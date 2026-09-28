@@ -308907,7 +308907,7 @@ window.__v216ui = 1;
   'use strict';
   if (typeof window === 'undefined') return;
 
-  var V = { versi: '1.0', nama: 'SAKTI-SARANG-BAWAAN', organ: 'V245' };
+  var V = { versi: '1.1', nama: 'SAKTI-SARANG-BAWAAN', organ: 'V245' };
 
   function q(id) { return (typeof document !== 'undefined') ? document.getElementById(id) : null; }
 
@@ -309090,7 +309090,7 @@ window.__v216ui = 1;
     div.id = 'v245-bawaan';
     div.innerHTML = CSS +
       '<div class="v245-judul"><span class="v245-led" id="v245-led"></span>OTAK SERVER — SARANG-PENJAGA</div>' +
-      '<div class="v245-sub">terima-pasang: sarang terpasang otomatis dari alamat halaman · laporan dibaca publik tanpa token · semua browser melihat keadaan yang sama</div>' +
+      '<div class="v245-sub">MISI: guru trader profesional — sasaran harian makin jarang meleset menuju selalu-untung, diukur jujur dari ledger · terima-pasang: sarang terpasang otomatis dari alamat halaman · laporan dibaca publik tanpa token · semua browser melihat keadaan yang sama</div>' +
       '<div class="v245-ringkas" id="v245-ringkas">membaca otak server…</div>' +
       '<div id="v245-daftar"></div>' +
       '<div class="v245-lain" id="v245-lain"></div>' +
@@ -309174,14 +309174,14 @@ window.__v216ui = 1;
       }
       var ct = q('v245-catatan');
       if (ct) {
-        var dasar = 'baca publik tanpa token — evolusi rutin dikerjakan SARANG-PENJAGA di server GitHub tiap 30 menit tanpa browser; tombol tulis (hijrah/simpan/evolusi) tetap butuh token pemilik.';
+        var dasar = 'baca publik tanpa token — evolusi rutin dikerjakan SARANG-PENJAGA di server GitHub tiap 30 menit tanpa browser; tombol tulis (hijrah/simpan/evolusi) tetap butuh token pemilik. Tujuan lengkap cyborg ini: <a href="' + escapeH(alamatSarang()) + 'TUJUAN.md" target="_blank" rel="noopener">TUJUAN.md</a>.';
         if (keadaan.server && keadaan.server.catatanJujur && keadaan.server.catatanJujur.length) {
           var cj = keadaan.server.catatanJujur;
           var gab = [];
           for (var i4 = 0; i4 < cj.length; i4++) gab.push(escapeH(cj[i4]));
-          ct.innerHTML = escapeH(dasar) + '<br>' + gab.join('<br>');
+          ct.innerHTML = dasar + '<br>' + gab.join('<br>'); // dasar sudah aman (teks organ + taut sah); catatanJujur server tetap di-escape
         } else {
-          ct.textContent = dasar;
+          ct.innerHTML = dasar; // teks statis organ sendiri (aman)
         }
       }
     } catch (e) { /* render tak boleh mematikan organ */ }
