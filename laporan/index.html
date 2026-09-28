@@ -89,6 +89,10 @@
   .galat{background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.35);color:var(--merah);
     border-radius:12px;padding:16px;margin:10px 0;display:none}
   .kandidat td:first-child{font-weight:700}
+  .target{font-family:var(--mono);font-size:12.5px;color:var(--hijau);margin-top:5px}
+  .badgephx{display:inline-block;background:rgba(251,191,36,.14);color:var(--amber);font-family:var(--mono);
+    font-weight:700;font-size:10.5px;padding:2px 8px;border-radius:7px;margin-left:6px;vertical-align:middle}
+  .radarline{font-family:var(--mono);font-size:11.5px;color:var(--sian);margin-top:4px}
   @media(max-width:520px){.angka-besar{font-size:28px}.dim{grid-template-columns:70px 52px 1fr}}
 </style>
 </head>
@@ -105,6 +109,7 @@
       <span class="chip"><span class="led"></span> denyut <b id="siklus">…</b></span>
       <span class="chip">sumber <b id="sumber">…</b></span>
       <span class="chip">BTC <b id="rezimbtc">…</b></span>
+      <span class="chip">radar <b id="radarchip">…</b></span>
       <span class="chip">dimutakhir <b id="waktu">…</b></span>
     </div>
   </header>
@@ -138,6 +143,8 @@
   <template id="tpl-sasaran">
     <div class="sasaran">
       <div class="atas"><div><div class="simbol"></div><div class="entry"></div></div><span class="arah"></span></div>
+      <div class="target" style="display:none"></div>
+      <div class="radarline" style="display:none"></div>
       <div class="keyakinan">
         <div class="teks"><span>keyakinan</span><b class="knum"></b></div>
         <div class="rel"><i></i></div>
@@ -147,10 +154,13 @@
     </div>
   </template>
 
+  <h2>Genome Radar Phoenix — Bobot Sinyal Akumulasi</h2>
+  <div class="genome" id="genome-phx"></div>
+
   <h2>Kandidat Lain</h2>
   <div class="gulir"><table class="tabel kandidat">
-    <thead><tr><th>Simbol</th><th>Arah</th><th>Keyakinan</th><th>Entry</th><th>Rezim</th></tr></thead>
-    <tbody id="kandidat"><tr><td colspan="5" style="color:var(--redup)">—</td></tr></tbody>
+    <thead><tr><th>Simbol</th><th>Arah</th><th>Keyakinan</th><th>Entry</th><th>Rezim</th><th>Keterangan</th></tr></thead>
+    <tbody id="kandidat"><tr><td colspan="6" style="color:var(--redup)">—</td></tr></tbody>
   </table></div>
 
   <h2>Riwayat Prediksi — Ledger Pra-Registrasi</h2>
@@ -176,6 +186,7 @@
 
 <script>
 const DIM = ['struktur','momentum','sr','tekanan','perubahan'];
+const PHXDIM = ['posisi','sweep','akumulasi','momentum','kompresi'];
 const $ = (id) => document.getElementById(id);
 const fmt = (x) => (x >= 1000 ? x.toLocaleString('id-ID',{maximumFractionDigits:2}) : String(x));
 function lalu(iso){
@@ -200,8 +211,17 @@ function isiSasaran(r){
     const kartu = el.querySelector('.sasaran');
     kartu.classList.add(s.arah === 'BUY' ? 'buy' : 'sell');
     el.querySelector('.simbol').textContent = s.simbol;
-    el.querySelector('.entry').textContent = 'entry ' + fmt(s.entry) + ' · horizon ' + s.horizon + ' · fee ' + s.fee;
+    el.querySelector('.entry').textContent = 'entry ' + fmt(s.entry) + ' · horizon ' + s.horizon + ' · fee ' + s.fee + (s.jalur === 'PHOENIX' ? ' · jalur phoenix' : '');
     const a = el.querySelector('.arah'); a.textContent = s.arah; a.classList.add(s.arah === 'BUY' ? 'buy' : 'sell');
+    if (s.jalur === 'PHOENIX'){ const bdg = document.createElement('span'); bdg.className = 'badgephx'; bdg.textContent = 'PHOENIX'; a.appendChild(bdg); }
+    if (s.target){
+      const t = el.querySelector('.target'); t.style.display = 'block';
+      t.textContent = 'sasaran jual ' + fmt(s.target) + ' · untung bersih +' + s.untungBersihPct + '%' + (s.stop ? ' · stop ' + fmt(s.stop) : '');
+    }
+    if (s.skorPhoenix){
+      const rl = el.querySelector('.radarline');
+      if (rl) rl.textContent = 'skor radar ' + s.skorPhoenix + ' — beli ujung bawah, jual ujung atas yang diprediksi';
+    }
     el.querySelector('.knum').textContent = s.keyakinan + '/100';
     el.querySelector('.rel i').style.width = s.keyakinan + '%';
     el.querySelector('.bukti').innerHTML = DIM.map((k) => {
@@ -217,10 +237,11 @@ function isiSasaran(r){
 function isiKandidat(r){
   const tb = $('kandidat');
   const k = r.kandidatLain || [];
-  if (!k.length){ tb.innerHTML = '<tr><td colspan="5" style="color:var(--redup)">tidak ada — semua masuk sasaran utama</td></tr>'; return; }
+  if (!k.length){ tb.innerHTML = '<tr><td colspan="6" style="color:var(--redup)">tidak ada — semua masuk sasaran utama</td></tr>'; return; }
   tb.innerHTML = k.map((s) => `<tr><td>${s.simbol}</td>
     <td class="${s.arah==='BUY'?'net-pos':'net-neg'}">${s.arah}</td>
-    <td>${s.keyakinan}/100</td><td>${fmt(s.entry)}</td><td>${s.rezim}</td></tr>`).join('');
+    <td>${s.keyakinan}/100</td><td>${fmt(s.entry)}</td><td>${s.rezim}</td>
+    <td style="color:var(--redup)">${s.catatan || (s.jalur==='PHOENIX' ? 'radar phoenix — target ' + fmt(s.target) : 'komite arah')}</td></tr>`).join('');
 }
 function isiRiwayat(rows){
   const tb = $('riwayat');
@@ -230,7 +251,7 @@ function isiRiwayat(rows){
     const net = e.net !== undefined ? ((e.net*100).toFixed(2)+'%') : '—';
     const cls = e.net !== undefined ? (e.net > 0 ? 'net-pos' : 'net-neg') : '';
     const wkt = (e.waktuKunci||'').replace('T',' ').slice(5,16);
-    return `<tr><td>${wkt} UTC</td><td><b>${e.simbol}</b></td>
+    return `<tr><td>${wkt} UTC</td><td><b>${e.simbol}</b>${e.jalur==='PHOENIX'?' <span style="color:var(--amber)">PHX</span>':''}</td>
       <td class="${e.arah==='BUY'?'net-pos':'net-neg'}">${e.arah}</td><td>${fmt(e.entry)}</td>
       <td><span class="st ${e.status}">${e.status||'—'}</span></td>
       <td>${e.exit ? fmt(e.exit) : '—'}</td><td class="${cls}">${net}</td></tr>`;
@@ -242,6 +263,11 @@ function isiGenome(g){
   $('genome').innerHTML = DIM.map((k) => `<div class="gdim">
     <div class="nm"><span>${k}</span><b>${((b[k]||0)*100).toFixed(1)}%</b></div>
     <div class="bar"><i style="width:${((b[k]||0)/maks*100).toFixed(0)}%"></i></div></div>`).join('');
+  const bp = (g && g.phoenix && g.phoenix.bobot) || {};
+  const maksP = Math.max(...Object.values(bp), 0.001);
+  $('genome-phx').innerHTML = PHXDIM.map((k) => `<div class="gdim">
+    <div class="nm"><span>${k}</span><b>${((bp[k]||0)*100).toFixed(1)}%</b></div>
+    <div class="bar"><i style="width:${((bp[k]||0)/maksP*100).toFixed(0)}%"></i></div></div>`).join('');
   $('generasi').textContent = g ? (g.semuaRezim?.[g.rezim]?.generasi ?? 0) : '—';
   $('generasi-sub').innerHTML = `generasi · rezim <b>${g?.rezim || '—'}</b>`;
 }
@@ -268,9 +294,11 @@ async function segarkan(){
     $('sumber').textContent = r.sumber?.host || '—';
     $('rezimbtc').textContent = (r.rezimBTC?.rezim || '—') + ' · ' + fmt(r.rezimBTC?.harga || 0);
     $('waktu').textContent = lalu(r.dihasilkan);
+    $('radarchip').textContent = r.radar ? (r.radar.telaah ?? '—') + ' telaah · ' + (r.radar.zonaPhoenix ?? '—') + ' zona' : '—';
     const a = r.akurasi || {};
     $('akurasi').textContent = a.akurasiPct !== null && a.akurasiPct !== undefined ? a.akurasiPct + '%' : '—';
-    $('akurasi-sub').innerHTML = `<b>${a.benar||0}</b> benar · <b>${a.salah||0}</b> salah · net kumulatif <b>${(a.netKumulatifPct||0).toFixed ? (a.netKumulatifPct||0).toFixed(2) : a.netKumulatifPct}%</b>`;
+    $('akurasi-sub').innerHTML = `<b>${a.benar||0}</b> benar · <b>${a.salah||0}</b> salah · net kumulatif <b>${(a.netKumulatifPct||0).toFixed ? (a.netKumulatifPct||0).toFixed(2) : a.netKumulatifPct}%</b>`
+      + (a.phoenix ? `<br>radar phoenix: dinilai <b>${a.phoenix.dinilai||0}</b> · benar <b>${a.phoenix.benar||0}</b> · target kena <b>${a.phoenix.targetKena||0}</b> · net <b>${a.phoenix.netKumulatifPct ?? 0}%</b>` : '');
     const j7 = a.jendela7h || {};
     $('ak7').textContent = j7.akurasiPct !== null && j7.akurasiPct !== undefined ? j7.akurasiPct + '%' : '—';
     $('ak7-sub').textContent = 'dinilai ' + (j7.dinilai||0) + ' · benar ' + (j7.benar||0);
