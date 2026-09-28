@@ -331,7 +331,7 @@ const peringkat = [...sasaran].sort((a, b) => b.keyakinan - a.keyakinan)
   .map((e) => ({
     simbol: e.simbol, arah: e.arah, keyakinan: e.keyakinan, entry: e.entry,
     rezim: e.rezim, dikunci: e.waktuKunci, horizon: e.horizon, fee: '0.2% pulang-pergi',
-    bukti: e.ketBukti, daya: e.daya,
+    bukti: e.bukti, ketBukti: e.ketBukti, daya: e.daya,
   }))
 const laporan = {
   protokol: 'SASARAN-MICAPROFITA', organ: VERSI, dihasilkan: ISO, siklus: SIKLUS,
