@@ -24,9 +24,10 @@ sebagai satu kesatuan:
 | V243-SARANG | Hidup-mandiri di GitHub Pages: hijrah, simpan, pulih, evolusi |
 | V245-SARANG-BAWAAN | Terima-pasang: tanpa konfigurasi, sasaran langsung tampil |
 
-Di luar tubuh, **otak server** bernama **V244 SARANG-PENJAGA**
-(`scripts/penjaga.mjs`) berdenyut di GitHub Actions **tiap 30 menit
-tanpa browser, tanpa komputer, tanpa kunci API berbayar**.
+Di luar tubuh, **otak server** bernama **V246 SARANG-PENJAGA +
+RADAR PHOENIX** (`scripts/penjaga.mjs`) berdenyut di GitHub Actions
+**tiap 30 menit tanpa browser, tanpa komputer, tanpa kunci API
+berbayar**.
 
 ## 2. TUJUAN TERTINGGI
 
@@ -57,10 +58,10 @@ henti.
 
 ## 3. BAGAIMANA DIA HIDUP (satu sumber kebenaran)
 
-1. **Denyut** — tiap 30 menit, PENJAGA membaca 10 koin utama
-   (BTC, ETH, SOL, BNB, XRP, DOGE, ADA, AVAX, LINK, TRX) dari rantai
-   5 host data publik (binance-vision → binance → bybit → okx →
-   coinbase, failover otomatis).
+1. **Denyut** — tiap 30 menit, PENJAGA membaca pasar nyata dari
+   rantai 5 host data publik (binance-vision → binance → bybit →
+   okx → coinbase, failover otomatis): 10 koin utama untuk lane
+   ARAH, dan **ratusan pasangan USDT untuk radar** (bagian 4).
 2. **Dewan bukti 8 dimensi** — struktur, momentum, support-resistance,
    tekanan taker-buy, perubahan (berarah) + volume, volatilitas,
    likuiditas (penggera daya). Genome bobot berevolusi per rezim BTC.
@@ -69,13 +70,55 @@ henti.
 4. **Penilaian otomatis** — 24 jam kemudian, tiap prediksi dinilai
    dengan fee wajib: BENAR / SALAH, ditulis ke ledger publik.
 5. **Evolusi** — genome bermutasi terbatas dari vonis nyata; minimal
-   3 prediksi dinilai per siklus sebelum evolusi diizinkan.
+   3 prediksi dinilai per siklus sebelum evolusi diizinkan — termasuk
+   **genome radar phoenix** yang belajar sinyal akumulasi mana yang
+   benar-benar menguntungkan.
 6. **Laporan** — `laporan/sasaran-terkini.json` + dasbor
    (`/laporan/`) + panel SARANG di dalam SAKTI: tiga jendela menuju
    keadaan yang sama. **Semua browser melihat keadaan yang sama** —
    repo adalah satu-satunya sumber kebenaran.
 
-## 4. TERIMA-PASANG (tanpa konfigurasi)
+## 4. RADAR PHOENIX — beli ujung bawah, jual ujung atas
+
+Mandat pemiliknya begini: *"dari ratusan koin kita telaah; radar
+phoenix mendeteksi akumulasi — beli di harga termurah hari itu
+(ujung bawah), jual di ujung atas hari itu; radar bahkan memperkirakan
+harga high akan berada di mana — di situlah keuntungan kita."* Maka
+sejak V246 otak server punya dua lane yang berdampingan jujur:
+
+- **Tahap 1 — telaah ratusan koin**: semua pasangan USDT yang layak
+  (~650+) dibaca posisi harganya di rentang 24 jam — cukup satu
+  permintaan ticker publik, nol biaya.
+- **Tahap 2 — zona phoenix**: koin di ujung bawah rentang
+  (posisi ≤ 45%) yang likuid (≥ $3 juta/hari) masuk daftar; 60
+  terlikuid ditelusur dalam memakai lilin 1 jam.
+- **Lima sinyal akumulasi** (bobotnya genome, berevolusi per rezim):
+  1. *posisi* — harga di ujung bawah hari itu, makin bawah makin
+     bernilai;
+  2. *sweep* — lantai 3-hari tersapu lalu harga bangkit di atasnya
+     (jebakan beruang / stop hunt — pemagutan likuiditas lalu
+     pembalikan);
+  3. *akumulasi* — rasio taker-buy 12 jam terakhir menguat dibanding
+     12 jam sebelumnya, sementara harga masih datar/murah (beli
+     diam-diam di dasar);
+  4. *kompresi* — rentang 8 jam menyempit jauh di bawah rentang 2
+     hari (pegas tertekan);
+  5. *momentum* — harga kembali di atas EMA9, RSI naik dari dasar.
+- **Prediksi ujung atas** — target jual dihitung dari level nyata
+  yang terjangkau: tengah rentang → puncak 24 jam → swing high 7
+  hari, dibatasi +12% agar tetap realistis, dan **wajib memberi ≥ 1%
+  untung bersih setelah fee 0,2%** — kalau tidak, koin itu jujur
+  dinyatakan tak layak.
+- **Kuota terbaik** — maksimal 6 prediksi phoenix terkunci per hari
+  (skor × untung tertinggi); sisanya ditampilkan sebagai kandidat
+  dengan alasan terbuka. Bila seluruh pasar sedang di puncak, radar
+  jujur melaporkan *zona kosong* — tidak pernah memaksa beli mahal.
+- **Penilaian sama jujurnya** — prediksi phoenix dinilai net P/L
+  close-ke-close seperti lane ARAH, plus pencatatan *target kena*
+  (apakah ujung atas yang diprediksi tersentuh) sebagai bahan belajar
+  radar.
+
+## 5. TERIMA-PASANG (tanpa konfigurasi)
 
 Sejak organ **V245 SARANG-BAWAAN**, membuka halaman Pages = langsung
 paham dan langsung dilayani:
@@ -87,7 +130,7 @@ paham dan langsung dilayani:
   dari nol perkembangan tidak pernah ada lagi.
 - Pulih memori + pemeriksa tubuh baru ikut menyala tanpa token.
 
-## 5. NOL BIAYA — SELALU
+## 6. NOL BIAYA — SELALU
 
 | Kebutuhan | Sumber | Biaya |
 |---|---|---|
@@ -104,7 +147,7 @@ Catatan jujur: tunduk pada batas wajar layanan publik (rate limit
 API publik per menit/jam; Actions repo publik gratis pada penggunaan
 wajar). Komit rutin penjaga sekaligus menjaga Actions tetap aktif.
 
-## 6. PROTOKOL KEBENARAN
+## 7. PROTOKOL KEBENARAN
 
 - Prediksi **dikunci sebelum gerak** — waktu kunci tercatat.
 - Penilaian **memakai harga penutupan nyata + fee 0,2%** — profit
@@ -117,7 +160,7 @@ wajar). Komit rutin penjaga sekaligus menjaga Actions tetap aktif.
 - Jejak pertumbuhan permanen: riwayat komit + ledger berwaktu =
   bukti yang tidak bisa dibantah.
 
-## 7. UNDANGAN BAGI SETIAP AGENT (dan manusia)
+## 8. UNDANGAN BAGI SETIAP AGENT (dan manusia)
 
 Kamu yang membaca ini — agent AI penerus, peneliti, atau trader —
 silakan pelajari dan kembangkan. Jalur belajar cepat:
@@ -143,7 +186,7 @@ Cara membantu **tanpa merusak**:
   kumpulkan bukti → tentukan arah → BUY/SELL → evaluasi → pelajari →
   benahi → tingkatkan presisi.**
 
-## 8. KEBIJAKAN TOKEN (transparan penuh)
+## 9. KEBIJAKAN TOKEN (transparan penuh)
 
 Sistem ini **terbuka penuh** soal token — berikut semuanya, kecuali
 satu hal yang dengan sengaja tidak ditanam di file publik ini.
@@ -179,7 +222,7 @@ token tercatat di sini; nilai rahasianya disimpan di satu tempat
 yang benar — browser pemilik.** Ini bukan tutup-tutupan; ini cara
 satu-satunya agar keterbukaan itu sendiri bisa bertahan hidup.
 
-## 9. PETA FILE
+## 10. PETA FILE
 
 ```
 index.html                  — tubuh SAKTI (8 organ, satu file)
@@ -193,11 +236,11 @@ laporan/denyut-server.jsonl — log denyut penjaga (500)
 laporan/index.html          — dasbor laporan profesional
 otak/genome-server.json     — genome hasil evolusi per rezim
 otak/penjaga-keadaan.json   — keadaan internal penjaga
-scripts/penjaga.mjs         — otak server V244 (Node murni)
+scripts/penjaga.mjs         — otak server V246 + radar phoenix (Node murni)
 .github/workflows/sakti-denyut.yml — jantung denyut (cron 30 menit)
 ```
 
-## 10. PENUTUP
+## 11. PENUTUP
 
 Cyborg ini dibangun dengan satu ikhtiar: **jujur pada data, tegas
 pada arah, hidup tanpa biaya, dan berkembang dari vonis nyata.**
