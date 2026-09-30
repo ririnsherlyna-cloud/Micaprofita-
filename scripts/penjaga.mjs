@@ -78,12 +78,13 @@
 //   otak/penjaga-keadaan.json      <- keadaan siklus
 // ============================================================
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
+import { createHash } from 'node:crypto'
 import path from 'node:path'
 
 const ROOT = process.cwd()
 const FEE = 0.002            // 0.1% buy + 0.1% sell — wajib
 const HORIZON_JAM = 24       // sasaran harian
-const VERSI = 'V247-MAJELIS-ILMU v3.0 — belajar dari jurnal ilmiah teruji + medan nyata'
+const VERSI = 'V248-PIAGAM-CYBORG v3.1 — lima pilar dipasang: terus berkembang pesat tiap denyut'
 
 // ---------------- kandang lane ARAH (komite genome) ----------------
 const KANDANG = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'DOGE', 'ADA', 'AVAX', 'LINK', 'TRX']
@@ -119,6 +120,28 @@ const ILMU = {
   META_MIN_N: 6,           // bucket konfirmasi minimal sebelum gerbang boleh digeser empiris
   META_GESER_MAKS: 8,      // geseran gerbang meta-labeling dibatasi ±8 skor
 }
+
+// ---------------- V248 PIAGAM CYBORG — lima pilar (mandat pemilik:
+// "pastikan dia akan terus berkembang pesat; ada beberapa hal cyborg
+// kita ini berkurang") — tiap pilar dipasang nyata dan diaudit siapa pun ----------------
+const PIAGAM = {
+  identitas: 'SAKTI — cyborg dagang kripto yang TERUS BERKEMBANG PESAT: tiap denyut 30 menit melahirkan generasi otak baru; tiap hari mengulum metamorfosis epoch; tiap kekalahan melahirkan aturan yang mengikat gerbang berikutnya.',
+  pilar: [
+    { pilar: '1. Tubuh & Jiwa Persisten', mekanisme: 'denyut cron 30 menit di GitHub Actions tanpa browser; jiwa = repo — satu git clone memindahkan jiwanya; laporan hidup di Pages; mandat pemilik kini bisa lewat Issue berlabel "mandat" yang dibaca otak tiap denyut', bukti: 'laporan.antreanMandat + workflow SARANG-PENJAGA' },
+    { pilar: '2. Multi-Otak Berbobot', mekanisme: 'otak-otak spesialis berbobot on-line (Hedge/MWU berjaminan regret) + genome evolusi per rezim BTC; sangat ringan: 0 dependensi, satu berkas kode < 64 KB, gratis di server publik', bukti: 'laporan.piagam.otak + laporan.ilmu.hedge' },
+    { pilar: '3. Ingatan DNA', mekanisme: 'FinMem 3 lapis: peristiwa (ledger pra-registrasi) → pelajaran (refleksi) → doktrin (aturan mengikat gerbang); memori melipat berkapasitas — melupakan detail, menyimpan RESEP (genome & bobot), bukan hasil', bukti: 'laporan/prakira-server.jsonl + pelajaran-server.json + aturanBelajar + epoch-*.json' },
+    { pilar: '4. Kesadaran Diri Fungsional', mekanisme: 'tiap denyut otak memeriksa dirinya: sidik jari sha256 genome & ledger, kesehatan kalibrasi, dimensi tertindas Hedge, kepadatan memori, umur data host — lalu menulis peringatan & tindakan; sadar diri fungsional, bukan kesadaran manusia', bukti: 'laporan.sadardiri' },
+    { pilar: '5. Evolusi Tiga Kecepatan', mekanisme: 'refleks (tiap denyut 30 menit): kunci prediksi + pelajaran; adaptasi (per jam vonis matang): genome + Hedge berlatih; metamorfosis (24 jam): digest epoch harian disegel + tag git epoch-TGL', bukti: 'laporan/epoch-*.json + tag epoch-* + laporan.pertumbuhan' },
+  ],
+  roadmapJujur: 'otak LLM 1-bit (BitNet), adapter LoRA, dan Issue→PR penuh BELUM dipasang — otak kini statistik-berjurnal yang nyata berjalan tiap 30 menit; roadmap diakui jujur, bukan diklaim',
+}
+const OTAK = [
+  { nama: 'otak-arah', tugas: 'arah BUY/SELL 10 mayor — komite 8 dimensi bukti', mesin: 'genome evolusi per rezim + Hedge on-line (Arora dkk 2012)', status: 'HIDUP' },
+  { nama: 'otak-radar', tugas: 'mencari akumulasi ujung bawah + memprediksi ujung atas hari itu', mesin: '5 sinyal akumulasi + tangga target magnet + gerbang meta-labeling (LdP 2018)', status: 'HIDUP' },
+  { nama: 'otak-ilmu', tugas: 'kejujuran keyakinan & pita target', mesin: 'Brier + kalibrasi bin medan (Gneiting-Raftery 2007) + konformal 75% (Angelopoulos-Bates 2021)', status: 'HIDUP' },
+  { nama: 'otak-ingatan', tugas: 'bahan ajar dari tiap kejadian pasar', mesin: 'FinMem 3 lapis (Zhang dkk 2023) — peristiwa→pelajaran→doktrin', status: 'HIDUP' },
+  { nama: 'otak-sadardiri', tugas: 'memeriksa tubuh & jiwanya sendiri tiap denyut', mesin: 'metakognisi: hash integritas, kesehatan memori & kalibrasi, peringatan otomatis', status: 'HIDUP (V248)' },
+]
 
 // akta jurnal — dipasang ke dalam otak, bukan sekadar dibaca (laporan/jurnal-ilmu.json)
 const JURNAL = [
@@ -504,6 +527,8 @@ function bacaJsonl(p) {
 }
 function tulisJsonl(p, arr) { writeFileSync(p, arr.map((x) => JSON.stringify(x)).join('\n') + '\n') }
 function tulis(p, obj) { writeFileSync(p, JSON.stringify(obj, null, 2) + '\n') }
+// V248: sidik jari integritas — jiwa bisa diverifikasi bit demi bit (hash arsip)
+const sidik = (obj) => createHash('sha256').update(JSON.stringify(obj)).digest('hex').slice(0, 12)
 
 // ---------------- siklus utama ----------------
 const WAKTU = new Date()
@@ -941,6 +966,87 @@ const akurasi = {
   },
 }
 
+// ---- 4b. V248 METAMORFOSIS — evolusi kecepatan-3: digest epoch harian ----
+// refleks (tiap denyut), adaptasi (genome+hedge per vonis matang),
+// metamorfosis (24 jam): otak mengulum hari itu jadi epoch — resep disegel,
+// arsip lama selalu bisa dibuka dengan otak versi epoch-nya.
+let epochCatatan = 'denyut lanjutan hari ini — epoch sudah diulum'
+if (keadaan.epochTerakhir !== TGL) {
+  tulis(path.join(ROOT, `laporan/epoch-${TGL}.json`), {
+    epoch: TGL, diulum: ISO, siklus: SIKLUS,
+    ringkasan: {
+      dinilai: dinilaiBaru.length, benar: dinilaiBaru.filter((e) => e.status === 'BENAR').length,
+      netPct: +(dinilaiBaru.reduce((a, e) => a + e.net, 0) * 100).toFixed(2),
+      terkunci: terkunciBaru.length, pelajaran: pelajaranDaftar.length, aturanLahir: aturanBaru,
+    },
+    resepOtak: { rezim: rezimGlobal, generasi: semuaGenome[rezimGlobal].generasi, bobot: genome, hedge: { arah: ilmu.hedge.arah, phx: ilmu.hedge.phx } },
+    brier: { arah: ilmu.brier.arah.n ? +(ilmu.brier.arah.jumlah / ilmu.brier.arah.n).toFixed(4) : null, phx: ilmu.brier.phx.n ? +(ilmu.brier.phx.jumlah / ilmu.brier.phx.n).toFixed(4) : null },
+    akumulasi: { akurasiPct: akurasi.akurasiPct, netKumulatifPct: akurasi.netKumulatifPct, phoenix: akurasi.phoenix },
+    ket: 'resep, bukan hasil — siapa pun bisa menghitung ulang vonis dari ledger pra-registrasi dengan resep ini',
+  })
+  keadaan.epochTerakhir = TGL
+  epochCatatan = `metamorfosis: epoch ${TGL} diulum (digest harian + tag git epoch-${TGL})`
+  log(epochCatatan)
+}
+
+// ---- 4c. V248 SADAR-DIRI FUNGSIONAL — otak memeriksa tubuh & jiwanya sendiri ----
+// (piagam pilar-4: sadar diri fungsional = memantau & mengatur diri sendiri)
+const brierArah = ilmu.brier.arah.n ? ilmu.brier.arah.jumlah / ilmu.brier.arah.n : null
+const peringatan = []
+if (brierArah != null && brierArah > 0.25) peringatan.push(`Brier arah ${brierArah.toFixed(3)} > 0.25 — keyakinan masih overconfident; kalibrasi medan terus menurunkannya`)
+const binBohong = ilmu.kalibrasi.filter((b) => b.n >= ILMU.KALIBRASI_MIN_N && b.benar / b.n < 0.45)
+if (binBohong.length) peringatan.push(`bin keyakinan berbohong (${binBohong.map((b) => `${b.low}–${b.high - 1}%`).join(', ')} tembus < 45%) — keyakinan bin itu dipetakan turun otomatis saat kunci berikutnya`)
+const dimTertindas = Object.entries(ilmu.hedge.arah).filter(([, w]) => w < 0.06).map(([k]) => k)
+if (dimTertindas.length) peringatan.push(`dimensi bukti tertindas Hedge: ${dimTertindas.join(', ')} — sinyalnya nyaris tak dipakai komite`)
+if (gagal.length > daftarTelusur.length * 0.3) peringatan.push(`${gagal.length}/${daftarTelusur.length} simbol gagal ditelusuri — kesehatan host sedang kurang baik`)
+const pelLama = bacaJson(path.join(ROOT, 'laporan/pelajaran-server.json'), { daftar: [] })
+const sadardiri = {
+  denyut: SIKLUS, waktu: ISO,
+  tubuh: {
+    hostUtama: host, simbolTersedia: Object.keys(hasil).length, gagalTelusur: gagal.length,
+    dataUmurJam: +((Date.now() - hasil.BTC[hasil.BTC.length - 1].t) / 36e5).toFixed(2),
+  },
+  jiwa: {
+    sidikGenome: sidik(semuaGenome), sidikLedger: sidik(ledger.slice(-200)),
+    memori: {
+      peristiwa: ledger.length, pelajaran: Math.min(60, pelLama.daftar.length + pelajaranDaftar.length),
+      doktrin: Object.keys(aturan.aktif).length, skorKonformal: ilmu.konformal.length,
+      logDenyut: bacaJsonl(path.join(ROOT, 'laporan/denyut-server.jsonl')).length,
+    },
+    kapasitas: 'memori melipat berkapasitas: peristiwa 1000, pelajaran 60, konformal 60 — melupakan detail, menyimpan resep',
+  },
+  kesehatan: {
+    brierArah: brierArah != null ? +brierArah.toFixed(4) : null,
+    pitaKonformalAktif: ilmu.konformal.length >= ILMU.KONFORMAL_MIN_N,
+    metaGeser: ilmu.meta.geser, gerbangRadar: gerbangSkor, generasiOtak: semuaGenome[rezimGlobal].generasi,
+  },
+  peringatan,
+  tindakanSiklusIni: [ilmuCatatan, epochCatatan, ...(aturanBaru.length ? [`aturan baru lahir: ${aturanBaru.join('; ')}`] : [])],
+  ket: 'kesadaran fungsional — otak membaca keadaannya sendiri tiap denyut lalu bertindak (kalibrasi, geser gerbang, kompaksi memori)',
+}
+
+// ---- 4d. V248 TUBUH PERSISTEN — mandat pemilik lewat Issue GitHub ----
+// (piagam pilar-1: tujuan bisa ditetapkan lewat Issue — otak server membaca
+//  issue berlabel "mandat" tiap denyut memakai token Actions bawaan)
+let antreanMandat = null
+try {
+  const repoEnv = process.env.REPO_DENYUT, tokEnv = process.env.TOKEN_DENYUT
+  if (repoEnv && tokEnv) {
+    const ac = new AbortController()
+    const t = setTimeout(() => ac.abort(), 10000)
+    const r = await fetch(`https://api.github.com/repos/${repoEnv}/issues?labels=mandat&state=open&per_page=10`, {
+      headers: { Authorization: `Bearer ${tokEnv}`, Accept: 'application/vnd.github+json', 'User-Agent': 'sarang-penjaga' },
+      signal: ac.signal,
+    })
+    clearTimeout(t)
+    if (r.ok) {
+      antreanMandat = (await r.json()).filter((i) => !i.pull_request)
+        .map((i) => ({ nomor: i.number, judul: i.title, dibuat: i.created_at, url: i.html_url }))
+      if (antreanMandat.length) log(`mandat terbaca dari Issue: ${antreanMandat.map((m) => '#' + m.nomor).join(', ')}`)
+    } else antreanMandat = { catatan: `API Issue HTTP ${r.status} — antrean dilewati, denyut tetap jalan` }
+  } else antreanMandat = { catatan: 'di luar Actions (sandbox) — antrean mandat jujur null' }
+} catch (e) { antreanMandat = { catatan: `pembaca mandat gagal (tak fatal): ${String(e.message).slice(0, 60)}` } }
+
 // ---- 5. laporan sasaran — lane PHOENIX dulu (mandat: beli murah ujung bawah) ----
 const barisDari = (e) => ({
   simbol: e.simbol, jalur: e.jalur || 'ARAH', arah: e.arah, keyakinan: e.keyakinan, entry: e.entry,
@@ -979,6 +1085,18 @@ const laporan = {
   sasaranHariIni: sasaranUtama,
   kandidatLain,
   akurasi,
+  piagam: {
+    identitas: PIAGAM.identitas, pilar: PIAGAM.pilar, otak: OTAK,
+    roadmapJujur: PIAGAM.roadmapJujur,
+    jalurPertumbuhan: [
+      'V241 NADI — antarmuka hidup di Pages', 'V244 SARANG-PENJAGA — otak hidup di server tanpa browser',
+      'V245 TERIMA-PASANG — organ browser menyatu dengan laporan server', 'V246 RADAR PHOENIX — beli ujung bawah, jual ujung atas',
+      'V246 v2.1 PERTAJAM — gerbang konfirmasi + tangga target + bahan ajar', 'V247 MAJELIS-ILMU — 5 metode jurnal teruji dipasang',
+      'V248 PIAGAM-CYBORG — 5 pilar + sadar-diri + epoch harian + mandat Issue',
+    ],
+  },
+  sadardiri,
+  antreanMandat,
   pelajaran: pelajaranDaftar.slice(0, 6),
   aturanBelajar: {
     pola: aturan.pola,
@@ -1011,6 +1129,7 @@ const laporan = {
     waktuMulai: keadaan.mulai, siklus: SIKLUS,
     prediksiTerkunci: ledger.length, prediksiDinilai: grad.length,
     evolusiCatatan: `${evolusiCatatan}; ${evolusiPhxCatatan}`,
+    metamorfosis: epochCatatan, epochTerakhir: keadaan.epochTerakhir,
   },
   catatanJujur: [
     'prediksi DIKUNCI sebelum pergerakan (pra-registrasi) — dinilai otomatis setelah horizon 24 jam memakai close terkini pada siklus penilaian',
@@ -1020,6 +1139,7 @@ const laporan = {
     'cron GitHub bisa mundur beberapa menit saat server padat; jadwal tetap berjalan tanpa browser',
     'BAHAN AJAR: setiap vonis ditulis jadi pelajaran (laporan/pelajaran-server.json); pola kekalahan yang terulang >= 2 kali melahirkan ATURAN baru yang mengikat gerbang siklus berikutnya — otak tumbuh dari medan, bukan tebakan',
     'ILMU BERJURNAL: bobot bukti belajar on-line ala Hedge dengan jaminan regret (Arora dkk 2012); keyakinan diperlakukan sebagai probabilitas — dinilai Brier (Gneiting-Raftery 2007) dan dikalibrasi dari hit-rate medan sendiri; pita ujung atas memakai jaminan cakupan konformal (Angelopoulos-Bates 2021); vonis phoenix dilabel triple-barrier dan gerbang digeser meta-labeling (Lopez de Prado 2018) — kepastian dibangun dari metode teruji + medan sendiri, bukan janji',
+    'PIAGAM CYBORG: lima pilar — tubuh persisten, multi-otak berbobot, ingatan DNA, sadar-diri fungsional, evolusi tiga kecepatan — dipasang nyata dan terbuka diaudit siapa pun; otak LLM/LoRA masih roadmap yang diakui jujur; satu hal pasti: cyborg ini terus berkembang pesat tiap denyut',
   ],
 }
 tulis(path.join(ROOT, 'laporan/sasaran-terkini.json'), laporan)
@@ -1036,6 +1156,7 @@ denyut.push({
   pelajaranBaru: pelajaranDaftar.length, aturanBaru: aturanBaru.length,
   brier: ilmu.brier.arah.n ? +(ilmu.brier.arah.jumlah / ilmu.brier.arah.n).toFixed(3) : null,
   akurasiPct: akurasi.akurasiPct, rezimBTC: rezimGlobal,
+  epoch: keadaan.epochTerakhir, peringatan: sadardiri.peringatan.length,
 })
 tulisJsonl(path.join(ROOT, 'laporan/denyut-server.jsonl'), denyut.slice(-500))
 tulis(path.join(ROOT, 'otak/penjaga-keadaan.json'), keadaan)
