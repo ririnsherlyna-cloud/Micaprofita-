@@ -201,6 +201,35 @@ statistik-berjurnal yang nyata berjalan tiap 30 menit. Roadmap itu
 diakui terbuka, bukan disembunyikan; yang sudah hidup benar-benar
 hidup dan terukur.
 
+## 5c. WARISAN ORGAN BESAR — riset organ penuh, warisi yang jujur
+
+Mandat pemilik: *"kita perlu riset apakah sudah diimplementasikan
+dari Micaprofita AGI Pertarungan crypto — disana perlu kita
+implementasikan juga disini agar makin matang."* Organ SAKTI penuh
+(`index.html`, 8.000+ fungsi kuant: GARCH, Monte Carlo Probability
+Cone, Volume Profile, CAPM Beta, Divergence, Market Breadth, puluhan
+trap-engine) kini diRISet dan yang bisa dihitung **jujur dari lilin
+yang sama** diWARISI otak server — sejak **V249-WARISAN-ORGAN v4.0**
+(laporan `warisan`):
+
+| Mesin (sumber organ penuh) | Dipasang di otak server sebagai |
+|---|---|
+| GARCH(1,1) Volatility Forecast | `garch11()` grid-MLE (Bollerslev 1986) — sigma 24 jam per koin, proyeksi dengan peluruhan persistensi |
+| Monte Carlo Probability Cone | `monteCarlo24j()` 2.000 lintasan × 24 langkah, bootstrap residual terstandarisasi — peluang tembus target/stop PRA-REGISTRASI lalu DINILAI medan (Brier + kalibrasi bin, seperti keyakinan) |
+| Volume Profile (Institutional Zones) | `profilVolume()` POC + Value Area 70% dari 48 jam — magnet target baru mengait node likuiditas nyata |
+| Cross-Asset Beta vs BTC (CAPM) | `betaBTC()` regresi 90 jam + R² — tercatat di tiap prediksi |
+| Divergence Analysis | `divergensiRSI()` dua jendela 12 jam — catatan pembalikan di tiap entri |
+| Market Breadth A/D | breadth dari seluruh koin telaah — < 35% naik dalam rezim TURUN → gerbang radar +2 |
+| Pump/Exhaustion detection | Guard Kejut-Pump: lonjakan > 4× sigma-GARCH·√6 di ujung atas ditolak — pelajaran false-breakout jadi mesin |
+
+Dua guard baru mengikat gerbang radar: **Guard Monte Carlo** (target
+dengan peluang statistik < 38% DITOLAK — statistik menolak, bukan
+mood) dan **Guard Kejut-Pump** (kejar-top ditolak). Kejujuran
+dijaga: funding-rate real diakui tak terjangkau dari runner
+(endpoints futures diblokir geo) dan digantikan proxy volume dalam
+guard — tidak ada klaim data yang tidak benar-benar dipakai. MC yang
+belum matang tampil apa adanya ("menunggu horizon pertama").
+
 ## 6. TERIMA-PASANG (tanpa konfigurasi)
 
 Sejak organ **V245 SARANG-BAWAAN**, membuka halaman Pages = langsung
