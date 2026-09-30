@@ -52,11 +52,12 @@ jobs:
             git push
           fi
 
-      - name: Tag metamorfosis harian (piagam pilar-5 — evolusi 24 jam)
+      - name: Tag metamorfosis harian — evolusi 24 jam (piagam pilar-5)
+        continue-on-error: true
         run: |
           TAG="epoch-$(date -u +%F)"
-          if git rev-parse "$TAG" >/dev/null 2>&1; then
-            echo "tag $TAG sudah ada — lewati"
+          if git ls-remote --tags origin "refs/tags/$TAG" | grep -q "$TAG"; then
+            echo "tag $TAG sudah ada di remote — lewati"
           else
             git tag -a "$TAG" -m "metamorfosis 24 jam — epoch ${TAG}: resep otak disegel di laporan/epoch-${TAG}.json"
             git push origin "$TAG"
