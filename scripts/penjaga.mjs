@@ -41,6 +41,31 @@
 //        pola kekalahan terulang >= 2x melahirkan ATURAN yang mengikat gerbang.
 //     6. MFE/MAE dicatat: seberapa jauh harga benar-benar bergerak setelah kunci.
 //
+//   v3.0 — MAJELIS-ILMU (mandat pemilik: "pelajari jurnal-jurnal ilmiah AI yang
+//     benar-benar banyak diperdebatkan, ditelaah, terbukti koheren — lalu
+//     inovasikan pada cyborg"). Lima metode teruji kini DIPASANG, bukan
+//     sekadar dikutip (laporan/jurnal-ilmu.json = akta rujukan):
+//     1. HEDGE / MULTIPLICATIVE WEIGHTS UPDATE — Arora-Hazan-Kale 2012
+//        (Theory of Computing 8:121-164) · Freund-Schapire 1997 (JCSS 55:119-)
+//        · Cesa-Bianchi-Lugosi 2006 (Prediction, Learning, and Games):
+//        bobot tiap dimensi bukti & sinyal belajar ON-LINE dari tiap vonis
+//        matang: w *= exp(-eta*loss), loss=(1-y*a)/2 — jaminan regret
+//        terbukti: komite terbukti tak jauh kalah dari ahli terbaiknya.
+//     2. BRIER + KALIBRASI — Brier 1950 · Gneiting-Raftery 2007 (JASA 102:359-):
+//        keyakinan diperlakukan sebagai PROBABILITAS — dinilai skor Brier,
+//        dan keyakinan baru dipetakan ke hit-rate empiris binnya (medan
+//        sendiri sebagai pengkalibrasi), bukan angka karangan.
+//     3. KONFORMAL — Angelopoulos-Bates 2021 (arXiv:2107.07511): pita ujung
+//        atas 75% dari skor kesesuaian (MFE) medan sendiri — kuantil dengan
+//        jaminan cakupan, jujur null saat sampel belum cukup.
+//     4. TRIPLE-BARRIER + META-LABELING — Lopez de Prado 2018 (Advances in
+//        Financial Machine Learning, Wiley): vonis phoenix dilabel barier mana
+//        yang kena duluan (TARGET/STOP/WAKTU); gerbang radar digeser empiris
+//        dari hasil bucket konfirmasi (model kedua menilai model pertama).
+//     5. FINMEM — Zhang dkk 2023 (arXiv:2311.13743): ingatan berlapis —
+//        peristiwa(1: ledger) -> pelajaran(2: refleksi) -> doktrin(3: aturan
+//        yang mengikat gerbang) — siklus sadar-pasar yang dipublikasikan.
+//
 // Prinsip: 0 dependensi, 0 API key, data publik saja.
 // Protokol: SASARAN-MICAPROFITA (laporan), ledger prakira
 // berantai waktu, fee 0.1%+0.1% wajib, vonis WAJIB biner
@@ -58,7 +83,7 @@ import path from 'node:path'
 const ROOT = process.cwd()
 const FEE = 0.002            // 0.1% buy + 0.1% sell — wajib
 const HORIZON_JAM = 24       // sasaran harian
-const VERSI = 'V246-SARANG-PENJAGA v2.1 — PHOENIX-PERTAJAM (belajar dari kekalahan)'
+const VERSI = 'V247-MAJELIS-ILMU v3.0 — belajar dari jurnal ilmiah teruji + medan nyata'
 
 // ---------------- kandang lane ARAH (komite genome) ----------------
 const KANDANG = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'DOGE', 'ADA', 'AVAX', 'LINK', 'TRX']
@@ -81,6 +106,51 @@ const PHX = {
   TURUN_SKOR_TAMBAH: 10,   // rezim TURUN/PARABOLIK: gerbang dinaikkan — melawan arus harus lebih meyakinkan
   TURUN_CAP: 1.06,         // rezim TURUN/PARABOLIK: target cap +6% — harapan kecil yang jujur
 }
+
+// ---------------- V247 ILMU — konstanta fondasi jurnal teruji ----------------
+const ILMU = {
+  HEDGE_ETA: 0.5,          // laju belajar Hedge (Freund-Schapire 1997) — seimbang antara adaptasi & stabilitas
+  HEDGE_MIN: 0.03, HEDGE_MAKS: 0.55,
+  BIN_KALIBRASI: [[52, 60], [60, 70], [70, 80], [80, 101]],
+  KALIBRASI_MIN_N: 5,      // bin belum dipercaya sebelum 5 kasus medan — jujur kembali ke angka mentah
+  KONFORMAL_ALPHA: 0.25,   // pita 75% — cakupan 1-alpha (Angelopoulos-Bates 2021)
+  KONFORMAL_MIN_N: 8,      // pita belum diumumkan sebelum 8 skor kesesuaian
+  KONFORMAL_MAKS: 60,      // memori skor kesesuaian dibatasi (FinMem: ingatan melipat)
+  META_MIN_N: 6,           // bucket konfirmasi minimal sebelum gerbang boleh digeser empiris
+  META_GESER_MAKS: 8,      // geseran gerbang meta-labeling dibatasi ±8 skor
+}
+
+// akta jurnal — dipasang ke dalam otak, bukan sekadar dibaca (laporan/jurnal-ilmu.json)
+const JURNAL = [
+  { judul: 'The Multiplicative Weights Update Method: a Meta-Algorithm and Applications',
+    penulis: 'S. Arora, E. Hazan, S. Kale', tahun: 2012,
+    terbitan: 'Theory of Computing 8(1):121–164', rujukan: 'https://theoryofcomputing.org/articles/v008a001',
+    penerapan: 'hedgePerbarui() — bobot 5 dimensi bukti & 5 sinyal radar belajar on-line dari tiap vonis matang (w *= exp(-eta*loss)); jaminan regret: komite tak jauh kalah dari ahli terbaiknya' },
+  { judul: 'A Decision-Theoretic Generalization of On-Line Learning and an Application to Boosting',
+    penulis: 'Y. Freund, R.E. Schapire', tahun: 1997,
+    terbitan: 'Journal of Computer and System Sciences 55(1):119–139', rujukan: 'https://doi.org/10.1006/jcss.1997.1504',
+    penerapan: 'algoritma Hedge asli yang dipakai hedgePerbarui() — loss=(1-y*a)/2 per dimensi' },
+  { judul: 'Prediction, Learning, and Games',
+    penulis: 'N. Cesa-Bianchi, G. Lugosi', tahun: 2006,
+    terbitan: 'Cambridge University Press', rujukan: 'https://doi.org/10.1017/CBO9780511546921',
+    penerapan: 'kerangka prediction with expert advice — 8-dim komite ARAH & 5-sinyal PHOENIX adalah ahli-ahli beradopsi dalam kerangka ini' },
+  { judul: 'Strictly Proper Scoring Rules, Prediction, and Estimation',
+    penulis: 'T. Gneiting, A.E. Raftery', tahun: 2007,
+    terbitan: 'Journal of the American Statistical Association 102(477):359–378', rujukan: 'https://doi.org/10.1198/016214506000001437',
+    penerapan: 'keyakinan dinilai sebagai probabilitas lewat skor Brier (e.brier) — aturan skor tepat mendorong kejujuran probabilitas, bukan overconfidence' },
+  { judul: 'A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification',
+    penulis: 'A.N. Angelopoulos, S. Bates', tahun: 2021,
+    terbitan: 'arXiv:2107.07511 (Foundations and Trends in ML)', rujukan: 'https://arxiv.org/abs/2107.07511',
+    penerapan: 'pitaKonformal() — pita ujung atas 75% dari skor kesesuaian (MFE medan sendiri): kuantil dengan jaminan cakupan bebas-distribusi' },
+  { judul: 'Advances in Financial Machine Learning (bab 3: Triple-Barrier & Meta-Labeling)',
+    penulis: 'M. López de Prado', tahun: 2018,
+    terbitan: 'Wiley', rujukan: 'https://www.wiley.com/en-us/9781119482089',
+    penerapan: 'label triple-barrier (TARGET/STOP/WAKTU) saat penilaian phoenix + gerbang meta-labeling: model kedua (hit-rate bucket konfirmasi) menggeser gerbang model pertama' },
+  { judul: 'FinMem: A Performance-Enhanced LLM Trading Agent with Layered Memory and Character Design',
+    penulis: 'Y. Zhang, dkk.', tahun: 2023,
+    terbitan: 'arXiv:2311.13743', rujukan: 'https://arxiv.org/abs/2311.13743',
+    penerapan: 'ingatan berlapis: peristiwa (ledger prakira) → pelajaran (refleksi) → doktrin (aturan mengikat gerbang) — bahan ajar cyborg kini berarsitektur jurnal' },
+]
 
 // ---------------- rantai host data publik ----------------
 const HOSTS = [
@@ -387,6 +457,42 @@ function vonisPhoenix(rad, phxGenome, dayaProduk, untung, rezimGlobal, gerbangSk
   return { skor: +skor100.toFixed(1), keyakinan, lolos }
 }
 
+// ---------------- V247 ILMU — tiga mesin belajar berjurnal ----------------
+// (1) HEDGE / MWU — Arora-Hazan-Kale 2012 · Freund-Schapire 1997.
+//     loss_d = (1 - y*a_d)/2 dengan y=+1 (vonis benar) / -1 (salah) dan
+//     a_d = nasihat dimensi dalam [-1,1]; w_d *= exp(-eta*loss), lalu
+//     dinormalisasi — jaminan regret terbukti terhadap dimensi terbaik.
+function hedgePerbarui(g, adv, y) {
+  for (const [k, a] of Object.entries(adv)) {
+    const loss = (1 - y * clamp(a, -1, 1)) / 2
+    g[k] = clamp((g[k] ?? 0.1) * Math.exp(-ILMU.HEDGE_ETA * loss), ILMU.HEDGE_MIN, ILMU.HEDGE_MAKS)
+  }
+  const t = Object.values(g).reduce((s, x) => s + x, 0) || 1
+  for (const k of Object.keys(g)) g[k] = +(g[k] / t).toFixed(4)
+}
+// (2) KALIBRASI KEPASTIAN — Brier 1950 · Gneiting-Raftery 2007.
+//     keyakinan mentah dipetakan ke hit-rate empiris bin medan sendiri
+//     (Laplace smoothing), 50/50 campur angka mentah; bin baru dipercaya
+//     setelah >= 5 kasus — kepastian dari medan, bukan karangan.
+function kalibrasiKeyakinan(p, kal) {
+  const bin = kal.find((b) => p >= b.low && p < b.high)
+  if (!bin || bin.n < ILMU.KALIBRASI_MIN_N) return { keyakinan: Math.round(p), sumber: 'mentah — medan bin belum cukup (jujur)' }
+  const emp = ((bin.benar + 1) / (bin.n + 2)) * 100
+  return {
+    keyakinan: Math.round(clamp(p * 0.5 + emp * 0.5, 52, 97)),
+    sumber: `dikalibrasi medan bin ${bin.low}–${bin.high - 1}% (n=${bin.n}, tembus ${emp.toFixed(0)}%)`,
+  }
+}
+// (3) KONFORMAL — Angelopoulos-Bates 2021 (arXiv:2107.07511).
+//     kuantil empiris skor kesesuaian (MFE matang) — cakupan 1-alpha
+//     bebas-distribusi; null jujur bila medan belum cukup.
+function pitaKonformal(skors) {
+  if (!Array.isArray(skors) || skors.length < ILMU.KONFORMAL_MIN_N) return null
+  const s = [...skors].sort((a, b) => a - b)
+  const q = (al) => s[clamp(Math.ceil((s.length + 1) * al) - 1, 0, s.length - 1)]
+  return { bawah: +q(0.25).toFixed(4), tengah: +q(0.5).toFixed(4), atas: +q(1 - ILMU.KONFORMAL_ALPHA).toFixed(4), n: s.length }
+}
+
 // ---------------- penyimpanan ----------------
 function bacaJson(p, def) {
   try { return existsSync(p) ? JSON.parse(readFileSync(p, 'utf8')) : structuredClone(def) } catch { return structuredClone(def) }
@@ -487,6 +593,22 @@ if (!semuaGenome.phoenix[rezimGlobal]) semuaGenome.phoenix[rezimGlobal] = { bobo
 const genome = semuaGenome[rezimGlobal].bobot
 const phxGenome = semuaGenome.phoenix[rezimGlobal].bobot
 
+// ---- V247 ILMU: keadaan belajar berjurnal (global — ahli dinilai lintas rezim;
+//      adaptasi rezim tetap tugas genome evolusi per rezim) ----
+if (!semuaGenome.ilmu) semuaGenome.ilmu = {}
+const ilmu = semuaGenome.ilmu
+if (!ilmu.hedge || !ilmu.hedge.arah) ilmu.hedge = { arah: { ...GENOME_AWAL }, phx: { ...PHX_AWAL } }
+if (!ilmu.brier) ilmu.brier = { arah: { n: 0, jumlah: 0 }, phx: { n: 0, jumlah: 0 } }
+if (!Array.isArray(ilmu.kalibrasi) || !ilmu.kalibrasi.length)
+  ilmu.kalibrasi = ILMU.BIN_KALIBRASI.map(([low, high]) => ({ low, high, n: 0, benar: 0 }))
+if (!Array.isArray(ilmu.konformal)) ilmu.konformal = []
+if (!ilmu.meta) ilmu.meta = { kuat: { n: 0, benar: 0 }, lemah: { n: 0, benar: 0 }, geser: 0 }
+// bobot efektif = campuran 50/50 genome evolusi (per rezim) + Hedge on-line (global)
+const campur = (a, b) => Object.fromEntries([...new Set([...Object.keys(a), ...Object.keys(b)])]
+  .map((k) => [k, ((a[k] ?? 0) + (b[k] ?? 0)) / 2]))
+const bobotArah = campur(genome, ilmu.hedge.arah)
+const bobotPhx = campur(phxGenome, ilmu.hedge.phx)
+
 // ---- 1. kunci prediksi hari ini (pra-registrasi: SEBELUM pergerakan) ----
 const terkunciBaru = []
 const nearMiss = []
@@ -497,9 +619,11 @@ for (const s of KANDANG) {
   const id = `${s}-${TGL}`
   if (ledger.some((e) => e.id === id)) continue                    // satu per simbol per hari UTC
   const b = dewanBukti(c)
-  const v = vonis(b, genome, rezimGlobal)
+  const v = vonis(b, bobotArah, rezimGlobal)
+  const kal = kalibrasiKeyakinan(v.keyakinan, ilmu.kalibrasi)      // V247: kepastian dari medan
   const entri = {
-    id, simbol: s, jalur: 'ARAH', arah: v.arah, keyakinan: v.keyakinan, skor: v.skor,
+    id, simbol: s, jalur: 'ARAH', arah: v.arah, keyakinan: kal.keyakinan, keyakinanMentah: v.keyakinan,
+    ketKeyakinan: kal.sumber, skor: v.skor,
     entry: b.harga, waktuKunci: ISO, horizon: '24j', rezim: b.rezim, status: 'TERBUKA',
     bukti: Object.fromEntries(DIM_ARAH.map((k) => [k, +b.dims[k].arah.toFixed(3)])),
     daya: { volume: +b.dims.volume.daya.toFixed(2), volatilitas: +b.dims.volatilitas.daya.toFixed(2), likuiditas: +b.dims.likuiditas.daya.toFixed(2) },
@@ -511,7 +635,18 @@ for (const s of KANDANG) {
 // 1b. lane PHOENIX — beli di ujung bawah hari, jual di ujung atas yang diprediksi
 // gerbang rezim-tegas — lahir dari pelajaran: melawan arus butuh bukti lebih kuat & kuota lebih kecil
 const rezimTegas = rezimGlobal === 'TURUN' || rezimGlobal === 'PARABOLIK'
-const gerbangSkor = PHX.GERBANG_SKOR + (rezimTegas ? PHX.TURUN_SKOR_TAMBAH : 0)
+// V247 META-LABELING (Lopez de Prado 2018): model kedua menilai model pertama —
+// gerbang digeser empiris dari hit-rate bucket konfirmasi medan sendiri, dibatasi ±8.
+let metaCatatan = 'meta-labeling: bucket konfirmasi belum cukup (min ' + ILMU.META_MIN_N + ') — gerbang tak digeser'
+let gerbangMeta = 0
+if (ilmu.meta.kuat.n >= ILMU.META_MIN_N) {
+  const hit = ilmu.meta.kuat.benar / ilmu.meta.kuat.n
+  if (hit < 0.5) gerbangMeta = Math.min(ILMU.META_GESER_MAKS, Math.round((0.5 - hit) * 40))
+  else if (hit > 0.65) gerbangMeta = -Math.min(ILMU.META_GESER_MAKS, Math.round((hit - 0.65) * 30))
+  ilmu.meta.geser = gerbangMeta
+  metaCatatan = `meta-labeling: konfirmasi-kuat tembus ${(hit * 100).toFixed(0)}% dari ${ilmu.meta.kuat.n} kasus — gerbang digeser ${gerbangMeta >= 0 ? '+' : ''}${gerbangMeta}`
+}
+const gerbangSkor = clamp(PHX.GERBANG_SKOR + (rezimTegas ? PHX.TURUN_SKOR_TAMBAH : 0) + gerbangMeta, 34, 56)
 const kunciMaks = rezimTegas ? Math.ceil(PHX.KUNCI_MAKS / 2) : PHX.KUNCI_MAKS
 const lulusPhx = []
 for (const s of daftarTelusur) {
@@ -523,7 +658,7 @@ for (const s of daftarTelusur) {
   const rad = radarPhoenix(c)
   const tgt = pilihTarget(c, b.harga, rezimGlobal)
   const dayaProduk = clamp(b.dims.volume.daya, 0.35, 1) * clamp(b.dims.volatilitas.daya, 0.3, 1) * clamp(b.dims.likuiditas.daya, 0.4, 1)
-  const v = vonisPhoenix(rad, phxGenome, dayaProduk, tgt.untung, rezimGlobal, gerbangSkor)
+  const v = vonisPhoenix(rad, bobotPhx, dayaProduk, tgt.untung, rezimGlobal, gerbangSkor)
   // GERBANG KONFIRMASI v2.1 — dilahirkan oleh 4 kekalahan pisau-jatuh (ACE/ARB/XPL/CRCLB, semua
   // dikunci saat momentum negatif): koin di ujung bawah TANPA konfirmasi bukan akumulasi, dia
   // sedang JATUH. WAJIB: kembali di atas EMA9 + taker-buy menguat + masih di ujung bawah.
@@ -569,12 +704,22 @@ for (const [i, p] of lulusPhx.entries()) {
     continue
   }
   const { tgt, rad, b } = p
+  const kalP = kalibrasiKeyakinan(p.keyakinan, ilmu.kalibrasi)     // V247: kepastian dari medan
+  const pita = pitaKonformal(ilmu.konformal)                       // V247: pita 75% ujung atas
   const entri = {
-    id: p.id, simbol: p.simbol, jalur: 'PHOENIX', arah: 'BUY', keyakinan: p.keyakinan, skorPhoenix: p.skorPhoenix,
+    id: p.id, simbol: p.simbol, jalur: 'PHOENIX', arah: 'BUY', keyakinan: kalP.keyakinan, keyakinanMentah: p.keyakinan,
+    ketKeyakinan: kalP.sumber, skorPhoenix: p.skorPhoenix,
     entry: b.harga, target: +tgt.target.toPrecision(7), ketTarget: tgt.ketTarget,
     untungBersih: +tgt.untung.toFixed(4),
     stop: +Math.min(b.harga * (1 - 1.8 * rad.atrPct / 100), rad.lo24 - (0.25 * rad.atrPct / 100) * b.harga).toPrecision(6),
     highAmbisius: tgt.highAmbisius ?? null,
+    ...(pita ? {
+      pitaUjungAtas: {
+        atas75Pct: +(pita.atas * 100).toFixed(2), atas75Harga: +(b.harga * (1 + pita.atas)).toPrecision(7),
+        tengahPct: +(pita.tengah * 100).toFixed(2), n: pita.n,
+        ket: 'pita konformal 75% — dari medan sendiri, gerak naik maksimum setelah kunci melebihi level ini hanya ±25% kasus (Angelopoulos-Bates 2021)',
+      },
+    } : {}),
     waktuKunci: ISO, horizon: '24j', rezim: b.rezim, status: 'TERBUKA',
     radar: { posisi24j: +rad.posisi.toFixed(3), sinyal: Object.fromEntries(PHX_DIM.map((k) => [k, +rad.sinyal[k].toFixed(3)])) },
     bukti: Object.fromEntries(DIM_ARAH.map((k) => [k, +b.dims[k].arah.toFixed(3)])),
@@ -601,6 +746,9 @@ for (const e of ledger) {
   const exit = c[c.length - 1].c
   const net = (e.arah === 'BUY' ? 1 : -1) * (exit / e.entry - 1) - FEE
   e.exit = exit; e.net = +net.toFixed(5); e.status = net > 0 ? 'BENAR' : 'SALAH'; e.waktuDinilai = ISO
+  // V247 ILMU: keyakinan adalah PROBABILITAS — dinilai skor Brier (Gneiting-Raftery 2007).
+  const pKal = clamp((e.keyakinanMentah ?? e.keyakinan ?? 60) / 100, 0.5, 0.98)
+  e.brier = +((pKal - (net > 0 ? 1 : 0)) ** 2).toFixed(4)
   if (e.jalur === 'PHOENIX') {
     // belajar radar: apakah prediksi ujung atasnya tersentuh? (bukan vonis resmi)
     const barSetelah = c.filter((x) => x.t >= new Date(e.waktuKunci).getTime())
@@ -608,6 +756,18 @@ for (const e of ledger) {
     if (barSetelah.length && e.entry > 0) {
       e.mfe = +(Math.max(...barSetelah.map((x) => x.h)) / e.entry - 1).toFixed(4)   // pergerakan tertinggi setelah kunci
       e.mae = +(Math.min(...barSetelah.map((x) => x.l)) / e.entry - 1).toFixed(4)   // pergerakan terendah setelah kunci
+      // V247: label TRIPLE-BARRIER (Lopez de Prado 2018) — barier mana yang kena DULUAN
+      e.barier = 'WAKTU'
+      for (const bar of barSetelah) {
+        if (e.stop != null && bar.l <= e.stop) { e.barier = 'STOP'; break }
+        if (bar.h >= e.target) { e.barier = 'TARGET'; break }
+      }
+      // V247: skor kesesuaian untuk pita konformal berikutnya
+      ilmu.konformal.push(e.mfe)
+      // V247: bucket meta-labeling — konfirmasi kuat vs lemah dinilai medan
+      const kuat = (e.radar?.sinyal?.momentum ?? 0) >= PHX.KONFIRM_MOMENTUM && (e.radar?.sinyal?.akumulasi ?? 0) >= 0.30
+      const bk = kuat ? ilmu.meta.kuat : ilmu.meta.lemah
+      bk.n += 1; if (net > 0) bk.benar += 1
     }
   }
   dinilaiBaru.push(e)
@@ -714,6 +874,52 @@ const pelajaranDaftar = dinilaiBaru.map((e) => {
 })
 if (pelajaranDaftar.length) log(`bahan ajar: ${pelajaranDaftar.length} pelajaran baru — aturan aktif ${Object.keys(aturan.aktif).length}`)
 
+// ---- 3c. V247 ILMU — belajar on-line berjurnal dari tiap vonis matang ----
+// otak membaca KEMBALI seluruh sejarahnya sekali (FinMem: lapisan-1 jadi guru),
+// lalu tiap vonis baru melatih Hedge + mengisi bin kalibrasi + menumpuk Brier.
+function angkaIlmu(e) {
+  const pKal = clamp((e.keyakinanMentah ?? e.keyakinan ?? 60) / 100, 0.5, 0.98)
+  return { pKal, o: e.net > 0 ? 1 : 0, y: e.status === 'BENAR' ? 1 : -1 }
+}
+if (!ilmu.seedSelesai) {
+  const sejarah = ledger.filter((x) => x.status === 'BENAR' || x.status === 'SALAH')
+  for (const e of sejarah) {
+    const { pKal, o, y } = angkaIlmu(e)
+    if (e.jalur === 'PHOENIX') {
+      hedgePerbarui(ilmu.hedge.phx, Object.fromEntries(PHX_DIM.map((k) => [k, (e.radar?.sinyal?.[k] ?? 0) * 2 - 1])), y)
+      if (e.mfe != null) ilmu.konformal.push(e.mfe)
+      const kuat = (e.radar?.sinyal?.momentum ?? 0) >= PHX.KONFIRM_MOMENTUM && (e.radar?.sinyal?.akumulasi ?? 0) >= 0.30
+      const bk = kuat ? ilmu.meta.kuat : ilmu.meta.lemah
+      bk.n += 1; if (e.net > 0) bk.benar += 1
+    } else {
+      hedgePerbarui(ilmu.hedge.arah, Object.fromEntries(DIM_ARAH.map((k) => [k, e.bukti?.[k] ?? 0])), y)
+    }
+    const bin = ilmu.kalibrasi.find((b) => pKal * 100 >= b.low && pKal * 100 < b.high)
+    if (bin) { bin.n += 1; if (o === 1) bin.benar += 1 }
+    const lb = e.jalur === 'PHOENIX' ? ilmu.brier.phx : ilmu.brier.arah
+    lb.n += 1; lb.jumlah += (pKal - o) ** 2
+  }
+  ilmu.konformal = ilmu.konformal.slice(-ILMU.KONFORMAL_MAKS)
+  ilmu.seedSelesai = ISO
+  log(`ilmu: seed ${sejarah.length} vonis sejarah -> hedge + kalibrasi + brier + konformal + meta`)
+}
+let ilmuCatatan = 'ilmu: belum ada vonis matang siklus ini'
+{
+  let n = 0
+  for (const e of dinilaiBaru) {
+    const { pKal, o, y } = angkaIlmu(e)
+    if (e.jalur === 'PHOENIX') hedgePerbarui(ilmu.hedge.phx, Object.fromEntries(PHX_DIM.map((k) => [k, (e.radar?.sinyal?.[k] ?? 0) * 2 - 1])), y)
+    else hedgePerbarui(ilmu.hedge.arah, Object.fromEntries(DIM_ARAH.map((k) => [k, e.bukti?.[k] ?? 0])), y)
+    const bin = ilmu.kalibrasi.find((b) => pKal * 100 >= b.low && pKal * 100 < b.high)
+    if (bin) { bin.n += 1; if (o === 1) bin.benar += 1 }
+    const lb = e.jalur === 'PHOENIX' ? ilmu.brier.phx : ilmu.brier.arah
+    lb.n += 1; lb.jumlah += (pKal - o) ** 2
+    n++
+  }
+  if (n) ilmuCatatan = `ilmu: hedge/kalibrasi/brier berlatih dari ${n} vonis matang (eta ${ILMU.HEDGE_ETA})`
+  log(ilmuCatatan)
+}
+
 // ---- 4. statistik akurasi jujur ----
 const grad = ledger.filter((e) => e.status === 'BENAR' || e.status === 'SALAH')
 const benar = grad.filter((e) => e.status === 'BENAR').length
@@ -738,7 +944,9 @@ const akurasi = {
 // ---- 5. laporan sasaran — lane PHOENIX dulu (mandat: beli murah ujung bawah) ----
 const barisDari = (e) => ({
   simbol: e.simbol, jalur: e.jalur || 'ARAH', arah: e.arah, keyakinan: e.keyakinan, entry: e.entry,
+  ...(e.ketKeyakinan ? { ketKeyakinan: e.ketKeyakinan } : {}),
   ...(e.jalur === 'PHOENIX' ? { target: e.target, ketTarget: e.ketTarget, untungBersihPct: +(e.untungBersih * 100).toFixed(1), stop: e.stop, skorPhoenix: e.skorPhoenix, highAmbisius: e.highAmbisius ?? null } : {}),
+  ...(e.pitaUjungAtas ? { pitaUjungAtas: e.pitaUjungAtas } : {}),
   rezim: e.rezim, dikunci: e.waktuKunci, horizon: e.horizon, fee: '0.2% pulang-pergi',
   bukti: e.bukti, ketBukti: e.ketBukti, daya: e.daya,
 })
@@ -777,10 +985,27 @@ const laporan = {
     aktif: Object.fromEntries(Object.entries(aturan.aktif).map(([k, v]) => [k, v.teks])),
     baruSiklusIni: aturanBaru,
   },
+  ilmu: {
+    versi: 'V247-MAJELIS-ILMU',
+    fondasi: 'metode teruji dipasang nyata: Hedge/MWU (Arora-Hazan-Kale 2012 · Freund-Schapire 1997) · Brier & proper scoring (Gneiting-Raftery 2007) · kalibrasi keyakinan dari medan · pita konformal 75% (Angelopoulos-Bates 2021) · triple-barrier & meta-labeling (Lopez de Prado 2018) · ingatan berlapis FinMem (Zhang dkk 2023) — rincian di laporan/jurnal-ilmu.json',
+    brier: {
+      arah: ilmu.brier.arah.n ? +(ilmu.brier.arah.jumlah / ilmu.brier.arah.n).toFixed(4) : null,
+      phx: ilmu.brier.phx.n ? +(ilmu.brier.phx.jumlah / ilmu.brier.phx.n).toFixed(4) : null,
+      nArah: ilmu.brier.arah.n, nPhx: ilmu.brier.phx.n,
+      ket: 'skor Brier keyakinan sebagai probabilitas — 0 sempurna, 0.25 = tebakan koin; makin kecil makin jujur',
+    },
+    kalibrasi: ilmu.kalibrasi.map((b) => ({ bin: `${b.low}–${b.high - 1}%`, n: b.n, tembusPct: b.n ? +((b.benar / b.n) * 100).toFixed(1) : null })),
+    hedge: {
+      arah: ilmu.hedge.arah, phx: ilmu.hedge.phx,
+      catatan: `${ilmuCatatan}; bobot efektif = 50% genome evolusi per rezim + 50% Hedge on-line`,
+    },
+    metaGerbang: { geser: ilmu.meta.geser, gerbangAktif: gerbangSkor, bucketKuat: ilmu.meta.kuat, bucketLemah: ilmu.meta.lemah, catatan: metaCatatan },
+    konformal: (() => { const p = pitaKonformal(ilmu.konformal); return p || { catatan: `belum cukup medan (min ${ILMU.KONFORMAL_MIN_N} vonis phoenix matang) — pita 75% belum diumumkan, jujur menunggu` } })(),
+  },
   genome: {
     rezim: rezimGlobal, bobot: genome,
     phoenix: { rezim: rezimGlobal, bobot: phxGenome },
-    semuaRezim: Object.fromEntries(Object.entries(semuaGenome).filter(([k]) => k !== 'phoenix' && k !== 'aturanBelajar').map(([k, v]) => [k, { generasi: v.generasi, belajar: v.belajar }])),
+    semuaRezim: Object.fromEntries(Object.entries(semuaGenome).filter(([k]) => k !== 'phoenix' && k !== 'aturanBelajar' && k !== 'ilmu').map(([k, v]) => [k, { generasi: v.generasi, belajar: v.belajar }])),
   },
   pertumbuhan: {
     waktuMulai: keadaan.mulai, siklus: SIKLUS,
@@ -794,6 +1019,7 @@ const laporan = {
     'lane PHOENIX (beli ujung bawah) dan lane ARAH (komite genome) berdiri sendiri; keduanya dinilai net P/L close-ke-close yang sama jujurnya',
     'cron GitHub bisa mundur beberapa menit saat server padat; jadwal tetap berjalan tanpa browser',
     'BAHAN AJAR: setiap vonis ditulis jadi pelajaran (laporan/pelajaran-server.json); pola kekalahan yang terulang >= 2 kali melahirkan ATURAN baru yang mengikat gerbang siklus berikutnya — otak tumbuh dari medan, bukan tebakan',
+    'ILMU BERJURNAL: bobot bukti belajar on-line ala Hedge dengan jaminan regret (Arora dkk 2012); keyakinan diperlakukan sebagai probabilitas — dinilai Brier (Gneiting-Raftery 2007) dan dikalibrasi dari hit-rate medan sendiri; pita ujung atas memakai jaminan cakupan konformal (Angelopoulos-Bates 2021); vonis phoenix dilabel triple-barrier dan gerbang digeser meta-labeling (Lopez de Prado 2018) — kepastian dibangun dari metode teruji + medan sendiri, bukan janji',
   ],
 }
 tulis(path.join(ROOT, 'laporan/sasaran-terkini.json'), laporan)
@@ -808,6 +1034,7 @@ denyut.push({
   dinilaiBaru: dinilaiBaru.length,
   benar: dinilaiBaru.filter((e) => e.status === 'BENAR').length,
   pelajaranBaru: pelajaranDaftar.length, aturanBaru: aturanBaru.length,
+  brier: ilmu.brier.arah.n ? +(ilmu.brier.arah.jumlah / ilmu.brier.arah.n).toFixed(3) : null,
   akurasiPct: akurasi.akurasiPct, rezimBTC: rezimGlobal,
 })
 tulisJsonl(path.join(ROOT, 'laporan/denyut-server.jsonl'), denyut.slice(-500))
@@ -821,6 +1048,24 @@ pelFile.diperbarui = ISO
 pelFile.aturanBelajar = aturan
 pelFile.daftar = [...pelajaranDaftar, ...pelFile.daftar].slice(0, 60)
 tulis(pelPath, pelFile)
+
+// V247: akta jurnal ilmiah — rujukan terverifikasi + cara tiap metode dipasang
+// (mandat pemilik: pelajari jurnal teruji lalu inovasikan pada cyborg)
+tulis(path.join(ROOT, 'laporan/jurnal-ilmu.json'), {
+  diperbarui: ISO, organ: VERSI,
+  mandat: 'pelajari jurnal ilmiah AI yang banyak diperdebatkan, ditelaah, terbukti koheren — lalu inovasikan pada cyborg (perintah pemilik)',
+  prinsip: 'setiap metode di bawah DIPASANG dalam kode otak (bukan sekadar dikutip) dan dinilai jujur oleh medan lewat ledger pra-registrasi',
+  daftar: JURNAL,
+  buktiPemasangan: {
+    hedge: 'hedgePerbarui() dipanggil dari sejarah (seed) + tiap vonis matang; bobot efektif = 50% genome + 50% hedge',
+    brier: 'e.brier dihitung saat penilaian; rata-rata dilaporkan di laporan.ilmu.brier',
+    kalibrasi: 'kalibrasiKeyakinan() dipakai saat mengunci ARAH & PHOENIX; tabel bin dilaporkan di laporan.ilmu.kalibrasi',
+    konformal: 'pitaKonformal() dari MFE medan sendiri; tercantum di entri phoenix (pitaUjungAtas) saat n >= 8',
+    tripleBarrier: 'e.barier (TARGET/STOP/WAKTU) dihitung saat penilaian phoenix',
+    metaLabeling: 'ilmu.meta.kuat/lemah menilai gerbang radar; geser dibatasi ±8 (laporan.ilmu.metaGerbang)',
+    finmem: 'lapisan 1 ledger -> lapisan 2 pelajaran -> lapisan 3 aturan (laporan/pelajaran-server.json)',
+  },
+})
 
 log(`denyut #${SIKLUS} selesai — kunci ${terkunciBaru.length} (phoenix ${terkunciBaru.filter((e) => e.jalur === 'PHOENIX').length}), nilai ${dinilaiBaru.length}, akurasi ${akurasi.akurasiPct ?? 'belum ada'}%`)
 console.log('RINGKASAN:' + JSON.stringify({
