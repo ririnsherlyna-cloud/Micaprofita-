@@ -104,19 +104,47 @@ sejak V246 otak server punya dua lane yang berdampingan jujur:
   4. *kompresi* — rentang 8 jam menyempit jauh di bawah rentang 2
      hari (pegas tertekan);
   5. *momentum* — harga kembali di atas EMA9, RSI naik dari dasar.
-- **Prediksi ujung atas** — target jual dihitung dari level nyata
-  yang terjangkau: tengah rentang → puncak 24 jam → swing high 7
-  hari, dibatasi +12% agar tetap realistis, dan **wajib memberi ≥ 1%
-  untung bersih setelah fee 0,2%** — kalau tidak, koin itu jujur
-  dinyatakan tak layak.
+- **Gerbang konfirmasi (v2.1, lahir dari kekalahan)** — 4 prediksi
+  pertama yang meleset (ACE/ARB/XPL/CRCLB, net −11,35%) semuanya
+  dikunci saat harga masih di bawah EMA9: itu pisau jatuh, bukan
+  akumulasi. Kini radar **wajib** melihat tiga hal sekaligus sebelum
+  membeli: harga kembali di atas EMA9, taker-buy 12 jam menguat
+  (beli diam-diam nyata), dan harga masih di sepertiga bawah rentang.
+  Tanpa konfirmasi, koin hanya jadi kandidat dengan alasan terbuka.
+- **Tangga target (v2.1)** — pelajaran `targetKena 0/6`: memilih
+  swing tertinggi (+12%) membuat prediksi ujung atas jadi fantasi
+  dalam horizon 24 jam. Kini target = **magnet nyata TERDEKAT** yang
+  memberi ≥ 1% untung bersih setelah fee: tengah rentang → puncak
+  24 jam → swing 7 hari. Level tertinggi dicatat jujur sebagai
+  *ujung atas ambisius* — bahan belajar, bukan sasaran resmi.
+- **Rezim tegas** — saat BTC TURUN/PARABOLIK, melawan arus harus
+  lebih meyakinkan: gerbang skor +10, kuota dibelah (3/hari), target
+  dibatasi +6%. Arah komite yang melawan rezim juga dipotong
+  keyakinannya (pelajaran LINK −9,2% saat rezim NAIK).
 - **Kuota terbaik** — maksimal 6 prediksi phoenix terkunci per hari
-  (skor × untung tertinggi); sisanya ditampilkan sebagai kandidat
-  dengan alasan terbuka. Bila seluruh pasar sedang di puncak, radar
-  jujur melaporkan *zona kosong* — tidak pernah memaksa beli mahal.
+  (skor × untung realistis, maks 6%); sisanya ditampilkan sebagai
+  kandidat dengan alasan terbuka. Bila seluruh pasar sedang di
+  puncak, radar jujur melaporkan *zona kosong* — tidak pernah memaksa
+  beli mahal.
 - **Penilaian sama jujurnya** — prediksi phoenix dinilai net P/L
   close-ke-close seperti lane ARAH, plus pencatatan *target kena*
-  (apakah ujung atas yang diprediksi tersentuh) sebagai bahan belajar
-  radar.
+  dan **MFE/MAE** (seberapa jauh harga benar-benar bergerak setelah
+  dikunci) sebagai bahan belajar radar.
+
+### Bahan ajar — bagaimana otak matang dari kejadian
+
+Mandat pemilik: *"dari kejadian ini agar jadi bahan ajar yang dapat
+dipahami dan mengasah kesadarannya akan pasar."* Maka sejak v2.1
+setiap vonis (benar/salah) ditulis menjadi **pelajaran** di
+`laporan/pelajaran-server.json` — lengkap dengan *kenapa* (bukti mana
+yang keliru) dan *pelajaran* (kalimat yang bisa dipahami manusia).
+Bila pola kekalahan yang sama terulang **≥ 2 kali**, otak menetapkan
+**ATURAN baru yang mengikat** gerbang siklus berikutnya — misalnya
+"radar dilarang membeli di bawah EMA9" dan "target = magnet terdekat".
+Aturan, pola terpantau, dan tanggal lahirnya tersimpan permanen di
+genome (`otak/genome-server.json`) dan tampil di dasbor seksi *Bahan
+Ajar*: kesadaran pasar yang tumbuh bisa dibaca siapa pun, bukan
+klaim.
 
 ## 5. TERIMA-PASANG (tanpa konfigurasi)
 
