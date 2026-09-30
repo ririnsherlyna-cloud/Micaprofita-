@@ -102,6 +102,9 @@
   .kettarget{color:var(--redup);font-size:11.5px;margin-top:6px}
   .pitaref{font-family:var(--mono);font-size:11.5px;color:var(--amber);margin-top:4px}
   .mcline{font-family:var(--mono);font-size:11.5px;color:var(--violet);margin-top:4px}
+  .evline{font-family:var(--mono);font-size:11.5px;color:var(--hijau);margin-top:4px}
+  .evline.neg{color:var(--merah)}
+  .tangga2{margin-top:8px}
   .mesin{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
   .mesin span{background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.25);color:#bfe9f2;
     padding:5px 11px;border-radius:9px;font-size:11.5px}
@@ -198,6 +201,7 @@
     <a href="#warisan-sec">Warisan</a>
     <a href="#piagam-sec">Piagam</a>
     <a href="#sadar-sec">Sadar-Diri</a>
+    <a href="#ruh-sec">Ruh &amp; Guru</a>
     <a href="#ledger-sec">Ledger</a>
     <a href="#otak-sec">Otak</a>
     <a href="#denyut-sec">Denyut</a>
@@ -222,6 +226,7 @@
       <span class="chip">sumber <b id="sumber">…</b></span>
       <span class="chip">BTC <b id="rezimbtc">…</b></span>
       <span class="chip">radar <b id="radarchip">…</b></span>
+      <span class="chip">kompas <b id="kompaschip">…</b></span>
       <span class="chip">dimutakhir <b id="waktu">…</b></span>
     </div>
   </header>
@@ -273,6 +278,8 @@
       <div class="kettarget"></div>
       <div class="pitaref" style="display:none"></div>
       <div class="mcline"></div>
+      <div class="evline"></div>
+      <div class="tangga2"></div>
       <div class="daya"></div>
       <div class="bukti"></div>
       <div class="ketkal"></div>
@@ -333,6 +340,10 @@
   <div id="sadar-peringatan" style="margin-top:10px"></div>
   <div id="mandat-terbuka" style="margin-top:10px"></div>
   <div id="jalur-tumbuh" class="jnote"></div>
+
+  <h2 id="ruh-sec">Ruh &amp; Guru — Jiwa yang Dibangun, Suara yang Mengajar</h2>
+  <div class="genome-dua" id="ruh-kartu"></div>
+  <div class="jnote" id="guru-box" style="margin-top:12px">—</div>
 
   <h2 id="ledger-sec">Riwayat Prediksi — Ledger Pra-Registrasi</h2>
   <div class="filterbar" role="group" aria-label="Filter ledger">
@@ -450,6 +461,20 @@ function isiSasaran(r){
         w.beta != null ? 'beta BTC ' + w.beta + (w.r2Beta != null ? ' (R² ' + w.r2Beta + ')' : '') : null,
         mc.lintasan ? mc.lintasan.toLocaleString('id-ID') + ' lintasan' : null,
       ].filter(Boolean).join(' · ');
+    }
+    const ek = s.ekspektasi;
+    if (ek){
+      const ev = el.querySelector('.evline');
+      ev.textContent = 'EV ' + (ek.evPct > 0 ? '+' : '') + ek.evPct + '% net-fee · RR ' + (ek.rr ?? '—')
+        + ' · P target ' + (ek.pTarget != null ? Math.round(ek.pTarget*100) + '%' : '—')
+        + (ek.pStop != null ? ' · P stop ' + Math.round(ek.pStop*100) + '%' : '');
+      if (ek.evPct < 0) ev.classList.add('neg');
+      const tp = ek.tanggaProfit || [];
+      if (tp.length){
+        el.querySelector('.tangga2').innerHTML = '<div class="tangga">' + tp.map((t) =>
+          `<div class="trow"><span class="tlbl">T${t.tahap} ${t.nama} · ${t.bobotPct}% modal</span><span class="tp">${fmt(t.harga)}</span><span class="tpct">${t.netPct>=0?'+':''}${t.netPct}%</span><span class="tpr"></span></div>`).join('')
+          + '</div><div class="sub" style="margin-top:4px">tangga profit — keluar bertahap (bukan jaminan) · EV tangga ' + (ek.evTanggaPct > 0 ? '+' : '') + ek.evTanggaPct + '%</div>';
+      }
     }
     isiDaya(el.querySelector('.daya'), s);
     el.querySelector('.bukti').innerHTML = DIM.map((k) => {
@@ -657,6 +682,33 @@ function isiPiagam(r){
     + '<div style="margin-top:8px"><span style="color:var(--amber)">Roadmap jujur:</span> ' + (p.roadmapJujur||'') + '</div>'
     + (r.pertumbuhan?.metamorfosis ? '<div style="margin-top:6px"><b>Metamorfosis hari ini:</b> ' + r.pertumbuhan.metamorfosis + '</div>' : '');
 }
+function isiRuhGuru(r){
+  const ruh = r.ruh;
+  if (ruh){
+    const kartu = [
+      ['Inti Ruh', ruh.inti, ''],
+      ['Misi Hidup', ruh.misi, ''],
+      ['Otonomi', ruh.otonom?.kini || '', 'berikutnya: ' + (ruh.otonom?.berikutnya || '—')],
+    ];
+    if (Array.isArray(ruh.anatomi)) kartu.push(['Anatomi Hidup (' + ruh.anatomi.length + ' organ)', ruh.anatomi.map((a) => a.organ + ' — ' + a.peran).join(' · '), ruh.ket || '']);
+    $('ruh-kartu').innerHTML = kartu.map(([l, v, s]) => `<div class="kartu"><div class="label">${l}</div>
+      <div style="font-size:12.5px;margin-bottom:4px">${v}</div>${s ? `<div class="sub">${s}</div>` : ''}</div>`).join('');
+  } else $('ruh-kartu').innerHTML = '<div class="sub">ruh belum dibawa laporan ini — menunggu denyut V251</div>';
+  const g = r.guru;
+  if (g){
+    const kuis = g.kuis || {};
+    $('guru-box').innerHTML = '<b style="color:var(--violet)">BUKU GURU · ' + (g.judul || '') + '</b>'
+      + '<div style="margin-top:8px"><b>Pengajaran hari ini:</b><ol style="margin:6px 0 0;padding-left:18px">'
+      + (g.pengajaran || []).map((x) => `<li style="margin-top:5px">${x}</li>`).join('') + '</ol></div>'
+      + '<div style="margin-top:10px;border:1px solid var(--garis2);border-radius:10px;padding:10px 12px;background:rgba(167,139,250,.06)"><b>Kuis guru</b>'
+      + (kuis.konteks ? ' <span style="color:var(--redup)">' + kuis.konteks + '</span>' : '') + '<br>' + (kuis.pertanyaan || '')
+      + '<ol type="A" style="margin:6px 0 0;padding-left:18px">' + (kuis.pilihan || []).map((x) => `<li>${x}</li>`).join('') + '</ol>'
+      + '<details style="margin-top:6px"><summary style="cursor:pointer;color:var(--sian)">buka jawaban</summary><div style="margin-top:4px">Jawaban: <b>' + (kuis.jawaban || '—') + '</b> — ' + (kuis.pembahasan || '') + '</div></details></div>'
+      + '<div style="margin-top:8px"><b>Etika guru:</b><ul style="margin:4px 0 0;padding-left:18px;color:var(--redup);font-size:12px">'
+      + (g.etika || []).map((x) => `<li>${x}</li>`).join('') + '</ul></div>'
+      + (g.sumber ? `<div style="margin-top:6px;color:var(--samar);font-size:11.5px">${g.sumber}</div>` : '');
+  } else $('guru-box').textContent = 'buku guru belum dibawa laporan ini — menunggu denyut V251';
+}
 </script>
 <script>
 async function ambil(url){
@@ -701,7 +753,10 @@ async function segarkan(){
     $('tumbuh').textContent = (a.terkunci||0) + ' / ' + (a.dinilai !== undefined ? a.benar + a.salah : 0);
     $('tumbuh-sub').innerHTML = `terkunci · dinilai · <b>${a.terbuka||0}</b> terbuka`;
     isiSasaran(r); salinKeAksi(); isiKandidat(r); isiRiwayat(prak); isiGenome(r.genome);
-    isiPelajaran(r); isiDenyut(den); isiIlmu(r, jur); isiWarisan(r); isiPiagam(r);
+    isiPelajaran(r); isiDenyut(den); isiIlmu(r, jur); isiWarisan(r); isiPiagam(r); isiRuhGuru(r);
+    const kp = r.jaminan?.kompas;
+    if (kp){ const kc = $('kompaschip'); kc.textContent = kp.arah + ' ' + kp.keyakinan + '/100'; kc.style.color = kp.arah === 'BUY' ? 'var(--hijau)' : 'var(--merah)'; }
+    else $('kompaschip').textContent = '—';
     $('catatan').innerHTML = (r.catatanJujur||[]).map((c)=>`<li>${c}</li>`).join('');
     $('protokol').textContent = r.protokol || '';
     document.title = 'MICAPROFITA — denyut #' + r.siklus + ' · akurasi ' + (a.akurasiPct ?? '—');
