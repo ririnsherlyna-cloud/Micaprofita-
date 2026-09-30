@@ -93,6 +93,9 @@
   .badgephx{display:inline-block;background:rgba(251,191,36,.14);color:var(--amber);font-family:var(--mono);
     font-weight:700;font-size:10.5px;padding:2px 8px;border-radius:7px;margin-left:6px;vertical-align:middle}
   .radarline{font-family:var(--mono);font-size:11.5px;color:var(--sian);margin-top:4px}
+  .pitaref{font-family:var(--mono);font-size:11.5px;color:var(--amber);margin-top:3px}
+  .ketkal{color:var(--redup);font-size:11.5px;margin-top:3px}
+  .jnote{background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.25);border-radius:12px;padding:12px 14px;margin-top:10px;font-size:12.5px;color:#bfe9f2}
   @media(max-width:520px){.angka-besar{font-size:28px}.dim{grid-template-columns:70px 52px 1fr}}
 </style>
 </head>
@@ -149,6 +152,8 @@
         <div class="teks"><span>keyakinan</span><b class="knum"></b></div>
         <div class="rel"><i></i></div>
       </div>
+      <div class="ketkal"></div>
+      <div class="pitaref" style="display:none"></div>
       <div class="bukti"></div>
       <span class="chiprezim"></span>
     </div>
@@ -164,6 +169,19 @@
     <tbody id="pelajaran"><tr><td colspan="6" style="color:var(--redup)">—</td></tr></tbody>
   </table></div>
 
+  <h2>Jurnal Ilmu — Fondasi Ilmiah Otak (dipasang, bukan sekadar dikutip)</h2>
+  <div id="ilmu-fondasi" style="font-size:13px;color:var(--redup);margin-bottom:12px">—</div>
+  <div class="ringkas" id="ilmu-kartu"></div>
+  <div class="gulir"><table class="tabel">
+    <thead><tr><th>Keyakinan (bin)</th><th>Kasus medan</th><th>Tembus nyata</th><th>Artinya</th></tr></thead>
+    <tbody id="ilmu-kalibrasi"><tr><td colspan="4" style="color:var(--redup)">—</td></tr></tbody>
+  </table></div>
+  <div style="height:10px"></div>
+  <div class="gulir"><table class="tabel">
+    <thead><tr><th>Jurnal teruji</th><th>Penulis</th><th>Tahun</th><th>Terbitan</th><th>Dipasang sebagai</th></tr></thead>
+    <tbody id="ilmu-jurnal"><tr><td colspan="5" style="color:var(--redup)">—</td></tr></tbody>
+  </table></div>
+
   <h2>Kandidat Lain</h2>
   <div class="gulir"><table class="tabel kandidat">
     <thead><tr><th>Simbol</th><th>Arah</th><th>Keyakinan</th><th>Entry</th><th>Rezim</th><th>Keterangan</th></tr></thead>
@@ -172,7 +190,7 @@
 
   <h2>Riwayat Prediksi — Ledger Pra-Registrasi</h2>
   <div class="gulir"><table class="tabel">
-    <thead><tr><th>Dikunci</th><th>Simbol</th><th>Arah</th><th>Entry</th><th>Status</th><th>Exit</th><th>Net</th></tr></thead>
+    <thead><tr><th>Dikunci</th><th>Simbol</th><th>Arah</th><th>Entry</th><th>Status</th><th>Exit</th><th>Net</th><th>Brier</th><th>Barier</th></tr></thead>
     <tbody id="riwayat"></tbody>
   </table></div>
 
@@ -228,6 +246,13 @@ function isiSasaran(r){
       t.textContent = 'sasaran jual ' + fmt(s.target) + ' · untung bersih +' + s.untungBersihPct + '%' + (s.stop ? ' · stop ' + fmt(s.stop) : '')
         + (s.highAmbisius ? ' · ujung atas ambisius ' + fmt(s.highAmbisius) : '');
     }
+    if (s.pitaUjungAtas){
+      const p = el.querySelector('.pitaref'); p.style.display = 'block';
+      p.textContent = 'pita konformal 75%: naik maksimum ±' + s.pitaUjungAtas.atas75Pct + '% (≈ ' + fmt(s.pitaUjungAtas.atas75Harga) + ') · tengah +' + s.pitaUjungAtas.tengahPct + '% · n=' + s.pitaUjungAtas.n;
+    }
+    if (s.ketKeyakinan){
+      const k = el.querySelector('.ketkal'); k.textContent = s.ketKeyakinan;
+    }
     if (s.skorPhoenix){
       const rl = el.querySelector('.radarline');
       if (rl) rl.textContent = 'skor radar ' + s.skorPhoenix + ' — beli ujung bawah, jual ujung atas yang diprediksi';
@@ -256,15 +281,17 @@ function isiKandidat(r){
 function isiRiwayat(rows){
   const tb = $('riwayat');
   const terakhir = rows.slice(-30).reverse();
-  if (!terakhir.length){ tb.innerHTML = '<tr><td colspan="7" style="color:var(--redup)">ledger kosong</td></tr>'; return; }
+  if (!terakhir.length){ tb.innerHTML = '<tr><td colspan="9" style="color:var(--redup)">ledger kosong</td></tr>'; return; }
   tb.innerHTML = terakhir.map((e) => {
     const net = e.net !== undefined ? ((e.net*100).toFixed(2)+'%') : '—';
     const cls = e.net !== undefined ? (e.net > 0 ? 'net-pos' : 'net-neg') : '';
     const wkt = (e.waktuKunci||'').replace('T',' ').slice(5,16);
+    const barier = e.barier ? (e.barier === 'TARGET' ? '<span style="color:var(--hijau)">TARGET</span>' : e.barier === 'STOP' ? '<span style="color:var(--merah)">STOP</span>' : '<span style="color:var(--redup)">WAKTU</span>') : '—';
     return `<tr><td>${wkt} UTC</td><td><b>${e.simbol}</b>${e.jalur==='PHOENIX'?' <span style="color:var(--amber)">PHX</span>':''}</td>
       <td class="${e.arah==='BUY'?'net-pos':'net-neg'}">${e.arah}</td><td>${fmt(e.entry)}</td>
       <td><span class="st ${e.status}">${e.status||'—'}</span></td>
-      <td>${e.exit ? fmt(e.exit) : '—'}</td><td class="${cls}">${net}</td></tr>`;
+      <td>${e.exit ? fmt(e.exit) : '—'}</td><td class="${cls}">${net}</td>
+      <td>${e.brier !== undefined ? e.brier.toFixed(3) : '—'}</td><td>${barier}</td></tr>`;
   }).join('');
 }
 function isiPelajaran(r){
@@ -306,6 +333,36 @@ function isiGenome(g){
   $('generasi').textContent = g ? (g.semuaRezim?.[g.rezim]?.generasi ?? 0) : '—';
   $('generasi-sub').innerHTML = `generasi · rezim <b>${g?.rezim || '—'}</b>`;
 }
+function isiIlmu(r, jurnalFile){
+  const i = r.ilmu;
+  if (!i){ $('ilmu-fondasi').textContent = 'otak belum membawa seksi ilmu — menunggu denyut baru'; return; }
+  $('ilmu-fondasi').textContent = i.fondasi;
+  const b = i.brier || {};
+  const brierTeks = (v, n) => v === null || v === undefined ? '—' : v.toFixed(3) + ' <span style="color:var(--redup);font-size:.8em">(n=' + n + ')</span>';
+  const kartu = [
+    ['Skor Brier — Komite ARAH', brierTeks(b.arah, b.nArah), 'makin kecil makin jujur · tebakan koin = 0.250'],
+    ['Skor Brier — Radar Phoenix', brierTeks(b.phx, b.nPhx), 'keyakinan diperlakukan sebagai probabilitas'],
+    ['Gerbang Radar Aktif', (i.metaGerbang?.gerbangAktif ?? '—') + (i.metaGerbang?.geser ? ' <span style="color:var(--amber)">(meta ' + (i.metaGerbang.geser>0?'+':'') + i.metaGerbang.geser + ')</span>' : ''), i.metaGerbang?.catatan || ''],
+    ['Pita Konformal 75%', i.konformal?.atas !== undefined ? '+' + (i.konformal.atas*100).toFixed(1) + '% <span style="color:var(--redup);font-size:.8em">n=' + i.konformal.n + '</span>' : 'menunggu medan', i.konformal?.catatan || 'gerak naik maksimum setelah kunci melebihi level ini hanya ±25% kasus'],
+  ];
+  $('ilmu-kartu').innerHTML = kartu.map(([l, v, s]) => `<div class="kartu"><div class="label">${l}</div>
+    <div class="angka-besar" style="font-size:24px">${v}</div><div class="sub">${s}</div></div>`).join('');
+  const kal = i.kalibrasi || [];
+  $('ilmu-kalibrasi').innerHTML = kal.length ? kal.map((x) => {
+    const arti = x.tembusPct === null ? 'belum ada kasus medan — keyakinan mentah dipakai jujur'
+      : x.tembusPct < 30 ? 'bin ini SUKA MELESAT — keyakinan baru dari bin ini diturunkan otomatis'
+      : x.tembusPct < 48 ? 'lemah — keyakinan dicampur 50/50 dengan kebenaran medan'
+      : 'terbukti — keyakinan bin ini dipercaya';
+    return `<tr><td>${x.bin}</td><td>${x.n}</td><td class="${x.tembusPct===null?'':x.tembusPct<30?'net-neg':x.tembusPct<48?'':'net-pos'}">${x.tembusPct===null?'—':x.tembusPct+'%'}</td>
+      <td style="color:var(--redup);font-family:inherit">${arti}</td></tr>`;
+  }).join('') : '<tr><td colspan="4" style="color:var(--redup)">—</td></tr>';
+  const jd = jurnalFile?.daftar || [];
+  $('ilmu-jurnal').innerHTML = jd.length ? jd.map((j) => `<tr>
+    <td style="font-family:inherit"><a href="${j.rujukan}" target="_blank" rel="noopener" style="color:var(--sian);text-decoration:none">${j.judul}</a></td>
+    <td>${j.penulis}</td><td>${j.tahun}</td><td style="font-family:inherit;font-size:11.5px">${j.terbitan}</td>
+    <td style="font-family:inherit;font-size:11.5px;color:var(--redup)">${j.penerapan}</td></tr>`).join('')
+    : '<tr><td colspan="5" style="color:var(--redup)">akta jurnal belum tersedia</td></tr>';
+}
 function isiDenyut(rows){
   $('denyut').innerHTML = rows.slice(-12).reverse().map((d) =>
     `<div class="baris"><span class="w">${(d.waktu||'').replace('T',' ').slice(0,19)} UTC</span>
@@ -321,9 +378,11 @@ async function ambil(url){
 function parseJsonl(t){ return t.split('\n').filter(l=>l.trim()).map(l=>{try{return JSON.parse(l)}catch{return null}}).filter(Boolean); }
 async function segarkan(){
   try{
-    const [teksLap, teksPrak, teksDen] = await Promise.all([
-      ambil('sasaran-terkini.json'), ambil('prakira-server.jsonl'), ambil('denyut-server.jsonl')]);
+    const [teksLap, teksPrak, teksDen, teksJur] = await Promise.all([
+      ambil('sasaran-terkini.json'), ambil('prakira-server.jsonl'), ambil('denyut-server.jsonl'),
+      ambil('jurnal-ilmu.json').catch(() => '{}')]);
     const r = JSON.parse(teksLap), prak = parseJsonl(teksPrak), den = parseJsonl(teksDen);
+    let jur = {}; try { jur = JSON.parse(teksJur); } catch {}
     $('galat').style.display = 'none';
     $('siklus').textContent = '#' + r.siklus;
     $('sumber').textContent = r.sumber?.host || '—';
@@ -339,7 +398,7 @@ async function segarkan(){
     $('ak7-sub').textContent = 'dinilai ' + (j7.dinilai||0) + ' · benar ' + (j7.benar||0);
     $('tumbuh').textContent = (a.terkunci||0) + ' / ' + (a.dinilai !== undefined ? a.benar + a.salah : 0);
     $('tumbuh-sub').innerHTML = `prediksi terkunci · dinilai · <b>${a.terbuka||0}</b> terbuka`;
-    isiSasaran(r); isiKandidat(r); isiRiwayat(prak); isiGenome(r.genome); isiPelajaran(r); isiDenyut(den);
+    isiSasaran(r); isiKandidat(r); isiRiwayat(prak); isiGenome(r.genome); isiPelajaran(r); isiDenyut(den); isiIlmu(r, jur);
     $('catatan').innerHTML = (r.catatanJujur||[]).map((c)=>`<li>${c}</li>`).join('');
     $('protokol').textContent = r.protokol || '';
     document.title = 'MICAPROFITA — denyut #' + r.siklus + ' · akurasi ' + (a.akurasiPct ?? '—');
