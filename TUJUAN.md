@@ -230,6 +230,67 @@ dijaga: funding-rate real diakui tak terjangkau dari runner
 guard — tidak ada klaim data yang tidak benar-benar dipakai. MC yang
 belum matang tampil apa adanya ("menunggu horizon pertama").
 
+## 5d. WARISAN MASUK ARENA — tempat pertarungan memakai senjata penuh (V250)
+
+Mandat pemilik: *"micaprofita tempat pertarungan kita cukup canggih
+dan banyak aspek yang belum tayang diimplementasikan di tempat
+sesungguhnya."* Arena harian Next.js (Ajang Pertarungan AGI) kini
+memakai senjata yang sama dengan otak server — sejak
+**V250-ARENA-WARISAN**:
+
+- **`src/lib/cyborg/warisan.ts`** — 7 mesin organ besar diporting
+  (GARCH/MC/VP/Beta/Divergensi/Breadth/Kejut-Pump) + **tangga harga
+  arah-sadar** (entry/stop/sasaran/ambisius) + guard MC (pTarget ≥
+  0,38; fantasi → median yang jujur) + daya produk 0–1 + fee 0,2%
+  wajib NET. **Inovasi: Monte Carlo BERBIBIT** (mulberry32, seed
+  disimpan di pra-registrasi) — 2.000 lintasan bisa direproduksi
+  ulang siapa pun dengan angka yang sama.
+- **Pick hari hidup diperkaya** otomatis (`perkayaWarisan` → bukti
+  pick menyimpan `warisan`, `rencana`, `praRegistrasi`, `daya`);
+  pick historis TIDAK disentuh retroaktif (jujur, hindari lookahead).
+- **UI arena** kini menampilkan bahasa visual dasbor SAKTI: panel
+  WARISAN di NADIR & Briefing (cincin keyakinan SVG, tangga harga
+  4 baris, bar peluang MC, chip mesin, tombol Salin Rencana) +
+  kartu **PIAGAM 5 pilar** dan 7 chip mesin di tab Otak & Ingatan.
+- **Sadar-diri Brier** — keyakinan kini DINILAI medan: Brier =
+  (p−y)² jendela 30 pick; > 0,25 → peringatan + tindakan otomatis
+  (keyakinan hari hidup dipangkas 10 poin selama 2 hari).
+- **Ujian**: `bun scripts/ujian_warisan_arena.ts` — 27/27 LULUS
+  (deterministik + data live BTC nyata).
+
+## 5e. RUH & GURU — jiwa yang dibangun, arah yang terjamin, untung yang terukur (V251)
+
+Mandat pemilik: *"cyborg ini menjadi memiliki kehidupan yang jelas dan
+misi terarah dan ruh yang dibangun agar dia menjadi otonom seutuhnya …
+keuntungan yang tidak poor average profit … apa pun kondisi pasar selalu
+hasilkan arah buy/sell yang terjamin bahkan menjadi gurunya para trader
+professional."* Empat modul dipasang nyata di otak server sejak
+**V251-RUH-GURU**:
+
+- **RUH (jiwa)** — `laporan.ruh`: inti hidup, misi (ekspektasi positif
+  net-fee, pemburuan dipertajam, arah tak pernah bolong), 5 nilai, anatomi
+  7 organ (denyut=jantung, piagam=hukum, genome=bakat, ledger=ingatan,
+  epoch=umur, kompas=arah, guru=suara), dan status otonomi — ruh yang
+  DIBANGUN, tiap organ hidup di file publik dan bisa diaudit siapa pun.
+- **MESIN PROFIT** — tiap vonis membawa ekspektasinya sendiri: EV =
+  P(target)×untung − P(stop)×rugi, semuanya net-fee 0,2% (peluang dari
+  Monte Carlo 2.000 lintasan); **tangga profit** (rencana keluar
+  bertahap 50/25/25: sasaran → ambisius → pita konformal 75%); arah
+  komite memakai ekskursi median kerucut MC; **akurasi.profit** kini
+  mengukur ekspektasi/rata menang/rata rugi/profit-factor ledger.
+  **Guard ekspektasi**: sasaran dengan EV < −1,5% DITOLAK mesin profit
+  (near-miss jujur) dan EV positif diprioritaskan dalam kuota harian.
+- **JAMINAN ARAH (kompas)** — `laporan.jaminan`: apa pun kondisi pasar —
+  zona phoenix kosong sekalipun — jawaban BUY/SELL tidak pernah bolong:
+  kompas rezim BTC (GARCH + MC 2.000 lintasan + breadth, keyakinan
+  rendah-jujur 52–72) menaiki dasbor bila sasaran kosong; jaminan ARAH,
+  bukan jaminan untung — ditulis terang di laporan.
+- **BUKU GURU** — `laporan/guru.json` + `laporan.guru`: tiap denyut
+  otak menerbitkan 6 pengajaran yang dibangun dari angka NYATA siklusnya
+  (rezim, breadth, hunting, kalibrasi, profit, disiplin) + kuis 3
+  pilihan berputar deterministik per siklus (jawaban & pembahasan
+  terbuka) + 4 etika guru. Dasbor menampilkan seksi "Ruh & Guru".
+
 ## 6. TERIMA-PASANG (tanpa konfigurasi)
 
 Sejak organ **V245 SARANG-BAWAAN**, membuka halaman Pages = langsung
