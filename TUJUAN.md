@@ -146,7 +146,33 @@ genome (`otak/genome-server.json`) dan tampil di dasbor seksi *Bahan
 Ajar*: kesadaran pasar yang tumbuh bisa dibaca siapa pun, bukan
 klaim.
 
-## 5. TERIMA-PASANG (tanpa konfigurasi)
+## 5. ILMU BERJURNAL — fondasi ilmiah otak (dipasang, bukan dikutip)
+
+Mandat pemilik: *"pelajari banyak jurnal ilmiah yang benar-benar
+banyak diperdebatkan, ditelaah, terbukti koheren — lalu inovasikan
+pada cyborg."* Sejak otak **V247-MAJELIS-ILMU v3.0**, lima metode
+berjurnal yang teruji lintas dekade kini HIDUP DI DALAM KODE otak
+server (akta rujukan + cara pemasangan: `laporan/jurnal-ilmu.json`):
+
+| Metode | Jurnal | Dipasang sebagai |
+|---|---|---|
+| Hedge / Multiplicative Weights Update | Arora–Hazan–Kale 2012 (*Theory of Computing*) · Freund–Schapire 1997 (*JCSS*) · Cesa-Bianchi–Lugosi 2006 | Bobot tiap dimensi bukti & sinyal radar belajar on-line dari tiap vonis matang (`w *= exp(-eta*loss)`) — dengan jaminan regret: komite tak jauh kalah dari ahli terbaiknya |
+| Proper Scoring / Brier | Brier 1950 · Gneiting–Raftery 2007 (*JASA*) | Keyakinan diperlakukan sebagai PROBABILITAS — dinilai skor Brier tiap penilaian; angkanya tampil jujur di dasbor (tebakan koin = 0,25) |
+| Kalibrasi keyakinan | turunan proper scoring | Keyakinan baru dipetakan ke hit-rate nyata bin medannya (Laplace) — kepastian dari medan sendiri, bukan karangan |
+| Conformal Prediction | Angelopoulos–Bates 2021 (arXiv:2107.07511) | Pita ujung atas 75% dari skor kesesuaian medan sendiri — jawaban atas "radar bahkan tahu harga high akan berapa" dengan jaminan cakupan; jujur menunggu bila n < 8 |
+| Triple-Barrier & Meta-Labeling | López de Prado 2018 (*Advances in Financial Machine Learning*) | Vonis phoenix dilabel TARGET/STOP/WAKTU (barier mana kena duluan); gerbang radar digeser empiris (±8) oleh model kedua dari hit-rate bucket konfirmasi |
+| Ingatan berlapis | FinMem — Zhang dkk 2023 (arXiv:2311.13743) | Lapisan 1 peristiwa (ledger) → lapisan 2 pelajaran (refleksi) → lapisan 3 doktrin (aturan mengikat) — bahan ajar berarsitektur jurnal |
+
+Pengakuan jujur yang dilahirkan metode ini: skor Brier medan kita
+(±0,32) masih LEBIH BURUK dari tebakan koin (0,25) — artinya
+keyakinan lama memang sering kelebihan percaya diri (bin 60–69%
+hanya tembus ±14–18% dari medan). Justru karena itulah kalibrasi
+dipasang: keyakinan baru otomatis diturunkan ke kebenaran medan,
+bobot dimensi yang menyesatkan dihukum Hedge tiap siklus, dan pita
+konformal memberi batas naik yang TERJANGKAU. Kepastian tidak
+diklaim — kepastian DIBANGUN, diukur, dan diperbaiki tiap denyut.
+
+## 6. TERIMA-PASANG (tanpa konfigurasi)
 
 Sejak organ **V245 SARANG-BAWAAN**, membuka halaman Pages = langsung
 paham dan langsung dilayani:
@@ -158,7 +184,7 @@ paham dan langsung dilayani:
   dari nol perkembangan tidak pernah ada lagi.
 - Pulih memori + pemeriksa tubuh baru ikut menyala tanpa token.
 
-## 6. NOL BIAYA — SELALU
+## 7. NOL BIAYA — SELALU
 
 | Kebutuhan | Sumber | Biaya |
 |---|---|---|
@@ -175,7 +201,7 @@ Catatan jujur: tunduk pada batas wajar layanan publik (rate limit
 API publik per menit/jam; Actions repo publik gratis pada penggunaan
 wajar). Komit rutin penjaga sekaligus menjaga Actions tetap aktif.
 
-## 7. PROTOKOL KEBENARAN
+## 8. PROTOKOL KEBENARAN
 
 - Prediksi **dikunci sebelum gerak** — waktu kunci tercatat.
 - Penilaian **memakai harga penutupan nyata + fee 0,2%** — profit
@@ -188,7 +214,7 @@ wajar). Komit rutin penjaga sekaligus menjaga Actions tetap aktif.
 - Jejak pertumbuhan permanen: riwayat komit + ledger berwaktu =
   bukti yang tidak bisa dibantah.
 
-## 8. UNDANGAN BAGI SETIAP AGENT (dan manusia)
+## 9. UNDANGAN BAGI SETIAP AGENT (dan manusia)
 
 Kamu yang membaca ini — agent AI penerus, peneliti, atau trader —
 silakan pelajari dan kembangkan. Jalur belajar cepat:
@@ -214,7 +240,7 @@ Cara membantu **tanpa merusak**:
   kumpulkan bukti → tentukan arah → BUY/SELL → evaluasi → pelajari →
   benahi → tingkatkan presisi.**
 
-## 9. KEBIJAKAN TOKEN (transparan penuh)
+## 10. KEBIJAKAN TOKEN (transparan penuh)
 
 Sistem ini **terbuka penuh** soal token — berikut semuanya, kecuali
 satu hal yang dengan sengaja tidak ditanam di file publik ini.
@@ -250,7 +276,7 @@ token tercatat di sini; nilai rahasianya disimpan di satu tempat
 yang benar — browser pemilik.** Ini bukan tutup-tutupan; ini cara
 satu-satunya agar keterbukaan itu sendiri bisa bertahan hidup.
 
-## 10. PETA FILE
+## 11. PETA FILE
 
 ```
 index.html                  — tubuh SAKTI (8 organ, satu file)
@@ -262,13 +288,15 @@ laporan/sasaran-terkini.json— laporan sasaran otak server
 laporan/prakira-server.jsonl— ledger prediksi pra-registrasi (1000)
 laporan/denyut-server.jsonl — log denyut penjaga (500)
 laporan/index.html          — dasbor laporan profesional
-otak/genome-server.json     — genome hasil evolusi per rezim
+laporan/jurnal-ilmu.json    — akta jurnal ilmiah + cara tiap metode dipasang
+laporan/pelajaran-server.json — bahan ajar (pelajaran & aturan dari medan)
+otak/genome-server.json     — genome hasil evolusi per rezim + keadaan ilmu (hedge/kalibrasi/konformal/meta)
 otak/penjaga-keadaan.json   — keadaan internal penjaga
-scripts/penjaga.mjs         — otak server V246 + radar phoenix (Node murni)
+scripts/penjaga.mjs         — otak server V247-MAJELIS-ILMU (Node murni, 5 metode jurnal hidup)
 .github/workflows/sakti-denyut.yml — jantung denyut (cron 30 menit)
 ```
 
-## 11. PENUTUP
+## 12. PENUTUP
 
 Cyborg ini dibangun dengan satu ikhtiar: **jujur pada data, tegas
 pada arah, hidup tanpa biaya, dan berkembang dari vonis nyata.**
