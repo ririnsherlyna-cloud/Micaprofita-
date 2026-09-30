@@ -157,6 +157,13 @@
   <h2>Genome Radar Phoenix — Bobot Sinyal Akumulasi</h2>
   <div class="genome" id="genome-phx"></div>
 
+  <h2>Bahan Ajar — Pelajaran &amp; Aturan dari Medan</h2>
+  <div id="aturan-baru" style="margin:8px 0 14px"></div>
+  <div class="gulir"><table class="tabel">
+    <thead><tr><th>Waktu</th><th>Simbol</th><th>Vonis</th><th>Net</th><th>Kenapa</th><th>Pelajaran</th></tr></thead>
+    <tbody id="pelajaran"><tr><td colspan="6" style="color:var(--redup)">—</td></tr></tbody>
+  </table></div>
+
   <h2>Kandidat Lain</h2>
   <div class="gulir"><table class="tabel kandidat">
     <thead><tr><th>Simbol</th><th>Arah</th><th>Keyakinan</th><th>Entry</th><th>Rezim</th><th>Keterangan</th></tr></thead>
@@ -213,10 +220,13 @@ function isiSasaran(r){
     el.querySelector('.simbol').textContent = s.simbol;
     el.querySelector('.entry').textContent = 'entry ' + fmt(s.entry) + ' · horizon ' + s.horizon + ' · fee ' + s.fee + (s.jalur === 'PHOENIX' ? ' · jalur phoenix' : '');
     const a = el.querySelector('.arah'); a.textContent = s.arah; a.classList.add(s.arah === 'BUY' ? 'buy' : 'sell');
-    if (s.jalur === 'PHOENIX'){ const bdg = document.createElement('span'); bdg.className = 'badgephx'; bdg.textContent = 'PHOENIX'; a.appendChild(bdg); }
+    if (s.jalur === 'PHOENIX'){
+      const bdg = document.createElement('span'); bdg.className = 'badgephx'; bdg.textContent = 'PHOENIX'; a.appendChild(bdg);
+    }
     if (s.target){
       const t = el.querySelector('.target'); t.style.display = 'block';
-      t.textContent = 'sasaran jual ' + fmt(s.target) + ' · untung bersih +' + s.untungBersihPct + '%' + (s.stop ? ' · stop ' + fmt(s.stop) : '');
+      t.textContent = 'sasaran jual ' + fmt(s.target) + ' · untung bersih +' + s.untungBersihPct + '%' + (s.stop ? ' · stop ' + fmt(s.stop) : '')
+        + (s.highAmbisius ? ' · ujung atas ambisius ' + fmt(s.highAmbisius) : '');
     }
     if (s.skorPhoenix){
       const rl = el.querySelector('.radarline');
@@ -256,6 +266,31 @@ function isiRiwayat(rows){
       <td><span class="st ${e.status}">${e.status||'—'}</span></td>
       <td>${e.exit ? fmt(e.exit) : '—'}</td><td class="${cls}">${net}</td></tr>`;
   }).join('');
+}
+function isiPelajaran(r){
+  const at = r.aturanBelajar || {};
+  const ab = $('aturan-baru');
+  const aktif = Object.entries(at.aktif || {});
+  let html = '';
+  if (aktif.length){
+    html += '<div style="border:1px solid var(--amber);border-radius:8px;padding:10px 12px;background:rgba(255,180,60,.06)"><b>Aturan yang diikat otak (lahir dari kekalahan nyata)</b><ul style="margin:6px 0 0;padding-left:18px">'
+      + aktif.map(([k,v])=>`<li><b>${k}</b> — ${v}</li>`).join('') + '</ul>'
+      + (at.pola ? '<div style="color:var(--redup);margin-top:6px;font-size:.85em">pola terpantau: ' + Object.entries(at.pola).map(([k,v])=>k+'='+v).join(' · ') + '</div>' : '')
+      + '</div>';
+  } else {
+    html += '<div style="color:var(--redup)">belum ada aturan — otak masih mengumpulkan kasus (aturan lahir bila pola kekalahan terulang ≥ 2 kali)</div>';
+  }
+  if ((at.baruSiklusIni||[]).length) html += '<div style="margin-top:6px;color:var(--amber)">BARU dipelajari siklus ini: ' + at.baruSiklusIni.length + ' aturan</div>';
+  ab.innerHTML = html;
+  const p = r.pelajaran || [];
+  const tb = $('pelajaran');
+  if (!p.length){ tb.innerHTML = '<tr><td colspan="6" style="color:var(--redup)">belum ada pelajaran baru siklus ini</td></tr>'; return; }
+  tb.innerHTML = p.map((x)=>`<tr><td>${(x.waktu||'').replace('T',' ').slice(0,16)}</td>
+    <td><b>${x.simbol}</b>${x.jalur==='PHOENIX'?' <span style="color:var(--amber)">PHX</span>':''}</td>
+    <td><span class="st ${x.vonis}">${x.vonis||'—'}</span></td>
+    <td class="${x.netPct>0?'net-pos':'net-neg'}">${(x.netPct>0?'+':'')+(x.netPct??0)}%</td>
+    <td style="color:var(--redup)">${(x.kenapa||[]).join('; ')||'—'}</td>
+    <td>${x.pelajaran||''}</td></tr>`).join('');
 }
 function isiGenome(g){
   const b = (g && g.bobot) || {};
@@ -304,7 +339,7 @@ async function segarkan(){
     $('ak7-sub').textContent = 'dinilai ' + (j7.dinilai||0) + ' · benar ' + (j7.benar||0);
     $('tumbuh').textContent = (a.terkunci||0) + ' / ' + (a.dinilai !== undefined ? a.benar + a.salah : 0);
     $('tumbuh-sub').innerHTML = `prediksi terkunci · dinilai · <b>${a.terbuka||0}</b> terbuka`;
-    isiSasaran(r); isiKandidat(r); isiRiwayat(prak); isiGenome(r.genome); isiDenyut(den);
+    isiSasaran(r); isiKandidat(r); isiRiwayat(prak); isiGenome(r.genome); isiPelajaran(r); isiDenyut(den);
     $('catatan').innerHTML = (r.catatanJujur||[]).map((c)=>`<li>${c}</li>`).join('');
     $('protokol').textContent = r.protokol || '';
     document.title = 'MICAPROFITA — denyut #' + r.siklus + ' · akurasi ' + (a.akurasiPct ?? '—');
