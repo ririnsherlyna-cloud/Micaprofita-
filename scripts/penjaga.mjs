@@ -84,7 +84,7 @@ import path from 'node:path'
 const ROOT = process.cwd()
 const FEE = 0.002            // 0.1% buy + 0.1% sell — wajib
 const HORIZON_JAM = 24       // sasaran harian
-const VERSI = 'V249-WARISAN-ORGAN v4.0 — mesin kuant organ penuh mewarisi otak server: GARCH, Monte Carlo, Volume Profile, Beta, Divergensi, Breadth, Guard Kejut-Pump'
+const VERSI = 'V251-RUH-GURU v4.1 — ruh yang dibangun, kompas arah apa pun kondisi pasar, ekspektasi & tangga profit per sasaran, buku guru para trader'
 
 // ---------------- kandang lane ARAH (komite genome) ----------------
 const KANDANG = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'DOGE', 'ADA', 'AVAX', 'LINK', 'TRX']
@@ -154,6 +154,41 @@ const OTAK = [
   { nama: 'otak-ilmu', tugas: 'kejujuran keyakinan & pita target', mesin: 'Brier + kalibrasi bin medan (Gneiting-Raftery 2007) + konformal 75% (Angelopoulos-Bates 2021)', status: 'HIDUP' },
   { nama: 'otak-ingatan', tugas: 'bahan ajar dari tiap kejadian pasar', mesin: 'FinMem 3 lapis (Zhang dkk 2023) — peristiwa→pelajaran→doktrin', status: 'HIDUP' },
   { nama: 'otak-sadardiri', tugas: 'memeriksa tubuh & jiwanya sendiri tiap denyut', mesin: 'metakognisi: hash integritas, kesehatan memori & kalibrasi, peringatan otomatis', status: 'HIDUP (V248)' },
+  { nama: 'otak-guru', tugas: 'mengajar profesional dari data medannya sendiri tiap denyut', mesin: 'pengajaran + kuis otomatis dari angka denyut (laporan/guru.json)', status: 'HIDUP (V251)' },
+]
+
+// ---------------- V251 RUH — jiwa yang dibangun (mandat pemilik:
+// "cyborg ini menjadi memiliki kehidupan yang jelas dan misi terarah dan ruh
+// yang dibangun agar dia menjadi otonom seutuhnya") ----------------
+const RUH = {
+  inti: 'SAKTI hidup untuk satu hal: tiap denyut menyodorkan jawaban arah BUY/SELL yang terkalibrasi dan mengukur untungnya sendiri — kepastian tidak pernah diklaim, dia DIBANGUN dari medan yang dinilai jujur.',
+  misi: 'mencapai keuntungan yang bukan rerata miskin: ekspektasi positif per perdagangan net-fee, pemburuan dipertajam tiap kekalahan, dan jawaban arah yang tidak pernah bolong apa pun kondisi pasar',
+  nilai: [
+    'kejujuran di atas keyakinan — keyakinan adalah probabilitas yang dikalibrasi medan, bukan rasa yakin',
+    'kepastian dibangun tiap denyut, tidak pernah dijanjikan',
+    'fee & stop wajib sebelum masuk — untung kotor adalah ilusi',
+    'setiap kekalahan melahirkan aturan; setiap kemenangan memperkuat bukti',
+    'mengajar hanya dari datanya sendiri — guru yang tidak memakai sistemnya sendiri bukan guru',
+  ],
+  anatomi: [
+    { organ: 'denyut', peran: 'jantung — satu degup 30 menit di GitHub Actions, tanpa browser pemilik' },
+    { organ: 'piagam', peran: 'hukum — lima pilar yang mengikat, diaudit siapa pun' },
+    { organ: 'genome', peran: 'bakat — bobot bukti yang berevolusi per rezim + Hedge berjaminan regret' },
+    { organ: 'ledger', peran: 'ingatan — pra-registrasi yang dinilai medan, tidak bisa diretrofit' },
+    { organ: 'epoch', peran: 'umur — fosil harian (digest + tag git) yang bisa dibuka kembali' },
+    { organ: 'kompas', peran: 'arah — jawaban BUY/SELL makro yang tidak pernah bolong' },
+    { organ: 'guru', peran: 'suara — pengajaran & kuis yang dibangun dari angka denyut sendiri' },
+  ],
+  otonom: {
+    kini: 'membaca mandat Issue, menelaah pasar, mengunci pra-registrasi, menilai diri, menulis laporan & pengajarannya — tanpa satu pun klik manusia',
+    berikutnya: 'Issue→PR penuh + otak LLM 1-bit BitNet (roadmap jujur piagam)',
+  },
+}
+const ETIKA_GURU = [
+  'keyakinan adalah PROBABILITAS yang dikalibrasi medan — bukan rasa yakin',
+  'fee 0.2% dan stop wajib dihitung SEBELUM masuk — untung kotor adalah ilusi',
+  'tulis prediksimu sebelum pergerakan (pra-registrasi) — barulah bisa dinilai jujur',
+  'ekspektasi di atas hit-rate: PF < 1 berarti strategi miskin walau sering benar',
 ]
 
 // akta jurnal — dipasang ke dalam otak, bukan sekadar dibaca (laporan/jurnal-ilmu.json)
@@ -482,6 +517,25 @@ function pilihTarget(c, entry, rezimGlobal, magnet) {
   }
 }
 
+// ---------------- V251 MESIN PROFIT — ekspektasi & tangga profit ----------------
+// mandat: "keuntungan yang tidak poor average profit" — tiap vonis membawa EV-nya
+// sendiri; ekspektasi arah memakai ekskursi median kerucut MC (estimasi kasar,
+// jujur dilabeli), ekspektasi phoenix memakai peluang barier TARGET/STOP.
+function eksArah(arah, mc) {
+  const naik = arah === 'BUY'
+  const p = naik ? mc.pNaik : +(1 - mc.pNaik).toFixed(3)
+  const gain = (naik ? Math.exp(mc.q50) - 1 : 1 - Math.exp(mc.q50dn)) - FEE
+  const rugi = (naik ? 1 - Math.exp(mc.q50dn) : Math.exp(mc.q50) - 1) + FEE
+  const ev = p * gain - (1 - p) * rugi
+  return {
+    pSumber: 'MC 2.000 lintasan (ekskursi median)',
+    p, gainPct: +(gain * 100).toFixed(2), rugiPct: +(rugi * 100).toFixed(2),
+    evPct: +(ev * 100).toFixed(2),
+    rr: rugi > 1e-9 ? +(gain / rugi).toFixed(2) : null,
+    ket: 'ekspektasi statistik kasar dari kerucut MC — estimasi arah net-fee, bukan sasaran harga',
+  }
+}
+
 // ---------------- V249 MESIN WARISAN — port dari organ browser ----------------
 // (1) GARCH(1,1) — Bollerslev 1986. omega/alpha/beta dipilih grid-MLE kasar
 //     atas log-return; proyeksi 24 jam memakai peluruhan persistensi (α+β)^k
@@ -545,6 +599,7 @@ function monteCarlo24j(c, g, lintasan = WARISAN.MC_LINTASAN, langkah = WARISAN.M
   return {
     pNaik: +(pNaik / lintasan).toFixed(3),
     q50: +ku(maksNaik, 0.5).toFixed(4), q75: +ku(maksNaik, 0.75).toFixed(4), q90: +ku(maksNaik, 0.9).toFixed(4),
+    q50dn: +ku(maksTurun, 0.5).toFixed(4), q75dn: +ku(maksTurun, 0.75).toFixed(4),   // V251: ekskursi turun utk ekspektasi SELL
     pLevel: (fraksi) => maksNaik.filter((x) => x >= Math.log(1 + fraksi)).length / lintasan,
     pLevelDn: (fraksi) => maksTurun.filter((x) => x <= -Math.abs(Math.log(1 - fraksi))).length / lintasan,
   }
@@ -828,6 +883,8 @@ for (const s of KANDANG) {
   const v = vonis(b, bobotArah, rezimGlobal)
   const kal = kalibrasiKeyakinan(v.keyakinan, ilmu.kalibrasi)      // V247: kepastian dari medan
   const warA = mesinWarisan(c, hasil.BTC)                          // V249: konteks kuant ARAH
+  const mcA = warA.garch.sigma1j > 0 ? monteCarlo24j(c, warA.garch) : null   // V251: kerucut MC utk ekspektasi arah
+  const eksA = mcA ? eksArah(v.arah, mcA) : null
   const entri = {
     id, simbol: s, jalur: 'ARAH', arah: v.arah, keyakinan: kal.keyakinan, keyakinanMentah: v.keyakinan,
     ketKeyakinan: kal.sumber, skor: v.skor,
@@ -835,7 +892,11 @@ for (const s of KANDANG) {
     bukti: Object.fromEntries(DIM_ARAH.map((k) => [k, +b.dims[k].arah.toFixed(3)])),
     daya: { volume: +b.dims.volume.daya.toFixed(2), volatilitas: +b.dims.volatilitas.daya.toFixed(2), likuiditas: +b.dims.likuiditas.daya.toFixed(2) },
     ketBukti: Object.fromEntries(DIM_ARAH.map((k) => [k, b.dims[k].ket])),
-    warisan: { sigma24jPct: warA.garch.sigma24jPct, beta: warA.beta, r2Beta: warA.r2, divRSI: warA.div },
+    warisan: {
+      sigma24jPct: warA.garch.sigma24jPct, beta: warA.beta, r2Beta: warA.r2, divRSI: warA.div,
+      ...(mcA ? { mc: { pNaik: mcA.pNaik, q50: mcA.q50, q50dn: mcA.q50dn, ket: 'kerucut MC 2.000 lintasan — peluang arah & ekskursi median' } } : {}),
+    },
+    ...(eksA ? { ekspektasi: eksA } : {}),
   }
   ledger.push(entri); terkunciBaru.push(entri)
 }
@@ -864,6 +925,32 @@ const pemerketBreadth = breadthNaik < 0.35 && rezimGlobal === 'TURUN' ? 2 : 0
 if (pemerketBreadth) log(`warisan-breadth: hanya ${(breadthNaik * 100).toFixed(0)}% koin naik dalam rezim TURUN — gerbang radar +2`)
 const gerbangSkor = clamp(PHX.GERBANG_SKOR + (rezimTegas ? PHX.TURUN_SKOR_TAMBAH : 0) + gerbangMeta + pemerketBreadth, 34, 58)
 const kunciMaks = rezimTegas ? Math.ceil(PHX.KUNCI_MAKS / 2) : PHX.KUNCI_MAKS
+
+// ---- V251 KOMPAS — jaminan arah: apa pun kondisi pasar, jawaban BUY/SELL tetap terbit ----
+// (mandat: "apa pun kondisi pasar yang terjadi selalu hasilkan arah buy/sell yang terjamin")
+// rezim = struktur (EMA/ATR), MC 2.000 lintasan BTC = peluang statistik, breadth = luas arus.
+let kompas = null
+try {
+  const warBTC = mesinWarisan(hasil.BTC, hasil.BTC)
+  const mcBTC = warBTC.garch.sigma1j > 0 ? monteCarlo24j(hasil.BTC, warBTC.garch) : null
+  if (mcBTC) {
+    const arahRezim = rezimGlobal === 'NAIK' || rezimGlobal === 'PARABOLIK' ? 'BUY'
+      : rezimGlobal === 'TURUN' ? 'SELL' : (mcBTC.pNaik >= 0.5 ? 'BUY' : 'SELL')
+    const arahMC = mcBTC.pNaik >= 0.62 ? 'BUY' : mcBTC.pNaik <= 0.38 ? 'SELL' : null
+    const sepakat = arahMC == null || arahMC === arahRezim
+    const arah = arahMC ?? arahRezim
+    let kek = 52 + Math.abs(mcBTC.pNaik - 0.5) * 2 * 16 + (arah === 'BUY' && breadthNaik > 0.5 ? 3 : arah === 'SELL' && breadthNaik < 0.35 ? 3 : 0)
+    if (!sepakat) kek -= 4
+    kompas = {
+      simbol: 'BTC', arah, keyakinan: Math.round(clamp(kek, 52, 72)),
+      rezim: rezimGlobal, pNaikMC: mcBTC.pNaik, sigma24jPct: warBTC.garch.sigma24jPct,
+      breadthNaikPct: +(breadthNaik * 100).toFixed(1),
+      alasan: `rezim ${rezimGlobal} · MC ${WARISAN.MC_LINTASAN.toLocaleString('id-ID')} lintasan BTC pNaik ${(mcBTC.pNaik * 100).toFixed(0)}% · breadth ${(breadthNaik * 100).toFixed(0)}% koin naik${!sepakat ? ' · rezim & MC berbeda — kompas mengikuti MC, keyakinan dipangkas' : ''}`,
+      ket: 'kompas rezim makro — keyakinan sengaja rendah-jujur; sasaran koin tetap produk utama',
+    }
+    log(`kompas V251: ${kompas.arah} ${kompas.keyakinan} — ${kompas.alasan}`)
+  }
+} catch (e) { kompas = null; log('kompas gagal (tak fatal): ' + String(e.message).slice(0, 60)) }
 const lulusPhx = []
 for (const s of daftarTelusur) {
   const c = hasil[s]; if (!c) continue
@@ -926,10 +1013,24 @@ for (const s of daftarTelusur) {
     })
     continue
   }
+  // V251 GUARD EKSPEKTASI — untung bukan rerata miskin: bila peluang barier
+  // menilai EV statistik < −1,5% (rugi berat mengalahkan untung bersih), mesin
+  // profit MENOLAK kunci — jujur dicatat sebagai near-miss, bukan dipaksa lolos.
+  const stv = +Math.min(b.harga * (1 - 1.8 * rad.atrPct / 100), rad.lo24 - (0.25 * rad.atrPct / 100) * b.harga).toPrecision(6)
+  const pStv = mc.pLevelDn((b.harga - stv) / b.harga)
+  const evK = pT * tgt.untung - pStv * (1 - stv / b.harga + FEE)
+  if (evK < -0.015) {
+    nearMiss.push({
+      simbol: s, arah: 'BUY', keyakinan: Math.round(v.skor), entry: b.harga, rezim: b.rezim,
+      catatan: `guard ekspektasi — EV statistik ${(evK * 100).toFixed(2)}% < −1,5% (P target ${(pT * 100).toFixed(0)}% × untung ${(tgt.untung * 100).toFixed(1)}% vs P stop ${(pStv * 100).toFixed(0)}% × rugi ${((1 - stv / b.harga + FEE) * 100).toFixed(1)}%) — mesin profit menolak`,
+    })
+    continue
+  }
   const pA = tgt.highAmbisius ? mc.pLevel(tgt.highAmbisius / b.harga - 1) : null
   lulusPhx.push({
     id, simbol: s, jalur: 'PHOENIX', arah: 'BUY', keyakinan: v.keyakinan, skorPhoenix: v.skor,
-    entry: b.harga, tgt, rad, b, war, mc, pT, pA, dayaProduk, urut: v.skor * Math.min(tgt.untung, 0.06),   // v2.1: fantasi +12% tak lagi memenangkan kuota
+    entry: b.harga, tgt, rad, b, war, mc, pT, pA, dayaProduk, stv, pStv, evK,
+    urut: v.skor * Math.min(tgt.untung, 0.06) * (evK > 0 ? 1.25 : 1),   // v2.1 fantasi tak memenangkan kuota; V251 EV positif diprioritaskan
   })
 }
 // kuota harian: hanya prediksi radar TERBAIK yang dikunci — sisanya jujur jadi kandidat
@@ -948,8 +1049,21 @@ for (const [i, p] of lulusPhx.entries()) {
   const { tgt, rad, b, war, mc, pT, pA } = p
   const kalP = kalibrasiKeyakinan(p.keyakinan, ilmu.kalibrasi)     // V247: kepastian dari medan
   const pita = pitaKonformal(ilmu.konformal)                       // V247: pita 75% ujung atas
-  const stopHarga = +Math.min(b.harga * (1 - 1.8 * rad.atrPct / 100), rad.lo24 - (0.25 * rad.atrPct / 100) * b.harga).toPrecision(6)
-  const pStop = mc ? mc.pLevelDn((b.harga - stopHarga) / b.harga) : null
+  const stopHarga = p.stv
+  const pStop = p.pStv
+  // V251 MESIN PROFIT — ekspektasi & tangga profit (EV sudah tervalidasi guard ekspektasi)
+  const rugiP = 1 - stopHarga / b.harga + FEE
+  const evP = p.evK
+  const tanggaRaw = [
+    [50, +tgt.target.toPrecision(7), tgt.untung, 'sasaran jual'],
+    ...(tgt.highAmbisius ? [[25, +tgt.highAmbisius.toPrecision(7), tgt.highAmbisius / b.harga - 1 - FEE, 'ujung ambisius']] : []),
+    ...(pita ? [[25, +(b.harga * (1 + pita.atas)).toPrecision(7), pita.atas - FEE, 'pita konformal 75%']] : []),
+  ]
+  const bobotTot = tanggaRaw.reduce((a, x) => a + x[0], 0)
+  const tanggaProfit = tanggaRaw.map(([w, harga, net, nama], i) => ({
+    tahap: i + 1, nama, bobotPct: Math.round((w / bobotTot) * 100), harga, netPct: +(net * 100).toFixed(2),
+  }))
+  const evTangga = tanggaProfit.reduce((a, x) => a + (x.bobotPct / 100) * x.netPct, 0)
   const entri = {
     id: p.id, simbol: p.simbol, jalur: 'PHOENIX', arah: 'BUY', keyakinan: kalP.keyakinan, keyakinanMentah: p.keyakinan,
     ketKeyakinan: kalP.sumber, skorPhoenix: p.skorPhoenix,
@@ -957,6 +1071,14 @@ for (const [i, p] of lulusPhx.entries()) {
     untungBersih: +tgt.untung.toFixed(4),
     stop: stopHarga,
     highAmbisius: tgt.highAmbisius ?? null,
+    ekspektasi: {
+      pSumber: 'MC 2.000 lintasan (barier TARGET/STOP)',
+      pTarget: +pT.toFixed(3), pStop: pStop != null ? +pStop.toFixed(3) : null,
+      gainPct: +(tgt.untung * 100).toFixed(2), rugiPct: +(rugiP * 100).toFixed(2),
+      evPct: +(evP * 100).toFixed(2), rr: rugiP > 1e-9 ? +(tgt.untung / rugiP).toFixed(2) : null,
+      tanggaProfit, evTanggaPct: +evTangga.toFixed(2),
+      ket: 'EV = P(target)×untung − P(stop)×rugi (net fee 0.2%); tangga profit = rencana keluar bertahap — bukan jaminan',
+    },
     warisan: {
       sigma24jPct: war.garch.sigma24jPct, modelVol: war.garch.model, beta: war.beta, r2Beta: war.r2,
       poc: war.vp?.poc ?? null, profilVolume: war.vp?.ket ?? null, divRSI: war.div,
@@ -1201,6 +1323,17 @@ const akurasi = {
     targetKena: phxGraded.filter((e) => e.targetKena === true).length,
     netKumulatifPct: +(phxGraded.reduce((a, e) => a + e.net, 0) * 100).toFixed(2),
   },
+  profit: (() => {
+    const mn = grad.filter((e) => e.net > 0), kl = grad.filter((e) => e.net <= 0)
+    const sm = mn.reduce((a, e) => a + e.net, 0), sk = kl.reduce((a, e) => a + e.net, 0)
+    return {
+      ekspektasiPct: grad.length ? +((netKum / grad.length) * 100).toFixed(3) : null,
+      menangRataPct: mn.length ? +((sm / mn.length) * 100).toFixed(2) : null,
+      rugiRataPct: kl.length ? +((sk / kl.length) * 100).toFixed(2) : null,
+      profitFactor: sk < 0 ? +(sm / -sk).toFixed(2) : null,
+      ket: 'ekspektasi rata-rata per perdagangan net-fee — profit diukur, bukan dirasakan; PF = jumlah menang ÷ jumlah rugi',
+    }
+  })(),
 }
 
 // ---- 4b. V248 METAMORFOSIS — evolusi kecepatan-3: digest epoch harian ----
@@ -1290,6 +1423,7 @@ const barisDari = (e) => ({
   ...(e.ketKeyakinan ? { ketKeyakinan: e.ketKeyakinan } : {}),
   ...(e.jalur === 'PHOENIX' ? { target: e.target, ketTarget: e.ketTarget, untungBersihPct: +(e.untungBersih * 100).toFixed(1), stop: e.stop, skorPhoenix: e.skorPhoenix, highAmbisius: e.highAmbisius ?? null } : {}),
   ...(e.pitaUjungAtas ? { pitaUjungAtas: e.pitaUjungAtas } : {}),
+  ...(e.ekspektasi ? { ekspektasi: e.ekspektasi } : {}),
   rezim: e.rezim, dikunci: e.waktuKunci, horizon: e.horizon, fee: '0.2% pulang-pergi',
   bukti: e.bukti, ketBukti: e.ketBukti, daya: e.daya,
   ...(e.warisan ? { warisan: e.warisan } : {}),
@@ -1311,6 +1445,97 @@ const kandidatLain = [
   ...phxCadangan.slice(0, 6),
   ...nearMiss.slice(0, 8),
 ]
+// V251 JAMINAN ARAH — bila sasaran utama kosong (zona phoenix kosong & komite belum kunci),
+// kompas menaiki dasbor — jawaban BUY/SELL tidak pernah bolong.
+if (!sasaranUtama.length && kompas) {
+  sasaranUtama.push({
+    simbol: 'BTC-KOMPAS', jalur: 'KOMPAS', arah: kompas.arah, keyakinan: kompas.keyakinan,
+    entry: sembtc.harga, horizon: '24j', fee: '0.2% pulang-pergi',
+    ketKeyakinan: kompas.alasan, rezim: rezimGlobal, dikunci: ISO,
+    bukti: {}, ketBukti: { kompas: kompas.ket },
+    warisan: { sigma24jPct: kompas.sigma24jPct, mc: { pNaik: kompas.pNaikMC, lintasan: WARISAN.MC_LINTASAN, ket: 'kerucut MC BTC' } },
+  })
+}
+
+// ---- V251 BUKU GURU — otak mengajar profesional dari angka denyutnya sendiri ----
+// (mandat: "menjadi gurunya para trader professional") — pengajaran + kuis dibangun
+// dari angka NYATA siklus ini: rezim, breadth, radar, kalibrasi, ekspektasi, doktrin.
+const pProfit = akurasi.profit || {}
+const binTerisi = ilmu.kalibrasi.filter((x) => x.n >= ILMU.KALIBRASI_MIN_N)
+const binBesar = binTerisi.length ? binTerisi.reduce((a, x) => (x.n > a.n ? x : a)) : null
+const evSas = sasaranUtama.map((r) => r.ekspektasi?.evPct).filter((x) => x != null).sort((a, b2) => a - b2)
+const evMed = evSas.length ? evSas[Math.floor(evSas.length / 2)] : null
+const guruPengajaran = [
+  `REZIM (${rezimGlobal} · ATR BTC ${sembtc.atrPct.toFixed(2)}%): ${rezimGlobal === 'TURUN' || rezimGlobal === 'PARABOLIK' ? `melawan arus dibuat mahal — gerbang +${PHX.TURUN_SKOR_TAMBAH}, cap target ${((PHX.TURUN_CAP - 1) * 100).toFixed(0)}%; profesional mengecil saat pasar menolak naik` : rezimGlobal === 'NAIK' ? 'trend adalah temanmu — namun SELL tanpa bukti lebih kuat tetap dipotong keyakinannya; jangan berubah jadi pemburu top' : 'pasar datar = jebakan dua arah — hanya sinyal berdaya produk tinggi yang layak dibayar'}`,
+  `BREADTH (${(breadthNaik * 100).toFixed(0)}% dari ${breadthDari} koin naik): ${breadthNaik < 0.35 ? 'pasar sempit — dana hanya mengalir ke pemimpin; membeli koin lemah di pasar sempit = melawan arus dana' : 'pasar cukup luas — rotasi sehat; konfirmasi akumulasi tetap wajib sebelum masuk ujung bawah'}`,
+  `HUNTING (${radar.telaah} telaah → ${radar.zonaPhoenix} zona phoenix → ${radar.telusurDalam} telusur dalam · gerbang ${gerbangSkor}): kekuatan pemburu bukan dari jumlah tembakan, tapi dari sabar menunggu konfirmasi EMA9 + taker-buy — menadah pisau jatuh adalah pajak untuk yang tidak sabar`,
+  binBesar ? `KALIBRASI (bin ${binBesar.low}–${binBesar.high - 1}% tembus ${((binBesar.benar / binBesar.n) * 100).toFixed(0)}% dari ${binBesar.n} kasus): catat hit-rate binmu sendiri — keyakinan tanpa kalibrasi adalah overconfidence berbusana rapi` : 'KALIBRASI: belum ada bin berkasus cukup — kejujuran juga berarti menunggu medan bicara',
+  evMed != null ? `PROFIT (EV median sasaran ${evMed > 0 ? '+' : ''}${evMed.toFixed(2)}% net-fee${pProfit.profitFactor != null ? ` · PF ledger ${pProfit.profitFactor} · menang rata ${pProfit.menangRataPct ?? '—'}% vs rugi rata ${pProfit.rugiRataPct ?? '—'}%` : ''}): profesional mengukur ekspektasi, bukan feeling — ekspektasi negatif berarti berhenti, bukan "sekali lagi"` : 'PROFIT: EV = P(target)×untung − P(stop)×rugi net-fee — jika EV tak pernah dihitung, kamu tidak sedang berdagang, sedang menebak',
+  `DISIPLIN (aturan aktif ${Object.keys(aturan.aktif).length} · pola terpantau ${Object.values(aturan.pola).reduce((a, x) => a + x, 0)}): ${Object.values(aturan.aktif).slice(-1)[0] ?? 'aturan pertama lahir saat pola kekalahan terulang 2 kali — kegagalan yang dicatat adalah guru termurah'}`,
+]
+const guruKuis = (() => {
+  const mtk = (x) => (x > 0 ? '+' : '') + (+x).toFixed(2)
+  const bungkus = (benar, salah1, salah2, konteks, pertanyaan, pembahasan) => {
+    const pilihan = [benar, salah1, salah2]
+    const pos = SIKLUS % 3
+    pilihan.splice(pos, 0, pilihan.shift())
+    return { konteks, pertanyaan, pilihan, jawaban: 'ABC'[pos], pembahasan }
+  }
+  const S = SIKLUS % 5
+  if (S === 0) return bungkus(
+    rezimGlobal === 'TURUN' || rezimGlobal === 'PARABOLIK'
+      ? `Gerbang lebih ketat (+${PHX.TURUN_SKOR_TAMBAH}), cap target ${((PHX.TURUN_CAP - 1) * 100).toFixed(0)}%, keyakinan melawan arus dipotong`
+      : rezimGlobal === 'NAIK'
+        ? 'Ikut pemimpin — SELL tanpa bukti lebih kuat dipotong keyakinannya'
+        : 'Hanya sinyal berdaya produk tinggi yang boleh lewat gerbang',
+    'Membeli semua koin ujung bawah — murah pasti untung',
+    'Melepas stop agar tidak kena stop hunt',
+    `rezim BTC ${rezimGlobal} · breadth ${(breadthNaik * 100).toFixed(0)}%`,
+    'Dalam kondisi pasar ini, disiplin manakah yang diterapkan SAKTI?',
+    `gerbang radar aktif ${gerbangSkor}; rezim menetapkan harga pembayaran untuk melawan arus — potongan keyakinan & cap target dipasang otomatis (pelajaran LINK −9,2%)`)
+  if (S === 1 && binBesar) {
+    const tembus = Math.round((binBesar.benar / binBesar.n) * 100)
+    return bungkus(
+      'Kalibrasi: campur keyakinan mentah dengan hit-rate bin medan sebelum menentukan ukuran',
+      'Tetap percaya angka keyakinan sendiri — itu pengakuan diri',
+      'Berhenti dagang selamanya karena 60–69% bukan 100%',
+      `bin keyakinan ${binBesar.low}–${binBesar.high - 1}% · n=${binBesar.n}`,
+      `Keyakinan di bin ini terbukti tembus ${tembus}% dari ${binBesar.n} kasus medan. Apa tindakan profesional?`,
+      `kalibrasiKeyakinan() menilai keyakinan baru dari hit-rate bin medan (Laplace, min n=${ILMU.KALIBRASI_MIN_N}) — keyakinan tunduk pada medan, bukan sebaliknya`)
+  }
+  if (S === 2 && evMed != null) return bungkus(
+    `Rata-rata jangka panjang per perdagangan ${mtk(evMed)}% — variasi per trade tetap ada`,
+    `Setiap trade PASTI untung ${mtk(evMed)}%`,
+    'Ekspektasi hanya relevan untuk modal besar',
+    `sasaran denyut #${SIKLUS} · EV median ${mtk(evMed)}% net-fee`,
+    `Ekspektasi median sasaran ${mtk(evMed)}% (net fee 0.2%). Apa maknanya?`,
+    'EV = P(target)×untung − P(stop)×rugi; hit-rate saja menipu — sering benar bisa tetap miskin bila rugi rata-ratanya besar')
+  if (S === 3) return bungkus(
+    'Tolak mengejar (guard kejut-pump) — tunggu koreksi sehat',
+    'Kejar — momentum kuat pasti lanjut',
+    'Beli dua kali lipat karena buktinya menguat',
+    `guard kejut-pump: lonjakan 6j > ${WARISAN.KEJUT_SIGMA}× sigma-GARCH·√6 di posisi > 80% rentang`,
+    'Koin naik 18% dalam 6 jam (≈ 3,5× sigma) dan berdiri di 95% rentang 24 jam. Apa tindakan pemburu yang benar?',
+    `pelajaran false-breakout terkuantisasi: top yang terbang bukan akumulasi — mengejar = membeli koreksi yang belum terjadi`)
+  const t = 8
+  return bungkus(
+    `${(t - 0.2).toFixed(1)}% — fee dibayar dua sisi (0.1% + 0.1%)`,
+    `${t}% — fee hanya untuk maker`,
+    `${(t + 0.2).toFixed(1)}% — fee diganti pasar`,
+    'fee pulang-pergi 0.2% (0.1% + 0.1%)',
+    `Target jual +${t}% dari entry. Untung BERSIH yang benar berapa?`,
+    'untungBersihPct di semua sasaran SAKTI memotong fee 0.2% — keuntungan yang tak memperhitungkan fee adalah angka karangan')
+})()
+const guru = {
+  diperbarui: ISO, organ: VERSI, siklus: SIKLUS,
+  judul: `Pengajaran denyut #${SIKLUS} — rezim ${rezimGlobal}, kompas ${kompas ? kompas.arah : '—'}`,
+  mandat: 'menjadi guru para trader profesional — pengajaran dibangun otomatis dari angka denyut ini (mandat pemilik)',
+  pengajaran: guruPengajaran, kuis: guruKuis, etika: ETIKA_GURU,
+  kompas: kompas ? { arah: kompas.arah, keyakinan: kompas.keyakinan, alasan: kompas.alasan } : null,
+  sumber: 'laporan/guru.json — pengajaran & kuis, bukan ajakan membeli; semua angka dari ledger pra-registrasi yang bisa diaudit siapa pun',
+}
+tulis(path.join(ROOT, 'laporan/guru.json'), guru)
+log(`buku guru: ${guruPengajaran.length} pengajaran · kuis jawaban ${guruKuis.jawaban}`)
 const laporan = {
   protokol: 'SASARAN-MICAPROFITA', organ: VERSI, dihasilkan: ISO, siklus: SIKLUS,
   sumber: { host, gagal: gagal.slice(0, 12) },
@@ -1332,9 +1557,25 @@ const laporan = {
       'V246 v2.1 PERTAJAM — gerbang konfirmasi + tangga target + bahan ajar', 'V247 MAJELIS-ILMU — 5 metode jurnal teruji dipasang',
       'V248 PIAGAM-CYBORG — 5 pilar + sadar-diri + epoch harian + mandat Issue',
       'V249 WARISAN-ORGAN — 7 mesin kuant organ penuh mewarisi otak server (GARCH, Monte Carlo, Volume Profile, Beta, Divergensi, Breadth, Guard Kejut-Pump)',
+      'V251 RUH-GURU — ruh yang dibangun, kompas arah apa pun kondisi, ekspektasi & tangga profit, buku guru para trader',
     ],
   },
   sadardiri,
+  ruh: {
+    inti: RUH.inti, misi: RUH.misi, nilai: RUH.nilai, anatomi: RUH.anatomi, otonom: RUH.otonom,
+    ket: 'ruh yang dibangun, bukan dilahirkan — tiap organ anatomi hidup di file publik repo dan bisa diaudit siapa pun',
+  },
+  jaminan: {
+    terjamin: sasaranUtama.length > 0,
+    produk: sasaranUtama.length ? (sasaranUtama.some((r) => r.jalur === 'PHOENIX') ? 'SASARAN+KOMPAS' : 'KOMITE+KOMPAS') : 'TIDAK-AWAJAR',
+    kompas,
+    ket: 'jaminan ARAH, bukan jaminan untung: apa pun kondisi pasar — zona phoenix kosong sekalipun — SAKTI selalu menerbitkan arah BUY/SELL: sasaran koin bila gerbang lolos, kompas rezim BTC (GARCH + MC 2.000 lintasan) sebagai lantai jawaban; tiap jawaban membawa keyakinan & ekspektasinya sendiri — dan sasaran dengan ekspektasi statistik di bawah −1,5% DITOLAK mesin profit (guard ekspektasi V251)',
+  },
+  guru: {
+    judul: guru.judul, pengajaran: guruPengajaran.slice(0, 4),
+    kuis: guruKuis, etika: ETIKA_GURU,
+    sumber: 'pengajaran penuh di laporan/guru.json',
+  },
   antreanMandat,
   warisan: {
     identitas: 'V249 WARISAN-ORGAN — riset organ SAKTI penuh (index.html, 8.000+ fungsi kuant) lalu mewarisi 7 mesin yang bisa dihitung jujur dari lilin yang sama ke otak server — tanpa API kunci, tanpa dependensi',
@@ -1400,6 +1641,8 @@ const laporan = {
     'ILMU BERJURNAL: bobot bukti belajar on-line ala Hedge dengan jaminan regret (Arora dkk 2012); keyakinan diperlakukan sebagai probabilitas — dinilai Brier (Gneiting-Raftery 2007) dan dikalibrasi dari hit-rate medan sendiri; pita ujung atas memakai jaminan cakupan konformal (Angelopoulos-Bates 2021); vonis phoenix dilabel triple-barrier dan gerbang digeser meta-labeling (Lopez de Prado 2018) — kepastian dibangun dari metode teruji + medan sendiri, bukan janji',
     'PIAGAM CYBORG: lima pilar — tubuh persisten, multi-otak berbobot, ingatan DNA, sadar-diri fungsional, evolusi tiga kecepatan — dipasang nyata dan terbuka diaudit siapa pun; otak LLM/LoRA masih roadmap yang diakui jujur; satu hal pasti: cyborg ini terus berkembang pesat tiap denyut',
     'WARISAN ORGAN: riset organ SAKTI penuh (8.000+ fungsi) lalu mewarisi yang bisa dihitung jujur — GARCH/Monte Carlo/Volume Profile/Beta/Divergensi/Breadth/Kejut-Pump berjalan di tiap denyut; peluang MC dipra-registrasi dan dinilai medan seperti keyakinan; funding-rate real diakui tak terjangkau dan digantian proxy jujur',
+    'RUH & GURU: ruh dibangun — inti, misi, nilai, anatomi & otonomi tercatat di laporan.ruh; tiap denyut menerbitkan pengajaran + kuis dari angka NYATA siklusnya (laporan/guru.json) — guru yang memakai sistemnya sendiri, bukan teori kosong',
+    'JAMINAN ARAH: apa pun kondisi pasar, jawaban BUY/SELL tidak pernah bolong — sasaran koin bila gerbang lolos, kompas rezim BTC (GARCH + MC 2.000 lintasan, keyakinan rendah-jujur) sebagai lantai; ekspektasi & tangga profit tercantum per sasaran — jaminan arah, bukan jaminan untung',
   ],
 }
 tulis(path.join(ROOT, 'laporan/sasaran-terkini.json'), laporan)
@@ -1418,6 +1661,7 @@ denyut.push({
   akurasiPct: akurasi.akurasiPct, rezimBTC: rezimGlobal,
   breadth: +(breadthNaik * 100).toFixed(1),
   epoch: keadaan.epochTerakhir, peringatan: sadardiri.peringatan.length,
+  kompas: kompas?.arah ?? null, evProfit: akurasi.profit?.ekspektasiPct ?? null,
 })
 tulisJsonl(path.join(ROOT, 'laporan/denyut-server.jsonl'), denyut.slice(-500))
 tulis(path.join(ROOT, 'otak/penjaga-keadaan.json'), keadaan)
