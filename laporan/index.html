@@ -87,12 +87,13 @@
   .cincin text{fill:var(--teks);font-family:var(--mono);font-weight:700}
   .cincin-wrap{text-align:center;font-size:10px;color:var(--samar);text-transform:uppercase;letter-spacing:1px}
   .tangga{margin-top:14px;border:1px solid var(--garis);border-radius:12px;overflow:hidden}
-  .trow{display:grid;grid-template-columns:1fr auto 70px;gap:8px;padding:7px 12px;font-family:var(--mono);font-size:12px;
+  .trow{display:grid;grid-template-columns:1fr auto 64px 46px;gap:8px;padding:7px 12px;font-family:var(--mono);font-size:12px;
     border-bottom:1px solid rgba(30,42,78,.5);background:rgba(15,23,48,.55);align-items:center}
   .trow:last-child{border-bottom:none}
   .trow .tlbl{color:var(--redup);font-family:system-ui;font-size:11.5px}
   .trow .tp{font-weight:700;text-align:right}
   .trow .tpct{text-align:right;color:var(--samar);font-size:11px}
+  .trow .tpr{text-align:right;color:var(--violet);font-size:10.5px;white-space:nowrap}
   .trow.amb .tp,.trow.amb .tpct{color:var(--amber)}
   .trow.tgt .tp,.trow.tgt .tpct{color:var(--hijau)}
   .trow.stp .tp,.trow.stp .tpct{color:var(--merah)}
@@ -100,6 +101,10 @@
   .trow.ent .tp{color:var(--sian)} .trow.ent .tpct{color:var(--sian)}
   .kettarget{color:var(--redup);font-size:11.5px;margin-top:6px}
   .pitaref{font-family:var(--mono);font-size:11.5px;color:var(--amber);margin-top:4px}
+  .mcline{font-family:var(--mono);font-size:11.5px;color:var(--violet);margin-top:4px}
+  .mesin{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+  .mesin span{background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.25);color:#bfe9f2;
+    padding:5px 11px;border-radius:9px;font-size:11.5px}
   .ketkal{color:var(--redup);font-size:11.5px;margin-top:4px}
   .daya{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
   .ddim{background:rgba(13,20,40,.6);border:1px solid var(--garis);border-radius:9px;padding:7px 9px}
@@ -190,6 +195,7 @@
     <a href="#sasaran-sec">Sasaran</a>
     <a href="#bahan-ajar-sec">Bahan Ajar</a>
     <a href="#ilmu-sec">Ilmu</a>
+    <a href="#warisan-sec">Warisan</a>
     <a href="#piagam-sec">Piagam</a>
     <a href="#sadar-sec">Sadar-Diri</a>
     <a href="#ledger-sec">Ledger</a>
@@ -266,6 +272,7 @@
       <div class="tangga"></div>
       <div class="kettarget"></div>
       <div class="pitaref" style="display:none"></div>
+      <div class="mcline"></div>
       <div class="daya"></div>
       <div class="bukti"></div>
       <div class="ketkal"></div>
@@ -301,6 +308,15 @@
   <div class="gulir"><table class="tabel">
     <thead><tr><th>Jurnal teruji</th><th>Penulis</th><th>Tahun</th><th>Terbitan</th><th>Dipasang sebagai</th></tr></thead>
     <tbody id="ilmu-jurnal"><tr><td colspan="5" style="color:var(--samar)">—</td></tr></tbody>
+  </table></div>
+
+  <h2 id="warisan-sec">Warisan Organ Besar — 7 Mesin Kuant Kini di Otak Server</h2>
+  <div id="warisan-identitas" class="jnote" style="margin:0 0 12px">—</div>
+  <div class="mesin" id="warisan-mesin"></div>
+  <div class="ringkas" id="warisan-kartu" style="margin-top:12px"></div>
+  <div class="gulir" style="margin-top:12px"><table class="tabel">
+    <thead><tr><th>Peluang MC (bin)</th><th>Kasus medan</th><th>Tembus target nyata</th><th>Artinya</th></tr></thead>
+    <tbody id="warisan-mc"><tr><td colspan="4" style="color:var(--samar)">—</td></tr></tbody>
   </table></div>
 
   <h2 id="piagam-sec">Piagam Cyborg — 5 Pilar (dipasang nyata, diaudit siapa pun)</h2>
@@ -388,16 +404,18 @@ function isiCincin(el, s){
 }
 function isiTangga(el, s){
   const box = el.querySelector('.tangga');
+  const mc = s.warisan?.mc || null;
   const rows = [];
-  if (s.highAmbisius) rows.push(['ujung atas ambisius', s.highAmbisius, 'amb']);
-  if (s.target) rows.push(['sasaran jual', s.target, 'tgt']);
-  rows.push(['entry', s.entry, 'ent']);
-  if (s.stop) rows.push(['stop', s.stop, 'stp']);
+  if (s.highAmbisius) rows.push(['ujung atas ambisius', s.highAmbisius, 'amb', mc?.pAmbisius ?? null]);
+  if (s.target) rows.push(['sasaran jual', s.target, 'tgt', mc?.pTarget ?? null]);
+  rows.push(['entry', s.entry, 'ent', null]);
+  if (s.stop) rows.push(['stop', s.stop, 'stp', mc?.pStop ?? null]);
   rows.sort((a,b) => b[1] - a[1]);
-  box.innerHTML = rows.map(([lbl, p, k]) => {
+  box.innerHTML = rows.map(([lbl, p, k, pr]) => {
     const pct = (p / s.entry - 1) * 100;
     const panah = k === 'ent' ? ' &#9656;' : k === 'tgt' ? ' &#9656;' : '';
-    return `<div class="trow ${k}"><span class="tlbl">${lbl}${panah}</span><span class="tp">${fmt(p)}</span><span class="tpct">${pct>=0?'+':''}${pct.toFixed(2)}%</span></div>`;
+    const prob = pr != null ? `<span class="tpr">P ${Math.round(pr*100)}%</span>` : '<span class="tpr"></span>';
+    return `<div class="trow ${k}"><span class="tlbl">${lbl}${panah}</span><span class="tp">${fmt(p)}</span><span class="tpct">${pct>=0?'+':''}${pct.toFixed(2)}%</span>${prob}</div>`;
   }).join('');
 }
 function isiDaya(el, s){
@@ -421,6 +439,17 @@ function isiSasaran(r){
     if (s.pitaUjungAtas){
       const p = el.querySelector('.pitaref'); p.style.display = 'block';
       p.textContent = 'pita konformal 75%: naik maksimum ±' + s.pitaUjungAtas.atas75Pct + '% (≈ ' + fmt(s.pitaUjungAtas.atas75Harga) + ') · tengah +' + s.pitaUjungAtas.tengahPct + '% · n=' + s.pitaUjungAtas.n;
+    }
+    const w = s.warisan;
+    if (w){
+      const mc = w.mc || {};
+      el.querySelector('.mcline').textContent = [
+        mc.pTarget != null ? 'MC: tembus target ' + Math.round(mc.pTarget*100) + '%' : null,
+        mc.pStop != null ? 'kena stop ' + Math.round(mc.pStop*100) + '%' : null,
+        w.sigma24jPct != null ? 'GARCH 24j ±' + w.sigma24jPct + '%' : null,
+        w.beta != null ? 'beta BTC ' + w.beta + (w.r2Beta != null ? ' (R² ' + w.r2Beta + ')' : '') : null,
+        mc.lintasan ? mc.lintasan.toLocaleString('id-ID') + ' lintasan' : null,
+      ].filter(Boolean).join(' · ');
     }
     isiDaya(el.querySelector('.daya'), s);
     el.querySelector('.bukti').innerHTML = DIM.map((k) => {
@@ -559,6 +588,31 @@ function isiIlmu(r, jurnalFile){
     <td style="font-family:inherit;font-size:11.5px;color:var(--redup)">${j.penerapan}</td></tr>`).join('')
     : '<tr><td colspan="5" style="color:var(--samar)">akta jurnal belum tersedia</td></tr>';
 }
+function isiWarisan(r){
+  const w = r.warisan;
+  if (!w){ $('warisan-identitas').textContent = 'warisan belum dibawa laporan ini — menunggu denyut V249 berikutnya'; return; }
+  $('warisan-identitas').innerHTML = '<b>IDENTITAS:</b> ' + w.identitas
+    + '<br><span style="color:var(--redup)">' + (w.catatan || '') + '</span>';
+  $('warisan-mesin').innerHTML = (w.mesin||[]).map((m) => `<span>${m}</span>`).join('');
+  const br = w.breadth || {};
+  const kartu = [
+    ['Breadth A/D Pasar', (br.naik24jPct ?? '—') + '% <span style="color:var(--redup);font-size:.8em">dari ' + (br.dari ?? '—') + ' koin</span>', br.ket || ''],
+    ['Gerbang Radar Aktif', w.gerbangRadar ?? '—', 'skor minimum radar phoenix (gerbang konfirmasi + meta + breadth)'],
+    ['Brier MC (peluang tembus target)', w.mc?.brier != null ? w.mc.brier + ' <span style="color:var(--redup);font-size:.8em">(n=' + w.mc.nMc + ')</span>' : 'menunggu horizon pertama', 'peluang MC dipra-registrasi lalu dinilai medan — makin kecil makin jujur'],
+    ['Gerbang MC', '≥ ' + Math.round((w.mc?.gerbangPTarget ?? 0.38)*100) + '%', 'target dengan peluang statistik di bawah ini DITOLAK oleh ' + (w.mc?.lintasan ?? 2000).toLocaleString('id-ID') + ' lintasan Monte Carlo'],
+  ];
+  $('warisan-kartu').innerHTML = kartu.map(([l,v,s2]) => `<div class="kartu"><div class="label">${l}</div>
+    <div class="angka-besar" style="font-size:22px">${v}</div><div class="sub">${s2}</div></div>`).join('');
+  const kal = w.mc?.kalibrasi || [];
+  $('warisan-mc').innerHTML = kal.length ? kal.map((x) => {
+    const arti = x.n === 0 ? 'belum ada kasus — peluang MC jujur menunggu medan'
+      : x.tembusPct < 25 ? 'bin ini MELESAT — peluang MC terlalu percaya diri di rentang ini'
+      : x.tembusPct < 40 ? 'lemah — akan dikalibrasi saat n tumbuh'
+      : 'terukur — peluang MC dipercaya di rentang ini';
+    return `<tr><td>${x.bin}</td><td>${x.n}</td><td class="${x.tembusPct===null?'':x.tembusPct<25?'net-neg':x.tembusPct<40?'':'net-pos'}">${x.tembusPct===null?'—':x.tembusPct+'%'}</td>
+      <td style="color:var(--redup);font-family:inherit">${arti}</td></tr>`;
+  }).join('') : '<tr><td colspan="4" style="color:var(--samar)">—</td></tr>';
+}
 function isiDenyut(rows){
   $('denyut').innerHTML = (rows||[]).slice(-12).reverse().map((d) =>
     `<div class="baris"><span class="w">${(d.waktu||'').replace('T',' ').slice(0,19)} UTC</span>
@@ -647,7 +701,7 @@ async function segarkan(){
     $('tumbuh').textContent = (a.terkunci||0) + ' / ' + (a.dinilai !== undefined ? a.benar + a.salah : 0);
     $('tumbuh-sub').innerHTML = `terkunci · dinilai · <b>${a.terbuka||0}</b> terbuka`;
     isiSasaran(r); salinKeAksi(); isiKandidat(r); isiRiwayat(prak); isiGenome(r.genome);
-    isiPelajaran(r); isiDenyut(den); isiIlmu(r, jur); isiPiagam(r);
+    isiPelajaran(r); isiDenyut(den); isiIlmu(r, jur); isiWarisan(r); isiPiagam(r);
     $('catatan').innerHTML = (r.catatanJujur||[]).map((c)=>`<li>${c}</li>`).join('');
     $('protokol').textContent = r.protokol || '';
     document.title = 'MICAPROFITA — denyut #' + r.siklus + ' · akurasi ' + (a.akurasiPct ?? '—');
