@@ -96,6 +96,9 @@
   .pitaref{font-family:var(--mono);font-size:11.5px;color:var(--amber);margin-top:3px}
   .ketkal{color:var(--redup);font-size:11.5px;margin-top:3px}
   .jnote{background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.25);border-radius:12px;padding:12px 14px;margin-top:10px;font-size:12.5px;color:#bfe9f2}
+  .peringatan{border:1px solid var(--amber);border-radius:10px;padding:10px 12px;background:rgba(255,180,60,.06)}
+  .peringatan li{margin-left:18px;font-size:12.5px;color:#d8dcae;margin-top:4px}
+  .mandatbox{border:1px solid var(--sian);border-radius:10px;padding:10px 12px;background:rgba(34,211,238,.06)}
   @media(max-width:520px){.angka-besar{font-size:28px}.dim{grid-template-columns:70px 52px 1fr}}
 </style>
 </head>
@@ -181,6 +184,21 @@
     <thead><tr><th>Jurnal teruji</th><th>Penulis</th><th>Tahun</th><th>Terbitan</th><th>Dipasang sebagai</th></tr></thead>
     <tbody id="ilmu-jurnal"><tr><td colspan="5" style="color:var(--redup)">—</td></tr></tbody>
   </table></div>
+
+  <h2>Piagam Cyborg — 5 Pilar (dipasang nyata, diaudit siapa pun)</h2>
+  <div id="piagam-identitas" class="jnote">—</div>
+  <div class="ringkas" id="piagam-pilar" style="margin-top:12px"></div>
+  <div style="height:10px"></div>
+  <div class="gulir"><table class="tabel">
+    <thead><tr><th>Otak spesialis</th><th>Tugas</th><th>Mesin</th><th>Status</th></tr></thead>
+    <tbody id="piagam-otak"><tr><td colspan="4" style="color:var(--redup)">—</td></tr></tbody>
+  </table></div>
+
+  <h2>Sadar-Diri Fungsional — Otak Memeriksa Tubuh &amp; Jiwanya Sendiri</h2>
+  <div class="ringkas" id="sadar-kartu"></div>
+  <div id="sadar-peringatan" style="margin-top:10px"></div>
+  <div id="mandat-terbuka" style="margin-top:10px"></div>
+  <div id="jalur-tumbuh" class="jnote"></div>
 
   <h2>Kandidat Lain</h2>
   <div class="gulir"><table class="tabel kandidat">
@@ -370,6 +388,42 @@ function isiDenyut(rows){
      <span>koin <b>${d.simbolOK}</b></span><span>kunci <b>${d.terkunciBaru}</b></span>
      <span>nilai <b>${d.dinilaiBaru}</b></span><span>rezim <b>${d.rezimBTC||'—'}</b></span></div>`).join('');
 }
+function isiPiagam(r){
+  const p = r.piagam;
+  if (!p){ $('piagam-identitas').textContent = 'piagam belum dibawa laporan ini — menunggu denyut V248 berikutnya'; return; }
+  $('piagam-identitas').innerHTML = '<b>IDENTITAS:</b> ' + p.identitas;
+  $('piagam-pilar').innerHTML = (p.pilar||[]).map((x) => `<div class="kartu">
+    <div class="label">${x.pilar}</div>
+    <div style="font-size:12.5px;margin-bottom:8px">${x.mekanisme}</div>
+    <div class="sub" style="font-family:var(--mono)">bukti: ${x.bukti}</div>
+    <div style="margin-top:8px"><span class="st BENAR">HIDUP</span></div></div>`).join('');
+  $('piagam-otak').innerHTML = (p.otak||[]).map((o) => `<tr><td style="font-family:inherit"><b>${o.nama}</b></td>
+    <td style="font-family:inherit">${o.tugas}</td><td style="font-family:inherit;color:var(--redup)">${o.mesin}</td>
+    <td><span class="st BENAR">${o.status}</span></td></tr>`).join('') || '<tr><td colspan="4" style="color:var(--redup)">—</td></tr>';
+  const s = r.sadardiri;
+  if (s){
+    const kartu = [
+      ['Sidik Jiwa (sha256-12)', (s.jiwa?.sidikGenome || '—') + ' · ' + (s.jiwa?.sidikLedger || '—'), 'genome · ledger — jiwa bisa diverifikasi bit demi bit'],
+      ['Memori Berlapis (FinMem)', `${s.jiwa?.memori?.peristiwa ?? '—'} peristiwa · ${s.jiwa?.memori?.pelajaran ?? '—'} pelajaran · <b>${s.jiwa?.memori?.doktrin ?? '—'}</b> doktrin`, s.jiwa?.kapasitas || ''],
+      ['Kesehatan Otak', `Brier ${s.kesehatan?.brierArah ?? '—'} · generasi <b>${s.kesehatan?.generasiOtak ?? '—'}</b>`, `pita konformal ${s.kesehatan?.pitaKonformalAktif ? '<b style="color:var(--hijau)">AKTIF</b>' : 'menunggu medan'} · gerbang radar ${s.kesehatan?.gerbangRadar ?? '—'} · meta ${s.kesehatan?.metaGeser ?? 0}`],
+      ['Tubuh &amp; Data', `host ${s.tubuh?.hostUtama || '—'} · <b>${s.tubuh?.simbolTersedia ?? '—'}</b> koin OK`, `umur data ${s.tubuh?.dataUmurJam ?? '—'} jam · gagal telusur ${s.tubuh?.gagalTelusur ?? 0}`],
+    ];
+    $('sadar-kartu').innerHTML = kartu.map(([l,v,sub]) => `<div class="kartu"><div class="label">${l}</div>
+      <div style="font-size:13.5px;font-family:var(--mono);margin-bottom:4px">${v}</div><div class="sub">${sub}</div></div>`).join('');
+    const per = s.peringatan || [];
+    $('sadar-peringatan').innerHTML = per.length
+      ? '<div class="peringatan"><b style="color:var(--amber)">Peringatan sadar-diri (' + per.length + ') — otaknya bertindak sendiri:</b><ul>' + per.map((x)=>`<li>${x}</li>`).join('') + '</ul><div style="color:var(--redup);font-size:11.5px;margin-top:6px">tindakan siklus ini: ' + (s.tindakanSiklusIni||[]).join(' · ') + '</div></div>'
+      : '<div class="sub">tanpa peringatan — semua pemeriksaan diri lolos siklus ini · tindakan: ' + (s.tindakanSiklusIni||[]).join(' · ') + '</div>';
+  }
+  const m = r.antreanMandat;
+  $('mandat-terbuka').innerHTML = Array.isArray(m)
+    ? (m.length ? '<div class="mandatbox"><b style="color:var(--sian)">Mandat pemilik terbaca dari Issue (dibaca otak tiap denyut):</b><ul style="margin:6px 0 0;padding-left:18px;font-size:12.5px">' + m.map((x)=>`<li><a href="${x.url}" target="_blank" rel="noopener" style="color:var(--sian)">#${x.nomor} ${x.judul}</a> <span style="color:var(--redup)">(dibuat ${lalu(x.dibuat)})</span></li>`).join('') + '</ul></div>'
+       : '<div class="sub">antrean mandat Issue: kosong — buat Issue berlabel "mandat" di repo, otak akan membacanya pada denyut berikutnya</div>')
+    : (m?.catatan ? '<div class="sub">antrean mandat: ' + m.catatan + '</div>' : '');
+  $('jalur-tumbuh').innerHTML = '<b>Jalur pertumbuhan (terus berkembang pesat):</b> ' + (p.jalurPertumbuhan||[]).join(' → ')
+    + '<br><span style="color:var(--amber)">Roadmap jujur:</span> ' + (p.roadmapJujur||'')
+    + (r.pertumbuhan?.metamorfosis ? '<br><b>Metamorfosis hari ini:</b> ' + r.pertumbuhan.metamorfosis : '');
+}
 async function ambil(url){
   const r = await fetch(url + '?t=' + Date.now(), {cache:'no-store'});
   if (!r.ok) throw new Error(url + ' -> HTTP ' + r.status);
@@ -398,7 +452,7 @@ async function segarkan(){
     $('ak7-sub').textContent = 'dinilai ' + (j7.dinilai||0) + ' · benar ' + (j7.benar||0);
     $('tumbuh').textContent = (a.terkunci||0) + ' / ' + (a.dinilai !== undefined ? a.benar + a.salah : 0);
     $('tumbuh-sub').innerHTML = `prediksi terkunci · dinilai · <b>${a.terbuka||0}</b> terbuka`;
-    isiSasaran(r); isiKandidat(r); isiRiwayat(prak); isiGenome(r.genome); isiPelajaran(r); isiDenyut(den); isiIlmu(r, jur);
+    isiSasaran(r); isiKandidat(r); isiRiwayat(prak); isiGenome(r.genome); isiPelajaran(r); isiDenyut(den); isiIlmu(r, jur); isiPiagam(r);
     $('catatan').innerHTML = (r.catatanJujur||[]).map((c)=>`<li>${c}</li>`).join('');
     $('protokol').textContent = r.protokol || '';
     document.title = 'MICAPROFITA — denyut #' + r.siklus + ' · akurasi ' + (a.akurasiPct ?? '—');
