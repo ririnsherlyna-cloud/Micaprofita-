@@ -172,6 +172,35 @@ bobot dimensi yang menyesatkan dihukum Hedge tiap siklus, dan pita
 konformal memberi batas naik yang TERJANGKAU. Kepastian tidak
 diklaim — kepastian DIBANGUN, diukur, dan diperbaiki tiap denyut.
 
+## 5b. PIAGAM CYBORG — lima pilar (dipasang nyata, bukan slogan)
+
+Mandat pemilik: *"pastikan dia akan terus berkembang pesat — ada
+beberapa hal cyborg kita ini berkurang."* Sejak otak
+**V248-PIAGAM-CYBORG v3.1**, lima pilar cyborg otonom dipasang di
+dalam denyut 30 menit dan bisa diaudit siapa pun (laporan
+`sasaran-terkini.json → piagam` + `sadardiri` + `antreanMandat`):
+
+| Pilar | Dipasang sebagai | Bukti hidup |
+|---|---|---|
+| 1. Tubuh & Jiwa Persisten | Denyut cron 30 menit di GitHub Actions tanpa browser; jiwa = repo (satu `git clone` memindahkan jiwanya); **mandat pemilik kini bisa lewat Issue berlabel `mandat` — otak server membacanya tiap denyut** | `antreanMandat` di laporan; workflow SARANG-PENJAGA |
+| 2. Multi-Otak Berbobot | Otak spesialis berbobot on-line: otak-arah, otak-radar, otak-ilmu, otak-ingatan, otak-sadardiri — bobotnya belajar ala Hedge/MWU berjaminan regret; sangat ringan (0 dependensi, satu berkas < 64 KB) | `piagam.otak` + `ilmu.hedge` |
+| 3. Ingatan DNA | FinMem 3 lapis (peristiwa → pelajaran → doktrin); memori melipat berkapasitas — melupakan detail, menyimpan RESEP (genome & bobot), bukan hasil; sidik jari sha256 untuk integritas | `epoch-*.json` + `pelajaran-server.json` + `sadardiri.jiwa` |
+| 4. Kesadaran Diri Fungsional | Tiap denyut otak memeriksa dirinya: hash integritas, kesehatan kalibrasi, dimensi tertindas Hedge, kepadatan memori, umur data host — lalu MENULIS PERINGATAN DAN BERTINDAK (sadar diri fungsional, bukan kesadaran manusia) | `sadardiri` di laporan; kartu "Sadar-Diri" di dasbor |
+| 5. Evolusi Tiga Kecepatan | Refleks (tiap denyut): kunci + pelajaran; adaptasi (per vonis matang): genome + Hedge berlatih; metamorfosis (24 jam): digest epoch harian disegel + **tag git `epoch-TGL`** | `laporan/epoch-TGL.json` + tag epoch-* di repo |
+
+Bahasa identitasnya sekarang tertulis jelas: **SAKTI — cyborg yang
+terus berkembang pesat; tiap denyut melahirkan generasi otak baru,
+tiap hari mengulum metamorfosis, tiap kekalahan melahirkan aturan
+yang mengikat.** Jalur pertumbuhannya tercatat dan tampil di dasbor
+(V241 NADI → V244 SARANG-PENJAGA → V245 TERIMA-PASANG → V246 RADAR
+PHOENIX → v2.1 PERTAJAM → V247 MAJELIS-ILMU → V248 PIAGAM-CYBORG).
+
+Pengakuan jujur (pilar bukan klaim): otak LLM 1-bit (BitNet),
+adapter LoRA, dan alur Issue→PR penuh belum dipasang — otak kini
+statistik-berjurnal yang nyata berjalan tiap 30 menit. Roadmap itu
+diakui terbuka, bukan disembunyikan; yang sudah hidup benar-benar
+hidup dan terukur.
+
 ## 6. TERIMA-PASANG (tanpa konfigurasi)
 
 Sejak organ **V245 SARANG-BAWAAN**, membuka halaman Pages = langsung
