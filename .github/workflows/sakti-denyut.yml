@@ -33,6 +33,9 @@ jobs:
 
       - name: Denyut otak server (tanpa browser)
         run: node scripts/penjaga.mjs
+        env:
+          TOKEN_DENYUT: ${{ secrets.GITHUB_TOKEN }}
+          REPO_DENYUT: ${{ github.repository }}
 
       - name: Komit pertumbuhan (jejak hidup permanen)
         run: |
@@ -48,4 +51,14 @@ jobs:
             git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran [skip ci]"
             git push
           fi
-# PEMICU-DENYUT: komit ringan utk memastikan workflow menyala
+
+      - name: Tag metamorfosis harian (piagam pilar-5: evolusi 24 jam)
+        run: |
+          TAG="epoch-$(date -u +%F)"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "tag $TAG sudah ada — lewati"
+          else
+            git tag -a "$TAG" -m "metamorfosis 24 jam — epoch ${TAG}: resep otak disegel di laporan/epoch-${TAG}.json"
+            git push origin "$TAG"
+            echo "epoch ditandai: $TAG"
+          fi
