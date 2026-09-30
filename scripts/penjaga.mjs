@@ -84,7 +84,7 @@ import path from 'node:path'
 const ROOT = process.cwd()
 const FEE = 0.002            // 0.1% buy + 0.1% sell — wajib
 const HORIZON_JAM = 24       // sasaran harian
-const VERSI = 'V248-PIAGAM-CYBORG v3.1 — lima pilar dipasang: terus berkembang pesat tiap denyut'
+const VERSI = 'V249-WARISAN-ORGAN v4.0 — mesin kuant organ penuh mewarisi otak server: GARCH, Monte Carlo, Volume Profile, Beta, Divergensi, Breadth, Guard Kejut-Pump'
 
 // ---------------- kandang lane ARAH (komite genome) ----------------
 const KANDANG = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'DOGE', 'ADA', 'AVAX', 'LINK', 'TRX']
@@ -119,6 +119,19 @@ const ILMU = {
   KONFORMAL_MAKS: 60,      // memori skor kesesuaian dibatasi (FinMem: ingatan melipat)
   META_MIN_N: 6,           // bucket konfirmasi minimal sebelum gerbang boleh digeser empiris
   META_GESER_MAKS: 8,      // geseran gerbang meta-labeling dibatasi ±8 skor
+}
+
+// ---------------- V249 WARISAN ORGAN BESAR ----------------
+// Riset organ SAKTI penuh (index.html, 8.000+ fungsi kuant: GARCH, Monte Carlo
+// Probability Cone, Volume Profile, CAPM Beta, Divergence, Market Breadth,
+// pump/exhaustion detector) → 7 mesin yang bisa dihitung JUJUR dari lilin 1h
+// yang SUDAH diambil — tanpa API kunci, tanpa dependensi, tanpa klaim baru.
+const WARISAN = {
+  MC_LINTASAN: 2000, MC_LANGKAH: 24, MC_MIN: 0.38,   // gerbang peluang tembus target
+  LAMBDA_EWMA: 0.94,                                  // RiskMetrics — residual terstandarisasi MC
+  VP_BATANG: 48, VP_BUCKET: 24, VA_POROSI: 0.70,     // Volume Profile 48 jam, Value Area 70%
+  BETA_JAM: 90,                                       // regresi CAPM 90 jam vs BTC
+  KEJUT_SIGMA: 4,                                     // lonjakan 6j > 4× sigma-GARCH·√6 di ujung atas = kejar-top
 }
 
 // ---------------- V248 PIAGAM CYBORG — lima pilar (mandat pemilik:
@@ -442,7 +455,7 @@ function radarPhoenix(c) {
 // prediksi "harga high akan berada di mana" — TANGGA TARGET v2.1
 // pelajaran targetKena 0/6: pilih kandidat TERJAUH membuat +12% dalam 24 jam jadi fantasi.
 // kini: pilih magnet nyata TERDEKAT yang memberi untung bersih cukup — first reachable, not highest.
-function pilihTarget(c, entry, rezimGlobal) {
+function pilihTarget(c, entry, rezimGlobal, magnet) {
   const d24 = c.slice(-24)
   const hi24 = Math.max(...d24.map((x) => x.h)), lo24 = Math.min(...d24.map((x) => x.l))
   const tengah = lo24 + (hi24 - lo24) * 0.5
@@ -454,6 +467,7 @@ function pilihTarget(c, entry, rezimGlobal) {
     { level: Math.min(tengah, batas), ket: 'tengah rentang 24 jam — magnet pertama di jalan ke ujung atas' },
     { level: Math.min(hi24, batas), ket: `puncak 24 jam — ujung atas hari ini${hi24 > batas ? ketCap : ''}` },
     { level: Math.min(swing7h, batas), ket: `swing high 7 hari${swing7h > batas ? ketCap : ''}` },
+    ...(magnet && magnet.level > entry * 1.004 ? [{ level: Math.min(magnet.level, batas), ket: magnet.ket }] : []),
   ].filter((k) => k.level > entry * 1.004).sort((a, b) => a.level - b.level)
   const pilih = kandidat.find((k) => k.level / entry - 1 - FEE >= PHX.UNTUNG_MIN)
   if (!pilih) {
@@ -466,6 +480,169 @@ function pilihTarget(c, entry, rezimGlobal) {
     target: pilih.level, ketTarget: pilih.ket, untung: pilih.level / entry - 1 - FEE, lemah: false,
     highAmbisius: hiAmbisius > pilih.level ? +hiAmbisius.toPrecision(7) : null,   // catatan belajar, bukan sasaran resmi
   }
+}
+
+// ---------------- V249 MESIN WARISAN — port dari organ browser ----------------
+// (1) GARCH(1,1) — Bollerslev 1986. omega/alpha/beta dipilih grid-MLE kasar
+//     atas log-return; proyeksi 24 jam memakai peluruhan persistensi (α+β)^k
+//     — bila pasar bermakna-reversi, sigma-24j < sigma1j·√24 (jujur).
+function garch11(closes) {
+  const r = []
+  for (let i = 1; i < closes.length; i++) r.push(Math.log(closes[i] / closes[i - 1]))
+  const n = r.length
+  if (n < 60) throw new Error('lilin kurang untuk GARCH')
+  const var0 = r.reduce((a, x) => a + x * x, 0) / n
+  let terbaik = null
+  for (const al of [0.02, 0.05, 0.08, 0.12, 0.16, 0.20]) {
+    for (const be of [0.70, 0.80, 0.88, 0.93, 0.97]) {
+      if (al + be >= 0.999) continue
+      const om = var0 * (1 - al - be)
+      let ll = 0, h = var0
+      for (const x of r) { ll += -Math.log(h) - (x * x) / h; h = om + al * x * x + be * h }
+      if (!terbaik || ll > terbaik.ll) terbaik = { ll, al, be, om }
+    }
+  }
+  const { al, be, om } = terbaik
+  let h = var0
+  for (const x of r.slice(-60)) h = om + al * x * x + be * h
+  let jumlahH = 0, hk = h
+  for (let k = 0; k < WARISAN.MC_LANGKAH; k++) { jumlahH += hk; hk = om + (al + be) * hk }
+  return {
+    model: `GARCH(1,1) MLE-grid — α=${al} β=${be} (Bollerslev 1986)`,
+    persistensi: +(al + be).toFixed(3), sigma1j: +Math.sqrt(h).toPrecision(4),
+    sigma24jPct: +(Math.sqrt(jumlahH) * 100).toFixed(2),
+  }
+}
+// (2) MONTE CARLO 24 jam — probability cone organ ("Monte Carlo Probability
+//     Cone 30 bar" versi server). Bootstrap residual TERSTANDARISASI
+//     (r/σ-ewma — sebaran ekor-tebal nyata dipertahankan), σ-skalakan GARCH,
+//     drift 0 (jujur: tanpa klaim arah). Mengembalikan peluang kumulatif
+//     ekskursi naik/turun — dipakai untuk guard target + pra-registrasi.
+function monteCarlo24j(c, g, lintasan = WARISAN.MC_LINTASAN, langkah = WARISAN.MC_LANGKAH) {
+  const closes = c.map((x) => x.c)
+  const n = closes.length
+  let varEw = closes.slice(1).reduce((a, x, i) => a + Math.log(x / closes[i]) ** 2, 0) / (n - 1)
+  const res = []
+  for (let i = 1; i < n; i++) {
+    const rr = Math.log(closes[i] / closes[i - 1])
+    varEw = WARISAN.LAMBDA_EWMA * varEw + (1 - WARISAN.LAMBDA_EWMA) * rr * rr
+    res.push(rr / Math.max(Math.sqrt(varEw), 1e-9))
+  }
+  const maksNaik = [], maksTurun = []
+  let pNaik = 0
+  for (let L = 0; L < lintasan; L++) {
+    let lp = 0, up = 0, dn = 0
+    for (let t = 0; t < langkah; t++) {
+      lp += res[(Math.random() * res.length) | 0] * g.sigma1j
+      if (lp > up) up = lp
+      if (lp < dn) dn = lp
+    }
+    if (lp > 0) pNaik++
+    maksNaik.push(up); maksTurun.push(dn)
+  }
+  maksNaik.sort((a, b) => a - b); maksTurun.sort((a, b) => a - b)
+  const ku = (arr, q) => arr[Math.min(arr.length - 1, Math.floor(q * arr.length))]
+  return {
+    pNaik: +(pNaik / lintasan).toFixed(3),
+    q50: +ku(maksNaik, 0.5).toFixed(4), q75: +ku(maksNaik, 0.75).toFixed(4), q90: +ku(maksNaik, 0.9).toFixed(4),
+    pLevel: (fraksi) => maksNaik.filter((x) => x >= Math.log(1 + fraksi)).length / lintasan,
+    pLevelDn: (fraksi) => maksTurun.filter((x) => x <= -Math.abs(Math.log(1 - fraksi))).length / lintasan,
+  }
+}
+// (3) VOLUME PROFILE — POC + Value Area 70% (organ: "Institutional Trading
+//     Zones"). Volume per bucket harga dari typical price 48 jam; magnet
+//     target baru: node volume-tinggi TERDEKAT di atas harga — likuiditas
+//     nyata menarik harga, bukan garis pikir.
+function profilVolume(c) {
+  const d = c.slice(-WARISAN.VP_BATANG)
+  const hi = Math.max(...d.map((x) => x.h)), lo = Math.min(...d.map((x) => x.l))
+  if (!(hi > lo)) return null
+  const NB = WARISAN.VP_BUCKET, leb = (hi - lo) / NB
+  const vol = Array(NB).fill(0)
+  for (const x of d) {
+    const tp = (x.h + x.l + x.c) / 3
+    let i = Math.floor((tp - lo) / leb); if (i < 0) i = 0; if (i >= NB) i = NB - 1
+    vol[i] += x.qv || x.v
+  }
+  const total = vol.reduce((a, x) => a + x, 0) || 1
+  let iPoc = 0
+  for (let i = 1; i < NB; i++) if (vol[i] > vol[iPoc]) iPoc = i
+  let iLo = iPoc, iHi = iPoc, terkumpul = vol[iPoc]
+  while (terkumpul < total * WARISAN.VA_POROSI && (iLo > 0 || iHi < NB - 1)) {
+    const kiri = iLo > 0 ? vol[iLo - 1] : -1
+    const kanan = iHi < NB - 1 ? vol[iHi + 1] : -1
+    if (kanan >= kiri) { iHi++; terkumpul += Math.max(kanan, 0) } else { iLo--; terkumpul += Math.max(kiri, 0) }
+  }
+  const pusat = (i) => +(lo + (i + 0.5) * leb).toPrecision(7)
+  const hargaKini = c[c.length - 1].c
+  const nodeAtas = []
+  for (let i = 0; i < NB; i++) if (vol[i] >= vol[iPoc] * 0.6 && pusat(i) > hargaKini * 1.004) nodeAtas.push(pusat(i))
+  nodeAtas.sort((a, b) => a - b)
+  return {
+    poc: pusat(iPoc), vah: pusat(iHi), val: pusat(iLo),
+    ket: `POC ${pusat(iPoc).toPrecision(7)} · VA ${pusat(iLo).toPrecision(7)}–${pusat(iHi).toPrecision(7)} (70% volume 48 jam)`,
+    magnetAtas: nodeAtas.length ? { level: nodeAtas[0], ket: `node Volume Profile ${nodeAtas[0].toPrecision(7)} — magnet likuiditas institusional 48 jam (POC/VA/HVN)` } : null,
+  }
+}
+// (4) BETA BTC — CAPM (organ: "Cross-Asset Beta vs BTC"). Regresi
+//     least-squares 90 jam return koin vs return BTC + R² (ketergantungan).
+function betaBTC(c, cBTC) {
+  if (!cBTC || cBTC.length < 30) throw new Error('BTC kurang')
+  const n = Math.min(WARISAN.BETA_JAM, c.length - 1, cBTC.length - 1)
+  const rc = [], rb = []
+  for (let i = 0; i < n; i++) {
+    rc.push(Math.log(c[c.length - 1 - i].c / c[c.length - 2 - i].c))
+    rb.push(Math.log(cBTC[cBTC.length - 1 - i].c / cBTC[cBTC.length - 2 - i].c))
+  }
+  const mb = rb.reduce((a, x) => a + x, 0) / n, mc2 = rc.reduce((a, x) => a + x, 0) / n
+  let cov = 0, vb = 0, vc = 0
+  for (let i = 0; i < n; i++) { cov += (rb[i] - mb) * (rc[i] - mc2); vb += (rb[i] - mb) ** 2; vc += (rc[i] - mc2) ** 2 }
+  const beta = vb > 0 ? cov / vb : 1
+  const korel = vb > 0 && vc > 0 ? cov / Math.sqrt(vb * vc) : 0
+  return { beta: +beta.toFixed(3), r2: +(korel * korel).toFixed(3) }
+}
+// (5) DIVERGENSI RSI (organ: "Divergence Analysis") — dua jendela 12 jam:
+//     harga lantai lebih rendah + RSI lebih tinggi = bullish; sebaliknya bearish.
+function divergensiRSI(c) {
+  const r = rsi(c.map((x) => x.c), 14)
+  const n = r.length
+  if (n < 40) return 'belum cukup lilin untuk divergensi'
+  const w = [{ pMin: Infinity, rMin: 999, pMax: -Infinity, rMax: -999 }, { pMin: Infinity, rMin: 999, pMax: -Infinity, rMax: -999 }]
+  for (let j = 0; j < 2; j++) {
+    for (let i = n - 24 + j * 12; i < n - 12 + j * 12; i++) {
+      w[j].pMin = Math.min(w[j].pMin, c[i].l); w[j].rMin = Math.min(w[j].rMin, r[i])
+      w[j].pMax = Math.max(w[j].pMax, c[i].h); w[j].rMax = Math.max(w[j].rMax, r[i])
+    }
+  }
+  if (w[1].pMin < w[0].pMin && w[1].rMin > w[0].rMin + 2) return 'divergensi bullish — harga cetak lantai lebih rendah, RSI lebih tinggi (tekanan jual melemah)'
+  if (w[1].pMax > w[0].pMax && w[1].rMax < w[0].rMax - 2) return 'divergensi bearish — puncak lebih tinggi, RSI lebih rendah (momentum melemah)'
+  return 'tanpa divergensi RSI 12 jam terakhir'
+}
+// (6+7) kemasan satu panggilan + GUARD KEJUT-PUMP — pelajaran false-breakout
+//     terkuantisasi: lonjakan 6 jam > 4× sigma-GARCH·√6 di ujung atas rentang
+//     (opsional diperkuat lonjakan volume) = pasar sedang DIKEJAR — radar
+//     menolak membeli top yang sudah terbang, menunggu koreksi sehat.
+function mesinWarisan(c, cBTC) {
+  const closes = c.map((x) => x.c)
+  let garch
+  try { garch = garch11(closes) } catch { garch = { model: 'ewma-jatuh', sigma1j: 0, sigma24jPct: null } }
+  let vp = null
+  try { vp = profilVolume(c) } catch { vp = null }
+  let beta = null, r2 = null
+  try { const bt = betaBTC(c, cBTC); beta = bt.beta; r2 = bt.r2 } catch { beta = null; r2 = null }
+  const div = divergensiRSI(c)
+  const la = closes.length - 1
+  const naik6 = closes[la] / closes[la - 6] - 1
+  const vol6 = c.slice(-6).reduce((a, x) => a + x.v, 0)
+  const vol48 = c.slice(-54, -6).reduce((a, x) => a + x.v, 0) / 48
+  const volSpike = vol48 > 0 ? vol6 / (vol48 * 6) : 1
+  const d24 = c.slice(-24)
+  const hi24 = Math.max(...d24.map((x) => x.h)), lo24 = Math.min(...d24.map((x) => x.l))
+  const posisi = hi24 > lo24 ? (closes[la] - lo24) / (hi24 - lo24) : 0.5
+  const lonjak = garch.sigma1j > 0 ? naik6 / (garch.sigma1j * Math.sqrt(6)) : 0
+  const kejutPump = posisi > 0.8 && (lonjak > WARISAN.KEJUT_SIGMA || (volSpike > 3 && lonjak > WARISAN.KEJUT_SIGMA * 0.5))
+  const ketKejut = `lonjakan 6 jam ${(naik6 * 100).toFixed(1)}% = ${lonjak.toFixed(1)}× sigma-GARCH, posisi ${(posisi * 100).toFixed(0)}% rentang, volume ${volSpike.toFixed(1)}× rata — kejar-top ditolak`
+  return { garch, vp, beta, r2, div, kejutPump, ketKejut, vpMagnet: vp ? vp.magnetAtas : null }
 }
 
 function vonisPhoenix(rad, phxGenome, dayaProduk, untung, rezimGlobal, gerbangSkor) {
@@ -628,6 +805,10 @@ if (!Array.isArray(ilmu.kalibrasi) || !ilmu.kalibrasi.length)
   ilmu.kalibrasi = ILMU.BIN_KALIBRASI.map(([low, high]) => ({ low, high, n: 0, benar: 0 }))
 if (!Array.isArray(ilmu.konformal)) ilmu.konformal = []
 if (!ilmu.meta) ilmu.meta = { kuat: { n: 0, benar: 0 }, lemah: { n: 0, benar: 0 }, geser: 0 }
+// V249: MC pra-registrasi juga dinilai medan — Brier + kalibrasi bin peluang
+if (!ilmu.brier.mc) ilmu.brier.mc = { n: 0, jumlah: 0 }
+if (!Array.isArray(ilmu.mcKalibrasi) || !ilmu.mcKalibrasi.length)
+  ilmu.mcKalibrasi = [[0.30, 0.45], [0.45, 0.60], [0.60, 0.75], [0.75, 0.96]].map(([low, high]) => ({ low, high, n: 0, benar: 0 }))
 // bobot efektif = campuran 50/50 genome evolusi (per rezim) + Hedge on-line (global)
 const campur = (a, b) => Object.fromEntries([...new Set([...Object.keys(a), ...Object.keys(b)])]
   .map((k) => [k, ((a[k] ?? 0) + (b[k] ?? 0)) / 2]))
@@ -646,6 +827,7 @@ for (const s of KANDANG) {
   const b = dewanBukti(c)
   const v = vonis(b, bobotArah, rezimGlobal)
   const kal = kalibrasiKeyakinan(v.keyakinan, ilmu.kalibrasi)      // V247: kepastian dari medan
+  const warA = mesinWarisan(c, hasil.BTC)                          // V249: konteks kuant ARAH
   const entri = {
     id, simbol: s, jalur: 'ARAH', arah: v.arah, keyakinan: kal.keyakinan, keyakinanMentah: v.keyakinan,
     ketKeyakinan: kal.sumber, skor: v.skor,
@@ -653,6 +835,7 @@ for (const s of KANDANG) {
     bukti: Object.fromEntries(DIM_ARAH.map((k) => [k, +b.dims[k].arah.toFixed(3)])),
     daya: { volume: +b.dims.volume.daya.toFixed(2), volatilitas: +b.dims.volatilitas.daya.toFixed(2), likuiditas: +b.dims.likuiditas.daya.toFixed(2) },
     ketBukti: Object.fromEntries(DIM_ARAH.map((k) => [k, b.dims[k].ket])),
+    warisan: { sigma24jPct: warA.garch.sigma24jPct, beta: warA.beta, r2Beta: warA.r2, divRSI: warA.div },
   }
   ledger.push(entri); terkunciBaru.push(entri)
 }
@@ -671,7 +854,15 @@ if (ilmu.meta.kuat.n >= ILMU.META_MIN_N) {
   ilmu.meta.geser = gerbangMeta
   metaCatatan = `meta-labeling: konfirmasi-kuat tembus ${(hit * 100).toFixed(0)}% dari ${ilmu.meta.kuat.n} kasus — gerbang digeser ${gerbangMeta >= 0 ? '+' : ''}${gerbangMeta}`
 }
-const gerbangSkor = clamp(PHX.GERBANG_SKOR + (rezimTegas ? PHX.TURUN_SKOR_TAMBAH : 0) + gerbangMeta, 34, 56)
+// V249 BREADTH A/D (organ: Market Breadth) — pasar sempit = risiko sistemik;
+// bila < 35% koin naik DAN rezim TURUN, gerbang radar diperketat +2.
+const breadthDari = Object.keys(hasil).length
+const breadthNaik = breadthDari
+  ? [...Object.values(hasil)].filter((c) => c.length > 25 && c[c.length - 1].c > c[c.length - 25].c).length / breadthDari
+  : 0.5
+const pemerketBreadth = breadthNaik < 0.35 && rezimGlobal === 'TURUN' ? 2 : 0
+if (pemerketBreadth) log(`warisan-breadth: hanya ${(breadthNaik * 100).toFixed(0)}% koin naik dalam rezim TURUN — gerbang radar +2`)
+const gerbangSkor = clamp(PHX.GERBANG_SKOR + (rezimTegas ? PHX.TURUN_SKOR_TAMBAH : 0) + gerbangMeta + pemerketBreadth, 34, 58)
 const kunciMaks = rezimTegas ? Math.ceil(PHX.KUNCI_MAKS / 2) : PHX.KUNCI_MAKS
 const lulusPhx = []
 for (const s of daftarTelusur) {
@@ -681,7 +872,8 @@ for (const s of daftarTelusur) {
   if (c.length < 80) continue                                       // radar butuh sejarah cukup
   const b = dewanBukti(c)
   const rad = radarPhoenix(c)
-  const tgt = pilihTarget(c, b.harga, rezimGlobal)
+  const war = mesinWarisan(c, hasil.BTC)          // V249: GARCH + VP + Beta + Divergensi + Guard
+  const tgt = pilihTarget(c, b.harga, rezimGlobal, war.vpMagnet)
   const dayaProduk = clamp(b.dims.volume.daya, 0.35, 1) * clamp(b.dims.volatilitas.daya, 0.3, 1) * clamp(b.dims.likuiditas.daya, 0.4, 1)
   const v = vonisPhoenix(rad, bobotPhx, dayaProduk, tgt.untung, rezimGlobal, gerbangSkor)
   // GERBANG KONFIRMASI v2.1 — dilahirkan oleh 4 kekalahan pisau-jatuh (ACE/ARB/XPL/CRCLB, semua
@@ -710,9 +902,34 @@ for (const s of daftarTelusur) {
     }
     continue
   }
+  // V249 GUARD KEJUT-PUMP — pelajaran false-breakout terkuantisasi: pasar yang
+  // sudah terbang cepat di ujung atas bukan akumulasi lagi, dia DIKEJAR. Radar
+  // menolak membeli top, menunggu koreksi sehat (aturan mengikat, bukan mood).
+  if (war.kejutPump) {
+    if (v.skor >= 25 && !tgt.lemah) {
+      nearMiss.push({
+        simbol: s, arah: 'BUY', keyakinan: Math.round(v.skor), entry: b.harga, rezim: b.rezim,
+        catatan: `guard kejut-pump — ${war.ketKejut}`,
+      })
+    }
+    continue
+  }
+  // V249 GUARD MONTE CARLO — peluang statistik tembus target harus layak:
+  // 2.000 lintasan × 24 langkah dari σ-GARCH + sebaran residual nyata. Bila
+  // peluang < MC_MIN, statistik MENOLAK target — tidak dipaksa lolos.
+  const mc = monteCarlo24j(c, war.garch)
+  const pT = mc.pLevel(tgt.target / b.harga - 1)
+  if (pT < WARISAN.MC_MIN) {
+    nearMiss.push({
+      simbol: s, arah: 'BUY', keyakinan: Math.round(v.skor), entry: b.harga, rezim: b.rezim,
+      catatan: `Monte Carlo 2.000 lintasan menilai peluang tembus target cuma ${(pT * 100).toFixed(0)}% (< ${Math.round(WARISAN.MC_MIN * 100)}%) — statistik menolak`,
+    })
+    continue
+  }
+  const pA = tgt.highAmbisius ? mc.pLevel(tgt.highAmbisius / b.harga - 1) : null
   lulusPhx.push({
     id, simbol: s, jalur: 'PHOENIX', arah: 'BUY', keyakinan: v.keyakinan, skorPhoenix: v.skor,
-    entry: b.harga, tgt, rad, b, dayaProduk, urut: v.skor * Math.min(tgt.untung, 0.06),   // v2.1: fantasi +12% tak lagi memenangkan kuota
+    entry: b.harga, tgt, rad, b, war, mc, pT, pA, dayaProduk, urut: v.skor * Math.min(tgt.untung, 0.06),   // v2.1: fantasi +12% tak lagi memenangkan kuota
   })
 }
 // kuota harian: hanya prediksi radar TERBAIK yang dikunci — sisanya jujur jadi kandidat
@@ -728,16 +945,28 @@ for (const [i, p] of lulusPhx.entries()) {
     })
     continue
   }
-  const { tgt, rad, b } = p
+  const { tgt, rad, b, war, mc, pT, pA } = p
   const kalP = kalibrasiKeyakinan(p.keyakinan, ilmu.kalibrasi)     // V247: kepastian dari medan
   const pita = pitaKonformal(ilmu.konformal)                       // V247: pita 75% ujung atas
+  const stopHarga = +Math.min(b.harga * (1 - 1.8 * rad.atrPct / 100), rad.lo24 - (0.25 * rad.atrPct / 100) * b.harga).toPrecision(6)
+  const pStop = mc ? mc.pLevelDn((b.harga - stopHarga) / b.harga) : null
   const entri = {
     id: p.id, simbol: p.simbol, jalur: 'PHOENIX', arah: 'BUY', keyakinan: kalP.keyakinan, keyakinanMentah: p.keyakinan,
     ketKeyakinan: kalP.sumber, skorPhoenix: p.skorPhoenix,
     entry: b.harga, target: +tgt.target.toPrecision(7), ketTarget: tgt.ketTarget,
     untungBersih: +tgt.untung.toFixed(4),
-    stop: +Math.min(b.harga * (1 - 1.8 * rad.atrPct / 100), rad.lo24 - (0.25 * rad.atrPct / 100) * b.harga).toPrecision(6),
+    stop: stopHarga,
     highAmbisius: tgt.highAmbisius ?? null,
+    warisan: {
+      sigma24jPct: war.garch.sigma24jPct, modelVol: war.garch.model, beta: war.beta, r2Beta: war.r2,
+      poc: war.vp?.poc ?? null, profilVolume: war.vp?.ket ?? null, divRSI: war.div,
+      mc: {
+        lintasan: WARISAN.MC_LINTASAN, langkah: WARISAN.MC_LANGKAH,
+        pTarget: +pT.toFixed(3), pStop: pStop != null ? +pStop.toFixed(3) : null,
+        pAmbisius: pA != null ? +pA.toFixed(3) : null, pNaik: mc?.pNaik ?? null,
+        ket: 'peluang Monte Carlo PRA-REGISTRASI — dinilai medan saat horizon habis (Brier + kalibrasi bin)',
+      },
+    },
     ...(pita ? {
       pitaUjungAtas: {
         atas75Pct: +(pita.atas * 100).toFixed(2), atas75Harga: +(b.harga * (1 + pita.atas)).toPrecision(7),
@@ -793,6 +1022,14 @@ for (const e of ledger) {
       const kuat = (e.radar?.sinyal?.momentum ?? 0) >= PHX.KONFIRM_MOMENTUM && (e.radar?.sinyal?.akumulasi ?? 0) >= 0.30
       const bk = kuat ? ilmu.meta.kuat : ilmu.meta.lemah
       bk.n += 1; if (net > 0) bk.benar += 1
+    }
+    // V249: MC pra-registrasi dinilai medan — kalibrasi peluang statistik
+    if (e.warisan?.mc?.pTarget != null && e.barier) {
+      const hitT = e.barier === 'TARGET' ? 1 : 0
+      ilmu.brier.mc.jumlah += (e.warisan.mc.pTarget - hitT) ** 2
+      ilmu.brier.mc.n += 1
+      const bkMc = ilmu.mcKalibrasi.find((x) => e.warisan.mc.pTarget >= x.low && e.warisan.mc.pTarget < x.high)
+      if (bkMc) { bkMc.n += 1; if (hitT) bkMc.benar += 1 }
     }
   }
   dinilaiBaru.push(e)
@@ -1055,6 +1292,7 @@ const barisDari = (e) => ({
   ...(e.pitaUjungAtas ? { pitaUjungAtas: e.pitaUjungAtas } : {}),
   rezim: e.rezim, dikunci: e.waktuKunci, horizon: e.horizon, fee: '0.2% pulang-pergi',
   bukti: e.bukti, ketBukti: e.ketBukti, daya: e.daya,
+  ...(e.warisan ? { warisan: e.warisan } : {}),
 })
 // tiap lane memakai prediksi barunya hari ini; bila kosong (sudah terkunci siklus lalu), pakai yang TERBUKA
 const pilihDasar = (jalurPhx) => {
@@ -1093,10 +1331,31 @@ const laporan = {
       'V245 TERIMA-PASANG — organ browser menyatu dengan laporan server', 'V246 RADAR PHOENIX — beli ujung bawah, jual ujung atas',
       'V246 v2.1 PERTAJAM — gerbang konfirmasi + tangga target + bahan ajar', 'V247 MAJELIS-ILMU — 5 metode jurnal teruji dipasang',
       'V248 PIAGAM-CYBORG — 5 pilar + sadar-diri + epoch harian + mandat Issue',
+      'V249 WARISAN-ORGAN — 7 mesin kuant organ penuh mewarisi otak server (GARCH, Monte Carlo, Volume Profile, Beta, Divergensi, Breadth, Guard Kejut-Pump)',
     ],
   },
   sadardiri,
   antreanMandat,
+  warisan: {
+    identitas: 'V249 WARISAN-ORGAN — riset organ SAKTI penuh (index.html, 8.000+ fungsi kuant) lalu mewarisi 7 mesin yang bisa dihitung jujur dari lilin yang sama ke otak server — tanpa API kunci, tanpa dependensi',
+    mesin: [
+      'GARCH(1,1) MLE-grid (Bollerslev 1986) — proyeksi sigma 24 jam per koin, mengikat lebar stop & ekspektasi realistis',
+      'Monte Carlo 2.000 lintasan × 24 langkah (probability cone organ) — peluang tembus target/stop PRA-REGISTRASI lalu DINILAI medan (Brier + kalibrasi bin)',
+      'Volume Profile POC + Value Area 70% — target kini mengait node likuiditas institusional 48 jam (magnet nyata)',
+      'Beta BTC CAPM 90 jam + R² — sensitivitas koin vs pasar tercatat di tiap prediksi',
+      'Divergensi RSI 12 jam — catatan pembalikan di tiap entri',
+      'Breadth A/D pasar — bila < 35% koin naik dalam rezim TURUN, gerbang radar diperketat +2',
+      'Guard Kejut-Pump — pelajaran false-breakout terkuantisasi: lonjakan > 4× sigma-GARCH·√6 di ujung atas ditolak, bukan dikejar',
+    ],
+    breadth: { naik24jPct: +(breadthNaik * 100).toFixed(1), dari: breadthDari, ket: pemerketBreadth ? 'pasar sempit — gerbang radar diperketat +2 skor' : 'pasar cukup luas — gerbang normal' },
+    gerbangRadar: gerbangSkor,
+    mc: {
+      lintasan: WARISAN.MC_LINTASAN, gerbangPTarget: WARISAN.MC_MIN,
+      brier: ilmu.brier.mc.n ? +(ilmu.brier.mc.jumlah / ilmu.brier.mc.n).toFixed(4) : null, nMc: ilmu.brier.mc.n,
+      kalibrasi: ilmu.mcKalibrasi.map((b) => ({ bin: `${Math.round(b.low * 100)}–${Math.round(b.high * 100)}%`, n: b.n, tembusPct: b.n ? +((b.benar / b.n) * 100).toFixed(1) : null })),
+    },
+    catatan: 'pTarget/pStop dikunci saat pra-registrasi lalu dinilai medan — kalibrasi MC tumbuh dari ledger, bukan klaim; funding-rate real tidak dipakai (endpoint futures tak terjangkau dari runner) — stres leverage diwakili guard kejut-pump berbasis volume, diakui jujur',
+  },
   pelajaran: pelajaranDaftar.slice(0, 6),
   aturanBelajar: {
     pola: aturan.pola,
@@ -1140,6 +1399,7 @@ const laporan = {
     'BAHAN AJAR: setiap vonis ditulis jadi pelajaran (laporan/pelajaran-server.json); pola kekalahan yang terulang >= 2 kali melahirkan ATURAN baru yang mengikat gerbang siklus berikutnya — otak tumbuh dari medan, bukan tebakan',
     'ILMU BERJURNAL: bobot bukti belajar on-line ala Hedge dengan jaminan regret (Arora dkk 2012); keyakinan diperlakukan sebagai probabilitas — dinilai Brier (Gneiting-Raftery 2007) dan dikalibrasi dari hit-rate medan sendiri; pita ujung atas memakai jaminan cakupan konformal (Angelopoulos-Bates 2021); vonis phoenix dilabel triple-barrier dan gerbang digeser meta-labeling (Lopez de Prado 2018) — kepastian dibangun dari metode teruji + medan sendiri, bukan janji',
     'PIAGAM CYBORG: lima pilar — tubuh persisten, multi-otak berbobot, ingatan DNA, sadar-diri fungsional, evolusi tiga kecepatan — dipasang nyata dan terbuka diaudit siapa pun; otak LLM/LoRA masih roadmap yang diakui jujur; satu hal pasti: cyborg ini terus berkembang pesat tiap denyut',
+    'WARISAN ORGAN: riset organ SAKTI penuh (8.000+ fungsi) lalu mewarisi yang bisa dihitung jujur — GARCH/Monte Carlo/Volume Profile/Beta/Divergensi/Breadth/Kejut-Pump berjalan di tiap denyut; peluang MC dipra-registrasi dan dinilai medan seperti keyakinan; funding-rate real diakui tak terjangkau dan digantian proxy jujur',
   ],
 }
 tulis(path.join(ROOT, 'laporan/sasaran-terkini.json'), laporan)
@@ -1156,6 +1416,7 @@ denyut.push({
   pelajaranBaru: pelajaranDaftar.length, aturanBaru: aturanBaru.length,
   brier: ilmu.brier.arah.n ? +(ilmu.brier.arah.jumlah / ilmu.brier.arah.n).toFixed(3) : null,
   akurasiPct: akurasi.akurasiPct, rezimBTC: rezimGlobal,
+  breadth: +(breadthNaik * 100).toFixed(1),
   epoch: keadaan.epochTerakhir, peringatan: sadardiri.peringatan.length,
 })
 tulisJsonl(path.join(ROOT, 'laporan/denyut-server.jsonl'), denyut.slice(-500))
@@ -1185,6 +1446,7 @@ tulis(path.join(ROOT, 'laporan/jurnal-ilmu.json'), {
     tripleBarrier: 'e.barier (TARGET/STOP/WAKTU) dihitung saat penilaian phoenix',
     metaLabeling: 'ilmu.meta.kuat/lemah menilai gerbang radar; geser dibatasi ±8 (laporan.ilmu.metaGerbang)',
     finmem: 'lapisan 1 ledger -> lapisan 2 pelajaran -> lapisan 3 aturan (laporan/pelajaran-server.json)',
+    warisan: 'mesinWarisan()/garch11()/monteCarlo24j()/profilVolume()/betaBTC() berjalan tiap telusur; pTarget MC tersimpan di e.warisan.mc (pra-registrasi) lalu dinilai saat matang (ilmu.brier.mc + ilmu.mcKalibrasi)',
   },
 })
 
