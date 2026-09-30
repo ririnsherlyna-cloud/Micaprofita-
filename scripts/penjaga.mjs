@@ -30,6 +30,17 @@
 //     (komite genome) — keduanya pra-registrasi, dinilai net
 //     P/L close-ke-close, genome radar ikut berevolusi.
 //
+//   v2.1 — PHOENIX-PERTAJAM (lahir dari 4 kekalahan pertama, net −11.35%):
+//     1. GERBANG KONFIRMASI wajib — di atas EMA9 + taker-buy menguat +
+//        masih di ujung bawah; tak ada lagi menadah pisau jatuh.
+//     2. TANGGA TARGET — pilih magnet nyata TERDEKAT (tengah rentang →
+//        puncak 24 jam), bukan swing tertinggi yang fantasi (targetKena 0/6).
+//     3. Rezim TURUN/PARABOLIK: gerbang skor +10, kuota dibelah, cap target 6%.
+//     4. Stop struktural di bawah lantai 24 jam (bukan cuma ATR).
+//     5. BAHAN AJAR — tiap vonis jadi pelajaran (laporan/pelajaran-server.json);
+//        pola kekalahan terulang >= 2x melahirkan ATURAN yang mengikat gerbang.
+//     6. MFE/MAE dicatat: seberapa jauh harga benar-benar bergerak setelah kunci.
+//
 // Prinsip: 0 dependensi, 0 API key, data publik saja.
 // Protokol: SASARAN-MICAPROFITA (laporan), ledger prakira
 // berantai waktu, fee 0.1%+0.1% wajib, vonis WAJIB biner
@@ -47,7 +58,7 @@ import path from 'node:path'
 const ROOT = process.cwd()
 const FEE = 0.002            // 0.1% buy + 0.1% sell — wajib
 const HORIZON_JAM = 24       // sasaran harian
-const VERSI = 'V246-SARANG-PENJAGA v2.0 — PHOENIX-RADAR'
+const VERSI = 'V246-SARANG-PENJAGA v2.1 — PHOENIX-PERTAJAM (belajar dari kekalahan)'
 
 // ---------------- kandang lane ARAH (komite genome) ----------------
 const KANDANG = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'DOGE', 'ADA', 'AVAX', 'LINK', 'TRX']
@@ -63,6 +74,12 @@ const PHX = {
   SASARAN_ARAH: 3,         // maks baris komite di sasaran utama
   KUNCI_MAKS: 6,           // kuota prediksi phoenix terkunci per hari — hanya yang terbaik
   TARGET_CAP: 1.12,        // target dibatasi +12% dari entry agar tetap realistis
+  // ---- v2.1: dilahirkan oleh kekalahan nyata (ACE/ARB/XPL/CRCLB, targetKena 0/6) ----
+  KONFIRM_MOMENTUM: 0.5,   // WAJIB: harga sudah kembali di atas EMA9 — dilarang membeli pisau jatuh
+  KONFIRM_AKUMULASI: 0.15, // WAJIB: taker-buy 12j > 12j sebelumnya — beli diam-diam harus terbaca
+  KONFIRM_POSISI: 0.35,    // WAJIB: masih di sepertiga bawah rentang 24 jam — "harga termurah hari itu"
+  TURUN_SKOR_TAMBAH: 10,   // rezim TURUN/PARABOLIK: gerbang dinaikkan — melawan arus harus lebih meyakinkan
+  TURUN_CAP: 1.06,         // rezim TURUN/PARABOLIK: target cap +6% — harapan kecil yang jujur
 }
 
 // ---------------- rantai host data publik ----------------
@@ -253,12 +270,15 @@ function dewanBukti(c) {
 const DIM_ARAH = ['struktur', 'momentum', 'sr', 'tekanan', 'perubahan']
 const GENOME_AWAL = { struktur: 0.24, momentum: 0.26, sr: 0.16, tekanan: 0.18, perubahan: 0.16 }
 
-function vonis(b, genome) {
+function vonis(b, genome, rezimGlobal) {
   let skor = 0
   for (const k of DIM_ARAH) skor += (genome[k] ?? GENOME_AWAL[k]) * b.dims[k].arah
   const dayaProduk = clamp(b.dims.volume.daya, 0.35, 1) * clamp(b.dims.volatilitas.daya, 0.3, 1) * clamp(b.dims.likuiditas.daya, 0.4, 1)
   const arah = skor > 0 ? 'BUY' : 'SELL'                    // WAJIB biner — tanpa SKIP
-  const keyakinan = clamp(Math.round(50 + 90 * Math.abs(skor) * dayaProduk), 52, 97)
+  let keyakinan = clamp(Math.round(50 + 90 * Math.abs(skor) * dayaProduk), 52, 97)
+  // pelajaran LINK (SELL −9.2% saat rezim NAIK): melawan rezim dibayar keyakinan lebih rendah — jujur sejak awal
+  if (arah === 'SELL' && (rezimGlobal === 'NAIK' || rezimGlobal === 'PARABOLIK')) keyakinan = clamp(keyakinan - 8, 52, 97)
+  if (arah === 'BUY' && rezimGlobal === 'TURUN') keyakinan = clamp(keyakinan - 8, 52, 97)
   return { arah, keyakinan, skor: +skor.toFixed(4), dayaProduk: +dayaProduk.toFixed(3) }
 }
 
@@ -326,32 +346,40 @@ function radarPhoenix(c) {
   }
 }
 
-// prediksi "harga high akan berada di mana" — rantai level nyata terjangkau
-function pilihTarget(c, entry) {
+// prediksi "harga high akan berada di mana" — TANGGA TARGET v2.1
+// pelajaran targetKena 0/6: pilih kandidat TERJAUH membuat +12% dalam 24 jam jadi fantasi.
+// kini: pilih magnet nyata TERDEKAT yang memberi untung bersih cukup — first reachable, not highest.
+function pilihTarget(c, entry, rezimGlobal) {
   const d24 = c.slice(-24)
   const hi24 = Math.max(...d24.map((x) => x.h)), lo24 = Math.min(...d24.map((x) => x.l))
   const tengah = lo24 + (hi24 - lo24) * 0.5
   const swing7h = c.length >= 168 ? Math.max(...c.slice(-168).map((x) => x.h)) : hi24
-  const batas = entry * PHX.TARGET_CAP
+  const cap = rezimGlobal === 'TURUN' || rezimGlobal === 'PARABOLIK' ? PHX.TURUN_CAP : PHX.TARGET_CAP
+  const batas = entry * cap
+  const ketCap = ` (dibatasi +${((cap - 1) * 100).toFixed(0)}% rezim ${rezimGlobal} agar realistis)`
   const kandidat = [
-    { level: Math.min(tengah, batas), ket: `tengah rentang 24 jam — magnet pertama${tengah > batas ? ' (dibatasi +12%)' : ''}` },
-    { level: Math.min(hi24, batas), ket: `puncak 24 jam — ujung atas hari ini${hi24 > batas ? ' (dibatasi +12% agar realistis)' : ''}` },
-    { level: Math.min(swing7h, batas), ket: `swing high 7 hari${swing7h > batas ? ' (dibatasi +12% agar realistis)' : ''}` },
+    { level: Math.min(tengah, batas), ket: 'tengah rentang 24 jam — magnet pertama di jalan ke ujung atas' },
+    { level: Math.min(hi24, batas), ket: `puncak 24 jam — ujung atas hari ini${hi24 > batas ? ketCap : ''}` },
+    { level: Math.min(swing7h, batas), ket: `swing high 7 hari${swing7h > batas ? ketCap : ''}` },
   ].filter((k) => k.level > entry * 1.004).sort((a, b) => a.level - b.level)
-  let pilih = null
-  for (const k of kandidat) if (k.level / entry - 1 - FEE >= PHX.UNTUNG_MIN) pilih = k
+  const pilih = kandidat.find((k) => k.level / entry - 1 - FEE >= PHX.UNTUNG_MIN)
   if (!pilih) {
-    const untungHi = Math.min(hi24, batas) / entry - 1 - FEE
-    return { target: Math.min(hi24, batas), ketTarget: 'puncak 24 jam', untung: untungHi, lemah: untungHi < PHX.UNTUNG_MIN }
+    // jujur: tak ada magnet nyata yang memberi >= 1% bersih — radar MENOLAK, bukan mengarang level
+    const palingJauh = kandidat.length ? kandidat[kandidat.length - 1].level : hi24
+    return { target: palingJauh, ketTarget: 'tak ada magnet nyata di depan — radar menolak', untung: palingJauh / entry - 1 - FEE, lemah: true }
   }
-  return { target: pilih.level, ketTarget: pilih.ket, untung: pilih.level / entry - 1 - FEE, lemah: false }
+  const hiAmbisius = Math.min(swing7h, batas)
+  return {
+    target: pilih.level, ketTarget: pilih.ket, untung: pilih.level / entry - 1 - FEE, lemah: false,
+    highAmbisius: hiAmbisius > pilih.level ? +hiAmbisius.toPrecision(7) : null,   // catatan belajar, bukan sasaran resmi
+  }
 }
 
-function vonisPhoenix(rad, phxGenome, dayaProduk, untung, rezimGlobal) {
+function vonisPhoenix(rad, phxGenome, dayaProduk, untung, rezimGlobal, gerbangSkor) {
   let skor = 0
   for (const k of PHX_DIM) skor += (phxGenome[k] ?? PHX_AWAL[k]) * rad.sinyal[k]
   const skor100 = clamp(skor * 100, 0, 100)                 // bobot total 1, sinyal 0..1
-  const lolos = skor100 >= PHX.GERBANG_SKOR && untung >= PHX.UNTUNG_MIN && dayaProduk >= 0.25
+  const lolos = skor100 >= (gerbangSkor ?? PHX.GERBANG_SKOR) && untung >= PHX.UNTUNG_MIN && dayaProduk >= 0.25
   let keyakinan = 50 + skor100 * 0.30 + dayaProduk * 12 + Math.min(untung, 0.05) * 140
   if (rezimGlobal === 'TURUN') keyakinan -= 8               // jujur: melawan arus lebih berisiko
   if (rezimGlobal === 'PARABOLIK') keyakinan -= 6
@@ -469,7 +497,7 @@ for (const s of KANDANG) {
   const id = `${s}-${TGL}`
   if (ledger.some((e) => e.id === id)) continue                    // satu per simbol per hari UTC
   const b = dewanBukti(c)
-  const v = vonis(b, genome)
+  const v = vonis(b, genome, rezimGlobal)
   const entri = {
     id, simbol: s, jalur: 'ARAH', arah: v.arah, keyakinan: v.keyakinan, skor: v.skor,
     entry: b.harga, waktuKunci: ISO, horizon: '24j', rezim: b.rezim, status: 'TERBUKA',
@@ -481,6 +509,10 @@ for (const s of KANDANG) {
 }
 
 // 1b. lane PHOENIX — beli di ujung bawah hari, jual di ujung atas yang diprediksi
+// gerbang rezim-tegas — lahir dari pelajaran: melawan arus butuh bukti lebih kuat & kuota lebih kecil
+const rezimTegas = rezimGlobal === 'TURUN' || rezimGlobal === 'PARABOLIK'
+const gerbangSkor = PHX.GERBANG_SKOR + (rezimTegas ? PHX.TURUN_SKOR_TAMBAH : 0)
+const kunciMaks = rezimTegas ? Math.ceil(PHX.KUNCI_MAKS / 2) : PHX.KUNCI_MAKS
 const lulusPhx = []
 for (const s of daftarTelusur) {
   const c = hasil[s]; if (!c) continue
@@ -489,34 +521,50 @@ for (const s of daftarTelusur) {
   if (c.length < 80) continue                                       // radar butuh sejarah cukup
   const b = dewanBukti(c)
   const rad = radarPhoenix(c)
-  const tgt = pilihTarget(c, b.harga)
+  const tgt = pilihTarget(c, b.harga, rezimGlobal)
   const dayaProduk = clamp(b.dims.volume.daya, 0.35, 1) * clamp(b.dims.volatilitas.daya, 0.3, 1) * clamp(b.dims.likuiditas.daya, 0.4, 1)
-  const v = vonisPhoenix(rad, phxGenome, dayaProduk, tgt.untung, rezimGlobal)
+  const v = vonisPhoenix(rad, phxGenome, dayaProduk, tgt.untung, rezimGlobal, gerbangSkor)
+  // GERBANG KONFIRMASI v2.1 — dilahirkan oleh 4 kekalahan pisau-jatuh (ACE/ARB/XPL/CRCLB, semua
+  // dikunci saat momentum negatif): koin di ujung bawah TANPA konfirmasi bukan akumulasi, dia
+  // sedang JATUH. WAJIB: kembali di atas EMA9 + taker-buy menguat + masih di ujung bawah.
+  const gagalKonfirm = []
+  if (rad.sinyal.momentum < PHX.KONFIRM_MOMENTUM) gagalKonfirm.push('harga masih di bawah EMA9 — pisau jatuh, bukan akumulasi')
+  if (rad.sinyal.akumulasi < PHX.KONFIRM_AKUMULASI) gagalKonfirm.push('taker-buy tidak menguat — tak ada beli diam-diam yang terbaca')
+  if (rad.posisi > PHX.KONFIRM_POSISI) gagalKonfirm.push(`sudah merangkak ${(rad.posisi * 100).toFixed(0)}% rentang 24 jam — bukan lagi harga termurah hari itu`)
+  if (gagalKonfirm.length) {
+    if (v.skor >= 25 && !tgt.lemah) {
+      nearMiss.push({
+        simbol: s, arah: 'BUY', keyakinan: Math.round(v.skor), entry: b.harga, rezim: b.rezim,
+        catatan: `belum konfirmasi — ${gagalKonfirm.join('; ')}`,
+      })
+    }
+    continue
+  }
   if (!v.lolos) {
     // jujur dicatat sebagai kandidat radar yang belum lolos gerbang (bukan prediksi terkunci)
     if (v.skor >= 25 && !tgt.lemah) {
       nearMiss.push({
         simbol: s, arah: 'BUY', keyakinan: Math.round(v.skor), entry: b.harga, rezim: b.rezim,
-        catatan: `kandidat radar belum lolos gerbang (skor ${v.skor.toFixed(0)} < ${PHX.GERBANG_SKOR} atau daya lemah) — ${rad.ket.posisi}`,
+        catatan: `kandidat radar belum lolos gerbang (skor ${v.skor.toFixed(0)} < ${gerbangSkor} atau daya lemah) — ${rad.ket.posisi}`,
       })
     }
     continue
   }
   lulusPhx.push({
     id, simbol: s, jalur: 'PHOENIX', arah: 'BUY', keyakinan: v.keyakinan, skorPhoenix: v.skor,
-    entry: b.harga, tgt, rad, b, dayaProduk, urut: v.skor * tgt.untung,
+    entry: b.harga, tgt, rad, b, dayaProduk, urut: v.skor * Math.min(tgt.untung, 0.06),   // v2.1: fantasi +12% tak lagi memenangkan kuota
   })
 }
 // kuota harian: hanya prediksi radar TERBAIK yang dikunci — sisanya jujur jadi kandidat
 const phxTerlanjur = ledger.filter((e) => e.jalur === 'PHOENIX' && (e.waktuKunci || '').slice(0, 10) === TGL).length
-const sisaKuota = Math.max(0, PHX.KUNCI_MAKS - phxTerlanjur)
+const sisaKuota = Math.max(0, kunciMaks - phxTerlanjur)
 lulusPhx.sort((a, b) => b.urut - a.urut)
 const phxCadangan = []
 for (const [i, p] of lulusPhx.entries()) {
   if (i >= sisaKuota) {
     phxCadangan.push({
       simbol: p.simbol, jalur: 'PHOENIX', arah: 'BUY', keyakinan: p.keyakinan, entry: p.b.harga, rezim: p.b.rezim,
-      catatan: `lolos gerbang radar (skor ${p.skorPhoenix}) — di luar kuota ${PHX.KUNCI_MAKS} terbaik hari ini`,
+      catatan: `lolos gerbang radar (skor ${p.skorPhoenix}) — di luar kuota ${kunciMaks} terbaik hari ini`,
     })
     continue
   }
@@ -525,7 +573,8 @@ for (const [i, p] of lulusPhx.entries()) {
     id: p.id, simbol: p.simbol, jalur: 'PHOENIX', arah: 'BUY', keyakinan: p.keyakinan, skorPhoenix: p.skorPhoenix,
     entry: b.harga, target: +tgt.target.toPrecision(7), ketTarget: tgt.ketTarget,
     untungBersih: +tgt.untung.toFixed(4),
-    stop: +(b.harga * (1 - 1.6 * rad.atrPct / 100)).toPrecision(6),
+    stop: +Math.min(b.harga * (1 - 1.8 * rad.atrPct / 100), rad.lo24 - (0.25 * rad.atrPct / 100) * b.harga).toPrecision(6),
+    highAmbisius: tgt.highAmbisius ?? null,
     waktuKunci: ISO, horizon: '24j', rezim: b.rezim, status: 'TERBUKA',
     radar: { posisi24j: +rad.posisi.toFixed(3), sinyal: Object.fromEntries(PHX_DIM.map((k) => [k, +rad.sinyal[k].toFixed(3)])) },
     bukti: Object.fromEntries(DIM_ARAH.map((k) => [k, +b.dims[k].arah.toFixed(3)])),
@@ -535,6 +584,7 @@ for (const [i, p] of lulusPhx.entries()) {
       ...rad.ket,
       'sasaran-jual': `prediksi ujung atas ${+tgt.target.toPrecision(7)} — ${tgt.ketTarget}`,
       'untung-bersih': `+${(tgt.untung * 100).toFixed(1)}% setelah fee 0.2% (beli ujung bawah, jual ujung atas)`,
+      'pengaman': `stop terpasang di bawah lantai 24 jam ${rad.lo24.toPrecision(6)} — lantai jebol berarti bacaan akumulasi salah`,
     },
   }
     ledger.push(entri); terkunciBaru.push(entri)
@@ -555,6 +605,10 @@ for (const e of ledger) {
     // belajar radar: apakah prediksi ujung atasnya tersentuh? (bukan vonis resmi)
     const barSetelah = c.filter((x) => x.t >= new Date(e.waktuKunci).getTime())
     e.targetKena = barSetelah.length ? Math.max(...barSetelah.map((x) => x.h)) >= e.target : null
+    if (barSetelah.length && e.entry > 0) {
+      e.mfe = +(Math.max(...barSetelah.map((x) => x.h)) / e.entry - 1).toFixed(4)   // pergerakan tertinggi setelah kunci
+      e.mae = +(Math.min(...barSetelah.map((x) => x.l)) / e.entry - 1).toFixed(4)   // pergerakan terendah setelah kunci
+    }
   }
   dinilaiBaru.push(e)
 }
@@ -593,6 +647,73 @@ if (phxDinilai.length >= 3) {
   log(evolusiPhxCatatan, JSON.stringify(phxGenome))
 }
 
+// ---- 3b. BAHAN AJAR — pelajaran & aturan lahir dari medan (mandat pemilik:
+//      "dari kejadian ini agar jadi bahan ajar yang dapat dipahami dan
+//      mengasah kesadarannya akan pasar") ----
+const POLA_PELAJARAN = {
+  phxPisauJatuh: 'ujung bawah + momentum negatif = pisau jatuh, BUKAN akumulasi — radar kini WAJIB menunggu harga kembali di atas EMA9 sebelum membeli',
+  phxTargetJauh: 'prediksi ujung atas harus level nyata yang TERJANGKAU dalam 24 jam — tangga target kini memilih magnet terdekat (tengah rentang), bukan swing tertinggi',
+  arahLawanRezim: 'melawan arus koin/rezim butuh bukti jauh lebih kuat — keyakinan kini dipotong bila arah melawan rezim',
+}
+const ATURAN_DEF = {
+  phxMomentumWajib: { pola: 'phxPisauJatuh', min: 2, teks: 'RADAR dilarang membeli saat harga masih di bawah EMA9 — kasus pisau jatuh terbukti berulang' },
+  phxTargetMagnet: { pola: 'phxTargetJauh', min: 2, teks: 'Target radar = magnet nyata TERDEKAT (tengah rentang / puncak 24 jam) — target jauh terbukti tak tersentuh' },
+  arahRegimHormati: { pola: 'arahLawanRezim', min: 2, teks: 'Arah melawan rezim wajib keyakinan lebih rendah — potongan keyakinan dipasang di vonis komite' },
+}
+function polaDari(e) {
+  const pola = []
+  if (e.jalur === 'PHOENIX') {
+    const mom = e.bukti?.momentum
+    if (mom != null && mom < 0) pola.push('phxPisauJatuh')
+    const jarak = e.target && e.entry ? e.target / e.entry - 1 : 0
+    if (e.targetKena === false && jarak >= 0.06 && (e.mfe == null || e.mfe < jarak * 0.8)) pola.push('phxTargetJauh')
+  } else if ((e.arah === 'SELL' && e.rezim === 'NAIK') || (e.arah === 'BUY' && e.rezim === 'TURUN')) {
+    pola.push('arahLawanRezim')
+  }
+  return pola
+}
+const aturan = semuaGenome.aturanBelajar || { pola: {}, aktif: {} }
+if (!aturan.seedSelesai) {
+  // otak membaca KEMBALI seluruh kekalahan lamanya — sejarah jadi guru pertama
+  for (const e of ledger.filter((x) => x.status === 'SALAH' || (x.jalur === 'PHOENIX' && x.targetKena !== undefined))) {
+    for (const k of polaDari(e)) aturan.pola[k] = (aturan.pola[k] || 0) + 1
+  }
+  aturan.seedSelesai = ISO
+  log('bahan ajar: seed pola dari sejarah', JSON.stringify(aturan.pola))
+}
+for (const e of dinilaiBaru) for (const k of polaDari(e)) aturan.pola[k] = (aturan.pola[k] || 0) + 1
+const aturanBaru = []
+for (const [nama, d] of Object.entries(ATURAN_DEF)) {
+  if (!aturan.aktif[nama] && (aturan.pola[d.pola] || 0) >= d.min) {
+    aturan.aktif[nama] = { sejak: ISO, teks: d.teks }
+    aturanBaru.push(`${nama} — ${d.teks}`)
+    log('ATURAN BARU DIBELAJARAN:', nama, `(${aturan.pola[d.pola]} kasus)`)
+  }
+}
+semuaGenome.aturanBelajar = aturan
+function pelajaranDari(e) {
+  const pola = polaDari(e)
+  const kenapa = []
+  if (pola.includes('phxPisauJatuh')) kenapa.push(`dikunci saat momentum negatif (${((e.bukti?.momentum ?? 0) * 100).toFixed(0)}% — di bawah EMA9)`)
+  if (pola.includes('phxTargetJauh')) kenapa.push(`ujung atas diprediksi +${(((e.target / e.entry) - 1) * 100).toFixed(1)}% tetapi tak pernah tersentuh${e.mfe != null ? ` (harga hanya sampai +${(e.mfe * 100).toFixed(1)}%)` : ''}`)
+  if (pola.includes('arahLawanRezim')) kenapa.push(`${e.arah} dipasang saat rezim koin sendiri ${e.rezim} — melawan arus tanpa penalti keyakinan`)
+  if (!kenapa.length && e.status === 'SALAH' && e.jalur === 'PHOENIX' && (e.radar?.sinyal?.sweep ?? 0) >= 0.5) kenapa.push('sapuan lantai terbaca jebakan-beruang tetapi arus terus turun — sapuan saja bukan bukti akumulasi')
+  return {
+    kenapa,
+    pelajaran: e.status === 'BENAR'
+      ? (kenapa.length ? 'benar secara P/L tetapi sasaran jualnya tak tersentuh — target diturunkan ke magnet terdekat agar prediksi ujung atas benar-benar teruji' : 'bukti yang dipercaya terbukti — bobot pola ini diperkuat evolusi')
+      : (kenapa.length ? POLA_PELAJARAN[pola[0]] || 'pola kekalahan dicatat — gerbang diperketat' : 'komite kalah — bobot genome digeser evolusi dari vonis nyata ini'),
+  }
+}
+const pelajaranDaftar = dinilaiBaru.map((e) => {
+  const info = pelajaranDari(e)
+  return {
+    waktu: ISO, simbol: e.simbol, jalur: e.jalur || 'ARAH', vonis: e.status,
+    netPct: +((e.net || 0) * 100).toFixed(2), kenapa: info.kenapa, pelajaran: info.pelajaran,
+  }
+})
+if (pelajaranDaftar.length) log(`bahan ajar: ${pelajaranDaftar.length} pelajaran baru — aturan aktif ${Object.keys(aturan.aktif).length}`)
+
 // ---- 4. statistik akurasi jujur ----
 const grad = ledger.filter((e) => e.status === 'BENAR' || e.status === 'SALAH')
 const benar = grad.filter((e) => e.status === 'BENAR').length
@@ -617,7 +738,7 @@ const akurasi = {
 // ---- 5. laporan sasaran — lane PHOENIX dulu (mandat: beli murah ujung bawah) ----
 const barisDari = (e) => ({
   simbol: e.simbol, jalur: e.jalur || 'ARAH', arah: e.arah, keyakinan: e.keyakinan, entry: e.entry,
-  ...(e.jalur === 'PHOENIX' ? { target: e.target, ketTarget: e.ketTarget, untungBersihPct: +(e.untungBersih * 100).toFixed(1), stop: e.stop, skorPhoenix: e.skorPhoenix } : {}),
+  ...(e.jalur === 'PHOENIX' ? { target: e.target, ketTarget: e.ketTarget, untungBersihPct: +(e.untungBersih * 100).toFixed(1), stop: e.stop, skorPhoenix: e.skorPhoenix, highAmbisius: e.highAmbisius ?? null } : {}),
   rezim: e.rezim, dikunci: e.waktuKunci, horizon: e.horizon, fee: '0.2% pulang-pergi',
   bukti: e.bukti, ketBukti: e.ketBukti, daya: e.daya,
 })
@@ -650,10 +771,16 @@ const laporan = {
   sasaranHariIni: sasaranUtama,
   kandidatLain,
   akurasi,
+  pelajaran: pelajaranDaftar.slice(0, 6),
+  aturanBelajar: {
+    pola: aturan.pola,
+    aktif: Object.fromEntries(Object.entries(aturan.aktif).map(([k, v]) => [k, v.teks])),
+    baruSiklusIni: aturanBaru,
+  },
   genome: {
     rezim: rezimGlobal, bobot: genome,
     phoenix: { rezim: rezimGlobal, bobot: phxGenome },
-    semuaRezim: Object.fromEntries(Object.entries(semuaGenome).filter(([k]) => k !== 'phoenix').map(([k, v]) => [k, { generasi: v.generasi, belajar: v.belajar }])),
+    semuaRezim: Object.fromEntries(Object.entries(semuaGenome).filter(([k]) => k !== 'phoenix' && k !== 'aturanBelajar').map(([k, v]) => [k, { generasi: v.generasi, belajar: v.belajar }])),
   },
   pertumbuhan: {
     waktuMulai: keadaan.mulai, siklus: SIKLUS,
@@ -666,6 +793,7 @@ const laporan = {
     'target jual phoenix wajib memberi >= 1% setelah fee 0.2%; bila seluruh pasar di puncak, radar jujur melaporkan zona kosong alih-alih memaksa beli mahal',
     'lane PHOENIX (beli ujung bawah) dan lane ARAH (komite genome) berdiri sendiri; keduanya dinilai net P/L close-ke-close yang sama jujurnya',
     'cron GitHub bisa mundur beberapa menit saat server padat; jadwal tetap berjalan tanpa browser',
+    'BAHAN AJAR: setiap vonis ditulis jadi pelajaran (laporan/pelajaran-server.json); pola kekalahan yang terulang >= 2 kali melahirkan ATURAN baru yang mengikat gerbang siklus berikutnya — otak tumbuh dari medan, bukan tebakan',
   ],
 }
 tulis(path.join(ROOT, 'laporan/sasaran-terkini.json'), laporan)
@@ -679,11 +807,20 @@ denyut.push({
   terkunciBaru: terkunciBaru.length, phoenixKunci: terkunciBaru.filter((e) => e.jalur === 'PHOENIX').length,
   dinilaiBaru: dinilaiBaru.length,
   benar: dinilaiBaru.filter((e) => e.status === 'BENAR').length,
+  pelajaranBaru: pelajaranDaftar.length, aturanBaru: aturanBaru.length,
   akurasiPct: akurasi.akurasiPct, rezimBTC: rezimGlobal,
 })
 tulisJsonl(path.join(ROOT, 'laporan/denyut-server.jsonl'), denyut.slice(-500))
 tulis(path.join(ROOT, 'otak/penjaga-keadaan.json'), keadaan)
 tulis(path.join(ROOT, 'otak/genome-server.json'), semuaGenome)
+
+// bahan ajar tersimpan permanen — jejak kesadaran pasar yang tumbuh
+const pelPath = path.join(ROOT, 'laporan/pelajaran-server.json')
+const pelFile = bacaJson(pelPath, { diperbarui: null, aturanBelajar: aturan, daftar: [] })
+pelFile.diperbarui = ISO
+pelFile.aturanBelajar = aturan
+pelFile.daftar = [...pelajaranDaftar, ...pelFile.daftar].slice(0, 60)
+tulis(pelPath, pelFile)
 
 log(`denyut #${SIKLUS} selesai — kunci ${terkunciBaru.length} (phoenix ${terkunciBaru.filter((e) => e.jalur === 'PHOENIX').length}), nilai ${dinilaiBaru.length}, akurasi ${akurasi.akurasiPct ?? 'belum ada'}%`)
 console.log('RINGKASAN:' + JSON.stringify({
