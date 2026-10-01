@@ -128,6 +128,24 @@
     font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.8px;padding:6px 12px;border-radius:9px;cursor:pointer;transition:background .15s}
   .salin:hover{background:rgba(34,211,238,.22)}
   .salin.ok{background:rgba(52,211,153,.18);border-color:var(--hijau);color:var(--hijau)}
+  /* ===== V253 WAWASAN 360 ===== */
+  .iklim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .iklim-grid .kartu{margin:0;padding:12px 14px}
+  .iklim-grid .angka{font-family:var(--mono);font-size:19px;font-weight:700;margin-top:3px}
+  .narasi-makro{background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.22);border-radius:12px;
+    padding:14px 16px;margin-top:12px;font-size:13.5px;line-height:1.75;color:#d8dcae}
+  .narasi-makro b{color:var(--sian)}
+  .narasi{background:rgba(21,32,64,.5);border-left:3px solid var(--violet);border-radius:0 10px 10px 0;
+    padding:11px 13px;margin-top:12px;font-size:12.8px;line-height:1.7;color:#d8dcae}
+  .wawgrid{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .wchip{font-family:var(--mono);font-size:10.8px;padding:3px 9px;border-radius:8px;cursor:default;
+    border:1px solid var(--garis);color:var(--redup);background:rgba(13,20,40,.6)}
+  .wchip.up{border-color:rgba(52,211,153,.45);color:var(--hijau);background:rgba(52,211,153,.07)}
+  .wchip.dn{border-color:rgba(251,113,133,.45);color:var(--merah);background:rgba(251,113,133,.07)}
+  .wchip b{font-weight:700}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin:0 auto}
+  .dot.up{background:var(--hijau)} .dot.dn{background:var(--merah)} .dot.nt{background:var(--samar)}
+  .wtd-h{font-size:10px;color:var(--samar);text-transform:uppercase;letter-spacing:.5px}
   /* ===== TABEL ===== */
   .tabel{width:100%;border-collapse:collapse;background:var(--kartu);border:1px solid var(--garis);border-radius:var(--radius);overflow:hidden;font-size:13px}
   .tabel th{background:#0d1530;color:var(--samar);text-transform:uppercase;font-size:10.5px;letter-spacing:1px;
@@ -202,6 +220,7 @@
   <div class="brand">MICAPROFITA · <b>SAKTI</b></div>
   <div class="tautan" id="navLinks">
     <a href="#sasaran-sec">Sasaran</a>
+    <a href="#wawasan-sec">Wawasan 360°</a>
     <a href="#bahan-ajar-sec">Bahan Ajar</a>
     <a href="#ilmu-sec">Ilmu</a>
     <a href="#warisan-sec">Warisan</a>
@@ -234,6 +253,7 @@
       <span class="chip">BTC <b id="rezimbtc">…</b></span>
       <span class="chip">radar <b id="radarchip">…</b></span>
       <span class="chip">kompas <b id="kompaschip">…</b></span>
+      <span class="chip">wawasan <b id="dimchip">…</b></span>
       <span class="chip">dimutakhir <b id="waktu">…</b></span>
     </div>
   </header>
@@ -289,6 +309,8 @@
       <div class="tangga2"></div>
       <div class="daya"></div>
       <div class="bukti"></div>
+      <div class="narasi" style="display:none"></div>
+      <div class="wawgrid"></div>
       <div class="ketkal"></div>
       <div class="sasaran-kaki">
         <span class="chiprezim"></span>
@@ -301,6 +323,15 @@
   <div class="gulir"><table class="tabel kandidat">
     <thead><tr><th>Simbol</th><th>Arah</th><th>Keyakinan</th><th>Entry</th><th>Rezim</th><th>Keterangan</th></tr></thead>
     <tbody id="kandidat"><tr><td colspan="6" style="color:var(--samar)">—</td></tr></tbody>
+  </table></div>
+
+  <h2 id="wawasan-sec">Wawasan Pasar 360° — Banyak Parameter, Satu Bacaan</h2>
+  <div class="sub" style="margin-top:-6px">mandat pemilik: AGI harus fasih &amp; matang — komite kini menimbang <b>17 dimensi</b> (5 lama + 12 wawasan) dari data publik nyata; parameter konstan per siklus (F&amp;G, dominasi) masuk iklim, bukan pemilih arah</div>
+  <div class="iklim-grid" id="iklim" style="margin-top:12px"></div>
+  <div class="narasi-makro" id="narasi-makro">—</div>
+  <div class="gulir" style="margin-top:12px"><table class="tabel">
+    <thead id="waw-head"><tr><th>Simbol</th><th>Rezim</th><th>Funding</th><th>OI / Δ</th><th id="waw-cols" colspan="12" style="text-align:center">12 parameter wawasan (arah param — arahkan kursor untuk bacaan analis)</th></tr></thead>
+    <tbody id="waw-body"><tr><td colspan="16" style="color:var(--samar)">—</td></tr></tbody>
   </table></div>
 
   <h2 id="bahan-ajar-sec">Bahan Ajar — Pelajaran &amp; Aturan dari Medan</h2>
@@ -510,6 +541,13 @@ function isiSasaran(r){
       return `<div class="dim"><span class="nm">${k}</span>${barDim(v || 0)}<span class="ket">${num}${ket}</span></div>`;
     }).join('');
     el.querySelector('.ketkal').textContent = s.ketKeyakinan || '';
+    const nar = el.querySelector('.narasi');
+    if (s.narasi){ nar.style.display = 'block'; nar.innerHTML = '<b style="color:var(--violet)">NARASI ANALIS —</b> ' + s.narasi; }
+    el.querySelector('.wawgrid').innerHTML = (s.wawasan || []).map((p) => {
+      const cls = p.arah > 0.15 ? 'up' : p.arah < -0.15 ? 'dn' : '';
+      const tanda = p.arah > 0.15 ? ' ▲' : p.arah < -0.15 ? ' ▼' : ' ·';
+      return `<span class="wchip ${cls}" title="${(p.ket || '').replace(/"/g, '&quot;')}">${p.param}${tanda}${p.nilai != null ? ' <b>' + p.nilai + '</b>' : ''}</span>`;
+    }).join('');
     el.querySelector('.chiprezim').textContent = 'rezim ' + s.rezim + ' · dikunci ' + lalu(s.dikunci);
     const btn = el.querySelector('.salin');
     btn.dataset.plan = [s.simbol, s.arah,
@@ -764,6 +802,41 @@ function isiRuhGuru(r){
       + (g.sumber ? `<div style="margin-top:6px;color:var(--samar);font-size:11.5px">${g.sumber}</div>` : '');
   } else $('guru-box').textContent = 'buku guru belum dibawa laporan ini — menunggu denyut V251';
 }
+// ===== V253 WAWASAN 360 — iklim makro + tabel parameter per kandang =====
+function isiWawasan(r){
+  const w = r.wawasan360 || {};
+  $('dimchip').textContent = w.dimensi ? w.dimensi + ' dim' : '—';
+  const ik = w.iklim || {};
+  const kartu = (label, angka, sub, warna) => `<div class="kartu"><div class="label">${label}</div><div class="angka"${warna ? ` style="color:${warna}"` : ''}>${angka}</div><div class="sub">${sub || ''}</div></div>`;
+  const fng = ik.fng;
+  const fngWarna = fng ? (fng.nilai >= 75 ? 'var(--merah)' : fng.nilai <= 25 ? 'var(--hijau)' : 'var(--amber)') : null;
+  $('iklim').innerHTML = [
+    kartu('Fear &amp; Greed', fng ? fng.nilai : '—', fng ? fng.klasifikasi : 'endpoint gagal — jujur null', fngWarna),
+    kartu('Dominasi BTC', ik.dominasi ? ik.dominasi.pct + '%' : '—', ik.dominasi ? (ik.dominasi.sumber === 'coingecko' ? 'kapitalisasi pasar' : 'proxy volume spot') : '—'),
+    kartu('Funding BTC', ik.fundingBtcPct != null ? ik.fundingBtcPct + '%' : '—', 'Bybit linear / interval'),
+    kartu('Open Interest BTC', ik.oiBtc ? '$' + ik.oiBtc.nilaiJuta + 'jt' : '—', ik.oiBtc && ik.oiBtc.deltaPct != null ? 'Δ ' + ik.oiBtc.deltaPct + '% / denyut' : 'Δ antar-siklus belum ada'),
+    kartu('Breadth Pasar', ik.breadthNaikPct != null ? ik.breadthNaikPct + '%' : '—', (ik.breadthDari || '—') + ' pasangan diukur'),
+    kartu('Rezim BTC', ik.rezim || '—', 'ATR ' + (ik.atrPctBTC ?? '—') + '% / jam'),
+  ].join('');
+  $('narasi-makro').innerHTML = ik.narasi ? ik.narasi : 'iklim makro menunggu denyut dengan endpoint sehat — tidak dikarang';
+  const pk = w.perKandang || [];
+  const params = (pk[0]?.params || []).map((p) => p.param);
+  if (params.length) $('waw-head').innerHTML = '<tr><th>Simbol</th><th>Rezim</th><th>Funding</th><th>OI / Δ</th>'
+    + params.map((p) => `<th class="wtd-h">${p}</th>`).join('') + '</tr>';
+  $('waw-body').innerHTML = pk.length ? pk.map((x) => {
+    const dots = params.map((nm) => {
+      const p = (x.params || []).find((q) => q.param === nm);
+      if (!p) return '<td><span class="dot nt"></span></td>';
+      const cls = p.arah > 0.15 ? 'up' : p.arah < -0.15 ? 'dn' : 'nt';
+      const val = p.nilai != null ? ' (' + p.nilai + ')' : '';
+      return `<td><span class="dot ${cls}" title="${p.param}${val}: ${(p.ket || '').replace(/"/g, '&quot;')}"></span></td>`;
+    }).join('');
+    const fd = x.fundingPct != null ? x.fundingPct + '%' : '—';
+    const oi = x.oiJuta != null ? '$' + x.oiJuta + 'jt' : '—';
+    const oiD = x.oiDeltaPct != null ? ` <span class="${x.oiDeltaPct >= 0 ? 'net-pos' : 'net-neg'}">Δ${x.oiDeltaPct}%</span>` : '';
+    return `<tr><td><b>${x.simbol}</b></td><td>${x.rezim}</td><td>${fd}</td><td>${oi}${oiD}</td>${dots}</tr>`;
+  }).join('') : '<tr><td colspan="16" style="color:var(--samar)">denyut berikutnya mengisi tabel parameter — data lama tampil apa adanya</td></tr>';
+}
 </script>
 <script>
 async function ambil(url){
@@ -808,7 +881,7 @@ async function segarkan(){
     $('tumbuh').textContent = (a.terkunci||0) + ' / ' + (a.dinilai !== undefined ? a.benar + a.salah : 0);
     $('tumbuh-sub').innerHTML = `terkunci · dinilai · <b>${a.terbuka||0}</b> terbuka`;
     isiSasaran(r); salinKeAksi(); isiKandidat(r); isiRiwayat(prak); isiGenome(r.genome);
-    isiPelajaran(r); isiDenyut(den); isiIlmu(r, jur); isiWarisan(r); isiPiagam(r); isiRuhGuru(r); isiForensik(r);
+    isiPelajaran(r); isiDenyut(den); isiIlmu(r, jur); isiWarisan(r); isiPiagam(r); isiRuhGuru(r); isiForensik(r); isiWawasan(r);
     const kp = r.jaminan?.kompas;
     if (kp){ const kc = $('kompaschip'); kc.textContent = kp.arah + ' ' + kp.keyakinan + '/100'; kc.style.color = kp.arah === 'BUY' ? 'var(--hijau)' : 'var(--merah)'; }
     else $('kompaschip').textContent = '—';
