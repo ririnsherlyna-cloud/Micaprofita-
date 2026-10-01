@@ -432,6 +432,60 @@ gerbang veto, tabel 10 kandang (jumlah param + konsensus per domain +
 net, status). Registri penuh 46 param/kandang + bacaan analis per
 param: `laporan/wawasan.json`.
 
+## 5i. METAKOGNISI-NEVRON — otak menilai dirinya sendiri sebelum bertaruh (V255)
+
+**Mandat pemilik:** "periksakankah ai agent bernama neurobro ai ... coba
+anda masuk kesana pelajari sistemnya decrypt dan kemudian apa yang
+bermanfaat dan kunci inti milik mereka apa yang bisa diimplementasikan
+pada micaprofita kita."
+
+Deep-screening dilakukan terhadap **Neurobro AI** (neurobro.ai, Axioma AI
+Labs — "Personalized AI For Finance", 390K+ pengguna, 200+ agen
+spesialis) yang framework-nya di-open-source sebagai **Nevron**
+(github axioma-ai-labs/nevron, siklus Plan→Execute→Learn→Remember).
+Repo sumber di-clone dan dibedah file-per-file. Tujuh kunci inti
+diadopsi dan diadaptasi ke ledger pra-registrasi SAKTI:
+
+1. **ConfidenceEstimator** (`src/metacognition/confidence_estimator.py`)
+   — keyakinan tiap kandidat kini 7 faktor berbobot (keselarasan 0.25,
+   memori 0.15, data 0.15, keakraban 0.15, rencana 0.10, rekam 0.15,
+   kondisi 0.05 — bobot asli Nevron); faktor terlemah dan aspek ragu
+   disebut eksplisit; level < 0.40 = TUNGGU.
+2. **FailurePredictor** (`failure_predictor.py`) — probabilitas gagal
+   DIHITUNG SEBELUM sinyal dikunci: hit-rate zona (arah×rezim) +
+   kegagalan terkini 24 jam + ekspektasi MC negatif; gabungan
+   0.6×maks + 0.4×rata; ≥ 0.60 = TUNGGU. Uji sandbox nyata: 5 sinyal
+   SELL dari zona racun ditolak gerbang ini.
+3. **SelfCritic (RLAIF)** (`src/learning/critic.py`) — tiap kekalahan
+   menghasilkan kritik 5-field: alasanGagal / yangSalah /
+   caraLebihBaik / polaDihindari / pelajaran; pola yang terulang ≥ 2
+   kasus melahirkan saran perbaikan berprioritas (≥ 3 = P1).
+4. **Lesson reliability** (`src/learning/lessons.py`) — reliabilitas =
+   keyakinan × penguatan × peluruhan-umur; pelajaran yang tak pernah
+   relevan lagi melemah sendiri (memori hidup, bukan arsip mati).
+5. **StrategyAdapter** (`src/learning/adapter.py`) — bias konteks
+   −0.5..+0.5 per (rezim×arah) = 0.4 tracker + 0.4 pelajaran(racun/emas)
+   + 0.2 recent-7-hari; menggeser keyakinan maks ±15 poin — genome
+   tetap jalur evolusi lambat, bias adalah lapisan cepat harian.
+6. **LoopDetector** (`loop_detector.py`) — jendela 20 vonis terakhir:
+   repetisi (3×), alternasi ABAB (4×), siklus ABC (2×) — bias lane
+   terdeteksi dan diawasi di sadar-diri.
+7. **MetacognitiveMonitor** (`monitor.py`) — tiap intervensi tercatat;
+   kalibrasi kedua gerbang DINILAI MEDAN: level tinggi / prob rendah
+   harus lebih sering benar, kalau tidak gerbangnya sendiri yang
+   dipertanyakan.
+
+**Registri parameter: 46 → 81 param bernama** (35 metakognitif: 7 faktor
++ 7 bobot + 4 sumber prediktor + 8 bias konteks + 3 loop + reliabilitas
++ kritik 5-field). Slot eksplorasi forensik dikecualikan dari veto
+metakognitif agar zona racun tetap bisa diuji menyembuh. Dasbor: seksi
+baru **"Metakognisi Nevron"** — 4 kartu gerbang, chip 7 kunci, tabel
+bias konteks, deteksi loop, reliabilitas pelajaran, saran perbaikan,
+intervensi; badge metakognisi + P gagal pada tiap kartu sasaran lane
+ARAH. Kalibrasi gerbang tampil sebagai ketepatan medan (n tumbuh dari
+vonis matang). Otak baru terdaftar di piagam: **otak-metakognisi
+(HIDUP V255)**.
+
 ## 6. TERIMA-PASANG (tanpa konfigurasi)
 
 Sejak organ **V245 SARANG-BAWAAN**, membuka halaman Pages = langsung
@@ -550,10 +604,10 @@ laporan/denyut-server.jsonl — log denyut penjaga (500)
 laporan/index.html          — dasbor laporan profesional
 laporan/jurnal-ilmu.json    — akta jurnal ilmiah + cara tiap metode dipasang
 laporan/pelajaran-server.json — bahan ajar (pelajaran & aturan dari medan)
-laporan/wawasan.json        — wawasan 360: iklim makro + 10 kandang × 12 parameter (V253)
+laporan/wawasan.json        — wawasan 360: iklim makro + 10 kandang × 46 param + metakognisi Nevron (V255)
 otak/genome-server.json     — genome hasil evolusi per rezim + keadaan ilmu (hedge/kalibrasi/konformal/meta)
 otak/penjaga-keadaan.json   — keadaan internal penjaga
-scripts/penjaga.mjs         — otak server V247-MAJELIS-ILMU (Node murni, 5 metode jurnal hidup)
+scripts/penjaga.mjs         — otak server V255-METAKOGNISI-NEVRON (Node murni; 81 param bernama + 7 kunci Nevron)
 .github/workflows/sakti-denyut.yml — jantung denyut (cron 30 menit)
 ```
 
