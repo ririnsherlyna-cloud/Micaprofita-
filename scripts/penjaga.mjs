@@ -84,7 +84,7 @@ import path from 'node:path'
 const ROOT = process.cwd()
 const FEE = 0.002            // 0.1% buy + 0.1% sell — wajib
 const HORIZON_JAM = 24       // sasaran harian
-const VERSI = 'V253-WAWASAN-360 v4.3 — komite diperluas 5→17 dimensi: + MACD/ADX/Bollinger/VWAP/OBV/struktur-swing/pola-lilin/konsistensi/pivot/kekuatan-relatif + derivatif NYATA (funding & open interest Bybit linear 896 simbol) + iklim makro (Fear & Greed, dominasi BTC, breadth) + narasi analis fasih per sasaran — wawasan crypto yang dihitung, bukan kata-kata'
+const VERSI = 'V254-SAMUDRA-PARAMETER v5.0 — dari 17 dimensi ke ~60 parameter per kandang × 10 kandang + iklim 15-an: multi-timeframe 1h+4h (EMA-align/MACD/RSI/Bollinger/swing), derivatif dalam (riwayat funding rata3+tren, order-book imbalance/spread/kedalaman/dinding, ΔOI), lintas-pasar (persentil perubahan & volume ratusan swap OKX, breadth, altseason-proxy), volatilitas-rezim (ATR-persentil, volume z-score, GARCH, MC-pNaik), kalender (sesi Asia/Eropa/AS, akhir pekan, fase bulan) + SEKOLAH PARAMETER (tiap param dicatat per prediksi, hit-rate dinilai medan) + gerbang VETO wawasan (order book & tren-4h & kerumunan funding menolak sinyal buruk)'
 
 // ---------------- kandang lane ARAH (komite genome) ----------------
 const KANDANG = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'DOGE', 'ADA', 'AVAX', 'LINK', 'TRX']
@@ -156,9 +156,39 @@ const WAWASAN = {
   ADX_TREND: 20,            // di atas ini pasar ber-trend (DI menentukan arah)
   BB_SEMPIT: 0.018,         // lebar band < 1.8% harga = kompresi
   OI_BERAT: 0.015,          // ΔOI per siklus > ±1.5% = perputaran posisi berat
+  // ---- V254 SAMUDRA-PARAMETER ----
+  IMBALANS_VETO: 0.55,      // order-book imbalance lawan arah > 0.55 = dinding pasaran menolak
+  SPREAD_BPS_LEBAR: 25,     // spread > 25 bps = mikrostruktur buruk, buku tidak bisa dipercaya
+  FRHIST_EKSTREM: 0.00035,  // rata funding 3 interval > 0.035% = kerumunan berkelanjutan (bukan lonjakan)
+  TREN4H_LAWAN: 0.62,       // EMA-align 4h lawan arah > 0.62 = rangka waktu besar menolak
+  ATR_PCTILE_EKSTREM: 0.96, // ATR di persentil 96+ = volatilitas ekstrem, sinyal arah melempar
+  SEKOLAH_LULUS_N: 20,      // sekolah parameter: n minimum sebelum param berhak dinilai
+  SEKOLAH_LULUS_HIT: 0.52,  // hit-rate nasihat param minimum utk status 'calon lulus'
 }
 const DIM_WAW = ['macd','adx','bollinger','vwap','obv','swing','pola','konsist','pivot','relatif','funding','oi']
 const GENOME_WAW_AWAL = { macd:0.10, adx:0.07, bollinger:0.07, vwap:0.09, obv:0.08, swing:0.12, pola:0.07, konsist:0.08, pivot:0.09, relatif:0.10, funding:0.07, oi:0.06 }
+// ---- V254 SAMUDRA-PARAMETER — registri domain: tiap parameter bernama punya
+// domain & lapis. Lapis INTI = 12 param berbobot (genome + Hedge). Lapis
+// OBSERVASI = parameter penuh tambahan: dihitung, dinarasikan, diveto-kan, dan
+// DICATAT per prediksi (sekolah parameter) — tapi TIDAK berbobot sampai hit-rate
+// medannya lulus. Kejujuran: tidak ada param baru yang langsung mengklaim hak suara.
+const DOMAIN_INTI = { macd:'momentum', adx:'tren', bollinger:'volatilitas', vwap:'aliran', obv:'aliran', swing:'tren', pola:'momentum', konsist:'momentum', pivot:'tren', relatif:'relatif', funding:'derivatif', oi:'derivatif' }
+const NAMA_DOMAIN = {
+  tren: 'Tren & Struktur', momentum: 'Momentum', volatilitas: 'Volatilitas', aliran: 'Aliran Order & Volume',
+  derivatif: 'Derivatif Futures', mikrostruktur: 'Mikrostruktur Buku', relatif: 'Kekuatan Relatif & Lintas-Pasar', kalender: 'Kalender & Sesi',
+}
+// registri parameter observasi (diluar 12 inti) — dipakai untuk hitungan total & dasbor
+const PARAM_OBS = ['ema1h','rsi1h','roc12','roc48','stoch','mfi','cci','jarakEkstrem','atrPctile','volZ','bodyRatio','ema4h','macd4h','rsi4h','bb4h','swing4h','sejajar4h','atrRatio','fundRata3','fundTren','bukuImbalans','bukuSpread','bukuKedalaman','bukuDinding','persenChg','persenVol','sesi','akhirPekan','faseBulan','garchSigma','betaBTC','divRSI','pocJarak','mcPnaik']
+const TOTAL_PARAM_NAMA = DIM_WAW.length + PARAM_OBS.length
+// statusSekolah — kelulusan param dari hit-rate medan (bukan dari tangan manusia):
+// pemula (n<10) → dipantau → calon-lulus (n>=20 & hit>=52% & net>0) / diawasi (hit<44%)
+function statusSekolah(h) {
+  if (!h || h.n < 10) return 'pemula'
+  const hit = h.benar / h.n
+  if (h.n >= WAWASAN.SEKOLAH_LULUS_N && hit >= WAWASAN.SEKOLAH_LULUS_HIT && h.net > 0) return 'calon-lulus'
+  if (h.n >= WAWASAN.SEKOLAH_LULUS_N && hit < 0.44) return 'diawasi'
+  return 'dipantau'
+}
 
 // ---------------- V248 PIAGAM CYBORG — lima pilar (mandat pemilik:
 // "pastikan dia akan terus berkembang pesat; ada beberapa hal cyborg
@@ -182,7 +212,7 @@ const OTAK = [
   { nama: 'otak-sadardiri', tugas: 'memeriksa tubuh & jiwanya sendiri tiap denyut', mesin: 'metakognisi: hash integritas, kesehatan memori & kalibrasi, peringatan otomatis', status: 'HIDUP (V248)' },
   { nama: 'otak-guru', tugas: 'mengajar profesional dari data medannya sendiri tiap denyut', mesin: 'pengajaran + kuis otomatis dari angka denyut (laporan/guru.json)', status: 'HIDUP (V251)' },
   { nama: 'otak-forensik', tugas: 'membedah penyebab kerugian lalu MENOLAK zona racun terbukti — performa di atas aktivitas', mesin: 'forensik zona per jalur (arah×rezim, band keyakinan, taker, konsensus) + gerbang no-trade + A/B versi anti-cheat (laporan/forensik.json + otak/performa.json)', status: 'HIDUP (V252)' },
-  { nama: 'otak-wawasan', tugas: '17 dimensi wawasan crypto — lilin, derivatif nyata, kekuatan relatif — plus narasi analis fasih per sasaran', mesin: 'MACD/ADX/Bollinger/VWAP/OBV/swing/pola/pivot/konsistensi/relatif dari lilin + funding & OI Bybit linear + F&G & dominasi; bobot 12 param wawasan belajar (genome per rezim + Hedge)', status: 'HIDUP (V253)' },
+  { nama: 'otak-wawasan', tugas: 'registri 46+ parameter wawasan crypto per kandang — lilin 1h+4h, derivatif dalam, order book, lintas-pasar, kalender, kuant-warisan — plus narasi analis fasih per sasaran', mesin: 'multi-timeframe (EMA-align/MACD/RSI/Bollinger/swing 1h+4h) + riwayat funding rata3/tren + order book OKX (imbalance/spread/kedalaman/dinding) + persentil lintas-pasar swap + F&G-7hari/dominasi/altseason + GARCH/MC/beta/POC + kalender; 12 inti berbobot (genome+Hedge), observasi diveto-kan & bersekolah hit-rate', status: 'HIDUP (V254)' },
 ]
 
 // ---------------- V251 RUH — jiwa yang dibangun (mandat pemilik:
@@ -911,6 +941,278 @@ function derivParams(simbol, deriv, oiLama) {
   })
   return out
 }
+
+// ---------------- V254 SAMUDRA-PARAMETER — mesin-mesin observasi tambahan ----------------
+// Semua dari lilin 1h yang SUDAH diambil (agregasi 4h tanpa jaringan), atau dari
+// endpoint OKX gratis (riwayat funding, order book, tickers swap). Setiap param:
+// { param, domain, lapis:'observasi', nilai, arah(-1..1), ket } — masuk narasi,
+// gerbang veto, dan sekolah parameter; TIDAK berbobot sebelum hit-rate lulus.
+function agg4h(c) {                                       // agregasi 1h → 4h (0 permintaan)
+  const out = []
+  for (let i = 0; i < c.length; i += 4) {
+    const g = c.slice(i, i + 4)
+    if (!g.length) break
+    out.push({ t: g[0].t, o: g[0].o, h: Math.max(...g.map((x) => x.h)), l: Math.min(...g.map((x) => x.l)), c: g[g.length - 1].c, v: g.reduce((a, x) => a + (x.v || 0), 0), tb: g.reduce((a, x) => a + (x.tb ?? (x.v || 0) / 2), 0) })
+  }
+  return out
+}
+function emaAlignDim(closes) {                            // harga vs EMA9/21/50 — kesejajaran tren
+  const e = (n) => { const k = 2 / (n + 1); let x = closes[0]; const out = [x]; for (let i = 1; i < closes.length; i++) { x = closes[i] * k + x * (1 - k); out.push(x) } return out }
+  if (closes.length < 55) return { nilai: null, arah: 0, ket: 'lilin kurang untuk EMA-align' }
+  const e9 = e(9), e21 = e(21), e50 = e(50), i = closes.length - 1
+  const sk = (closes[i] > e9[i] ? 1 / 3 : -1 / 3) + (e9[i] > e21[i] ? 1 / 3 : -1 / 3) + (e21[i] > e50[i] ? 1 / 3 : -1 / 3)
+  const penuh = (closes[i] > e9[i] && e9[i] > e21[i] && e21[i] > e50[i]) ? ' — susunan bullish penuh (harga>EMA9>EMA21>EMA50)' : (closes[i] < e9[i] && e9[i] < e21[i] && e21[i] < e50[i]) ? ' — susunan bearish penuh (harga<EMA9<EMA21<EMA50)' : ''
+  return { nilai: +sk.toFixed(2), arah: clamp(sk, -1, 1), ket: `EMA-align 1h skor ${sk.toFixed(2)} (−1..+1)${penuh}${!penuh ? ' — susunan campur, tren belum sepakat' : ''}` }
+}
+function rsiKlasikDim(closes, n = 14) {                   // RSI klasik — momentum & kelebihan
+  const ra = rsi(closes, n)
+  const v = Array.isArray(ra) ? ra[ra.length - 1] : ra
+  if (v == null || !Number.isFinite(v)) return { nilai: null, arah: 0, ket: `RSI-${n} belum terukur — lilin kurang` }
+  const i = closes.length - 1
+  const arah = v > 78 ? -0.4 : v < 22 ? 0.4 : clamp((v - 50) / 22, -1, 1)
+  return { nilai: +v.toFixed(1), arah, ket: `RSI-${n} ${v.toFixed(1)} — ${v > 78 ? 'overbought ekstrem; momentum naik tinggal bensin' : v < 22 ? 'oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang' : v >= 55 ? 'momentum pembeli dominan' : v <= 45 ? 'momentum penjual dominan' : 'netral'}` }
+}
+function rocDim(closes, n) {                              // Rate of Change n-jam
+  if (closes.length < n + 2) return { nilai: null, arah: 0, ket: `lilin kurang untuk ROC-${n}` }
+  const r = closes[closes.length - 1] / closes[closes.length - 1 - n] - 1
+  return { nilai: +(r * 100).toFixed(2), arah: clamp(tanh(r * 30), -1, 1), ket: `ROC-${n}j ${(r * 100 >= 0 ? '+' : '')}${(r * 100).toFixed(2)}% — ${Math.abs(r) > 0.08 ? (r > 0 ? 'lonjakan tajam; kejar-top diwaspadai' : 'runtuhan tajam; pantulan butuh konfirmasi') : r > 0 ? 'naik terukur' : r < 0 ? 'turun terukur' : 'mendatar'}` }
+}
+function stochDim(c, n = 14) {                            // Stochastic %K/%D — posisi dalam rentang
+  if (c.length < n + 3) return { nilai: null, arah: 0, ket: 'lilin kurang untuk stokastik' }
+  const k = (i) => { const w = c.slice(i - n + 1, i + 1); const hi = Math.max(...w.map((x) => x.h)), lo = Math.min(...w.map((x) => x.l)); return hi > lo ? 100 * (c[i].c - lo) / (hi - lo) : 50 }
+  const ks = []; for (let i = n - 1; i < c.length; i++) ks.push(k(i))
+  const kd = ks.slice(-3).reduce((a, x) => a + x, 0) / 3
+  const k0 = ks[ks.length - 1], k1 = ks[ks.length - 2]
+  const arah = k0 > 85 ? -0.35 : k0 < 15 ? 0.35 : clamp((k0 - 50) / 38, -1, 1) * 0.8 + (k0 > kd ? 0.2 : -0.2)
+  return { nilai: +k0.toFixed(1), arah: clamp(arah, -1, 1), ket: `Stoch %K ${k0.toFixed(0)} / %D ${kd.toFixed(0)} — ${k0 > 85 ? 'jenuh beli' : k0 < 15 ? 'jenuh jual' : 'tengah rentang'} · ${k0 > k1 ? '%K merangkak naik' : '%K menekun turun'}${k0 > kd !== k1 > kd ? ' — PERPUTARAN %K baru' : ''}` }
+}
+function mfiDim(c, n = 14) {                              // Money Flow Index — volume-weighted RSI
+  if (c.length < n + 2) return { nilai: null, arah: 0, ket: 'lilin kurang untuk MFI' }
+  let pos = 0, neg = 0
+  for (let i = c.length - n; i < c.length; i++) {
+    const tp = (c[i].h + c[i].l + c[i].c) / 3, arus = tp * (c[i].v || 0)
+    const tpL = (c[i - 1].h + c[i - 1].l + c[i - 1].c) / 3
+    if (tp > tpL) pos += arus; else neg += arus
+  }
+  const mfi = neg > 0 ? 100 - 100 / (1 + pos / neg) : 100
+  const arah = mfi > 85 ? -0.4 : mfi < 15 ? 0.4 : clamp((mfi - 50) / 26, -1, 1)
+  return { nilai: +mfi.toFixed(1), arah, ket: `MFI-${n} ${mfi.toFixed(0)} — ${mfi > 85 ? 'arus masuk jenuh (uang pintar sudah masuk lama)' : mfi < 15 ? 'arus keluar jenuh' : mfi >= 55 ? 'arus masuk dominan' : mfi <= 45 ? 'arus keluar dominan' : 'arus seimbang'}` }
+}
+function cciDim(c, n = 20) {                              // CCI — deviasi harga dari rata statistik
+  if (c.length < n) return { nilai: null, arah: 0, ket: 'lilin kurang untuk CCI' }
+  const tp = c.slice(-n).map((x) => (x.h + x.l + x.c) / 3)
+  const m = tp.reduce((a, x) => a + x, 0) / n
+  const md = tp.reduce((a, x) => a + Math.abs(x - m), 0) / n || 1e-9
+  const cci = (tp[tp.length - 1] - m) / (0.015 * md)
+  return { nilai: +cci.toFixed(0), arah: clamp(cci / 160, -1, 1), ket: `CCI-20 ${cci.toFixed(0)} — ${cci > 160 ? 'jauh di atas statistik; ekstensi rentan balik' : cci < -160 ? 'jauh di bawah statistik' : cci > 0 ? 'di atas rata statistik' : 'di bawah rata statistik'}` }
+}
+function jarakEkstremDim(c) {                             // jarak dari high/low 240 jam (10 hari)
+  const w = c.slice(-240)
+  if (w.length < 60) return { nilai: null, arah: 0, ket: 'lilin kurang untuk jarak ekstrem 10 hari' }
+  const hi = Math.max(...w.map((x) => x.h)), lo = Math.min(...w.map((x) => x.l)), h = w[w.length - 1].c
+  const dr = (hi - h) / h * 100, dl = (h - lo) / h * 100
+  const arah = clamp((dl - dr) / 10, -1, 1)
+  return { nilai: +(dr - dl).toFixed(2), arah, ket: `jarak 10 hari: −${dr.toFixed(1)}% dari puncak / +${dl.toFixed(1)}% dari lantai — ${dr < 2 ? 'menempel puncak 10 hari (area distribusi)' : dl < 2 ? 'menempel lantai 10 hari (area akumulasi berisiko)' : 'ruang gerak dua arah masih lebar'}` }
+}
+function atrPctileDim(c) {                                // persentil ATR% — rezim volatilitas
+  const atr = (w) => { let s = 0; for (let i = 1; i < w.length; i++) s += Math.max(w[i].h - w[i].l, Math.abs(w[i].h - w[i - 1].c), Math.abs(w[i].l - w[i - 1].c)); return s / Math.max(1, w.length - 1) }
+  if (c.length < 120) return { nilai: null, arah: 0, ket: 'lilin kurang untuk persentil ATR' }
+  const h = c[c.length - 1].c
+  const kini = atr(c.slice(-14)) / h * 100
+  const riw = []
+  for (let i = 40; i + 14 <= c.length; i += 6) riw.push(atr(c.slice(i - 14, i)) / c[i - 1].c * 100)
+  const pct = riw.length ? riw.filter((x) => x <= kini).length / riw.length : 0.5
+  return { nilai: +pct.toFixed(2), arah: 0, ket: `ATR14 ${kini.toFixed(2)}% harga — persentil ${(pct * 100).toFixed(0)} dari ~${riw.length} pengukuran 10 hari: volatilitas ${pct >= 0.96 ? 'EKSTREM (sinyal arah melempar; ukuran posisi dikecilkan)' : pct >= 0.75 ? 'tinggi' : pct <= 0.25 ? 'tertidur (letupan menunggu)' : 'normal'}` }
+}
+function volZDim(c) {                                     // volume z-score 24 jam vs 30 hari
+  if (c.length < 200) return { nilai: null, arah: 0, ket: 'lilin kurang untuk volume z-score' }
+  const v24 = c.slice(-24).reduce((a, x) => a + (x.v || 0), 0)
+  const riw = []
+  for (let i = 24; i + 24 <= c.length; i += 24) riw.push(c.slice(i, i + 24).reduce((a, x) => a + (x.v || 0), 0))
+  const m = riw.reduce((a, x) => a + x, 0) / riw.length
+  const sd = Math.sqrt(riw.reduce((a, x) => a + (x - m) ** 2, 0) / riw.length) || 1e-9
+  const z = (v24 - m) / sd
+  const tb24 = c.slice(-24).reduce((a, x) => a + (x.tb ?? (x.v || 0) / 2), 0) / Math.max(v24, 1e-9)
+  const arah = clamp(z / 2.2, -0.6, 0.6) * (tb24 >= 0.5 ? 1 : -1)
+  return { nilai: +z.toFixed(2), arah, ket: `volume 24 jam ${(z >= 0 ? '+' : '')}${z.toFixed(2)}σ dari rata 30 hari, taker-buy ${(tb24 * 100).toFixed(0)}% — ${Math.abs(z) > 2 ? (tb24 >= 0.5 ? 'keramaian ekstrem DISERTAI beli agresif' : 'keramaian ekstrem DISERTAI jual agresif') : Math.abs(z) > 1 ? 'volume menghangat' : 'volume tenang'}${v24 < m * 0.6 ? '; pasar mendatar kering — gerak palsu lebih mudah' : ''}` }
+}
+function bodyRatioDim(c) {                                // keyakinan lilin — rata badan/range 12 jam
+  const d = c.slice(-12)
+  let tot = 0, n = 0
+  for (const x of d) { const r = Math.max(x.h - x.l, 1e-9); tot += Math.abs(x.c - x.o) / r; n++ }
+  const br = tot / Math.max(n, 1)
+  const bull = d.filter((x) => x.c > x.o).length / Math.max(n, 1)
+  return { nilai: +br.toFixed(2), arah: clamp((br - 0.45) * 2, -0.5, 0.5) * (bull >= 0.5 ? 1 : -1), ket: `rata badan lilin ${(br * 100).toFixed(0)}% rentang, ${Math.round(bull * 12)}/12 hijau — ${br > 0.6 ? 'lilin penuh keyakinan; penggerak arah serius' : br < 0.35 ? 'lilin ragu-ragu (sumbu panjang); arah mudah berubah pikiran' : 'lilin normal'}` }
+}
+function macd4hDim(closes4h) {                            // MACD histogram 4 jam
+  const m = macdDim(closes4h)
+  return { nilai: m.nilai, arah: m.arah, ket: `MACD 4h: histogram ${m.nilai != null ? (m.nilai > 0 ? '+' : '') + m.nilai + '% harga' : '—'} — ${(m.ket.split('dan ')[1] || 'momentum menipis')}; rangka waktu besar ${m.arah > 0.2 ? 'bullish' : m.arah < -0.2 ? 'bearish' : 'mendatar'}` }
+}
+function sejajarDim(d1, d4) {                             // kesepakatan 1h vs 4h
+  if (!d1 || !d4 || d1.nilai == null || d4.nilai == null) return { nilai: null, arah: 0, ket: 'rangka waktu belum lengkap untuk ukuran sejajar' }
+  const s = d1.arah + d4.arah
+  const sejajar = Math.sign(d1.arah) === Math.sign(d4.arah) && Math.abs(s) > 0.3
+  return { nilai: +s.toFixed(2), arah: clamp(s / 2, -1, 1), ket: `1h${d1.arah >= 0 ? '+' : ''}${d1.arah.toFixed(2)} vs 4h${d4.arah >= 0 ? '+' : ''}${d4.arah.toFixed(2)} — ${sejajar ? 'SEJAJAR satu arah: sinyal berbobot' : Math.sign(d1.arah) !== Math.sign(d4.arah) ? 'BERLAWANAN antar rangka waktu: jangan salahkan satu lilin, tunggu' : 'satu TF aktif satu tidur'}` }
+}
+function sesiKalenderParams() {                           // kalender — 3 param deterministik
+  const W = new Date()
+  const j = W.getUTCHours()
+  const sesi = j >= 0 && j < 7 ? 'Asia (Tokyo/Singapura)' : j < 13 ? 'Eropa (London)' : j < 21 ? 'Amerika (New York)' : 'Senja (transisi)'
+  const hari = W.getUTCDay(), akhirPekan = hari === 0 || hari === 6
+  const tgl = W.getUTCDate(), fase = tgl <= 10 ? 'awal bulan' : tgl <= 20 ? 'tengah bulan' : 'akhir bulan'
+  return [
+    { param: 'sesi', domain: 'kalender', nilai: sesi, arah: 0, ket: `sesi ${sesi} (UTC ${j}:00) — ${j >= 7 && j < 21 ? 'likuiditas penuh; arah lebih tervalidasi volume nyata' : 'likuiditas tipis; pergerakan mudah palsu dan wick lebih dalam'}` },
+    { param: 'akhirPekan', domain: 'kalender', nilai: akhirPekan, arah: akhirPekan ? -0.1 : 0, ket: `${akhirPekan ? 'AKHIR PEKAN — volume institusi tidur, harga bisa bergerak liar tanpa dukungan; sinyal diperlambat' : 'hari kerja pasar — likuiditas institusi standby'}` },
+    { param: 'faseBulan', domain: 'kalender', nilai: fase, arah: 0, ket: `${fase} (tanggal ${tgl} UTC) — ${tgl <= 10 ? 'arus DCA bulanan cenderung menopang' : tgl > 20 ? 'pembandingan portofolio akhir bulan bisa memicu rotasi' : 'fase netral kalender'}` },
+  ]
+}
+function fundHistParams(frHist, frKini) {                 // riwayat funding — kerumunan BERKELANJUTAN
+  if (!Array.isArray(frHist) || !frHist.length) return [
+    { param: 'fundRata3', domain: 'derivatif', nilai: null, arah: 0, ket: 'riwayat funding OKX tidak tersedia — kerumunan berkelanjutan belum terukur' },
+  ]
+  const tiga = frHist.slice(0, 3).map((x) => +x.fundingRate).filter((x) => Number.isFinite(x))
+  const rata = tiga.length ? tiga.reduce((a, x) => a + x, 0) / tiga.length : null
+  const kini = frKini != null && Number.isFinite(frKini) ? frKini : rata
+  const tren = rata != null && kini != null ? kini - rata : null
+  const arahRata = rata == null ? 0 : rata >= WAWASAN.FRHIST_EKSTREM ? -0.7 : rata <= -WAWASAN.FRHIST_EKSTREM ? 0.7 : clamp(-rata * 800, -0.35, 0.35)
+  const out = [{
+    param: 'fundRata3', domain: 'derivatif', nilai: rata != null ? +(rata * 100).toFixed(4) : null, arah: arahRata,
+    ket: `funding rata 3 interval ${rata != null ? (rata * 100 >= 0 ? '+' : '') + (rata * 100).toFixed(4) + '%' : '—'} — ${rata == null ? 'data kurang' : rata >= WAWASAN.FRHIST_EKSTREM ? 'LONG membayar BERKELANJUTAN (bukan lonjakan sesaat): fondasi naik korosif, long-squeeze mengintai' : rata <= -WAWASAN.FRHIST_EKSTREM ? 'SHORT membayar berkelanjutan: bahan short-squeeze menumpuk' : 'kerumunan funding normal — posisi tidak terlampau ramai'}`,
+  }]
+  if (tren != null) out.push({
+    param: 'fundTren', domain: 'derivatif', nilai: +(tren * 100).toFixed(4), arah: clamp(-tren * 900, -0.5, 0.5),
+    ket: `funding ${tren >= 0 ? 'MEMANAS' : 'MENDINGIN'} (${(tren * 100 >= 0 ? '+' : '')}${(tren * 100).toFixed(4)}% vs rata3) — ${Math.abs(tren) > 0.0002 ? (tren > 0 ? 'kerumunan long BARU masuk cepat; makin ramai makin rapuh' : 'kerumunan long mundur cepat; posisi sedang dibongkar') : 'tingkat keanggotaan kerumunan stabil'}`,
+  })
+  return out
+}
+function bookParams(book, harga) {                        // mikrostruktur — order book spot OKX
+  if (!book || !Array.isArray(book.bids) || !Array.isArray(book.asks) || !book.bids.length || !book.asks.length) return [
+    { param: 'bukuImbalans', domain: 'mikrostruktur', nilai: null, arah: 0, ket: 'order book tidak tersedia — mikrostruktur jujur kosong siklus ini' },
+  ]
+  const bb = +book.bids[0][0], ba = +book.asks[0][0]
+  const mid = (bb + ba) / 2 || harga || 1
+  const spreadBps = (ba - bb) / mid * 1e4
+  const ambil = (lv) => lv.map((x) => [+x[0], +x[1]]).filter(([px]) => px >= mid * 0.99 && px <= mid * 1.01)
+  const b1 = ambil(book.bids), a1 = ambil(book.asks)
+  const vb = b1.reduce((a, [px, sz]) => a + px * sz, 0), va = a1.reduce((a, [px, sz]) => a + px * sz, 0)
+  const imbalans = vb + va > 0 ? (vb - va) / (vb + va) : 0
+  const vbTot = book.bids.reduce((a, x) => a + (+x[0]) * (+x[1]), 0), vaTot = book.asks.reduce((a, x) => a + (+x[0]) * (+x[1]), 0)
+  const rasio = vaTot > 0 ? vbTot / vaTot : null
+  const dinding = [...b1.map(([px, sz]) => ({ px, sz, s: 'bid' })), ...a1.map(([px, sz]) => ({ px, sz, s: 'ask' }))].sort((x, y) => y.sz - x.sz)[0]
+  const out = [{
+    param: 'bukuImbalans', domain: 'mikrostruktur', nilai: +imbalans.toFixed(3), arah: clamp(imbalans * 1.6, -1, 1),
+    ket: `buku 1%: ${imbalans >= 0 ? 'BID menumpuk' : 'ASK menumpuk'} ${Math.abs(imbalans * 100).toFixed(0)}% (imbalance ${(imbalans >= 0 ? '+' : '')}${imbalans.toFixed(2)}) — ${Math.abs(imbalans) > WAWASAN.IMBALANS_VETO ? (imbalans > 0 ? 'benteng beli tebal: jatuh terasa mahal, naik ringan' : 'benteng jual tebal: naik mahal, tekanan pasar ke bawah') : imbalans > 0.15 ? 'beli sedikit unggul' : imbalans < -0.15 ? 'jual sedikit unggul' : 'buku seimbang — arah dari aliran, bukan tumpukan'}`,
+  }]
+  out.push({
+    param: 'bukuSpread', domain: 'mikrostruktur', nilai: +spreadBps.toFixed(1), arah: 0,
+    ket: `spread ${(spreadBps).toFixed(1)} bps — ${spreadBps > WAWASAN.SPREAD_BPS_LEBAR ? 'LEBAR: likuiditas tipis, slippage menelan sinyal tipis' : spreadBps < 3 ? 'sangat rapat: institusi standby' : 'normal'}`,
+  })
+  if (rasio != null) out.push({
+    param: 'bukuKedalaman', domain: 'mikrostruktur', nilai: +rasio.toFixed(2), arah: clamp((rasio - 1) * 0.8, -0.7, 0.7),
+    ket: `kedalaman 50 level: $${vbTot >= 1e6 ? (vbTot / 1e6).toFixed(1) + 'jt' : (vbTot / 1e3).toFixed(0) + 'rb'} bid vs $${vaTot >= 1e6 ? (vaTot / 1e6).toFixed(1) + 'jt' : (vaTot / 1e3).toFixed(0) + 'rb'} ask (rasio ${rasio.toFixed(2)}) — ${rasio > 1.35 ? 'amunisi beli jauh lebih tebal' : rasio < 0.74 ? 'pasokan jual jauh lebih tebal' : 'kedalaman berimbang'}`,
+  })
+  if (dinding) out.push({
+    param: 'bukuDinding', domain: 'mikrostruktur', nilai: +dinding.px.toPrecision(7), arah: dinding.s === 'bid' ? 0.35 : -0.35,
+    ket: `dinding terbesar ${dinding.s === 'bid' ? 'DI SISI BID' : 'DI SISI ASK'} $${(dinding.px * dinding.sz) >= 1e6 ? ((dinding.px * dinding.sz) / 1e6).toFixed(1) + 'jt' : ((dinding.px * dinding.sz) / 1e3).toFixed(0) + 'rb'} di ${dinding.px.toPrecision(7)} (${(Math.abs(dinding.px - mid) / mid * 100).toFixed(2)}% dari mid) — ${Math.abs(dinding.px - mid) / mid < 0.005 ? 'dinding dekat: magnet pergerakan jangka pendek' : 'dinding jauh: penjaga, bukan magnet'}`,
+  })
+  return out
+}
+function lintasParams(simbol, tickOkx) {                  // lintas-pasar — persentil di ratusan swap
+  if (!Array.isArray(tickOkx) || !tickOkx.length) return [
+    { param: 'persenChg', domain: 'relatif', nilai: null, arah: 0, ket: 'tickers swap OKX tidak tersedia — persentil pasar jujur kosong' },
+  ]
+  const me = tickOkx.find((x) => x.instId === simbol + '-USDT-SWAP')
+  if (!me || !+me.open24h) return [{ param: 'persenChg', domain: 'relatif', nilai: null, arah: 0, ket: 'swap koin ini tidak ada di OKX — persentil jujur null' }]
+  const chg = +me.last / +me.open24h - 1
+  const usd = (x) => (+x.volCcy24h || 0) * (+x.last || 0)
+  const sem = tickOkx.filter((x) => x.instId.endsWith('-USDT-SWAP') && +x.open24h > 0 && x.instId.includes('-USDT-'))
+  const chgL = sem.map((x) => +x.last / +x.open24h - 1).sort((a, b) => a - b)
+  const volL = sem.map((x) => usd(x)).sort((a, b) => a - b)
+  const pct = (L, v) => L.length ? L.filter((x) => x <= v).length / L.length : null
+  const pChg = pct(chgL, chg), pVol = pct(volL, usd(me))
+  const medChg = chgL.length ? chgL[Math.floor(chgL.length / 2)] : null
+  const out = [{
+    param: 'persenChg', domain: 'relatif', nilai: +(chg * 100).toFixed(2), arah: clamp(tanh(chg * 12), -1, 1),
+    ket: `perubahan 24j ${(chg * 100 >= 0 ? '+' : '')}${(chg * 100).toFixed(2)}% — persentil ${(pChg * 100).toFixed(0)} dari ${chgL.length} swap USDT OKX (${pChg > 0.85 ? 'kelompok PEMIMPIN hari ini' : pChg < 0.15 ? 'kelompok TERTINGGAL hari ini — pisau jatuh diwaspadai' : 'tengah kawanan'}); median pasar ${medChg != null ? (medChg * 100 >= 0 ? '+' : '') + (medChg * 100).toFixed(2) + '%' : '—'}`,
+  }]
+  if (pVol != null) out.push({
+    param: 'persenVol', domain: 'relatif', nilai: +(usd(me) / 1e6).toFixed(1), arah: 0,
+    ket: `volume swap 24j $${(usd(me) / 1e6).toFixed(1)}jt — persentil ${(pVol * 100).toFixed(0)} dari kawasan (${pVol > 0.8 ? 'pusat perhatian dana hari ini' : pVol < 0.2 ? 'koin pinggiran: sinyal mudah meleset karena pasar tipis' : 'perhatian normal'})`,
+  })
+  return out
+}
+// ASSEMBLER — satu sumber parameter per kandang: inti (12 berbobot) + observasi
+// (multi-TF, derivatif-dalam, mikrostruktur, lintas-pasar, kalender, warisan-kuant).
+function wawasanPenuh(c, cBTC, s, ctx) {
+  const inti = [...wawasanLilin(c, cBTC), ...derivParams(s, ctx.deriv, ctx.oiLama)]
+    .map((p) => ({ ...p, domain: DOMAIN_INTI[p.param] || 'lain', lapis: 'inti' }))
+  const obs = []
+  const push = (param, domain, o) => obs.push({ param, domain, lapis: 'observasi', nilai: o.nilai ?? null, arah: +(o.arah ?? 0).toFixed(3), ket: o.ket })
+  const closes = c.map((x) => x.c)
+  const ema1h = emaAlignDim(closes)
+  push('ema1h', 'tren', ema1h)
+  push('rsi1h', 'momentum', rsiKlasikDim(closes))
+  push('roc12', 'momentum', rocDim(closes, 12))
+  push('roc48', 'momentum', rocDim(closes, 48))
+  push('stoch', 'momentum', stochDim(c))
+  push('mfi', 'aliran', mfiDim(c))
+  push('cci', 'momentum', cciDim(c))
+  push('jarakEkstrem', 'tren', jarakEkstremDim(c))
+  push('atrPctile', 'volatilitas', atrPctileDim(c))
+  push('volZ', 'aliran', volZDim(c))
+  push('bodyRatio', 'momentum', bodyRatioDim(c))
+  const c4 = agg4h(c)
+  if (c4.length >= 30) {
+    const cl4 = c4.map((x) => x.c)
+    const ema4h = emaAlignDim(cl4)
+    push('ema4h', 'tren', { ...ema4h, ket: ema4h.ket.replace('EMA-align 1h', 'EMA-align 4h') })
+    push('macd4h', 'momentum', macd4hDim(cl4))
+    push('rsi4h', 'momentum', rsiKlasikDim(cl4))
+    const bb4 = bollingerDim(cl4)
+    push('bb4h', 'volatilitas', { nilai: bb4.nilai, arah: bb4.arah, ket: bb4.ket.replace('Bollinger %B', 'Bollinger %B 4h') })
+    const sw4 = swingDim(c4)
+    push('swing4h', 'tren', { nilai: sw4.nilai, arah: sw4.arah, ket: sw4.ket.replace('struktur', 'struktur 4h') })
+    push('sejajar4h', 'tren', sejajarDim(ema1h, ema4h))
+    const atrA = (w) => { let s = 0; for (let i = 1; i < w.length; i++) s += Math.max(w[i].h - w[i].l, Math.abs(w[i].h - w[i - 1].c), Math.abs(w[i].l - w[i - 1].c)); return s / Math.max(1, w.length - 1) }
+    const atr1pct = atrA(c.slice(-14)) / (c[c.length - 1]?.c || 1) * 100
+    const atr4pct = atrA(c4.slice(-14)) / (c4[c4.length - 1]?.c || 1) * 100
+    push('atrRatio', 'volatilitas', { nilai: +(atr4pct / Math.max(atr1pct, 0.01)).toFixed(2), arah: 0, ket: `ATR 4h ≈ ${atr4pct.toFixed(2)}% vs 1h ${atr1pct.toFixed(2)}% (${(atr4pct / Math.max(atr1pct, 0.01)).toFixed(1)}×) — ${atr4pct / Math.max(atr1pct, 0.01) > 1.6 ? 'volatilitas membesar di rangka waktu besar' : atr4pct / Math.max(atr1pct, 0.01) < 1.05 ? 'volatilitas pipih antar TF: pasar sibuk' : 'konsisten antar TF'}` })
+  } else push('sejajar4h', 'tren', { nilai: null, arah: 0, ket: 'lilin kurang untuk rangka waktu 4h' })
+  for (const p of fundHistParams(ctx.frHist, ctx.frKini)) push(p.param, p.domain, p)
+  for (const p of bookParams(ctx.book, c[c.length - 1]?.c)) push(p.param, p.domain, p)
+  for (const p of lintasParams(s, ctx.tickOkx)) push(p.param, p.domain, p)
+  for (const p of sesiKalenderParams()) push(p.param, p.domain, p)
+  if (ctx.war) {                                          // param warisan-kuant (dari mesin yang sama)
+    if (ctx.war.garch?.sigma24jPct != null) push('garchSigma', 'volatilitas', { nilai: ctx.war.garch.sigma24jPct, arah: 0, ket: `GARCH(1,1): sigma 24 jam ±${ctx.war.garch.sigma24jPct}% — ukuran posisi & lebar stop ditetapkan dari sini` })
+    if (ctx.war.beta != null) push('betaBTC', 'relatif', { nilai: +ctx.war.beta.toFixed(2), arah: 0, ket: `beta vs BTC 90 jam ${ctx.war.beta.toFixed(2)} (R² ${(ctx.war.r2 ?? 0).toFixed(2)}) — ${ctx.war.beta > 1.2 ? 'amplifier pasar: naik lebih tinggi, jatuh lebih dalam' : ctx.war.beta < 0.8 ? 'bantal defensif terhadap gejolak BTC' : 'bergerak seiring pasar'}` })
+    if (ctx.war.div) push('divRSI', 'momentum', { nilai: ctx.war.div, arah: ctx.war.div.includes('bullish') ? 0.6 : ctx.war.div.includes('bearish') ? -0.6 : 0, ket: `divergensi RSI 12 jam: ${ctx.war.div}` })
+    if (ctx.war.vp?.poc != null) push('pocJarak', 'aliran', { nilai: +(((ctx.war.vp.poc / c[c.length - 1].c) - 1) * 100).toFixed(2), arah: ctx.war.vp.poc > c[c.length - 1].c ? 0.3 : -0.3, ket: `POC volume 48 jam ${(+ctx.war.vp.poc).toPrecision(7)} (${ctx.war.vp.poc > c[c.length - 1].c ? 'di atas harga — magnet tarik naik' : 'di bawah harga — magnet tarik turun'})` })
+  }
+  if (ctx.mc?.pNaik != null) push('mcPnaik', 'volatilitas', { nilai: +(ctx.mc.pNaik * 100).toFixed(1), arah: clamp((ctx.mc.pNaik - 0.5) * 2.4, -1, 1), ket: `Monte Carlo 2.000 lintasan: peluang naik dalam 24 jam ${(ctx.mc.pNaik * 100).toFixed(0)}% — ${ctx.mc.pNaik > 0.55 ? 'distribusi condong naik' : ctx.mc.pNaik < 0.45 ? 'distribusi condong turun' : 'koin flip statistik'}` })
+  return { inti, penuh: [...inti, ...obs] }
+}
+// GERBANG VETO WAWASAN — parameter observasi berhak MENOLAK sinyal buruk (mandat
+// investor: "berani menolak sinyal buruk; lebih baik NO TRADE daripada merugi").
+// Syarat ketat (bukan mood): dinding buku lawan, kerumunan funding berkelanjutan
+// lawan, tren 4h lawan, volatilitas ekstrem — semua dilabeli & bisa diaudit.
+function vetoWaw(penuh, arahV) {
+  const sgn = arahV === 'BUY' ? 1 : -1
+  const W = Object.fromEntries(penuh.map((p) => [p.param, p]))
+  const veto = []
+  const bi = W.bukuImbalans
+  if (bi?.nilai != null && bi.arah * sgn <= -WAWASAN.IMBALANS_VETO && (W.bukuSpread?.nilai ?? 0) <= WAWASAN.SPREAD_BPS_LEBAR)
+    veto.push({ kunci: 'order-book-lawan', ket: `order book menolak: imbalance ${(bi.nilai >= 0 ? '+' : '')}${bi.nilai} melawan ${arahV} (dinding pasaran di sisi berlawanan)` })
+  const fr = W.fundRata3
+  if (fr?.nilai != null && Math.abs(fr.nilai) >= WAWASAN.FRHIST_EKSTREM * 100 && fr.nilai * sgn > 0)
+    veto.push({ kunci: 'kerumunan-funding', ket: `funding rata3 ${fr.nilai}% = kerumunan searah ${arahV} terus membayar mahal — masuk berarti menumpang posisi rapuh` })
+  const t4 = W.ema4h
+  if (t4?.nilai != null && t4.arah * sgn <= -WAWASAN.TREN4H_LAWAN && (W.sejajar4h?.nilai ?? 0) * sgn < 0)
+    veto.push({ kunci: 'tren-4h-lawan', ket: `rangka waktu 4h menolak: EMA-align 4h ${t4.arah.toFixed(2)} berlawanan ${arahV} sementara 1h sendirian` })
+  const ap = W.atrPctile
+  if (ap?.nilai != null && ap.nilai >= WAWASAN.ATR_PCTILE_EKSTREM && (W.sejajar4h?.nilai ?? 0) * sgn < 0)
+    veto.push({ kunci: 'volatilitas-ekstrem', ket: `ATR persentil ${(ap.nilai * 100).toFixed(0)} (ekstrem) sambil 4h tidak menyetujui — sinyal ${arahV} berisiko tergelincir stop sebelum bekerja` })
+  return veto
+}
 // NARASI — jawaban "fasih & matang": paragraf analis profesional dari angka NYATA,
 // selalu diakhiri klausul risiko. Tidak ada klaim tanpa angka di belakangnya.
 // coda (opsional): penutup khusus jalur — mis. radar phoenix memakai cerita radar
@@ -919,17 +1221,18 @@ function narasiSasaran(s, b, v, waw, iklim, eksA, sigma24jPct, rezimGlobal, coda
   const W = Object.fromEntries(waw.map((p) => [p.param, p]))
   const k1 = `${s} dibaca dalam rezim ${b.rezim}${rezimGlobal && rezimGlobal !== b.rezim ? ` — berbeda dari rezim BTC ${rezimGlobal}, artinya koin ini punya hidupnya sendiri` : ` — selaras rezim pasar`} · harga ${b.harga.toPrecision(6)} dengan ATR14 ${b.atrPct.toFixed(2)}% (satu hari normal bisa melampaui ±${(b.atrPct * Math.sqrt(24)).toFixed(1)}%).`
   const k2 = `Struktur: ${b.dims.struktur.ket}. ${W.swing?.ket ?? ''}`
-  const k3 = `Aliran & posisi: ${W.obv?.ket ?? '—'}. ${W.funding?.ket ?? 'funding Bybit tidak tersedia untuk simbol ini'}. ${W.oi?.ket ?? ''}`
-  const k4 = `Momentum: ${W.macd?.ket ?? '—'}; ${W.relatif?.ket ?? ''}.`
+  const k3 = `Aliran & posisi: ${W.obv?.ket ?? '—'}. ${W.funding?.ket ?? 'funding futures tidak tersedia untuk simbol ini'}. ${W.oi?.ket ?? ''}${W.fundRata3?.nilai != null ? ` ${W.fundRata3.ket}` : ''}${W.bukuImbalans?.nilai != null ? ` Order book: ${W.bukuImbalans.ket}` : ''}.`
+  const k4 = `Momentum: ${W.macd?.ket ?? '—'}; ${W.relatif?.ket ?? ''}${W.sejajar4h?.nilai != null ? ` ${W.sejajar4h.ket}` : ''}.`
+  const k4b = W.persenChg?.nilai != null ? `Di pasar luas: ${W.persenChg.ket}.${W.volZ?.nilai != null ? ` ${W.volZ.ket}` : ''}` : null
   const k5 = iklim.fng ? `Iklim pasar: Fear & Greed ${iklim.fng.nilai} (${iklim.fng.klasifikasi}) — ${iklim.fng.nilai >= 75 ? 'kerakusan ekstrem; historisnya koreksi mengintai, disiplin ukuran posisi di atas bias' : iklim.fng.nilai <= 25 ? 'ketakutan ekstrem; historisnya zona akumulasi kontrarian, tetapi pisau jatuh tetap dilarang ditadah' : 'sentimen tidak ekstrem; arah dari medan, bukan dari emosi'}${iklim.dominasi ? `; ${iklim.dominasi.ket}` : ''}.` : null
   if (coda) return [k1, k2, k3, k4, k5, coda].filter(Boolean).join(' ')
   const sgn = v.arah === 'BUY' ? 'menopang NAIK' : 'menekan TURUN'
   const bagus = waw.filter((p) => (v.arah === 'BUY' ? p.arah > 0.15 : p.arah < -0.15))
   const lawan = waw.filter((p) => (v.arah === 'BUY' ? p.arah < -0.15 : p.arah > 0.15))
-  const k6 = `Komite 17 dimensi memilih ${v.arah} (keyakinan ${v.keyakinan}/100 — dikalibrasi medan): ${bagus.length} parameter ${sgn}${lawan.length ? `, ${lawan.length} melawan (${lawan.map((p) => p.param).join(', ')})` : ' tanpa penentang keras'}.`
+  const k6 = `Komite ${DIM_ARAH.length + DIM_WAW.length} dimensi berbobot (diawasi ${TOTAL_PARAM_NAMA} parameter bernama + sekolah hit-rate) memilih ${v.arah} (keyakinan ${v.keyakinan}/100 — dikalibrasi medan): ${bagus.length} parameter ${sgn}${lawan.length ? `, ${lawan.length} melawan (${lawan.map((p) => p.param).join(', ')})` : ' tanpa penentang keras'}.`
   const k7 = eksA ? `Matematika: ekspektasi ${eksA.evPct >= 0 ? '+' : ''}${eksA.evPct}% net-fee — P arah benar ${Math.round(eksA.p * 100)}%, untung rata ${eksA.gainPct}% vs rugi rata ${eksA.rugiPct}%, RR ${eksA.rr ?? '—'}${sigma24jPct ? ` · GARCH menaksir simpangan 24 jam ±${sigma24jPct}%: ukur posisi dari sigma ini, bukan dari rasa` : ''}.` : null
   const k8 = `Risiko jujur: ${lawan.length >= 4 ? 'komite terbelah — perlakukan sebagai sinyal lemah, ukuran posisi kecil atau tangan kosong' : lawan.length >= 2 ? 'ada arus berlawanan — stop wajib jalan, dilarang menambah saat melawan' : 'seperempat medan selalu bisa berbalik dalam 24 jam — pra-registrasi ini dinilai otomatis oleh medan, bukan janji'}.`
-  return [k1, k2, k3, k4, k5, k6, k7, k8].filter(Boolean).join(' ')
+  return [k1, k2, k3, k4, k4b, k5, k6, k7, k8].filter(Boolean).join(' ')
 }
 
 function vonisPhoenix(rad, phxGenome, dayaProduk, untung, rezimGlobal, gerbangSkor) {
@@ -1160,11 +1463,41 @@ async function ambilDeriv() {
 let deriv = await ambilDeriv()
 if (deriv) log(`derivatif: ${deriv.size} simbol siap`)
 else wawCatatan.push('semua host derivatif gagal — param funding/OI jujur null siklus ini')
-let fng = null
+// ---- V254 SAMUDRA — data dalam OKX (selalu dicoba; OKX satu-satunya host yang
+// terbukti hidup dari runner): tickers SWAP lintas-pasar (1 permintaan) +
+// riwayat funding & order book per kandang (2×10 permintaan kecil, sopan).
+// Gagal jujur = null, tidak pernah dikarang.
+let tickOkx = null
+const frHistMap = new Map(), bookMap = new Map()
 try {
-  const f = await ambilJson('https://api.alternative.me/fng/?limit=1', 10000)
+  const tk = await ambilJson('https://www.okx.com/api/v5/market/tickers?instType=SWAP', 20000)
+  tickOkx = tk?.data || null
+  if (tickOkx?.length) wawCatatan.push(`okx lintas-pasar: ${tickOkx.length} swap (persentil perubahan & volume)`)
+  else wawCatatan.push('okx tickers swap kosong — param lintas-pasar jujur null')
+} catch (e) { wawCatatan.push(`okx tickers swap gagal (${String(e.message).slice(0, 36)})`) }
+try {
+  await kumpul(KANDANG, 3, async (s) => {
+    const inst = s + '-USDT-SWAP'
+    const [fh, bk] = await Promise.all([
+      ambilJson(`https://www.okx.com/api/v5/public/funding-rate-history?instId=${inst}&limit=4`, 12000).catch(() => null),
+      ambilJson(`https://www.okx.com/api/v5/market/books?instId=${s}-USDT&sz=50`, 12000).catch(() => null),
+    ])
+    if (fh?.data?.length) frHistMap.set(s, fh.data)
+    const d0 = bk?.data?.[0]
+    if (d0?.bids?.length && d0?.asks?.length) bookMap.set(s, d0)
+  })
+  wawCatatan.push(`okx dalam: riwayat funding ${frHistMap.size}/${KANDANG.length} · order book spot ${bookMap.size}/${KANDANG.length}`)
+} catch (e) { wawCatatan.push(`okx dalam gagal (${String(e.message).slice(0, 36)})`) }
+log(`samudra: tickers ${tickOkx ? tickOkx.length : '—'} · frHist ${frHistMap.size} · books ${bookMap.size}`)
+let fng = null, fngRiwayat = null
+try {
+  const f = await ambilJson('https://api.alternative.me/fng/?limit=8', 10000)
   const d0 = f?.data?.[0]
   if (d0) fng = { nilai: +d0.value, klasifikasi: d0.value_classification, ket: 'alternative.me — indeks sentimen gabungan (volatilitas, momentum, media, dominasi, volume)' }
+  if (f?.data?.length >= 8) {
+    const kmr = +f.data[1].value, l7 = +f.data[7].value
+    fngRiwayat = { kemarin: kmr, lalu7h: l7, delta7d: +d0.value - l7, delta1d: +d0.value - kmr }
+  }
 } catch { wawCatatan.push('Fear & Greed gagal — sentimen jujur kosong siklus ini') }
 let dominasi = null
 try {
@@ -1352,29 +1685,36 @@ for (const s of KANDANG) {
   const id = `${s}-${TGL}`
   if (ledger.some((e) => e.id === id)) continue                    // satu per simbol per hari UTC
   const b = dewanBukti(c)
-  const waw = [...wawasanLilin(c, hasil.BTC), ...derivParams(s, deriv, oiLamaMap?.[s])]   // V253: 12 param wawasan
+  const wawCtx = { deriv, oiLama: oiLamaMap?.[s], frHist: frHistMap.get(s), frKini: deriv?.get(s + 'USDT') ? +(deriv.get(s + 'USDT').fundingRate) : null, book: bookMap.get(s), tickOkx, war: null, mc: null }   // V254: konteks samudra
+  const warA = mesinWarisan(c, hasil.BTC)                          // V249: konteks kuant ARAH (dipindah duluan utk param samudra)
+  const mcA = warA.garch.sigma1j > 0 ? monteCarlo24j(c, warA.garch) : null   // V251: kerucut MC utk ekspektasi arah
+  wawCtx.war = warA; wawCtx.mc = mcA
+  const wp = wawasanPenuh(c, hasil.BTC, s, wawCtx)                 // V254: inti 12 + observasi ~40
+  const waw = wp.inti
   const buktiWaw = Object.fromEntries(waw.map((p) => [p.param, +p.arah.toFixed(3)]))
   const v = vonis(b, waw, bobotArah, bobotWaw, rezimGlobal)
-  const warA = mesinWarisan(c, hasil.BTC)                          // V249: konteks kuant ARAH
-  const mcA = warA.garch.sigma1j > 0 ? monteCarlo24j(c, warA.garch) : null   // V251: kerucut MC utk ekspektasi arah
   const eksA = mcA ? eksArah(v.arah, mcA) : null
   const buktiCand = Object.fromEntries(DIM_ARAH.map((k) => [k, +b.dims[k].arah.toFixed(3)]))
   const frPct = waw.find((p) => p.param === 'funding')?.nilai ?? null
   const kena = zonaKandidat('arah', v.arah, b.rezim, v.keyakinan, buktiCand, frPct)
-  kandidatArah.push({ s, id, b, v, waw, buktiWaw, warA, mcA, eksA, buktiCand, kena })
+  const vetoW = vetoWaw(wp.penuh, v.arah)                          // V254: gerbang veto wawasan
+  kandidatArah.push({ s, id, b, v, waw, wp, buktiWaw, warA, mcA, eksA, buktiCand, kena, vetoW })
 }
 const emasArah = (k) => k.kena.some((z) => z.status === 'EMAS')
-const bersihArah = kandidatArah.filter((k) => !k.kena.some((z) => z.status === 'RACUN'))
+// V254: kandidat yang DI-VETO wawasan dipisah — bukan racun forensik, tapi ditolak
+// parameter medan (order book / funding-riwayat / tren 4h / volatilitas ekstrem).
+const divetoArah = kandidatArah.filter((k) => k.vetoW.length)
+const bersihArah = kandidatArah.filter((k) => !k.vetoW.length && !k.kena.some((z) => z.status === 'RACUN'))
 const tercemarArah = kandidatArah.filter((k) => k.kena.some((z) => z.status === 'RACUN'))
   .sort((a, b) => (b.eksA?.evPct ?? -99) - (a.eksA?.evPct ?? -99))
 // SLOT EKSPLORASI forensik (bandit berbatas): 1 kandidat racun per denyut dengan
 // EV statistik >= 0 boleh lewat — tanpa informasi baru, zona tak pernah bisa menyembuh.
 const eksplorasiArah = tercemarArah.find((k) => k.eksA && k.eksA.evPct >= 0) || null
 const kunciEntriArah = (k, eksplor) => {
-  const { s, id, b, v, waw, buktiWaw, warA, mcA, eksA, buktiCand, kena } = k
+  const { s, id, b, v, waw, wp, buktiWaw, warA, mcA, eksA, buktiCand, kena } = k
   const emas = emasArah(k)
   const kal = kunciKeyakinan(v.keyakinan + (emas ? 4 : 0), ilmu.kalibrasi, kena)   // V252: kepastian zona medan
-  const nar = narasiSasaran(s, b, { arah: v.arah, keyakinan: kal.keyakinan }, waw, { fng, dominasi }, eksA, warA.garch.sigma24jPct, rezimGlobal)
+  const nar = narasiSasaran(s, b, { arah: v.arah, keyakinan: kal.keyakinan }, wp.penuh, { fng, dominasi }, eksA, warA.garch.sigma24jPct, rezimGlobal)
   const entri = {
     id, simbol: s, jalur: 'ARAH', arah: v.arah, keyakinan: kal.keyakinan, keyakinanMentah: v.keyakinan,
     ketKeyakinan: kal.sumber, skor: v.skor, skorKomite: { lama: v.skorLama, wawasan: v.skorWaw, bagian: WAWASAN.BAGIAN_KOMITE },
@@ -1383,10 +1723,11 @@ const kunciEntriArah = (k, eksplor) => {
     entry: b.harga, waktuKunci: ISO, horizon: '24j', rezim: b.rezim, status: 'TERBUKA',
     bukti: buktiCand,
     buktiWaw,
+    paramsPenuh: Object.fromEntries(wp.penuh.map((p) => [p.param, +p.arah.toFixed(2)])),   // V254 sekolah parameter: nasihat tiap param disegel utk dinilai medan
     daya: { volume: +b.dims.volume.daya.toFixed(2), volatilitas: +b.dims.volatilitas.daya.toFixed(2), likuiditas: +b.dims.likuiditas.daya.toFixed(2) },
     ketBukti: Object.fromEntries(DIM_ARAH.map((k2) => [k2, b.dims[k2].ket])),
-    ketBuktiWaw: Object.fromEntries(waw.map((p) => [p.param, p.ket])),
-    wawasan: waw.map((p) => ({ param: p.param, nilai: p.nilai, arah: +p.arah.toFixed(2), ket: p.ket })),
+    ketBuktiWaw: Object.fromEntries(wp.penuh.map((p) => [p.param, p.ket])),
+    wawasan: wp.penuh.map((p) => ({ param: p.param, domain: p.domain, lapis: p.lapis, nilai: p.nilai, arah: +p.arah.toFixed(2), ket: p.ket })),
     derivatif: (() => { const f = waw.find((p) => p.param === 'funding'), o = waw.find((p) => p.param === 'oi'); return { fundingPct: f?.nilai ?? null, oiJuta: o?.nilai ?? null, ket: 'derivatif futures rantai host (bybit→bytick→fapi→okx) + snapshot OI antar-siklus' } })(),
     narasi: nar,
     warisan: {
@@ -1404,6 +1745,13 @@ if (eksplorasiArah) {
   forensikTindakan.push(`slot eksplorasi: ${eksplorasiArah.s} ${eksplorasiArah.v.arah} dilepas lewat gerbang (EV +${(eksplorasiArah.eksA.evPct * 100).toFixed(2)}% >= 0) — zona racun diuji agar bisa menyembuh dengan bukti baru`)
   log(`forensik-eksplorasi: ${eksplorasiArah.s} ${eksplorasiArah.v.arah} EV +${(eksplorasiArah.eksA.evPct * 100).toFixed(2)}%`)
 }
+for (const k of divetoArah) {
+  nearMiss.push({
+    simbol: k.s, arah: k.v.arah, keyakinan: k.v.keyakinan, entry: k.b.harga, rezim: k.b.rezim,
+    catatan: `GERBANG VETO WAWASAN — ${k.vetoW.map((x) => x.ket).join('; ')}`, kunci: k.vetoW.map((x) => x.kunci),
+  })
+}
+if (divetoArah.length) log(`veto-wawasan: ${divetoArah.map((k) => `${k.s}(${k.vetoW.map((x) => x.kunci).join('/')})`).join(' ')} — parameter medan menolak sinyal`)
 for (const k of tercemarArah) {
   if (k === eksplorasiArah) continue
   const racunK = k.kena.filter((z) => z.status === 'RACUN')
@@ -1467,16 +1815,19 @@ try {
 } catch (e) { kompas = null; log('kompas gagal (tak fatal): ' + String(e.message).slice(0, 60)) }
 const lulusPhx = []
 const tercemarPhx = []
+let vetoPhxCt = 0                                    // V254: hitungan veto wawasan jalur phoenix
 for (const s of daftarTelusur) {
   const c = hasil[s]; if (!c) continue
   const id = `PHX-${s}-${TGL}`
   if (ledger.some((e) => e.id === id)) continue
   if (c.length < 80) continue                                       // radar butuh sejarah cukup
   const b = dewanBukti(c)
-  const wawPhx = [...wawasanLilin(c, hasil.BTC), ...derivParams(s, deriv, oiLamaMap?.[s])]   // V253: wawasan utk radar juga
-  const frPctPhx = wawPhx.find((p) => p.param === 'funding')?.nilai ?? null
+  const war = mesinWarisan(c, hasil.BTC)          // V249: GARCH + VP + Beta + Divergensi + Guard (dipindah duluan utk param samudra)
   const rad = radarPhoenix(c)
-  const war = mesinWarisan(c, hasil.BTC)          // V249: GARCH + VP + Beta + Divergensi + Guard
+  const wpPhx = wawasanPenuh(c, hasil.BTC, s, { deriv, oiLama: oiLamaMap?.[s], frHist: frHistMap.get(s), frKini: deriv?.get(s + 'USDT') ? +(deriv.get(s + 'USDT').fundingRate) : null, book: bookMap.get(s), tickOkx, war, mc: null })   // V254: inti + observasi utk radar
+  const wawPhx = wpPhx.inti
+  const frPctPhx = wawPhx.find((p) => p.param === 'funding')?.nilai ?? null
+  const vetoPhx = vetoWaw(wpPhx.penuh, 'BUY')     // V254: gerbang veto wawasan utk radar BUY
   const tgt = pilihTarget(c, b.harga, rezimGlobal, war.vpMagnet)
   const dayaProduk = clamp(b.dims.volume.daya, 0.35, 1) * clamp(b.dims.volatilitas.daya, 0.3, 1) * clamp(b.dims.likuiditas.daya, 0.4, 1)
   const v = vonisPhoenix(rad, bobotPhx, dayaProduk, tgt.untung, rezimGlobal, gerbangSkor)
@@ -1518,6 +1869,16 @@ for (const s of daftarTelusur) {
     }
     continue
   }
+  // V254 GERBANG VETO WAWASAN (radar BUY) — parameter medan menolak beli yang
+  // dilawan dinding buku / kerumunan funding / tren 4h / volatilitas ekstrem.
+  if (vetoPhx.length) {
+    vetoPhxCt++                                     // V254: hitungan veto wawasan jalur phoenix
+    nearMiss.push({
+      simbol: s, arah: 'BUY', keyakinan: Math.round(v.skor), entry: b.harga, rezim: b.rezim,
+      catatan: `GERBANG VETO WAWASAN — ${vetoPhx.map((x) => x.ket).join('; ')}`, kunci: vetoPhx.map((x) => x.kunci),
+    })
+    continue
+  }
   // V249 GUARD MONTE CARLO — peluang statistik tembus target harus layak:
   // 2.000 lintasan × 24 langkah dari σ-GARCH + sebaran residual nyata. Bila
   // peluang < MC_MIN, statistik MENOLAK target — tidak dipaksa lolos.
@@ -1554,7 +1915,7 @@ for (const s of daftarTelusur) {
   if (racunPhx.length) {
     tercemarPhx.push({
       id, simbol: s, arah: 'BUY', keyakinan: v.keyakinan + (emasPhx ? 4 : 0), skorPhoenix: v.skor,
-      entry: b.harga, rezim: b.rezim, tgt, rad, b, war, mc, pT, pStv, evK, kenaPhx, racunPhx, zonaEmas: emasPhx, wawPhx,
+      entry: b.harga, rezim: b.rezim, tgt, rad, b, war, mc, pT, pStv, evK, kenaPhx, racunPhx, zonaEmas: emasPhx, wawPhx, wpPhx,
     })
     blokForensikPhx += 1
     continue
@@ -1562,7 +1923,7 @@ for (const s of daftarTelusur) {
   const pA = tgt.highAmbisius ? mc.pLevel(tgt.highAmbisius / b.harga - 1) : null
   lulusPhx.push({
     id, simbol: s, jalur: 'PHOENIX', arah: 'BUY', keyakinan: v.keyakinan + (emasPhx ? 4 : 0), skorPhoenix: v.skor,
-    entry: b.harga, tgt, rad, b, war, mc, pT, pA, dayaProduk, stv, pStv, evK, kenaPhx, zonaEmas: emasPhx, wawPhx,
+    entry: b.harga, tgt, rad, b, war, mc, pT, pA, dayaProduk, stv, pStv, evK, kenaPhx, zonaEmas: emasPhx, wawPhx, wpPhx,
     urut: v.skor * Math.min(tgt.untung, 0.06) * (evK > 0 ? 1.25 : 1),   // v2.1 fantasi tak memenangkan kuota; V251 EV positif diprioritaskan
   })
 }
@@ -1573,7 +1934,7 @@ lulusPhx.sort((a, b) => b.urut - a.urut)
 const phxCadangan = []
 // V252: pembangun entri phoenix — satu sumber untuk jalur kuota & slot eksplorasi
 const bangunEntriPhx = (p, eksplor) => {
-  const { tgt, rad, b, war, mc, pT, wawPhx } = p
+  const { tgt, rad, b, war, mc, pT, wawPhx, wpPhx } = p
   const pA = tgt.highAmbisius ? mc.pLevel(tgt.highAmbisius / b.harga - 1) : null
   const kalP = kunciKeyakinan(p.keyakinan, ilmu.kalibrasi, p.kenaPhx)   // V252: kepastian zona medan
   const pita = pitaKonformal(ilmu.konformal)                       // V247: pita 75% ujung atas
@@ -1581,7 +1942,7 @@ const bangunEntriPhx = (p, eksplor) => {
   const pStop = p.pStv
   // V253: narasi phoenix — inti sama (struktur/aliran/momentum/iklim), penutup cerita radar
   const codaPhx = `Radar membeli ujung bawah hari ini — posisi ${(rad.posisi * 100).toFixed(0)}% rentang 24 jam — dengan sasaran jual ${+tgt.target.toPrecision(7)} (untung bersih +${(tgt.untung * 100).toFixed(1)}% setelah fee), stop struktural ${+stopHarga.toPrecision(6)} di bawah lantai, peluang MC tembus target ${Math.round(pT * 100)}% vs kena stop ${pStop != null ? Math.round(pStop * 100) + '%' : '—'}%. Risiko jujur: akumulasi bisa gagal — lantai jebol berarti bacaan salah dan stop yang mengatakan itu lebih dulu.`
-  const narPhx = narasiSasaran(p.simbol, b, { arah: 'BUY', keyakinan: kalP.keyakinan }, wawPhx, { fng, dominasi }, null, war.garch.sigma24jPct, rezimGlobal, codaPhx)
+  const narPhx = narasiSasaran(p.simbol, b, { arah: 'BUY', keyakinan: kalP.keyakinan }, wpPhx.penuh, { fng, dominasi }, null, war.garch.sigma24jPct, rezimGlobal, codaPhx)
   const buktiWawPhx = Object.fromEntries(wawPhx.map((x) => [x.param, +x.arah.toFixed(3)]))
   // V251 MESIN PROFIT — ekspektasi & tangga profit (EV sudah tervalidasi guard ekspektasi)
   const rugiP = 1 - stopHarga / b.harga + FEE
@@ -1634,6 +1995,7 @@ const bangunEntriPhx = (p, eksplor) => {
     radar: { posisi24j: +rad.posisi.toFixed(3), sinyal: Object.fromEntries(PHX_DIM.map((k) => [k, +rad.sinyal[k].toFixed(3)])) },
     bukti: Object.fromEntries(DIM_ARAH.map((k) => [k, +b.dims[k].arah.toFixed(3)])),
     buktiWaw: buktiWawPhx,
+    paramsPenuh: Object.fromEntries(wpPhx.penuh.map((x) => [x.param, +x.arah.toFixed(2)])),   // V254 sekolah parameter
     daya: { volume: +b.dims.volume.daya.toFixed(2), volatilitas: +b.dims.volatilitas.daya.toFixed(2), likuiditas: +b.dims.likuiditas.daya.toFixed(2) },
     ketBukti: {
       ...Object.fromEntries(DIM_ARAH.map((k) => [k, b.dims[k].ket])),
@@ -1642,8 +2004,8 @@ const bangunEntriPhx = (p, eksplor) => {
       'untung-bersih': `+${(tgt.untung * 100).toFixed(1)}% setelah fee 0.2% (beli ujung bawah, jual ujung atas)`,
       'pengaman': `stop terpasang di bawah lantai 24 jam ${rad.lo24.toPrecision(6)} — lantai jebol berarti bacaan akumulasi salah`,
     },
-    ketBuktiWaw: Object.fromEntries(wawPhx.map((x) => [x.param, x.ket])),
-    wawasan: wawPhx.map((x) => ({ param: x.param, nilai: x.nilai, arah: +x.arah.toFixed(2), ket: x.ket })),
+    ketBuktiWaw: Object.fromEntries(wpPhx.penuh.map((x) => [x.param, x.ket])),
+    wawasan: wpPhx.penuh.map((x) => ({ param: x.param, domain: x.domain, lapis: x.lapis, nilai: x.nilai, arah: +x.arah.toFixed(2), ket: x.ket })),
     derivatif: (() => { const f = wawPhx.find((x) => x.param === 'funding'), o = wawPhx.find((x) => x.param === 'oi'); return { fundingPct: f?.nilai ?? null, oiJuta: o?.nilai ?? null, ket: 'derivatif futures rantai host (bybit→bytick→fapi→okx) + snapshot OI antar-siklus' } })(),
     narasi: narPhx,
   }
@@ -1688,6 +2050,23 @@ for (const e of ledger) {
   const exit = c[c.length - 1].c
   const net = (e.arah === 'BUY' ? 1 : -1) * (exit / e.entry - 1) - FEE
   e.exit = exit; e.net = +net.toFixed(5); e.status = net > 0 ? 'BENAR' : 'SALAH'; e.waktuDinilai = ISO
+  // V254 SEKOLAH PARAMETER — nasihat tiap param disegel saat kunci; kini dinilai
+  // medan: param yang BICARA (|arah|>=0.15) dihitung apakah nasihatnya searah
+  // kemenangan, dan berapa sumbangan netnya — dasar kelulusan bobot di versi depan.
+  const hitMap = e.paramsPenuh || e.buktiWaw
+  if (hitMap) {
+    if (!ilmu.paramHit) ilmu.paramHit = {}
+    const sgnE = e.arah === 'BUY' ? 1 : -1
+    for (const [pid, a] of Object.entries(hitMap)) {
+      if (!Number.isFinite(a) || Math.abs(a) < 0.15) continue          // hanya param yang berbicara
+      if (!ilmu.paramHit[pid]) ilmu.paramHit[pid] = { n: 0, benar: 0, net: 0 }
+      const h = ilmu.paramHit[pid]
+      const endors = a * sgnE > 0                                      // param menyetujui arah posisi
+      h.n++
+      if ((endors && e.status === 'BENAR') || (!endors && e.status === 'SALAH')) h.benar++
+      h.net = +((h.net ?? 0) + e.net * (endors ? 1 : -1) * Math.abs(a)).toFixed(5)
+    }
+  }
   // V247 ILMU: keyakinan adalah PROBABILITAS — dinilai skor Brier (Gneiting-Raftery 2007).
   const pKal = clamp((e.keyakinanMentah ?? e.keyakinan ?? 60) / 100, 0.5, 0.98)
   e.brier = +((pKal - (net > 0 ? 1 : 0)) ** 2).toFixed(4)
@@ -2220,51 +2599,107 @@ tulis(path.join(ROOT, 'laporan/forensik.json'), {
 })
 log(`buku guru: ${guruPengajaran.length} pengajaran · kuis jawaban ${guruKuis.jawaban}`)
 
-// ---- 5c. V253 WAWASAN-360 — iklim makro + narasi analis pasar + tabel perKandang ----
-// Jawaban mandat "fasih dan matang": bukan cuma sinyal, tapi BACAAN pasar penuh
-// parameter — semuanya dihitung dari endpoint publik, tanpa API key.
+// ---- 5c. V254 SAMUDRA-PARAMETER — iklim makro + narasi analis pasar + tabel perKandang ----
+// Jawaban mandat "banyak parameter": registri penuh per kandang (inti 12 berbobot
+// + observasi ~34) + iklim lintas-pasar dari ratusan swap OKX + sekolah parameter.
+// iklim lintas-pasar OKX — breadth, median, sebaran p10-p90, altseason-proxy, dominasi volume swap
+let iklimOkx = null
+if (Array.isArray(tickOkx) && tickOkx.length) {
+  try {
+    const sem = tickOkx.filter((x) => x.instId.endsWith('-USDT-SWAP') && +x.open24h > 0)
+    const chgs = sem.map((x) => +x.last / +x.open24h - 1)
+    const btcC = sem.find((x) => x.instId === 'BTC-USDT-SWAP')
+    const btcChg = btcC ? +btcC.last / +btcC.open24h - 1 : null
+    const q = [...chgs].sort((a, b) => a - b)
+    const naikPct = chgs.length ? chgs.filter((x) => x > 0).length / chgs.length : null
+    const medChg = q.length ? q[Math.floor(q.length / 2)] : null
+    const p10 = q.length ? q[Math.floor(q.length * 0.1)] : null
+    const p90 = q.length ? q[Math.floor(q.length * 0.9)] : null
+    const volBtc = btcC ? (+btcC.volCcy24h || 0) * (+btcC.last || 0) : 0
+    const volTot = sem.reduce((a, x) => a + (+x.volCcy24h || 0) * (+x.last || 0), 0)
+    iklimOkx = {
+      dari: chgs.length,
+      naikPct: naikPct != null ? +(naikPct * 100).toFixed(1) : null,
+      medianChgPct: medChg != null ? +(medChg * 100).toFixed(2) : null,
+      dispersiPct: p10 != null && p90 != null ? +((p90 - p10) * 100).toFixed(2) : null,
+      altseasonProxy: medChg != null && btcChg != null ? +((medChg - btcChg) * 100).toFixed(2) : null,
+      dominasiVolumeOkxPct: volTot > 0 ? +((volBtc / volTot) * 100).toFixed(2) : null,
+      ket: 'dari tickers swap OKX — konstan per siklus: masuk iklim & narasi, bukan pemilih arah (pelajaran forensik)',
+    }
+  } catch { iklimOkx = null }
+}
 const narasiMakroTeks = [
   `BTC berdiri di ${sembtc.harga.toPrecision(6)} dalam rezim ${rezimGlobal} (ATR per jam ${sembtc.atrPct.toFixed(2)}%) — breadth pasar ${(breadthNaik * 100).toFixed(0)}% koin naik (${breadthDari} pasangan diukur).`,
-  fng ? `Sentimen terukur Fear & Greed ${fng.nilai} — ${fng.klasifikasi}: ${fng.nilai >= 75 ? 'kerakusan ekstrem; historisnya koreksi mengintai — disiplin ukuran posisi harus di atas bias naik' : fng.nilai <= 25 ? 'ketakutan ekstrem; historisnya zona akumulasi kontrarian — tetapi pisau jatuh tetap dilarang ditadah' : 'sentimen tidak ekstrem; arah dibaca dari medan, bukan dari emosi'}.` : null,
+  fng ? `Sentimen terukur Fear & Greed ${fng.nilai} — ${fng.klasifikasi}${fngRiwayat ? ` (kemarin ${fngRiwayat.kemarin}, Δ7 hari ${fngRiwayat.delta7d >= 0 ? '+' : ''}${fngRiwayat.delta7d} — sentimen ${Math.abs(fngRiwayat.delta7d) >= 10 ? 'bergeser cepat; waspadai emosi ikut bergerak' : 'cenderung stabil'})` : ''}: ${fng.nilai >= 75 ? 'kerakusan ekstrem; historisnya koreksi mengintai — disiplin ukuran posisi harus di atas bias naik' : fng.nilai <= 25 ? 'ketakutan ekstrem; historisnya zona akumulasi kontrarian — tetapi pisau jatuh tetap dilarang ditadah' : 'sentimen tidak ekstrem; arah dibaca dari medan, bukan dari emosi'}.` : null,
   dominasi ? `${dominasi.ket} — ${dominasi.sumber === 'coingecko' ? 'dominasi naik artinya dana berlindung ke mayor dan altcoin tertekan' : 'proxy volume: BTC menyerap porsi likuiditas spot'}.` : null,
   frBtc != null ? `Funding BTC ${(frBtc * 100).toFixed(4)}% · ETH ${frEth != null ? (frEth * 100).toFixed(4) + '%' : '—'} per interval — ${frBtc >= WAWASAN.FUNDING_EKSTREM ? 'long ramai membayar mahal: fondasi naik rapuh terhadap long-squeeze' : frBtc <= -WAWASAN.FUNDING_EKSTREM ? 'short ramai membayar mahal: bahan short-squeeze melawan arus' : 'tidak ada kerumunan ekstrem di derivatif'}.` : null,
   oiBtc ? `Open interest BTC $${oiBtc.nilaiJuta} juta${oiBtc.deltaPct != null ? ` (Δ${(oiBtc.deltaPct * 100).toFixed(2)}% sejak denyut lalu — ${Math.abs(oiBtc.deltaPct) > WAWASAN.OI_BERAT ? 'perputaran posisi berat; sinyal berikutnya bermomen' : 'posisi stabil'})` : ' (Δ antar-siklus belum tersedia — denyut pertama dengan snapshot ini)'}.` : null,
-  `Komite ARAH kini menimbang 17 dimensi (5 lama + 12 wawasan: MACD, ADX/DI, Bollinger %B, VWAP, OBV, struktur swing, pola lilin, konsistensi, pivot, kekuatan relatif, funding, OI) — bobotnya belajar dari vonis nyata, bukan ditetapkan tangan.`,
+  iklimOkx ? `Lintas-pasar swap OKX (${iklimOkx.dari} instrumen): ${(iklimOkx.naikPct ?? 0)}% naik, median 24j ${iklimOkx.medianChgPct != null ? (iklimOkx.medianChgPct >= 0 ? '+' : '') + iklimOkx.medianChgPct + '%' : '—'}, sebaran p10–p90 ${iklimOkx.dispersiPct ?? '—'}% — ${iklimOkx.altseasonProxy != null ? (iklimOkx.altseasonProxy > 2 ? 'ALT mengungguli BTC: musim altcoin berhembus' : iklimOkx.altseasonProxy < -2 ? 'BTC menyerap arus; altcoin tertekan' : 'pasar bergerak bersama') : ''}` : null,
+  `Komite ARAH kini menimbang ${DIM_ARAH.length + DIM_WAW.length} dimensi berbobot dalam registri ${TOTAL_PARAM_NAMA} parameter bernama per kandang (≈${TOTAL_PARAM_NAMA * 10} pengukuran per denyut): multi-timeframe 1h+4h, riwayat funding, order book, persentil lintas-pasar, kalender, GARCH/MC — dan tiap param DICATAT nasihatnya per prediksi lalu dinilai medan (sekolah parameter); bobot inti belajar dari vonis nyata, bukan ditetapkan tangan.`,
 ].filter(Boolean).join(' ')
 const perKandang = []
 for (const s of KANDANG) {
   const c = hasil[s]; if (!c) continue
   const bK = dewanBukti(c)
-  const wawK = [...wawasanLilin(c, hasil.BTC), ...derivParams(s, deriv, oiLamaMap?.[s])]
+  const warK = mesinWarisan(c, hasil.BTC)
+  const mcK = warK.garch.sigma1j > 0 ? monteCarlo24j(c, warK.garch) : null
+  const wpK = wawasanPenuh(c, hasil.BTC, s, { deriv, oiLama: oiLamaMap?.[s], frHist: frHistMap.get(s), frKini: deriv?.get(s + 'USDT') ? +(deriv.get(s + 'USDT').fundingRate) : null, book: bookMap.get(s), tickOkx, war: warK, mc: mcK })
   const dK = deriv?.get(s + 'USDT')
+  // konsensus per domain — rata arah param yang bicara (|arah|>=0.15)
+  const kons = {}
+  for (const p of wpK.penuh) {
+    if (Math.abs(p.arah) >= 0.15) {
+      if (!kons[p.domain]) kons[p.domain] = { bicara: 0, jumlah: 0 }
+      kons[p.domain].bicara++; kons[p.domain].jumlah += p.arah
+    }
+  }
+  const konsensus = Object.fromEntries(Object.entries(kons).map(([d, { bicara, jumlah }]) => [d, { arah: +(jumlah / bicara).toFixed(2), bicara }]))
   perKandang.push({
     simbol: s, harga: +bK.harga.toPrecision(7), rezim: bK.rezim, atrPct: +bK.atrPct.toFixed(2),
     fundingPct: dK ? +((+dK.fundingRate) * 100).toFixed(4) : null,
     oiJuta: dK ? +((+dK.openInterestValue) / 1e6).toFixed(1) : null,
     oiDeltaPct: oiDelta(oiLamaMap?.[s], dK) != null ? +(oiDelta(oiLamaMap?.[s], dK) * 100).toFixed(2) : null,
-    params: wawK.map((p) => ({ param: p.param, nilai: p.nilai, arah: +p.arah.toFixed(2), ket: p.ket })),
+    jumlahParam: wpK.penuh.length, konsensus,
+    params: wpK.penuh.map((p) => ({ param: p.param, domain: p.domain, lapis: p.lapis, nilai: p.nilai, arah: +p.arah.toFixed(2), ket: p.ket })),
   })
 }
+const sampelPk = perKandang[0]?.params || []
+const perDomainCount = {}
+for (const p of sampelPk) perDomainCount[p.domain] = (perDomainCount[p.domain] || 0) + 1
+const sekolahParam = Object.entries(ilmu.paramHit || {})
+  .map(([param, h]) => ({ param, n: h.n, hitPct: h.n ? +((h.benar / h.n) * 100).toFixed(1) : null, netPct: +((h.net || 0) * 100).toFixed(2), status: statusSekolah(h) }))
+  .sort((a, b) => b.n - a.n)
 const wawasan360 = {
-  versi: 'V253-WAWASAN-360', dihasilkan: ISO, siklus: SIKLUS,
+  versi: 'V254-SAMUDRA-PARAMETER', dihasilkan: ISO, siklus: SIKLUS,
   dimensi: DIM_ARAH.length + DIM_WAW.length,
+  registri: {
+    totalNama: TOTAL_PARAM_NAMA, intiBerbobot: DIM_WAW.length, observasi: PARAM_OBS.length,
+    perDomain: perDomainCount, jumlahKandang: perKandang.length,
+    pengukuranPerDenyut: TOTAL_PARAM_NAMA * perKandang.length,
+    ket: `registri ${TOTAL_PARAM_NAMA} parameter bernama per kandang × ${perKandang.length} kandang ≈ ${TOTAL_PARAM_NAMA * perKandang.length} pengukuran per denyut + iklim lintas-pasar; lapis INTI (12) berbobot genome+Hedge, lapis OBSERVASI (${PARAM_OBS.length}) dihitung, dinarasikan, boleh MENOLAK (veto), dan dicatat nasihatnya per prediksi — menunggu kelulusan sekolah sebelum berhak bersuara`,
+  },
+  sekolahParameter: sekolahParam,
+  vetoSiklusIni: {
+    arah: divetoArah.map((k) => ({ simbol: k.s, arah: k.v.arah, kunci: k.vetoW.map((x) => x.kunci), alasan: k.vetoW.map((x) => x.ket) })),
+    phoenixDitolak: vetoPhxCt,
+    ket: 'gerbang veto wawasan — parameter medan menolak sinyal buruk sebelum dikunci; no-trade adalah keputusan',
+  },
   iklim: {
-    fng,
-    dominasi,
+    fng, fngRiwayat, dominasi,
     fundingBtcPct: frBtc != null ? +(frBtc * 100).toFixed(4) : null,
     fundingEthPct: frEth != null ? +(frEth * 100).toFixed(4) : null,
-    oiBtc, oiEth,
+    oiBtc, oiEth, okx: iklimOkx,
     breadthNaikPct: +(breadthNaik * 100).toFixed(1), breadthDari,
     rezim: rezimGlobal, hargaBTC: +sembtc.harga.toPrecision(7), atrPctBTC: +sembtc.atrPct.toFixed(2),
     narasi: narasiMakroTeks,
     catatan: wawCatatan,
   },
   perKandang,
-  metode: 'L1 lilin (MACD 12/26/9, ADX/DI 14, Bollinger %B 20/2, VWAP-24j, OBV taker-weighted, struktur swing fraktal 3-bar, pola lilin engulfing/hammer/star, konsistensi 24 lilin, pivot klasik P/R1/S1, kekuatan relatif vs BTC) · L2 derivatif NYATA rantai host (bybit → bytick → fapi Binance premiumIndex+OI → OKX per-simbol; funding + open interest; ΔOI antar-siklus dari snapshot keadaan) · L3 makro (Fear & Greed alternative.me, dominasi CoinGecko dengan fallback proxy volume-spot, breadth) — semuanya endpoint publik tanpa API key',
-  ket: 'paramater konstan per siklus (F&G, dominasi, breadth) masuk IKLIM & NARASI, tidak memilih arah — pelajaran forensik: fitur konstan lane tidak berhak menolak sinyal; 12 param wawasan belajar bobotnya (genome per rezim + Hedge on-line) dengan jalan yang sama seperti dimensi lama; endpoint gagal = param jujur null, tidak pernah dikarang',
+  metode: 'L1 lilin 1h (MACD, ADX/DI, Bollinger, VWAP, OBV, swing fraktal, pola lilin, konsistensi, pivot klasik, kekuatan relatif) · L1b multi-timeframe 4h hasil agregasi 1h (EMA-align, MACD, RSI, Bollinger, swing, sejajar-TF, rasio ATR) · L2 derivatif NYATA (funding kini + riwayat rata3/tren OKX, OI rantai host bybit→bytick→fapi→OKX + ΔOI antar-siklus) · L2b mikrostruktur (order book spot OKX 50 level: imbalance 1%, spread bps, rasio kedalaman, dinding terbesar) · L2c lintas-pasar (persentil perubahan & volume dari swap USDT OKX, median, sebaran) · L3 makro (F&G + riwayat 7 hari, dominasi, breadth, altseason-proxy) · L4 kuant-warisan (GARCH sigma, MC-pNaik, beta CAPM, divergensi RSI, POC volume) · L5 kalender (sesi Asia/Eropa/AS, akhir pekan, fase bulan) — semuanya endpoint publik tanpa API key; gagal = null jujur',
+  ket: 'parameter konstan per siklus (F&G, dominasi, breadth) masuk IKLIM & NARASI, tidak memilih arah — pelajaran forensik: fitur konstan lane tidak berhak menolak sinyal; 12 param inti belajar bobotnya (genome per rezim + Hedge on-line); parameter observasi menolak via gerbang veto yang dilabeli & dicatat; sekolah parameter mengukur hit-rate tiap param dari ledger — kelulusan via bukti, bukan tangan',
 }
 tulis(path.join(ROOT, 'laporan/wawasan.json'), wawasan360)
-log(`wawasan-360 laporan: ${perKandang.length} kandang × ${DIM_WAW.length} param · narasi makro ${narasiMakroTeks.length} kar.`)
+log(`samudra laporan: ${perKandang.length} kandang × ${TOTAL_PARAM_NAMA} param · sekolah ${sekolahParam.length} param dinilai · narasi makro ${narasiMakroTeks.length} kar.`)
 const laporan = {
   protokol: 'SASARAN-MICAPROFITA', organ: VERSI, dihasilkan: ISO, siklus: SIKLUS,
   sumber: { host, gagal: gagal.slice(0, 12) },
@@ -2289,11 +2724,14 @@ const laporan = {
   disiplin,
   wawasan360: {
     dimensi: wawasan360.dimensi,
+    registri: wawasan360.registri,
     iklim: wawasan360.iklim,
-    perKandang: wawasan360.perKandang.map((x) => ({ simbol: x.simbol, rezim: x.rezim, fundingPct: x.fundingPct, oiJuta: x.oiJuta, oiDeltaPct: x.oiDeltaPct, params: x.params })),
+    vetoSiklusIni: wawasan360.vetoSiklusIni,
+    sekolahParameter: sekolahParam.slice(0, 14),
+    perKandang: wawasan360.perKandang.map((x) => ({ simbol: x.simbol, rezim: x.rezim, fundingPct: x.fundingPct, oiJuta: x.oiJuta, oiDeltaPct: x.oiDeltaPct, jumlahParam: x.jumlahParam, konsensus: x.konsensus, params: (x.params || []).filter((p) => p.lapis === 'inti') })),
     metode: wawasan360.metode,
     ket: wawasan360.ket,
-    sumber: 'rincian penuh di laporan/wawasan.json',
+    sumber: 'registri penuh 46 param/kandang di laporan/wawasan.json',
   },
   piagam: {
     identitas: PIAGAM.identitas, pilar: PIAGAM.pilar, otak: OTAK,
@@ -2307,6 +2745,7 @@ const laporan = {
       'V251 RUH-GURU — ruh yang dibangun, kompas arah apa pun kondisi, ekspektasi & tangga profit, buku guru para trader',
       'V252 GERBANG-PERFORMA — forensik kerugian mengikat: zona racun terbukti ditolak, keyakinan dipetakan hit-rate zona medan, baseline vs sekarang dibuktikan lewat hasil',
       'V253 WAWASAN-360 — komite 5→17 dimensi: 10 parameter lilin baru + derivatif NYATA (funding & OI Bybit linear) + iklim makro (F&G, dominasi, breadth) + narasi analis fasih per sasaran',
+      'V254 SAMUDRA-PARAMETER — registri 46 parameter/kandang (≈460 pengukuran per denyut): multi-TF 1h+4h, riwayat funding, order book OKX, persentil lintas-pasar, kalender, GARCH/MC + SEKOLAH PARAMETER (hit-rate tiap param dinilai medan) + gerbang VETO wawasan (no-trade adalah keputusan)',
     ],
   },
   sadardiri,
