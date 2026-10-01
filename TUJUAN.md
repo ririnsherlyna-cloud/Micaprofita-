@@ -333,6 +333,51 @@ BUKAN kondisi normal. V252 menjawab dengan empat organ baru:
   & Perbaikan": kartu baseline vs sekarang vs target + tabel zona
   racun/emas + tindakan otomatis otak).
 
+## 5g. WAWASAN-360 — banyak parameter, satu bacaan, narasi analis (V253)
+
+Mandat pemilik: "AGI ini masih — dibanding OpenClaw bahkan chat AI biasa —
+belum fasih dan matang; pertingkat agar dia miliki BANYAK PARAMETER wawasan
+terkait crypto." V253 menjawab dengan tiga lapis parameter baru, semuanya
+dari endpoint PUBLIK tanpa API key, tanpa dependensi:
+
+- **L1 — 10 parameter lilin** (dari lilin 1 jam yang sudah diambil, 0
+  permintaan baru): MACD(12,26,9) histogram & slope, ADX/DI(14) kekuatan
+  trend, Bollinger %B(20,2) & lebar band, VWAP-24j deviasi, OBV
+  taker-weighted 48 jam, struktur swing fraktal (HH+HL vs LH+LL), pola
+  lilin (engulfing/hammer/shooting star/doji), konsistensi arah 24 lilin,
+  pivot klasik harian (P/R1/S1), kekuatan relatif vs BTC 24 jam.
+- **L2 — derivatif NYATA** (pertama kali di otak server — catatan lama
+  "funding tak terjangkau" DICABUT): funding rate + open interest dari
+  Bybit linear (896 simbol, 1 permintaan); ΔOI antar-siklus dihitung dari
+  snapshot `otak/penjaga-keadaan.json` (jujur: denyut pertama = null).
+- **L3 — iklim makro**: Fear & Greed (alternative.me), dominasi BTC
+  (CoinGecko; fallback proxy volume-spot dilabeli jujur), breadth pasar —
+  masuk IKLIM & NARASI, **bukan pemilih arah**: pelajaran forensik —
+  parameter yang konstan per siklus tidak berhak menolak sinyal.
+
+**Komite dua-bagian** — skor ARAH = 60% dimensi lama (belajar sejak V240)
++ 40% wawasan (12 param, bobot setara awal). Kedua bagian belajar dengan
+jalan yang sama: genome per rezim (evolusi) + Hedge/MWU on-line dari tiap
+vonis matang. Zona forensik baru **funding** ditambahkan: kerumunan
+long/short yang membayar mahal kini bisa jadi racun/emas berdasarkan
+rekam jejak sendiri.
+
+**NARASI ANALIS (fasih & matang)** — tiap sasaran (ARAH & PHOENIX)
+kini membawa paragraf analis 5–8 kalimat yang dibangun dari angka
+NYATA: struktur & rezim, aliran OBV, funding/OI, momentum & kekuatan
+relatif, iklim F&G, matematika EV/GARCH, dan klausul risiko yang
+menyebut jumlah parameter yang melawan. Iklim makro membawa narasi
+772+ karakter. Dasbor seksi **"Wawasan Pasar 360°"**: 6 kartu iklim
+(F&G, dominasi, funding BTC, OI BTC, breadth, rezim) + narasi makro +
+tabel 10 kandang × 12 parameter (dot hijau/merah/abu + tooltip bacaan
+analis), plus chip parameter & narasi di setiap kartu sasaran.
+Rincian penuh: `laporan/wawasan.json`.
+
+Kejujuran dipertahankan: endpoint gagal = parameter **null**, tidak
+pernah dikarang; entri lama pra-V253 tampil tanpa wawasan apa adanya;
+param konstan tidak memilih arah; semua bobot baru bisa diaudit di
+`otak/genome-server.json` (genome.waw) dan laporan.ilmu.hedge.waw.
+
 ## 6. TERIMA-PASANG (tanpa konfigurasi)
 
 Sejak organ **V245 SARANG-BAWAAN**, membuka halaman Pages = langsung
@@ -451,6 +496,7 @@ laporan/denyut-server.jsonl — log denyut penjaga (500)
 laporan/index.html          — dasbor laporan profesional
 laporan/jurnal-ilmu.json    — akta jurnal ilmiah + cara tiap metode dipasang
 laporan/pelajaran-server.json — bahan ajar (pelajaran & aturan dari medan)
+laporan/wawasan.json        — wawasan 360: iklim makro + 10 kandang × 12 parameter (V253)
 otak/genome-server.json     — genome hasil evolusi per rezim + keadaan ilmu (hedge/kalibrasi/konformal/meta)
 otak/penjaga-keadaan.json   — keadaan internal penjaga
 scripts/penjaga.mjs         — otak server V247-MAJELIS-ILMU (Node murni, 5 metode jurnal hidup)
