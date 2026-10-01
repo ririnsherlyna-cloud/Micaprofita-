@@ -325,14 +325,16 @@
     <tbody id="kandidat"><tr><td colspan="6" style="color:var(--samar)">—</td></tr></tbody>
   </table></div>
 
-  <h2 id="wawasan-sec">Wawasan Pasar 360° — Banyak Parameter, Satu Bacaan</h2>
-  <div class="sub" style="margin-top:-6px">mandat pemilik: AGI harus fasih &amp; matang — komite kini menimbang <b>17 dimensi</b> (5 lama + 12 wawasan) dari data publik nyata; parameter konstan per siklus (F&amp;G, dominasi) masuk iklim, bukan pemilih arah</div>
+  <h2 id="wawasan-sec">Wawasan Pasar 360° — Samudra Parameter, Satu Bacaan</h2>
+  <div class="sub" style="margin-top:-6px">mandat pemilik: AGI harus fasih &amp; matang — komite menimbang <b>12 dimensi berbobot</b> dalam registri <b>46 parameter bernama per kandang</b> (multi-TF 1h+4h, riwayat funding, order book, lintas-pasar, kalender, GARCH/MC) + <b>sekolah parameter</b> (hit-rate tiap param dinilai medan) + <b>gerbang veto</b> (no-trade adalah keputusan); param konstan per siklus masuk iklim, bukan pemilih arah</div>
   <div class="iklim-grid" id="iklim" style="margin-top:12px"></div>
   <div class="narasi-makro" id="narasi-makro">—</div>
+  <div id="veto-waw" style="margin-top:10px"></div>
   <div class="gulir" style="margin-top:12px"><table class="tabel">
-    <thead id="waw-head"><tr><th>Simbol</th><th>Rezim</th><th>Funding</th><th>OI / Δ</th><th id="waw-cols" colspan="12" style="text-align:center">12 parameter wawasan (arah param — arahkan kursor untuk bacaan analis)</th></tr></thead>
+    <thead id="waw-head"><tr><th>Simbol</th><th>Rezim</th><th>Funding</th><th>OI / Δ</th><th id="waw-cols" colspan="12" style="text-align:center">12 parameter inti berbobot (arah param — arahkan kursor untuk bacaan analis; 46 param penuh di wawasan.json)</th></tr></thead>
     <tbody id="waw-body"><tr><td colspan="16" style="color:var(--samar)">—</td></tr></tbody>
   </table></div>
+  <div id="sekolah-box" style="margin-top:12px"></div>
 
   <h2 id="bahan-ajar-sec">Bahan Ajar — Pelajaran &amp; Aturan dari Medan</h2>
   <div id="aturan-baru" style="margin:0 0 12px"></div>
@@ -543,11 +545,18 @@ function isiSasaran(r){
     el.querySelector('.ketkal').textContent = s.ketKeyakinan || '';
     const nar = el.querySelector('.narasi');
     if (s.narasi){ nar.style.display = 'block'; nar.innerHTML = '<b style="color:var(--violet)">NARASI ANALIS —</b> ' + s.narasi; }
-    el.querySelector('.wawgrid').innerHTML = (s.wawasan || []).map((p) => {
-      const cls = p.arah > 0.15 ? 'up' : p.arah < -0.15 ? 'dn' : '';
-      const tanda = p.arah > 0.15 ? ' ▲' : p.arah < -0.15 ? ' ▼' : ' ·';
-      return `<span class="wchip ${cls}" title="${(p.ket || '').replace(/"/g, '&quot;')}">${p.param}${tanda}${p.nilai != null ? ' <b>' + p.nilai + '</b>' : ''}</span>`;
-    }).join('');
+    el.querySelector('.wawgrid').innerHTML = (() => {
+      const w = s.wawasan || [];
+      const inti = w.filter((p) => p.lapis !== 'observasi');
+      const obs = w.length - inti.length;
+      const chips = inti.map((p) => {
+        const cls = p.arah > 0.15 ? 'up' : p.arah < -0.15 ? 'dn' : '';
+        const tanda = p.arah > 0.15 ? ' ▲' : p.arah < -0.15 ? ' ▼' : ' ·';
+        return `<span class="wchip ${cls}" title="${(p.ket || '').replace(/"/g, '&quot;')}">${p.param}${tanda}${p.nilai != null ? ' <b>' + p.nilai + '</b>' : ''}</span>`;
+      });
+      if (obs > 0) chips.push(`<span class="wchip" title="${obs} parameter observasi (multi-TF, order book, lintas-pasar, kalender) ikut dinarasikan &amp; diveto-kan — registri penuh di laporan/wawasan.json">+${obs} observasi</span>`);
+      return chips.join('');
+    })();
     el.querySelector('.chiprezim').textContent = 'rezim ' + s.rezim + ' · dikunci ' + lalu(s.dikunci);
     const btn = el.querySelector('.salin');
     btn.dataset.plan = [s.simbol, s.arah,
@@ -802,23 +811,35 @@ function isiRuhGuru(r){
       + (g.sumber ? `<div style="margin-top:6px;color:var(--samar);font-size:11.5px">${g.sumber}</div>` : '');
   } else $('guru-box').textContent = 'buku guru belum dibawa laporan ini — menunggu denyut V251';
 }
-// ===== V253 WAWASAN 360 — iklim makro + tabel parameter per kandang =====
+// ===== V254 SAMUDRA — iklim makro + registri + veto + sekolah + tabel parameter =====
 function isiWawasan(r){
   const w = r.wawasan360 || {};
-  $('dimchip').textContent = w.dimensi ? w.dimensi + ' dim' : '—';
+  const reg = w.registri || {};
+  $('dimchip').textContent = reg.totalNama ? reg.totalNama + ' param' : (w.dimensi ? w.dimensi + ' dim' : '—');
   const ik = w.iklim || {};
+  const okx = ik.okx || {};
   const kartu = (label, angka, sub, warna) => `<div class="kartu"><div class="label">${label}</div><div class="angka"${warna ? ` style="color:${warna}"` : ''}>${angka}</div><div class="sub">${sub || ''}</div></div>`;
   const fng = ik.fng;
   const fngWarna = fng ? (fng.nilai >= 75 ? 'var(--merah)' : fng.nilai <= 25 ? 'var(--hijau)' : 'var(--amber)') : null;
+  const fngDelta = ik.fngRiwayat ? ' · Δ7h ' + (ik.fngRiwayat.delta7d > 0 ? '+' : '') + ik.fngRiwayat.delta7d : '';
   $('iklim').innerHTML = [
-    kartu('Fear &amp; Greed', fng ? fng.nilai : '—', fng ? fng.klasifikasi : 'endpoint gagal — jujur null', fngWarna),
+    kartu('Fear &amp; Greed', fng ? fng.nilai : '—', fng ? fng.klasifikasi + fngDelta : 'endpoint gagal — jujur null', fngWarna),
     kartu('Dominasi BTC', ik.dominasi ? ik.dominasi.pct + '%' : '—', ik.dominasi ? (ik.dominasi.sumber === 'coingecko' ? 'kapitalisasi pasar' : 'proxy volume spot') : '—'),
     kartu('Funding BTC', ik.fundingBtcPct != null ? ik.fundingBtcPct + '%' : '—', 'futures (rantai host) / interval'),
     kartu('Open Interest BTC', ik.oiBtc ? '$' + ik.oiBtc.nilaiJuta + 'jt' : '—', ik.oiBtc && ik.oiBtc.deltaPct != null ? 'Δ ' + ik.oiBtc.deltaPct + '% / denyut' : 'Δ antar-siklus belum ada'),
-    kartu('Breadth Pasar', ik.breadthNaikPct != null ? ik.breadthNaikPct + '%' : '—', (ik.breadthDari || '—') + ' pasangan diukur'),
+    kartu('Lintas-pasar OKX', okx.naikPct != null ? okx.naikPct + '%' : '—', okx.dari ? okx.dari + ' swap naik · median ' + (okx.medianChgPct != null ? (okx.medianChgPct > 0 ? '+' : '') + okx.medianChgPct + '%' : '—') : '—'),
+    kartu('Altseason-proxy', okx.altseasonProxy != null ? (okx.altseasonProxy > 0 ? '+' : '') + okx.altseasonProxy + '%' : '—', 'median alt − BTC (positif = musim alt)'),
+    kartu('Breadth Spot', ik.breadthNaikPct != null ? ik.breadthNaikPct + '%' : '—', (ik.breadthDari || '—') + ' pasangan diukur'),
     kartu('Rezim BTC', ik.rezim || '—', 'ATR ' + (ik.atrPctBTC ?? '—') + '% / jam'),
   ].join('');
   $('narasi-makro').innerHTML = ik.narasi ? ik.narasi : 'iklim makro menunggu denyut dengan endpoint sehat — tidak dikarang';
+  // gerbang veto wawasan — parameter medan menolak sinyal buruk
+  const vs = w.vetoSiklusIni || {};
+  const vArah = vs.arah || [];
+  const totalVeto = vArah.length + (vs.phoenixDitolak || 0);
+  $('veto-waw').innerHTML = totalVeto === 0
+    ? '<div class="jnote" style="border-left-color:var(--hijau)">Gerbang veto: <b>tidak ada sinyal yang ditolak</b> parameter medan siklus ini (' + (reg.pengukuranPerDenyut ?? '—') + ' pengukuran tervalidasi; ambang veto ketat — bukan mood).</div>'
+    : '<div class="jnote" style="border-left-color:var(--merah)">Gerbang veto: <b>' + totalVeto + ' sinyal DITOLAK</b> parameter medan (order book / kerumunan funding / tren 4h / volatilitas ekstrem) — no-trade adalah keputusan: ' + vArah.map((v) => `<b>${v.simbol}</b> ${v.arah} (${(v.kunci || []).join('/')})`).join(' · ') + (vs.phoenixDitolak ? ' · radar phoenix ' + vs.phoenixDitolak + ' ditolak' : '') + '.</div>';
   const pk = w.perKandang || [];
   const params = (pk[0]?.params || []).map((p) => p.param);
   if (params.length) $('waw-head').innerHTML = '<tr><th>Simbol</th><th>Rezim</th><th>Funding</th><th>OI / Δ</th>'
@@ -834,8 +855,20 @@ function isiWawasan(r){
     const fd = x.fundingPct != null ? x.fundingPct + '%' : '—';
     const oi = x.oiJuta != null ? '$' + x.oiJuta + 'jt' : '—';
     const oiD = x.oiDeltaPct != null ? ` <span class="${x.oiDeltaPct >= 0 ? 'net-pos' : 'net-neg'}">Δ${x.oiDeltaPct}%</span>` : '';
-    return `<tr><td><b>${x.simbol}</b></td><td>${x.rezim}</td><td>${fd}</td><td>${oi}${oiD}</td>${dots}</tr>`;
+    const kons = Object.entries(x.konsensus || {});
+    const konsTxt = kons.length ? kons.map(([d, v]) => `${d}${v.arah > 0.15 ? '▲' : v.arah < -0.15 ? '▼' : '·'}${v.bicara}`).join(' ') : '—';
+    return `<tr><td><b>${x.simbol}</b><div style="font-size:10.5px;color:var(--samar)">${x.jumlahParam ?? '—'} param</div></td><td>${x.rezim}<div style="font-size:10.5px;color:var(--samar)" title="konsensus per domain (arah·bicara)">${konsTxt}</div></td><td>${fd}</td><td>${oi}${oiD}</td>${dots}</tr>`;
   }).join('') : '<tr><td colspan="16" style="color:var(--samar)">denyut berikutnya mengisi tabel parameter — data lama tampil apa adanya</td></tr>';
+  // SEKOLAH PARAMETER — hit-rate medan tiap param (dasar kelulusan bobot)
+  const sk = w.sekolahParameter || [];
+  const warna = { 'calon-lulus': 'var(--hijau)', 'diawasi': 'var(--merah)', 'dipantau': 'var(--amber)', 'pemula': 'var(--samar)' };
+  $('sekolah-box').innerHTML = sk.length
+    ? '<h3 style="margin:0 0 6px">Sekolah Parameter — tiap param dinilai medan dari ledger</h3>'
+      + '<div class="sub" style="margin:-2px 0 8px">nasihat param disegel saat kunci prediksi, lalu dinilai: param yang bicara dihitung hit-rate &amp; sumbangan netnya — calon-lulus (n≥20, hit≥52%, net&gt;0) berhak naik jadi pemilih arah di versi berikutnya</div>'
+      + '<div class="gulir"><table class="tabel"><thead><tr><th>Parameter</th><th>Kasus (n)</th><th>Nasihat benar</th><th>Sumbangan net</th><th>Status</th></tr></thead><tbody>'
+      + sk.map((x) => `<tr><td><b>${x.param}</b></td><td>${x.n}</td><td>${x.hitPct != null ? x.hitPct + '%' : '—'}</td><td class="${(x.netPct || 0) > 0 ? 'net-pos' : (x.netPct || 0) < 0 ? 'net-neg' : ''}">${(x.netPct || 0) > 0 ? '+' : ''}${x.netPct}%</td><td style="color:${warna[x.status] || 'inherit'}"><b>${x.status}</b></td></tr>`).join('')
+      + '</tbody></table></div>'
+    : '<div class="jnote">Sekolah parameter: menunggu vonis matang — setelah ada prediksi terkunci yang dinilai medan, hit-rate tiap parameter tampil di sini (kelulusan via bukti, bukan tangan).</div>';
 }
 </script>
 <script>
