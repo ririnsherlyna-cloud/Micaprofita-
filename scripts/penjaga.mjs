@@ -892,7 +892,7 @@ function derivParams(simbol, deriv, oiLama) {
     : fr <= -WAWASAN.FUNDING_EKSTREM ? 0.7 : fr <= -WAWASAN.FUNDING_MIRING ? 0.3 : 0
   out.push({
     param: 'funding', nilai: +(fr * 100).toFixed(4), arah: arahFr,
-    ket: `funding Bybit ${fr >= 0 ? '+' : ''}${(fr * 100).toFixed(4)}% per interval — ${fr >= WAWASAN.FUNDING_EKSTREM ? 'LONG membayar mahal: kerumunan long ramai, fondasi naik rapuh terhadap long-squeeze' : fr <= -WAWASAN.FUNDING_EKSTREM ? 'SHORT membayar mahal: kerumunan short ramai, bahan short-squeeze' : fr > 0 ? 'long membayar normal — tidak ada kerumunan ekstrem' : 'short membayar — bearish tidak ramai'}`,
+    ket: `funding futures ${fr >= 0 ? '+' : ''}${(fr * 100).toFixed(4)}% per interval — ${fr >= WAWASAN.FUNDING_EKSTREM ? 'LONG membayar mahal: kerumunan long ramai, fondasi naik rapuh terhadap long-squeeze' : fr <= -WAWASAN.FUNDING_EKSTREM ? 'SHORT membayar mahal: kerumunan short ramai, bahan short-squeeze' : fr > 0 ? 'long membayar normal — tidak ada kerumunan ekstrem' : 'short membayar — bearish tidak ramai'}`,
   })
   const oiKini = +d.openInterestValue
   const delta = oiDelta(oiLama, d)
@@ -1387,7 +1387,7 @@ const kunciEntriArah = (k, eksplor) => {
     ketBukti: Object.fromEntries(DIM_ARAH.map((k2) => [k2, b.dims[k2].ket])),
     ketBuktiWaw: Object.fromEntries(waw.map((p) => [p.param, p.ket])),
     wawasan: waw.map((p) => ({ param: p.param, nilai: p.nilai, arah: +p.arah.toFixed(2), ket: p.ket })),
-    derivatif: (() => { const f = waw.find((p) => p.param === 'funding'), o = waw.find((p) => p.param === 'oi'); return { fundingPct: f?.nilai ?? null, oiJuta: o?.nilai ?? null, ket: 'Bybit linear (funding) + snapshot OI antar-siklus' } })(),
+    derivatif: (() => { const f = waw.find((p) => p.param === 'funding'), o = waw.find((p) => p.param === 'oi'); return { fundingPct: f?.nilai ?? null, oiJuta: o?.nilai ?? null, ket: 'derivatif futures rantai host (bybit→bytick→fapi→okx) + snapshot OI antar-siklus' } })(),
     narasi: nar,
     warisan: {
       sigma24jPct: warA.garch.sigma24jPct, beta: warA.beta, r2Beta: warA.r2, divRSI: warA.div,
@@ -1644,7 +1644,7 @@ const bangunEntriPhx = (p, eksplor) => {
     },
     ketBuktiWaw: Object.fromEntries(wawPhx.map((x) => [x.param, x.ket])),
     wawasan: wawPhx.map((x) => ({ param: x.param, nilai: x.nilai, arah: +x.arah.toFixed(2), ket: x.ket })),
-    derivatif: (() => { const f = wawPhx.find((x) => x.param === 'funding'), o = wawPhx.find((x) => x.param === 'oi'); return { fundingPct: f?.nilai ?? null, oiJuta: o?.nilai ?? null, ket: 'Bybit linear (funding) + snapshot OI antar-siklus' } })(),
+    derivatif: (() => { const f = wawPhx.find((x) => x.param === 'funding'), o = wawPhx.find((x) => x.param === 'oi'); return { fundingPct: f?.nilai ?? null, oiJuta: o?.nilai ?? null, ket: 'derivatif futures rantai host (bybit→bytick→fapi→okx) + snapshot OI antar-siklus' } })(),
     narasi: narPhx,
   }
   ledger.push(entri); terkunciBaru.push(entri)
