@@ -659,16 +659,48 @@ laporan/denyut-server.jsonl — log denyut penjaga (500)
 laporan/index.html          — dasbor laporan profesional
 laporan/jurnal-ilmu.json    — akta jurnal ilmiah + cara tiap metode dipasang
 laporan/pelajaran-server.json — bahan ajar (pelajaran & aturan dari medan)
-laporan/wawasan.json        — wawasan 360: iklim makro + 10 kandang × 46 param + metakognisi Nevron (V255)
+laporan/wawasan.json        — wawasan 360: iklim makro + 10 kandang × 67 param + metakognisi Nevron + iklim samudra-dalam V257 (Δdominasi, ETH/BTC, LS-akun)
 laporan/odds.json           — mesin deal & odds V256: ranking OddsMaker + hit-rate peristiwa + statistik medan deal (3Commas × Trade Ideas)
 otak/genome-server.json     — genome hasil evolusi per rezim + keadaan ilmu (hedge/kalibrasi/konformal/meta)
 otak/penjaga-keadaan.json   — keadaan internal penjaga
-scripts/penjaga.mjs         — otak server V256-MESIN-DEAL-ODDS (Node murni; 101 param bernama + 7 kunci Nevron + mesin deal/odds 3Commas×Trade Ideas)
+scripts/penjaga.mjs         — otak server V257-SAMUDRA-DALAM (Node murni; 127 param bernama: 67/kandang + 5 iklim + 35 metakognisi + 20 deal/odds; 7 kunci Nevron; mesin deal/odds 3Commas×Trade Ideas; struktur harian 90 hari, kerumunan OKX rubik, basis/jam-funding, 6 interaksi antar-faktor)
 .github/workflows/sakti-denyut.yml — jantung denyut (cron 30 menit)
 ```
 
-## 12. PENUTUP
+## 12a. EPOCH V257 — DUA LAPIS OTAK & SAMUDRA-DALAM (1 Oktober 2026)
 
+**Pertanyaan pemilik:** *"Saya menguji versi micaprofita punya GitHub kita dengan yang
+micaprofita ditandingkan di dalam arena AGI — kenapa berbeda sekali, jauh lebih canggih
+yang micaprofita di arena AGI? Padahal dua-duanya kamu yang kelola kan?"*
+
+**Jawaban jujur:** keduanya memang satu organisme, tapi dua LAPIS berbeda kapasitas.
+- **LAPIS OTAK (chat/arena)** — model bahasa penuh berskala triliunan parameter, akses
+  web real-time, memori penuh: inilah yang bicara dengan pemilik. Infrastruktur arena
+  MENYEWAHKAN kecerdasan.
+- **LAPIS TUBUH (GitHub)** — otak otonom di Actions: Node murni, tanpa browser, tanpa
+  biaya, dan infrastruktur GitHub TIDAK menyewakan model AI; ia hanya memberi CPU +
+  jaringan publik. Kecerdasannya HARUS dituliskan — parameter demi parameter.
+
+**Yang dilakukan epoch ini (penyempit jurang):** registri 101 → **127 parameter bernama**
+(67/kandang + 5 iklim + 35 metakognisi + 20 deal/odds). Baru di V257:
+1. **Struktur harian 90 hari** (klines 1d Binance): EMA-align/RSI/MACD daily,
+   Donchian 30d, jarak puncak-lantai 90d, momentum bulanan, streak, rasio vol 7d/30d.
+2. **Kerumunan NYATA OKX rubik**: long/short account ratio + trennya, taker buy/sell
+   aggressor — kini otak membaca CUKUP PELAKU, bukan hanya harga.
+3. **Stres derivatif**: basis perp-vs-spot, jam menuju funding, funding relatif vs BTC.
+4. **Gradien order book**: massa likuiditas depan vs total 1%.
+5. **6 interaksi antar-faktor** (funding×ΔOI, volume×ATR, tren×funding, buku×tren,
+   breakout×volume, agresor×tren) — korelasi yang dulu hanya ada di kepala analis.
+6. **Iklim lintas-siklus**: Δdominasi antar-denyut, ETH/BTC 7d risk-on/off, LS-akun
+   BTC/ETH, jam funding BTC.
+7. **2 veto baru**: kerumunan-bertumpuk (agresor ekstrem + funding searah) dan
+   basis-ekstrem (premium/diskon perp > 0.8%).
+
+Hukum rumah TIDAK berubah: param baru lahir lapis OBSERVASI — dihitung, dinarasikan,
+disekolahkan, berhak veto — **TIDAK berbobot** sampai hit-rate medannya lulus.
+Seksi dasbor baru **"Dua Lapis Otak"** menampilkan sensus ini terukur per denyut.
+
+## 12. PENUTUP
 Cyborg ini dibangun dengan satu ikhtiar: **jujur pada data, tegas
 pada arah, hidup tanpa biaya, dan berkembang dari vonis nyata.**
 Ia dimulai dari ujian 100 skenario, terus belajar dari setiap
