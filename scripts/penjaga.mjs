@@ -1987,10 +1987,12 @@ log(`samudra: tickers ${tickOkx ? tickOkx.length : '—'} · frHist ${frHistMap.
 const hariMap = new Map()
 try {
   await kumpul(KANDANG, 4, async (s) => {
-    const d = await ambilJson(`https://api.binance.com/api/v3/klines?symbol=${s}USDT&interval=1d&limit=90`, 12000).catch(() => null)
-    if (Array.isArray(d) && d.length >= 40) hariMap.set(s, d.map((k) => ({ t: +k[0], o: +k[1], h: +k[2], l: +k[3], c: +k[4], v: +k[5] })))
+    for (const hb of ['https://data-api.binance.vision', 'https://api.binance.com']) {
+      const d = await ambilJson(`${hb}/api/v3/klines?symbol=${s}USDT&interval=1d&limit=90`, 12000).catch(() => null)
+      if (Array.isArray(d) && d.length >= 40) { hariMap.set(s, d.map((k) => ({ t: +k[0], o: +k[1], h: +k[2], l: +k[3], c: +k[4], v: +k[5] }))); break }
+    }
   })
-  wawCatatan.push(`struktur harian: ${hariMap.size}/${KANDANG.length} kandang (klines 1d Binance 90 hari)`)
+  wawCatatan.push(`struktur harian: ${hariMap.size}/${KANDANG.length} kandang (klines 1d Binance 90 hari, vision→api)`)
 } catch (e) { wawCatatan.push(`struktur harian gagal (${String(e.message).slice(0, 36)})`) }
 const lsAkunMap = new Map()   // riwayat long/short ACCOUNT ratio (OKX rubik, terbaru dulu)
 const lsTakerMap = new Map()  // riwayat taker buy/sell volume — agresor (OKX rubik)
@@ -2007,7 +2009,11 @@ try {
 } catch (e) { wawCatatan.push(`kerumunan rubik gagal (${String(e.message).slice(0, 36)})`) }
 let ethBtc = null
 try {
-  const eb = await ambilJson('https://api.binance.com/api/v3/klines?symbol=ETHBTC&interval=1d&limit=8', 12000)
+  let eb = null
+  for (const hb of ['https://data-api.binance.vision', 'https://api.binance.com']) {
+    eb = await ambilJson(`${hb}/api/v3/klines?symbol=ETHBTC&interval=1d&limit=8`, 12000).catch(() => null)
+    if (Array.isArray(eb) && eb.length >= 8) break
+  }
   if (Array.isArray(eb) && eb.length >= 8) {
     const cl = eb.map((k) => +k[4])
     const roc7 = cl[cl.length - 1] / cl[0] - 1
