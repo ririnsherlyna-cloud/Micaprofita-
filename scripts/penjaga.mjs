@@ -1092,16 +1092,74 @@ keadaan.siklus += 1
 const SIKLUS = keadaan.siklus
 
 // ---- 0d. V253 WAWASAN-360 — derivatif NYATA + sentimen + dominasi (1x per denyut) ----
-// Pertama kali otak server memakai funding rate & open interest NYATA (Bybit linear,
-// 896 simbol 1 permintaan) — catatan jujur lama "funding tak terjangkau" kini dicabut.
+// Pertama kali otak server memakai funding rate & open interest NYATA.
+// Rantai host derivatif (pelajaran denyut pertama: api.bybit.com diblokir runner
+// Actions → 4 lapis: bybit → bytick (cermin) → fapi Binance premiumIndex+OI →
+// OKX per-simbol kandang) — semua gagal = param jujur null, tidak dikarang.
 const wawCatatan = []
-let deriv = null
-try {
-  const dl = await ambilJson('https://api.bybit.com/v5/market/tickers?category=linear', 20000)
-  const ls = dl?.result?.list || []
-  if (ls.length) { deriv = new Map(ls.map((x) => [x.symbol, x])); wawCatatan.push(`derivatif Bybit linear: ${ls.length} simbol (funding + OI)`) }
-  else throw new Error('daftar kosong')
-} catch (e) { wawCatatan.push(`derivatif Bybit gagal (${String(e.message).slice(0, 40)}) — param funding/OI jujur kosong siklus ini`) }
+const NORM_DERIV = (fundingRate, openInterestValue, price24hPcnt) => ({ fundingRate, openInterestValue, price24hPcnt })
+async function ambilDeriv() {
+  // (a) Bybit linear (asli + cermin bytick) — 1 permintaan: funding + OI + chg24h semua simbol
+  for (const hb of ['https://api.bybit.com', 'https://api.bytick.com']) {
+    try {
+      const dl = await ambilJson(hb + '/v5/market/tickers?category=linear', 20000)
+      const ls = dl?.result?.list || []
+      if (!ls.length) throw new Error('daftar kosong')
+      wawCatatan.push(`derivatif ${hb.replace('https://', '')} linear: ${ls.length} simbol (funding + OI)`)
+      return new Map(ls.map((x) => [x.symbol, NORM_DERIV(+x.fundingRate, +x.openInterestValue, +x.price24hPcnt)]))
+    } catch (e) { wawCatatan.push(`derivatif ${hb.replace('https://', '')} gagal (${String(e.message).slice(0, 36)})`) }
+  }
+  // (b) Binance fapi — premiumIndex 1 permintaan (funding semua simbol) + OI per kandang
+  try {
+    const pi = await ambilJson('https://fapi.binance.com/fapi/v1/premiumIndex', 20000)
+    const ls = Array.isArray(pi) ? pi : []
+    if (!ls.length) throw new Error('premiumIndex kosong')
+    const m = new Map(ls.map((x) => [x.symbol, NORM_DERIV(+x.lastFundingRate, 0, 0)]))
+    for (const x of ls) if (m.has(x.symbol)) m.get(x.symbol).mark = +x.markPrice
+    const daftarFapi = [...new Set(['BTC', 'ETH', ...KANDANG])]
+    await kumpul(daftarFapi, 4, async (s) => {
+      const oi = await ambilJson(`https://fapi.binance.com/fapi/v1/openInterest?symbol=${s}USDT`, 12000)
+      const en = m.get(s + 'USDT')
+      if (oi?.openInterest && en) en.openInterestValue = +oi.openInterest * (en.mark || 0)
+    }).catch(() => null)
+    for (const s of daftarFapi) {
+      const en = m.get(s + 'USDT')
+      const t = tickGlobal?.find?.((x) => x.symbol === s + 'USDT')
+      if (en && t) en.price24hPcnt = (+t.priceChangePercent || 0) / 100
+    }
+    const nOi = [...m.values()].filter((x) => x.openInterestValue > 0).length
+    wawCatatan.push(`derivatif fapi.binance.com premiumIndex: ${m.size} simbol (funding) · OI ${nOi}/${daftarFapi.length} kandang`)
+    return m
+  } catch (e) { wawCatatan.push(`derivatif fapi.binance.com gagal (${String(e.message).slice(0, 36)})`) }
+  // (c) OKX per-simbol kandang — funding + OI + ticker (3×12 permintaan kecil, sopan)
+  try {
+    const daftarOkx = [...new Set(['BTC', 'ETH', ...KANDANG])]
+    const tickOkx = await ambilJson('https://www.okx.com/api/v5/market/tickers?instType=SWAP', 20000)
+    const pxOkx = new Map((tickOkx?.data || []).map((x) => [x.instId, +x.last]))
+    const m = new Map()
+    await kumpul(daftarOkx, 3, async (s) => {
+      const inst = s + '-USDT-SWAP'
+      const [fr, oi] = await Promise.all([
+        ambilJson(`https://www.okx.com/api/v5/public/funding-rate?instId=${inst}`, 12000).catch(() => null),
+        ambilJson(`https://www.okx.com/api/v5/public/open-interest?instId=${inst}`, 12000).catch(() => null),
+      ])
+      const frr = fr?.data?.[0] ? +fr.data[0].fundingRate : null
+      const oiD = oi?.data?.[0]
+      const harga = pxOkx.get(inst) || 0
+      const oiUsd = oiD ? (+oiD.oiCcy > 0 ? +oiD.oiCcy : +oiD.oi * (+oiD.ctVal || 0)) * harga : 0
+      if (frr != null) m.set(s + 'USDT', NORM_DERIV(frr, oiUsd, 0))
+    }).catch(() => null)
+    if (m.size) {
+      wawCatatan.push(`derivatif okx per-simbol: ${m.size}/${daftarOkx.length} kandang (funding + OI USD)`)
+      return m
+    }
+    throw new Error('okx kosong')
+  } catch (e) { wawCatatan.push(`derivatif okx gagal (${String(e.message).slice(0, 36)})`) }
+  return null
+}
+let deriv = await ambilDeriv()
+if (deriv) log(`derivatif: ${deriv.size} simbol siap`)
+else wawCatatan.push('semua host derivatif gagal — param funding/OI jujur null siklus ini')
 let fng = null
 try {
   const f = await ambilJson('https://api.alternative.me/fng/?limit=1', 10000)
@@ -2199,9 +2257,10 @@ const wawasan360 = {
     breadthNaikPct: +(breadthNaik * 100).toFixed(1), breadthDari,
     rezim: rezimGlobal, hargaBTC: +sembtc.harga.toPrecision(7), atrPctBTC: +sembtc.atrPct.toFixed(2),
     narasi: narasiMakroTeks,
+    catatan: wawCatatan,
   },
   perKandang,
-  metode: 'L1 lilin (MACD 12/26/9, ADX/DI 14, Bollinger %B 20/2, VWAP-24j, OBV taker-weighted, struktur swing fraktal 3-bar, pola lilin engulfing/hammer/star, konsistensi 24 lilin, pivot klasik P/R1/S1, kekuatan relatif vs BTC) · L2 derivatif NYATA Bybit linear (funding rate + open interest; ΔOI antar-siklus dari snapshot keadaan) · L3 makro (Fear & Greed alternative.me, dominasi CoinGecko dengan fallback proxy volume-spot, breadth) — semuanya endpoint publik tanpa API key',
+  metode: 'L1 lilin (MACD 12/26/9, ADX/DI 14, Bollinger %B 20/2, VWAP-24j, OBV taker-weighted, struktur swing fraktal 3-bar, pola lilin engulfing/hammer/star, konsistensi 24 lilin, pivot klasik P/R1/S1, kekuatan relatif vs BTC) · L2 derivatif NYATA rantai host (bybit → bytick → fapi Binance premiumIndex+OI → OKX per-simbol; funding + open interest; ΔOI antar-siklus dari snapshot keadaan) · L3 makro (Fear & Greed alternative.me, dominasi CoinGecko dengan fallback proxy volume-spot, breadth) — semuanya endpoint publik tanpa API key',
   ket: 'paramater konstan per siklus (F&G, dominasi, breadth) masuk IKLIM & NARASI, tidak memilih arah — pelajaran forensik: fitur konstan lane tidak berhak menolak sinyal; 12 param wawasan belajar bobotnya (genome per rezim + Hedge on-line) dengan jalan yang sama seperti dimensi lama; endpoint gagal = param jujur null, tidak pernah dikarang',
 }
 tulis(path.join(ROOT, 'laporan/wawasan.json'), wawasan360)
