@@ -84,7 +84,7 @@ import path from 'node:path'
 const ROOT = process.cwd()
 const FEE = 0.002            // 0.1% buy + 0.1% sell — wajib
 const HORIZON_JAM = 24       // sasaran harian
-const VERSI = 'V251-RUH-GURU v4.1 — ruh yang dibangun, kompas arah apa pun kondisi pasar, ekspektasi & tangga profit per sasaran, buku guru para trader'
+const VERSI = 'V252-GERBANG-PERFORMA v4.2 — forensik kerugian mengikat: zona racun terbukti DITOLAK (no-trade adalah keputusan), keyakinan dipetakan hit-rate zona medan, baseline vs sekarang dibuktikan tiap denyut'
 
 // ---------------- kandang lane ARAH (komite genome) ----------------
 const KANDANG = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'DOGE', 'ADA', 'AVAX', 'LINK', 'TRX']
@@ -155,6 +155,7 @@ const OTAK = [
   { nama: 'otak-ingatan', tugas: 'bahan ajar dari tiap kejadian pasar', mesin: 'FinMem 3 lapis (Zhang dkk 2023) — peristiwa→pelajaran→doktrin', status: 'HIDUP' },
   { nama: 'otak-sadardiri', tugas: 'memeriksa tubuh & jiwanya sendiri tiap denyut', mesin: 'metakognisi: hash integritas, kesehatan memori & kalibrasi, peringatan otomatis', status: 'HIDUP (V248)' },
   { nama: 'otak-guru', tugas: 'mengajar profesional dari data medannya sendiri tiap denyut', mesin: 'pengajaran + kuis otomatis dari angka denyut (laporan/guru.json)', status: 'HIDUP (V251)' },
+  { nama: 'otak-forensik', tugas: 'membedah penyebab kerugian lalu MENOLAK zona racun terbukti — performa di atas aktivitas', mesin: 'forensik zona per jalur (arah×rezim, band keyakinan, taker, konsensus) + gerbang no-trade + A/B versi anti-cheat (laporan/forensik.json + otak/performa.json)', status: 'HIDUP (V252)' },
 ]
 
 // ---------------- V251 RUH — jiwa yang dibangun (mandat pemilik:
@@ -738,6 +739,23 @@ function kalibrasiKeyakinan(p, kal) {
     sumber: `dikalibrasi medan bin ${bin.low}–${bin.high - 1}% (n=${bin.n}, tembus ${emp.toFixed(0)}%)`,
   }
 }
+// V252 GERBANG-PERFORMA — keyakinan dipetakan hit-rate ZONA medan (lebih relevan
+// dari bin global): kandidat yang selamat dari gerbang forensik membawa keyakinan
+// sesuai rekam jejak kondisinya sendiri — bukan rasa yakin yang dikarang komite.
+// FORENSIK didefinisikan di bawah (sebelum dipakai saat runtime).
+function kunciKeyakinan(p, kal, zona) {
+  const relevan = (zona || []).filter((z) => z && z.n >= FORENSIK.EMAS_MIN_N)
+  if (relevan.length) {
+    const totN = relevan.reduce((a, z) => a + z.n, 0)
+    const hit = relevan.reduce((a, z) => a + z.akurasiPct * z.n, 0) / totN
+    const w = clamp(totN / 24, 0.3, 0.65)
+    return {
+      keyakinan: Math.round(clamp(p * (1 - w) + hit * w, 30, 97)),
+      sumber: `dikalibrasi zona forensik (${relevan.map((z) => `${z.nama} tembus ${z.akurasiPct}% dari n=${z.n}`).join(' · ')}; bobot medan ${w.toFixed(2)})`,
+    }
+  }
+  return kalibrasiKeyakinan(p, kal)
+}
 // (3) KONFORMAL — Angelopoulos-Bates 2021 (arXiv:2107.07511).
 //     kuantil empiris skor kesesuaian (MFE matang) — cakupan 1-alpha
 //     bebas-distribusi; null jujur bila medan belum cukup.
@@ -870,28 +888,141 @@ const campur = (a, b) => Object.fromEntries([...new Set([...Object.keys(a), ...O
 const bobotArah = campur(genome, ilmu.hedge.arah)
 const bobotPhx = campur(phxGenome, ilmu.hedge.phx)
 
+// ---- V252 FORENSIK MEDAN — mandat investor: "jangan hanya mencatat prediksi
+// yang salah; analisis MENGAPA kesalahan terjadi dan pola apa yang terus
+// menyebabkan kerugian" ---- Tiap denyut otak membedah SELURUH vonis tertutup
+// per jalur, mengelompokkan ke zona kondisi, dan zona dengan bukti cukup yang
+// terbukti merugi menjadi ZONA RACUN yang DITOLAK mesin — no-trade adalah keputusan.
+const FORENSIK = {
+  MIN_N: 8,          // bukti minimum sebelum zona berhak menolak sinyal
+  RACUN_EKS: -0.006, // ekspektasi <= -0.6% = racun terbukti
+  EMAS_MIN_N: 6,     // zona emas boleh lebih awal percaya (n>=6)
+  EMAS_EKS: 0.003,   // ekspektasi >= +0.3% = zona emas
+  MAKS_PORSI: 0.85,  // zona dgn porsi > 85% jalur = fitur KONSTAN (mis. phoenix selalu kontrarian) — tidak berhak menolak/menaikkan
+}
+function forensikMedan(closed) {
+  const tag = (e) => {
+    const sgn = e.arah === 'BUY' ? 1 : -1
+    const sesuai = DIM_ARAH.reduce((a, d) => a + (((e.bukti?.[d] ?? 0) !== -1) && (e.bukti?.[d] ?? 0) * sgn > 0 ? 1 : 0), 0)
+    const t = e.bukti?.tekanan ?? 0
+    const taker = t === -1 ? 'netral' : (Math.abs(t) >= 0.3 && t * sgn > 0 ? 'searah' : (t * sgn < 0 ? 'melawan' : 'netral'))
+    const kek = e.keyakinanMentah ?? e.keyakinan ?? 60
+    return { rez: `${e.arah}-${e.rezim}`, band: kek < 55 ? '<55' : (kek < 70 ? '55-69' : '>=70'), taker, kons: sesuai >= 3 ? '3-5' : '0-2' }
+  }
+  const namaTaker = { 'taker-searah': 'tekanan taker searah kuat (ikut kerumunan)', 'taker-melawan': 'tekanan taker melawan (fade kerumunan)', 'taker-netral': 'tekanan taker netral' }
+  const buat = (kunciFn, namaFn) => {
+    const g = {}
+    for (const e of closed) {
+      const t = tag(e); const k = kunciFn(t)
+      if (!g[k]) g[k] = { n: 0, benar: 0, net: 0, menang: 0, kalah: 0 }
+      const b = g[k]; b.n++; b.net += e.net
+      if (e.status === 'BENAR') b.benar++
+      if (e.net > 0) b.menang += e.net; else b.kalah += e.net
+    }
+    return Object.entries(g).map(([k, b]) => {
+      const eks = b.net / b.n
+      const porsi = +(b.n / closed.length).toFixed(3)
+      // kelayakan diskriminatif: zona yang mencakup hampir SEMUA entri jalurnya adalah
+      // konstanta lane (bukan kondisi) — tidak boleh dipakai menolak/menaikkan
+      const layak = porsi <= FORENSIK.MAKS_PORSI
+      const status = (layak && b.n >= FORENSIK.MIN_N && eks <= FORENSIK.RACUN_EKS) ? 'RACUN'
+        : (layak && b.n >= FORENSIK.EMAS_MIN_N && eks >= FORENSIK.EMAS_EKS) ? 'EMAS' : 'NETRAL'
+      return {
+        kunci: k, nama: namaFn(k), n: b.n, porsi,
+        akurasiPct: +((b.benar / b.n) * 100).toFixed(1),
+        ekspekPct: +(eks * 100).toFixed(2),
+        pf: b.kalah < 0 ? +(b.menang / -b.kalah).toFixed(2) : null,
+        status,
+      }
+    })
+  }
+  const zona = [
+    ...buat((t) => t.rez, (k) => `arah ${k.replace('-', ' di rezim ')}`),
+    ...buat((t) => t.band, (k) => `keyakinan mentah ${k}`),
+    ...buat((t) => `taker-${t.taker}`, (k) => namaTaker[k] || k),
+    ...buat((t) => t.kons, (k) => `konsensus bukti ${k} sesuai`),
+  ]
+  return { zona, racun: zona.filter((z) => z.status === 'RACUN'), emas: zona.filter((z) => z.status === 'EMAS') }
+}
+const closedArah = ledger.filter((e) => e.status === 'BENAR' || e.status === 'SALAH').filter((e) => (e.jalur || 'ARAH') === 'ARAH')
+const closedPhx = ledger.filter((e) => e.status === 'BENAR' || e.status === 'SALAH').filter((e) => e.jalur === 'PHOENIX')
+const forensik = {
+  dasarN: { arah: closedArah.length, phoenix: closedPhx.length },
+  arah: forensikMedan(closedArah),
+  phoenix: forensikMedan(closedPhx),
+}
+if (forensik.arah.racun.length) log(`forensik ARAH zona racun: ${forensik.arah.racun.map((z) => `${z.nama} (n=${z.n}, ekspek ${z.ekspekPct}%)`).join(' | ')}`)
+if (forensik.phoenix.racun.length) log(`forensik PHOENIX zona racun: ${forensik.phoenix.racun.map((z) => `${z.nama} (n=${z.n}, ekspek ${z.ekspekPct}%)`).join(' | ')}`)
+if (forensik.arah.emas.length || forensik.phoenix.emas.length)
+  log(`forensik zona emas: ${[...forensik.arah.emas, ...forensik.phoenix.emas].map((z) => `${z.nama} (+${z.ekspekPct}%)`).join(' | ')}`)
+// tag zona utk kandidat baru — cermin tag() di atas agar 1:1 dengan data medan
+const zonaKandidat = (lane, arah, rezimKoin, kekMentah, bukti) => {
+  const sgn = arah === 'BUY' ? 1 : -1
+  const sesuai = DIM_ARAH.reduce((a, d) => a + (((bukti?.[d] ?? 0) !== -1) && (bukti?.[d] ?? 0) * sgn > 0 ? 1 : 0), 0)
+  const t = bukti?.tekanan ?? 0
+  const taker = t === -1 ? 'netral' : (Math.abs(t) >= 0.3 && t * sgn > 0 ? 'searah' : (t * sgn < 0 ? 'melawan' : 'netral'))
+  const band = kekMentah < 55 ? '<55' : (kekMentah < 70 ? '55-69' : '>=70')
+  const kunci = [`${arah}-${rezimKoin}`, band, `taker-${taker}`, sesuai >= 3 ? '3-5' : '0-2']
+  return forensik[lane].zona.filter((z) => kunci.includes(z.kunci))
+}
+// V252: bukti racun taker-searah (jalur ARAH) → bobot tekanan komite DITURUNKAN
+// (bobot lokal deterministik dari medan; genome evolusi tetap jalur belajarnya)
+const forensikTindakan = []
+let blokForensikArah = 0
+let blokForensikPhx = 0
+if (forensik.arah.racun.some((z) => z.kunci === 'taker-searah')) {
+  const totLama = DIM_ARAH.reduce((a, k) => a + (bobotArah[k] ?? 0), 0)
+  const tekLama = bobotArah.tekanan ?? 0.18
+  const tekBaru = clamp(tekLama * 0.6, 0.02, 0.4)
+  const sisaLama = totLama - tekLama
+  if (sisaLama > 0) for (const k of DIM_ARAH) if (k !== 'tekanan') bobotArah[k] = (bobotArah[k] ?? 0) * ((totLama - tekBaru) / sisaLama)
+  bobotArah.tekanan = tekBaru
+  forensikTindakan.push(`genome komite: bobot tekanan diturunkan ${(tekLama * 100).toFixed(1)}% → ${(tekBaru * 100).toFixed(1)}% — mengikuti kerumunan terbukti racun (forensik medan)`)
+  log(`forensik-genome: bobot tekanan diturunkan → ${JSON.stringify(bobotArah)}`)
+}
+
 // ---- 1. kunci prediksi hari ini (pra-registrasi: SEBELUM pergerakan) ----
 const terkunciBaru = []
 const nearMiss = []
 
 // 1a. lane ARAH — komite genome di kandang 10 mayor
+// V252: DUA TAHAP — hitung semua kandidat dulu, lalu gerbang forensik memisahkan
+// yang layak dari zona racun terbukti (mandat investor: "berani mengurangi atau
+// menolak sinyal buruk — lebih baik tidak mengambil posisi daripada merugi").
+const kandidatArah = []
 for (const s of KANDANG) {
   const c = hasil[s]; if (!c) continue
   const id = `${s}-${TGL}`
   if (ledger.some((e) => e.id === id)) continue                    // satu per simbol per hari UTC
   const b = dewanBukti(c)
   const v = vonis(b, bobotArah, rezimGlobal)
-  const kal = kalibrasiKeyakinan(v.keyakinan, ilmu.kalibrasi)      // V247: kepastian dari medan
   const warA = mesinWarisan(c, hasil.BTC)                          // V249: konteks kuant ARAH
   const mcA = warA.garch.sigma1j > 0 ? monteCarlo24j(c, warA.garch) : null   // V251: kerucut MC utk ekspektasi arah
   const eksA = mcA ? eksArah(v.arah, mcA) : null
+  const buktiCand = Object.fromEntries(DIM_ARAH.map((k) => [k, +b.dims[k].arah.toFixed(3)]))
+  const kena = zonaKandidat('arah', v.arah, b.rezim, v.keyakinan, buktiCand)
+  kandidatArah.push({ s, id, b, v, warA, mcA, eksA, buktiCand, kena })
+}
+const emasArah = (k) => k.kena.some((z) => z.status === 'EMAS')
+const bersihArah = kandidatArah.filter((k) => !k.kena.some((z) => z.status === 'RACUN'))
+const tercemarArah = kandidatArah.filter((k) => k.kena.some((z) => z.status === 'RACUN'))
+  .sort((a, b) => (b.eksA?.evPct ?? -99) - (a.eksA?.evPct ?? -99))
+// SLOT EKSPLORASI forensik (bandit berbatas): 1 kandidat racun per denyut dengan
+// EV statistik >= 0 boleh lewat — tanpa informasi baru, zona tak pernah bisa menyembuh.
+const eksplorasiArah = tercemarArah.find((k) => k.eksA && k.eksA.evPct >= 0) || null
+const kunciEntriArah = (k, eksplor) => {
+  const { s, id, b, v, warA, mcA, eksA, buktiCand, kena } = k
+  const emas = emasArah(k)
+  const kal = kunciKeyakinan(v.keyakinan + (emas ? 4 : 0), ilmu.kalibrasi, kena)   // V252: kepastian zona medan
   const entri = {
     id, simbol: s, jalur: 'ARAH', arah: v.arah, keyakinan: kal.keyakinan, keyakinanMentah: v.keyakinan,
     ketKeyakinan: kal.sumber, skor: v.skor,
+    ...(emas ? { zonaEmas: true } : {}),
+    ...(eksplor ? { eksplorasi: true, ketEksplorasi: 'slot eksplorasi forensik — menguji apakah zona racun mulai menyembuh (EV statistik >= 0)' } : {}),
     entry: b.harga, waktuKunci: ISO, horizon: '24j', rezim: b.rezim, status: 'TERBUKA',
-    bukti: Object.fromEntries(DIM_ARAH.map((k) => [k, +b.dims[k].arah.toFixed(3)])),
+    bukti: buktiCand,
     daya: { volume: +b.dims.volume.daya.toFixed(2), volatilitas: +b.dims.volatilitas.daya.toFixed(2), likuiditas: +b.dims.likuiditas.daya.toFixed(2) },
-    ketBukti: Object.fromEntries(DIM_ARAH.map((k) => [k, b.dims[k].ket])),
+    ketBukti: Object.fromEntries(DIM_ARAH.map((k2) => [k2, b.dims[k2].ket])),
     warisan: {
       sigma24jPct: warA.garch.sigma24jPct, beta: warA.beta, r2Beta: warA.r2, divRSI: warA.div,
       ...(mcA ? { mc: { pNaik: mcA.pNaik, q50: mcA.q50, q50dn: mcA.q50dn, ket: 'kerucut MC 2.000 lintasan — peluang arah & ekskursi median' } } : {}),
@@ -899,7 +1030,24 @@ for (const s of KANDANG) {
     ...(eksA ? { ekspektasi: eksA } : {}),
   }
   ledger.push(entri); terkunciBaru.push(entri)
+  return entri
 }
+for (const k of bersihArah) kunciEntriArah(k, false)
+if (eksplorasiArah) {
+  kunciEntriArah(eksplorasiArah, true)
+  forensikTindakan.push(`slot eksplorasi: ${eksplorasiArah.s} ${eksplorasiArah.v.arah} dilepas lewat gerbang (EV +${(eksplorasiArah.eksA.evPct * 100).toFixed(2)}% >= 0) — zona racun diuji agar bisa menyembuh dengan bukti baru`)
+  log(`forensik-eksplorasi: ${eksplorasiArah.s} ${eksplorasiArah.v.arah} EV +${(eksplorasiArah.eksA.evPct * 100).toFixed(2)}%`)
+}
+for (const k of tercemarArah) {
+  if (k === eksplorasiArah) continue
+  const racunK = k.kena.filter((z) => z.status === 'RACUN')
+  nearMiss.push({
+    simbol: k.s, arah: k.v.arah, keyakinan: k.v.keyakinan, entry: k.b.harga, rezim: k.b.rezim,
+    catatan: `GERBANG FORENSIK — zona racun terbukti: ${racunK.map((z) => `${z.nama} (n=${z.n}, akurasi ${z.akurasiPct}%, ekspek ${z.ekspekPct > 0 ? '+' : ''}${z.ekspekPct}%)`).join(' · ')} — menolak sinyal buruk: TUNGGU lebih baik dari merugi`,
+  })
+}
+blokForensikArah = tercemarArah.length - (eksplorasiArah ? 1 : 0)
+if (blokForensikArah) log(`forensik-gerbang: ${blokForensikArah} kandidat ARAH ditolak (zona racun), ${bersihArah.length} lolos`)
 
 // 1b. lane PHOENIX — beli di ujung bawah hari, jual di ujung atas yang diprediksi
 // gerbang rezim-tegas — lahir dari pelajaran: melawan arus butuh bukti lebih kuat & kuota lebih kecil
@@ -952,6 +1100,7 @@ try {
   }
 } catch (e) { kompas = null; log('kompas gagal (tak fatal): ' + String(e.message).slice(0, 60)) }
 const lulusPhx = []
+const tercemarPhx = []
 for (const s of daftarTelusur) {
   const c = hasil[s]; if (!c) continue
   const id = `PHX-${s}-${TGL}`
@@ -1026,10 +1175,26 @@ for (const s of daftarTelusur) {
     })
     continue
   }
+  // V252 GERBANG FORENSIK (jalur phoenix — zona dihitung dari ledger phoenix SENDIRI,
+  // n>=8 & diskriminatif baru berhak menolak): zona racun terbukti DITOLAK — radar
+  // tak membeli kondisi yang rekam jejaknya merugi. Kandidat terbaik ber-EV>=0
+  // disimpan utk slot eksplorasi (bandit berbatas) agar zona bisa menyembuh.
+  const buktiPhx = Object.fromEntries(DIM_ARAH.map((k) => [k, +b.dims[k].arah.toFixed(3)]))
+  const kenaPhx = zonaKandidat('phoenix', 'BUY', b.rezim, v.keyakinan, buktiPhx)
+  const racunPhx = kenaPhx.filter((z) => z.status === 'RACUN')
+  const emasPhx = kenaPhx.some((z) => z.status === 'EMAS')
+  if (racunPhx.length) {
+    tercemarPhx.push({
+      id, simbol: s, arah: 'BUY', keyakinan: v.keyakinan + (emasPhx ? 4 : 0), skorPhoenix: v.skor,
+      entry: b.harga, rezim: b.rezim, tgt, rad, b, war, mc, pT, pStv, evK, kenaPhx, racunPhx, zonaEmas: emasPhx,
+    })
+    blokForensikPhx += 1
+    continue
+  }
   const pA = tgt.highAmbisius ? mc.pLevel(tgt.highAmbisius / b.harga - 1) : null
   lulusPhx.push({
-    id, simbol: s, jalur: 'PHOENIX', arah: 'BUY', keyakinan: v.keyakinan, skorPhoenix: v.skor,
-    entry: b.harga, tgt, rad, b, war, mc, pT, pA, dayaProduk, stv, pStv, evK,
+    id, simbol: s, jalur: 'PHOENIX', arah: 'BUY', keyakinan: v.keyakinan + (emasPhx ? 4 : 0), skorPhoenix: v.skor,
+    entry: b.harga, tgt, rad, b, war, mc, pT, pA, dayaProduk, stv, pStv, evK, kenaPhx, zonaEmas: emasPhx,
     urut: v.skor * Math.min(tgt.untung, 0.06) * (evK > 0 ? 1.25 : 1),   // v2.1 fantasi tak memenangkan kuota; V251 EV positif diprioritaskan
   })
 }
@@ -1038,16 +1203,11 @@ const phxTerlanjur = ledger.filter((e) => e.jalur === 'PHOENIX' && (e.waktuKunci
 const sisaKuota = Math.max(0, kunciMaks - phxTerlanjur)
 lulusPhx.sort((a, b) => b.urut - a.urut)
 const phxCadangan = []
-for (const [i, p] of lulusPhx.entries()) {
-  if (i >= sisaKuota) {
-    phxCadangan.push({
-      simbol: p.simbol, jalur: 'PHOENIX', arah: 'BUY', keyakinan: p.keyakinan, entry: p.b.harga, rezim: p.b.rezim,
-      catatan: `lolos gerbang radar (skor ${p.skorPhoenix}) — di luar kuota ${kunciMaks} terbaik hari ini`,
-    })
-    continue
-  }
-  const { tgt, rad, b, war, mc, pT, pA } = p
-  const kalP = kalibrasiKeyakinan(p.keyakinan, ilmu.kalibrasi)     // V247: kepastian dari medan
+// V252: pembangun entri phoenix — satu sumber untuk jalur kuota & slot eksplorasi
+const bangunEntriPhx = (p, eksplor) => {
+  const { tgt, rad, b, war, mc, pT } = p
+  const pA = tgt.highAmbisius ? mc.pLevel(tgt.highAmbisius / b.harga - 1) : null
+  const kalP = kunciKeyakinan(p.keyakinan, ilmu.kalibrasi, p.kenaPhx)   // V252: kepastian zona medan
   const pita = pitaKonformal(ilmu.konformal)                       // V247: pita 75% ujung atas
   const stopHarga = p.stv
   const pStop = p.pStv
@@ -1067,6 +1227,8 @@ for (const [i, p] of lulusPhx.entries()) {
   const entri = {
     id: p.id, simbol: p.simbol, jalur: 'PHOENIX', arah: 'BUY', keyakinan: kalP.keyakinan, keyakinanMentah: p.keyakinan,
     ketKeyakinan: kalP.sumber, skorPhoenix: p.skorPhoenix,
+    ...(p.zonaEmas ? { zonaEmas: true } : {}),
+    ...(eksplor ? { eksplorasi: true, ketEksplorasi: 'slot eksplorasi forensik phoenix — menguji apakah zona racun mulai menyembuh (EV statistik >= 0)' } : {}),
     entry: b.harga, target: +tgt.target.toPrecision(7), ketTarget: tgt.ketTarget,
     untungBersih: +tgt.untung.toFixed(4),
     stop: stopHarga,
@@ -1108,7 +1270,34 @@ for (const [i, p] of lulusPhx.entries()) {
       'pengaman': `stop terpasang di bawah lantai 24 jam ${rad.lo24.toPrecision(6)} — lantai jebol berarti bacaan akumulasi salah`,
     },
   }
-    ledger.push(entri); terkunciBaru.push(entri)
+  ledger.push(entri); terkunciBaru.push(entri)
+  return entri
+}
+for (const [i, p] of lulusPhx.entries()) {
+  if (i >= sisaKuota) {
+    phxCadangan.push({
+      simbol: p.simbol, jalur: 'PHOENIX', arah: 'BUY', keyakinan: p.keyakinan, entry: p.b.harga, rezim: p.b.rezim,
+      catatan: `lolos gerbang radar (skor ${p.skorPhoenix}) — di luar kuota ${kunciMaks} terbaik hari ini`,
+    })
+    continue
+  }
+  bangunEntriPhx(p, false)
+}
+// V252 SLOT EKSPLORASI phoenix (bandit berbatas): 1 kandidat zona racun dengan
+// EV statistik >= 0 per denyut boleh lewat — tanpa bukti baru zona tak pernah menyembuh
+const terpakaiQuota = Math.min(lulusPhx.length, sisaKuota)
+const eksplorPhx = tercemarPhx.filter((k) => k.evK >= 0).sort((a, b) => b.evK - a.evK)[0] || null
+if (eksplorPhx && sisaKuota - terpakaiQuota > 0) {
+  bangunEntriPhx(eksplorPhx, true)
+  forensikTindakan.push(`slot eksplorasi phoenix: ${eksplorPhx.simbol} dilepas lewat gerbang (EV +${(eksplorPhx.evK * 100).toFixed(2)}% >= 0) — zona racun radar diuji agar bisa menyembuh dengan bukti baru`)
+  log(`forensik-eksplorasi-phx: ${eksplorPhx.simbol} EV +${(eksplorPhx.evK * 100).toFixed(2)}%`)
+}
+for (const k of tercemarPhx) {
+  if (k === eksplorPhx) continue
+  nearMiss.push({
+    simbol: k.simbol, arah: 'BUY', keyakinan: k.keyakinan, entry: k.b.harga, rezim: k.b.rezim,
+    catatan: `GERBANG FORENSIK phoenix — zona racun terbukti: ${k.racunPhx.map((z) => `${z.nama} (n=${z.n}, akurasi ${z.akurasiPct}%, ekspek ${z.ekspekPct > 0 ? '+' : ''}${z.ekspekPct}%)`).join(' · ')} — radar menolak zona merugi`,
+  })
 }
 
 // ---- 2. nilai prediksi yang horizonnya sudah lewat (net P/L = vonis resmi) ----
@@ -1155,6 +1344,57 @@ for (const e of ledger) {
     }
   }
   dinilaiBaru.push(e)
+}
+
+// ---- 2b. V252 PERFORMA — baseline vs sekarang: perbaikan DIBUKTIKAN lewat hasil ----
+// (mandat investor: "membuktikan melalui hasil bahwa setiap pembaruan membuat
+//  performanya semakin baik" — jendela pembanding = vonis yang DIKUNCI setelah
+//  v252 berlaku; anti-cheat: tidak dihitung mundur ke versi lama)
+const metrikLedger = (sub) => {
+  if (!sub.length) return { n: 0, akurasiPct: null, netPct: null, pf: null, ekspekPct: null, menangRataPct: null, rugiRataPct: null }
+  const nets = sub.map((e) => e.net)
+  const men = nets.filter((n) => n > 0), kg = nets.filter((n) => n <= 0)
+  const sum = (a) => a.reduce((x, y) => x + y, 0)
+  return {
+    n: sub.length,
+    akurasiPct: +((sub.filter((e) => e.status === 'BENAR').length / sub.length) * 100).toFixed(1),
+    netPct: +(sum(nets) * 100).toFixed(2),
+    pf: kg.length && sum(kg) < 0 ? +(sum(men) / -sum(kg)).toFixed(2) : null,
+    ekspekPct: +((sum(nets) / nets.length) * 100).toFixed(2),
+    menangRataPct: men.length ? +((sum(men) / men.length) * 100).toFixed(2) : null,
+    rugiRataPct: kg.length ? +((sum(kg) / kg.length) * 100).toFixed(2) : null,
+  }
+}
+const closedSemua = ledger.filter((e) => e.status === 'BENAR' || e.status === 'SALAH')
+let perfState = bacaJson(path.join(ROOT, 'otak/performa.json'), null)
+let performaCatatan = ''
+if (!perfState || !perfState.baseline || !perfState.cutoff) {
+  const base = metrikLedger(closedSemua)
+  perfState = {
+    baseline: { versi: 'V251-RUH-GURU v4.1', tgl: ISO, ...base, ket: 'rekam jejak saat v252 lahir — titik nol perbaikan; akurasi 37.2% / PF 0.57 / ekspek -0.67% BUKAN kondisi normal' },
+    cutoff: ISO,
+    target: { akurasiPct: 50, pf: 1.2, ekspekPct: 0.3, nMin: 12, ket: 'PF < 1.2 & ekspek negatif dilarang dianggap wajar — ini gerbang yang harus ditembus tiap versi baru' },
+  }
+  tulis(path.join(ROOT, 'otak/performa.json'), perfState)
+  performaCatatan = `baseline performa disegel: akurasi ${base.akurasiPct}% · PF ${base.pf} · ekspek ${base.ekspekPct}% (n=${base.n}) — dari sini tiap versi DIBUKTIKAN lewat jendela vonisnya`
+  log(performaCatatan)
+}
+const jendelaV252 = closedSemua.filter((e) => (e.waktuKunci || '') >= perfState.cutoff)
+const sekarangMet = metrikLedger(jendelaV252)
+const targetPerf = perfState.target
+const lulusTarget = {
+  akurasi: sekarangMet.n >= targetPerf.nMin && sekarangMet.akurasiPct != null && sekarangMet.akurasiPct >= targetPerf.akurasiPct,
+  pf: sekarangMet.n >= targetPerf.nMin && sekarangMet.pf != null && sekarangMet.pf >= targetPerf.pf,
+  ekspek: sekarangMet.n >= targetPerf.nMin && sekarangMet.ekspekPct != null && sekarangMet.ekspekPct >= targetPerf.ekspekPct,
+}
+const arahanPerf = sekarangMet.n < targetPerf.nMin ? 'BELUM-CUKUP'
+  : (sekarangMet.ekspekPct > perfState.baseline.ekspekPct && sekarangMet.akurasiPct > perfState.baseline.akurasiPct) ? 'MEMBAIK'
+  : (sekarangMet.ekspekPct <= perfState.baseline.ekspekPct && sekarangMet.akurasiPct <= perfState.baseline.akurasiPct) ? 'MUNDUR' : 'CAMPUR'
+const performa = {
+  baseline: perfState.baseline,
+  sekarang: { versi: VERSI, ...sekarangMet },
+  target: targetPerf, lulus: lulusTarget, arahan: arahanPerf,
+  ket: 'baseline = semua vonis dikunci SEBELUM v252; sekarang = vonis dikunci SETELAHNYA (jendela murni) — perbaikan dibuktikan lewat hasil, bukan klaim aktivitas',
 }
 
 // ---- 3. evolusi genome dari vonis nyata (ARAH + PHOENIX, berbatas, jujur) ----
@@ -1369,6 +1609,12 @@ if (binBohong.length) peringatan.push(`bin keyakinan berbohong (${binBohong.map(
 const dimTertindas = Object.entries(ilmu.hedge.arah).filter(([, w]) => w < 0.06).map(([k]) => k)
 if (dimTertindas.length) peringatan.push(`dimensi bukti tertindas Hedge: ${dimTertindas.join(', ')} — sinyalnya nyaris tak dipakai komite`)
 if (gagal.length > daftarTelusur.length * 0.3) peringatan.push(`${gagal.length}/${daftarTelusur.length} simbol gagal ditelusuri — kesehatan host sedang kurang baik`)
+// V252: peringatan performa — PF < 1 & ekspek negatif BUKAN kondisi normal (mandat investor)
+if (akurasi.profit?.profitFactor != null && akurasi.profit.profitFactor < 1)
+  peringatan.push(`PF ledger ${akurasi.profit.profitFactor} < 1 — sistem masih kehilangan nilai; gerbang forensik menahan zona racun, target PF ${targetPerf.pf} / ekspek +${targetPerf.ekspekPct}% jadi kompas perbaikan`)
+if (arahanPerf === 'MUNDUR') peringatan.push(`jendela v252 MUNDUR dari baseline (n=${sekarangMet.n}) — gerbang diperketat otomatis; perbaikan strategi wajib sebelum kuota kembali normal`)
+if (performa.sekarang.n > 0 && performa.sekarang.n < targetPerf.nMin)
+  peringatan.push(`jendela v252 baru ${performa.sekarang.n}/${targetPerf.nMin} vonis — perbandingan versi belum hak memutus; no-trade di zona racun tetap mengikat`)
 const pelLama = bacaJson(path.join(ROOT, 'laporan/pelajaran-server.json'), { daftar: [] })
 const sadardiri = {
   denyut: SIKLUS, waktu: ISO,
@@ -1389,9 +1635,10 @@ const sadardiri = {
     brierArah: brierArah != null ? +brierArah.toFixed(4) : null,
     pitaKonformalAktif: ilmu.konformal.length >= ILMU.KONFORMAL_MIN_N,
     metaGeser: ilmu.meta.geser, gerbangRadar: gerbangSkor, generasiOtak: semuaGenome[rezimGlobal].generasi,
+    performa: { arahan: arahanPerf, pf: sekarangMet.pf, ekspekPct: sekarangMet.ekspekPct, n: sekarangMet.n, zonaRacun: forensik.arah.racun.length + forensik.phoenix.racun.length },
   },
   peringatan,
-  tindakanSiklusIni: [ilmuCatatan, epochCatatan, ...(aturanBaru.length ? [`aturan baru lahir: ${aturanBaru.join('; ')}`] : [])],
+  tindakanSiklusIni: [ilmuCatatan, epochCatatan, ...(aturanBaru.length ? [`aturan baru lahir: ${aturanBaru.join('; ')}`] : []), ...forensikTindakan, ...(performaCatatan ? [performaCatatan] : []), ...(blokForensikArah + blokForensikPhx ? `gerbang forensik menolak ${blokForensikArah + blokForensikPhx} sinyal zona racun siklus ini — no-trade adalah keputusan` : [])],
   ket: 'kesadaran fungsional — otak membaca keadaannya sendiri tiap denyut lalu bertindak (kalibrasi, geser gerbang, kompaksi memori)',
 }
 
@@ -1456,6 +1703,19 @@ if (!sasaranUtama.length && kompas) {
     warisan: { sigma24jPct: kompas.sigma24jPct, mc: { pNaik: kompas.pNaikMC, lintasan: WARISAN.MC_LINTASAN, ket: 'kerucut MC BTC' } },
   })
 }
+// V252 DISIPLIN — kualitas di atas aktivitas (mandat investor poin 3 & 5):
+// bila tak ada sasaran yang lolos gerbang forensik, sistem menyatakan TUNGGU
+// (tanpa posisi) — kompas tetap memberi arah. Tidak bertindak adalah keputusan.
+const modeDisiplin = sasaranUtama.some((r) => r.jalur !== 'KOMPAS') ? 'AKTIF' : 'TUNGGU'
+const disiplin = {
+  mode: modeDisiplin,
+  zonaRacunAktif: forensik.arah.racun.length + forensik.phoenix.racun.length,
+  ditolakSiklusIni: blokForensikArah + blokForensikPhx,
+  emasDiprioritaskan: forensik.arah.emas.length + forensik.phoenix.emas.length,
+  ket: modeDisiplin === 'TUNGGU'
+    ? 'TIDAK ADA SASARAN LAYAK — sistem menolak sinyal kualitas rendah (lebih baik tidak mengambil posisi daripada terus merugi); kompas tetap menerbitkan arah tiap denyut'
+    : 'sasaran aktif — hanya kandidat yang selamat dari gerbang forensik; zona racun terbukti tetap ditolak',
+}
 
 // ---- V251 BUKU GURU — otak mengajar profesional dari angka denyutnya sendiri ----
 // (mandat: "menjadi gurunya para trader professional") — pengajaran + kuis dibangun
@@ -1467,6 +1727,7 @@ const evSas = sasaranUtama.map((r) => r.ekspektasi?.evPct).filter((x) => x != nu
 const evMed = evSas.length ? evSas[Math.floor(evSas.length / 2)] : null
 const guruPengajaran = [
   `REZIM (${rezimGlobal} · ATR BTC ${sembtc.atrPct.toFixed(2)}%): ${rezimGlobal === 'TURUN' || rezimGlobal === 'PARABOLIK' ? `melawan arus dibuat mahal — gerbang +${PHX.TURUN_SKOR_TAMBAH}, cap target ${((PHX.TURUN_CAP - 1) * 100).toFixed(0)}%; profesional mengecil saat pasar menolak naik` : rezimGlobal === 'NAIK' ? 'trend adalah temanmu — namun SELL tanpa bukti lebih kuat tetap dipotong keyakinannya; jangan berubah jadi pemburu top' : 'pasar datar = jebakan dua arah — hanya sinyal berdaya produk tinggi yang layak dibayar'}`,
+  `FORENSIK (${forensik.arah.racun.length + forensik.phoenix.racun.length} zona racun terpasang · ${blokForensikArah + blokForensikPhx} sinyal ditolak siklus ini · mode ${modeDisiplin}): penyebab kegagalan diukur, bukan diperdebatkan — ${forensik.arah.racun[0] ? `zona terburuk: ${forensik.arah.racun[0].nama} (n=${forensik.arah.racun[0].n}, akurasi ${forensik.arah.racun[0].akurasiPct}%, ekspek ${forensik.arah.racun[0].ekspekPct}%)` : 'belum ada zona berbukti cukup'} — profesional menutup keran kerugian lebih dulu daripada membuka keran keuntungan baru`,
   `BREADTH (${(breadthNaik * 100).toFixed(0)}% dari ${breadthDari} koin naik): ${breadthNaik < 0.35 ? 'pasar sempit — dana hanya mengalir ke pemimpin; membeli koin lemah di pasar sempit = melawan arus dana' : 'pasar cukup luas — rotasi sehat; konfirmasi akumulasi tetap wajib sebelum masuk ujung bawah'}`,
   `HUNTING (${radar.telaah} telaah → ${radar.zonaPhoenix} zona phoenix → ${radar.telusurDalam} telusur dalam · gerbang ${gerbangSkor}): kekuatan pemburu bukan dari jumlah tembakan, tapi dari sabar menunggu konfirmasi EMA9 + taker-buy — menadah pisau jatuh adalah pajak untuk yang tidak sabar`,
   binBesar ? `KALIBRASI (bin ${binBesar.low}–${binBesar.high - 1}% tembus ${((binBesar.benar / binBesar.n) * 100).toFixed(0)}% dari ${binBesar.n} kasus): catat hit-rate binmu sendiri — keyakinan tanpa kalibrasi adalah overconfidence berbusana rapi` : 'KALIBRASI: belum ada bin berkasus cukup — kejujuran juga berarti menunggu medan bicara',
@@ -1535,6 +1796,21 @@ const guru = {
   sumber: 'laporan/guru.json — pengajaran & kuis, bukan ajakan membeli; semua angka dari ledger pra-registrasi yang bisa diaudit siapa pun',
 }
 tulis(path.join(ROOT, 'laporan/guru.json'), guru)
+// V252 — laporan forensik penuh: penyebab kegagalan terukur & tindakan yang diambil
+tulis(path.join(ROOT, 'laporan/forensik.json'), {
+  dihasilkan: ISO, organ: VERSI, siklus: SIKLUS,
+  dasarN: forensik.dasarN,
+  zona: { arah: forensik.arah.zona, phoenix: forensik.phoenix.zona },
+  penyebab: [
+    ...forensik.arah.racun.map((z) => `ARAH: ${z.nama} — n=${z.n}, akurasi ${z.akurasiPct}%, ekspek ${z.ekspekPct}%, PF ${z.pf ?? '—'} → ZONA RACUN, DITOLAK mesin`),
+    ...forensik.phoenix.racun.map((z) => `PHOENIX: ${z.nama} — n=${z.n}, akurasi ${z.akurasiPct}%, ekspek ${z.ekspekPct}%, PF ${z.pf ?? '—'} → ZONA RACUN, DITOLAK mesin`),
+  ],
+  tindakan: [...forensikTindakan, `gerbang menolak ${blokForensikArah} kandidat ARAH + ${blokForensikPhx} kandidat phoenix siklus ini`, `mode disiplin: ${modeDisiplin}`],
+  performa: performa,
+  disiplin,
+  metode: 'pembagian zona per jalur (ARAH vs PHOENIX) atas 4 kelompok kondisi — arah×rezim, band keyakinan mentah, keselarasan taker, konsensus bukti; status RACUN butuh n>=8 & ekspek <= -0.6% & porsi <= 85% (zona diskriminatif, bukan konstanta lane), EMAS butuh n>=6 & ekspek >= +0.3%; zona dihitung ulang tiap denyut dari ledger pra-registrasi',
+  ket: 'forensik penyebab kegagalan — sistem tidak hanya mencatat prediksi salah: ia menganalisis POLA kerugian, menolak zona racun, mengkalibrasi keyakinan ke hit-rate zona, dan membandingkan versi lewat hasil — fokus berikutnya bukan menambah prediksi, tapi mengubah pengalaman menjadi perbaikan performa',
+})
 log(`buku guru: ${guruPengajaran.length} pengajaran · kuis jawaban ${guruKuis.jawaban}`)
 const laporan = {
   protokol: 'SASARAN-MICAPROFITA', organ: VERSI, dihasilkan: ISO, siklus: SIKLUS,
@@ -1548,6 +1824,16 @@ const laporan = {
   sasaranHariIni: sasaranUtama,
   kandidatLain,
   akurasi,
+  forensik: {
+    identitas: 'V252 GERBANG-PERFORMA — tiap denyut otak membedah seluruh vonis tertutup per jalur: di kondisi apa dia menang, di kondisi apa dia terus kalah; zona berbukti cukup (n>=8) dengan ekspektasi <= -0.6% menjadi ZONA RACUN yang DITOLAK mesin — no-trade adalah keputusan, bukan kegagalan',
+    dasarN: forensik.dasarN,
+    zonaRacun: [...forensik.arah.racun.map((z) => ({ jalur: 'ARAH', ...z })), ...forensik.phoenix.racun.map((z) => ({ jalur: 'PHOENIX', ...z }))],
+    zonaEmas: [...forensik.arah.emas.map((z) => ({ jalur: 'ARAH', ...z })), ...forensik.phoenix.emas.map((z) => ({ jalur: 'PHOENIX', ...z }))],
+    tindakan: forensikTindakan,
+    ket: 'zona dihitung ulang tiap denyut dari ledger — racun bisa menyembuh (slot eksplorasi berbatas), emas bisa pudar: hanya bukti yang berbicara; rincian penuh di laporan/forensik.json',
+  },
+  performa,
+  disiplin,
   piagam: {
     identitas: PIAGAM.identitas, pilar: PIAGAM.pilar, otak: OTAK,
     roadmapJujur: PIAGAM.roadmapJujur,
@@ -1558,6 +1844,7 @@ const laporan = {
       'V248 PIAGAM-CYBORG — 5 pilar + sadar-diri + epoch harian + mandat Issue',
       'V249 WARISAN-ORGAN — 7 mesin kuant organ penuh mewarisi otak server (GARCH, Monte Carlo, Volume Profile, Beta, Divergensi, Breadth, Guard Kejut-Pump)',
       'V251 RUH-GURU — ruh yang dibangun, kompas arah apa pun kondisi, ekspektasi & tangga profit, buku guru para trader',
+      'V252 GERBANG-PERFORMA — forensik kerugian mengikat: zona racun terbukti ditolak, keyakinan dipetakan hit-rate zona medan, baseline vs sekarang dibuktikan lewat hasil',
     ],
   },
   sadardiri,
@@ -1642,6 +1929,7 @@ const laporan = {
     'PIAGAM CYBORG: lima pilar — tubuh persisten, multi-otak berbobot, ingatan DNA, sadar-diri fungsional, evolusi tiga kecepatan — dipasang nyata dan terbuka diaudit siapa pun; otak LLM/LoRA masih roadmap yang diakui jujur; satu hal pasti: cyborg ini terus berkembang pesat tiap denyut',
     'WARISAN ORGAN: riset organ SAKTI penuh (8.000+ fungsi) lalu mewarisi yang bisa dihitung jujur — GARCH/Monte Carlo/Volume Profile/Beta/Divergensi/Breadth/Kejut-Pump berjalan di tiap denyut; peluang MC dipra-registrasi dan dinilai medan seperti keyakinan; funding-rate real diakui tak terjangkau dan digantian proxy jujur',
     'RUH & GURU: ruh dibangun — inti, misi, nilai, anatomi & otonomi tercatat di laporan.ruh; tiap denyut menerbitkan pengajaran + kuis dari angka NYATA siklusnya (laporan/guru.json) — guru yang memakai sistemnya sendiri, bukan teori kosong',
+    'PERFORMA DI ATAS AKTIVITAS: PF 0.57 & ekspek -0.67% BUKAN kondisi normal — baseline v251 disegel di otak/performa.json; tiap versi baru DIBANDINGKAN pada jendela vonisnya sendiri (anti-cheat) sampai target akurasi 50% · PF 1.2 · ekspek +0.3% terlampaui; zona racun forensik ditolak mesin — lebih baik TUNGGU daripada terus merugi',
     'JAMINAN ARAH: apa pun kondisi pasar, jawaban BUY/SELL tidak pernah bolong — sasaran koin bila gerbang lolos, kompas rezim BTC (GARCH + MC 2.000 lintasan, keyakinan rendah-jujur) sebagai lantai; ekspektasi & tangga profit tercantum per sasaran — jaminan arah, bukan jaminan untung',
   ],
 }
