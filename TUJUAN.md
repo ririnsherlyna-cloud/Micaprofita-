@@ -486,6 +486,61 @@ ARAH. Kalibrasi gerbang tampil sebagai ketepatan medan (n tumbuh dari
 vonis matang). Otak baru terdaftar di piagam: **otak-metakognisi
 (HIDUP V255)**.
 
+## 5j. MESIN-DEAL-ODDS — warisan 3Commas × Trade Ideas (V256)
+
+Mandat pemilik: *"periksa ai agent 3commas & trade ideas yang khusus
+trading — pelajari sistemnya, decrypt, ambil apa yang bermanfaat dan
+kunci inti mereka, implementasikan pada Micaprofita agar cyborg AGI
+kita benar-benar mahir, mawas dan makin professional — lakukan deep
+screening dan inject."* Deep-screening dilakukan langsung pada
+**dokumentasi resmi** (help.3commas.io: DCA bot, Trailing Stop,
+Breakeven, Global Max Open Positions, Pump Protection; trade-ideas.com:
+AI Signals/Holly, AI Strategy Lab, Money Machine, OddsMaker) — bukti
+halaman tersimpan di `scripts/riset3c/`.
+
+Yang diadopsi dan dipasang di otak server:
+
+1. **MESIN DEAL ala DCA-bot 3Commas** — tiap sasaran kini lahir
+   membawa **rencana deal lengkap** (pra-registrasi): safety orders
+   (`maxSO=2` hard-cap ala *Max DCA Orders*; deviasi pertama
+   `1.2×ATR24j`, kelipatan `×1.6` ala *Price Deviation Multiplier*;
+   volume `×1.5` ala *Order Size Multiplier*) + harga-rata jika SO penuh
+   + TP-dari-avg; **Move SL to Breakeven** (aktivasi 60% jalan ke
+   target → stop pindah ke net-nol termasuk fee); **Trailing Take
+   Profit** 2-param (setelah T1, trail dari peak `0.8×ATR24j`). Semua
+   kontingensi **DINILAI MEDAN** saat horizon matang: SO kena? harga
+   rata? net-dengan-SO vs tanpa-SO? BEP menyelamatkan? ekstra trailing
+   dari peak nyata — diakumulasi di `ilmu.deal`.
+2. **ODDS MAKER ala Trade Ideas** — setiap denyut SEMUA kandidat
+   (ARAH + PHOENIX) diberi **skor peluang 0-100**:
+   `40%×peluang-MC + 25%×hit-rate zona medan + 20%×estimator
+   metakognisi + 15%×daya produk (+5 zona emas)`. Hanya **top-3**
+   berodds ≥ 55 yang boleh mengunci (*Money Machine: top-3 momentum
+   opportunities*) — sisanya ditolak dengan alasan odds yang bisa
+   diaudit di ledger nearMiss & laporan/odds.json.
+3. **EVENT-BASED TESTING ala OddsMaker** — 6 tag peristiwa dihitung
+   dari lilin saat kunci (breakout48j, lonjakVolume, crossEMA,
+   pullbackBB, divergensiRSI, searahTren4h), disegel di ledger, lalu
+   hit-rate & net per peristiwa dihitung dari vonis matang — *"pinpoint
+   winning filters, eliminate losing variables"* versi medan sendiri.
+4. **GLOBAL MAX OPEN POSITIONS** (3Commas) — posisi terbuka diukur
+   tiap denyut melawan batas kumulatif; dilaporkan di dasbor & denyut.
+5. Validasi silang: guard kejut-pump V249 ≈ *Pump Protection*;
+   komite AND ≈ *entry AND ≤5 indikator*; forensik zona V252 ≈
+   *eliminate losing variables*; sekolah parameter + slot eksplorasi ≈
+   *backtest/paper-first*; bias konteks V255 ≈ *Holly risk adaptation*.
+
+Registri parameter: **81 → 101 bernama** (+14 mesin deal/odds, +6 tag
+peristiwa). File baru: **laporan/odds.json** (identitas + 8 sumber
+resmi ber-URL, ranking odds siklus, hit-rate per peristiwa, statistik
+medan deal, posisi terbuka). Dasbor: seksi **"Mesin Deal & Odds"** —
+6 kartu (ambang/top-K, kandidat diranked, posisi terbuka, SO
+menyelamatkan, BEP menyelamatkan, ekstra trailing), tabel ranking
+OddsMaker, tabel peristiwa; tiap kartu sasaran kini menampilkan badge
+odds + komponen + peristiwa + blok RENCANA DEAL (SO levels, BEP,
+trailing) + hasil medan bila sudah matang. Otak piagam baru:
+**otak-deal-odds (HIDUP V256)**.
+
 ## 6. TERIMA-PASANG (tanpa konfigurasi)
 
 Sejak organ **V245 SARANG-BAWAAN**, membuka halaman Pages = langsung
@@ -605,9 +660,10 @@ laporan/index.html          — dasbor laporan profesional
 laporan/jurnal-ilmu.json    — akta jurnal ilmiah + cara tiap metode dipasang
 laporan/pelajaran-server.json — bahan ajar (pelajaran & aturan dari medan)
 laporan/wawasan.json        — wawasan 360: iklim makro + 10 kandang × 46 param + metakognisi Nevron (V255)
+laporan/odds.json           — mesin deal & odds V256: ranking OddsMaker + hit-rate peristiwa + statistik medan deal (3Commas × Trade Ideas)
 otak/genome-server.json     — genome hasil evolusi per rezim + keadaan ilmu (hedge/kalibrasi/konformal/meta)
 otak/penjaga-keadaan.json   — keadaan internal penjaga
-scripts/penjaga.mjs         — otak server V255-METAKOGNISI-NEVRON (Node murni; 81 param bernama + 7 kunci Nevron)
+scripts/penjaga.mjs         — otak server V256-MESIN-DEAL-ODDS (Node murni; 101 param bernama + 7 kunci Nevron + mesin deal/odds 3Commas×Trade Ideas)
 .github/workflows/sakti-denyut.yml — jantung denyut (cron 30 menit)
 ```
 
