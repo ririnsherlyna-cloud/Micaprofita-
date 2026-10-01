@@ -291,6 +291,48 @@ professional."* Empat modul dipasang nyata di otak server sejak
   pilihan berputar deterministik per siklus (jawaban & pembahasan
   terbuka) + 4 etika guru. Dasbor menampilkan seksi "Ruh & Guru".
 
+## 5f. GERBANG-PERFORMA — forensik kerugian mengikat, performa di atas aktivitas (V252)
+
+Mandat investor: "Saya tidak membiayai sistem hanya untuk melihatnya terus
+berjalan dan belajar. Saya ingin sistem yang menyadari ketika performanya
+buruk, menemukan penyebabnya, memperbaiki strateginya, mengurangi kesalahan
+yang berulang, dan membuktikan melalui hasil bahwa setiap pembaruan membuat
+performanya semakin baik." — akurasi 37,2% / PF 0,57 / ekspektasi −0,67%
+BUKAN kondisi normal. V252 menjawab dengan empat organ baru:
+
+- **FORENSIK MEDAN** — `laporan/forensik.json` + `laporan.forensik`: tiap
+  denyut otak membedah SELURUH vonis tertutup **per jalur** (ARAH vs
+  PHOENIX) ke dalam 4 kelompok kondisi: arah×rezim, band keyakinan mentah,
+  keselarasan tekanan taker, konsensus bukti. Zona berbukti cukup
+  (n ≥ 8, ekspektasi ≤ −0,6%, **porsi ≤ 85%** — kelayakan diskriminatif
+  agar fitur konstan lane tidak mematikan mesin) menjadi **ZONA RACUN**;
+  zona (n ≥ 6, ekspektasi ≥ +0,3%) menjadi **ZONA EMAS**. Rincian
+  penyebab: mengikuti kerumunan taker terbukti racun, keyakinan mentah
+  55–69 (sinyal "ramai" middle-conviction) terburuk, SELL mengikuti arus
+  TURUN kena pantulan; justru fade (SELL di NAIK, keyakinan <55,
+  taker melawan) yang menang.
+- **GERBANG RACUN (no-trade adalah keputusan)** — kandidat baru yang
+  jatuh di zona racun DITOLAK mesin dengan alasan forensik spesifik
+  (kondisi, n, akurasi, ekspektasi) dicatat sebagai near-miss; bila tidak
+  ada sasaran layak, sistem menyatakan mode **TUNGGU** (`laporan.disiplin`)
+  — kompas tetap memberi arah, tapi tanpa posisi: lebih baik tidak
+  mengambil posisi daripada terus merugi. **Slot eksplorasi berbatas**
+  (bandit, 1/denyut/jalur, wajib EV statistik ≥ 0) melepas satu kandidat
+  racun terbaik agar zona bisa menyembuh dengan bukti baru.
+- **KALIBRASI KEYAKINAN ZONA** — keyakinan tampilan dipetakan ke
+  hit-rate zona medan kandidat (bobot 0,3–0,65 menurut n) — angka
+  keyakinan kini mewarisi rekam jejak kondisinya sendiri, bukan rasa
+  yakin komite; zona emas diprioritaskan dalam kuota; bobot genome
+  `tekanan` diturunkan otomatis saat racun taker-searah terbukti.
+- **A/B VERSI ANTI-CHEAT** — `otak/performa.json` + `laporan.performa`:
+  baseline V251 (37,2% / PF 0,57 / −0,67%, n=43) disegel saat v252 lahir;
+  setiap versi baru dinilai **hanya pada jendela vonis yang DIKUNCI
+  setelahnya** — target wajib akurasi ≥ 50% · PF ≥ 1,2 · ekspektasi
+  ≥ +0,3% (n ≥ 12) dengan arahan MEMBAIK/MUNDUR/BELUM-CUKUP yang
+  menampilkan status perbaikan tiap denyut di dasbor (seksi "Forensik
+  & Perbaikan": kartu baseline vs sekarang vs target + tabel zona
+  racun/emas + tindakan otomatis otak).
+
 ## 6. TERIMA-PASANG (tanpa konfigurasi)
 
 Sejak organ **V245 SARANG-BAWAAN**, membuka halaman Pages = langsung
