@@ -221,6 +221,7 @@
   <div class="tautan" id="navLinks">
     <a href="#sasaran-sec">Sasaran</a>
     <a href="#wawasan-sec">Wawasan 360°</a>
+    <a href="#metakognisi-sec">Metakognisi</a>
     <a href="#bahan-ajar-sec">Bahan Ajar</a>
     <a href="#ilmu-sec">Ilmu</a>
     <a href="#warisan-sec">Warisan</a>
@@ -311,6 +312,7 @@
       <div class="bukti"></div>
       <div class="narasi" style="display:none"></div>
       <div class="wawgrid"></div>
+      <div class="metakog" style="margin-top:8px"></div>
       <div class="ketkal"></div>
       <div class="sasaran-kaki">
         <span class="chiprezim"></span>
@@ -326,15 +328,19 @@
   </table></div>
 
   <h2 id="wawasan-sec">Wawasan Pasar 360° — Samudra Parameter, Satu Bacaan</h2>
-  <div class="sub" style="margin-top:-6px">mandat pemilik: AGI harus fasih &amp; matang — komite menimbang <b>12 dimensi berbobot</b> dalam registri <b>46 parameter bernama per kandang</b> (multi-TF 1h+4h, riwayat funding, order book, lintas-pasar, kalender, GARCH/MC) + <b>sekolah parameter</b> (hit-rate tiap param dinilai medan) + <b>gerbang veto</b> (no-trade adalah keputusan); param konstan per siklus masuk iklim, bukan pemilih arah</div>
+  <div class="sub" style="margin-top:-6px">mandat pemilik: AGI harus fasih &amp; matang — komite menimbang <b>12 dimensi berbobot</b> dalam registri <b>81 parameter bernama</b> (46 per kandang: multi-TF 1h+4h, riwayat funding, order book, lintas-pasar, kalender, GARCH/MC <b>+ 35 metakognitif Nevron</b> yang menilai sinyal dari dalam) + <b>sekolah parameter</b> (hit-rate tiap param dinilai medan) + <b>gerbang veto</b> &amp; <b>gerbang metakognitif</b> (no-trade adalah keputusan); param konstan per siklus masuk iklim, bukan pemilih arah</div>
   <div class="iklim-grid" id="iklim" style="margin-top:12px"></div>
   <div class="narasi-makro" id="narasi-makro">—</div>
   <div id="veto-waw" style="margin-top:10px"></div>
   <div class="gulir" style="margin-top:12px"><table class="tabel">
-    <thead id="waw-head"><tr><th>Simbol</th><th>Rezim</th><th>Funding</th><th>OI / Δ</th><th id="waw-cols" colspan="12" style="text-align:center">12 parameter inti berbobot (arah param — arahkan kursor untuk bacaan analis; 46 param penuh di wawasan.json)</th></tr></thead>
+    <thead id="waw-head"><tr><th>Simbol</th><th>Rezim</th><th>Funding</th><th>OI / Δ</th><th id="waw-cols" colspan="12" style="text-align:center">12 parameter inti berbobot (arah param — arahkan kursor untuk bacaan analis; 81 param penuh di wawasan.json)</th></tr></thead>
     <tbody id="waw-body"><tr><td colspan="16" style="color:var(--samar)">—</td></tr></tbody>
   </table></div>
   <div id="sekolah-box" style="margin-top:12px"></div>
+
+  <h2 id="metakognisi-sec">Metakognisi Nevron — Otak Menilai Dirinya Sendiri Sebelum Bertaruh</h2>
+  <div class="sub" style="margin-top:-6px">hasil deep-screening <b>Neurobro AI</b> (neurobro.ai, Axioma AI Labs) yang framework-nya open-source sebagai <b>Nevron</b> (github axioma-ai-labs/nevron): 7 kunci arsitektur diadopsi &amp; diadaptasi ke ledger pra-registrasi SAKTI — estimator keyakinan 7-faktor, prediktor kegagalan pra-kunci, bias konteks, deteksi loop, kritik diri 5-field, reliabilitas pelajaran, monitor intervensi — dan kalibrasi kedua gerbangnya DINILAI MEDAN</div>
+  <div id="metakognisi-box" style="margin-top:12px"></div>
 
   <h2 id="bahan-ajar-sec">Bahan Ajar — Pelajaran &amp; Aturan dari Medan</h2>
   <div id="aturan-baru" style="margin:0 0 12px"></div>
@@ -543,6 +549,20 @@ function isiSasaran(r){
       return `<div class="dim"><span class="nm">${k}</span>${barDim(v || 0)}<span class="ket">${num}${ket}</span></div>`;
     }).join('');
     el.querySelector('.ketkal').textContent = s.ketKeyakinan || '';
+    const mkEl = el.querySelector('.metakog');
+    if (s.metakognisi){
+      const m = s.metakognisi;
+      const lv = m.estLevel != null ? Math.round(m.estLevel * 100) : null;
+      const lvWarna = lv != null ? (lv >= 60 ? 'var(--hijau)' : lv >= 40 ? 'var(--amber)' : 'var(--merah)') : 'var(--samar)';
+      const pp = m.predProb != null ? Math.round(m.predProb * 100) : null;
+      const ppWarna = pp != null ? (pp >= 60 ? 'var(--merah)' : pp >= 40 ? 'var(--amber)' : 'var(--hijau)') : 'var(--samar)';
+      const ragu = (m.aspekRagu || []).length ? ' · ragu: ' + m.aspekRagu.join('; ') : '';
+      mkEl.innerHTML = '<span class="wchip" style="color:' + lvWarna + '" title="Nevron ConfidenceEstimator — 7 faktor berbobot: keselarasan/memori/data/keakraban/rencana/rekam/kondisi">metakognisi <b>' + (lv != null ? lv + '%' : '—') + '</b></span>'
+        + '<span class="wchip" style="color:' + ppWarna + '" title="Nevron FailurePredictor — prob gagal pra-kunci: hit-rate zona + kegagalan 24 jam + ekspektasi negatif">P gagal <b>' + (pp != null ? pp + '%' : '—') + '</b></span>'
+        + (m.estTerlemah ? '<span class="wchip" title="faktor terlemah dari 7 faktor keyakinan">terlemah: ' + m.estTerlemah + '</span>' : '')
+        + ((s.biasKonteks && s.biasKonteks.geser) ? '<span class="wchip ' + (s.biasKonteks.geser > 0 ? 'up' : 'dn') + '" title="Nevron StrategyAdapter — bias konteks per rezim×arah">bias konteks ' + (s.biasKonteks.geser > 0 ? '+' : '') + s.biasKonteks.geser + '</span>' : '')
+        + '<span class="wchip" title="' + ((m.ket || '') + ragu).replace(/"/g, '&quot;') + '">self-check 7-faktor ▸</span>';
+    } else mkEl.innerHTML = '';
     const nar = el.querySelector('.narasi');
     if (s.narasi){ nar.style.display = 'block'; nar.innerHTML = '<b style="color:var(--violet)">NARASI ANALIS —</b> ' + s.narasi; }
     el.querySelector('.wawgrid').innerHTML = (() => {
@@ -869,6 +889,37 @@ function isiWawasan(r){
       + sk.map((x) => `<tr><td><b>${x.param}</b></td><td>${x.n}</td><td>${x.hitPct != null ? x.hitPct + '%' : '—'}</td><td class="${(x.netPct || 0) > 0 ? 'net-pos' : (x.netPct || 0) < 0 ? 'net-neg' : ''}">${(x.netPct || 0) > 0 ? '+' : ''}${x.netPct}%</td><td style="color:${warna[x.status] || 'inherit'}"><b>${x.status}</b></td></tr>`).join('')
       + '</tbody></table></div>'
     : '<div class="jnote">Sekolah parameter: menunggu vonis matang — setelah ada prediksi terkunci yang dinilai medan, hit-rate tiap parameter tampil di sini (kelulusan via bukti, bukan tangan).</div>';
+  // ===== V255 METAKOGNISI-NEVRON — otak menilai dirinya sendiri =====
+  const mk = w.metakognisi || r.metakognisi;
+  if (mk && $('metakognisi-box')){
+    const kal = (g) => g && g.n > 0 ? `ketepatan medan <b>${Math.round((g.tepat / g.n) * 100)}%</b> (n=${g.n})` : 'kalibrasi menunggu vonis metakognitif matang (n=0)';
+    const biasRows = Object.entries(mk.biasKonteks || {});
+    const biasTbl = biasRows.length
+      ? '<div class="gulir"><table class="tabel"><thead><tr><th>Konteks (arah×rezim)</th><th>Bias</th><th>Geser keyakinan</th><th>Zona medan</th><th>Sumber</th></tr></thead><tbody>'
+        + biasRows.map(([k, b]) => `<tr><td><b>${k}</b></td><td><span class="${b.bias > 0.05 ? 'net-pos' : b.bias < -0.05 ? 'net-neg' : ''}">${(b.bias > 0 ? '+' : '')}${b.bias}</span></td><td>${b.geserKeyakinan > 0 ? '+' : ''}${b.geserKeyakinan} poin</td><td>${b.statusZona ? `${b.statusZona} (n=${b.nZona})` : 'belum berbukti'}${b.nRecent7h ? ` · recent-7h n=${b.nRecent7h}` : ''}</td><td style="color:var(--samar);font-size:10.5px">tracker 0.4 + pelajaran 0.4 + recent 0.2</td></tr>`).join('')
+        + '</tbody></table></div>'
+      : '<div class="jnote">Bias konteks: belum ada zona forensik berbukti — semua konteks netral (jujur, tidak dikarang).</div>';
+    const kunciChips = (mk.kunciDiadopsi || []).map((k) => `<span class="wchip" title="${(k.adaptasi || '').replace(/"/g, '&quot;')} (asal: ${k.asal || '—'})">${k.kunci}</span>`).join('');
+    const saran = (mk.saranPerbaikan || []).map((s) => `<div class="jnote" style="border-left-color:${s.prioritas === 1 ? 'var(--merah)' : 'var(--amber)'};margin:6px 0"><b>P${s.prioritas} · ${s.pola}</b> — ${s.kasus} kasus terulang: ${s.saran}</div>`).join('');
+    const inter = (mk.intervensiSiklusIni || []).map((i) => `<div style="font-size:11.5px;margin:4px 0;color:var(--redup)">▸ <b>${i.jenis}</b> → ${i.target}: ${i.tindakan} — ${i.alasan}</div>`).join('');
+    const loop = (mk.loop || []).map((l) => `<span class="wchip dn" title="${(l.ket || '').replace(/"/g, '&quot;')}">LOOP ${l.jenis}: ${l.pola} (${l.repetisi}×)</span>`).join('') || '<span class="wchip" style="color:var(--hijau)">tidak ada loop pada 20 vonis terakhir</span>';
+    const rel = (mk.reliabilitasPelajaran || []).slice(0, 6).map((x) => `<span class="wchip ${x.reliabilitas >= 0.55 ? 'up' : x.reliabilitas < 0.35 ? 'dn' : ''}" title="reliabilitas = keyakinan × penguatan × peluruhan-umur (Nevron lessons.py)${x.sejak ? ' · sejak ' + x.sejak.slice(0, 10) : ''}">${x.pola}: <b>${Math.round(x.reliabilitas * 100)}%</b> (${x.kasus} kasus)</span>`).join('');
+    const vsM = mk.vetoSiklusIni || {};
+    $('metakognisi-box').innerHTML =
+      '<div class="jnote" style="border-left-color:var(--violet)"><b>Organ aktif (V255):</b> ' + (mk.organ || '—') + ' — ' + (mk.jumlahParamMetakognisi ?? 35) + ' parameter metakognitif baru, registri total <b>81 param bernama</b>. ' + (mk.ket || '') + '</div>'
+      + '<div class="iklim-grid" style="margin:10px 0">'
+      + kartu('Gerbang Estimator (Nevron)', 'level ≥ ' + ((mk.estimator?.ambangLolos ?? 0.4) * 100).toFixed(0) + '%', '7 faktor berbobot menilai tiap kandidat; di bawah ambang = TUNGGU · ' + kal(mk.estimator?.kalibrasiMedan))
+      + kartu('Gerbang Prediktor (Nevron)', 'P gagal < ' + ((mk.prediktor?.ambang ?? 0.6) * 100).toFixed(0) + '%', 'hit-rate zona + kegagalan 24j + ekspektasi negatif · ' + kal(mk.prediktor?.kalibrasiMedan))
+      + kartu('Veto siklus ini', (vsM.estimator || 0) + (vsM.prediktor || 0), `estimator ${vsM.estimator || 0} · prediktor ${vsM.prediktor || 0} — sinyal dari otaknya sendiri yang ditolak`)
+      + kartu('Bias konteks aktif', biasRows.length, 'konteks (rezim×arah) berbukti medan — geser keyakinan maks ±15 poin')
+      + '</div>'
+      + '<div style="margin:8px 0"><b style="font-size:12.5px">7 kunci diadopsi dari Nevron:</b><div style="margin-top:6px">' + kunciChips + '</div></div>'
+      + '<div style="margin:10px 0 4px"><b style="font-size:12.5px">Bias konteks per rezim×arah (StrategyAdapter):</b></div>' + biasTbl
+      + '<div style="margin:10px 0 4px"><b style="font-size:12.5px">Deteksi loop (jendela 20 vonis):</b><div style="margin-top:6px">' + loop + '</div></div>'
+      + (rel ? '<div style="margin:10px 0 4px"><b style="font-size:12.5px">Reliabilitas pelajaran (penguatan + peluruhan):</b><div style="margin-top:6px">' + rel + '</div></div>' : '')
+      + (saran ? '<div style="margin:10px 0 4px"><b style="font-size:12.5px">Saran perbaikan dari pola kegagalan batch (SelfCritic):</b>' + saran + '</div>' : '')
+      + (inter ? '<div style="margin:10px 0 4px"><b style="font-size:12.5px">Intervensi metakognitif siklus ini:</b>' + inter + '</div>' : '');
+  } else if ($('metakognisi-box')) $('metakognisi-box').innerHTML = '<div class="jnote">Metakognisi Nevron menunggu denyut V255 berikutnya — data belum tersedia (jujur, tidak dikarang).</div>';
 }
 </script>
 <script>
