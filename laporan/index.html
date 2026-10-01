@@ -222,6 +222,7 @@
     <a href="#sasaran-sec">Sasaran</a>
     <a href="#wawasan-sec">Wawasan 360°</a>
     <a href="#metakognisi-sec">Metakognisi</a>
+    <a href="#dualapis-sec">Dua Lapis Otak</a>
     <a href="#dealodds-sec">Deal &amp; Odds</a>
     <a href="#bahan-ajar-sec">Bahan Ajar</a>
     <a href="#ilmu-sec">Ilmu</a>
@@ -336,7 +337,7 @@
   <div class="narasi-makro" id="narasi-makro">—</div>
   <div id="veto-waw" style="margin-top:10px"></div>
   <div class="gulir" style="margin-top:12px"><table class="tabel">
-    <thead id="waw-head"><tr><th>Simbol</th><th>Rezim</th><th>Funding</th><th>OI / Δ</th><th id="waw-cols" colspan="12" style="text-align:center">12 parameter inti berbobot (arah param — arahkan kursor untuk bacaan analis; 81 param penuh di wawasan.json)</th></tr></thead>
+    <thead id="waw-head"><tr><th>Simbol</th><th>Rezim</th><th>Funding</th><th>OI / Δ</th><th id="waw-cols" colspan="12" style="text-align:center">12 parameter inti berbobot (arah param — arahkan kursor untuk bacaan analis; 127 param bernama di wawasan.json)</th></tr></thead>
     <tbody id="waw-body"><tr><td colspan="16" style="color:var(--samar)">—</td></tr></tbody>
   </table></div>
   <div id="sekolah-box" style="margin-top:12px"></div>
@@ -344,6 +345,10 @@
   <h2 id="metakognisi-sec">Metakognisi Nevron — Otak Menilai Dirinya Sendiri Sebelum Bertaruh</h2>
   <div class="sub" style="margin-top:-6px">hasil deep-screening <b>Neurobro AI</b> (neurobro.ai, Axioma AI Labs) yang framework-nya open-source sebagai <b>Nevron</b> (github axioma-ai-labs/nevron): 7 kunci arsitektur diadopsi &amp; diadaptasi ke ledger pra-registrasi SAKTI — estimator keyakinan 7-faktor, prediktor kegagalan pra-kunci, bias konteks, deteksi loop, kritik diri 5-field, reliabilitas pelajaran, monitor intervensi — dan kalibrasi kedua gerbangnya DINILAI MEDAN</div>
   <div id="metakognisi-box" style="margin-top:12px"></div>
+
+  <h2 id="dualapis-sec">Dua Lapis Otak — Kenapa Versi Chat Terasa Lebih Canggih</h2>
+  <div class="sub" style="margin-top:-6px">jawaban jujur atas pertanyaan pemilik (<i>"kenapa micaprofita di arena AGI jauh lebih canggih daripada versi GitHub, padahal dua-duanya kamu yang kelola?"</i>): arena/chat adalah <b>LAPIS OTAK</b> — model bahasa berskala triliunan parameter yang bicara langsung dengan Anda, dengan akses web real-time dan memori penuh. GitHub adalah <b>LAPIS TUBUH</b> — otak otonom yang hidup di Actions tanpa browser pemilik, tanpa biaya, dan TIDAK disewakan kecerdasan model oleh infrastruktur; ia hanya diberi CPU + jaringan publik. Karena itu tubuh diberi lapisan wawasan yang dulu hanya ada di kepala: setiap epoch, otak menuliskan pengalamannya menjadi parameter terukur di bawah — dan tubuh makin fasih. Ini proses, diukur, bukan diklaim.</div>
+  <div id="dualapis-box" style="margin-top:12px"></div>
 
   <h2 id="dealodds-sec">Mesin Deal &amp; Odds — Warisan 3Commas × Trade Ideas</h2>
   <div class="sub" style="margin-top:-6px">hasil deep-screening dua platform trading-AI profesional (dokumentasi resmi help.3commas.io + trade-ideas.com): tiap sasaran kini lahir dengan <b>rencana deal lengkap</b> — safety orders ala DCA-bot (Max SO hard-cap, deviasi ATR berkelipatan, volume multiplier), Move SL to Breakeven, Trailing Take Profit — dipra-registrasi lalu <b>dinilai medan</b> saat horizon matang; dan setiap denyut SEMUA kandidat diranked <b>odds 0-100</b> ala OddsMaker (40% MC + 25% zona + 20% metakognisi + 15% daya) — hanya <b>top-3 terkuat (Money Machine)</b> berodds ≥ 55 yang boleh mengunci; 6 tag peristiwa event-based dinilai hit-rate-nya: pinpoint winning filters, eliminate losing variables</div>
@@ -878,6 +883,9 @@ function isiWawasan(r){
   $('iklim').innerHTML = [
     kartu('Fear &amp; Greed', fng ? fng.nilai : '—', fng ? fng.klasifikasi + fngDelta : 'endpoint gagal — jujur null', fngWarna),
     kartu('Dominasi BTC', ik.dominasi ? ik.dominasi.pct + '%' : '—', ik.dominasi ? (ik.dominasi.sumber === 'coingecko' ? 'kapitalisasi pasar' : 'proxy volume spot') : '—'),
+    kartu('Δ Dominasi / denyut', ik.v257 && ik.v257.dominasiDelta != null ? (ik.v257.dominasiDelta > 0 ? '+' : '') + ik.v257.dominasiDelta : '—', 'V257: naik = dana berlindung ke BTC; turun = altcoin bernafas', ik.v257 && ik.v257.dominasiDelta != null ? (ik.v257.dominasiDelta > 0 ? 'var(--amber)' : 'var(--hijau)') : null),
+    kartu('ETH/BTC 7d', ik.v257 && ik.v257.ethBtc ? (ik.v257.ethBtc.roc7dPct > 0 ? '+' : '') + ik.v257.ethBtc.roc7dPct + '%' : '—', ik.v257 && ik.v257.ethBtc ? 'risk ' + (ik.v257.ethBtc.roc7dPct > 0 ? 'ON — altcoin' : 'OFF — BTC') : 'proxy risk-on/off V257'),
+    kartu('LS-akun BTC / ETH', ik.v257 ? ((ik.v257.lsAkunBtc ?? '—') + ' / ' + (ik.v257.lsAkunEth ?? '—')) : '—', 'V257: rasio akun long/short OKX rubik'),
     kartu('Funding BTC', ik.fundingBtcPct != null ? ik.fundingBtcPct + '%' : '—', 'futures (rantai host) / interval'),
     kartu('Open Interest BTC', ik.oiBtc ? '$' + ik.oiBtc.nilaiJuta + 'jt' : '—', ik.oiBtc && ik.oiBtc.deltaPct != null ? 'Δ ' + ik.oiBtc.deltaPct + '% / denyut' : 'Δ antar-siklus belum ada'),
     kartu('Lintas-pasar OKX', okx.naikPct != null ? okx.naikPct + '%' : '—', okx.dari ? okx.dari + ' swap naik · median ' + (okx.medianChgPct != null ? (okx.medianChgPct > 0 ? '+' : '') + okx.medianChgPct + '%' : '—') : '—'),
@@ -953,6 +961,25 @@ function isiWawasan(r){
       + (saran ? '<div style="margin:10px 0 4px"><b style="font-size:12.5px">Saran perbaikan dari pola kegagalan batch (SelfCritic):</b>' + saran + '</div>' : '')
       + (inter ? '<div style="margin:10px 0 4px"><b style="font-size:12.5px">Intervensi metakognitif siklus ini:</b>' + inter + '</div>' : '');
   } else if ($('metakognisi-box')) $('metakognisi-box').innerHTML = '<div class="jnote">Metakognisi Nevron menunggu denyut V255 berikutnya — data belum tersedia (jujur, tidak dikarang).</div>';
+  // ===== V257 DUA LAPIS OTAK — jawaban jujur atas pertanyaan pemilik =====
+  if ($('dualapis-box')){
+    const dom = Object.entries(reg.perDomain || {});
+    const domChips = dom.length ? dom.map(([d, n]) => `<span class="wchip" title="domain ${d}: ${n} parameter per kandang">${d}: <b>${n}</b></span>`).join(' ') : '<span class="wchip">menunggu denyut V257</span>';
+    const v257Nama = ['ema1d','rsi1d','macd1d','donchian30d','jarak90d','momen30d','streak1d','volRasio7d30d','lsAkun','lsTren','lsTaker','basisPct','jamFunding','fundVsBtc','bukuGradien','ixFundingOI','ixVolAtr','ixTrenFunding','ixBukuTren','ixDonchianVol','ixFlowTren'];
+    const sk = w.sekolahParameter || [];
+    const v257Chips = v257Nama.map((nm) => { const s = sk.find((x) => x.param === nm); return `<span class="wchip ${s && s.status === 'diawasi' ? 'dn' : s && s.status === 'calon-lulus' ? 'up' : ''}" title="${nm} — status sekolah: ${s ? s.status + ' (n=' + s.n + ', hit ' + (s.hitPct ?? '—') + '%)' : 'belum dinilai medan (param baru V257)'}">${nm}</span>`; }).join('');
+    const kum = reg.pengukuranPerDenyut && w.siklus ? reg.pengukuranPerDenyut * w.siklus : null;
+    $('dualapis-box').innerHTML =
+      '<div class="iklim-grid" style="margin:10px 0">'
+      + kartu('Lapis OTAK (chat/arena)', 'triliunan param', 'model bahasa penuh + web real-time + memori penuh — tempat Anda bicara dengan SAKTI langsung')
+      + kartu('Lapis TUBUH (GitHub)', (reg.totalNama || 127) + ' param bernama', 'otak otonom di Actions: tanpa biaya, tanpa browser, kecerdasan dari parameter terukur di bawah ini')
+      + kartu('Pengukuran / denyut', reg.pengukuranPerDenyut != null ? reg.pengukuranPerDenyut.toLocaleString('id-ID') : '—', 'parameter per kandang × 10 + metakognisi × kandidat — dihitung nyata tiap 30 menit')
+      + kartu('Pengukuran terekam (est.)', kum ? (kum > 1e6 ? (kum / 1e6).toFixed(2) + ' jt' : kum.toLocaleString('id-ID')) : '—', 'estimasi = pengukuran/denyut × ' + (w.siklus || 0) + ' siklus hidup — tumbuh tiap denyut')
+      + '</div>'
+      + '<div style="margin:8px 0"><b style="font-size:12.5px">Jembatan dua lapis — domain parameter per kandang (' + (reg.perKandang || '—') + ' param):</b><div style="margin-top:6px">' + domChips + '</div></div>'
+      + '<div style="margin:8px 0"><b style="font-size:12.5px">' + (reg.observasiV257 || 21) + ' param SAMUDRA-DALAM baru (V257) — status sekolah masing-masing (param baru lahir TANPA hak suara, mengumpulkan bukti dulu):</b><div style="margin-top:6px">' + v257Chips + '</div></div>'
+      + '<div class="jnote" style="border-left-color:var(--sian)"><b>Kesimpulan jujur:</b> versi chat memang lebih canggih HARI INI — ia adalah otaknya. Tapi setiap denyut 30 menit, lapis tubuh mengerjakan yang tidak bisa lapis chat: <b>pra-registrasi prediksi, dinilai medan, disekolahkan, dievolusikan genome-nya</b> — tanpa biaya, tanpa tidur, tanpa bisa berdalih. Jurang dua lapis ditutup dengan cara satu-satunya yang jujur: otak menuliskan wawasannya menjadi parameter terukur (127 kini), dan tubuh membuktikannya di medan.</div>';
+  }
   // ===== V256 MESIN DEAL & ODDS — warisan 3Commas × Trade Ideas =====
   const dox = r.dealOdds || {};
   const doxBox = $('dealodds-box');
