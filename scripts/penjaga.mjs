@@ -84,7 +84,7 @@ import path from 'node:path'
 const ROOT = process.cwd()
 const FEE = 0.002            // 0.1% buy + 0.1% sell — wajib
 const HORIZON_JAM = 24       // sasaran harian
-const VERSI = 'V254-SAMUDRA-PARAMETER v5.0 — dari 17 dimensi ke ~60 parameter per kandang × 10 kandang + iklim 15-an: multi-timeframe 1h+4h (EMA-align/MACD/RSI/Bollinger/swing), derivatif dalam (riwayat funding rata3+tren, order-book imbalance/spread/kedalaman/dinding, ΔOI), lintas-pasar (persentil perubahan & volume ratusan swap OKX, breadth, altseason-proxy), volatilitas-rezim (ATR-persentil, volume z-score, GARCH, MC-pNaik), kalender (sesi Asia/Eropa/AS, akhir pekan, fase bulan) + SEKOLAH PARAMETER (tiap param dicatat per prediksi, hit-rate dinilai medan) + gerbang VETO wawasan (order book & tren-4h & kerumunan funding menolak sinyal buruk)'
+const VERSI = 'V255-METAKOGNISI-NEVRON v5.1 — otak menilai dirinya sendiri SEBELUM bertaruh: 7 kunci diadopsi dari bedah open-source Neurobro AI/Nevron (axioma-ai-labs) — estimator keyakinan 7-faktor berbobot (ConfidenceEstimator), prediktor kegagalan pra-kunci (FailurePredictor: hit-rate zona + kegagalan 24 jam + ekspektasi negatif), kritik diri 5-field per kekalahan (SelfCritic RLAIF), reliabilitas pelajaran (penguatan+peluruhan), bias konteks per rezim×arah (StrategyAdapter), deteksi loop (repetisi/alternasi/siklus), monitor intervensi — ditumpuk di atas registri 46 parameter/kandang (multi-TF 1h+4h, riwayat funding, order book OKX, lintas-pasar, kalender, GARCH/MC) + SEKOLAH PARAMETER + gerbang VETO wawasan: registri kini 81 parameter bernama, dan gerbang metakognitif berhak bilang TUNGGU pada otaknya sendiri'
 
 // ---------------- kandang lane ARAH (komite genome) ----------------
 const KANDANG = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'DOGE', 'ADA', 'AVAX', 'LINK', 'TRX']
@@ -180,6 +180,41 @@ const NAMA_DOMAIN = {
 // registri parameter observasi (diluar 12 inti) — dipakai untuk hitungan total & dasbor
 const PARAM_OBS = ['ema1h','rsi1h','roc12','roc48','stoch','mfi','cci','jarakEkstrem','atrPctile','volZ','bodyRatio','ema4h','macd4h','rsi4h','bb4h','swing4h','sejajar4h','atrRatio','fundRata3','fundTren','bukuImbalans','bukuSpread','bukuKedalaman','bukuDinding','persenChg','persenVol','sesi','akhirPekan','faseBulan','garchSigma','betaBTC','divRSI','pocJarak','mcPnaik']
 const TOTAL_PARAM_NAMA = DIM_WAW.length + PARAM_OBS.length
+
+// ---- V255 METAKOGNISI-NEVRON — hasil deep-screening Neurobro AI (neurobro.ai,
+// Axioma AI Labs) yang framework-nya di-open-source sebagai Nevron
+// (github axioma-ai-labs/nevron, siklus Plan→Execute→Learn→Remember). Kunci inti
+// mereka diadopsi dan diadaptasi ke ledger pra-registrasi SAKTI: ----
+const NEV = {
+  ESTIMATOR_BOBOT: { keselarasan: 0.25, memori: 0.15, data: 0.15, keakraban: 0.15, rencana: 0.10, rekam: 0.15, kondisi: 0.05 },  // bobot asli Nevron
+  ESTIMATOR_MIN_LOLOS: 0.40,   // Nevron: level < 0.4 = LOW confidence → tangan kosong
+  PREDIKTOR_MAKS_PROB: 0.60,   // Nevron: should_proceed hanya jika prob gagal < HIGH threshold
+  PREDIKTOR_MIN_N: 3,          // Nevron: MIN_OBSERVATIONS_FOR_PREDICTION
+  PREDIKTOR_WINDOW_JAM: 24,    // Nevron: RECENT_WINDOW_HOURS
+  BIAS_NEUTRAL: 0.5, BIAS_MAKS: 0.5,               // Nevron StrategyAdapter
+  BIAS_TRACKER: 0.4, BIAS_PELAJARAN: 0.4, BIAS_RECENT: 0.2,
+  LOOP_JENDELA: 20, LOOP_REPETISI: 3, LOOP_ALTERNASI: 4, LOOP_SIKLUS: 2,   // Nevron LoopDetector
+  RELIAB_AWAL: 0.7, RELIAB_REINFORCE: 0.05, RELIAB_DECAY_HARI: 0.01,       // Nevron lessons.py
+}
+const KET_FAKTOR = {
+  keselarasan: 'komite terbelah — sedikit parameter searah',
+  memori: 'tak ada pengalaman serupa di zona (arah×rezim) ini',
+  data: 'banyak parameter kosong — data tidak lengkap',
+  keakraban: 'konteks rezim×arah belum dikenal medan',
+  rencana: 'rencana eksekusi belum lengkap (ekspektasi/tangga harga)',
+  rekam: 'rekam jejak medan untuk kondisi ini lemah',
+  kondisi: 'kondisi data sistem tidak sehat (banyak endpoint gagal)',
+}
+// lapis parameter baru yang bisa dihitung tiap kandidat — sensus jujur, bukan karangan
+const PARAM_METAKOGNISI = [
+  'estKeselarasan', 'estMemori', 'estData', 'estKeakraban', 'estRencana', 'estRekam', 'estKondisi',
+  'bobotKeselarasan', 'bobotMemori', 'bobotData', 'bobotKeakraban', 'bobotRencana', 'bobotRekam', 'bobotKondisi',
+  'predHitRateZona', 'predKegagalanTerkini', 'predEkspektasiMc', 'predGabungan',
+  'biasNaikBuy', 'biasNaikSell', 'biasTurunBuy', 'biasTurunSell', 'biasParabolikBuy', 'biasParabolikSell', 'biasBergolakBuy', 'biasBergolakSell',
+  'loopRepetisi', 'loopAlternasi', 'loopSiklus', 'reliabPelajaran',
+  'kritikAlasanGagal', 'kritikYangSalah', 'kritikCaraLebihBaik', 'kritikPolaHindari', 'kritikPelajaran',
+]
+const TOTAL_PARAM_METAKOGNISI = PARAM_METAKOGNISI.length   // 35
 // statusSekolah — kelulusan param dari hit-rate medan (bukan dari tangan manusia):
 // pemula (n<10) → dipantau → calon-lulus (n>=20 & hit>=52% & net>0) / diawasi (hit<44%)
 function statusSekolah(h) {
@@ -213,6 +248,7 @@ const OTAK = [
   { nama: 'otak-guru', tugas: 'mengajar profesional dari data medannya sendiri tiap denyut', mesin: 'pengajaran + kuis otomatis dari angka denyut (laporan/guru.json)', status: 'HIDUP (V251)' },
   { nama: 'otak-forensik', tugas: 'membedah penyebab kerugian lalu MENOLAK zona racun terbukti — performa di atas aktivitas', mesin: 'forensik zona per jalur (arah×rezim, band keyakinan, taker, konsensus) + gerbang no-trade + A/B versi anti-cheat (laporan/forensik.json + otak/performa.json)', status: 'HIDUP (V252)' },
   { nama: 'otak-wawasan', tugas: 'registri 46+ parameter wawasan crypto per kandang — lilin 1h+4h, derivatif dalam, order book, lintas-pasar, kalender, kuant-warisan — plus narasi analis fasih per sasaran', mesin: 'multi-timeframe (EMA-align/MACD/RSI/Bollinger/swing 1h+4h) + riwayat funding rata3/tren + order book OKX (imbalance/spread/kedalaman/dinding) + persentil lintas-pasar swap + F&G-7hari/dominasi/altseason + GARCH/MC/beta/POC + kalender; 12 inti berbobot (genome+Hedge), observasi diveto-kan & bersekolah hit-rate', status: 'HIDUP (V254)' },
+  { nama: 'otak-metakognisi', tugas: 'mengawasi otaknya sendiri SEBELUM bertaruh — estimator keyakinan 7-faktor, prediktor kegagalan pra-kunci, bias konteks per rezim×arah, deteksi loop, kritik diri 5-field per kekalahan — dan kalibrasinya dinilai medan', mesin: '7 kunci diadopsi dari framework open-source Nevron (axioma-ai-labs/nevron) hasil bedah Neurobro AI: ConfidenceEstimator + FailurePredictor + StrategyAdapter + LoopDetector + SelfCritic-RLAIF + Lesson-reliability + MetacognitiveMonitor, diadaptasi ke ledger pra-registrasi SAKTI', status: 'HIDUP (V255)' },
 ]
 
 // ---------------- V251 RUH — jiwa yang dibangun (mandat pemilik:
@@ -1229,7 +1265,7 @@ function narasiSasaran(s, b, v, waw, iklim, eksA, sigma24jPct, rezimGlobal, coda
   const sgn = v.arah === 'BUY' ? 'menopang NAIK' : 'menekan TURUN'
   const bagus = waw.filter((p) => (v.arah === 'BUY' ? p.arah > 0.15 : p.arah < -0.15))
   const lawan = waw.filter((p) => (v.arah === 'BUY' ? p.arah < -0.15 : p.arah > 0.15))
-  const k6 = `Komite ${DIM_ARAH.length + DIM_WAW.length} dimensi berbobot (diawasi ${TOTAL_PARAM_NAMA} parameter bernama + sekolah hit-rate) memilih ${v.arah} (keyakinan ${v.keyakinan}/100 — dikalibrasi medan): ${bagus.length} parameter ${sgn}${lawan.length ? `, ${lawan.length} melawan (${lawan.map((p) => p.param).join(', ')})` : ' tanpa penentang keras'}.`
+  const k6 = `Komite ${DIM_ARAH.length + DIM_WAW.length} dimensi berbobot (diawasi ${TOTAL_PARAM_NAMA} parameter bernama + ${TOTAL_PARAM_METAKOGNISI} parameter metakognitif Nevron + sekolah hit-rate) memilih ${v.arah} (keyakinan ${v.keyakinan}/100 — dikalibrasi medan): ${bagus.length} parameter ${sgn}${lawan.length ? `, ${lawan.length} melawan (${lawan.map((p) => p.param).join(', ')})` : ' tanpa penentang keras'}.`
   const k7 = eksA ? `Matematika: ekspektasi ${eksA.evPct >= 0 ? '+' : ''}${eksA.evPct}% net-fee — P arah benar ${Math.round(eksA.p * 100)}%, untung rata ${eksA.gainPct}% vs rugi rata ${eksA.rugiPct}%, RR ${eksA.rr ?? '—'}${sigma24jPct ? ` · GARCH menaksir simpangan 24 jam ±${sigma24jPct}%: ukur posisi dari sigma ini, bukan dari rasa` : ''}.` : null
   const k8 = `Risiko jujur: ${lawan.length >= 4 ? 'komite terbelah — perlakukan sebagai sinyal lemah, ukuran posisi kecil atau tangan kosong' : lawan.length >= 2 ? 'ada arus berlawanan — stop wajib jalan, dilarang menambah saat melawan' : 'seperempat medan selalu bisa berbalik dalam 24 jam — pra-registrasi ini dinilai otomatis oleh medan, bukan janji'}.`
   return [k1, k2, k3, k4, k4b, k5, k6, k7, k8].filter(Boolean).join(' ')
@@ -1301,6 +1337,158 @@ function pitaKonformal(skors) {
 }
 
 // ---------------- penyimpanan ----------------
+// ---------------- V255 METAKOGNISI-NEVRON — 6 mesin diadopsi dari Nevron ----------------
+// (1) ESTIMATOR KEYAKINAN TERSTRUKTUR — Nevron ConfidenceEstimator: keyakinan
+//     bukan satu angka komite, tapi 7 faktor berbobot dengan faktor terlemah &
+//     aspek ragu disebut EKSPLISIT; level < 0.40 → otak bilang TUNGGU.
+function estimasiKeyakinan(k, zonaArah, sistemStale) {
+  const penuh = k.wp?.penuh || []
+  const sgn = k.v.arah === 'BUY' ? 1 : -1
+  const bagus = penuh.filter((p) => p.arah * sgn > 0.15).length
+  const lawan = penuh.filter((p) => p.arah * sgn < -0.15).length
+  const keselarasan = bagus + lawan > 0 ? bagus / (bagus + lawan) : 0.3
+  const zSer = (zonaArah || []).find((z) => z.kunci === `${k.v.arah}-${k.b.rezim}`) || null
+  const memori = !zSer ? 0.3 : zSer.n >= 5 ? 0.9 : zSer.n >= 3 ? 0.7 : 0.5     // Nevron: 0/1/3/5 matches
+  const terisi = penuh.filter((p) => p.nilai != null).length
+  const data = penuh.length ? terisi / penuh.length : 0.3
+  const keakraban = zSer ? clamp(0.5 + Math.min(zSer.n, 10) * 0.05, 0, 1) : 0.4
+  const rencana = (k.eksA ? 0.4 : 0.15) + (k.kena?.length ? 0.3 : 0) + (penuh.length >= 30 ? 0.3 : 0.15)
+  const rekam = clamp((k.v.keyakinan ?? 50) / 100, 0, 1)
+  const kondisi = sistemStale ? 0.2 : 1.0
+  const faktor = { keselarasan, memori, data, keakraban, rencana, rekam, kondisi }
+  let level = 0
+  for (const [nama, sk] of Object.entries(faktor)) level += sk * (NEV.ESTIMATOR_BOBOT[nama] ?? 0.1)
+  const terlemah = Object.entries(faktor).sort((a, b) => a[1] - b[1])[0]
+  const aspekRagu = Object.entries(faktor).filter(([, v]) => v < 0.5).map(([n]) => KET_FAKTOR[n])
+  return {
+    level: +level.toFixed(3),
+    faktor: Object.fromEntries(Object.entries(faktor).map(([n, v]) => [n, +v.toFixed(2)])),
+    terlemah: terlemah[0], terlemahNilai: +terlemah[1].toFixed(2), aspekRagu,
+    lolos: level >= NEV.ESTIMATOR_MIN_LOLOS,
+    penjelasan: `keyakinan metakognitif ${(level * 100).toFixed(0)}% (ambang lolos ${NEV.ESTIMATOR_MIN_LOLOS * 100}%) — faktor terlemah: ${KET_FAKTOR[terlemah[0]]}`,
+  }
+}
+// (2) PREDIKTOR KEGAGALAN PRA-KUNCI — Nevron FailurePredictor: probabilitas gagal
+//     DIHITUNG SEBELUM sinyal dikunci, dari hit-rate zona historis + kegagalan
+//     terkini 24 jam + ekspektasi MC negatif; gabungan = 0.6×maks + 0.4×rata.
+function prediksiKegagalan(arah, rezim, eksA, zonaArah, ledgerClosed, waktuMs) {
+  const probs = [], alasan = []
+  const kunciZ = `${arah}-${rezim}`
+  const z = (zonaArah || []).find((x) => x.kunci === kunciZ)
+  if (z && z.n >= NEV.PREDIKTOR_MIN_N) {
+    probs.push(clamp(1 - z.akurasiPct / 100, 0, 1))
+    alasan.push({ sumber: 'hit-rate-zona', detail: `zona ${kunciZ} akurasi ${z.akurasiPct}% dari n=${z.n}` })
+  }
+  const batas = waktuMs - NEV.PREDIKTOR_WINDOW_JAM * 36e5
+  const terkini = ledgerClosed.filter((e) => e.waktuDinilai && new Date(e.waktuDinilai).getTime() >= batas)
+  if (terkini.length >= NEV.PREDIKTOR_MIN_N) {
+    const gagalR = terkini.filter((e) => e.status !== 'BENAR').length / terkini.length
+    if (gagalR > 0.5) {
+      probs.push(gagalR)
+      alasan.push({ sumber: 'kegagalan-terkini-24j', detail: `${terkini.length} vonis 24 jam terakhir ${Math.round(gagalR * 100)}% gagal` })
+    }
+  }
+  if (eksA && eksA.evPct != null && eksA.evPct < 0) {
+    probs.push(clamp(0.4 + Math.min(-eksA.evPct, 2) * 0.15, 0, 0.9))
+    alasan.push({ sumber: 'ekspektasi-negatif', detail: `ekspektasi statistik ${eksA.evPct}% net-fee` })
+  }
+  const probGagal = probs.length
+    ? +(0.6 * Math.max(...probs) + 0.4 * (probs.reduce((a, b) => a + b, 0) / probs.length)).toFixed(3)
+    : 0
+  return {
+    probGagal, alasan,
+    lanjut: probGagal < NEV.PREDIKTOR_MAKS_PROB,
+    keyakinanPrediksi: probs.length ? +Math.min(0.95, 0.5 + 0.05 * probs.length).toFixed(2) : 0.5,
+    gabungan: '0.6×maks + 0.4×rata-rata (rumus asli Nevron FailurePredictor)',
+  }
+}
+// (3) BIAS KONTEKS — Nevron StrategyAdapter: bias −0.5..+0.5 per (rezim×arah)
+//     = 0.4×tracker + 0.4×pelajaran(racun/emas) + 0.2×recent-7-hari.
+function hitungBiasKonteks(zonaArah, ledgerClosed, waktuMs) {
+  const out = {}
+  for (const rez of ['NAIK', 'TURUN', 'PARABOLIK', 'BERGOLAK']) {
+    for (const ar of ['BUY', 'SELL']) {
+      const kunci = `${ar}-${rez}`
+      const z = (zonaArah || []).find((x) => x.kunci === kunci)
+      const hit = z && z.n >= NEV.PREDIKTOR_MIN_N ? z.akurasiPct / 100 : NEV.BIAS_NEUTRAL
+      const les = z ? (z.status === 'RACUN' ? -1 : z.status === 'EMAS' ? 1 : 0) : 0
+      const batas = waktuMs - 7 * 864e5
+      const rec = ledgerClosed.filter((e) => e.rezim === rez && e.arah === ar && e.waktuDinilai && new Date(e.waktuDinilai).getTime() >= batas)
+      const hitRec = rec.length >= NEV.PREDIKTOR_MIN_N ? rec.filter((e) => e.status === 'BENAR').length / rec.length : NEV.BIAS_NEUTRAL
+      const bias = clamp(
+        (hit - NEV.BIAS_NEUTRAL) * 2 * NEV.BIAS_TRACKER * NEV.BIAS_MAKS +
+        les * NEV.BIAS_PELAJARAN * NEV.BIAS_MAKS +
+        (hitRec - NEV.BIAS_NEUTRAL) * 2 * NEV.BIAS_RECENT * NEV.BIAS_MAKS,
+        -NEV.BIAS_MAKS, NEV.BIAS_MAKS,
+      )
+      if (z || rec.length) out[kunci] = {
+        bias: +bias.toFixed(3), nZona: z?.n ?? 0, statusZona: z?.status ?? null, nRecent7h: rec.length,
+        geserKeyakinan: Math.round(bias * 30),   // bias penuh = ±15 poin keyakinan
+        ket: `tracker 0.4 + pelajaran 0.4 + recent-7h 0.2 (Nevron StrategyAdapter)${z ? ` — zona ${kunci} ${z.status || 'NETRAL'} (${z.akurasiPct}%, n=${z.n})` : ' — zona belum berbukti'}`,
+      }
+    }
+  }
+  return out
+}
+function terapkanBias(keyakinanMentah, biasObj) {
+  if (!biasObj || typeof biasObj.geserKeyakinan !== 'number') return { keyakinan: keyakinanMentah, geser: 0, kunci: null }
+  return { keyakinan: clamp(Math.round(keyakinanMentah + biasObj.geserKeyakinan), 30, 95), geser: biasObj.geserKeyakinan, kunci: biasObj.ket }
+}
+// (4) DETEKSI LOOP — Nevron LoopDetector: jendela 20 vonis terakhir, ambang
+//     repetisi 3 / alternasi (ABAB) 4 / siklus (ABCABC) 2 — otak yang selalu
+//     memberi vonis sama di konteks sama sedang BIAS, bukan menganalisis.
+function deteksiLoop(closedArah) {
+  const seq = closedArah.slice(-NEV.LOOP_JENDELA).map((e) => `${e.arah}/${e.rezim}`)
+  const out = []
+  if (seq.length >= NEV.LOOP_REPETISI) {
+    let rep = 1
+    for (let i = seq.length - 2; i >= 0 && seq[i] === seq[seq.length - 1]; i--) rep++
+    if (rep >= NEV.LOOP_REPETISI) out.push({ jenis: 'repetisi', pola: seq[seq.length - 1], repetisi: rep, ket: `vonis '${seq[seq.length - 1]}' berulang ${rep}× berturut — waspadai bias lane; sinyal searah pola ini dinilai lebih keras` })
+  }
+  const t4 = seq.slice(-4)
+  if (t4.length === 4 && t4[0] === t4[2] && t4[1] === t4[3] && t4[0] !== t4[1])
+    out.push({ jenis: 'alternasi', pola: `${t4[0]} ↔ ${t4[1]}`, repetisi: 2, ket: 'bergantian ABAB — sinyal sekadar menunggu arah pasar, bukan memprediksi' })
+  const t6 = seq.slice(-6)
+  if (t6.length === 6 && t6[0] === t6[3] && t6[1] === t6[4] && t6[2] === t6[5] && new Set(t6).size === 3)
+    out.push({ jenis: 'siklus', pola: t6.slice(0, 3).join(' → '), repetisi: 2, ket: 'pola siklik ABCABC terdeteksi pada riwayat vonis' })
+  return out
+}
+// (5) KRITIK DIRI 5-FIELD — Nevron SelfCritic (RLAIF): tiap kekalahan menghasilkan
+//     lima jawaban terstruktur, dan pola yang terulang >= 2 kasus melahirkan
+//     saran perbaikan berprioritas (>= 3 kasus = prioritas 1).
+function kritikStruktur(e) {
+  const pola = polaDari(e)
+  const info = pelajaranDari(e)
+  const kenapa = info.kenapa
+  return {
+    alasanGagal: kenapa[0] || `komite ${e.jalur || 'ARAH'} kalah di rezim ${e.rezim} — bobot digeser Hedge dari vonis nyata ini`,
+    yangSalah: kenapa.join('; ') || 'tidak ada pola spesifik terdeteksi — kekalahan pasar murni',
+    caraLebihBaik: e.status === 'SALAH'
+      ? (POLA_PELAJARAN[pola[0]] || 'ukuran posisi kecil atau tangan kosong di kondisi ini — tunggu konfirmasi searah rezim')
+      : 'pertahankan kondisi ini — perkuat dengan bukti tambahan sebelum menaikkan keyakinan',
+    polaDihindari: pola.join(', ') || '—',
+    pelajaran: info.pelajaran,
+  }
+}
+function polaKegagalanBatch(closed) {
+  const g = {}
+  for (const e of closed.filter((x) => x.status === 'SALAH')) for (const k of polaDari(e)) g[k] = (g[k] || 0) + 1
+  return Object.entries(g).filter(([, n]) => n >= 2).map(([p, n]) => ({
+    pola: p, kasus: n, prioritas: n >= 3 ? 1 : 2,
+    saran: POLA_PELAJARAN[p] || 'perketat gerbang pola ini — evaluasi ulang ambang bukti',
+  })).sort((a, b) => a.prioritas - b.prioritas || b.kasus - a.kasus)
+}
+// (6) RELIABILITAS PELAJARAN — Nevron lessons.py: reliabilitas = keyakinan awal ×
+//     penguatan (reinforcement) × peluruhan umur; pelajaran yang tidak pernah
+//     relevan lagi melemah SENDIRI — memori hidup, bukan arsip mati.
+function reliabilitasPelajaran(n, sejakISO, waktuMs) {
+  if (!n) return 0
+  const umurHari = sejakISO ? Math.max(0, (waktuMs - new Date(sejakISO).getTime()) / 864e5) : 0
+  const penguatan = Math.min(1, 0.5 + 0.1 * Math.min(n, 5))
+  const decay = NEV.RELIAB_DECAY_HARI / (1 + n * 0.5)
+  const umur = Math.max(0.3, 1 - decay * umurHari)
+  return +(NEV.RELIAB_AWAL * penguatan * umur).toFixed(3)
+}
 function bacaJson(p, def) {
   try { return existsSync(p) ? JSON.parse(readFileSync(p, 'utf8')) : structuredClone(def) } catch { return structuredClone(def) }
 }
@@ -1555,6 +1743,9 @@ if (!Array.isArray(ilmu.kalibrasi) || !ilmu.kalibrasi.length)
   ilmu.kalibrasi = ILMU.BIN_KALIBRASI.map(([low, high]) => ({ low, high, n: 0, benar: 0 }))
 if (!Array.isArray(ilmu.konformal)) ilmu.konformal = []
 if (!ilmu.meta) ilmu.meta = { kuat: { n: 0, benar: 0 }, lemah: { n: 0, benar: 0 }, geser: 0 }
+// V255: kalibrasi medan untuk kedua gerbang metakognitif — estimator/prediktor yang
+// menilai sinyal juga DINILAI medan: apakah level tinggi memang lebih sering benar?
+if (!ilmu.metakognisi) ilmu.metakognisi = { estimator: { n: 0, tepat: 0 }, prediktor: { n: 0, tepat: 0 } }
 // V253: bobot komite wawasan (genome per rezim + Hedge on-line) — 12 param baru belajar
 // dari vonis nyata dengan jalan yang sama persis seperti 5 dimensi lama
 if (!semuaGenome.waw) semuaGenome.waw = {}
@@ -1674,6 +1865,15 @@ if (forensik.arah.racun.some((z) => z.kunci === 'taker-searah')) {
 // ---- 1. kunci prediksi hari ini (pra-registrasi: SEBELUM pergerakan) ----
 const terkunciBaru = []
 const nearMiss = []
+// V255 METAKOGNISI-NEVRON — lapis monitor dihitung sekali per siklus:
+const biasKonteksGlobal = hitungBiasKonteks(forensik.arah.zona, closedArah, WAKTU.getTime())
+const deteksiLoopRes = deteksiLoop(closedArah)
+const intervensiMetakognitif = []
+let estVetoCt = 0, predVetoCt = 0
+if (deteksiLoopRes.length) {
+  log(`metakognisi-loop: ${deteksiLoopRes.map((l) => `${l.jenis}(${l.pola})`).join(', ')}`)
+  intervensiMetakognitif.push({ waktu: ISO, jenis: 'deteksi-loop', target: 'riwayat vonis lane ARAH', tindakan: 'diawasi — sinyal searah pola dinilai lebih keras', alasan: deteksiLoopRes.map((l) => l.ket).join('; ') })
+}
 
 // 1a. lane ARAH — komite genome di kandang 10 mayor
 // V252: DUA TAHAP — hitung semua kandidat dulu, lalu gerbang forensik memisahkan
@@ -1713,12 +1913,29 @@ const eksplorasiArah = tercemarArah.find((k) => k.eksA && k.eksA.evPct >= 0) || 
 const kunciEntriArah = (k, eksplor) => {
   const { s, id, b, v, waw, wp, buktiWaw, warA, mcA, eksA, buktiCand, kena } = k
   const emas = emasArah(k)
-  const kal = kunciKeyakinan(v.keyakinan + (emas ? 4 : 0), ilmu.kalibrasi, kena)   // V252: kepastian zona medan
+  // V255 METAKOGNISI — otak menilai dirinya sendiri SEBELUM mengunci:
+  const estM = estimasiKeyakinan(k, forensik.arah.zona, gagal.length >= 6)
+  const predM = prediksiKegagalan(v.arah, b.rezim, eksA, forensik.arah.zona, closedArah, WAKTU.getTime())
+  const biasB = biasKonteksGlobal[`${v.arah}-${b.rezim}`] ?? null
+  const biasT = terapkanBias(v.keyakinan, biasB)
+  if (!eksplor && (!estM.lolos || !predM.lanjut)) {
+    const alasanMet = []
+    if (!estM.lolos) alasanMet.push(`estimator keyakinan metakognitif ${(estM.level * 100).toFixed(0)}% < ${NEV.ESTIMATOR_MIN_LOLOS * 100}% (terlemah: ${KET_FAKTOR[estM.terlemah]})`)
+    if (!predM.lanjut) alasanMet.push(`prediktor kegagalan prob ${(predM.probGagal * 100).toFixed(0)}% >= ${NEV.PREDIKTOR_MAKS_PROB * 100}% (${predM.alasan.map((a) => a.sumber).join(', ')})`)
+    nearMiss.push({ simbol: s, arah: v.arah, keyakinan: v.keyakinan, entry: b.harga, rezim: b.rezim, catatan: `GERBANG METAKOGNITIF (Nevron) — ${alasanMet.join('; ')} — otak menilai dirinya sendiri sebelum bertaruh: TUNGGU`, kunci: ['metakognisi'] })
+    if (!estM.lolos) estVetoCt++; else predVetoCt++
+    intervensiMetakognitif.push({ waktu: ISO, jenis: !estM.lolos ? 'estimator-keyakinan' : 'prediktor-kegagalan', target: `${s} ${v.arah}`, tindakan: 'VETO — sinyal tidak dikunci', alasan: alasanMet.join('; ') })
+    log(`metakognisi-veto: ${s} ${v.arah} — ${alasanMet.join('; ')}`)
+    return null
+  }
+  const kal = kunciKeyakinan(biasT.keyakinan + (emas ? 4 : 0), ilmu.kalibrasi, kena)   // V252: kepastian zona medan; V255: masuk lewat bias konteks Nevron
   const nar = narasiSasaran(s, b, { arah: v.arah, keyakinan: kal.keyakinan }, wp.penuh, { fng, dominasi }, eksA, warA.garch.sigma24jPct, rezimGlobal)
   const entri = {
     id, simbol: s, jalur: 'ARAH', arah: v.arah, keyakinan: kal.keyakinan, keyakinanMentah: v.keyakinan,
     ketKeyakinan: kal.sumber, skor: v.skor, skorKomite: { lama: v.skorLama, wawasan: v.skorWaw, bagian: WAWASAN.BAGIAN_KOMITE },
     ...(emas ? { zonaEmas: true } : {}),
+    ...(biasT.geser ? { biasKonteks: { kunci: `${v.arah}-${b.rezim}`, geser: biasT.geser, ket: biasT.kunci } } : {}),
+    metakognisi: { estLevel: estM.level, estTerlemah: estM.terlemah, estFaktor: estM.faktor, aspekRagu: estM.aspekRagu, predProb: predM.probGagal, predAlasan: predM.alasan.map((a) => a.sumber), ket: `${estM.penjelasan}; prediktor kegagalan pra-kunci ${(predM.probGagal * 100).toFixed(0)}%` },
     ...(eksplor ? { eksplorasi: true, ketEksplorasi: 'slot eksplorasi forensik — menguji apakah zona racun mulai menyembuh (EV statistik >= 0)' } : {}),
     entry: b.harga, waktuKunci: ISO, horizon: '24j', rezim: b.rezim, status: 'TERBUKA',
     bukti: buktiCand,
@@ -1739,7 +1956,7 @@ const kunciEntriArah = (k, eksplor) => {
   ledger.push(entri); terkunciBaru.push(entri)
   return entri
 }
-for (const k of bersihArah) kunciEntriArah(k, false)
+for (const k of bersihArah) kunciEntriArah(k, false)   // V255: fungsi mem-push sendiri; veto metakognitif = return null
 if (eksplorasiArah) {
   kunciEntriArah(eksplorasiArah, true)
   forensikTindakan.push(`slot eksplorasi: ${eksplorasiArah.s} ${eksplorasiArah.v.arah} dilepas lewat gerbang (EV +${(eksplorasiArah.eksA.evPct * 100).toFixed(2)}% >= 0) — zona racun diuji agar bisa menyembuh dengan bukti baru`)
@@ -2050,6 +2267,15 @@ for (const e of ledger) {
   const exit = c[c.length - 1].c
   const net = (e.arah === 'BUY' ? 1 : -1) * (exit / e.entry - 1) - FEE
   e.exit = exit; e.net = +net.toFixed(5); e.status = net > 0 ? 'BENAR' : 'SALAH'; e.waktuDinilai = ISO
+  // V255: kalibrasi kedua gerbang metakognitif — apakah penilaian otak tentang
+  // dirinya sendiri memang memprediksi hasil? (diukur, bukan dianggap)
+  if (e.metakognisi) {
+    const benarOut = e.status === 'BENAR'
+    const estTebak = e.metakognisi.estLevel >= NEV.ESTIMATOR_MIN_LOLOS
+    ilmu.metakognisi.estimator.n++; if (estTebak === benarOut) ilmu.metakognisi.estimator.tepat++
+    const predTebak = e.metakognisi.predProb < NEV.PREDIKTOR_MAKS_PROB
+    ilmu.metakognisi.prediktor.n++; if (predTebak === benarOut) ilmu.metakognisi.prediktor.tepat++
+  }
   // V254 SEKOLAH PARAMETER — nasihat tiap param disegel saat kunci; kini dinilai
   // medan: param yang BICARA (|arah|>=0.15) dihitung apakah nasihatnya searah
   // kemenangan, dan berapa sumbangan netnya — dasar kelulusan bobot di versi depan.
@@ -2232,12 +2458,21 @@ const aturan = semuaGenome.aturanBelajar || { pola: {}, aktif: {} }
 if (!aturan.seedSelesai) {
   // otak membaca KEMBALI seluruh kekalahan lamanya — sejarah jadi guru pertama
   for (const e of ledger.filter((x) => x.status === 'SALAH' || (x.jalur === 'PHOENIX' && x.targetKena !== undefined))) {
-    for (const k of polaDari(e)) aturan.pola[k] = (aturan.pola[k] || 0) + 1
+    for (const k of polaDari(e)) {
+      aturan.pola[k] = (aturan.pola[k] || 0) + 1
+      if (!aturan.polaMeta) aturan.polaMeta = {}
+      if (!aturan.polaMeta[k]) aturan.polaMeta[k] = { sejak: ISO }
+    }
   }
   aturan.seedSelesai = ISO
   log('bahan ajar: seed pola dari sejarah', JSON.stringify(aturan.pola))
 }
-for (const e of dinilaiBaru) for (const k of polaDari(e)) aturan.pola[k] = (aturan.pola[k] || 0) + 1
+// V255: penguatan pola + catat sejak-kapan (basis reliabilitas pelajaran Nevron)
+for (const e of dinilaiBaru) for (const k of polaDari(e)) {
+  aturan.pola[k] = (aturan.pola[k] || 0) + 1
+  if (!aturan.polaMeta) aturan.polaMeta = {}
+  if (!aturan.polaMeta[k]) aturan.polaMeta[k] = { sejak: ISO }
+}
 const aturanBaru = []
 for (const [nama, d] of Object.entries(ATURAN_DEF)) {
   if (!aturan.aktif[nama] && (aturan.pola[d.pola] || 0) >= d.min) {
@@ -2263,9 +2498,11 @@ function pelajaranDari(e) {
 }
 const pelajaranDaftar = dinilaiBaru.map((e) => {
   const info = pelajaranDari(e)
+  const krit = kritikStruktur(e)   // V255: kritik diri 5-field (Nevron SelfCritic)
   return {
     waktu: ISO, simbol: e.simbol, jalur: e.jalur || 'ARAH', vonis: e.status,
     netPct: +((e.net || 0) * 100).toFixed(2), kenapa: info.kenapa, pelajaran: info.pelajaran,
+    kritik: krit,
   }
 })
 if (pelajaranDaftar.length) log(`bahan ajar: ${pelajaranDaftar.length} pelajaran baru — aturan aktif ${Object.keys(aturan.aktif).length}`)
@@ -2419,7 +2656,14 @@ const sadardiri = {
     performa: { arahan: arahanPerf, pf: sekarangMet.pf, ekspekPct: sekarangMet.ekspekPct, n: sekarangMet.n, zonaRacun: forensik.arah.racun.length + forensik.phoenix.racun.length },
   },
   peringatan,
-  tindakanSiklusIni: [ilmuCatatan, epochCatatan, ...(aturanBaru.length ? [`aturan baru lahir: ${aturanBaru.join('; ')}`] : []), ...forensikTindakan, ...(performaCatatan ? [performaCatatan] : []), ...(blokForensikArah + blokForensikPhx ? `gerbang forensik menolak ${blokForensikArah + blokForensikPhx} sinyal zona racun siklus ini — no-trade adalah keputusan` : [])],
+  metakognisi: {
+    organ: 'V255-METAKOGNISI-NEVRON — otak menilai dirinya sendiri sebelum bertaruh (kunci diadopsi dari bedah Neurobro AI/Nevron)',
+    intervensiSiklusIni: intervensiMetakognitif.slice(0, 12),
+    veto: { estimatorKeyakinan: estVetoCt, prediktorKegagalan: predVetoCt },
+    loopTerdeteksi: deteksiLoopRes,
+    kalibrasiMedan: { estimator: ilmu.metakognisi.estimator, prediktor: ilmu.metakognisi.prediktor, ket: 'ketepatan gerbang dinilai hasil nyata: level tinggi/prob rendah harus lebih sering benar' },
+  },
+  tindakanSiklusIni: [ilmuCatatan, epochCatatan, ...(aturanBaru.length ? [`aturan baru lahir: ${aturanBaru.join('; ')}`] : []), ...forensikTindakan, ...(performaCatatan ? [performaCatatan] : []), ...(estVetoCt + predVetoCt ? `gerbang metakognitif Nevron menolak ${estVetoCt + predVetoCt} sinyal dari otaknya sendiri (estimator ${estVetoCt} · prediktor ${predVetoCt}) — menilai diri sebelum bertaruh` : []), ...(blokForensikArah + blokForensikPhx ? `gerbang forensik menolak ${blokForensikArah + blokForensikPhx} sinyal zona racun siklus ini — no-trade adalah keputusan` : [])],
   ket: 'kesadaran fungsional — otak membaca keadaannya sendiri tiap denyut lalu bertindak (kalibrasi, geser gerbang, kompaksi memori)',
 }
 
@@ -2458,6 +2702,8 @@ const barisDari = (e) => ({
   ...(e.narasi ? { narasi: e.narasi } : {}),
   rezim: e.rezim, dikunci: e.waktuKunci, horizon: e.horizon, fee: '0.2% pulang-pergi',
   bukti: e.bukti, ketBukti: e.ketBukti, daya: e.daya,
+  ...(e.metakognisi ? { metakognisi: e.metakognisi } : {}),
+  ...(e.biasKonteks ? { biasKonteks: e.biasKonteks } : {}),
   ...(e.warisan ? { warisan: e.warisan } : {}),
 })
 // tiap lane memakai prediksi barunya hari ini; bila kosong (sudah terkunci siklus lalu), pakai yang TERBUKA
@@ -2635,7 +2881,7 @@ const narasiMakroTeks = [
   frBtc != null ? `Funding BTC ${(frBtc * 100).toFixed(4)}% · ETH ${frEth != null ? (frEth * 100).toFixed(4) + '%' : '—'} per interval — ${frBtc >= WAWASAN.FUNDING_EKSTREM ? 'long ramai membayar mahal: fondasi naik rapuh terhadap long-squeeze' : frBtc <= -WAWASAN.FUNDING_EKSTREM ? 'short ramai membayar mahal: bahan short-squeeze melawan arus' : 'tidak ada kerumunan ekstrem di derivatif'}.` : null,
   oiBtc ? `Open interest BTC $${oiBtc.nilaiJuta} juta${oiBtc.deltaPct != null ? ` (Δ${(oiBtc.deltaPct * 100).toFixed(2)}% sejak denyut lalu — ${Math.abs(oiBtc.deltaPct) > WAWASAN.OI_BERAT ? 'perputaran posisi berat; sinyal berikutnya bermomen' : 'posisi stabil'})` : ' (Δ antar-siklus belum tersedia — denyut pertama dengan snapshot ini)'}.` : null,
   iklimOkx ? `Lintas-pasar swap OKX (${iklimOkx.dari} instrumen): ${(iklimOkx.naikPct ?? 0)}% naik, median 24j ${iklimOkx.medianChgPct != null ? (iklimOkx.medianChgPct >= 0 ? '+' : '') + iklimOkx.medianChgPct + '%' : '—'}, sebaran p10–p90 ${iklimOkx.dispersiPct ?? '—'}% — ${iklimOkx.altseasonProxy != null ? (iklimOkx.altseasonProxy > 2 ? 'ALT mengungguli BTC: musim altcoin berhembus' : iklimOkx.altseasonProxy < -2 ? 'BTC menyerap arus; altcoin tertekan' : 'pasar bergerak bersama') : ''}` : null,
-  `Komite ARAH kini menimbang ${DIM_ARAH.length + DIM_WAW.length} dimensi berbobot dalam registri ${TOTAL_PARAM_NAMA} parameter bernama per kandang (≈${TOTAL_PARAM_NAMA * 10} pengukuran per denyut): multi-timeframe 1h+4h, riwayat funding, order book, persentil lintas-pasar, kalender, GARCH/MC — dan tiap param DICATAT nasihatnya per prediksi lalu dinilai medan (sekolah parameter); bobot inti belajar dari vonis nyata, bukan ditetapkan tangan.`,
+  `Komite ARAH kini menimbang ${DIM_ARAH.length + DIM_WAW.length} dimensi berbobot dalam registri ${TOTAL_PARAM_NAMA} parameter bernama per kandang + ${TOTAL_PARAM_METAKOGNISI} parameter metakognitif Nevron (≈${TOTAL_PARAM_NAMA * 10} pengukuran kandang + ${TOTAL_PARAM_METAKOGNISI}×kandidat per denyut): multi-timeframe 1h+4h, riwayat funding, order book, persentil lintas-pasar, kalender, GARCH/MC — tiap param DICATAT nasihatnya per prediksi lalu dinilai medan (sekolah parameter), dan keyakinan tiap kandidat dinilai 7-faktor metakognitif + prediktor kegagalan pra-kunci sebelum otak berani mengunci`,
 ].filter(Boolean).join(' ')
 const perKandang = []
 for (const s of KANDANG) {
@@ -2669,15 +2915,47 @@ for (const p of sampelPk) perDomainCount[p.domain] = (perDomainCount[p.domain] |
 const sekolahParam = Object.entries(ilmu.paramHit || {})
   .map(([param, h]) => ({ param, n: h.n, hitPct: h.n ? +((h.benar / h.n) * 100).toFixed(1) : null, netPct: +((h.net || 0) * 100).toFixed(2), status: statusSekolah(h) }))
   .sort((a, b) => b.n - a.n)
+// V255 METAKOGNISI-NEVRON — blok laporan metakognitif lengkap
+const reliabPelajaran = Object.entries(aturan.pola || {}).map(([p, n]) => ({
+  pola: p, kasus: n, sejak: aturan.polaMeta?.[p]?.sejak ?? null,
+  reliabilitas: reliabilitasPelajaran(n, aturan.polaMeta?.[p]?.sejak ?? ISO, WAKTU.getTime()),
+  status: aturan.aktif ? (Object.keys(aturan.aktif).some((k) => ATURAN_DEF[k]?.pola === p) ? 'aturan-aktif' : 'tercatat') : 'tercatat',
+})).sort((a, b) => b.reliabilitas - a.reliabilitas)
+const saranPerbaikan = polaKegagalanBatch(closedArah)
+const metakognisiLaporan = {
+  organ: 'V255-METAKOGNISI-NEVRON — dibedah dari deep-screening Neurobro AI (neurobro.ai, Axioma AI Labs) dan framework open-source mereka Nevron (github axioma-ai-labs/nevron, siklus Plan→Execute→Learn→Remember)',
+  kunciDiadopsi: [
+    { kunci: 'ConfidenceEstimator', asal: 'src/metacognition/confidence_estimator.py', adaptasi: 'keyakinan 7-faktor berbobot (0.25/0.15/0.15/0.15/0.10/0.15/0.05) per kandidat; faktor terlemah + aspek ragu disebut eksplisit; level < 0.40 = TUNGGU' },
+    { kunci: 'FailurePredictor', asal: 'src/metacognition/failure_predictor.py', adaptasi: 'prob gagal DIHITUNG SEBELUM kunci dari hit-rate zona (arah×rezim) + kegagalan 24 jam + ekspektasi MC negatif; gabungan 0.6×maks + 0.4×rata; >= 0.60 = TUNGGU' },
+    { kunci: 'SelfCritic (RLAIF)', asal: 'src/learning/critic.py', adaptasi: 'kritik 5-field per kekalahan (alasanGagal/yangSalah/caraLebihBaik/polaDihindari/pelajaran) + pola batch >=2 kasus → saran perbaikan berprioritas' },
+    { kunci: 'Lesson reliability', asal: 'src/learning/lessons.py', adaptasi: 'reliabilitas = keyakinan × penguatan × peluruhan-umur — pelajaran tak relevan melemah sendiri' },
+    { kunci: 'StrategyAdapter', asal: 'src/learning/adapter.py', adaptasi: 'bias konteks −0.5..+0.5 per (rezim×arah) = 0.4 tracker + 0.4 pelajaran + 0.2 recent-7h; menggeser keyakinan ±15 poin — genome tetap jalur evolusi lambat' },
+    { kunci: 'LoopDetector', asal: 'src/metacognition/loop_detector.py', adaptasi: 'jendela 20 vonis: repetisi(3)/alternasi-ABAB(4)/siklus-ABC(2) — bias lane terdeteksi dan diawasi' },
+    { kunci: 'MetacognitiveMonitor', asal: 'src/metacognition/monitor.py', adaptasi: 'tiap intervensi tercatat di sadardiri + kalibrasi kedua gerbang dinilai medan (tepat = level tinggi/prob rendah memang lebih sering benar)' },
+  ],
+  paramMetakognisi: PARAM_METAKOGNISI,
+  jumlahParamMetakognisi: TOTAL_PARAM_METAKOGNISI,
+  estimator: { bobot: NEV.ESTIMATOR_BOBOT, ambangLolos: NEV.ESTIMATOR_MIN_LOLOS, ketFaktor: KET_FAKTOR, kalibrasiMedan: ilmu.metakognisi.estimator },
+  prediktor: { ambang: NEV.PREDIKTOR_MAKS_PROB, windowJam: NEV.PREDIKTOR_WINDOW_JAM, minN: NEV.PREDIKTOR_MIN_N, kalibrasiMedan: ilmu.metakognisi.prediktor },
+  biasKonteks: biasKonteksGlobal,
+  loop: deteksiLoopRes,
+  reliabilitasPelajaran: reliabPelajaran,
+  saranPerbaikan,
+  intervensiSiklusIni: intervensiMetakognitif.slice(0, 12),
+  vetoSiklusIni: { estimator: estVetoCt, prediktor: predVetoCt },
+  ket: 'dua gerbang metakognitif (estimator + prediktor) berdiri SEBELUM ledger: mereka berhak menolak sinyal dari otaknya sendiri — dan kalibrasinya sendiri dinilai medan; slot eksplorasi forensik dikecualikan agar zona racun tetap bisa diuji',
+}
 const wawasan360 = {
-  versi: 'V254-SAMUDRA-PARAMETER', dihasilkan: ISO, siklus: SIKLUS,
+  versi: 'V255-METAKOGNISI-NEVRON', dihasilkan: ISO, siklus: SIKLUS,
   dimensi: DIM_ARAH.length + DIM_WAW.length,
   registri: {
-    totalNama: TOTAL_PARAM_NAMA, intiBerbobot: DIM_WAW.length, observasi: PARAM_OBS.length,
+    totalNama: TOTAL_PARAM_NAMA + TOTAL_PARAM_METAKOGNISI, perKandang: TOTAL_PARAM_NAMA, metakognisi: TOTAL_PARAM_METAKOGNISI,
+    intiBerbobot: DIM_WAW.length, observasi: PARAM_OBS.length,
     perDomain: perDomainCount, jumlahKandang: perKandang.length,
-    pengukuranPerDenyut: TOTAL_PARAM_NAMA * perKandang.length,
-    ket: `registri ${TOTAL_PARAM_NAMA} parameter bernama per kandang × ${perKandang.length} kandang ≈ ${TOTAL_PARAM_NAMA * perKandang.length} pengukuran per denyut + iklim lintas-pasar; lapis INTI (12) berbobot genome+Hedge, lapis OBSERVASI (${PARAM_OBS.length}) dihitung, dinarasikan, boleh MENOLAK (veto), dan dicatat nasihatnya per prediksi — menunggu kelulusan sekolah sebelum berhak bersuara`,
+    pengukuranPerDenyut: TOTAL_PARAM_NAMA * perKandang.length + TOTAL_PARAM_METAKOGNISI * kandidatArah.length,
+    ket: `registri ${TOTAL_PARAM_NAMA} parameter bernama per kandang × ${perKandang.length} kandang ≈ ${TOTAL_PARAM_NAMA * perKandang.length} pengukuran per denyut + ${TOTAL_PARAM_METAKOGNISI} parameter metakognitif Nevron per kandidat (≈${TOTAL_PARAM_METAKOGNISI * kandidatArah.length} pengukuran) — lapis INTI (12) berbobot genome+Hedge, lapis OBSERVASI (${PARAM_OBS.length}) boleh MENOLAK via veto, lapis METAKOGNISI (35) menilai sinyal dari dalam sebelum dikunci; sensus jujur, bukan karangan`,
   },
+  metakognisi: metakognisiLaporan,
   sekolahParameter: sekolahParam,
   vetoSiklusIni: {
     arah: divetoArah.map((k) => ({ simbol: k.s, arah: k.v.arah, kunci: k.vetoW.map((x) => x.kunci), alasan: k.vetoW.map((x) => x.ket) })),
@@ -2725,14 +3003,28 @@ const laporan = {
   wawasan360: {
     dimensi: wawasan360.dimensi,
     registri: wawasan360.registri,
+    metakognisi: {
+      organ: metakognisiLaporan.organ, kunciDiadopsi: metakognisiLaporan.kunciDiadopsi,
+      jumlahParamMetakognisi: metakognisiLaporan.jumlahParamMetakognisi,
+      estimator: { bobot: metakognisiLaporan.estimator.bobot, ambangLolos: metakognisiLaporan.estimator.ambangLolos, kalibrasiMedan: metakognisiLaporan.estimator.kalibrasiMedan },
+      prediktor: { ambang: metakognisiLaporan.prediktor.ambang, kalibrasiMedan: metakognisiLaporan.prediktor.kalibrasiMedan },
+      biasKonteks: metakognisiLaporan.biasKonteks,
+      loop: metakognisiLaporan.loop,
+      reliabilitasPelajaran: metakognisiLaporan.reliabilitasPelajaran.slice(0, 8),
+      saranPerbaikan: metakognisiLaporan.saranPerbaikan,
+      intervensiSiklusIni: metakognisiLaporan.intervensiSiklusIni,
+      vetoSiklusIni: metakognisiLaporan.vetoSiklusIni,
+      ket: metakognisiLaporan.ket,
+    },
     iklim: wawasan360.iklim,
     vetoSiklusIni: wawasan360.vetoSiklusIni,
     sekolahParameter: sekolahParam.slice(0, 14),
     perKandang: wawasan360.perKandang.map((x) => ({ simbol: x.simbol, rezim: x.rezim, fundingPct: x.fundingPct, oiJuta: x.oiJuta, oiDeltaPct: x.oiDeltaPct, jumlahParam: x.jumlahParam, konsensus: x.konsensus, params: (x.params || []).filter((p) => p.lapis === 'inti') })),
     metode: wawasan360.metode,
     ket: wawasan360.ket,
-    sumber: 'registri penuh 46 param/kandang di laporan/wawasan.json',
+    sumber: `registri penuh ${TOTAL_PARAM_NAMA} param/kandang + ${TOTAL_PARAM_METAKOGNISI} param metakognitif di laporan/wawasan.json`,
   },
+  metakognisi: metakognisiLaporan,
   piagam: {
     identitas: PIAGAM.identitas, pilar: PIAGAM.pilar, otak: OTAK,
     roadmapJujur: PIAGAM.roadmapJujur,
@@ -2746,6 +3038,7 @@ const laporan = {
       'V252 GERBANG-PERFORMA — forensik kerugian mengikat: zona racun terbukti ditolak, keyakinan dipetakan hit-rate zona medan, baseline vs sekarang dibuktikan lewat hasil',
       'V253 WAWASAN-360 — komite 5→17 dimensi: 10 parameter lilin baru + derivatif NYATA (funding & OI Bybit linear) + iklim makro (F&G, dominasi, breadth) + narasi analis fasih per sasaran',
       'V254 SAMUDRA-PARAMETER — registri 46 parameter/kandang (≈460 pengukuran per denyut): multi-TF 1h+4h, riwayat funding, order book OKX, persentil lintas-pasar, kalender, GARCH/MC + SEKOLAH PARAMETER (hit-rate tiap param dinilai medan) + gerbang VETO wawasan (no-trade adalah keputusan)',
+      'V255 METAKOGNISI-NEVRON — bedah Neurobro AI/Nevron (axioma-ai-labs): 7 kunci metakognisi diadopsi — estimator keyakinan 7-faktor, prediktor kegagalan pra-kunci, kritik diri 5-field, reliabilitas pelajaran (penguatan+peluruhan), bias konteks per rezim×arah, deteksi loop, monitor intervensi — registri 46 → 81 parameter bernama; gerbang metakognitif berhak bilang TUNGGU pada otaknya sendiri, dan kalibrasinya dinilai medan',
     ],
   },
   sadardiri,
@@ -2832,6 +3125,7 @@ const laporan = {
     'WAWASAN 360: komite kini 17 dimensi — 10 parameter lilin (MACD/ADX/Bollinger/VWAP/OBV/swing/pola/konsistensi/pivot/relatif) + funding & open interest NYATA Bybit linear + iklim makro (F&G alternative.me, dominasi CoinGecko/proxy volume, breadth); tiap sasaran membawa NARASI analis lengkap dari angka nyata; param konstan per siklus tidak memilih arah (pelajaran forensik); endpoint gagal = param null jujur, tidak dikarang',
     'RUH & GURU: ruh dibangun — inti, misi, nilai, anatomi & otonomi tercatat di laporan.ruh; tiap denyut menerbitkan pengajaran + kuis dari angka NYATA siklusnya (laporan/guru.json) — guru yang memakai sistemnya sendiri, bukan teori kosong',
     'PERFORMA DI ATAS AKTIVITAS: PF 0.57 & ekspek -0.67% BUKAN kondisi normal — baseline v251 disegel di otak/performa.json; tiap versi baru DIBANDINGKAN pada jendela vonisnya sendiri (anti-cheat) sampai target akurasi 50% · PF 1.2 · ekspek +0.3% terlampaui; zona racun forensik ditolak mesin — lebih baik TUNGGU daripada terus merugi',
+    'METAKOGNISI NEVRON (bedah Neurobro AI): otak kini menilai dirinya sendiri SEBELUM bertaruh — keyakinan 7-faktor berbobot, probabilitas gagal pra-kunci (hit-rate zona + kegagalan 24 jam + ekspektasi negatif), bias konteks per rezim×arah (tracker 0.4 + pelajaran 0.4 + recent 0.2), deteksi loop (repetisi/alternasi/siklus), kritik diri 5-field per kekalahan + saran perbaikan berprioritas — diadopsi dari framework open-source Nevron (axioma-ai-labs/nevron), disegel di tiap sasaran, dan kalibrasi kedua gerbangnya DINILAI MEDAN',
     'JAMINAN ARAH: apa pun kondisi pasar, jawaban BUY/SELL tidak pernah bolong — sasaran koin bila gerbang lolos, kompas rezim BTC (GARCH + MC 2.000 lintasan, keyakinan rendah-jujur) sebagai lantai; ekspektasi & tangga profit tercantum per sasaran — jaminan arah, bukan jaminan untung',
   ],
 }
@@ -2852,6 +3146,9 @@ denyut.push({
   breadth: +(breadthNaik * 100).toFixed(1),
   epoch: keadaan.epochTerakhir, peringatan: sadardiri.peringatan.length,
   kompas: kompas?.arah ?? null, evProfit: akurasi.profit?.ekspektasiPct ?? null,
+  vetoMetakognisi: estVetoCt + predVetoCt, biasKonteksAktif: Object.keys(biasKonteksGlobal).length,
+  estKalibrasi: ilmu.metakognisi.estimator.n ? +(ilmu.metakognisi.estimator.tepat / ilmu.metakognisi.estimator.n).toFixed(3) : null,
+  predKalibrasi: ilmu.metakognisi.prediktor.n ? +(ilmu.metakognisi.prediktor.tepat / ilmu.metakognisi.prediktor.n).toFixed(3) : null,
   fng: fng?.nilai ?? null, fundingBtcPct: frBtc != null ? +(frBtc * 100).toFixed(4) : null, dimWawasan: DIM_ARAH.length + DIM_WAW.length,
 })
 tulisJsonl(path.join(ROOT, 'laporan/denyut-server.jsonl'), denyut.slice(-500))
