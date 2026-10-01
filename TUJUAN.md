@@ -347,9 +347,12 @@ dari endpoint PUBLIK tanpa API key, tanpa dependensi:
   lilin (engulfing/hammer/shooting star/doji), konsistensi arah 24 lilin,
   pivot klasik harian (P/R1/S1), kekuatan relatif vs BTC 24 jam.
 - **L2 — derivatif NYATA** (pertama kali di otak server — catatan lama
-  "funding tak terjangkau" DICABUT): funding rate + open interest dari
-  Bybit linear (896 simbol, 1 permintaan); ΔOI antar-siklus dihitung dari
-  snapshot `otak/penjaga-keadaan.json` (jujur: denyut pertama = null).
+  "funding tak terjangkau" DICABUT): funding rate + open interest via
+  **rantai host 4 lapis** — bybit → bytick → fapi Binance premiumIndex+OI
+  → OKX per-simbol kandang; denyut pertama produksi tercatat: 403/403/
+  451/OKX 10-10 (jejak audit di `laporan/wawasan.json` iklim.catatan);
+  ΔOI antar-siklus dari snapshot `otak/penjaga-keadaan.json` (jujur:
+  denyut pertama = null).
 - **L3 — iklim makro**: Fear & Greed (alternative.me), dominasi BTC
   (CoinGecko; fallback proxy volume-spot dilabeli jujur), breadth pasar —
   masuk IKLIM & NARASI, **bukan pemilih arah**: pelajaran forensik —
