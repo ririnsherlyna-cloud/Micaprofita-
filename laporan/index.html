@@ -222,6 +222,7 @@
     <a href="#sasaran-sec">Sasaran</a>
     <a href="#wawasan-sec">Wawasan 360°</a>
     <a href="#metakognisi-sec">Metakognisi</a>
+    <a href="#dealodds-sec">Deal &amp; Odds</a>
     <a href="#bahan-ajar-sec">Bahan Ajar</a>
     <a href="#ilmu-sec">Ilmu</a>
     <a href="#warisan-sec">Warisan</a>
@@ -255,6 +256,7 @@
       <span class="chip">radar <b id="radarchip">…</b></span>
       <span class="chip">kompas <b id="kompaschip">…</b></span>
       <span class="chip">wawasan <b id="dimchip">…</b></span>
+      <span class="chip">odds top <b id="oddschip">…</b></span>
       <span class="chip">dimutakhir <b id="waktu">…</b></span>
     </div>
   </header>
@@ -313,6 +315,7 @@
       <div class="narasi" style="display:none"></div>
       <div class="wawgrid"></div>
       <div class="metakog" style="margin-top:8px"></div>
+      <div class="dealbox" style="margin-top:8px"></div>
       <div class="ketkal"></div>
       <div class="sasaran-kaki">
         <span class="chiprezim"></span>
@@ -328,7 +331,7 @@
   </table></div>
 
   <h2 id="wawasan-sec">Wawasan Pasar 360° — Samudra Parameter, Satu Bacaan</h2>
-  <div class="sub" style="margin-top:-6px">mandat pemilik: AGI harus fasih &amp; matang — komite menimbang <b>12 dimensi berbobot</b> dalam registri <b>81 parameter bernama</b> (46 per kandang: multi-TF 1h+4h, riwayat funding, order book, lintas-pasar, kalender, GARCH/MC <b>+ 35 metakognitif Nevron</b> yang menilai sinyal dari dalam) + <b>sekolah parameter</b> (hit-rate tiap param dinilai medan) + <b>gerbang veto</b> &amp; <b>gerbang metakognitif</b> (no-trade adalah keputusan); param konstan per siklus masuk iklim, bukan pemilih arah</div>
+  <div class="sub" style="margin-top:-6px">mandat pemilik: AGI harus fasih &amp; matang — komite menimbang <b>12 dimensi berbobot</b> dalam registri <b>101 parameter bernama</b> (46 per kandang: multi-TF 1h+4h, riwayat funding, order book, lintas-pasar, kalender, GARCH/MC <b>+ 35 metakognitif Nevron</b> + <b>20 mesin deal/odds 3Commas×Trade Ideas</b> yang merekayasa rencana posisi &amp; meranking peluang) + <b>sekolah parameter</b> (hit-rate tiap param dinilai medan) + <b>gerbang veto</b> &amp; <b>gerbang metakognitif</b> (no-trade adalah keputusan); param konstan per siklus masuk iklim, bukan pemilih arah</div>
   <div class="iklim-grid" id="iklim" style="margin-top:12px"></div>
   <div class="narasi-makro" id="narasi-makro">—</div>
   <div id="veto-waw" style="margin-top:10px"></div>
@@ -341,6 +344,10 @@
   <h2 id="metakognisi-sec">Metakognisi Nevron — Otak Menilai Dirinya Sendiri Sebelum Bertaruh</h2>
   <div class="sub" style="margin-top:-6px">hasil deep-screening <b>Neurobro AI</b> (neurobro.ai, Axioma AI Labs) yang framework-nya open-source sebagai <b>Nevron</b> (github axioma-ai-labs/nevron): 7 kunci arsitektur diadopsi &amp; diadaptasi ke ledger pra-registrasi SAKTI — estimator keyakinan 7-faktor, prediktor kegagalan pra-kunci, bias konteks, deteksi loop, kritik diri 5-field, reliabilitas pelajaran, monitor intervensi — dan kalibrasi kedua gerbangnya DINILAI MEDAN</div>
   <div id="metakognisi-box" style="margin-top:12px"></div>
+
+  <h2 id="dealodds-sec">Mesin Deal &amp; Odds — Warisan 3Commas × Trade Ideas</h2>
+  <div class="sub" style="margin-top:-6px">hasil deep-screening dua platform trading-AI profesional (dokumentasi resmi help.3commas.io + trade-ideas.com): tiap sasaran kini lahir dengan <b>rencana deal lengkap</b> — safety orders ala DCA-bot (Max SO hard-cap, deviasi ATR berkelipatan, volume multiplier), Move SL to Breakeven, Trailing Take Profit — dipra-registrasi lalu <b>dinilai medan</b> saat horizon matang; dan setiap denyut SEMUA kandidat diranked <b>odds 0-100</b> ala OddsMaker (40% MC + 25% zona + 20% metakognisi + 15% daya) — hanya <b>top-3 terkuat (Money Machine)</b> berodds ≥ 55 yang boleh mengunci; 6 tag peristiwa event-based dinilai hit-rate-nya: pinpoint winning filters, eliminate losing variables</div>
+  <div id="dealodds-box" style="margin-top:12px"></div>
 
   <h2 id="bahan-ajar-sec">Bahan Ajar — Pelajaran &amp; Aturan dari Medan</h2>
   <div id="aturan-baru" style="margin:0 0 12px"></div>
@@ -563,6 +570,32 @@ function isiSasaran(r){
         + ((s.biasKonteks && s.biasKonteks.geser) ? '<span class="wchip ' + (s.biasKonteks.geser > 0 ? 'up' : 'dn') + '" title="Nevron StrategyAdapter — bias konteks per rezim×arah">bias konteks ' + (s.biasKonteks.geser > 0 ? '+' : '') + s.biasKonteks.geser + '</span>' : '')
         + '<span class="wchip" title="' + ((m.ket || '') + ragu).replace(/"/g, '&quot;') + '">self-check 7-faktor ▸</span>';
     } else mkEl.innerHTML = '';
+    // V256 ODDS + RENCANA DEAL (3Commas × Trade Ideas)
+    const dbEl = el.querySelector('.dealbox');
+    if (dbEl){
+      let db = '';
+      if (s.odds){
+        const ok = s.odds.skor >= (s.odds.ambang ?? 55);
+        db += '<span class="wchip ' + (ok ? 'up' : 'dn') + '" title="OddsMaker (Trade Ideas): skor peluang 0-100 = 40% peluang-MC + 25% hit-rate zona + 20% metakognisi + 15% daya' + (s.odds.bonusEmas ? ' + bonus zona emas' : '') + '">odds <b>' + s.odds.skor + '</b>/100</span>';
+        db += '<span class="wchip" title="MC ' + Math.round((s.odds.komponen?.mc ?? 0) * 100) + '% · zona ' + Math.round((s.odds.komponen?.zona ?? 0) * 100) + '% · meta ' + Math.round((s.odds.komponen?.meta ?? 0) * 100) + '% · daya ' + Math.round((s.odds.komponen?.daya ?? 0) * 100) + '%">komponen odds ▸</span>';
+      }
+      if (Array.isArray(s.peristiwa) && s.peristiwa.length) db += '<span class="wchip" title="OddsMaker event-based tagging — peristiwa pemicu yang DIHITUNG dari lilin, disegel di ledger lalu dinilai hit-rate-nya saat matang">peristiwa: ' + s.peristiwa.join(', ') + '</span>';
+      const rd = s.rencanaDeal;
+      if (rd){
+        const soRows = (rd.safetyOrders || []).map((so) => fmt(so.harga) + ' (' + (so.devPct) + '% · ×' + so.volMult + ')').join(' · ');
+        db += '<div style="margin-top:8px;border:1px solid var(--garis2);border-radius:10px;padding:8px 10px;background:rgba(56,189,248,.05)">'
+          + '<b style="font-size:11.5px;color:var(--sian)">RENCANA DEAL (3Commas DCA · pra-registrasi, kontingensi disiplin)</b>'
+          + '<div style="font-size:11.5px;margin-top:4px">▸ Safety orders (max ' + rd.maxSO + '): ' + soRows + ' — avg jika penuh <b>' + fmt(rd.avgJikaSoPenuh) + '</b> · TP-dari-avg ' + fmt(rd.tpDariAvgHarga) + '</div>'
+          + (rd.breakeven ? '<div style="font-size:11.5px;margin-top:3px">▸ Move SL to Breakeven: aktivasi ' + fmt(rd.breakeven.aktivasiHarga) + ' (+' + rd.breakeven.aktivasiPct + '%) → stop pindah ke <b>' + fmt(rd.breakeven.stopBaruHarga) + '</b> (net-nol)</div>' : '')
+          + (rd.trailing ? '<div style="font-size:11.5px;margin-top:3px">▸ Trailing TP: setelah T1, trail dari peak −<b>' + rd.trailing.jarakPct + '%</b> (0.8×ATR24j)</div>' : '')
+          + '</div>';
+      }
+      if (s.dealMedan){
+        const dm = s.dealMedan;
+        db += '<div class="jnote" style="margin-top:8px;border-left-color:var(--hijau)"><b>HASIL MEDAN RENCANA DEAL:</b> ' + (dm.ket || '') + (dm.bep ? ' · BEP aktivasi: ' + (dm.bep.aktivasiKena ? 'kena' : 'tidak') + (dm.bep.menyelamatkan ? ' — MENYELAMATKAN posisi' : '') : '') + (dm.trail ? ' · trailing: peak ' + fmt(dm.trail.peakHarga) + ' (+' + dm.trail.ekstraPct + '% di atas T1)' : '') + '</div>';
+      }
+      dbEl.innerHTML = db;
+    }
     const nar = el.querySelector('.narasi');
     if (s.narasi){ nar.style.display = 'block'; nar.innerHTML = '<b style="color:var(--violet)">NARASI ANALIS —</b> ' + s.narasi; }
     el.querySelector('.wawgrid').innerHTML = (() => {
@@ -906,7 +939,7 @@ function isiWawasan(r){
     const rel = (mk.reliabilitasPelajaran || []).slice(0, 6).map((x) => `<span class="wchip ${x.reliabilitas >= 0.55 ? 'up' : x.reliabilitas < 0.35 ? 'dn' : ''}" title="reliabilitas = keyakinan × penguatan × peluruhan-umur (Nevron lessons.py)${x.sejak ? ' · sejak ' + x.sejak.slice(0, 10) : ''}">${x.pola}: <b>${Math.round(x.reliabilitas * 100)}%</b> (${x.kasus} kasus)</span>`).join('');
     const vsM = mk.vetoSiklusIni || {};
     $('metakognisi-box').innerHTML =
-      '<div class="jnote" style="border-left-color:var(--violet)"><b>Organ aktif (V255):</b> ' + (mk.organ || '—') + ' — ' + (mk.jumlahParamMetakognisi ?? 35) + ' parameter metakognitif baru, registri total <b>81 param bernama</b>. ' + (mk.ket || '') + '</div>'
+      '<div class="jnote" style="border-left-color:var(--violet)"><b>Organ aktif (V255):</b> ' + (mk.organ || '—') + ' — ' + (mk.jumlahParamMetakognisi ?? 35) + ' parameter metakognitif baru, lapis DEAL/ODDS +20 (V256) — registri total <b>' + (reg.totalNama || 101) + ' param bernama</b>. ' + (mk.ket || '') + '</div>'
       + '<div class="iklim-grid" style="margin:10px 0">'
       + kartu('Gerbang Estimator (Nevron)', 'level ≥ ' + ((mk.estimator?.ambangLolos ?? 0.4) * 100).toFixed(0) + '%', '7 faktor berbobot menilai tiap kandidat; di bawah ambang = TUNGGU · ' + kal(mk.estimator?.kalibrasiMedan))
       + kartu('Gerbang Prediktor (Nevron)', 'P gagal < ' + ((mk.prediktor?.ambang ?? 0.6) * 100).toFixed(0) + '%', 'hit-rate zona + kegagalan 24j + ekspektasi negatif · ' + kal(mk.prediktor?.kalibrasiMedan))
@@ -920,6 +953,41 @@ function isiWawasan(r){
       + (saran ? '<div style="margin:10px 0 4px"><b style="font-size:12.5px">Saran perbaikan dari pola kegagalan batch (SelfCritic):</b>' + saran + '</div>' : '')
       + (inter ? '<div style="margin:10px 0 4px"><b style="font-size:12.5px">Intervensi metakognitif siklus ini:</b>' + inter + '</div>' : '');
   } else if ($('metakognisi-box')) $('metakognisi-box').innerHTML = '<div class="jnote">Metakognisi Nevron menunggu denyut V255 berikutnya — data belum tersedia (jujur, tidak dikarang).</div>';
+  // ===== V256 MESIN DEAL & ODDS — warisan 3Commas × Trade Ideas =====
+  const dox = r.dealOdds || {};
+  const doxBox = $('dealodds-box');
+  if (doxBox){
+    if (dox.identitas){
+      const pt = dox.posisiTerbuka || {};
+      const rank = dox.oddsSiklusIni || [];
+      const per = dox.peristiwa || [];
+      const dm = dox.dealMedan || {};
+      $('oddschip').textContent = rank.length && rank[0].odds != null ? rank[0].odds : '—';
+      const rankRows = rank.map((x) => `<tr><td><b>${x.simbol}</b><div style="font-size:10.5px;color:var(--samar)">${x.jalur}</div></td><td>${x.arah}</td><td><b>${x.odds}</b></td><td style="font-size:10.5px">MC ${Math.round((x.komponen?.mc ?? 0) * 100)} · zona ${Math.round((x.komponen?.zona ?? 0) * 100)} · meta ${Math.round((x.komponen?.meta ?? 0) * 100)} · daya ${Math.round((x.komponen?.daya ?? 0) * 100)}</td><td>${(x.peristiwa || []).join(', ') || '—'}</td><td>${x.terkunci ? '<span class="st up">MENGUNCI</span>' : '<span class="st dn">DITOLAK</span> <span style="color:var(--samar);font-size:10.5px">' + (x.alasan || '') + '</span>'}</td></tr>`).join('');
+      const perRows = per.map((p) => `<tr><td><b>${p.peristiwa}</b><div style="font-size:10.5px;color:var(--samar)">${p.ket || ''}</div></td><td>${p.n}</td><td>${p.hitPct != null ? p.hitPct + '%' : '—'}</td><td class="${(p.netPct || 0) > 0 ? 'net-pos' : (p.netPct || 0) < 0 ? 'net-neg' : ''}">${(p.netPct || 0) > 0 ? '+' : ''}${p.netPct}%</td><td style="color:${p.status === 'pemenang' ? 'var(--hijau)' : p.status === 'penggerus' ? 'var(--merah)' : 'var(--amber)'}"><b>${p.status}</b></td></tr>`).join('');
+      const dKartu = (l, v, s2) => `<div class="kartu"><div class="label">${l}</div><div class="angka">${v}</div><div class="sub">${s2 || ''}</div></div>`;
+      doxBox.innerHTML =
+        '<div class="jnote" style="border-left-color:var(--sian)"><b>Organ aktif (V256):</b> ' + dox.identitas + '. <b>Sumber resmi:</b> ' + (dox.sumberResmi || []).map((u) => `<span style="font-size:10.5px">${u}</span>`).join(' · ') + '</div>'
+        + '<div class="iklim-grid" style="margin:10px 0">'
+        + dKartu('Ambang Odds / Top-K', (dox.ambang ?? 55) + ' / ' + (dox.topK ?? 3), 'Money Machine: hanya top-3 peluang terkuat yang boleh mengunci')
+        + dKartu('Kandidat diranked siklus ini', rank.length, 'semua kandidat ARAH + PHOENIX diberi skor peluang tiap denyut')
+        + dKartu('Posisi terbuka / batas', (pt.jumlah ?? '—') + ' / ' + (pt.batas ?? '—'), 'Global Max Open Positions (3Commas) — mencegah over-trading')
+        + dKartu('SO menyelesaikan', (dm.so?.n ?? 0) > 0 ? (dm.so.menyelamatkan ?? 0) + '/' + dm.so.n : '—', 'rencana deal di mana safety order memperbaiki net (menunggu medan bila n=0)')
+        + dKartu('BEP menyelamatkan', (dm.bep?.n ?? 0) > 0 ? (dm.bep.menyelamatkan ?? 0) + '/' + dm.bep.n : '—', 'Move SL to Breakeven mengubah rugi jadi net-nol')
+        + dKartu('Ekstra trailing rata²', (dm.trail?.tembusT1 ?? 0) > 0 ? '+' + (dm.trail.ekstraPctJumlah / dm.trail.tembusT1).toFixed(2) + '%' : '—', 'profit tambahan di atas T1 dari peak nyata (n=' + (dm.trail?.tembusT1 ?? 0) + ')')
+        + '</div>'
+        + '<h3 style="margin:10px 0 6px">Ranking OddsMaker siklus ini</h3>'
+        + '<div class="gulir"><table class="tabel"><thead><tr><th>Simbol</th><th>Arah</th><th>Odds</th><th>Komponen</th><th>Peristiwa</th><th>Status</th></tr></thead><tbody>'
+        + (rankRows || '<tr><td colspan="6" style="color:var(--samar)">—</td></tr>') + '</tbody></table></div>'
+        + '<h3 style="margin:12px 0 6px">Hit-rate per Peristiwa (event-based testing ala OddsMaker)</h3>'
+        + '<div class="gulir"><table class="tabel"><thead><tr><th>Peristiwa</th><th>n</th><th>Hit-rate</th><th>Net kumulatif</th><th>Status</th></tr></thead><tbody>'
+        + (perRows || '<tr><td colspan="5" style="color:var(--samar)">—</td></tr>') + '</tbody></table></div>'
+        + '<div class="sub" style="margin-top:8px">rencana deal = KONTINGENSI yang disiplin, bukan janji hasil; statistik medan tumbuh dari ledger pra-registrasi — rincian penuh &amp; parameter di laporan/odds.json</div>';
+    } else {
+      $('oddschip').textContent = '—';
+      doxBox.innerHTML = '<div class="jnote">Mesin Deal &amp; Odds menunggu denyut V256 berikutnya — data belum tersedia (jujur, tidak dikarang).</div>';
+    }
+  }
 }
 </script>
 <script>
