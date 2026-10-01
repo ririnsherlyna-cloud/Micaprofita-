@@ -84,7 +84,7 @@ import path from 'node:path'
 const ROOT = process.cwd()
 const FEE = 0.002            // 0.1% buy + 0.1% sell — wajib
 const HORIZON_JAM = 24       // sasaran harian
-const VERSI = 'V255-METAKOGNISI-NEVRON v5.1 — otak menilai dirinya sendiri SEBELUM bertaruh: 7 kunci diadopsi dari bedah open-source Neurobro AI/Nevron (axioma-ai-labs) — estimator keyakinan 7-faktor berbobot (ConfidenceEstimator), prediktor kegagalan pra-kunci (FailurePredictor: hit-rate zona + kegagalan 24 jam + ekspektasi negatif), kritik diri 5-field per kekalahan (SelfCritic RLAIF), reliabilitas pelajaran (penguatan+peluruhan), bias konteks per rezim×arah (StrategyAdapter), deteksi loop (repetisi/alternasi/siklus), monitor intervensi — ditumpuk di atas registri 46 parameter/kandang (multi-TF 1h+4h, riwayat funding, order book OKX, lintas-pasar, kalender, GARCH/MC) + SEKOLAH PARAMETER + gerbang VETO wawasan: registri kini 81 parameter bernama, dan gerbang metakognitif berhak bilang TUNGGU pada otaknya sendiri'
+const VERSI = 'V256-MESIN-DEAL-ODDS v5.2 — deep-screening 3Commas & Trade Ideas (dokumentasi resmi help.3commas.io + trade-ideas.com): (A) MESIN DEAL ala DCA-bot 3Commas — tiap sasaran kini lahir dengan RENCANA DEAL lengkap: safety orders (Max DCA Orders hard-cap, Price Deviation = 1.2×ATR berkelipatan ×1.6, Order Size Multiplier ×1.5), Move SL to Breakeven (aktivasi 60% jalan ke target, stop baru = net-nol), Trailing Take Profit (trail dari peak 0.8×ATR setelah target T1) — semuanya PRA-REGISTRASI lalu DINILAI MEDAN saat horizon matang (SO kena?, avg-price, net-dengan-SO vs tanpa, BEP menyelamatkan?, ekstra trailing) — plus Global Max Open Positions diukur; (B) ODDS MAKER ala Trade Ideas — skor peluang 0-100 per kandidat (0.40×peluang-MC + 0.25×hit-rate zona medan + 0.20×estimator metakognisi + 0.15×daya produk; zona emas +5), hanya TOP-3 terkuat (Money Machine) berodds ≥55 yang boleh mengunci — sisanya ditolak dengan alasan odds; (C) TAG PERISTIWA event-based ala OddsMaker — 6 peristiwa (breakout48j, lonjakVolume, crossEMA, pullbackBB, divergensiRSI, searahTren4h) disegel di ledger dan hit-rate-nya per peristiwa dihitung medan: pinpoint winning filters, eliminate losing variables — ditumpuk di atas V255 metakognisi Nevron + registri 81 param → kini 101 parameter bernama'
 
 // ---------------- kandang lane ARAH (komite genome) ----------------
 const KANDANG = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'DOGE', 'ADA', 'AVAX', 'LINK', 'TRX']
@@ -215,6 +215,36 @@ const PARAM_METAKOGNISI = [
   'kritikAlasanGagal', 'kritikYangSalah', 'kritikCaraLebihBaik', 'kritikPolaHindari', 'kritikPelajaran',
 ]
 const TOTAL_PARAM_METAKOGNISI = PARAM_METAKOGNISI.length   // 35
+// ---- V256 MESIN-DEAL-ODDS — hasil deep-screening 3Commas & Trade Ideas ----
+// Sumber: help.3commas.io/articles/16281102 (DCA 6-param), 16281163 (Trailing Stop
+// 2-param), 16281110 (Move SL to Breakeven), 16281055 (Global Max Open Positions);
+// trade-ideas.com/features/backtesting (OddsMaker event-based), /features/money-machine
+// (top-3 momentum), /features/ai-signals (Holly risk adaptation).
+const DEAL = {
+  MAX_SO: 2,             // Max DCA Orders (3Commas): hard cap safety orders — budget terkontrol
+  SO_DEV: 1.2,           // Price Deviation pertama = 1.2 × ATR24j dari entry
+  SO_DEV_MULT: 1.6,      // Price Deviation Multiplier: langkah berikut = langkah sebelumnya × 1.6
+  SO_VOL_MULT: 1.5,      // Order Size Multiplier geometris per safety order
+  BEP_ACT: 0.6,          // Move SL to Breakeven: aktivasi di 60% jalan menuju target
+  TRAIL_DIST: 0.8,       // Trailing Take Profit: jarak trail dari peak = 0.8 × ATR24j
+  ODDS_MIN: 55,          // Odds Maker: ambang skor peluang untuk boleh mengunci
+  TOP_K: 3,              // Money Machine: konsentrasi top-3 peluang terkuat
+  MAX_POSISI: 24,        // Global Max Open Positions (3Commas): sinyal baru diabaikan bila tercapai — prevent excessive trading
+  BOBOT: { mc: 0.4, zona: 0.25, meta: 0.2, daya: 0.15 },   // bobot skor peluang OddsMaker
+}
+// Tag peristiwa event-based ala OddsMaker — semuanya DIHITUNG dari lilin (bukan mood):
+const PERISTIWA_DEFS = [
+  { nama: 'breakout48j', ket: 'close menembus high 48 jam sebelumnya (breakout event)' },
+  { nama: 'lonjakVolume', ket: 'volume 6 jam ≥ 2× rata-rata 24 jam (volume spike event)' },
+  { nama: 'crossEMA', ket: 'EMA9 memotong EMA21 dalam 6 jam terakhir (MA cross event)' },
+  { nama: 'pullbackBB', ket: 'lilin lalu menutup melampaui Bollinger 21/2.5 lalu kembali (pullback event)' },
+  { nama: 'divergensiRSI', ket: 'divergensi RSI 12 jam terdeteksi (reversal event)' },
+  { nama: 'searahTren4h', ket: 'EMA-align 1h & 4h searah dengan arah sinyal (trend-follow event)' },
+]
+const PARAM_DEAL = ['maxSO', 'soDevAtr', 'soDevMult', 'soVolMult', 'bepAktPct', 'bepExecPct', 'trailDistAtr', 'oddsMin', 'oddsTopK', 'bobotOddsMC', 'bobotOddsZona', 'bobotOddsMeta', 'bobotOddsDaya', 'maxPosisiTerbuka']
+const PARAM_EVENT = PERISTIWA_DEFS.map((p) => `evt_${p.nama}`)
+const TOTAL_PARAM_DEAL_ODDS = PARAM_DEAL.length + PARAM_EVENT.length   // 14 + 6 = 20
+const TOTAL_PARAM_SEMUA = TOTAL_PARAM_NAMA + TOTAL_PARAM_METAKOGNISI + TOTAL_PARAM_DEAL_ODDS   // 46+35+20 = 101
 // statusSekolah — kelulusan param dari hit-rate medan (bukan dari tangan manusia):
 // pemula (n<10) → dipantau → calon-lulus (n>=20 & hit>=52% & net>0) / diawasi (hit<44%)
 function statusSekolah(h) {
@@ -249,6 +279,7 @@ const OTAK = [
   { nama: 'otak-forensik', tugas: 'membedah penyebab kerugian lalu MENOLAK zona racun terbukti — performa di atas aktivitas', mesin: 'forensik zona per jalur (arah×rezim, band keyakinan, taker, konsensus) + gerbang no-trade + A/B versi anti-cheat (laporan/forensik.json + otak/performa.json)', status: 'HIDUP (V252)' },
   { nama: 'otak-wawasan', tugas: 'registri 46+ parameter wawasan crypto per kandang — lilin 1h+4h, derivatif dalam, order book, lintas-pasar, kalender, kuant-warisan — plus narasi analis fasih per sasaran', mesin: 'multi-timeframe (EMA-align/MACD/RSI/Bollinger/swing 1h+4h) + riwayat funding rata3/tren + order book OKX (imbalance/spread/kedalaman/dinding) + persentil lintas-pasar swap + F&G-7hari/dominasi/altseason + GARCH/MC/beta/POC + kalender; 12 inti berbobot (genome+Hedge), observasi diveto-kan & bersekolah hit-rate', status: 'HIDUP (V254)' },
   { nama: 'otak-metakognisi', tugas: 'mengawasi otaknya sendiri SEBELUM bertaruh — estimator keyakinan 7-faktor, prediktor kegagalan pra-kunci, bias konteks per rezim×arah, deteksi loop, kritik diri 5-field per kekalahan — dan kalibrasinya dinilai medan', mesin: '7 kunci diadopsi dari framework open-source Nevron (axioma-ai-labs/nevron) hasil bedah Neurobro AI: ConfidenceEstimator + FailurePredictor + StrategyAdapter + LoopDetector + SelfCritic-RLAIF + Lesson-reliability + MetacognitiveMonitor, diadaptasi ke ledger pra-registrasi SAKTI', status: 'HIDUP (V255)' },
+  { nama: 'otak-deal-odds', tugas: 'merekayasa setiap sasaran seperti bot profesional: rencana deal lengkap (safety orders, breakeven, trailing) dipra-registrasi lalu dinilai medan, dan hanya peluang berodds tertinggi (top-3) yang boleh mengunci', mesin: 'kunci diadopsi dari dokumentasi resmi 3Commas & Trade Ideas hasil deep-screening: DCA 6-parameter (Max SO, deviation ×multiplier, volume multiplier), Move SL to Breakeven, Trailing Stop 2-param, Global Max Open Positions, OddsMaker event-based testing (6 tag peristiwa dinilai hit-rate-nya), Money Machine top-3 concentration — diadaptasi ke ledger pra-registrasi SAKTI', status: 'HIDUP (V256)' },
 ]
 
 // ---------------- V251 RUH — jiwa yang dibangun (mandat pemilik:
@@ -1489,6 +1520,120 @@ function reliabilitasPelajaran(n, sejakISO, waktuMs) {
   const umur = Math.max(0.3, 1 - decay * umurHari)
   return +(NEV.RELIAB_AWAL * penguatan * umur).toFixed(3)
 }
+
+// ---------------- V256 MESIN DEAL (3Commas) + ODDS MAKER (Trade Ideas) ----------------
+// hasil deep-screening dokumentasi resmi (lihat scripts/riset3c/): rencana deal
+// dipra-registrasi per sasaran, peluang diranking, peristiwa ditandai lalu dinilai medan.
+const atrN = (c, n = 24) => {
+  const w = c.slice(-(n + 1))
+  let s = 0
+  for (let i = 1; i < w.length; i++) s += Math.max(w[i].h - w[i].l, Math.abs(w[i].h - w[i - 1].c), Math.abs(w[i].l - w[i - 1].c))
+  return w.length > 1 ? s / (w.length - 1) : (w[0]?.h || 0) * 0.01
+}
+// (1) TAG PERISTIWA — OddsMaker "event-based testing": sinyal dicatat PERISTIWA
+//     pemicunya dari lilin; hit-rate per peristiwa dinilai medan saat matang.
+function tagPeristiwa(c, arah, war, wp) {
+  const sgn = arah === 'BUY' ? 1 : -1
+  const n = c.length, last = c[n - 1]
+  const tags = []
+  if (n >= 49) {
+    const hi48 = Math.max(...c.slice(-49, -1).map((x) => x.h))
+    const lo48 = Math.min(...c.slice(-49, -1).map((x) => x.l))
+    if (last.c > hi48 || last.c < lo48) tags.push('breakout48j')
+  }
+  const vols = c.map((x) => x.v || 0)
+  if (vols.length >= 30) {
+    const v24 = vols.slice(-24).reduce((a, b) => a + b, 0) / 24
+    const v6 = vols.slice(-6).reduce((a, b) => a + b, 0) / 6
+    if (v24 > 0 && v6 >= 2 * v24) tags.push('lonjakVolume')
+  }
+  const closes = c.map((x) => x.c)
+  const e9 = ema(closes, 9), e21 = ema(closes, 21)
+  for (let i = Math.max(1, n - 6); i < n; i++) {
+    if (!Number.isFinite(e9[i]) || !Number.isFinite(e21[i]) || !Number.isFinite(e9[i - 1]) || !Number.isFinite(e21[i - 1])) continue
+    const d0 = e9[i - 1] - e21[i - 1], d1 = e9[i] - e21[i]
+    if (d0 * d1 < 0 || (d0 === 0 && d1 !== 0)) { tags.push('crossEMA'); break }
+  }
+  // pullbackBB memakai band Bollinger langsung: bawah-dulu-lalu-kembali = BUY, cermin utk SELL
+  const bb = (() => { const m = 21, k = 2.5; if (n < m + 2) return null; const win = closes.slice(-m); const mm = win.reduce((a, b) => a + b, 0) / m; const sd = Math.sqrt(win.reduce((a, b) => a + (b - mm) ** 2, 0) / m); return { atas: mm + k * sd, bawah: mm - k * sd, mm } })()
+  if (bb) {
+    if (arah === 'BUY' && closes[n - 2] < bb.bawah && last.c > bb.bawah) tags.push('pullbackBB')
+    if (arah === 'SELL' && closes[n - 2] > bb.atas && last.c < bb.atas) tags.push('pullbackBB')
+  }
+  if (war?.div) {
+    if (arah === 'BUY' && war.div.includes('bullish')) tags.push('divergensiRSI')
+    if (arah === 'SELL' && war.div.includes('bearish')) tags.push('divergensiRSI')
+  }
+  const w4 = wp?.penuh?.find?.((p) => p.param === 'ema4h')
+  const w1 = wp?.penuh?.find?.((p) => p.param === 'ema1h')
+  if (w4?.arah != null && w1?.arah != null && w4.arah * sgn > 0.15 && w1.arah * sgn > 0.15) tags.push('searahTren4h')
+  return tags
+}
+// (2) RENCANA DEAL ala 3Commas DCA — safety orders + Move SL to Breakeven +
+//     Trailing Take Profit: semuanya PRA-REGISTRASI (kontingensi disiplin,
+//     Max SO = hard cap ala "Max DCA Orders"; level dari ATR, bukan mood).
+function rencanaDeal(c, entry, arah, untungTarget) {
+  const sgn = arah === 'BUY' ? 1 : -1
+  const atr = atrN(c, 24)
+  const so = []
+  let dev = (DEAL.SO_DEV * atr) / entry
+  for (let i = 0; i < DEAL.MAX_SO; i++) {
+    const harga = entry * (1 - sgn * dev)
+    so.push({ tahap: i + 1, harga: +harga.toPrecision(7), devPct: +(dev * 100).toFixed(2), volMult: +Math.pow(DEAL.SO_VOL_MULT, i + 1).toFixed(2), ket: arah === 'BUY' ? 'safety order beli di bawah entry (averaging terkontrol)' : 'safety order jual di atas entry (averaging posisi short)' })
+    dev *= DEAL.SO_DEV_MULT
+  }
+  const parts = [{ v: 1, p: entry }]
+  so.forEach((s, i) => parts.push({ v: Math.pow(DEAL.SO_VOL_MULT, i + 1), p: s.harga }))
+  const totV = parts.reduce((a, x) => a + x.v, 0)
+  const avgPenuh = parts.reduce((a, x) => a + x.v * x.p, 0) / totV
+  const bepAktH = entry * (1 + sgn * Math.max(untungTarget, 0) * DEAL.BEP_ACT)
+  const bepStopH = entry * (1 + sgn * FEE)   // net-nol termasuk fee pulang-pergi
+  const trailDistPct = +(((DEAL.TRAIL_DIST * atr) / entry) * 100).toFixed(2)
+  return {
+    mesin: '3Commas DCA-deal (pra-registrasi — kontingensi, bukan janji)',
+    maxSO: DEAL.MAX_SO, soDevAtr: DEAL.SO_DEV, soDevMult: DEAL.SO_DEV_MULT, soVolMult: DEAL.SO_VOL_MULT,
+    safetyOrders: so,
+    avgJikaSoPenuh: +avgPenuh.toPrecision(7),
+    tpDariAvgHarga: +((avgPenuh * (1 + sgn * Math.max(untungTarget, 0) * 0.5))).toPrecision(7),
+    breakeven: {
+      mesin: 'Move SL to Breakeven (3Commas)',
+      aktivasiHarga: +bepAktH.toPrecision(7),
+      aktivasiPct: +(Math.max(untungTarget, 0) * DEAL.BEP_ACT * 100).toFixed(2),
+      stopBaruHarga: +bepStopH.toPrecision(7),
+      stopBaruPct: +(sgn * FEE * 100).toFixed(2),
+      ket: 'harga menyentuh aktivasi → stop pindah ke net-nol — risiko penuh hilang setelah itu',
+    },
+    trailing: {
+      mesin: 'Trailing Take Profit (3Commas 2-param)',
+      aktivasi: 'setelah target T1 tersentuh',
+      jarakPct: trailDistPct,
+      ket: `profit ditrail dari peak dengan jarak ${trailDistPct}% (0.8×ATR24j) — pemenang diberi ruang berlari`,
+    },
+    maxPosisiTerbuka: DEAL.MAX_POSISI,
+  }
+}
+// (3) ODDS MAKER ala Trade Ideas — skor peluang 0-100 dari 4 sumber terukur
+//     (+ bonus zona emas) — Money Machine: hanya top-K yang boleh mengunci.
+function skorOdds({ pWin, zonaHit, metaLevel, dayaAvg, emas }) {
+  const b = DEAL.BOBOT
+  const k = {
+    mc: clamp(pWin ?? 0.5, 0, 1), zona: clamp(zonaHit ?? 0.5, 0, 1),
+    meta: clamp(metaLevel ?? 0.5, 0, 1), daya: clamp(dayaAvg ?? 0.5, 0, 1),
+  }
+  const skor = 100 * (b.mc * k.mc + b.zona * k.zona + b.meta * k.meta + b.daya * k.daya) + (emas ? 5 : 0)
+  return {
+    skor: +skor.toFixed(1), komponen: Object.fromEntries(Object.entries(k).map(([n, v]) => [n, +v.toFixed(3)])),
+    bobot: b, bonusEmas: emas ? 5 : 0, ambang: DEAL.ODDS_MIN, topK: DEAL.TOP_K,
+    ket: `odds ${(skor).toFixed(1)}/100 = 40%×peluang-MC + 25%×hit-rate-zona + 20%×metakognisi + 15%×daya${emas ? ' (+5 zona emas)' : ''} — ranking ala Trade Ideas OddsMaker, top-${DEAL.TOP_K} ala Money Machine`,
+  }
+}
+// hit-rate zona medan utk OddsMaker: rata akurasiPct zona yang disandang kandidat
+const hitZona = (kena) => {
+  const z = (kena || []).filter((x) => x.akurasiPct != null && x.n >= 3)
+  if (!z.length) return 0.5
+  return z.reduce((a, x) => a + x.akurasiPct / 100, 0) / z.length
+}
+const dayaRata = (d) => d ? ((d.volume?.daya ?? d.volume ?? 0.5) + (d.volatilitas?.daya ?? d.volatilitas ?? 0.5) + (d.likuiditas?.daya ?? d.likuiditas ?? 0.5)) / 3 : 0.5
 function bacaJson(p, def) {
   try { return existsSync(p) ? JSON.parse(readFileSync(p, 'utf8')) : structuredClone(def) } catch { return structuredClone(def) }
 }
@@ -1746,6 +1891,15 @@ if (!ilmu.meta) ilmu.meta = { kuat: { n: 0, benar: 0 }, lemah: { n: 0, benar: 0 
 // V255: kalibrasi medan untuk kedua gerbang metakognitif — estimator/prediktor yang
 // menilai sinyal juga DINILAI medan: apakah level tinggi memang lebih sering benar?
 if (!ilmu.metakognisi) ilmu.metakognisi = { estimator: { n: 0, tepat: 0 }, prediktor: { n: 0, tepat: 0 } }
+// V256 MESIN DEAL — statistik medan rencana deal (safety orders / breakeven / trailing)
+// + hit-rate per peristiwa OddsMaker: semuanya dinilai dari vonis matang, bukan klaim.
+if (!ilmu.deal) ilmu.deal = {
+  so: { n: 0, soKena: 0, netDenganSo: 0, netTanpaSo: 0, menyelamatkan: 0 },
+  bep: { n: 0, aktivasiKena: 0, keluarNetNol: 0, menyelamatkan: 0 },
+  trail: { n: 0, tembusT1: 0, ekstraPctJumlah: 0, ekstraMaksPct: 0 },
+}
+if (!ilmu.peristiwa) ilmu.peristiwa = {}
+for (const p of PERISTIWA_DEFS) if (!ilmu.peristiwa[p.nama]) ilmu.peristiwa[p.nama] = { n: 0, benar: 0, net: 0 }
 // V253: bobot komite wawasan (genome per rezim + Hedge on-line) — 12 param baru belajar
 // dari vonis nyata dengan jalan yang sama persis seperti 5 dimensi lama
 if (!semuaGenome.waw) semuaGenome.waw = {}
@@ -1898,7 +2052,14 @@ for (const s of KANDANG) {
   const frPct = waw.find((p) => p.param === 'funding')?.nilai ?? null
   const kena = zonaKandidat('arah', v.arah, b.rezim, v.keyakinan, buktiCand, frPct)
   const vetoW = vetoWaw(wp.penuh, v.arah)                          // V254: gerbang veto wawasan
-  kandidatArah.push({ s, id, b, v, waw, wp, buktiWaw, warA, mcA, eksA, buktiCand, kena, vetoW })
+  // V256 MESIN-DEAL-ODDS — metakognisi dihitung DI LOOP (dibutuhkan untuk ranking odds
+  // sebelum kunci), rencana deal + tag peristiwa + skor odds dipra-registrasi per kandidat:
+  const estM = estimasiKeyakinan({ wp, v, b, eksA, kena }, forensik.arah.zona, gagal.length >= 6)
+  const predM = prediksiKegagalan(v.arah, b.rezim, eksA, forensik.arah.zona, closedArah, WAKTU.getTime())
+  const periA = tagPeristiwa(c, v.arah, warA, wp)
+  const dealA = rencanaDeal(c, b.harga, v.arah, Math.max(eksA ? eksA.gainPct / 100 : 0.01, 0.01))
+  const oddsA = skorOdds({ pWin: eksA ? clamp(eksA.p, 0, 1) : null, zonaHit: hitZona(kena), metaLevel: estM.level, dayaAvg: dayaRata(b.dims), emas: false })   // emas belum diketahui di sini — bonus diberikan saat ranking
+  kandidatArah.push({ s, id, b, v, waw, wp, buktiWaw, warA, mcA, eksA, buktiCand, kena, vetoW, estM, predM, peri: periA, deal: dealA, odds: oddsA })
 }
 const emasArah = (k) => k.kena.some((z) => z.status === 'EMAS')
 // V254: kandidat yang DI-VETO wawasan dipisah — bukan racun forensik, tapi ditolak
@@ -1911,11 +2072,9 @@ const tercemarArah = kandidatArah.filter((k) => k.kena.some((z) => z.status === 
 // EV statistik >= 0 boleh lewat — tanpa informasi baru, zona tak pernah bisa menyembuh.
 const eksplorasiArah = tercemarArah.find((k) => k.eksA && k.eksA.evPct >= 0) || null
 const kunciEntriArah = (k, eksplor) => {
-  const { s, id, b, v, waw, wp, buktiWaw, warA, mcA, eksA, buktiCand, kena } = k
+  const { s, id, b, v, waw, wp, buktiWaw, warA, mcA, eksA, buktiCand, kena, estM, predM, peri, deal, odds } = k
   const emas = emasArah(k)
-  // V255 METAKOGNISI — otak menilai dirinya sendiri SEBELUM mengunci:
-  const estM = estimasiKeyakinan(k, forensik.arah.zona, gagal.length >= 6)
-  const predM = prediksiKegagalan(v.arah, b.rezim, eksA, forensik.arah.zona, closedArah, WAKTU.getTime())
+  // V255 METAKOGNISI — otak menilai dirinya sendiri SEBELUM mengunci (V256: dihitung di loop, dipakai ulang di sini):
   const biasB = biasKonteksGlobal[`${v.arah}-${b.rezim}`] ?? null
   const biasT = terapkanBias(v.keyakinan, biasB)
   if (!eksplor && (!estM.lolos || !predM.lanjut)) {
@@ -1952,11 +2111,30 @@ const kunciEntriArah = (k, eksplor) => {
       ...(mcA ? { mc: { pNaik: mcA.pNaik, q50: mcA.q50, q50dn: mcA.q50dn, ket: 'kerucut MC 2.000 lintasan — peluang arah & ekskursi median' } } : {}),
     },
     ...(eksA ? { ekspektasi: eksA } : {}),
+    odds: odds,                                                     // V256 OddsMaker (Trade Ideas)
+    peristiwa: peri,                                                // V256 tag peristiwa (OddsMaker event-based)
+    rencanaDeal: deal,                                              // V256 mesin deal (3Commas)
   }
   ledger.push(entri); terkunciBaru.push(entri)
   return entri
 }
-for (const k of bersihArah) kunciEntriArah(k, false)   // V255: fungsi mem-push sendiri; veto metakognitif = return null
+// V256 ODDS MAKER RANKING (Money Machine top-K): bersihArah diurut skor peluang —
+// hanya TOP-K berodds >= ambang yang boleh mengunci; sisanya ditolak DENGAN ALASAN ODDS.
+for (const k of bersihArah) if (emasArah(k)) k.odds.skor = +(k.odds.skor + 5).toFixed(1)
+const rankArah = [...bersihArah].sort((a, b) => b.odds.skor - a.odds.skor)
+const posisiTerbukaAwal = ledger.filter((e) => e.status === 'TERBUKA').length
+const sisaPosisi = Math.max(0, DEAL.MAX_POSISI - posisiTerbukaAwal)   // Global Max Open Positions (3Commas)
+const pilihArah = rankArah.filter((k) => k.odds.skor >= DEAL.ODDS_MIN).slice(0, Math.min(DEAL.TOP_K, sisaPosisi))
+if (sisaPosisi === 0) log(`global-max-positions: ${posisiTerbukaAwal} posisi terbuka >= batas ${DEAL.MAX_POSISI} — sinyal ARAH baru diabaikan siklus ini`)
+const gagalOddsArah = rankArah.filter((k) => !pilihArah.includes(k))
+for (const k of pilihArah) kunciEntriArah(k, false)   // V255: fungsi mem-push sendiri; veto metakognitif = return null
+for (const k of gagalOddsArah) {
+  nearMiss.push({
+    simbol: k.s, arah: k.v.arah, keyakinan: k.v.keyakinan, entry: k.b.harga, rezim: k.b.rezim,
+    catatan: `ODDS MAKER (Trade Ideas) — skor peluang ${k.odds.skor}/100 ${k.odds.skor < DEAL.ODDS_MIN ? `< ambang ${DEAL.ODDS_MIN}` : `cukup tapi di luar top-${DEAL.TOP_K} terkuat (Money Machine)`} · komponen: MC ${(k.odds.komponen.mc * 100).toFixed(0)} / zona ${(k.odds.komponen.zona * 100).toFixed(0)} / meta ${(k.odds.komponen.meta * 100).toFixed(0)} / daya ${(k.odds.komponen.daya * 100).toFixed(0)} — fokus modal hanya pada peluang terkuat`,
+  })
+}
+if (gagalOddsArah.length) log(`odds-maker: ${gagalOddsArah.length} kandidat ARAH ditolak ranking (top-${DEAL.TOP_K} ambang ${DEAL.ODDS_MIN}), ${pilihArah.length} lolos`)
 if (eksplorasiArah) {
   kunciEntriArah(eksplorasiArah, true)
   forensikTindakan.push(`slot eksplorasi: ${eksplorasiArah.s} ${eksplorasiArah.v.arah} dilepas lewat gerbang (EV +${(eksplorasiArah.eksA.evPct * 100).toFixed(2)}% >= 0) — zona racun diuji agar bisa menyembuh dengan bukti baru`)
@@ -2138,20 +2316,29 @@ for (const s of daftarTelusur) {
     continue
   }
   const pA = tgt.highAmbisius ? mc.pLevel(tgt.highAmbisius / b.harga - 1) : null
+  // V256 MESIN-DEAL-ODDS — peristiwa + rencana deal + odds dipra-registrasi per kandidat phoenix:
+  const periP = tagPeristiwa(c, 'BUY', war, wpPhx)
+  const dealP = rencanaDeal(c, b.harga, 'BUY', tgt.untung)
+  const estPhx = estimasiKeyakinan({ wp: wpPhx, v: { arah: 'BUY', keyakinan: v.keyakinan }, b, eksA: null, kena: kenaPhx }, forensik.phoenix.zona, gagal.length >= 6)
+  const oddsP = skorOdds({ pWin: pT, zonaHit: hitZona(kenaPhx), metaLevel: estPhx.level, dayaAvg: dayaProduk, emas: emasPhx })
   lulusPhx.push({
     id, simbol: s, jalur: 'PHOENIX', arah: 'BUY', keyakinan: v.keyakinan + (emasPhx ? 4 : 0), skorPhoenix: v.skor,
     entry: b.harga, tgt, rad, b, war, mc, pT, pA, dayaProduk, stv, pStv, evK, kenaPhx, zonaEmas: emasPhx, wawPhx, wpPhx,
-    urut: v.skor * Math.min(tgt.untung, 0.06) * (evK > 0 ? 1.25 : 1),   // v2.1 fantasi tak memenangkan kuota; V251 EV positif diprioritaskan
+    peri: periP, deal: dealP, odds: oddsP, estPhx,
+    urut: oddsP.skor * 10 + v.skor * Math.min(tgt.untung, 0.06) * (evK > 0 ? 1.25 : 1) / 10,   // V256: odds primer (Money Machine); skor×EV jadi tie-break
   })
 }
 // kuota harian: hanya prediksi radar TERBAIK yang dikunci — sisanya jujur jadi kandidat
 const phxTerlanjur = ledger.filter((e) => e.jalur === 'PHOENIX' && (e.waktuKunci || '').slice(0, 10) === TGL).length
 const sisaKuota = Math.max(0, kunciMaks - phxTerlanjur)
+const sisaPosisiPhx = Math.max(0, DEAL.MAX_POSISI - ledger.filter((e) => e.status === 'TERBUKA').length)   // V256 Global Max Open Positions
+const kunciEfektif = Math.min(sisaKuota, sisaPosisiPhx)
+if (sisaPosisiPhx === 0 && sisaKuota > 0) log(`global-max-positions: batas ${DEAL.MAX_POSISI} tercapai — kuota phoenix ${sisaKuota} dibatalkan siklus ini`)
 lulusPhx.sort((a, b) => b.urut - a.urut)
 const phxCadangan = []
 // V252: pembangun entri phoenix — satu sumber untuk jalur kuota & slot eksplorasi
 const bangunEntriPhx = (p, eksplor) => {
-  const { tgt, rad, b, war, mc, pT, wawPhx, wpPhx } = p
+  const { tgt, rad, b, war, mc, pT, wawPhx, wpPhx, peri, deal, odds } = p
   const pA = tgt.highAmbisius ? mc.pLevel(tgt.highAmbisius / b.harga - 1) : null
   const kalP = kunciKeyakinan(p.keyakinan, ilmu.kalibrasi, p.kenaPhx)   // V252: kepastian zona medan
   const pita = pitaKonformal(ilmu.konformal)                       // V247: pita 75% ujung atas
@@ -2225,12 +2412,15 @@ const bangunEntriPhx = (p, eksplor) => {
     wawasan: wpPhx.penuh.map((x) => ({ param: x.param, domain: x.domain, lapis: x.lapis, nilai: x.nilai, arah: +x.arah.toFixed(2), ket: x.ket })),
     derivatif: (() => { const f = wawPhx.find((x) => x.param === 'funding'), o = wawPhx.find((x) => x.param === 'oi'); return { fundingPct: f?.nilai ?? null, oiJuta: o?.nilai ?? null, ket: 'derivatif futures rantai host (bybit→bytick→fapi→okx) + snapshot OI antar-siklus' } })(),
     narasi: narPhx,
+    odds: odds,                                                     // V256 OddsMaker (Trade Ideas)
+    peristiwa: peri,                                                // V256 tag peristiwa (OddsMaker event-based)
+    rencanaDeal: deal,                                              // V256 mesin deal (3Commas)
   }
   ledger.push(entri); terkunciBaru.push(entri)
   return entri
 }
 for (const [i, p] of lulusPhx.entries()) {
-  if (i >= sisaKuota) {
+  if (i >= kunciEfektif) {
     phxCadangan.push({
       simbol: p.simbol, jalur: 'PHOENIX', arah: 'BUY', keyakinan: p.keyakinan, entry: p.b.harga, rezim: p.b.rezim,
       catatan: `lolos gerbang radar (skor ${p.skorPhoenix}) — di luar kuota ${kunciMaks} terbaik hari ini`,
@@ -2241,9 +2431,9 @@ for (const [i, p] of lulusPhx.entries()) {
 }
 // V252 SLOT EKSPLORASI phoenix (bandit berbatas): 1 kandidat zona racun dengan
 // EV statistik >= 0 per denyut boleh lewat — tanpa bukti baru zona tak pernah menyembuh
-const terpakaiQuota = Math.min(lulusPhx.length, sisaKuota)
+const terpakaiQuota = Math.min(lulusPhx.length, kunciEfektif)
 const eksplorPhx = tercemarPhx.filter((k) => k.evK >= 0).sort((a, b) => b.evK - a.evK)[0] || null
-if (eksplorPhx && sisaKuota - terpakaiQuota > 0) {
+if (eksplorPhx && kunciEfektif - terpakaiQuota > 0) {
   bangunEntriPhx(eksplorPhx, true)
   forensikTindakan.push(`slot eksplorasi phoenix: ${eksplorPhx.simbol} dilepas lewat gerbang (EV +${(eksplorPhx.evK * 100).toFixed(2)}% >= 0) — zona racun radar diuji agar bisa menyembuh dengan bukti baru`)
   log(`forensik-eksplorasi-phx: ${eksplorPhx.simbol} EV +${(eksplorPhx.evK * 100).toFixed(2)}%`)
@@ -2296,6 +2486,65 @@ for (const e of ledger) {
   // V247 ILMU: keyakinan adalah PROBABILITAS — dinilai skor Brier (Gneiting-Raftery 2007).
   const pKal = clamp((e.keyakinanMentah ?? e.keyakinan ?? 60) / 100, 0.5, 0.98)
   e.brier = +((pKal - (net > 0 ? 1 : 0)) ** 2).toFixed(4)
+  // V256 ODDSMAKER PERISTIWA — hit-rate per peristiwa pemicu dihitung medan:
+  // "pinpoint winning filters, eliminate losing variables" (Trade Ideas OddsMaker).
+  if (Array.isArray(e.peristiwa)) {
+    for (const t of e.peristiwa) {
+      const h = ilmu.peristiwa?.[t]
+      if (!h) continue
+      h.n++
+      if (e.status === 'BENAR') h.benar++
+      h.net = +((h.net ?? 0) + e.net).toFixed(5)
+    }
+  }
+  // V256 MESIN DEAL — rencana deal 3Commas dinilai medan dari lilin pasca-kunci:
+  // SO kena?, avg-price & net-dengan-SO, BEP menyelamatkan?, ekstra trailing.
+  const barSetelahAll = c.filter((x) => x.t >= new Date(e.waktuKunci).getTime())
+  if (e.rencanaDeal && barSetelahAll.length && e.entry > 0) {
+    const sgnD = e.arah === 'BUY' ? 1 : -1
+    const rd = e.rencanaDeal
+    const sentuh = (lvl, sisi) => barSetelahAll.some((b) => (sisi === 'bawah' ? b.l <= lvl : b.h >= lvl))
+    const soKena = (rd.safetyOrders || []).filter((s) => sentuh(s.harga, sgnD === 1 ? 'bawah' : 'atas')).length
+    if (soKena > 0) {
+      const parts = [{ v: 1, p: e.entry }]
+      for (let i = 0; i < soKena; i++) parts.push({ v: Math.pow(DEAL.SO_VOL_MULT, i + 1), p: rd.safetyOrders[i].harga })
+      const totV = parts.reduce((a, x) => a + x.v, 0)
+      const avgD = parts.reduce((a, x) => a + x.v * x.p, 0) / totV
+      const netD = (sgnD === 1 ? 1 : -1) * (exit / avgD - 1) - FEE
+      e.dealMedan = {
+        soKena, soMax: rd.maxSO, avgJikaSo: +avgD.toPrecision(7),
+        netTanpaSO: e.net, netDenganSO: +netD.toFixed(5),
+        perbaikanPct: +((netD - e.net) * 100).toFixed(2),
+        ket: `${soKena} safety order tersentuh — averaging turunkan harga rata ke ${+avgD.toPrecision(7)}; net jika SO dieksekusi ${netD >= 0 ? '+' : ''}${(netD * 100).toFixed(2)}% vs ${e.net >= 0 ? '+' : ''}${(e.net * 100).toFixed(2)}% tanpa SO`,
+      }
+      ilmu.deal.so.n++; ilmu.deal.so.soKena += soKena
+      ilmu.deal.so.netDenganSo = +(ilmu.deal.so.netDenganSo + netD).toFixed(5)
+      ilmu.deal.so.netTanpaSo = +(ilmu.deal.so.netTanpaSo + e.net).toFixed(5)
+      if (netD > e.net) ilmu.deal.so.menyelamatkan++
+    }
+    if (rd.breakeven) {
+      const aktKena = sentuh(rd.breakeven.aktivasiHarga, sgnD === 1 ? 'atas' : 'bawah')
+      if (aktKena) {
+        const stopKena = sentuh(rd.breakeven.stopBaruHarga, sgnD === 1 ? 'bawah' : 'atas')
+        e.dealMedan = { ...(e.dealMedan || {}), bep: { aktivasiKena: true, keluarNetNol: stopKena, menyelamatkan: stopKena && e.net < 0 } }
+        ilmu.deal.bep.n++; ilmu.deal.bep.aktivasiKena++
+        if (stopKena) { ilmu.deal.bep.keluarNetNol++; if (e.net < 0) ilmu.deal.bep.menyelamatkan++ }
+      }
+    }
+    // trailing: peak pasca-T1 vs harga akhir horizon (BUY) — cermin utk SELL
+    const t1 = e.jalur === 'PHOENIX' ? e.target : null
+    const t1Kena = t1 != null ? barSetelahAll.some((b) => (sgnD === 1 ? b.h >= t1 : b.l <= t1)) : false
+    if (t1Kena) {
+      const idxT1 = barSetelahAll.findIndex((b) => (sgnD === 1 ? b.h >= t1 : b.l <= t1))
+      const pasca = barSetelahAll.slice(idxT1)
+      const peak = sgnD === 1 ? Math.max(...pasca.map((x) => x.h)) : Math.min(...pasca.map((x) => x.l))
+      const ekstraPct = +(sgnD === 1 ? (peak / t1 - 1) * 100 : (t1 / peak - 1) * 100).toFixed(2)   // seberapa jauh melampaui T1 (arah-aware)
+      e.dealMedan = { ...(e.dealMedan || {}), trail: { tembusT1: true, peakHarga: +peak.toPrecision(7), ekstraPct: +ekstraPct.toFixed(2), jarakTrailPct: rd.trailing?.jarakPct ?? null } }
+      ilmu.deal.trail.n++; ilmu.deal.trail.tembusT1++
+      ilmu.deal.trail.ekstraPctJumlah = +(ilmu.deal.trail.ekstraPctJumlah + ekstraPct).toFixed(2)
+      ilmu.deal.trail.ekstraMaksPct = Math.max(ilmu.deal.trail.ekstraMaksPct, ekstraPct)
+    }
+  }
   if (e.jalur === 'PHOENIX') {
     // belajar radar: apakah prediksi ujung atasnya tersentuh? (bukan vonis resmi)
     const barSetelah = c.filter((x) => x.t >= new Date(e.waktuKunci).getTime())
@@ -2704,6 +2953,10 @@ const barisDari = (e) => ({
   bukti: e.bukti, ketBukti: e.ketBukti, daya: e.daya,
   ...(e.metakognisi ? { metakognisi: e.metakognisi } : {}),
   ...(e.biasKonteks ? { biasKonteks: e.biasKonteks } : {}),
+  ...(e.odds ? { odds: e.odds } : {}),
+  ...(e.peristiwa ? { peristiwa: e.peristiwa } : {}),
+  ...(e.rencanaDeal ? { rencanaDeal: e.rencanaDeal } : {}),
+  ...(e.dealMedan ? { dealMedan: e.dealMedan } : {}),
   ...(e.warisan ? { warisan: e.warisan } : {}),
 })
 // tiap lane memakai prediksi barunya hari ini; bila kosong (sudah terkunci siklus lalu), pakai yang TERBUKA
@@ -2743,6 +2996,9 @@ const disiplin = {
   zonaRacunAktif: forensik.arah.racun.length + forensik.phoenix.racun.length,
   ditolakSiklusIni: blokForensikArah + blokForensikPhx,
   emasDiprioritaskan: forensik.arah.emas.length + forensik.phoenix.emas.length,
+  posisiTerbuka: ledger.filter((e) => e.status === 'TERBUKA').length,
+  maksPosisiTerbuka: DEAL.MAX_POSISI,
+  oddsDitolakSiklusIni: gagalOddsArah.length,
   ket: modeDisiplin === 'TUNGGU'
     ? 'TIDAK ADA SASARAN LAYAK — sistem menolak sinyal kualitas rendah (lebih baik tidak mengambil posisi daripada terus merugi); kompas tetap menerbitkan arah tiap denyut'
     : 'sasaran aktif — hanya kandidat yang selamat dari gerbang forensik; zona racun terbukti tetap ditolak',
@@ -2765,6 +3021,8 @@ const guruPengajaran = [
   evMed != null ? `PROFIT (EV median sasaran ${evMed > 0 ? '+' : ''}${evMed.toFixed(2)}% net-fee${pProfit.profitFactor != null ? ` · PF ledger ${pProfit.profitFactor} · menang rata ${pProfit.menangRataPct ?? '—'}% vs rugi rata ${pProfit.rugiRataPct ?? '—'}%` : ''}): profesional mengukur ekspektasi, bukan feeling — ekspektasi negatif berarti berhenti, bukan "sekali lagi"` : 'PROFIT: EV = P(target)×untung − P(stop)×rugi net-fee — jika EV tak pernah dihitung, kamu tidak sedang berdagang, sedang menebak',
   `DISIPLIN (aturan aktif ${Object.keys(aturan.aktif).length} · pola terpantau ${Object.values(aturan.pola).reduce((a, x) => a + x, 0)}): ${Object.values(aturan.aktif).slice(-1)[0] ?? 'aturan pertama lahir saat pola kekalahan terulang 2 kali — kegagalan yang dicatat adalah guru termurah'}`,
   `WAWASAN (funding BTC ${frBtc != null ? (frBtc * 100).toFixed(4) + '%' : '—'} · OI BTC ${oiBtc ? '$' + oiBtc.nilaiJuta + ' juta' + (oiBtc.deltaPct != null ? ' · Δ' + (oiBtc.deltaPct * 100).toFixed(2) + '%' : '') : '—'} · F&G ${fng?.nilai ?? '—'} ${fng?.klasifikasi ?? ''}): derivatif adalah bahasa kerumunan — funding ekstrem berarti pihak yang MEMBAYAR biasanya yang salah; baca open interest dulu sebelum percaya lilin: harga naik tanpa OI naik adalah naik tanpa dana baru, dan itu rapuh`,
+  `DEAL (${PHX.SASARAN_ARAH + PHX.SASARAN_PHX + PHX.KUNCI_MAKS} batas posisi · posisi terbuka ${ledger.filter((e) => e.status === 'TERBUKA').length}): rencana profesional bukan satu tembakan — safety order dari ATR (bukan mood), stop pindah ke net-nol setelah ${Math.round(DEAL.BEP_ACT * 100)}% jalan ke target, profit ditrail ${DEAL.TRAIL_DIST}×ATR dari peak; kontingensi disiplin yang dipra-registrasi — bukan janji`,
+  `ODDS (${bersihArah.length + lulusPhx.length} kandidat diranking · ambang ${DEAL.ODDS_MIN} · top-${DEAL.TOP_K} ala Money Machine): fokus modal hanya pada peluang terkuat — skor 0-100 dari 40% peluang-MC + 25% hit-rate zona + 20% metakognisi + 15% daya${PERISTIWA_DEFS.some((p) => (ilmu.peristiwa[p.nama]?.n ?? 0) >= 10) ? `; peristiwa paling terbukti: ${(PERISTIWA_DEFS.filter((p) => (ilmu.peristiwa[p.nama]?.n ?? 0) >= 10).map((p) => ({ nama: p.nama, hit: ilmu.peristiwa[p.nama].n ? ilmu.peristiwa[p.nama].benar / ilmu.peristiwa[p.nama].n : 0 })).sort((a, b) => b.hit - a.hit)[0] || {}).nama ?? '—'}` : '; peristiwa menunggu medan'} — menembak semua koin yang bergerak adalah cara tercepat jadi donatur pasar`,
 ]
 const guruKuis = (() => {
   const mtk = (x) => (x > 0 ? '+' : '') + (+x).toFixed(2)
@@ -2946,14 +3204,15 @@ const metakognisiLaporan = {
   ket: 'dua gerbang metakognitif (estimator + prediktor) berdiri SEBELUM ledger: mereka berhak menolak sinyal dari otaknya sendiri — dan kalibrasinya sendiri dinilai medan; slot eksplorasi forensik dikecualikan agar zona racun tetap bisa diuji',
 }
 const wawasan360 = {
-  versi: 'V255-METAKOGNISI-NEVRON', dihasilkan: ISO, siklus: SIKLUS,
+  versi: 'V256-MESIN-DEAL-ODDS', dihasilkan: ISO, siklus: SIKLUS,
   dimensi: DIM_ARAH.length + DIM_WAW.length,
   registri: {
-    totalNama: TOTAL_PARAM_NAMA + TOTAL_PARAM_METAKOGNISI, perKandang: TOTAL_PARAM_NAMA, metakognisi: TOTAL_PARAM_METAKOGNISI,
+    totalNama: TOTAL_PARAM_SEMUA, perKandang: TOTAL_PARAM_NAMA, metakognisi: TOTAL_PARAM_METAKOGNISI,
+    dealOdds: TOTAL_PARAM_DEAL_ODDS,
     intiBerbobot: DIM_WAW.length, observasi: PARAM_OBS.length,
     perDomain: perDomainCount, jumlahKandang: perKandang.length,
     pengukuranPerDenyut: TOTAL_PARAM_NAMA * perKandang.length + TOTAL_PARAM_METAKOGNISI * kandidatArah.length,
-    ket: `registri ${TOTAL_PARAM_NAMA} parameter bernama per kandang × ${perKandang.length} kandang ≈ ${TOTAL_PARAM_NAMA * perKandang.length} pengukuran per denyut + ${TOTAL_PARAM_METAKOGNISI} parameter metakognitif Nevron per kandidat (≈${TOTAL_PARAM_METAKOGNISI * kandidatArah.length} pengukuran) — lapis INTI (12) berbobot genome+Hedge, lapis OBSERVASI (${PARAM_OBS.length}) boleh MENOLAK via veto, lapis METAKOGNISI (35) menilai sinyal dari dalam sebelum dikunci; sensus jujur, bukan karangan`,
+    ket: `registri ${TOTAL_PARAM_SEMUA} parameter bernama = ${TOTAL_PARAM_NAMA} per kandang × ${perKandang.length} kandang + ${TOTAL_PARAM_METAKOGNISI} metakognitif Nevron per kandidat + ${TOTAL_PARAM_DEAL_ODDS} parameter deal/odds (V256: 14 mesin deal+odds 3Commas/Trade Ideas + 6 tag peristiwa OddsMaker) — lapis INTI (12) berbobot genome+Hedge, lapis OBSERVASI (${PARAM_OBS.length}) boleh MENOLAK via veto, lapis METAKOGNISI (35) menilai sinyal dari dalam, lapis DEAL/ODDS (20) merekayasa rencana posisi & meranking peluang; sensus jujur, bukan karangan`,
   },
   metakognisi: metakognisiLaporan,
   sekolahParameter: sekolahParam,
@@ -2978,6 +3237,56 @@ const wawasan360 = {
 }
 tulis(path.join(ROOT, 'laporan/wawasan.json'), wawasan360)
 log(`samudra laporan: ${perKandang.length} kandang × ${TOTAL_PARAM_NAMA} param · sekolah ${sekolahParam.length} param dinilai · narasi makro ${narasiMakroTeks.length} kar.`)
+
+// ---- V256 MESIN DEAL & ODDS — laporan lengkap ala 3Commas × Trade Ideas ----
+// identitas + sumber resmi, ranking OddsMaker siklus ini, hit-rate per peristiwa,
+// statistik medan rencana deal (SO/BEP/trailing), parameter, posisi terbuka.
+const posisiTerbuka = ledger.filter((e) => e.status === 'TERBUKA')
+const rankOddsSiklus = [
+  ...rankArah.map((k) => ({ simbol: k.s, jalur: 'ARAH', arah: k.v.arah, odds: k.odds.skor, komponen: k.odds.komponen, peristiwa: k.peri, terkunci: pilihArah.includes(k), alasan: pilihArah.includes(k) ? 'top odds — mengunci' : k.odds.skor < DEAL.ODDS_MIN ? `odds < ${DEAL.ODDS_MIN}` : `di luar top-${DEAL.TOP_K}` })),
+  ...lulusPhx.map((p) => ({ simbol: p.simbol, jalur: 'PHOENIX', arah: 'BUY', odds: p.odds.skor, komponen: p.odds.komponen, peristiwa: p.peri, terkunci: lulusPhx.indexOf(p) < sisaKuota, alasan: lulusPhx.indexOf(p) < sisaKuota ? 'kuota terbaik (odds primer)' : 'di luar kuota' })),
+].sort((a, b) => b.odds - a.odds)
+const peristiwaStat = PERISTIWA_DEFS.map((p) => {
+  const h = ilmu.peristiwa[p.nama] || { n: 0, benar: 0, net: 0 }
+  return { peristiwa: p.nama, ket: p.ket, n: h.n, hitPct: h.n ? +((h.benar / h.n) * 100).toFixed(1) : null, netPct: +((h.net || 0) * 100).toFixed(2), status: h.n >= 10 ? (h.benar / h.n >= 0.52 ? 'pemenang' : (h.benar / h.n < 0.44 ? 'penggerus' : 'netral')) : 'pemula' }
+})
+const dealOddsLaporan = {
+  versi: 'V256-MESIN-DEAL-ODDS', dihasilkan: ISO, siklus: SIKLUS,
+  identitas: 'deep-screening dua platform trading-AI profesional — kunci intinya diadopsi, diadaptasi ke ledger pra-registrasi SAKTI, lalu DINILAI MEDAN',
+  sumber: [
+    { platform: '3Commas', url: 'https://help.3commas.io/en/articles/16281102', kunci: 'DCA bot 6-parameter: Max DCA Orders (hard cap), Price Deviation + Multiplier, Order Size Multiplier — averaging terkontrol' },
+    { platform: '3Commas', url: 'https://help.3commas.io/en/articles/16281110', kunci: 'Move Stop Loss to Breakeven — eliminasi risiko setelah aktivasi' },
+    { platform: '3Commas', url: 'https://help.3commas.io/en/articles/16281163', kunci: 'Trailing Stop 2-parameter: Activation + jarak trail' },
+    { platform: '3Commas', url: 'https://help.3commas.io/en/articles/16281055', kunci: 'Global Max Open Positions — "prevent excessive trading"' },
+    { platform: '3Commas', url: 'https://help.3commas.io/en/articles/16281154', kunci: 'Pump Protection — memvalidasi guard kejut-pump SAKTI V249' },
+    { platform: 'Trade Ideas', url: 'https://trade-ideas.com/features/backtesting/', kunci: 'OddsMaker: event-based testing, metrics (PF/win-rate/drawdown), "pinpoint winning filters, eliminate losing variables"' },
+    { platform: 'Trade Ideas', url: 'https://trade-ideas.com/features/money-machine/', kunci: 'Money Machine: konsentrasi top-3 momentum opportunities' },
+    { platform: 'Trade Ideas', url: 'https://trade-ideas.com/features/ai-signals/', kunci: 'Holly AI: signals dengan entry/exit + position sizing menyesuaikan kondisi (memvalidasi bias konteks V255)' },
+  ],
+  kunciDiadopsi: [
+    'MESIN DEAL 3Commas — safety orders (maxSO 2, deviasi 1.2×ATR ×1.6, volume ×1.5) + TP-dari-avg dipra-registrasi di tiap sasaran dan dinilai medan saat matang',
+    'MOVE SL TO BREAKEVEN 3Commas — aktivasi 60% jalan ke target, stop pindah ke net-nol; diukur berapa kali menyelamatkan posisi',
+    'TRAILING TAKE PROFIT 3Commas — trail dari peak 0.8×ATR setelah T1; ekstra profit terukur dari peak nyata',
+    'ODDS MAKER Trade Ideas — skor peluang 0-100 (40% MC + 25% zona + 20% metakognisi + 15% daya) meranking SEMUA kandidat tiap denyut',
+    'MONEY MACHINE Trade Ideas — hanya top-3 berodds ≥ 55 yang boleh mengunci; sisanya ditolak dengan alasan odds yang bisa diaudit',
+    'EVENT-BASED TESTING OddsMaker — 6 tag peristiwa disegel di ledger; hit-rate & net per peristiwa dihitung dari vonis matang',
+    'GLOBAL MAX OPEN POSITIONS 3Commas — posisi terbuka diukur tiap denyut melawan batas',
+  ],
+  paramDeal: PARAM_DEAL,
+  paramEvent: PARAM_EVENT,
+  oddsSiklusIni: rankOddsSiklus,
+  ambang: DEAL.ODDS_MIN, topK: DEAL.TOP_K, bobot: DEAL.BOBOT,
+  peristiwa: peristiwaStat,
+  deal: {
+    param: { maxSO: DEAL.MAX_SO, soDevAtr: DEAL.SO_DEV, soDevMult: DEAL.SO_DEV_MULT, soVolMult: DEAL.SO_VOL_MULT, bepAkt: DEAL.BEP_ACT, trailDistAtr: DEAL.TRAIL_DIST },
+    medan: ilmu.deal,
+    ket: 'semua kontingensi deal DIPRA-REGISTRASI saat kunci lalu dibandingkan dengan jalur nyata lilin pasca-kunci — net-dengan-SO vs tanpa-SO, BEP menyelamatkan?, ekstra trailing dari peak nyata; tumbuh dari ledger, bukan klaim',
+  },
+  posisiTerbuka: { jumlah: posisiTerbuka.length, rincian: posisiTerbuka.slice(0, 14).map((e) => ({ simbol: e.simbol, jalur: e.jalur, arah: e.arah, umurJam: +(((WAKTU - new Date(e.waktuKunci)) / 36e5)).toFixed(1) })), batas: DEAL.MAX_POSISI, ket: 'Global Max Open Positions (3Commas): batas kumulatif — sinyal baru di luar batas tidak dieksekusi (guard mengikat sejak V256)' },
+  kejujuran: 'rencana deal adalah KONTINGENSI yang disiplin — bukan janji hasil; statistik medan baru bermakna setelah n cukup; param konstan siklus tidak ikut memilih arah (pelajaran forensik)',
+}
+tulis(path.join(ROOT, 'laporan/odds.json'), dealOddsLaporan)
+log(`deal-odds: top siklus ${rankOddsSiklus[0] ? `${rankOddsSiklus[0].simbol} ${rankOddsSiklus[0].odds}` : '—'} · odds ditolak ${gagalOddsArah.length} · posisi terbuka ${posisiTerbuka.length}/${dealOddsLaporan.posisiTerbuka.batas}`)
 const laporan = {
   protokol: 'SASARAN-MICAPROFITA', organ: VERSI, dihasilkan: ISO, siklus: SIKLUS,
   sumber: { host, gagal: gagal.slice(0, 12) },
@@ -3025,6 +3334,17 @@ const laporan = {
     sumber: `registri penuh ${TOTAL_PARAM_NAMA} param/kandang + ${TOTAL_PARAM_METAKOGNISI} param metakognitif di laporan/wawasan.json`,
   },
   metakognisi: metakognisiLaporan,
+  dealOdds: {
+    identitas: dealOddsLaporan.identitas,
+    sumberResmi: dealOddsLaporan.sumber.map((s) => `${s.platform}: ${s.url}`),
+    kunciDiadopsi: dealOddsLaporan.kunciDiadopsi,
+    ambang: DEAL.ODDS_MIN, topK: DEAL.TOP_K, bobot: DEAL.BOBOT,
+    oddsSiklusIni: rankOddsSiklus.slice(0, 8),
+    peristiwa: peristiwaStat,
+    dealMedan: ilmu.deal,
+    posisiTerbuka: { jumlah: posisiTerbuka.length, batas: dealOddsLaporan.posisiTerbuka.batas },
+    sumber: 'rincian penuh + param di laporan/odds.json',
+  },
   piagam: {
     identitas: PIAGAM.identitas, pilar: PIAGAM.pilar, otak: OTAK,
     roadmapJujur: PIAGAM.roadmapJujur,
@@ -3039,6 +3359,7 @@ const laporan = {
       'V253 WAWASAN-360 — komite 5→17 dimensi: 10 parameter lilin baru + derivatif NYATA (funding & OI Bybit linear) + iklim makro (F&G, dominasi, breadth) + narasi analis fasih per sasaran',
       'V254 SAMUDRA-PARAMETER — registri 46 parameter/kandang (≈460 pengukuran per denyut): multi-TF 1h+4h, riwayat funding, order book OKX, persentil lintas-pasar, kalender, GARCH/MC + SEKOLAH PARAMETER (hit-rate tiap param dinilai medan) + gerbang VETO wawasan (no-trade adalah keputusan)',
       'V255 METAKOGNISI-NEVRON — bedah Neurobro AI/Nevron (axioma-ai-labs): 7 kunci metakognisi diadopsi — estimator keyakinan 7-faktor, prediktor kegagalan pra-kunci, kritik diri 5-field, reliabilitas pelajaran (penguatan+peluruhan), bias konteks per rezim×arah, deteksi loop, monitor intervensi — registri 46 → 81 parameter bernama; gerbang metakognitif berhak bilang TUNGGU pada otaknya sendiri, dan kalibrasinya dinilai medan',
+      'V256 MESIN-DEAL-ODDS — deep-screening 3Commas & Trade Ideas (dokumentasi resmi): mesin deal DCA (safety orders maxSO/deviasi×multiplier/volume×multiplier + TP-dari-avg), Move SL to Breakeven, Trailing Take Profit, Global Max Open Positions — semuanya dipra-registrasi & dinilai medan; OddsMaker 0-100 (40% MC + 25% zona + 20% metakognisi + 15% daya) + Money Machine top-3 menguasai kuota; 6 tag peristiwa event-based dinilai hit-rate-nya — registri 81 → 101 parameter bernama',
     ],
   },
   sadardiri,
@@ -3053,7 +3374,7 @@ const laporan = {
     ket: 'jaminan ARAH, bukan jaminan untung: apa pun kondisi pasar — zona phoenix kosong sekalipun — SAKTI selalu menerbitkan arah BUY/SELL: sasaran koin bila gerbang lolos, kompas rezim BTC (GARCH + MC 2.000 lintasan) sebagai lantai jawaban; tiap jawaban membawa keyakinan & ekspektasinya sendiri — dan sasaran dengan ekspektasi statistik di bawah −1,5% DITOLAK mesin profit (guard ekspektasi V251)',
   },
   guru: {
-    judul: guru.judul, pengajaran: guruPengajaran.slice(0, 4),
+    judul: guru.judul, pengajaran: [...guruPengajaran.slice(SIKLUS % guruPengajaran.length), ...guruPengajaran.slice(0, SIKLUS % guruPengajaran.length)].slice(0, 5),
     kuis: guruKuis, etika: ETIKA_GURU,
     sumber: 'pengajaran penuh di laporan/guru.json',
   },
@@ -3150,6 +3471,8 @@ denyut.push({
   estKalibrasi: ilmu.metakognisi.estimator.n ? +(ilmu.metakognisi.estimator.tepat / ilmu.metakognisi.estimator.n).toFixed(3) : null,
   predKalibrasi: ilmu.metakognisi.prediktor.n ? +(ilmu.metakognisi.prediktor.tepat / ilmu.metakognisi.prediktor.n).toFixed(3) : null,
   fng: fng?.nilai ?? null, fundingBtcPct: frBtc != null ? +(frBtc * 100).toFixed(4) : null, dimWawasan: DIM_ARAH.length + DIM_WAW.length,
+  oddsTop: rankOddsSiklus[0]?.odds ?? null, oddsDitolak: gagalOddsArah.length, posisiTerbuka: posisiTerbuka.length,
+  peristiwaHidup: Object.values(ilmu.peristiwa || {}).filter((h) => h.n > 0).length,
 })
 tulisJsonl(path.join(ROOT, 'laporan/denyut-server.jsonl'), denyut.slice(-500))
 // V253: snapshot OI utk ΔOI antar-siklus berikutnya (denyut pertama jujur null)
@@ -3181,6 +3504,7 @@ tulis(path.join(ROOT, 'laporan/jurnal-ilmu.json'), {
     metaLabeling: 'ilmu.meta.kuat/lemah menilai gerbang radar; geser dibatasi ±8 (laporan.ilmu.metaGerbang)',
     finmem: 'lapisan 1 ledger -> lapisan 2 pelajaran -> lapisan 3 aturan (laporan/pelajaran-server.json)',
     warisan: 'mesinWarisan()/garch11()/monteCarlo24j()/profilVolume()/betaBTC() berjalan tiap telusur; pTarget MC tersimpan di e.warisan.mc (pra-registrasi) lalu dinilai saat matang (ilmu.brier.mc + ilmu.mcKalibrasi)',
+    dealOdds: 'rencanaDeal()/skorOdds()/tagPeristiwa() dipasang V256 dari deep-screening 3Commas & Trade Ideas (dokumentasi resmi): SO/BEP/trailing dipra-registrasi per sasaran lalu dinilai medan (ilmu.deal), odds 0-100 meranking kuota (top-3), hit-rate per peristiwa di ilmu.peristiwa — rincian di laporan/odds.json',
   },
 })
 
