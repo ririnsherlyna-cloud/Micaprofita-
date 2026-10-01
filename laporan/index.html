@@ -139,6 +139,12 @@
   .st.TERBUKA{background:rgba(251,191,36,.14);color:var(--amber)}
   .st.BENAR{background:rgba(52,211,153,.14);color:var(--hijau)}
   .st.SALAH{background:rgba(251,113,133,.14);color:var(--merah)}
+  .st.RACUN{background:rgba(251,113,133,.16);color:var(--merah)}
+  .st.EMAS{background:rgba(52,211,153,.16);color:var(--hijau)}
+  .st.NETRAL{background:rgba(148,163,184,.14);color:var(--redup)}
+  .st.MEMBAIK{background:rgba(52,211,153,.16);color:var(--hijau)}
+  .st.MUNDUR{background:rgba(251,113,133,.16);color:var(--merah)}
+  .st.BELUM-CUKUP{background:rgba(251,191,36,.14);color:var(--amber)}
   .net-pos{color:var(--hijau)} .net-neg{color:var(--merah)}
   .gulir{overflow-x:auto;border-radius:var(--radius)}
   /* ===== FILTER LEDGER ===== */
@@ -201,6 +207,7 @@
     <a href="#warisan-sec">Warisan</a>
     <a href="#piagam-sec">Piagam</a>
     <a href="#sadar-sec">Sadar-Diri</a>
+    <a href="#forensik-sec">Forensik</a>
     <a href="#ruh-sec">Ruh &amp; Guru</a>
     <a href="#ledger-sec">Ledger</a>
     <a href="#otak-sec">Otak</a>
@@ -344,6 +351,25 @@
   <h2 id="ruh-sec">Ruh &amp; Guru — Jiwa yang Dibangun, Suara yang Mengajar</h2>
   <div class="genome-dua" id="ruh-kartu"></div>
   <div class="jnote" id="guru-box" style="margin-top:12px">—</div>
+
+  <h2 id="forensik-sec">Forensik &amp; Perbaikan — Performa di Atas Aktivitas</h2>
+  <div class="sub" style="margin-top:-6px">mandat investor: sistem harus menyadari performanya buruk, menemukan penyebabnya, memperbaiki strateginya, dan membuktikan lewat hasil — bukan sekadar terus membuat prediksi</div>
+  <div class="ringkas" id="forensik-ab" style="margin-top:10px"></div>
+  <div class="genome-dua" style="margin-top:12px">
+    <div class="kartu">
+      <div class="label">Zona Kondisi Medan — racun DITOLAK mesin, emas diprioritaskan</div>
+      <div class="gulir" style="max-height:340px"><table class="tabel" style="margin-top:6px">
+        <thead><tr><th>Zona</th><th>Jalur</th><th>n</th><th>akurasi</th><th>ekspek</th><th>PF</th><th>status</th></tr></thead>
+        <tbody id="forensik-zona"><tr><td colspan="7" style="color:var(--samar)">—</td></tr></tbody>
+      </table></div>
+    </div>
+    <div class="kartu">
+      <div class="label">Disiplin Gerbang &amp; Tindakan Otomatis</div>
+      <div id="forensik-disiplin" style="margin-top:6px">—</div>
+      <div id="forensik-tindakan" style="margin-top:10px">—</div>
+      <div class="sub" style="margin-top:10px">zona dihitung ulang tiap denyut dari ledger — racun bisa menyembuh lewat slot eksplorasi berbatas (1/denyut, wajib EV ≥ 0), emas bisa pudar: hanya bukti yang berbicara</div>
+    </div>
+  </div>
 
   <h2 id="ledger-sec">Riwayat Prediksi — Ledger Pra-Registrasi</h2>
   <div class="filterbar" role="group" aria-label="Filter ledger">
@@ -682,6 +708,35 @@ function isiPiagam(r){
     + '<div style="margin-top:8px"><span style="color:var(--amber)">Roadmap jujur:</span> ' + (p.roadmapJujur||'') + '</div>'
     + (r.pertumbuhan?.metamorfosis ? '<div style="margin-top:6px"><b>Metamorfosis hari ini:</b> ' + r.pertumbuhan.metamorfosis + '</div>' : '');
 }
+function isiForensik(r){
+  const f = r.forensik, p = r.performa, d = r.disiplin;
+  const kosong = '<div class="sub">forensik belum dibawa laporan ini — menunggu denyut V252</div>';
+  if (!f && !p){ $('forensik-ab').innerHTML = kosong; $('forensik-zona').innerHTML = '<tr><td colspan="7" style="color:var(--samar)">—</td></tr>'; $('forensik-disiplin').textContent = '—'; $('forensik-tindakan').textContent = '—'; return; }
+  const b = p?.baseline || {}, s = p?.sekarang || {}, t = p?.target || {};
+  const fe = (x) => (x === null || x === undefined) ? '—' : (x > 0 ? '+' : '') + x + '%';
+  const arahBadge = p?.arahan ? `<span class="st ${p.arahan}">${p.arahan}</span>` : '—';
+  const lulus = p?.lulus || {};
+  const cek = (x, nama) => (x ? '<b style="color:var(--hijau)">LULUS</b>' : '<span style="color:var(--amber)">menunggu</span>') + ' · ' + nama;
+  const kartu = [
+    ['Baseline — sebelum v252', b.versi || '—', `<span style="font-size:15px;font-family:var(--mono)">${b.akurasiPct ?? '—'}%</span> akurasi · PF <b>${b.pf ?? '—'}</b> · ekspek <b>${fe(b.ekspekPct)}</b>`, `n=${b.n ?? '—'} vonis${b.tgl ? ' · disegel ' + b.tgl.slice(0, 10) : ''} — titik nol perbaikan`],
+    ['Sekarang — jendela v252', `${s.n ?? 0} vonis terkunci setelah v252`, `<span style="font-size:15px;font-family:var(--mono)">${s.akurasiPct ?? '—'}%</span> akurasi · PF <b>${s.pf ?? '—'}</b> · ekspek <b>${fe(s.ekspekPct)}</b>`, `arahan ${arahBadge} — perbandingan murni (anti-cheat: hanya vonis terkunci setelah v252 berlaku)`],
+    ['Target Performa (wajib)', `akurasi ≥ ${t.akurasiPct ?? '—'}% · PF ≥ ${t.pf ?? '—'} · ekspek ≥ +${t.ekspekPct ?? '—'}%`, `${cek(lulus.akurasi, 'akurasi')}<br>${cek(lulus.pf, 'profit factor')}<br>${cek(lulus.ekspek, 'ekspektasi')}`, `n minimum ${t.nMin ?? '—'} — PF < 1.2 & ekspek negatif BUKAN kondisi normal`],
+  ];
+  $('forensik-ab').innerHTML = kartu.map(([l, v, ang, sub]) => `<div class="kartu"><div class="label">${l}</div>
+    <div class="sub" style="margin:2px 0 6px">${v}</div><div style="font-size:12.5px">${ang}</div><div class="sub" style="margin-top:6px">${sub}</div></div>`).join('');
+  const zona = [...(f?.zonaRacun || []), ...(f?.zonaEmas || [])];
+  $('forensik-zona').innerHTML = zona.length ? zona.map((z) => `<tr>
+    <td style="font-family:inherit">${z.nama}</td><td>${z.jalur || 'ARAH'}</td><td>${z.n}</td>
+    <td>${z.akurasiPct ?? '—'}%</td><td class="${z.ekspekPct >= 0 ? 'net-pos' : 'net-neg'}">${fe(z.ekspekPct)}</td>
+    <td>${z.pf ?? '—'}</td><td><span class="st ${z.status}">${z.status}</span></td></tr>`).join('')
+    : '<tr><td colspan="7" style="color:var(--samar)">belum ada zona berbukti cukup</td></tr>';
+  $('forensik-disiplin').innerHTML = d ? `<div style="font-size:13px">mode <span class="st ${d.mode === 'TUNGGU' ? 'BELUM-CUKUP' : 'EMAS'}">${d.mode}</span>
+    · ditolak siklus ini <b>${d.ditolakSiklusIni ?? 0}</b> · zona racun aktif <b>${d.zonaRacunAktif ?? 0}</b> · zona emas <b>${d.emasDiprioritaskan ?? 0}</b></div>
+    <div class="sub" style="margin-top:6px">${d.ket || ''}</div>` : '—';
+  $('forensik-tindakan').innerHTML = (f?.tindakan || []).length
+    ? '<b style="color:var(--sian)">Tindakan otomatis otak:</b><ul style="margin:6px 0 0;padding-left:18px;font-size:12.5px">' + f.tindakan.map((x) => `<li>${x}</li>`).join('') + '</ul>'
+    : '<div class="sub">tanpa tindakan forensik siklus ini</div>';
+}
 function isiRuhGuru(r){
   const ruh = r.ruh;
   if (ruh){
@@ -753,7 +808,7 @@ async function segarkan(){
     $('tumbuh').textContent = (a.terkunci||0) + ' / ' + (a.dinilai !== undefined ? a.benar + a.salah : 0);
     $('tumbuh-sub').innerHTML = `terkunci · dinilai · <b>${a.terbuka||0}</b> terbuka`;
     isiSasaran(r); salinKeAksi(); isiKandidat(r); isiRiwayat(prak); isiGenome(r.genome);
-    isiPelajaran(r); isiDenyut(den); isiIlmu(r, jur); isiWarisan(r); isiPiagam(r); isiRuhGuru(r);
+    isiPelajaran(r); isiDenyut(den); isiIlmu(r, jur); isiWarisan(r); isiPiagam(r); isiRuhGuru(r); isiForensik(r);
     const kp = r.jaminan?.kompas;
     if (kp){ const kc = $('kompaschip'); kc.textContent = kp.arah + ' ' + kp.keyakinan + '/100'; kc.style.color = kp.arah === 'BUY' ? 'var(--hijau)' : 'var(--merah)'; }
     else $('kompaschip').textContent = '—';
