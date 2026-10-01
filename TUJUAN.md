@@ -381,6 +381,57 @@ pernah dikarang; entri lama pra-V253 tampil tanpa wawasan apa adanya;
 param konstan tidak memilih arah; semua bobot baru bisa diaudit di
 `otak/genome-server.json` (genome.waw) dan laporan.ilmu.hedge.waw.
 
+## 5h. SAMUDRA-PARAMETER — dari 17 dimensi ke 46 parameter/kandang + sekolah + veto (V254)
+
+Mandat pemilik: "tingkatkan lagi parameternya — chat AI punya ribuan
+miliar parameter, masa kita masih di bawah itu." Jawaban jujur SAKTI:
+kekuatan bukan jumlah bobot jaringan, tapi jumlah **bukti pasar yang
+terukur**. V254 melipatgandakan registri parameter dari 17 dimensi ke
+**46 parameter bernama per kandang × 10 kandang ≈ 460 pengukuran per
+denyut** (+12 iklim), semuanya dari endpoint publik tanpa API key:
+
+- **Multi-timeframe 1h+4h** (agregasi 4h dari lilin 1h, 0 permintaan):
+  EMA-align (harga>EMA9>EMA21>EMA50), MACD-4h, RSI 1h & 4h, Bollinger
+  %B-4h, struktur swing 4h, **sejajar-TF** (kesepakatan 1h vs 4h),
+  rasio ATR antar-TF; RSI/Stoch %K%D/MFI/CCI/ROC-12j/ROC-48j 1h;
+  jarak dari puncak/lantai 10 hari; z-score volume 24j; rasio badan
+  lilin (keyakinan lilin).
+- **Derivatif dalam (OKX, host yang terbukti hidup dari runner)**:
+  riwayat funding **rata-3 interval + tren** (kerumunan berkelanjutan,
+  bukan lonjakan sesaat); order book spot 50 level: **imbalance 1%**,
+  spread bps, **rasio kedalaman** bid/ask, **dinding terbesar**
+  (sisi + jarak dari mid).
+- **Lintas-pasar**: persentil perubahan & volume 24j koin di antara
+  ratusan swap USDT OKX; breadth swap (naikPct), median, sebaran
+  p10–p90, **altseason-proxy** (median alt − BTC), dominasi volume swap.
+- **Kuant-warisan & kalender**: GARCH sigma-24j, MC-2000-lintasan
+  pNaik, beta CAPM, divergensi RSI, jarak POC; sesi Asia/Eropa/AS,
+  akhir pekan, fase bulan.
+- **Makro lebih dalam**: F&G + riwayat 7 hari (Δ1h/Δ7d).
+
+**SEKOLAH PARAMETER** — parameter baru TIDAK langsung berhak bersuara.
+Nasihat tiap parameter disegel saat prediksi dikunci (`paramsPenuh`
+di ledger); saat vonis matang, tiap param yang bicara dihitung
+hit-rate & sumbangan netnya (`ilmu.paramHit`). Pemula (n<10) →
+dipantau → **calon-lulus** (n≥20, hit≥52%, net>0) → berhak naik jadi
+pemilih arah di versi berikutnya; hit<44% = **diawasi**. Kelulusan via
+bukti, bukan tangan.
+
+**GERBANG VETO WAWASAN** — parameter observasi berhak MENOLAK sinyal
+buruk (mandat investor: berani no-trade): dinding buku lawan
+(imbalance ≥0,55), kerumunan funding berkelanjutan searah posisi
+(rata3 ≥0,035%), tren 4h lawan (EMA-align ≥0,62 sementara TF tidak
+sejajar), volatilitas ekstrem (ATR persentil ≥96 tanpa dukungan 4h).
+Semua veto dilabeli + dicatat di `wawasan360.vetoSiklusIni` dan
+near-miss ledger — bisa diaudit, bukan mood.
+
+Dasbor: chip hero **"46 param"**, 8 kartu iklim (F&G+Δ7d, dominasi,
+funding, OI, lintas-pasar OKX, altseason, breadth, rezim), kotak
+gerbang veto, tabel 10 kandang (jumlah param + konsensus per domain +
+12 inti), dan **tabel Sekolah Parameter** (n, nasihat benar, sumbangan
+net, status). Registri penuh 46 param/kandang + bacaan analis per
+param: `laporan/wawasan.json`.
+
 ## 6. TERIMA-PASANG (tanpa konfigurasi)
 
 Sejak organ **V245 SARANG-BAWAAN**, membuka halaman Pages = langsung
