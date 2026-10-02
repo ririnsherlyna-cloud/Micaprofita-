@@ -227,6 +227,7 @@
     <a href="#gekko-sec">Gekko</a>
     <a href="#kaizen-sec">Kaizen</a>
     <a href="#autopilot-sec">AutoPilot</a>
+    <a href="#claw-sec">ClawTrade</a>
     <a href="#bahan-ajar-sec">Bahan Ajar</a>
     <a href="#ilmu-sec">Ilmu</a>
     <a href="#warisan-sec">Warisan</a>
@@ -341,7 +342,7 @@
   <div class="narasi-makro" id="narasi-makro">—</div>
   <div id="veto-waw" style="margin-top:10px"></div>
   <div class="gulir" style="margin-top:12px"><table class="tabel">
-    <thead id="waw-head"><tr><th>Simbol</th><th>Rezim</th><th>Funding</th><th>OI / Δ</th><th id="waw-cols" colspan="12" style="text-align:center">12 parameter inti berbobot (arah param — arahkan kursor untuk bacaan analis; 191 param bernama di wawasan.json)</th></tr></thead>
+    <thead id="waw-head"><tr><th>Simbol</th><th>Rezim</th><th>Funding</th><th>OI / Δ</th><th id="waw-cols" colspan="12" style="text-align:center">12 parameter inti berbobot (arah param — arahkan kursor untuk bacaan analis; 232 param bernama di wawasan.json)</th></tr></thead>
     <tbody id="waw-body"><tr><td colspan="16" style="color:var(--samar)">—</td></tr></tbody>
   </table></div>
   <div id="sekolah-box" style="margin-top:12px"></div>
@@ -369,6 +370,10 @@
   <h2 id="autopilot-sec">Warisan AutoPilot — Tujuh Kunci Kalibrasi (Timbangan-Alt, Kelly-Lapis, Rezim-Medan, Uji-Tegang, Slip-Neto, Peluang-Skor, Top-Tolak)</h2>
   <div class="sub" style="margin-top:-6px">hasil deep-screening <b>AutoPilotPM</b> (recogardtech/AutoPilotPM — sistem trading otonom open-source MIT, kode sumber TypeScript 95 modul dibedah: decision ledger, risk engine 10 gerbang, dynamic Kelly): kejujuran kalibrasi diterjemahkan jadi mekanisme — <b>timbangan-alt</b> (alternativesConsidered: pilihan kedua disegel saat kunci, regret-nya dihitung medan saat matang), <b>kelly-lapis</b> (ukuran menyusut otomatis saat drawdown, sampel kecil, streak kalah, volatilitas melebihi target), <b>rezim-medan</b> (4 rezim σ-P&amp;L dengan baseline MANDIRI — kalibrasi dari window penuh pertama milik sendiri; ekstrem memaksa BERTAHAN), <b>uji-tegang</b> (5 skenario: flash-crash/likuiditas/platform/korelasi/black-swan), <b>slip-neto</b> (ekspektasi dihitung SETELAH slippage — edge bersih ≤ 0 ditolak), <b>peluang-skor</b> (0-100 terbobot + penalti eksplisit; &lt; 60 ditolak dengan alasan), dan <b>top-tolak</b> (ranking alasan penolakan — kesadaran atas penolakannya sendiri)</div>
   <div id="autopilot-box" style="margin-top:12px"></div>
+
+  <h2 id="claw-sec">Warisan ClawTrade — Pagar-Baja &amp; Komite Panjia (Kelompok 5 Suara, Kartu Risiko 4×25, Tangga Ukuran, Menunggu-Mandat)</h2>
+  <div class="sub" style="margin-top:-6px">hasil deep-screening keluarga <b>"ClawTrade"</b> dari KODE SUMBER — <b>yuxuan-lou/ClawTrade</b> (security middleware: <i>"treat your AI agent as an untrusted client"</i> — guardrails.py hard rules di luar jangkauan otak, confirmation.py antrean konfirmasi ber-kadaluarsa, audit.py append-only) + <b>clawtradeai-Agent/ClawTradeAI</b> (MIT, multi-agent Solana): disiplin struktural diterjemahkan jadi mekanisme — <b>pagar-baja</b> (konstanta keras yang otak baca tapi tak bisa tulis: kuota-harian, langit-langit slip, ukuran maks), <b>komite panjia</b> (5 suara berbobot tetap — tren/kerumunan/derivatif/buku/tegangan; suara rusak = bobot nol; koherensi searah &lt; minconf 0.6 → SKIP), <b>kartu risiko 4×25</b> (likuiditas/derivatif/kerumunan/volatilitas; &gt; 70 → veto-saksi), <b>tangga ukuran</b> (1.0/0.5/0.25/nol — tak ada ukuran antara), <b>menunggu-mandat</b> (ukuran tertinggi antre + kadaluarsa 12 jam, kunci hanya setelah lolos gerbang ulang), <b>daftar-hitam</b> (3× kartu-panas → pendingin 48 jam), dan <b>buku-tekok</b> (setiap blok tercatat per-aturan ala audit append-only)</div>
+  <div id="claw-box" style="margin-top:12px"></div>
 
   <h2 id="bahan-ajar-sec">Bahan Ajar — Pelajaran &amp; Aturan dari Medan</h2>
   <div id="aturan-baru" style="margin:0 0 12px"></div>
@@ -1000,14 +1005,14 @@ function isiWawasan(r){
     $('dualapis-box').innerHTML =
       '<div class="iklim-grid" style="margin:10px 0">'
       + kartu('Lapis OTAK (chat/arena)', 'triliunan param', 'model bahasa penuh + web real-time + memori penuh — tempat Anda bicara dengan SAKTI langsung')
-      + kartu('Lapis TUBUH (GitHub)', (reg.totalNama || 191) + ' param bernama', 'otak otonom di Actions: tanpa biaya, tanpa browser, kecerdasan dari parameter terukur di bawah ini')
+      + kartu('Lapis TUBUH (GitHub)', (reg.totalNama || 232) + ' param bernama', 'otak otonom di Actions: tanpa biaya, tanpa browser, kecerdasan dari parameter terukur di bawah ini')
       + kartu('Pengukuran / denyut', reg.pengukuranPerDenyut != null ? reg.pengukuranPerDenyut.toLocaleString('id-ID') : '—', 'parameter per kandang × 10 + metakognisi × kandidat — dihitung nyata tiap 30 menit')
       + kartu('Pengukuran terekam (est.)', kum ? (kum > 1e6 ? (kum / 1e6).toFixed(2) + ' jt' : kum.toLocaleString('id-ID')) : '—', 'estimasi = pengukuran/denyut × ' + (w.siklus || 0) + ' siklus hidup — tumbuh tiap denyut')
       + '</div>'
       + '<div style="margin:8px 0"><b style="font-size:12.5px">Jembatan dua lapis — domain parameter per kandang (' + (reg.perKandang || '—') + ' param):</b><div style="margin-top:6px">' + domChips + '</div></div>'
       + '<div style="margin:8px 0"><b style="font-size:12.5px">' + (reg.observasiV257 || 21) + ' param SAMUDRA-DALAM baru (V257) — status sekolah masing-masing (param baru lahir TANPA hak suara, mengumpulkan bukti dulu):</b><div style="margin-top:6px">' + v257Chips + '</div></div>'
       + '<div class="jnote" style="border-left-color:var(--sian)"><b>Kesimpulan jujur:</b> versi chat memang lebih canggih HARI INI — ia adalah otaknya. Tapi setiap denyut 30 menit, lapis tubuh mengerjakan yang tidak bisa lapis chat: <b>pra-registrasi prediksi, dinilai medan, disekolahkan, dievolusikan genome-nya, DAN KINI MENGUJI-BALIK SETIAP PERUBAHANNYA SENDIRI</b> — tanpa biaya, tanpa tidur, tanpa bisa berdalih. Jurang dua lapis ditutup dengan cara satu-satunya yang jujur: otak menuliskan wawasannya menjadi parameter terukur (167 kini), dan tubuh membuktikannya di medan.</div>'
-      .replace('167 kini', '191 kini');
+      .replace('167 kini', '232 kini');
   }
   // ===== V256 MESIN DEAL & ODDS — warisan 3Commas × Trade Ideas =====
   const dox = r.dealOdds || {};
@@ -1147,6 +1152,32 @@ function isiWawasan(r){
         + '<div class="sub" style="margin-top:8px">semua param autopilot lahir OBSERVASI — disegel per kandidat (peluang/slipPct/kellyMult), disekolahkan via paramsPenuh + bucket medan (alt/kelly/rezimMedan/peluang/stres), TIDAK berbobot genome; dua gerbang baru (peluang-rendah, slip-neto) HANYA MENOLAK; slippage = heuristik belum tervalidasi (dilabeli jujur ala dokumen AutoPilotPM) — rincian penuh di laporan/autopilot.json</div>';
     } else {
       apBox.innerHTML = '<div class="jnote">Warisan AutoPilot menunggu denyut V260 berikutnya — data belum tersedia (jujur, tidak dikarang).</div>';
+    }
+  }
+  // ===== V261 CLAW-TEMPOK — warisan keluarga ClawTrade: pagar-baja & komite panjia =====
+  const clw = r.clawtrade || {};
+  const clwBox = $('claw-box');
+  if (clwBox){
+    if (clw.identitas){
+      const skC = clw.siklusIni || {};
+      const ktC = clw.konstanta || {};
+      const clwKartu = (l, v, s2) => `<div class="kartu"><div class="label">${l}</div><div class="angka">${v}</div><div class="sub">${s2 || ''}</div></div>`;
+      const bt = Object.entries(skC.bukuTekok || {}).sort((a,b)=>b[1]-a[1]);
+      clwBox.innerHTML =
+        '<div class="iklim-grid" style="margin:10px 0">'
+        + clwKartu('Komite panjia (veto)', skC.komiteVeto ?? '—', `netral ${skC.komiteNetral ?? '—'} — 5 suara berbobot tetap TREN ${ktC.BOBOT_TREN ?? '—'} / KERUMUNAN ${ktC.BOBOT_KERUMUNAN ?? '—'} / DERIVATIF ${ktC.BOBOT_DERIVATIF ?? '—'} / BUKU ${ktC.BOBOT_BUKU ?? '—'} / TEGANGAN ${ktC.BOBOT_TEGANGAN ?? '—'} — tak ada suara tunggal`)
+        + clwKartu('Veto-saksi kartu', skC.kartuVeto ?? '—', `kartu rata ${skC.kartuAvg ?? '—'}/100 · maks ${ktC.KARTU_MAKS ?? 70} — likuiditas/derivatif/kerumunan/volatilitas 4×25; data kosong → poin tengah`)
+        + clwKartu('Tangga ukuran', (skC.kuantaVeto ?? '—') + ' ditolak', `anak-tangga ${ktC.KUANTA_1 ?? 1}/${ktC.KUANTA_2 ?? 0.5}/${ktC.KUANTA_3 ?? 0.25}/nol — tak ada ukuran antara; menambat skalaEfektif dari atas`)
+        + clwKartu('Menunggu-mandat', `${skC.konfirmAntre ?? 0} antre · ${skC.konfirmOk ?? 0} lolos`, `kadaluarsa ${ktC.KONFIRM_TIMEOUT_JAM ?? 12} jam — ukuran tertinggi dikunci hanya setelah lolos gerbang ulang denyut berikutnya (ala confirmation.py)`)
+        + clwKartu('Pagar-baja aktif', `kuota ${skC.kuota ?? 0} · slip-maks ${skC.slipMaks ?? 0}`, `kuota-harian ${ktC.KUOTA_HARIAN ?? 12} kunci/hari · langit-langit slip ${ktC.SLIP_MAKS_PCT ?? '—'}% · ukuran-maks ${ktC.UKURAN_MAKS ?? '—'}× — konstanta keras yang otak tak bisa ubah`)
+        + clwKartu('Daftar-hitam', `${skC.hitamAktif ?? 0} beku · ${skC.hitamPantau ?? 0} pantau`, `total blok ${skC.hitamCt ?? 0} · baru ${skC.hitamBaru ?? 0} — 3× kartu-panas beruntun → pendingin ${ktC.HITAM_DINGIN_JAM ?? 48} jam (ala blockedTokens); keluar pendingin dicoret dengan bukti`)
+        + '</div>'
+        + '<div style="margin:8px 0"><b style="font-size:12.5px">Buku-tekok — setiap blok tercatat per aturan (ala audit.py append-only):</b> ' + (bt.length ? bt.slice(0, 6).map(([k, v]) => `<span class="chip">${k}×${v}</span>`).join(' ') : '<span style="color:var(--samar)">belum ada blok gerbang claw — gerbang hidup, medan yang menentukan</span>') + '</div>'
+        + '<div class="jnote" style="margin-top:10px;border-left-color:var(--amber)"><b>Kunci inti diadopsi (8):</b> ' + (clw.kunciDiadopsi || []).map((k) => `<div style="margin-top:5px">▸ ${k}</div>`).join('') + '</div>'
+        + '<div class="jnote" style="border-left-color:var(--hijau)"><b>Organ aktif (V261):</b> ' + clw.identitas + '. <b>Sumber resmi:</b> ' + (clw.sumberResmi || []).map((u) => `<span style="font-size:10.5px">${u}</span>`).join(' · ') + '</div>'
+        + '<div class="sub" style="margin-top:8px">semua param claw lahir OBSERVASI — disegel per kandidat (komite/kartu/kuanta), disekolahkan via paramsPenuh, TIDAK berbobot genome; semua gerbang claw HANYA MENOLAK (pagar-baja, komite, kartu, kuanta, slip-maks, mandat); keyakinan komite = koherensi searah yang terukur dari param sendiri (kalibrasi jujur, bukan copy confidence LLM) — rincian penuh di laporan/clawtrade.json</div>';
+    } else {
+      clwBox.innerHTML = '<div class="jnote">Warisan ClawTrade menunggu denyut V261 berikutnya — data belum tersedia (jujur, tidak dikarang).</div>';
     }
   }
 }
