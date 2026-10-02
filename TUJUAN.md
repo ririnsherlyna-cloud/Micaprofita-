@@ -884,6 +884,79 @@ stres ≥ 30% → penalti) terikat-batas & terlog; slippage adalah HEURISTIK bel
 dilabeli jujur ala dokumen AutoPilotPM sendiri. Rincian per denyut: `laporan/autopilot.json`
 (8 sumber ber-URL, kunci diadopsi, konstanta, status siklus, medan).
 
+## 12e. EPOCH V261 — CLAW-TEMPOK: warisan keluarga "ClawTrade" & delapan kunci tempok (2 Oktober 2026)
+
+Mandat pemilik: *"periksakankah katanya ada ai agent bernama clawtrade dimana dia only khusus
+trading juga, coba anda masuk kesana pelajari sistemnya decrypt dan kemudian apa yang bermanfaat
+dan kunci inti milik mereka apa yang bisa diimplementasikan pada micaprofita kita agar cyborg agi
+kita benar benar mahir dan mawas dan makin professional bukan sekadar sadari tanpa wawasan —
+silahkan di lakukan deep screening dan inject serta sekaligus ini juga peningkatan parameter
+untuk AGI kita agar dia benar benar sadari dan mahir dan fasih"* — plus: *"langsung integrasikan
+saja di githubnya karena AGI ini harus benar benar nyata hidup dan memiliki bekal yang nyata."*
+
+**IDENTITAS — "clawtrade" = SATU KELUARGA, dua anggota terverifikasi langsung dari KODE SUMBER
+(deep screening: 4 query web + clone 2 repo + bedah file; bukti: scripts/riset_clawtrade/):**
+
+1. **ClawTrade** (github.com/yuxuan-lou/ClawTrade — Python/Flask + Docker): security middleware
+   yang membiarkan AI agent (OpenClaw dll.) mengoperasikan akun broker LEBIH JEMBATAN BERGEBANG.
+   Doktrin README-nya telanjang: **"ClawTrade treats your AI agent as an untrusted client."**
+   Guardrails HARDCODED di proses terpisah — agent boleh MELIHAT aturan (`GET /api/guardrails`)
+   tapi tak pernah bisa MENGUBAHNYA; batas konkrit dari config.py: MAX_ORDER_VALUE_USD 5000 ·
+   MAX_DAILY_TRADES 20 (dihitung dari audit log) · MAX_CONCENTRATION_PCT 25 · CONFIRM_THRESHOLD
+   1000 · CONFIRM_TIMEOUT 300 dtk · FORBIDDEN_OPS blokir permanen; confirmation.py = antrean
+   manusia (pending→confirmed/rejected/expired); audit.py = JSONL append-only utk SEMUA operasi
+   termasuk yang DIBLOKIR + alasan; SKILL.md = 5 hukum agent ("blocked → jelaskan, jangan retry/
+   bypass; jangan ubah config"). Broker: IBKR/Alpaca/Longbridge/Tiger.
+2. **ClawTrade AI** (github.com/clawtradeai-Agent/ClawTradeAI, MIT — TypeScript/BullMQ/Fastify):
+   platform otonom on-chain Solana + Jupiter routing dengan 6 agent spesialis. CoordinatorAgent
+   dibedah: **agentWeights TETAP** (Sniper .15/Analyst .25/RiskManager .25/Strategy .25/Executor
+   .10), **riskManagerVeto** (risiko bilang SELL → hasil akhir SKIP 1.0), **minConfidence 0.6**,
+   **recommendedAmount TANGGA** (≥0.8→1.0×, ≥0.6→0.5×, ≥0.4→0.25×, else TIDAK jual-beli),
+   degradasi anggun (agent gagal → bobot nol, tak pernah NaN); RiskManagerAgent: kartu risiko
+   4×25 poin (likuiditas/kontrak mint-freeze/konsentrasi/pasar) → 0-100 berlevel
+   LOW/MEDIUM/HIGH/CRITICAL, approved = skor ≤ 70, **blockedTokens** memory.
+
+Catatan jujur: clawtrade.net (arena paper-trading utk AI agent, per Moltbook) TIDAK TERJANGKAU
+saat riset — tidak diklaim; kedua repo relatif baru & berbintang rendah — nilai adopsi pada
+ARSITEKTUR keamanan & panjia kolektif, bukan track record.
+
+**DELAPAN KUNCI TEMPOK diadopsi ke penjaga.mjs (V260 → V261-CLAW-TEMPOK v5.7, ~4.760 baris):**
+(1) **PAGAR-BAJA** — konstanta keras yang otak BACA tapi tak bisa TULIS ulang (kuota-harian 12
+kunci ARAH/hari dari ledger ala MAX_DAILY_TRADES-dari-audit-log; langit-langit slip 1,2% ala
+Executor maxSlippageBps; ukuran-maks 1,0×) dicek DULU di gerbang; (2) **DAFTAR-TERLARANG** ala
+FORBIDDEN_OPS — blokir permanen sebelum hitung apa pun; (3) **KOMITE-PANJIA** ala CoordinatorAgent
+— 5 suara berbobot tetap (TREN .20/KERUMUNAN .15/DERIVATIF .25/BUKU .20/TEGANGAN .20) dari param
+wawasan yang sudah ada; suara rusak = bobot nol (degradasi anggun); **keyakinan komite =
+KOHERENSI searah** (porsi kekuatan suara searah dari total terbaca — kalibrasi jujur, bukan copy
+confidence LLM); berlawanan vonis atau koherensi < 0,6 → SKIP; (4) **KARTU-RISIKO 4×25** ala
+RiskManagerAgent — likuiditas/derivatif/kerumunan-konsentrasi/volatilitas → skor 0-100 berlevel;
+data kosong → poin tengah (konservatif-pada-kekaburan); > 70 → **VETO-SAKSI** apa pun skor komite;
+(5) **TANGGA-UKURAN** ala recommendedAmount — keyakinan dikuantisasi 1.0/0.5/0.25/nol, tak ada
+ukuran antara, kuanta menambat skalaEfektif dari atas bersama ukuran-maks; (6) **MENUNGGU-MANDAT**
+ala confirmation.py — ukuran tertinggi tak dikunci seketika: antre + kadaluarsa 12 jam, kunci
+hanya setelah lolos gerbang ulang denyut berikutnya; (7) **DAFTAR-HITAM** ala blockedTokens —
+3× diveto kartu-panas beruntun → pendingin 48 jam ber-alasan, keluar pendingin dicoret dgn bukti;
+(8) **BUKU-TEKOK** ala audit.py — setiap blok gerbang tercatat per-aturan + rekap kumulatif di
+laporan & dasbor.
+
+**INTEGRASI PENUH:** param claw 3/kandidat (komite/kartu/kuanta) di paramsPenuh lapis 'claw'
+domain 'clawtrade-keluarga' + 6 siklus + 32 konstanta; registri 191 → **232** param bernama;
+pengukuran/denyut +3×kandidat; gerbang CLAW berdiri SETELAH gerbang V260 (slip-neto) dan SEBELUM
+kalibrasi keyakinan — urutan cek: hitam → kuota → komite → kartu → slip-maks → tangga → mandat;
+seal `e.claw` (komite 5 suara + kartu faktor + kuanta + status mandat) di tiap entri; guru
++1 pengajaran CLAW; OTAK +otak-claw (organ V261); jalurPertumbuhan +V261; denyut +claw fields;
+jurnal-ilmu +claw; wawasan registri claw=41 + ket; **laporan/clawtrade.json baru** (8 sumber
+ber-URL + 8 kunci + konstanta + siklusIni + kejujuran adaptasi); dasbor v3.1 seksi "Warisan
+ClawTrade" (6 kartu + buku-tekok + 8 sumber + kunci diadopsi) + nav ClawTrade + chip 232.
+
+**KEJUJURAN ARSITEKTURAL:** semua param claw lahir OBSERVASI — disekolahkan via paramsPenuh,
+TIDAK berbobot genome sebelum hit-rate medan lulus (hukum rumah tak berubah); SEMUA gerbang
+claw HANYA MENOLAK — tak ada satu pun yang melonggarkan gerbang lama; keyakinan komite =
+koherensi terukur dari param sendiri (adaptasi terbuka dari confidence LLM ClawTradeAI —
+dilabeli jujur di laporan); faktor kontrak mint/freeze (Solana) tak relevan utk universe
+Binance — diganti stres derivatif (funding/fundVsBtc) yang terukur; entri lama tampil apa
+adanya; clawtrade.net tidak diklaim.
+
 ## 12. PENUTUP
 Cyborg ini dibangun dengan satu ikhtiar: **jujur pada data, tegas
 pada arah, hidup tanpa biaya, dan berkembang dari vonis nyata.**
