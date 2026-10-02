@@ -84,7 +84,7 @@ import path from 'node:path'
 const ROOT = process.cwd()
 const FEE = 0.002            // 0.1% buy + 0.1% sell — wajib
 const HORIZON_JAM = 24       // sasaran harian
-const VERSI = 'V257-SAMUDRA-DALAM v5.3 — penyempit jurang otak-chat vs tubuh-GitHub (jawaban pemilik: "kenapa micaprofita di arena jauh lebih canggih?" — karena arena bicara dengan otak penuh; tubuh GitHub kini diberi lapisan wawasan yang selama ini hanya ada di kepala): lapisan parameter per kandang diperluas 46 → 67 bernama — (D) STRUKTUR HARIAN dari klines 1d 90 hari (EMA-align/RSI/MACD daily, Donchian 30d, jarak puncak-lantai 90d, momentum bulanan, streak hari, rasio volatilitas realized 7d/30d), (E) KERUMUNAN NYATA OKX rubik (long/short account ratio + tren membubarnya, taker buy/sell aggressor), (F) STRES DERIVATIF (basis perp-vs-spot, jam menuju funding, funding relatif vs BTC), (G) gradien order book (massa depan vs total 1%), (H) 6 INTERAKSI antar-faktor eksplisit (funding×ΔOI, volume×rezim-ATR, tren4h×funding, buku×tren1h, breakout×volume, agresor×tren) — semuanya lapis OBSERVASI: dihitung, dinarasikan, disekolahkan, berhak VETO, TIDAK berbobot sebelum hit-rate medan lulus (hukum rumah tak berubah) + 5 param iklim lintas-siklus (Δdominasi antar-denyut, ETH/BTC 7d risk-on/off, LS-akun BTC/ETH, jam funding BTC) · ditumpuk pada V256-MESIN-DEAL-ODDS (MESIN DEAL ala DCA-bot 3Commas: safety orders hard-cap 1.2×ATR ×1.6 ×1.5 + breakeven aktivasi 60% + trailing 0.8×ATR + Global Max Open Positions; ODDS MAKER ala Trade Ideas: skor 0-100, top-3 ≥55 boleh kunci; 6 tag peristiwa OddsMaker) → registri total 101 → 127 parameter bernama'
+const VERSI = 'V258-GEKKO-CZAR v5.4 — penyempit jurang otak-chat vs tubuh-GitHub (jawaban pemilik: "kenapa micaprofita di arena jauh lebih canggih?" — karena arena bicara dengan otak penuh; tubuh GitHub kini diberi lapisan wawasan yang selama ini hanya ada di kepala; V258: warisan deep-screening Gekko Agent (Axal) + riset CZAR Loss Allora Foundation (arXiv 2609.36061)): lapisan parameter per kandang diperluas 46 → 67 bernama — (D) STRUKTUR HARIAN dari klines 1d 90 hari (EMA-align/RSI/MACD daily, Donchian 30d, jarak puncak-lantai 90d, momentum bulanan, streak hari, rasio volatilitas realized 7d/30d), (E) KERUMUNAN NYATA OKX rubik (long/short account ratio + tren membubarnya, taker buy/sell aggressor), (F) STRES DERIVATIF (basis perp-vs-spot, jam menuju funding, funding relatif vs BTC), (G) gradien order book (massa depan vs total 1%), (H) 6 INTERAKSI antar-faktor eksplisit (funding×ΔOI, volume×rezim-ATR, tren4h×funding, buku×tren1h, breakout×volume, agresor×tren) — semuanya lapis OBSERVASI: dihitung, dinarasikan, disekolahkan, berhak VETO, TIDAK berbobot sebelum hit-rate medan lulus (hukum rumah tak berubah) + 5 param iklim lintas-siklus (Δdominasi antar-denyut, ETH/BTC 7d risk-on/off, LS-akun BTC/ETH, jam funding BTC) · ditumpuk pada V256-MESIN-DEAL-ODDS (MESIN DEAL ala DCA-bot 3Commas: safety orders hard-cap 1.2×ATR ×1.6 ×1.5 + breakeven aktivasi 60% + trailing 0.8×ATR + Global Max Open Positions; ODDS MAKER ala Trade Ideas: skor 0-100, top-3 ≥55 boleh kunci; 6 tag peristiwa OddsMaker) → registri total 101 → 127 → 145 parameter bernama'
 
 // ---------------- kandang lane ARAH (komite genome) ----------------
 const KANDANG = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'DOGE', 'ADA', 'AVAX', 'LINK', 'TRX']
@@ -254,7 +254,42 @@ const PERISTIWA_DEFS = [
 const PARAM_DEAL = ['maxSO', 'soDevAtr', 'soDevMult', 'soVolMult', 'bepAktPct', 'bepExecPct', 'trailDistAtr', 'oddsMin', 'oddsTopK', 'bobotOddsMC', 'bobotOddsZona', 'bobotOddsMeta', 'bobotOddsDaya', 'maxPosisiTerbuka']
 const PARAM_EVENT = PERISTIWA_DEFS.map((p) => `evt_${p.nama}`)
 const TOTAL_PARAM_DEAL_ODDS = PARAM_DEAL.length + PARAM_EVENT.length   // 14 + 6 = 20
-const TOTAL_PARAM_SEMUA = TOTAL_PARAM_NAMA + TOTAL_PARAM_METAKOGNISI + TOTAL_PARAM_DEAL_ODDS   // V257: 72+35+20 = 127
+// ---- V258 GEKKO-CZAR — hasil deep-screening Gekko Agent (Axal, di Virtuals) +
+// riset CZAR Loss (Allora Foundation, arXiv 2609.36061). Bukti riset:
+// scripts/riset_gekko/ (blog Allora, substack Axal, abstract arXiv). Kunci inti:
+// (1) META-INFERENSI KOLEKTIF — model spesialis bertanding per topik, inferensi
+//     dibobot akurasi historis+kontekstual (Allora Topics — mesin di balik Gekko);
+// (2) CZAR DECISIVENESS — loss simetris membiarkan "prakiraan nol" menang;
+//     skor asimetris magnitude-aware + akurasi-impas vs prediktor-nol;
+// (3) EKSPOSUR DINAMIS — volatilitas tak menguntungkan → pangkas ekspresi modal;
+// (4) DIVERGENSI prediksi vs probabilitas-implied pasar;
+// (5) TEMPER AUTOPILOT — profil risiko denyut mengatur kuota & ambang terikat-batas;
+// (6) VERIFIABLE AUTONOMY — sidik sha256 pra-registrasi per prediksi.
+const GEK = {
+  TOPIK_INTI: {
+    momentum: ['macd', 'pola', 'konsist', 'rsi1h', 'roc12', 'stoch', 'cci', 'bodyRatio', 'macd4h', 'rsi4h'],
+    tren: ['adx', 'swing', 'pivot', 'ema1h', 'ema4h', 'swing4h', 'sejajar4h', 'ema1d', 'donchian30d'],
+    aliran: ['vwap', 'obv', 'mfi', 'volZ', 'pocJarak'],
+    derivatif: ['funding', 'oi', 'fundRata3', 'fundTren', 'basisPct', 'fundVsBtc'],
+    mikrostruktur: ['bukuImbalans', 'bukuSpread', 'bukuKedalaman', 'bukuDinding', 'bukuGradien'],
+    relatif: ['relatif', 'betaBTC', 'persenChg', 'persenVol'],
+  },
+  REGRET_ETA: 0.9,      // bobot topik = exp(-ETA·regret) — regret 1 → 0.41× (regret-minimization ala Allora)
+  REGRET_DECAY: 0.97,   // peluruhan regret antar vonis matang — ingatan topik melunak perlahan
+  BOBOT_MIN: 0.15,      // lantai bobot — topik sakit tetap boleh membisikkan, tak pernah bisu total
+  CZAR_CAP: 8,          // reward dibatasi |net| 8% — ekor langka tak menggemukkan skor/skola
+  CZAR_FLOOR: 1.5,      // penalti dasar salah arah (% poin) — kerugian tak bisa bersembunyi di balik volume
+  EKSPRESI_MIN: 0.25, EKSPRESI_MAKS: 1.0,   // skala eksposur dinamis (Allora×G.A.M.E)
+  DIVERG_KUAT: 0.18,    // |keyakinan komite − P(arah komite) pasar| ≥ 0.18 = terpisah jauh
+  SUHU_BERTAHAN_AMBANG: 5,   // BERTAHAN: ambang odds +5 (lebih selektif — Autopilot risk-off)
+  SUHU_AGRESIF_AMBANG: 3,    // AGRESIF: ambang −3, TIDAK PERNAH di bawah lantai
+  AMBANG_LANTAI: 52,    // suhu apa pun tak boleh melunakkan gerbang di bawah ini
+}
+const PARAM_GEKKO_KANDANG = ['metaArah', 'metaKeyakinan', 'probPasar', 'divergensi', 'ekspresi']
+const PARAM_GEKKO_SIKLUS = ['suhuTemper', 'ambangOddsEfektif', 'kuotaArahEfektif', 'akurasiImpas', 'darahAkurasi']
+const PARAM_GEKKO_KONST = ['czarCap', 'czarFloor', 'regretEta', 'regretDecay', 'ekspresiMin', 'ekspresiMaks', 'divergKuat', 'suhuAmbang']
+const TOTAL_PARAM_GEKKO = PARAM_GEKKO_KANDANG.length + PARAM_GEKKO_SIKLUS.length + PARAM_GEKKO_KONST.length   // 5+5+8 = 18
+const TOTAL_PARAM_SEMUA = TOTAL_PARAM_NAMA + TOTAL_PARAM_METAKOGNISI + TOTAL_PARAM_DEAL_ODDS + TOTAL_PARAM_GEKKO   // V258: 72+35+20+18 = 145
 // statusSekolah — kelulusan param dari hit-rate medan (bukan dari tangan manusia):
 // pemula (n<10) → dipantau → calon-lulus (n>=20 & hit>=52% & net>0) / diawasi (hit<44%)
 function statusSekolah(h) {
@@ -290,6 +325,7 @@ const OTAK = [
   { nama: 'otak-wawasan', tugas: 'registri 72 parameter wawasan crypto per kandang+iklim — lilin 1h+4h+HARIAN 90 hari, derivatif dalam (funding/OI/basis/jam-funding/funding-relatif), kerumunan OKX rubik (LS-akun/taker-agresor), order book + gradien, lintas-pasar, kalender, kuant-warisan, 6 interaksi antar-faktor — plus narasi analis fasih per sasaran', mesin: 'multi-timeframe (EMA-align/MACD/RSI/Bollinger/swing 1h+4h+harian) + riwayat funding rata3/tren + basis/jam-funding + order book OKX (imbalance/spread/kedalaman/dinding/gradien) + LS-akun & taker-volume rubik + persentil lintas-pasar swap + F&G-7hari/dominasi-Δ/ETH-BTC/altseason + GARCH/MC/beta/POC + kalender; 12 inti berbobot (genome+Hedge), observasi diveto-kan & bersekolah hit-rate', status: 'HIDUP (V257)' },
   { nama: 'otak-metakognisi', tugas: 'mengawasi otaknya sendiri SEBELUM bertaruh — estimator keyakinan 7-faktor, prediktor kegagalan pra-kunci, bias konteks per rezim×arah, deteksi loop, kritik diri 5-field per kekalahan — dan kalibrasinya dinilai medan', mesin: '7 kunci diadopsi dari framework open-source Nevron (axioma-ai-labs/nevron) hasil bedah Neurobro AI: ConfidenceEstimator + FailurePredictor + StrategyAdapter + LoopDetector + SelfCritic-RLAIF + Lesson-reliability + MetacognitiveMonitor, diadaptasi ke ledger pra-registrasi SAKTI', status: 'HIDUP (V255)' },
   { nama: 'otak-deal-odds', tugas: 'merekayasa setiap sasaran seperti bot profesional: rencana deal lengkap (safety orders, breakeven, trailing) dipra-registrasi lalu dinilai medan, dan hanya peluang berodds tertinggi (top-3) yang boleh mengunci', mesin: 'kunci diadopsi dari dokumentasi resmi 3Commas & Trade Ideas hasil deep-screening: DCA 6-parameter (Max SO, deviation ×multiplier, volume multiplier), Move SL to Breakeven, Trailing Stop 2-param, Global Max Open Positions, OddsMaker event-based testing (6 tag peristiwa dinilai hit-rate-nya), Money Machine top-3 concentration — diadaptasi ke ledger pra-registrasi SAKTI', status: 'HIDUP (V256)' },
+  { nama: 'otak-gekko', tugas: 'meta-inferensi kolektif 6 topik ala Allora (mesin di balik Gekko Agent/Axal): topik memberi suara arah dengan bobot regret-minimized, ditilang skor CZAR yang asimetris (decisiveness), eksposur dinamis 0.25–1.0×, divergensi vs probabilitas pasar, suhu Autopilot yang mengatur kuota & ambang terikat-batas, dan sidik sha256 pra-registrasi per prediksi', mesin: 'warisan deep-screening Gekko Agent (Axal × Virtuals × Allora) + CZAR Loss (Allora Foundation, arXiv 2609.36061): metaInferensi() + skorCzar() + ekspresiSkala() + probPasar()/divergensi + suhuPasar() + sidikPrakunci — semua param lapis gekko lahir OBSERVASI dan disekolahkan medan', status: 'HIDUP (V258)' },
 ]
 
 // ---------------- V251 RUH — jiwa yang dibangun (mandat pemilik:
@@ -1794,6 +1830,90 @@ const hitZona = (kena) => {
   return z.reduce((a, x) => a + x.akurasiPct / 100, 0) / z.length
 }
 const dayaRata = (d) => d ? ((d.volume?.daya ?? d.volume ?? 0.5) + (d.volatilitas?.daya ?? d.volatilitas ?? 0.5) + (d.likuiditas?.daya ?? d.likuiditas ?? 0.5)) / 3 : 0.5
+// ---------------- V258 GEKKO-CZAR — organ warisan Gekko Agent (Axal) ----------------
+// (1) META-INFERENSI KOLEKTIF (Allora Topics): 6 topik pekerja memberi suara arah
+//     dari param-param anggotanya; bobot topik = exp(-0.9·regret) — regret
+//     diperbarui tiap vonis matang (regret-minimization ala Allora), tidak ada
+//     topik yang memegang kuasa permanen.
+function bobotTopik(t) {
+  const r = ilmu.topik?.[t]?.regret ?? 0.6
+  return Math.max(GEK.BOBOT_MIN, Math.exp(-GEK.REGRET_ETA * r))
+}
+function metaInferensi(wp) {
+  const W = Object.fromEntries(wp.map((p) => [p.param, p]))
+  const suara = []
+  for (const [t, members] of Object.entries(GEK.TOPIK_INTI)) {
+    const v = members.map((m) => W[m]?.arah).filter((a) => Number.isFinite(a))
+    if (!v.length) continue
+    const rata = v.reduce((a, x) => a + x, 0) / v.length
+    if (Math.abs(rata) < 0.05) continue                                   // topik diam bila tak punya pendapat
+    suara.push({ topik: t, arah: +rata.toFixed(3), bobot: +bobotTopik(t).toFixed(3) })
+  }
+  if (!suara.length) return { metaArah: null, metaKeyakinan: null, suara, ket: 'tak ada topik bersuara — data kurang' }
+  const tot = suara.reduce((a, x) => a + x.bobot, 0)
+  const sk = suara.reduce((a, x) => a + x.bobot * x.arah, 0) / tot
+  const metaArah = sk > 0 ? 'BUY' : 'SELL'
+  const metaKeyakinan = clamp(Math.round(50 + Math.abs(sk) * 55), 50, 90)
+  const urut = [...suara].sort((a, b) => b.bobot - a.bobot)
+  return { metaArah, metaKeyakinan, suara, terkuat: urut[0].topik, terlemah: urut[urut.length - 1].topik, ket: `meta-inferensi kolektif: ${suara.length} topik bersuara, terkuat ${urut[0].topik}` }
+}
+// (2) CZAR — skor asimetris magnitude-aware (adaptasi CZAR Loss, arXiv 2609.36061,
+//     utk ledger biner 24 jam): benar → reward near-linear dibatasi cap (ekor langka
+//     tak menggemukkan); benar-kecil → hampir nol credit (zero-agnostic: gerakan kecil
+//     = derau); salah → penalti floor + kuadratik untuk error besar (divergence).
+function skorCzar(net) {
+  const a = Math.abs(net)
+  if (net > 0) return +Math.min(a, GEK.CZAR_CAP).toFixed(4)
+  return +(-(GEK.CZAR_FLOOR + (Math.min(a, GEK.CZAR_CAP) ** 2) / GEK.CZAR_CAP)).toFixed(4)
+}
+// (4) PROB PASAR — P(naik) implisit dari harga kerumunan NYATA: agresor taker
+//     (momentum), kerumunan akun LS (kontrarian), funding (kontrarian), EMA-align 4h
+//     (tren) — semua sudah dihitung lapis samudra; nol permintaan baru.
+function probPasar(W) {
+  const komp = []
+  const tk = W.lsTaker?.nilai
+  if (tk != null && tk > 0) komp.push(clamp(Math.log(tk) / Math.log(1.5), -1, 1) * 0.8)
+  const la = W.lsAkun?.nilai
+  if (la != null && la > 0) komp.push(clamp(-(la - 1) * 0.7, -1, 1))
+  const fd = W.funding?.arah
+  if (Number.isFinite(fd)) komp.push(clamp(fd * 1.0, -1, 1))
+  const t4 = W.ema4h?.arah
+  if (Number.isFinite(t4)) komp.push(clamp(t4 * 1.0, -1, 1))
+  if (!komp.length) return null
+  const rata = komp.reduce((a, x) => a + x, 0) / komp.length
+  return +clamp(0.5 + rata * 0.35, 0.06, 0.94).toFixed(3)
+}
+// (3) EKSPOSUR DINAMIS (Allora × Virtuals G.A.M.E: "adjust exposure — increase
+//     during favorable conditions, reduce during downturns"): skala 0.25–1.0× unit
+//     standar dari odds + keyakinan − volatilitas ekstrem − kerumunan funding.
+function ekspresiSkala({ odds, keyakinan, atrPctile, fundingPct }) {
+  const f = {}
+  f.odds = +clamp(((odds ?? 55) - 55) / 30, -0.5, 0.5).toFixed(2)
+  f.keyakinan = +clamp(((keyakinan ?? 55) - 55) / 40, -0.4, 0.4).toFixed(2)
+  f.volatilitas = (atrPctile != null && Number.isFinite(atrPctile) && atrPctile <= 1 && atrPctile >= 0.9) ? -0.2 : 0
+  f.kerumunan = (fundingPct != null && Math.abs(fundingPct) >= WAWASAN.FUNDING_EKSTREM * 100) ? -0.15 : 0
+  const skala = clamp(0.55 + f.odds + f.keyakinan + f.volatilitas + f.kerumunan, GEK.EKSPRESI_MIN, GEK.EKSPRESI_MAKS)
+  return { skala: +skala.toFixed(2), faktor: f }
+}
+// (5) TEMPER AUTOPILOT (Axal: risk-profile → alokasi strategi) — suhu denyut
+//     mengatur ambang odds & kuota ARAH dalam batas ketat: BERTAHAN = lebih
+//     selektif (+5 ambang, kuota −1), AGRESIF hanya bila medan benar-benar hijau
+//     (−3, lantai 52, kuota tak pernah melebihi baseline); PF < 1 MEMAKSA BERTAHAN.
+function suhuPasar({ fng, breadth, rezim, profitFactor }) {
+  const alasan = []
+  let temper = 'NETRAL'
+  if (profitFactor != null && profitFactor < 1) { temper = 'BERTAHAN'; alasan.push(`PF jendela ${profitFactor} < 1 — modal mengetat`) }
+  if (rezim === 'TURUN' || rezim === 'CRASH') { temper = 'BERTAHAN'; alasan.push(`rezim BTC ${rezim}`) }
+  if (breadth != null && breadth < 35) { temper = 'BERTAHAN'; alasan.push(`breadth sempit ${(+breadth).toFixed(0)}% koin naik`) }
+  if (temper === 'NETRAL' && profitFactor != null && profitFactor >= 1.2 && fng != null && fng >= 45 && fng <= 72 && breadth != null && breadth > 55 && (rezim === 'NAIK' || rezim === 'PARABOLIK')) {
+    temper = 'AGRESIF'; alasan.push(`PF ${profitFactor} · F&G ${fng} · breadth ${(+breadth).toFixed(0)}% — medan hijau terukur`)
+  }
+  const ambang = temper === 'BERTAHAN' ? DEAL.ODDS_MIN + GEK.SUHU_BERTAHAN_AMBANG
+    : temper === 'AGRESIF' ? Math.max(GEK.AMBANG_LANTAI, DEAL.ODDS_MIN - GEK.SUHU_AGRESIF_AMBANG)
+    : DEAL.ODDS_MIN
+  const kuota = temper === 'BERTAHAN' ? Math.max(1, DEAL.TOP_K - 1) : DEAL.TOP_K
+  return { temper, ambang, kuota, alasan, ket: `temper Autopilot: ${temper} → ambang odds efektif ${ambang} · kuota ARAH ${kuota}` }
+}
 function bacaJson(p, def) {
   try { return existsSync(p) ? JSON.parse(readFileSync(p, 'utf8')) : structuredClone(def) } catch { return structuredClone(def) }
 }
@@ -2114,6 +2234,12 @@ if (!ilmu.deal) ilmu.deal = {
 }
 if (!ilmu.peristiwa) ilmu.peristiwa = {}
 for (const p of PERISTIWA_DEFS) if (!ilmu.peristiwa[p.nama]) ilmu.peristiwa[p.nama] = { n: 0, benar: 0, net: 0 }
+// V258 GEKKO-CZAR — state ilmu baru: topik (regret-minimized), czar, ekspresi, divergensi
+if (!ilmu.topik) ilmu.topik = {}
+for (const t of Object.keys(GEK.TOPIK_INTI)) if (!ilmu.topik[t]) ilmu.topik[t] = { n: 0, benar: 0, net: 0, regret: 0.6 }   // 0.6 = bobot awal ~0.58 (netral-waspada)
+if (!ilmu.cz) ilmu.cz = { n: 0, jumlah: 0 }
+if (!ilmu.ekspresi) ilmu.ekspresi = { tinggi: { n: 0, net: 0 }, rendah: { n: 0, net: 0 } }
+if (!ilmu.divergensi) ilmu.divergensi = { kuat: { n: 0, benar: 0, net: 0 }, lemah: { n: 0, benar: 0, net: 0 } }
 // V253: bobot komite wawasan (genome per rezim + Hedge on-line) — 12 param baru belajar
 // dari vonis nyata dengan jalan yang sama persis seperti 5 dimensi lama
 if (!semuaGenome.waw) semuaGenome.waw = {}
@@ -2273,7 +2399,28 @@ for (const s of KANDANG) {
   const periA = tagPeristiwa(c, v.arah, warA, wp)
   const dealA = rencanaDeal(c, b.harga, v.arah, Math.max(eksA ? eksA.gainPct / 100 : 0.01, 0.01))
   const oddsA = skorOdds({ pWin: eksA ? clamp(eksA.p, 0, 1) : null, zonaHit: hitZona(kena), metaLevel: estM.level, dayaAvg: dayaRata(b.dims), emas: false })   // emas belum diketahui di sini — bonus diberikan saat ranking
-  kandidatArah.push({ s, id, b, v, waw, wp, buktiWaw, warA, mcA, eksA, buktiCand, kena, vetoW, estM, predM, peri: periA, deal: dealA, odds: oddsA })
+  // V258 GEKKO-CZAR — meta-inferensi kolektif + probPasar + divergensi + ekspresi:
+  // semuanya dihitung DI LOOP (dibutuhkan ranking & pra-registrasi), nol permintaan baru.
+  const metaA = metaInferensi(wp.penuh)
+  const ppA = probPasar(Object.fromEntries(wp.penuh.map((p) => [p.param, p])))
+  const divergA = (ppA != null && metaA.metaArah != null)
+    ? +((v.keyakinan / 100) - (metaA.metaArah === 'BUY' ? ppA : 1 - ppA)).toFixed(3)
+    : null   // >0 = komite lebih yakin dari pasar pada arahnya sendiri
+  const eksprA = ekspresiSkala({
+    odds: oddsA.skor, keyakinan: v.keyakinan,
+    atrPctile: wp.penuh.find((p) => p.param === 'atrPctile')?.nilai ?? null,
+    fundingPct: frPct,
+  })
+  // param gekko masuk wp.penuh (lapis 'gekko') — disekolahkan seperti saudaranya;
+  // 2 pembicara (metaArah, probPasar), 3 pengamat sunyi (arah 0)
+  wp.penuh.push(
+    { param: 'metaArah', domain: 'gekko-allora', lapis: 'gekko', nilai: metaA.metaArah, arah: metaA.metaArah === 'BUY' ? 0.5 : metaA.metaArah === 'SELL' ? -0.5 : 0, ket: `${metaA.ket} — suara kolektif ${metaA.metaArah ?? '—'}${metaA.metaKeyakinan != null ? ` ${metaA.metaKeyakinan}%` : ''} (Allora Topics)` },
+    { param: 'metaKeyakinan', domain: 'gekko-allora', lapis: 'gekko', nilai: metaA.metaKeyakinan, arah: 0, ket: `keyakinan meta-inferensi ${metaA.metaKeyakinan ?? '—'}% — terkuat ${metaA.terkuat ?? '—'}, terlemah ${metaA.terlemah ?? '—'}` },
+    { param: 'probPasar', domain: 'gekko-allora', lapis: 'gekko', nilai: ppA, arah: ppA != null ? +((ppA - 0.5) * 2).toFixed(3) : 0, ket: `P(naik) implisit pasar ${(ppA != null ? (ppA * 100).toFixed(0) : '—')}% dari agresor taker + kerumunan LS + funding + EMA4h (Allora prediction-markets)` },
+    { param: 'divergensi', domain: 'gekko-allora', lapis: 'gekko', nilai: divergA, arah: 0, ket: divergA == null ? 'divergensi jujur kosong — probPasar/meta belum terukur' : `divergensi ${divergA >= 0 ? '+' : ''}${divergA} — ${Math.abs(divergA) >= GEK.DIVERG_KUAT ? 'komite TERPISAH JAUH dari harga kerumunan (edge atau trap — dinilai medan)' : 'komite cukup selaras pasar'}` },
+    { param: 'ekspresi', domain: 'gekko-allora', lapis: 'gekko', nilai: eksprA.skala, arah: 0, ket: `skala eksposur dinamis ${eksprA.skala}× unit (odds ${eksprA.faktor.odds >= 0 ? '+' : ''}${eksprA.faktor.odds}, keyakinan ${eksprA.faktor.keyakinan >= 0 ? '+' : ''}${eksprA.faktor.keyakinan}, volatilitas ${eksprA.faktor.volatilitas}, kerumunan ${eksprA.faktor.kerumunan}) — Allora×G.A.M.E` },
+  )
+  kandidatArah.push({ s, id, b, v, waw, wp, buktiWaw, warA, mcA, eksA, buktiCand, kena, vetoW, estM, predM, peri: periA, deal: dealA, odds: oddsA, metaA, ppA, divergA, eksprA })
 }
 const emasArah = (k) => k.kena.some((z) => z.status === 'EMAS')
 // V254: kandidat yang DI-VETO wawasan dipisah — bukan racun forensik, tapi ditolak
@@ -2286,7 +2433,7 @@ const tercemarArah = kandidatArah.filter((k) => k.kena.some((z) => z.status === 
 // EV statistik >= 0 boleh lewat — tanpa informasi baru, zona tak pernah bisa menyembuh.
 const eksplorasiArah = tercemarArah.find((k) => k.eksA && k.eksA.evPct >= 0) || null
 const kunciEntriArah = (k, eksplor) => {
-  const { s, id, b, v, waw, wp, buktiWaw, warA, mcA, eksA, buktiCand, kena, estM, predM, peri, deal, odds } = k
+  const { s, id, b, v, waw, wp, buktiWaw, warA, mcA, eksA, buktiCand, kena, estM, predM, peri, deal, odds, metaA, ppA, divergA, eksprA } = k
   const emas = emasArah(k)
   // V255 METAKOGNISI — otak menilai dirinya sendiri SEBELUM mengunci (V256: dihitung di loop, dipakai ulang di sini):
   const biasB = biasKonteksGlobal[`${v.arah}-${b.rezim}`] ?? null
@@ -2326,29 +2473,55 @@ const kunciEntriArah = (k, eksplor) => {
     },
     ...(eksA ? { ekspektasi: eksA } : {}),
     odds: odds,                                                     // V256 OddsMaker (Trade Ideas)
+    // V258 GEKKO-CZAR — warisan Gekko Agent (Axal): meta-inferensi kolektif + probPasar
+    // + divergensi + ekspresi dinamis dipra-registrasi; sidik sha256 = tamper-evident
+    topik: { metaArah: metaA.metaArah, metaKeyakinan: metaA.metaKeyakinan, terkuat: metaA.terkuat ?? null, terlemah: metaA.terlemah ?? null, suara: metaA.suara, ket: 'meta-inferensi kolektif ala Allora Topics — bobot topik = exp(-0.9·regret) dari medan sendiri' },
+    probPasar: ppA,
+    divergensi: divergA,
+    ekspresi: { ...eksprA, ket: 'skala eksposur dinamis ala Allora×G.A.M.E (0.25–1.0× unit) — dinilai medan: apakah ekspresi tinggi memang lebih menguntungkan?' },
+    sidikPrakunci: sidik({ id, simbol: s, arah: v.arah, entry: b.harga, keyakinan: kal.keyakinan, odds: odds.skor, waktuKunci: ISO, params: wp.penuh.length }),
     peristiwa: peri,                                                // V256 tag peristiwa (OddsMaker event-based)
     rencanaDeal: deal,                                              // V256 mesin deal (3Commas)
   }
   ledger.push(entri); terkunciBaru.push(entri)
   return entri
 }
+// V249 BREADTH A/D (organ: Market Breadth) — dipindah ke atas odds-ranking V258
+// karena suhu Autopilot butuh breadth; pasar sempit = risiko sistemik; bila < 35%
+// koin naik DAN rezim TURUN, gerbang radar diperketat +2.
+const breadthDari = Object.keys(hasil).length
+const breadthNaik = breadthDari
+  ? [...Object.values(hasil)].filter((c) => c.length > 25 && c[c.length - 1].c > c[c.length - 25].c).length / breadthDari
+  : 0.5
+const pemerketBreadth = breadthNaik < 0.35 && rezimGlobal === 'TURUN' ? 2 : 0
+if (pemerketBreadth) log(`warisan-breadth: hanya ${(breadthNaik * 100).toFixed(0)}% koin naik dalam rezim TURUN — gerbang radar +2`)
 // V256 ODDS MAKER RANKING (Money Machine top-K): bersihArah diurut skor peluang —
 // hanya TOP-K berodds >= ambang yang boleh mengunci; sisanya ditolak DENGAN ALASAN ODDS.
 for (const k of bersihArah) if (emasArah(k)) k.odds.skor = +(k.odds.skor + 5).toFixed(1)
 const rankArah = [...bersihArah].sort((a, b) => b.odds.skor - a.odds.skor)
+// V258 SUHU AUTOPILOT (Axal) — temper denyut dari PF-jendela ARAH + rezim + breadth + F&G;
+// ambang & kuota efektif menggantikan baseline 3Commas/Trade Ideas DALAM BATAS KETAT (lantai 52).
+const _mnPf = closedArah.filter((e) => e.net > 0), _klPf = closedArah.filter((e) => e.net <= 0)
+const _smPf = _mnPf.reduce((a, e) => a + e.net, 0), _skPf = _klPf.reduce((a, e) => a + e.net, 0)
+const pfArah = _skPf < 0 ? +(_smPf / -_skPf).toFixed(2) : null
+const suhu = suhuPasar({ fng: fng?.nilai ?? null, breadth: +(breadthNaik * 100).toFixed(1), rezim: rezimGlobal, profitFactor: pfArah })
+const ambangOdds = suhu.ambang
+const kuotaArahSuhu = suhu.kuota
+for (const k of rankArah) k.odds.ambangEfektif = ambangOdds
+if (suhu.temper !== 'NETRAL') log(`suhu-pasar: ${suhu.ket} — ${suhu.alasan.join('; ')}`)
 const posisiTerbukaAwal = ledger.filter((e) => e.status === 'TERBUKA').length
 const sisaPosisi = Math.max(0, DEAL.MAX_POSISI - posisiTerbukaAwal)   // Global Max Open Positions (3Commas)
-const pilihArah = rankArah.filter((k) => k.odds.skor >= DEAL.ODDS_MIN).slice(0, Math.min(DEAL.TOP_K, sisaPosisi))
+const pilihArah = rankArah.filter((k) => k.odds.skor >= ambangOdds).slice(0, Math.min(kuotaArahSuhu, sisaPosisi))
 if (sisaPosisi === 0) log(`global-max-positions: ${posisiTerbukaAwal} posisi terbuka >= batas ${DEAL.MAX_POSISI} — sinyal ARAH baru diabaikan siklus ini`)
 const gagalOddsArah = rankArah.filter((k) => !pilihArah.includes(k))
 for (const k of pilihArah) kunciEntriArah(k, false)   // V255: fungsi mem-push sendiri; veto metakognitif = return null
 for (const k of gagalOddsArah) {
   nearMiss.push({
     simbol: k.s, arah: k.v.arah, keyakinan: k.v.keyakinan, entry: k.b.harga, rezim: k.b.rezim,
-    catatan: `ODDS MAKER (Trade Ideas) — skor peluang ${k.odds.skor}/100 ${k.odds.skor < DEAL.ODDS_MIN ? `< ambang ${DEAL.ODDS_MIN}` : `cukup tapi di luar top-${DEAL.TOP_K} terkuat (Money Machine)`} · komponen: MC ${(k.odds.komponen.mc * 100).toFixed(0)} / zona ${(k.odds.komponen.zona * 100).toFixed(0)} / meta ${(k.odds.komponen.meta * 100).toFixed(0)} / daya ${(k.odds.komponen.daya * 100).toFixed(0)} — fokus modal hanya pada peluang terkuat`,
+    catatan: `ODDS MAKER (Trade Ideas) — skor peluang ${k.odds.skor}/100 ${k.odds.skor < ambangOdds ? `< ambang efektif ${ambangOdds} (suhu ${suhu.temper}, baseline ${DEAL.ODDS_MIN})` : `cukup tapi di luar kuota top-${kuotaArahSuhu} terkuat (Money Machine · suhu ${suhu.temper})`} · komponen: MC ${(k.odds.komponen.mc * 100).toFixed(0)} / zona ${(k.odds.komponen.zona * 100).toFixed(0)} / meta ${(k.odds.komponen.meta * 100).toFixed(0)} / daya ${(k.odds.komponen.daya * 100).toFixed(0)} — fokus modal hanya pada peluang terkuat`,
   })
 }
-if (gagalOddsArah.length) log(`odds-maker: ${gagalOddsArah.length} kandidat ARAH ditolak ranking (top-${DEAL.TOP_K} ambang ${DEAL.ODDS_MIN}), ${pilihArah.length} lolos`)
+if (gagalOddsArah.length) log(`odds-maker: ${gagalOddsArah.length} kandidat ARAH ditolak ranking (kuota ${kuotaArahSuhu} · ambang efektif ${ambangOdds} · suhu ${suhu.temper}), ${pilihArah.length} lolos`)
 if (eksplorasiArah) {
   kunciEntriArah(eksplorasiArah, true)
   forensikTindakan.push(`slot eksplorasi: ${eksplorasiArah.s} ${eksplorasiArah.v.arah} dilepas lewat gerbang (EV +${(eksplorasiArah.eksA.evPct * 100).toFixed(2)}% >= 0) — zona racun diuji agar bisa menyembuh dengan bukti baru`)
@@ -2386,14 +2559,8 @@ if (ilmu.meta.kuat.n >= ILMU.META_MIN_N) {
   ilmu.meta.geser = gerbangMeta
   metaCatatan = `meta-labeling: konfirmasi-kuat tembus ${(hit * 100).toFixed(0)}% dari ${ilmu.meta.kuat.n} kasus — gerbang digeser ${gerbangMeta >= 0 ? '+' : ''}${gerbangMeta}`
 }
-// V249 BREADTH A/D (organ: Market Breadth) — pasar sempit = risiko sistemik;
-// bila < 35% koin naik DAN rezim TURUN, gerbang radar diperketat +2.
-const breadthDari = Object.keys(hasil).length
-const breadthNaik = breadthDari
-  ? [...Object.values(hasil)].filter((c) => c.length > 25 && c[c.length - 1].c > c[c.length - 25].c).length / breadthDari
-  : 0.5
-const pemerketBreadth = breadthNaik < 0.35 && rezimGlobal === 'TURUN' ? 2 : 0
-if (pemerketBreadth) log(`warisan-breadth: hanya ${(breadthNaik * 100).toFixed(0)}% koin naik dalam rezim TURUN — gerbang radar +2`)
+// V249 BREADTH — perhitungan breadthDari/breadthNaik/pemerketBreadth dipindah ke atas
+// odds-ranking (dibutuhkan suhu Autopilot V258); logika persis sama, pemakaian di bawah tak berubah.
 const gerbangSkor = clamp(PHX.GERBANG_SKOR + (rezimTegas ? PHX.TURUN_SKOR_TAMBAH : 0) + gerbangMeta + pemerketBreadth, 34, 58)
 const kunciMaks = rezimTegas ? Math.ceil(PHX.KUNCI_MAKS / 2) : PHX.KUNCI_MAKS
 
@@ -2562,6 +2729,13 @@ const bangunEntriPhx = (p, eksplor) => {
   const codaPhx = `Radar membeli ujung bawah hari ini — posisi ${(rad.posisi * 100).toFixed(0)}% rentang 24 jam — dengan sasaran jual ${+tgt.target.toPrecision(7)} (untung bersih +${(tgt.untung * 100).toFixed(1)}% setelah fee), stop struktural ${+stopHarga.toPrecision(6)} di bawah lantai, peluang MC tembus target ${Math.round(pT * 100)}% vs kena stop ${pStop != null ? Math.round(pStop * 100) + '%' : '—'}%. Risiko jujur: akumulasi bisa gagal — lantai jebol berarti bacaan salah dan stop yang mengatakan itu lebih dulu.`
   const narPhx = narasiSasaran(p.simbol, b, { arah: 'BUY', keyakinan: kalP.keyakinan }, wpPhx.penuh, { fng, dominasi }, null, war.garch.sigma24jPct, rezimGlobal, codaPhx)
   const buktiWawPhx = Object.fromEntries(wawPhx.map((x) => [x.param, +x.arah.toFixed(3)]))
+  // V258 GEKKO-CZAR — ekspresi dinamis + sidik pra-registrasi utk phoenix:
+  const eksprP = ekspresiSkala({
+    odds: odds.skor, keyakinan: kalP.keyakinan,
+    atrPctile: wpPhx.penuh.find((x) => x.param === 'atrPctile')?.nilai ?? null,
+    fundingPct: wpPhx.penuh.find((x) => x.param === 'funding')?.nilai ?? null,
+  })
+  const sidikP = sidik({ id: p.id, simbol: p.simbol, arah: 'BUY', entry: b.harga, keyakinan: kalP.keyakinan, odds: odds.skor, waktuKunci: ISO, params: wpPhx.penuh.length })
   // V251 MESIN PROFIT — ekspektasi & tangga profit (EV sudah tervalidasi guard ekspektasi)
   const rugiP = 1 - stopHarga / b.harga + FEE
   const evP = p.evK
@@ -2629,6 +2803,8 @@ const bangunEntriPhx = (p, eksplor) => {
     odds: odds,                                                     // V256 OddsMaker (Trade Ideas)
     peristiwa: peri,                                                // V256 tag peristiwa (OddsMaker event-based)
     rencanaDeal: deal,                                              // V256 mesin deal (3Commas)
+    ekspresi: { ...eksprP, ket: 'skala eksposur dinamis ala Allora×G.A.M.E (0.25–1.0× unit) — dinilai medan' },   // V258
+    sidikPrakunci: sidikP,                                          // V258 verifiable autonomy (Axal)
   }
   ledger.push(entri); terkunciBaru.push(entri)
   return entri
@@ -2671,6 +2847,11 @@ for (const e of ledger) {
   const exit = c[c.length - 1].c
   const net = (e.arah === 'BUY' ? 1 : -1) * (exit / e.entry - 1) - FEE
   e.exit = exit; e.net = +net.toFixed(5); e.status = net > 0 ? 'BENAR' : 'SALAH'; e.waktuDinilai = ISO
+  // V258 CZAR — skor asimetris magnitude-aware per vonis matang (arXiv 2609.36061):
+  // benar besar dibayar linear (cap 8%), benar kecil ≈ nol credit (zero-agnostic),
+  // salah kena floor + kuadratik — kekalahan tak bisa bersembunyi di balik volume.
+  e.cz = skorCzar(e.net)
+  ilmu.cz.n++; ilmu.cz.jumlah = +(ilmu.cz.jumlah + e.cz).toFixed(4)
   // V255: kalibrasi kedua gerbang metakognitif — apakah penilaian otak tentang
   // dirinya sendiri memang memprediksi hasil? (diukur, bukan dianggap)
   if (e.metakognisi) {
@@ -2695,7 +2876,33 @@ for (const e of ledger) {
       h.n++
       if ((endors && e.status === 'BENAR') || (!endors && e.status === 'SALAH')) h.benar++
       h.net = +((h.net ?? 0) + e.net * (endors ? 1 : -1) * Math.abs(a)).toFixed(5)
+      h.cz = +((h.cz ?? 0) + skorCzar(e.net * (endors ? 1 : -1))).toFixed(4)   // V258: nasihat param ditilang CZAR — benar-kecil tak lagi setara benar-besar
     }
+  }
+  // V258 META-INFERENSI KOLEKTIF — suara topik disegel saat kunci; kini regret
+  // diperbarui dari medan (regret-minimization ala Allora): suara sesuai kemenangan
+  // menurunkan regret (bobot naik), suara keliru menaikkan regret (bobot turun).
+  if (Array.isArray(e.topik?.suara)) {
+    const sgnT = e.arah === 'BUY' ? 1 : -1
+    for (const sv of e.topik.suara) {
+      const tI = ilmu.topik?.[sv.topik]; if (!tI) continue
+      const setuju = sv.arah * sgnT > 0
+      tI.n++
+      if ((setuju && e.status === 'BENAR') || (!setuju && e.status === 'SALAH')) tI.benar++
+      tI.net = +((tI.net ?? 0) + e.net * (setuju ? 1 : -1)).toFixed(5)
+      tI.regret = +clamp(GEK.REGRET_DECAY * (tI.regret ?? 0.6) + (setuju ? (e.status === 'BENAR' ? -0.08 : 0.12) : (e.status === 'BENAR' ? -0.04 : 0.08)), 0, 3).toFixed(4)
+    }
+  }
+  // V258 EKSPOSUR DINAMIS — apakah ekspresi tinggi memang lebih menguntungkan?
+  if (e.ekspresi?.skala != null) {
+    const bE = e.ekspresi.skala >= 0.55 ? ilmu.ekspresi.tinggi : ilmu.ekspresi.rendah
+    bE.n++; bE.net = +((bE.net ?? 0) + e.net).toFixed(5)
+  }
+  // V258 DIVERGENSI — prediksi terpisah jauh dari probabilitas pasar: edge atau jebakan?
+  if (e.divergensi != null) {
+    const bD = Math.abs(e.divergensi) >= GEK.DIVERG_KUAT ? ilmu.divergensi.kuat : ilmu.divergensi.lemah
+    bD.n++; if (e.status === 'BENAR') bD.benar++
+    bD.net = +((bD.net ?? 0) + e.net).toFixed(5)
   }
   // V247 ILMU: keyakinan adalah PROBABILITAS — dinilai skor Brier (Gneiting-Raftery 2007).
   const pKal = clamp((e.keyakinanMentah ?? e.keyakinan ?? 60) / 100, 0.5, 0.98)
@@ -2709,6 +2916,7 @@ for (const e of ledger) {
       h.n++
       if (e.status === 'BENAR') h.benar++
       h.net = +((h.net ?? 0) + e.net).toFixed(5)
+      h.cz = +((h.cz ?? 0) + skorCzar(e.net)).toFixed(4)   // V258: peristiwa ditilang CZAR
     }
   }
   // V256 MESIN DEAL — rencana deal 3Commas dinilai medan dari lilin pasca-kunci:
@@ -3042,12 +3250,22 @@ const akurasi = {
   profit: (() => {
     const mn = grad.filter((e) => e.net > 0), kl = grad.filter((e) => e.net <= 0)
     const sm = mn.reduce((a, e) => a + e.net, 0), sk = kl.reduce((a, e) => a + e.net, 0)
+    const menangRata = mn.length ? sm / mn.length : null, rugiRata = kl.length ? -sk / kl.length : null
+    // V258 CZAR — akurasi impas: berapa hit-rate minimum agar net-nol (breakeven WR
+    // = rugiRata/(menangRata+rugiRata) = 1/(1+PF)) — ambang jujur yang DIBAYAR medan,
+    // bukan 50% teoretis; darahAkurasi = akurasi − impas (negatif = merah, posisi ilegal).
+    const impas = (menangRata != null && rugiRata != null && menangRata + rugiRata > 0) ? +((rugiRata / (menangRata + rugiRata)) * 100).toFixed(1) : null
+    const akPct = grad.length ? +((benar / grad.length) * 100).toFixed(1) : null
+    const darah = (impas != null && akPct != null) ? +(akPct - impas).toFixed(1) : null
     return {
       ekspektasiPct: grad.length ? +((netKum / grad.length) * 100).toFixed(3) : null,
-      menangRataPct: mn.length ? +((sm / mn.length) * 100).toFixed(2) : null,
-      rugiRataPct: kl.length ? +((sk / kl.length) * 100).toFixed(2) : null,
+      menangRataPct: menangRata != null ? +(menangRata * 100).toFixed(2) : null,
+      rugiRataPct: rugiRata != null ? +(rugiRata * 100).toFixed(2) : null,
       profitFactor: sk < 0 ? +(sm / -sk).toFixed(2) : null,
-      ket: 'ekspektasi rata-rata per perdagangan net-fee — profit diukur, bukan dirasakan; PF = jumlah menang ÷ jumlah rugi',
+      impasPct: impas,
+      darahAkurasi: darah,
+      czarRata: ilmu.cz.n ? +(ilmu.cz.jumlah / ilmu.cz.n).toFixed(3) : null,
+      ket: 'ekspektasi rata-rata per perdagangan net-fee — profit diukur, bukan dirasakan; PF = jumlah menang ÷ jumlah rugi; impas = hit-rate breakeven nyata dari rata menang/rugi (CZAR: ambang jujur vs prediktor-nol); darah = akurasi − impas; czarRata = skor asimetris rata (benar-kecil ≈ 0, salah kena floor)',
     }
   })(),
 }
@@ -3088,6 +3306,9 @@ if (gagal.length > daftarTelusur.length * 0.3) peringatan.push(`${gagal.length}/
 // V252: peringatan performa — PF < 1 & ekspek negatif BUKAN kondisi normal (mandat investor)
 if (akurasi.profit?.profitFactor != null && akurasi.profit.profitFactor < 1)
   peringatan.push(`PF ledger ${akurasi.profit.profitFactor} < 1 — sistem masih kehilangan nilai; gerbang forensik menahan zona racun, target PF ${targetPerf.pf} / ekspek +${targetPerf.ekspekPct}% jadi kompas perbaikan`)
+// V258 CZAR — darah akurasi: di bawah impas = setiap aktivitas menggerus modal
+if (akurasi.profit?.darahAkurasi != null && akurasi.profit.darahAkurasi < 0)
+  peringatan.push(`darah akurasi ${akurasi.profit.darahAkurasi} poin: akurasi ${akurasi.akurasiPct}% di bawah impas ${akurasi.profit.impasPct}% (CZAR: ambang jujur dari rata menang/rugi medan sendiri) — aktivitas tanpa edge adalah penggerus modal; suhu ${suhu.temper} mengetatkan kuota`)
 // V253: peringatan derivatif — kerumunan ekstrem = fondasi rapuh
 if (frBtc != null && Math.abs(frBtc) >= WAWASAN.FUNDING_EKSTREM)
   peringatan.push(`funding BTC ${frBtc >= 0 ? '+' : ''}${(frBtc * 100).toFixed(4)}% ekstrem — kerumunan derivatif ramai; ${frBtc > 0 ? 'long-squeeze mengintai atas' : 'short-squeeze mengintai bawah'} — ukuran posisi dipangkas, bukan ditambah`)
@@ -3172,6 +3393,12 @@ const barisDari = (e) => ({
   ...(e.rencanaDeal ? { rencanaDeal: e.rencanaDeal } : {}),
   ...(e.dealMedan ? { dealMedan: e.dealMedan } : {}),
   ...(e.warisan ? { warisan: e.warisan } : {}),
+  // V258 GEKKO-CZAR — meta-inferensi/probPasar/divergensi/ekspresi/sidik ke kartu sasaran
+  ...(e.topik ? { topik: e.topik } : {}),
+  ...(e.probPasar != null ? { probPasar: e.probPasar } : {}),
+  ...(e.divergensi != null ? { divergensi: e.divergensi } : {}),
+  ...(e.ekspresi ? { ekspresi: e.ekspresi } : {}),
+  ...(e.sidikPrakunci ? { sidikPrakunci: e.sidikPrakunci } : {}),
 })
 // tiap lane memakai prediksi barunya hari ini; bila kosong (sudah terkunci siklus lalu), pakai yang TERBUKA
 const pilihDasar = (jalurPhx) => {
@@ -3237,6 +3464,8 @@ const guruPengajaran = [
   `WAWASAN (funding BTC ${frBtc != null ? (frBtc * 100).toFixed(4) + '%' : '—'} · OI BTC ${oiBtc ? '$' + oiBtc.nilaiJuta + ' juta' + (oiBtc.deltaPct != null ? ' · Δ' + (oiBtc.deltaPct * 100).toFixed(2) + '%' : '') : '—'} · F&G ${fng?.nilai ?? '—'} ${fng?.klasifikasi ?? ''}): derivatif adalah bahasa kerumunan — funding ekstrem berarti pihak yang MEMBAYAR biasanya yang salah; baca open interest dulu sebelum percaya lilin: harga naik tanpa OI naik adalah naik tanpa dana baru, dan itu rapuh`,
   `DEAL (${DEAL.MAX_POSISI} batas posisi global · posisi terbuka ${ledger.filter((e) => e.status === 'TERBUKA').length}): rencana profesional bukan satu tembakan — safety order dari ATR (bukan mood), stop pindah ke net-nol setelah ${Math.round(DEAL.BEP_ACT * 100)}% jalan ke target, profit ditrail ${DEAL.TRAIL_DIST}×ATR dari peak; kontingensi disiplin yang dipra-registrasi — bukan janji`,
   `ODDS (${bersihArah.length + lulusPhx.length} kandidat diranking · ambang ${DEAL.ODDS_MIN} · top-${DEAL.TOP_K} ala Money Machine): fokus modal hanya pada peluang terkuat — skor 0-100 dari 40% peluang-MC + 25% hit-rate zona + 20% metakognisi + 15% daya${PERISTIWA_DEFS.some((p) => (ilmu.peristiwa[p.nama]?.n ?? 0) >= 10) ? `; peristiwa paling terbukti: ${(PERISTIWA_DEFS.filter((p) => (ilmu.peristiwa[p.nama]?.n ?? 0) >= 10).map((p) => ({ nama: p.nama, hit: ilmu.peristiwa[p.nama].n ? ilmu.peristiwa[p.nama].benar / ilmu.peristiwa[p.nama].n : 0 })).sort((a, b) => b.hit - a.hit)[0] || {}).nama ?? '—'}` : '; peristiwa menunggu medan'} — menembak semua koin yang bergerak adalah cara tercepat jadi donatur pasar`,
+  `GEKKO (suhu ${suhu.temper} · ambang efektif ${ambangOdds} · kuota ARAH ${kuotaArahSuhu} · ala Allora Topics/Axal): ${suhu.temper === 'BERTAHAN' ? 'suhu dingin — otak mengetatkan kuota & ambangnya sendiri saat medan memburuk; mengecil saat tak yakin adalah keterampilan, bukan kelemahan' : suhu.temper === 'AGRESIF' ? 'suhu hangat terukur — kuota dilonggarkan HANYA karena medan hijau terukur (PF, breadth, F&G), bukan karena rasa optimis; lantai ambang tetap 52' : 'suhu netral — standar odds & kuota berlaku; suhu bisa mengetat otomatis kapan pun PF turun di bawah 1'} — 6 topik pekerja memberi suara kolektif dan bobotnya berubah mengikuti regret medan`,
+  `CZAR (akurasi ${akurasi.akurasiPct ?? '—'}% vs impas ${akurasi.profit?.impasPct ?? '—'}% · darah ${akurasi.profit?.darahAkurasi ?? '—'} · czar rata ${akurasi.profit?.czarRata ?? '—'}): ${akurasi.profit?.impasPct != null ? `impas dihitung dari rata menang/rugi medanmu sendiri — akurasi di bawah impas berarti SETIAP aktivitas menggerus modal, dan skor CZAR memberi nol credit untuk kemenangan kecil sambil menagih penalti penuh atas kekalahan` : 'impas belum terukur (butuh vonis matang menang & rugi) — rugi rata vs menang rata menentukan berapa hit-rate minimum yang benar-benar cukup'} — pelajaran CZAR Loss (arXiv 2609.36061): jangan biarkan prediktor-nol mengalahkanmu di atas kertas`,
 ]
 const guruKuis = (() => {
   const mtk = (x) => (x > 0 ? '+' : '') + (+x).toFixed(2)
@@ -3386,7 +3615,7 @@ const sampelPk = perKandang[0]?.params || []
 const perDomainCount = {}
 for (const p of sampelPk) perDomainCount[p.domain] = (perDomainCount[p.domain] || 0) + 1
 const sekolahParam = Object.entries(ilmu.paramHit || {})
-  .map(([param, h]) => ({ param, n: h.n, hitPct: h.n ? +((h.benar / h.n) * 100).toFixed(1) : null, netPct: +((h.net || 0) * 100).toFixed(2), status: statusSekolah(h) }))
+  .map(([param, h]) => ({ param, n: h.n, hitPct: h.n ? +((h.benar / h.n) * 100).toFixed(1) : null, netPct: +((h.net || 0) * 100).toFixed(2), czar: h.cz != null ? +h.cz.toFixed(2) : null, status: statusSekolah(h) }))
   .sort((a, b) => b.n - a.n)
 // V255 METAKOGNISI-NEVRON — blok laporan metakognitif lengkap
 const reliabPelajaran = Object.entries(aturan.pola || {}).map(([p, n]) => ({
@@ -3419,15 +3648,15 @@ const metakognisiLaporan = {
   ket: 'dua gerbang metakognitif (estimator + prediktor) berdiri SEBELUM ledger: mereka berhak menolak sinyal dari otaknya sendiri — dan kalibrasinya sendiri dinilai medan; slot eksplorasi forensik dikecualikan agar zona racun tetap bisa diuji',
 }
 const wawasan360 = {
-  versi: 'V257-SAMUDRA-DALAM', dihasilkan: ISO, siklus: SIKLUS,
+  versi: 'V258-GEKKO-CZAR', dihasilkan: ISO, siklus: SIKLUS,
   dimensi: DIM_ARAH.length + DIM_WAW.length,
   registri: {
     totalNama: TOTAL_PARAM_SEMUA, perKandang: TOTAL_PARAM_NAMA, metakognisi: TOTAL_PARAM_METAKOGNISI,
-    dealOdds: TOTAL_PARAM_DEAL_ODDS,
+    dealOdds: TOTAL_PARAM_DEAL_ODDS, gekko: TOTAL_PARAM_GEKKO,
     intiBerbobot: DIM_WAW.length, observasi: PARAM_OBS.length, observasiV257: PARAM_OBS_V257.length, iklimParam: PARAM_IKLIM.length,
     perDomain: perDomainCount, jumlahKandang: perKandang.length,
-    pengukuranPerDenyut: TOTAL_PARAM_NAMA * perKandang.length + TOTAL_PARAM_METAKOGNISI * kandidatArah.length,
-    ket: `registri ${TOTAL_PARAM_SEMUA} parameter bernama = ${TOTAL_PARAM_NAMA} per kandang × ${perKandang.length} kandang + ${TOTAL_PARAM_METAKOGNISI} metakognitif Nevron per kandidat + ${TOTAL_PARAM_DEAL_ODDS} parameter deal/odds (V256: 14 mesin deal+odds 3Commas/Trade Ideas + 6 tag peristiwa OddsMaker) — V257 menambah ${PARAM_OBS_V257.length} param samudra-dalam per kandang (struktur harian 90 hari, kerumunan LS-akun & agresor taker, basis/jam-funding/funding-relatif, gradien buku, 6 interaksi) + ${PARAM_IKLIM.length} param iklim lintas-siklus — lapis INTI (12) berbobot genome+Hedge, lapis OBSERVASI (${PARAM_OBS.length + PARAM_OBS_V257.length}) boleh MENOLAK via veto, lapis METAKOGNISI (35) menilai sinyal dari dalam, lapis DEAL/ODDS (20) merekayasa rencana posisi & meranking peluang; sensus jujur, bukan karangan`,
+    pengukuranPerDenyut: TOTAL_PARAM_NAMA * perKandang.length + TOTAL_PARAM_METAKOGNISI * kandidatArah.length + PARAM_GEKKO_KANDANG.length * kandidatArah.length,
+    ket: `registri ${TOTAL_PARAM_SEMUA} parameter bernama = ${TOTAL_PARAM_NAMA} per kandang × ${perKandang.length} kandang + ${TOTAL_PARAM_METAKOGNISI} metakognitif Nevron per kandidat + ${TOTAL_PARAM_DEAL_ODDS} parameter deal/odds (V256) + ${TOTAL_PARAM_GEKKO} parameter gekko (V258: 5 per kandidat — metaArah/metaKeyakinan/probPasar/divergensi/ekspresi; 5 siklus — suhu/ambang-efektif/kuota/akurasi-impas/darah; 8 konstanta CZAR-regret-ekspresi) — lapis INTI (12) berbobot genome+Hedge, lapis OBSERVASI (${PARAM_OBS.length + PARAM_OBS_V257.length}) boleh MENOLAK via veto, lapis METAKOGNISI (35) menilai sinyal dari dalam, lapis DEAL/ODDS (20) merekayasa rencana posisi & meranking peluang, lapis GEKKO (18) memberi suara kolektif bertingkat-regret + tilangan CZAR + eksposur dinamis; sensus jujur, bukan karangan`,
   },
   metakognisi: metakognisiLaporan,
   sekolahParameter: sekolahParam,
@@ -3469,7 +3698,7 @@ const rankOddsSiklus = [
 ].sort((a, b) => b.odds - a.odds)
 const peristiwaStat = PERISTIWA_DEFS.map((p) => {
   const h = ilmu.peristiwa[p.nama] || { n: 0, benar: 0, net: 0 }
-  return { peristiwa: p.nama, ket: p.ket, n: h.n, hitPct: h.n ? +((h.benar / h.n) * 100).toFixed(1) : null, netPct: +((h.net || 0) * 100).toFixed(2), status: h.n >= 10 ? (h.benar / h.n >= 0.52 ? 'pemenang' : (h.benar / h.n < 0.44 ? 'penggerus' : 'netral')) : 'pemula' }
+  return { peristiwa: p.nama, ket: p.ket, n: h.n, hitPct: h.n ? +((h.benar / h.n) * 100).toFixed(1) : null, netPct: +((h.net || 0) * 100).toFixed(2), czar: h.cz != null ? +h.cz.toFixed(2) : null, status: h.n >= 10 ? (h.benar / h.n >= 0.52 ? 'pemenang' : (h.benar / h.n < 0.44 ? 'penggerus' : 'netral')) : 'pemula' }
 })
 const dealOddsLaporan = {
   versi: 'V256-MESIN-DEAL-ODDS', dihasilkan: ISO, siklus: SIKLUS,
@@ -3508,6 +3737,46 @@ const dealOddsLaporan = {
 }
 tulis(path.join(ROOT, 'laporan/odds.json'), dealOddsLaporan)
 log(`deal-odds: top siklus ${rankOddsSiklus[0] ? `${rankOddsSiklus[0].simbol} ${rankOddsSiklus[0].odds}` : '—'} · odds ditolak ${gagalOddsArah.length} · posisi terbuka ${posisiTerbuka.length}/${dealOddsLaporan.posisiTerbuka.batas}`)
+
+// ---- V258 GEKKO-CZAR — laporan lengkap warisan Gekko Agent (Axal) + CZAR Loss ----
+const topikStat = Object.entries(ilmu.topik || {}).map(([t, h]) => ({
+  topik: t, n: h.n, hitPct: h.n ? +((h.benar / h.n) * 100).toFixed(1) : null, netPct: +((h.net || 0) * 100).toFixed(2),
+  regret: h.regret ?? 0.6, bobotKini: +bobotTopik(t).toFixed(3),
+  status: h.n >= 10 ? (h.benar / h.n >= 0.52 ? 'pembicara-dipercaya' : h.benar / h.n < 0.44 ? 'dibisukan' : 'netral') : 'pemula',
+})).sort((a, b) => b.bobotKini - a.bobotKini)
+const gekkoLaporan = {
+  versi: 'V258-GEKKO-CZAR', dihasilkan: ISO, siklus: SIKLUS,
+  identitas: 'deep-screening Gekko Agent (Axal × Virtuals × Allora) + CZAR Loss (Allora Foundation, arXiv 2609.36061) — kunci inti diadopsi, diadaptasi ke ledger pra-registrasi SAKTI, lalu DINILAI MEDAN',
+  sumber: [
+    { platform: 'Gekko AI by Virtuals / Axal', url: 'https://www.coinbase.com/price/base-gekko-ai-by-virtuals', kunci: 'identitas: agen trading AI buatan Axal (jaringan verifiable agents), fokus agents × trading × automation' },
+    { platform: 'Axal Substack', url: 'https://axal.substack.com/p/why-we-launched-gekko', kunci: 'peluncuran Des-2024 bersama Virtuals; fair-launch (alokasi tim ZERO); integrasi Autopilot' },
+    { platform: 'Allora Network × Gekko', url: 'https://www.allora.network/blog/gekko-ai-allora-a-new-edge-in-automated-trading', kunci: 'META-INFERENSI KOLEKTIF: model spesialis bertanding per Topics, inferensi dibobot akurasi historis+kontekstual; Gekko "dynamically adjust strategies mid-flight"' },
+    { platform: 'Allora Foundation (arXiv 2609.36061)', url: 'https://arxiv.org/abs/2609.36061', kunci: 'CZAR LOSS: loss simetris membiarkan prediktor-nol menang (akurasi-impas naik tajam dgn derau); skor asimetris magnitude-aware menjaga ambang impas dekat 50%' },
+    { platform: 'Allora × Virtuals G.A.M.E', url: 'https://www.allora.network/blog/allora-powers-virtuals-protocol', kunci: 'EKSPOSUR DINAMIS: volatilitas forecast → pangkas/naikkan exposure; meta-strategy realokasi; intelligent DCA' },
+    { platform: 'Allora Prediction Markets', url: 'https://www.allora.network/blog/inside-the-allora-prediction-markets-ecosystem', kunci: 'DIVERGENSI: masuk saat ramalan sendiri TERPISAH dari probabilitas-implied pasar' },
+    { platform: 'Axal Autopilot', url: 'https://axal.substack.com/p/introducing-axal-autopilot', kunci: 'TEMPER: risk-profile → alokasi strategi personal; fase-masuk bertahap; rebalancing otomatis' },
+    { platform: 'Axal (verifiable agents)', url: 'https://docs.axal.com/how-it-works/contracts', kunci: 'VERIFIABLE AUTONOMY: aksi agen bisa diverifikasi pihak ketiga' },
+  ],
+  kunciDiadopsi: [
+    'META-INFERENSI KOLEKTIF (Allora Topics) — 6 topik pekerja (momentum/tren/aliran/derivatif/mikrostruktur/relatif) memberi suara arah; bobot topik = exp(-0.9·regret), regret diperbarui tiap vonis matang dari medan — tidak ada topik berkuasa permanen',
+    'CZAR DECISIVENESS (arXiv 2609.36061) — skor asimetris magnitude-aware utk tiap vonis matang (benar: linear cap 8%; benar-kecil ≈ 0 credit; salah: floor 1.5 + kuadratik); akurasiImpas = breakeven WR dari rata menang/rugi medan; darahAkurasi = akurasi − impas (merah = aktivitas menggerus modal)',
+    'EKSPOSUR DINAMIS (Allora×G.A.M.E) — ekspresi 0.25–1.0× unit per sasaran dari odds+keyakinan−volatilitas ekstrem−kerumunan funding; dipra-registrasi & dibandingkan medan (ekspresi tinggi vs rendah)',
+    'DIVERGENSI PASAR-PREDIKSI (Allora prediction markets) — probPasar dari agresor taker + kerumunan LS + funding + EMA4h; divergensi = keyakinan komite − P(arah komite); bucket kuat/lemah dinilai medan',
+    'TEMPER AUTOPILOT (Axal) — suhu denyut AGRESIF/NETRAL/BERTAHAN dari PF-jendela+rezim+breadth+F&G; BERTAHAN: ambang odds +5 & kuota −1; AGRESIF: −3 dengan lantai 52; PF<1 MEMAKSA BERTAHAN — terikat-batas & terlog',
+    'VERIFIABLE AUTONOMY (Axal) — sidikPrakunci sha256 payload prediksi saat kunci (ARAH & PHOENIX) — tamper-evident, bisa direkalkulasi siapa pun',
+  ],
+  paramGekko: { kandang: PARAM_GEKKO_KANDANG, siklus: PARAM_GEKKO_SIKLUS, konst: PARAM_GEKKO_KONST, total: TOTAL_PARAM_GEKKO },
+  konstanta: { regretEta: GEK.REGRET_ETA, regretDecay: GEK.REGRET_DECAY, bobotMin: GEK.BOBOT_MIN, czarCap: GEK.CZAR_CAP, czarFloor: GEK.CZAR_FLOOR, ekspresiMin: GEK.EKSPRESI_MIN, ekspresiMaks: GEK.EKSPRESI_MAKS, divergKuat: GEK.DIVERG_KUAT, ambangLantai: GEK.AMBANG_LANTAI },
+  suhuSiklusIni: suhu,
+  topik: topikStat,
+  czar: { n: ilmu.cz.n, rata: ilmu.cz.n ? +(ilmu.cz.jumlah / ilmu.cz.n).toFixed(3) : null, ket: 'skor CZAR rata-rata — negatif berarti ledger masih didominasi penalti kekalahan; naik mendekati 0/positif = decisiveness terbayar' },
+  ekspresiMedan: ilmu.ekspresi,
+  divergensiMedan: ilmu.divergensi,
+  sidikPraKunci: { jumlahTerkunci: ledger.filter((e) => e.sidikPrakunci).length, ket: 'setiap prediksi baru membawa sidik sha256 pra-registrasi — entri lama tanpa sidik tampil apa adanya' },
+  kejujuran: 'semua param gekko lahir OBSERVASI — dinarasikan, disekolahkan (paramsPenuh), berhak veto lewat gerbang lama; TIDAK berbobot genome sebelum hit-rate medan lulus; satu perubahan gerbang (suhu Autopilot) terikat-batas (lantai 52, kuota ≤ baseline) dan tercatat per denyut',
+}
+tulis(path.join(ROOT, 'laporan/gekko.json'), gekkoLaporan)
+log(`gekko: suhu ${suhu.temper} (ambang ${ambangOdds}, kuota ${kuotaArahSuhu}) · topik terkuat ${topikStat[0]?.topik ?? '—'} · czar rata ${gekkoLaporan.czar.rata ?? '—'}`)
 const laporan = {
   protokol: 'SASARAN-MICAPROFITA', organ: VERSI, dihasilkan: ISO, siklus: SIKLUS,
   sumber: { host, gagal: gagal.slice(0, 12) },
@@ -3566,6 +3835,19 @@ const laporan = {
     posisiTerbuka: { jumlah: posisiTerbuka.length, batas: dealOddsLaporan.posisiTerbuka.batas },
     sumber: 'rincian penuh + param di laporan/odds.json',
   },
+  gekko: {
+    identitas: gekkoLaporan.identitas,
+    sumberResmi: gekkoLaporan.sumber.map((s) => `${s.platform}: ${s.url}`),
+    kunciDiadopsi: gekkoLaporan.kunciDiadopsi,
+    suhuSiklusIni: { temper: suhu.temper, ambangEfektif: ambangOdds, kuotaArah: kuotaArahSuhu, baselineAmbang: DEAL.ODDS_MIN, baselineKuota: DEAL.TOP_K, alasan: suhu.alasan },
+    topik: topikStat,
+    czar: gekkoLaporan.czar,
+    akurasiImpas: { impasPct: akurasi.profit?.impasPct ?? null, darahAkurasi: akurasi.profit?.darahAkurasi ?? null, akurasiPct: akurasi.akurasiPct, ket: 'CZAR: impas = breakeven WR dari rata menang/rugi medan; darah = akurasi − impas' },
+    ekspresiMedan: ilmu.ekspresi,
+    divergensiMedan: ilmu.divergensi,
+    sidikPraKunci: gekkoLaporan.sidikPraKunci.jumlahTerkunci,
+    sumber: 'rincian penuh di laporan/gekko.json',
+  },
   piagam: {
     identitas: PIAGAM.identitas, pilar: PIAGAM.pilar, otak: OTAK,
     roadmapJujur: PIAGAM.roadmapJujur,
@@ -3581,6 +3863,7 @@ const laporan = {
       'V254 SAMUDRA-PARAMETER — registri 46 parameter/kandang (≈460 pengukuran per denyut): multi-TF 1h+4h, riwayat funding, order book OKX, persentil lintas-pasar, kalender, GARCH/MC + SEKOLAH PARAMETER (hit-rate tiap param dinilai medan) + gerbang VETO wawasan (no-trade adalah keputusan)',
       'V255 METAKOGNISI-NEVRON — bedah Neurobro AI/Nevron (axioma-ai-labs): 7 kunci metakognisi diadopsi — estimator keyakinan 7-faktor, prediktor kegagalan pra-kunci, kritik diri 5-field, reliabilitas pelajaran (penguatan+peluruhan), bias konteks per rezim×arah, deteksi loop, monitor intervensi — registri 46 → 81 parameter bernama; gerbang metakognitif berhak bilang TUNGGU pada otaknya sendiri, dan kalibrasinya dinilai medan',
       'V256 MESIN-DEAL-ODDS — deep-screening 3Commas & Trade Ideas (dokumentasi resmi): mesin deal DCA (safety orders maxSO/deviasi×multiplier/volume×multiplier + TP-dari-avg), Move SL to Breakeven, Trailing Take Profit, Global Max Open Positions — semuanya dipra-registrasi & dinilai medan; OddsMaker 0-100 (40% MC + 25% zona + 20% metakognisi + 15% daya) + Money Machine top-3 menguasai kuota; 6 tag peristiwa event-based dinilai hit-rate-nya — registri 81 → 101 parameter bernama',
+      'V258 GEKKO-CZAR — deep-screening Gekko Agent (Axal × Virtuals × Allora) + CZAR Loss (Allora Foundation, arXiv 2609.36061): meta-inferensi kolektif 6 topik bertingkat-regret ala Allora Topics, skor CZAR asimetris magnitude-aware + akurasi-impas/darah-akurasi, eksposur dinamis 0.25–1.0×, divergensi vs probabilitas pasar, suhu Autopilot terikat-batas (PF<1 memaksa BERTAHAN), sidik sha256 pra-registrasi per prediksi — registri 127 → 145 parameter bernama',
     ],
   },
   sadardiri,
@@ -3668,6 +3951,7 @@ const laporan = {
     'RUH & GURU: ruh dibangun — inti, misi, nilai, anatomi & otonomi tercatat di laporan.ruh; tiap denyut menerbitkan pengajaran + kuis dari angka NYATA siklusnya (laporan/guru.json) — guru yang memakai sistemnya sendiri, bukan teori kosong',
     'PERFORMA DI ATAS AKTIVITAS: PF 0.57 & ekspek -0.67% BUKAN kondisi normal — baseline v251 disegel di otak/performa.json; tiap versi baru DIBANDINGKAN pada jendela vonisnya sendiri (anti-cheat) sampai target akurasi 50% · PF 1.2 · ekspek +0.3% terlampaui; zona racun forensik ditolak mesin — lebih baik TUNGGU daripada terus merugi',
     'METAKOGNISI NEVRON (bedah Neurobro AI): otak kini menilai dirinya sendiri SEBELUM bertaruh — keyakinan 7-faktor berbobot, probabilitas gagal pra-kunci (hit-rate zona + kegagalan 24 jam + ekspektasi negatif), bias konteks per rezim×arah (tracker 0.4 + pelajaran 0.4 + recent 0.2), deteksi loop (repetisi/alternasi/siklus), kritik diri 5-field per kekalahan + saran perbaikan berprioritas — diadopsi dari framework open-source Nevron (axioma-ai-labs/nevron), disegel di tiap sasaran, dan kalibrasi kedua gerbangnya DINILAI MEDAN',
+    'GEKKO-CZAR (bedah Gekko Agent/Axal + arXiv 2609.36061): 6 topik pekerja memberi suara kolektif bertingkat-regret ala Allora Topics (bobot = exp(-0.9·regret) dari medan); tiap vonis matang ditilang CZAR — benar-kecil ≈ nol credit, salah kena floor+kuadratik — lalu akurasi-impas dihitung dari rata menang/rugi medan sendiri (darah akurasi merah = aktivitas menggerus modal); eksposur dinamis 0.25–1.0× dan divergensi vs probabilitas pasar dipra-registrasi lalu dibandingkan medan; suhu Autopilot (AGRESIF/NETRAL/BERTAHAN) mengatur kuota & ambang terikat-batas — PF<1 memaksa BERTAHAN; tiap prediksi kini bawa sidik sha256 pra-registrasi (tamper-evident)',
     'JAMINAN ARAH: apa pun kondisi pasar, jawaban BUY/SELL tidak pernah bolong — sasaran koin bila gerbang lolos, kompas rezim BTC (GARCH + MC 2.000 lintasan, keyakinan rendah-jujur) sebagai lantai; ekspektasi & tangga profit tercantum per sasaran — jaminan arah, bukan jaminan untung',
   ],
 }
@@ -3693,6 +3977,10 @@ denyut.push({
   predKalibrasi: ilmu.metakognisi.prediktor.n ? +(ilmu.metakognisi.prediktor.tepat / ilmu.metakognisi.prediktor.n).toFixed(3) : null,
   fng: fng?.nilai ?? null, fundingBtcPct: frBtc != null ? +(frBtc * 100).toFixed(4) : null, dimWawasan: DIM_ARAH.length + DIM_WAW.length,
   oddsTop: rankOddsSiklus[0]?.odds ?? null, oddsDitolak: gagalOddsArah.length, posisiTerbuka: posisiTerbuka.length,
+  suhu: suhu.temper, ambangOddsEfektif: ambangOdds, kuotaArahEfektif: kuotaArahSuhu,
+  czarRata: ilmu.cz.n ? +(ilmu.cz.jumlah / ilmu.cz.n).toFixed(3) : null,
+  impasPct: akurasi.profit?.impasPct ?? null, darahAkurasi: akurasi.profit?.darahAkurasi ?? null,
+  topikHidup: Object.values(ilmu.topik || {}).filter((h) => h.n > 0).length,
   peristiwaHidup: Object.values(ilmu.peristiwa || {}).filter((h) => h.n > 0).length,
 })
 tulisJsonl(path.join(ROOT, 'laporan/denyut-server.jsonl'), denyut.slice(-500))
@@ -3726,6 +4014,7 @@ tulis(path.join(ROOT, 'laporan/jurnal-ilmu.json'), {
     finmem: 'lapisan 1 ledger -> lapisan 2 pelajaran -> lapisan 3 aturan (laporan/pelajaran-server.json)',
     warisan: 'mesinWarisan()/garch11()/monteCarlo24j()/profilVolume()/betaBTC() berjalan tiap telusur; pTarget MC tersimpan di e.warisan.mc (pra-registrasi) lalu dinilai saat matang (ilmu.brier.mc + ilmu.mcKalibrasi)',
     dealOdds: 'rencanaDeal()/skorOdds()/tagPeristiwa() dipasang V256 dari deep-screening 3Commas & Trade Ideas (dokumentasi resmi): SO/BEP/trailing dipra-registrasi per sasaran lalu dinilai medan (ilmu.deal), odds 0-100 meranking kuota (top-3), hit-rate per peristiwa di ilmu.peristiwa — rincian di laporan/odds.json',
+    gekko: 'metaInferensi()/skorCzar()/probPasar()/ekspresiSkala()/suhuPasar()/sidikPrakunci dipasang V258 dari deep-screening Gekko Agent (Axal × Virtuals × Allora) + CZAR Loss (arXiv 2609.36061): suara topik bertingkat-regret disegel & diperbarui medan (ilmu.topik), czar per vonis (e.cz/ilmu.cz), impas/darah akurasi (akurasi.profit), ekspresi & divergensi dibandingkan medan (ilmu.ekspresi/ilmu.divergensi), suhu mengatur kuota terikat-batas — rincian di laporan/gekko.json',
   },
 })
 
