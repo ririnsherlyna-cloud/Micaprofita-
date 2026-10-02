@@ -84,7 +84,7 @@ import path from 'node:path'
 const ROOT = process.cwd()
 const FEE = 0.002            // 0.1% buy + 0.1% sell — wajib
 const HORIZON_JAM = 24       // sasaran harian
-const VERSI = 'V258-GEKKO-CZAR v5.4 — penyempit jurang otak-chat vs tubuh-GitHub (jawaban pemilik: "kenapa micaprofita di arena jauh lebih canggih?" — karena arena bicara dengan otak penuh; tubuh GitHub kini diberi lapisan wawasan yang selama ini hanya ada di kepala; V258: warisan deep-screening Gekko Agent (Axal) + riset CZAR Loss Allora Foundation (arXiv 2609.36061)): lapisan parameter per kandang diperluas 46 → 67 bernama — (D) STRUKTUR HARIAN dari klines 1d 90 hari (EMA-align/RSI/MACD daily, Donchian 30d, jarak puncak-lantai 90d, momentum bulanan, streak hari, rasio volatilitas realized 7d/30d), (E) KERUMUNAN NYATA OKX rubik (long/short account ratio + tren membubarnya, taker buy/sell aggressor), (F) STRES DERIVATIF (basis perp-vs-spot, jam menuju funding, funding relatif vs BTC), (G) gradien order book (massa depan vs total 1%), (H) 6 INTERAKSI antar-faktor eksplisit (funding×ΔOI, volume×rezim-ATR, tren4h×funding, buku×tren1h, breakout×volume, agresor×tren) — semuanya lapis OBSERVASI: dihitung, dinarasikan, disekolahkan, berhak VETO, TIDAK berbobot sebelum hit-rate medan lulus (hukum rumah tak berubah) + 5 param iklim lintas-siklus (Δdominasi antar-denyut, ETH/BTC 7d risk-on/off, LS-akun BTC/ETH, jam funding BTC) · ditumpuk pada V256-MESIN-DEAL-ODDS (MESIN DEAL ala DCA-bot 3Commas: safety orders hard-cap 1.2×ATR ×1.6 ×1.5 + breakeven aktivasi 60% + trailing 0.8×ATR + Global Max Open Positions; ODDS MAKER ala Trade Ideas: skor 0-100, top-3 ≥55 boleh kunci; 6 tag peristiwa OddsMaker) → registri total 101 → 127 → 145 parameter bernama'
+const VERSI = 'V260-AUTOPILOT-KALIBRASI v5.6 — penyempit jurang otak-chat vs tubuh-GitHub; V260: warisan deep-screening "AutoPilotPM" (recogardtech/AutoPilotPM, MIT, kode sumber TypeScript 95 modul dibedah: src/ledger + src/risk + src/trading): TUJUH KUNCI KALIBRASI diadopsi — (1) TIMBANGAN-ALT (alternativesConsidered ala decision ledger): pilihan kedua dicatat saat kunci, regret-nya dihitung medan saat matang; (2) KELLY-LAPIS (dynamic Kelly 9-lapis): pengecilan drawdown (mulai 5%, setengah di 15%), kerendahan-hati sampel-kecil (<10 vonis → 0.5–0.95×), penyusutan streak-kalah (lantai 0.5×), vol-target scaling (klamps 0.5–1.5) — ditumpuk di atas ekspresi dinamis, skalaEfektif clamp [0.2,1.2] + keyakinan-ukuran 0.4/0.3/0.3; (3) REZIM-MEDAN (volatility regime 4-tingkat BASELINE-MANDIRI): σ window P&L dibanding baseline σ window penuh pertama milik sendiri — tenang 1.2×/normal 1.0×/tinggi 0.5×/ekstrem 0.25×+BERTAHAN; (4) UJI-TEGANG (stress test 5 skenario ala stress.ts): flash-crash/likuiditas/platform/korelasi/black-swan dinilai ke posisi terbuka, terburuk ≥30% → penalti+BERTAHAN; (5) SLIP-NETO (slippage-adjusted edge ala OPPORTUNITY_FINDER): edge dikurangi sqrt(1/likuiditas)·2·faktor+spread/2 SEBELUM memutuskan — edge bersih ≤ 0 ditolak dengan alasan, data kosong tidak memblokir (fallback-jujur); (6) PELUANG-SKOR (opportunity scoring terbobot + penalti): 0-100 = edge+likuiditas+keyakinan+eksekusi−penalti, <60 ditolak dengan alasan (gerbang baru yang hanya MENOLAK); (7) TOP-TOLAK (topBlockReasons): ranking alasan penolakan — kesadaran atas penolakannya sendiri — ditumpuk pada V259-KAIZEN-PULIH (prateekjain98/kaizen-trader open-source + KAIZEN Virtuals/Hyperliquid + Kaizen RegimeBot + kaizen.cash): EMPAT LOOP PENYEMBUHAN-DIRI diadopsi — (1) UJI-BALIK (delta-revert): perubahan genome adalah eksperimen yang dinilai medan per 8 vonis matang, yang lebih buruk DIREVERT; (2) KARANTINA (rule-healer): topik meta-inferensi yang terus keliru disita suaranya sementara, pulih lewat bukti; (3) DINGIN-DENDAM (anti-revenge): kekalahan beruntun per sasaran/keluarga membekukan re-entry; (4) HENTI-HARIAN: rugi-net harian ≤ −4% memaksa BERTAHAN — ditambah KESEGARAN gerakan (pompa-tua diveto ala "fresh breakouts > stale pumps"), MODAL-MATI (chop-exit), TESIS-PATAH, dan PENJAGA-KEDUA (hard-stop 15%/hard-target 40% pra-registrasi ala watchdog proses-terpisah): lapisan parameter per kandang diperluas 46 → 67 bernama — (D) STRUKTUR HARIAN dari klines 1d 90 hari (EMA-align/RSI/MACD daily, Donchian 30d, jarak puncak-lantai 90d, momentum bulanan, streak hari, rasio volatilitas realized 7d/30d), (E) KERUMUNAN NYATA OKX rubik (long/short account ratio + tren membubarnya, taker buy/sell aggressor), (F) STRES DERIVATIF (basis perp-vs-spot, jam menuju funding, funding relatif vs BTC), (G) gradien order book (massa depan vs total 1%), (H) 6 INTERAKSI antar-faktor eksplisit (funding×ΔOI, volume×rezim-ATR, tren4h×funding, buku×tren1h, breakout×volume, agresor×tren) — semuanya lapis OBSERVASI: dihitung, dinarasikan, disekolahkan, berhak VETO, TIDAK berbobot sebelum hit-rate medan lulus (hukum rumah tak berubah) + 5 param iklim lintas-siklus (Δdominasi antar-denyut, ETH/BTC 7d risk-on/off, LS-akun BTC/ETH, jam funding BTC) · ditumpuk pada V256-MESIN-DEAL-ODDS (MESIN DEAL ala DCA-bot 3Commas: safety orders hard-cap 1.2×ATR ×1.6 ×1.5 + breakeven aktivasi 60% + trailing 0.8×ATR + Global Max Open Positions; ODDS MAKER ala Trade Ideas: skor 0-100, top-3 ≥55 boleh kunci; 6 tag peristiwa OddsMaker) → registri total 101 → 127 → 145 → 167 → 191 parameter bernama'
 
 // ---------------- kandang lane ARAH (komite genome) ----------------
 const KANDANG = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'DOGE', 'ADA', 'AVAX', 'LINK', 'TRX']
@@ -289,7 +289,99 @@ const PARAM_GEKKO_KANDANG = ['metaArah', 'metaKeyakinan', 'probPasar', 'divergen
 const PARAM_GEKKO_SIKLUS = ['suhuTemper', 'ambangOddsEfektif', 'kuotaArahEfektif', 'akurasiImpas', 'darahAkurasi']
 const PARAM_GEKKO_KONST = ['czarCap', 'czarFloor', 'regretEta', 'regretDecay', 'ekspresiMin', 'ekspresiMaks', 'divergKuat', 'suhuAmbang']
 const TOTAL_PARAM_GEKKO = PARAM_GEKKO_KANDANG.length + PARAM_GEKKO_SIKLUS.length + PARAM_GEKKO_KONST.length   // 5+5+8 = 18
-const TOTAL_PARAM_SEMUA = TOTAL_PARAM_NAMA + TOTAL_PARAM_METAKOGNISI + TOTAL_PARAM_DEAL_ODDS + TOTAL_PARAM_GEKKO   // V258: 72+35+20+18 = 145
+// ---- V259 KAIZEN-PULIH — hasil deep-screening keluarga "Kaizen Trader" (bukti
+// riset: scripts/riset_kaizen/ — README+3 file kode sumber prateekjain98/kaizen-trader,
+// portofolio pencipta, HOL registry KAIZEN Virtuals, kaizen-daytrading.com, kaizen.cash).
+// Kunci inti: 4 healing loops (rule healer / Claude analysis / delta revert / Darwinian
+// selector) + anti-revenge cooldowns + daily loss halt + chop/thesis-break exits +
+// watchdog proses-terpisah + freshness guard + otonomi berjenjang. Diadaptasi ke
+// ledger pra-registrasi SAKTI — semua dinilai medan, bukan klaim.
+const KZN = {
+  UJI_JENDELA: 8,        // uji-balik: eksperimen genome dinilai tiap 8 vonis matang (PDCA)
+  KARANTINA_KEJ: 3,      // rule-healer: 3 suara-keliru beruntun + hit-rate < 44% → karantina
+  KARANTINA_PULIH: 2,    // 2× setuju-saat-benar untuk pulih dari karantina
+  DINGIN_SASARAN_KEJ: 2, // anti-dendam: 2 kekalahan beruntun per sasaran → dingin
+  DINGIN_SASARAN_JAM: 4, // dingin 4 jam per sasaran (ala kaizen-trader)
+  DINGIN_FAM_KEJ: 3,     // 3 kekalahan beruntun per keluarga rezim×arah
+  DINGIN_FAM_DENYUT: 1,  // keluarga didinginkan 1 denyut (30 menit ala kaizen-trader)
+  HENTI_RUGI_PCT: 4,     // henti-harian: rugi-net vonis hari UTC ≤ −4% kumulatif → BERTAHAN dipaksa
+  MODALMATI_JAM: 4,      // chop-exit: menginap ≥4 jam tanpa progres
+  MODALMATI_PROGRES: 2,  // progres < ±2% = modal mati (dead capital ala kaizen-trader)
+  KESEGARAN_24J: 100,    // |24j| > 100% tanpa akselerasi segar = pompa tua (fresh > stale)
+  KESEGARAN_AKS: 5,      // akselerasi 1 jam minimum untuk mengejar pompa
+  PENGAWAS_STOP: 15,     // penjaga-kedua: hard-stop 15% dari entry (ala watchdog proses terpisah)
+  PENGAWAS_TARGET: 40,   // penjaga-kedua: hard-target 40%
+}
+const PARAM_KAIZEN_KANDANG = ['kesegaran', 'akselerasi1j', 'tesisSehat']
+const PARAM_KAIZEN_SIKLUS = ['dinginSasaranCt', 'dinginFamCt', 'hentiHarianAktif', 'ujiBalikStatus', 'karantinaCt', 'pengawasKenaCt']
+const PARAM_KAIZEN_KONST = ['ujiJendela', 'karantinaKej', 'karantinaPulih', 'dinginSasaranKej', 'dinginSasaranJam', 'dinginFamKej', 'hentiRugiPct', 'modalMatiJam', 'modalMatiProgres', 'kesegaran24j', 'kesegaranAks', 'pengawasStopDef', 'pengawasTargetDef']
+const TOTAL_PARAM_KAIZEN = PARAM_KAIZEN_KANDANG.length + PARAM_KAIZEN_SIKLUS.length + PARAM_KAIZEN_KONST.length   // 3+6+13 = 22
+// ---- V260 AUTOPILOT-KALIBRASI — hasil deep-screening "AutoPilotPM"
+// (recogardtech/AutoPilotPM, MIT; bukti riset: scripts/riset_autopilot/ — Riset_AutoPilotPM.md
+// + clone utuh repo_autopilotpm/ + 6 query web). Kunci inti: decision ledger dgn
+// confidence-calibration + alternativesConsidered (src/ledger), dynamic Kelly 9-lapis
+// (src/trading/kelly.ts), volatility regime 4-tingkat baseline-mandiri
+// (src/risk/volatility.ts), stress test 5 skenario (src/risk/stress.ts), slippage-adjusted
+// edge + opportunity scoring terbobot + topBlockReasons (docs/OPPORTUNITY_FINDER.md).
+// Diadaptasi ke ledger pra-registrasi SAKTI — semua dinilai medan, bukan klaim.
+const AUT = {
+  KELLY_DD_MULAI: 5,      // % drawdown mulai mengecilkan ukuran (kelly.ts step 3)
+  KELLY_DD_MAKS: 15,      // % drawdown = titik faktor pengecilan maksimum
+  KELLY_DD_FAKTOR: 0.5,   // pada DD maks, ukuran tinggal 0.5×
+  KELLY_SAMPEL_N: 10,     // vonis matang < 10 → kerendahan-hati sampel (0.5–0.95)
+  KELLY_LOSS_STREAK: 2,   // kalah beruntun ≥ 2 → ukuran menyusut bertahap (lantai 0.5)
+  KELLY_VOL_TARGET: 10,   // % volatilitas target (vol-target scaling)
+  KELLY_VOL_KLIP: 1.5,    // faktor vol diklamps [0.5, 1.5]
+  STRES_AMBANG_PCT: 30,   // estimasi rugi skenario terburuk ≥ 30% unit → penalti + BERTAHAN
+  SLIP_FAKTOR: 0.8,       // faktor platform slippage (ala tabel OPPORTUNITY_FINDER)
+  SLIP_AMBANG_PCT: 2,     // slip > 2% → penalti eksekusi
+  PELUANG_AMBANG: 60,     // skor peluang < 60 → ditolak DENGAN ALASAN (gerbang baru, hanya menolak)
+  BOBOT_EDGE: 40, BOBOT_LIQ: 25, BOBOT_KIYAK: 25, BOBOT_EKSEKUSI: 10,  // 35/25/25/15 ala AutoPilot, diukur ulang utk medan perp
+}
+// ---- V261 CLAW-KOMITE — hasil deep-screening keluarga "ClawTrade" ----
+// Sumber utama: github clawtradeai-Agent/ClawTradeAI (MIT, multi-agent Solana:
+// CoordinatorAgent weighted voting + veto RiskManager + recommendedAmount kuanta,
+// RiskManagerAgent 4×25 risk card + blockedTokens, SniperAgent freshness/dedup,
+// ExecutorAgent maxSlippageBps 500) + github yuxuan-lou/ClawTrade (MIT, security
+// middleware: guardrails.py hard rules di luar jangkauan otak, MAX_DAILY_TRADES
+// dari audit log, confirmation.py human-queue + timeout, audit.py append-only).
+const CLAW = {
+  BOBOT_TREN: 0.20, BOBOT_KERUMUNAN: 0.15, BOBOT_DERIVATIF: 0.25, BOBOT_BUKU: 0.20, BOBOT_TEGANGAN: 0.20,  // agentWeights ala CoordinatorAgent
+  KOMITE_MINCONF: 0.6,     // minConfidence Coordinator: skor komite < 0.6 → SKIP
+  KOMITE_NETRAL: 0.15,     // |arah suara| ≤ 0.15 → suara SKIP (netral)
+  KARTU_MAKS: 70,          // maxRiskScore RiskManager: kartu > 70 → ditolak
+  KARTU_QV_KRIT: 1e7,      // quote-volume 24j < $10jt → likuiditas kritis 25 poin
+  KARTU_QV_RENDAH: 3e7,    // < $30jt → 15 poin
+  KARTU_QV_MID: 8e7,       // < $80jt → 8 poin
+  KARTU_SPREAD_MAKS: 8,    // spread bps > 8 → +5 poin (eksekusi mahal)
+  KARTU_VOLZ_SPike: 2,     // |volZ| > 2 → +5 poin (churn anomaly ala volume/liquidity ratio)
+  KARTU_SIGMA_TINGGI: 15,  // σ24j > 15% → 20 poin
+  KARTU_SIGMA_SEDANG: 8,   // σ24j > 8% → 10 poin
+  KARTU_SIGMA_RINGAN: 5,   // σ24j > 5% → 5 poin
+  KARTU_LS_EKSTREM: 1,     // |LS-akun − 1| > 1 → 15 poin (kerumunan miring ekstrem)
+  KARTU_LSTAKER_EKSTREM: 0.6, // |taker-agresor| > 0.6 → 10 poin
+  KARTU_FUNDING_EKSTREM: 0.15, // |funding%| ≥ 0.15 → 15 poin (perang funding)
+  KARTU_FUNDING_SEDANG: 0.05,  // |funding%| ≥ 0.05 → 8 poin
+  KARTU_FUNDBTC_EKSTREM: 1.5,  // |funding vs BTC| > 1.5 → 10 poin
+  HITAM_KEJ: 3,            // 3× ditolak kartu-panas beruntun → daftar-hitam (blockedTokens)
+  HITAM_DINGIN_JAM: 48,    // lantai pendingin daftar-hitam (keluar lebih cepat hanya via mandat)
+  KUOTA_HARIAN: 12,        // MAX_DAILY_TRADES guardrail — kunci ARAH/hari dihitung dari ledger (audit)
+  KUANTA_T1: 0.8,          // keyakinan ≥ 0.8 → kuanta 1.0 (ala recommendedAmount)
+  KUANTA_1: 1.0, KUANTA_2: 0.5, KUANTA_3: 0.25,
+  KONFIRM_AMBANG: 0.8,     // kuanta tertinggi → MENUNGGU MANDAT (human-queue ala confirmation.py)
+  KONFIRM_TIMEOUT_JAM: 12, // pending kadaluarsa (CONFIRM_TIMEOUT ala confirmation.py)
+  SLIP_MAKS_PCT: 1.2,      // langit-langit eksekusi 120bps ala Executor maxSlippageBps
+  UKURAN_MAKS: 1.0,        // ukuran akhir keras di luar genome (guardrail tersumbat)
+}
+const PARAM_CLAW_KANDANG = ['komite', 'kartu', 'kuanta']
+const PARAM_CLAW_SIKLUS = ['komiteMinconf', 'komiteVeto', 'kartuVeto', 'kartuAvg', 'hitamCt', 'kuotaCt']
+const PARAM_CLAW_KONST = ['bobotTren', 'bobotKerumunan', 'bobotDerivatif', 'bobotBuku', 'bobotTegangan', 'komiteMinconf', 'komiteNetral', 'kartuMaks', 'kartuQvKrit', 'kartuQvRendah', 'kartuQvMid', 'kartuSpreadMaks', 'kartuVolzSpike', 'kartuSigmaTinggi', 'kartuSigmaSedang', 'kartuSigmaRingan', 'kartuLsEkstrem', 'kartuLstakerEkstrem', 'kartuFundingEkstrem', 'kartuFundingSedang', 'kartuFundbtcEkstrem', 'hitamKej', 'hitamDinginJam', 'kuotaHarian', 'kuantaT1', 'kuanta1', 'kuanta2', 'kuanta3', 'konfirmAmbang', 'konfirmTimeoutJam', 'slipMaksPct', 'ukuranMaks']
+const TOTAL_PARAM_CLAW = PARAM_CLAW_KANDANG.length + PARAM_CLAW_SIKLUS.length + PARAM_CLAW_KONST.length   // 3+6+32 = 41
+const PARAM_AUTO_KANDANG = ['peluang', 'slipPct', 'kellyMult']
+const PARAM_AUTO_SIKLUS = ['rezimMedan', 'multRezim', 'stresTerkburuk', 'stresSkenario', 'topTolakUtama', 'topTolakCt']
+const PARAM_AUTO_KONST = ['kellyDdMulai', 'kellyDdMaks', 'kellyDdFaktor', 'kellySampelN', 'kellyLossStreak', 'kellyVolTarget', 'kellyVolKlip', 'stresAmbangPct', 'slipFaktor', 'slipAmbangPct', 'peluangAmbang', 'bobotEdge', 'bobotLiq', 'bobotKiyak', 'bobotEksekusi']
+const TOTAL_PARAM_AUTO = PARAM_AUTO_KANDANG.length + PARAM_AUTO_SIKLUS.length + PARAM_AUTO_KONST.length   // 3+6+15 = 24
+const TOTAL_PARAM_SEMUA = TOTAL_PARAM_NAMA + TOTAL_PARAM_METAKOGNISI + TOTAL_PARAM_DEAL_ODDS + TOTAL_PARAM_GEKKO + TOTAL_PARAM_KAIZEN + TOTAL_PARAM_AUTO + TOTAL_PARAM_CLAW   // V261: 72+35+20+18+22+24+41 = 232
 // statusSekolah — kelulusan param dari hit-rate medan (bukan dari tangan manusia):
 // pemula (n<10) → dipantau → calon-lulus (n>=20 & hit>=52% & net>0) / diawasi (hit<44%)
 function statusSekolah(h) {
@@ -325,7 +417,9 @@ const OTAK = [
   { nama: 'otak-wawasan', tugas: 'registri 72 parameter wawasan crypto per kandang+iklim — lilin 1h+4h+HARIAN 90 hari, derivatif dalam (funding/OI/basis/jam-funding/funding-relatif), kerumunan OKX rubik (LS-akun/taker-agresor), order book + gradien, lintas-pasar, kalender, kuant-warisan, 6 interaksi antar-faktor — plus narasi analis fasih per sasaran', mesin: 'multi-timeframe (EMA-align/MACD/RSI/Bollinger/swing 1h+4h+harian) + riwayat funding rata3/tren + basis/jam-funding + order book OKX (imbalance/spread/kedalaman/dinding/gradien) + LS-akun & taker-volume rubik + persentil lintas-pasar swap + F&G-7hari/dominasi-Δ/ETH-BTC/altseason + GARCH/MC/beta/POC + kalender; 12 inti berbobot (genome+Hedge), observasi diveto-kan & bersekolah hit-rate', status: 'HIDUP (V257)' },
   { nama: 'otak-metakognisi', tugas: 'mengawasi otaknya sendiri SEBELUM bertaruh — estimator keyakinan 7-faktor, prediktor kegagalan pra-kunci, bias konteks per rezim×arah, deteksi loop, kritik diri 5-field per kekalahan — dan kalibrasinya dinilai medan', mesin: '7 kunci diadopsi dari framework open-source Nevron (axioma-ai-labs/nevron) hasil bedah Neurobro AI: ConfidenceEstimator + FailurePredictor + StrategyAdapter + LoopDetector + SelfCritic-RLAIF + Lesson-reliability + MetacognitiveMonitor, diadaptasi ke ledger pra-registrasi SAKTI', status: 'HIDUP (V255)' },
   { nama: 'otak-deal-odds', tugas: 'merekayasa setiap sasaran seperti bot profesional: rencana deal lengkap (safety orders, breakeven, trailing) dipra-registrasi lalu dinilai medan, dan hanya peluang berodds tertinggi (top-3) yang boleh mengunci', mesin: 'kunci diadopsi dari dokumentasi resmi 3Commas & Trade Ideas hasil deep-screening: DCA 6-parameter (Max SO, deviation ×multiplier, volume multiplier), Move SL to Breakeven, Trailing Stop 2-param, Global Max Open Positions, OddsMaker event-based testing (6 tag peristiwa dinilai hit-rate-nya), Money Machine top-3 concentration — diadaptasi ke ledger pra-registrasi SAKTI', status: 'HIDUP (V256)' },
+  { nama: 'otak-autopilot', tugas: 'mengukur ekspektasi SETELAH biaya jatuh-tempo (slip-neto), mengukur ukuran SETELAH drawdown & sampel kecil (kelly-lapis), membaca medan lewat rezim σ-mandiri & 5 skenario tegang, menimbang peluang 0-100 terbobot-penalti, dan mencatat pilihan kedua yang ditimbang — kejujuran kalibrasi ala decision ledger', mesin: 'warisan deep-screening AutoPilotPM (recogardtech/AutoPilotPM, MIT, kode sumber TypeScript dibedah): decision ledger + confidence calibration + alternativesConsidered (src/ledger), dynamic Kelly 9-lapis (src/trading/kelly.ts), volatility regime 4-tingkat baseline-mandiri (src/risk/volatility.ts), stress test 5 skenario (src/risk/stress.ts), opportunity scoring terbobot + penalti + slippage heuristik + topBlockReasons (docs/OPPORTUNITY_FINDER.md) — semua dinilai medan', status: 'HIDUP (V260)' },
   { nama: 'otak-gekko', tugas: 'meta-inferensi kolektif 6 topik ala Allora (mesin di balik Gekko Agent/Axal): topik memberi suara arah dengan bobot regret-minimized, ditilang skor CZAR yang asimetris (decisiveness), eksposur dinamis 0.25–1.0×, divergensi vs probabilitas pasar, suhu Autopilot yang mengatur kuota & ambang terikat-batas, dan sidik sha256 pra-registrasi per prediksi', mesin: 'warisan deep-screening Gekko Agent (Axal × Virtuals × Allora) + CZAR Loss (Allora Foundation, arXiv 2609.36061): metaInferensi() + skorCzar() + ekspresiSkala() + probPasar()/divergensi + suhuPasar() + sidikPrakunci — semua param lapis gekko lahir OBSERVASI dan disekolahkan medan', status: 'HIDUP (V258)' },
+  { nama: 'otak-kaizen', tugas: 'menyembuh dirinya sendiri ala filosofi kaizen: perubahan genome diuji-balik vs baseline (delta-revert), topik yang terus keliru dikarantina (rule-healer), sasaran yang dendam dibekukan (anti-revenge), rugi harian mengetatkan gerbang sendiri (daily halt), pompa-tua ditolak (freshness), modal mati & tesis patah diukur, dan penjaga-kedua mengawal di luar otak skor', mesin: 'warisan deep-screening keluarga "Kaizen Trader" (prateekjain98/kaizen-trader open-source + KAIZEN Virtuals + RegimeBot + kaizen.cash): 4 healing loops (rule healer / Claude analysis / delta revert / Darwinian selector) diadaptasi ke ledger pra-registrasi — ujiBalik + karantina + dinginDendam + hentiHarian + kesegaran + modalMati + tesis + pengawas, semuanya dinilai medan', status: 'HIDUP (V259)' },
 ]
 
 // ---------------- V251 RUH — jiwa yang dibangun (mandat pemilik:
@@ -1806,6 +1900,14 @@ function rencanaDeal(c, entry, arah, untungTarget) {
       ket: `profit ditrail dari peak dengan jarak ${trailDistPct}% (0.8×ATR24j) — pemenang diberi ruang berlari`,
     },
     maxPosisiTerbuka: DEAL.MAX_POSISI,
+    // V259 KAIZEN-PULIH — penjaga-kedua + perluasan taksonomi keluar (ala kaizen-trader:
+    // 8 kondisi keluar eksplisit + watchdog proses-terpisah dengan stop/target independen)
+    pengawas: { mesin: 'Penjaga-Kedua ala watchdog kaizen-trader (proses independen dari otak skor)', stopPct: KZN.PENGAWAS_STOP, targetPct: KZN.PENGAWAS_TARGET, ket: `hard-stop ${KZN.PENGAWAS_STOP}% / hard-target ${KZN.PENGAWAS_TARGET}% dari entry — tercatat saat kunci, dicek tiap denyut BAHKAN bila otak skor bingung` },
+    exitEkstra: {
+      chopExit: { umurMaksJam: KZN.MODALMATI_JAM, progresMinPct: KZN.MODALMATI_PROGRES, ket: `modal-mati: tanpa progres ±${KZN.MODALMATI_PROGRES}% dalam ${KZN.MODALMATI_JAM} jam → potong — modal mati adalah peluang yang hilang` },
+      tesisBreak: { ket: 'tesis-patah: kondisi asal yang membuat entry (funding/EMA4h searah) berbalik → tutup apa pun P&L-nya' },
+      ket: 'perluasan taksonomi keluar ala kaizen-trader: stop/target/trailing/timeout + chop-exit + thesis-break + daily-halt',
+    },
   }
 }
 // (3) ODDS MAKER ala Trade Ideas — skor peluang 0-100 dari 4 sumber terukur
@@ -1836,6 +1938,7 @@ const dayaRata = (d) => d ? ((d.volume?.daya ?? d.volume ?? 0.5) + (d.volatilita
 //     diperbarui tiap vonis matang (regret-minimization ala Allora), tidak ada
 //     topik yang memegang kuasa permanen.
 function bobotTopik(t) {
+  if (ilmu.karantina?.[t]) return 0        // V259 KARANTINA (rule-healer): suara disita sementara — pulih lewat bukti medan
   const r = ilmu.topik?.[t]?.regret ?? 0.6
   return Math.max(GEK.BOBOT_MIN, Math.exp(-GEK.REGRET_ETA * r))
 }
@@ -1850,8 +1953,10 @@ function metaInferensi(wp) {
     suara.push({ topik: t, arah: +rata.toFixed(3), bobot: +bobotTopik(t).toFixed(3) })
   }
   if (!suara.length) return { metaArah: null, metaKeyakinan: null, suara, ket: 'tak ada topik bersuara — data kurang' }
-  const tot = suara.reduce((a, x) => a + x.bobot, 0)
-  const sk = suara.reduce((a, x) => a + x.bobot * x.arah, 0) / tot
+  const hidup = suara.filter((x) => x.bobot > 0)                       // V259: topik dikarantina = bobot 0 = tak bersuara
+  if (!hidup.length) return { metaArah: null, metaKeyakinan: null, suara, ket: 'semua topik bersuara sedang dikarantina — suara disita hingga bukti pulih' }
+  const tot = hidup.reduce((a, x) => a + x.bobot, 0)
+  const sk = hidup.reduce((a, x) => a + x.bobot * x.arah, 0) / tot
   const metaArah = sk > 0 ? 'BUY' : 'SELL'
   const metaKeyakinan = clamp(Math.round(50 + Math.abs(sk) * 55), 50, 90)
   const urut = [...suara].sort((a, b) => b.bobot - a.bobot)
@@ -1883,6 +1988,77 @@ function probPasar(W) {
   const rata = komp.reduce((a, x) => a + x, 0) / komp.length
   return +clamp(0.5 + rata * 0.35, 0.06, 0.94).toFixed(3)
 }
+// (V260) KELLY-LAPIS (AutoPilotPM src/trading/kelly.ts — dynamic Kelly 9 lapis):
+// 4 sub-faktor yang belum dipunyai tubuh — pengecilan drawdown, kerendahan-hati
+// sampel kecil, penyusutan loss-streak, vol-target scaling — ditumpuk DI ATAS
+// ekspresi dinamis gekko; hasilnya multiplier terikat-batas [0.4, 1.5].
+function kellyLapis({ ddPct, nVonis, lossStreak, sigma24jPct }) {
+  const f = {}
+  f.drawdown = ddPct != null && ddPct > AUT.KELLY_DD_MULAI
+    ? +(ddPct >= AUT.KELLY_DD_MAKS ? AUT.KELLY_DD_FAKTOR : 1 - (ddPct / AUT.KELLY_DD_MAKS) * (1 - AUT.KELLY_DD_FAKTOR)).toFixed(3)
+    : 1
+  f.sampel = nVonis != null && nVonis < AUT.KELLY_SAMPEL_N ? +(0.5 + (nVonis / AUT.KELLY_SAMPEL_N) * 0.45).toFixed(3) : 1
+  f.streakKalah = lossStreak != null && lossStreak >= AUT.KELLY_LOSS_STREAK ? +Math.max(0.5, 1 - lossStreak * 0.1).toFixed(3) : 1
+  f.vol = sigma24jPct != null && sigma24jPct > 0 ? +clamp(AUT.KELLY_VOL_TARGET / sigma24jPct, 0.5, AUT.KELLY_VOL_KLIP).toFixed(3) : 1
+  const mult = clamp(f.drawdown * f.sampel * f.streakKalah * f.vol, 0.4, 1.5)
+  const ku = nVonis != null ? clamp(0.4 * Math.min(1, nVonis / 20) + 0.3 + 0.3 * (1 - Math.min(1, (ddPct ?? 0) / AUT.KELLY_DD_MAKS)), 0.2, 1) : null
+  return { mult: +mult.toFixed(3), f, ku: ku != null ? +ku.toFixed(3) : null }
+}
+// (V260) REZIM-MEDAN (AutoPilotPM src/risk/volatility.ts — 4 rezim dgn baseline
+// mandiri): σ window P&L terakhir dibanding baseline σ window penuh PERTAMA
+// (self-calibration) — tenang 1.2×, normal 1.0×, tinggi 0.5×, ekstrem 0.25×+BERTAHAN.
+function rezimMedan(netHist, baseLama) {
+  const win = (netHist || []).slice(-30).map((x) => x * 100)
+  if (win.length < 4) return { rezim: 'normal', mult: 1, sigma: null, baseline: baseLama ?? null, ket: 'window P&L belum cukup — rezim normal-awas (jujur pada kekaburan)' }
+  const mean = win.reduce((a, x) => a + x, 0) / win.length
+  const sigma = +Math.sqrt(win.reduce((a, x) => a + (x - mean) ** 2, 0) / win.length).toFixed(4)
+  const baseline = baseLama ?? sigma          // kalibrasi mandiri: window penuh pertama = baseline
+  const r = baseline > 0 ? sigma / baseline : 1
+  const rezim = r < 0.5 ? 'tenang' : r < 1.5 ? 'normal' : r < 2.5 ? 'tinggi' : 'ekstrem'
+  const mult = rezim === 'tenang' ? 1.2 : rezim === 'normal' ? 1 : rezim === 'tinggi' ? 0.5 : 0.25
+  return { rezim, mult, sigma, baseline: +baseline.toFixed(4), ket: `σ window ${sigma}% vs baseline ${baseline.toFixed(4)}% (rasio ${r.toFixed(2)}) — baseline dikalibrasi dari window penuh pertama, bukan ambang karangan` }
+}
+// (V260) UJI-TEGANG (AutoPilotPM src/risk/stress.ts — 5 skenario terdefinisi):
+// posisi terbuka dinilai di bawah flash-crash/likuiditas/platform/korelasi/black-swan;
+// estimasi rugi unit-relatif dari skala eksposur terpasang tiap posisi, diurut severity.
+const SKENARIO_TEGANG = [
+  { nama: 'flash-crash', rugiPct: 20 }, { nama: 'likuiditas-mampet', rugiPct: 10 },
+  { nama: 'platform-mati', rugiPct: 15 }, { nama: 'korelasi-menembus', rugiPct: 25 },
+  { nama: 'black-swan', rugiPct: 40 },
+]
+function ujiTegang(posisiTerbuka) {
+  const hasilS = SKENARIO_TEGANG.map((sc) => {
+    const rugiUnit = posisiTerbuka.reduce((a, e) => a + (e.ekspresi?.skalaEfektif ?? e.ekspresi?.skala ?? 0.5), 0) * (sc.rugiPct / 100)
+    return { nama: sc.nama, rugiPct: sc.rugiPct, rugiUnit: +rugiUnit.toFixed(2) }
+  }).sort((a, b) => b.rugiUnit - a.rugiUnit)
+  return { skenario: hasilS, terburuk: hasilS[0] ?? null, ket: `${posisiTerbuka.length} posisi terbuka dinilai di 5 skenario — estimasi rugi unit-relatif (skala eksposur × fraksi skenario), diurut severity ala AutoPilot stress.ts` }
+}
+// (V260) SLIP-NETO (AutoPilotPM docs/OPPORTUNITY_FINDER.md — slippage heuristik
+// sqrt(size/liquidity)·2·faktor + spread/2): edge dikurangi perkiraan biaya
+// jatuh-tempo SEBELUM memutuskan — data kosong TIDAK memblokir (fallback-jujur).
+function slipNeto({ qvUsd, spreadBps, edgePct }) {
+  if (qvUsd == null || !Number.isFinite(qvUsd) || qvUsd <= 0) return { slipPct: null, edgeBersih: null, ket: 'likuiditas tak terukur — slip-neto tidak memblokir (fallback-jujur ala AutoPilot)' }
+  const likuiditasUsd = Math.max(qvUsd / 24, 1)   // volume quote per jam dari lilin 1 jam terakhir
+  const slip = +(Math.sqrt(1 / likuiditasUsd) * 2 * AUT.SLIP_FAKTOR * 100 + (spreadBps ?? 0) / 200).toFixed(3)
+  const edgeBersih = edgePct != null ? +(edgePct - slip).toFixed(3) : null
+  return { slipPct: slip, edgeBersih, ket: `slip ≈ ${slip}% (sqrt(1/likuiditas)·2·${AUT.SLIP_FAKTOR} + spread/2) — edge ${edgePct ?? '—'}% → bersih ${edgeBersih ?? '—'}%` }
+}
+// (V260) PELUANG-SKOR (AutoPilotPM opportunity scoring 0-100: Edge 35/Liq 25/
+// Confidence 25/Execution 15 − penalti): komposit terbobot + penalti eksplisit;
+// < ambang → ditolak DENGAN ALASAN (topBlockReasons).
+function peluangSkor({ edgeBersih, liqUsd, keyakinan, spreadBps, slipPct }) {
+  const edgeScore = edgeBersih != null ? clamp(edgeBersih / 10, 0, 1) * AUT.BOBOT_EDGE : AUT.BOBOT_EDGE * 0.5
+  const liqScore = liqUsd != null && liqUsd > 0 ? clamp(Math.log10(Math.max(liqUsd, 10) / 1e5) / 2, 0, 1) * AUT.BOBOT_LIQ : AUT.BOBOT_LIQ * 0.5
+  const kiyakScore = ((keyakinan ?? 55) / 100) * AUT.BOBOT_KIYAK
+  const penalti = []
+  let eksekusi = AUT.BOBOT_EKSEKUSI
+  if (spreadBps != null && spreadBps > WAWASAN.SPREAD_BPS_LEBAR) { eksekusi -= 5; penalti.push('spread lebar −5') }
+  if (slipPct != null && slipPct > AUT.SLIP_AMBANG_PCT) { eksekusi -= 4; penalti.push(`slip ${slipPct}% > ${AUT.SLIP_AMBANG_PCT}% −4`) }
+  if (keyakinan != null && keyakinan < 70) { eksekusi -= 3; penalti.push('keyakinan < 70 −3') }
+  eksekusi = Math.max(0, eksekusi)
+  const skor = +clamp(edgeScore + liqScore + kiyakScore + eksekusi, 0, 100).toFixed(1)
+  return { skor, bagian: { edge: +edgeScore.toFixed(1), liq: +liqScore.toFixed(1), kiyak: +kiyakScore.toFixed(1), eksekusi }, penalti, ket: `peluang ${skor}/100 = edge ${edgeScore.toFixed(1)} + likuiditas ${liqScore.toFixed(1)} + keyakinan ${kiyakScore.toFixed(1)} + eksekusi ${eksekusi}${penalti.length ? ` − penalti (${penalti.join(', ')})` : ''} — bobot AutoPilotPM` }
+}
 // (3) EKSPOSUR DINAMIS (Allora × Virtuals G.A.M.E: "adjust exposure — increase
 //     during favorable conditions, reduce during downturns"): skala 0.25–1.0× unit
 //     standar dari odds + keyakinan − volatilitas ekstrem − kerumunan funding.
@@ -1899,9 +2075,11 @@ function ekspresiSkala({ odds, keyakinan, atrPctile, fundingPct }) {
 //     mengatur ambang odds & kuota ARAH dalam batas ketat: BERTAHAN = lebih
 //     selektif (+5 ambang, kuota −1), AGRESIF hanya bila medan benar-benar hijau
 //     (−3, lantai 52, kuota tak pernah melebihi baseline); PF < 1 MEMAKSA BERTAHAN.
-function suhuPasar({ fng, breadth, rezim, profitFactor }) {
+function suhuPasar({ fng, breadth, rezim, profitFactor, rugiHarianPct, rezimEkstrem }) {
   const alasan = []
   let temper = 'NETRAL'
+  if (rezimEkstrem) { temper = 'BERTAHAN'; alasan.push('REZIM-MEDAN EKSTREM: σ P&L ≥ 2.5× baseline mandiri — halt ala AutoPilot volatility regime') }
+  if (rugiHarianPct != null && rugiHarianPct <= -KZN.HENTI_RUGI_PCT) { temper = 'BERTAHAN'; alasan.push(`HENTI-HARIAN: rugi-net vonis hari ini ${rugiHarianPct}% ≤ −${KZN.HENTI_RUGI_PCT}% — circuit breaker kaizen-trader`) }
   if (profitFactor != null && profitFactor < 1) { temper = 'BERTAHAN'; alasan.push(`PF jendela ${profitFactor} < 1 — modal mengetat`) }
   if (rezim === 'TURUN' || rezim === 'CRASH') { temper = 'BERTAHAN'; alasan.push(`rezim BTC ${rezim}`) }
   if (breadth != null && breadth < 35) { temper = 'BERTAHAN'; alasan.push(`breadth sempit ${(+breadth).toFixed(0)}% koin naik`) }
@@ -2005,6 +2183,12 @@ mkdirSync(path.join(ROOT, 'otak'), { recursive: true })
 
 const keadaan = bacaJson(path.join(ROOT, 'otak/penjaga-keadaan.json'), { mulai: ISO, siklus: 0 })
 keadaan.siklus += 1
+// V259 KAIZEN-PULIH — state loop penyembuhan: dingin per sasaran/keluarga, eksperimen
+// uji-balik, streak karantina — semuanya persisten antar denyut (ingatan penyembuh)
+if (!keadaan.kaizen) keadaan.kaizen = { dingin: {}, dinginFam: {}, uji: null, netHist: [], revertCt: 0, lolosCt: 0, karantinaStreak: {} }
+for (const k2 of ['dingin', 'dinginFam']) if (!keadaan.kaizen[k2]) keadaan.kaizen[k2] = {}
+if (!Array.isArray(keadaan.kaizen.netHist)) keadaan.kaizen.netHist = []
+const kaizen = keadaan.kaizen
 const SIKLUS = keadaan.siklus
 
 // ---- 0d. V253 WAWASAN-360 — derivatif NYATA + sentimen + dominasi (1x per denyut) ----
@@ -2240,6 +2424,19 @@ for (const t of Object.keys(GEK.TOPIK_INTI)) if (!ilmu.topik[t]) ilmu.topik[t] =
 if (!ilmu.cz) ilmu.cz = { n: 0, jumlah: 0 }
 if (!ilmu.ekspresi) ilmu.ekspresi = { tinggi: { n: 0, net: 0 }, rendah: { n: 0, net: 0 } }
 if (!ilmu.divergensi) ilmu.divergensi = { kuat: { n: 0, benar: 0, net: 0 }, lemah: { n: 0, benar: 0, net: 0 } }
+// V259 KAIZEN-PULIH — state ilmu baru: karantina topik, penjaga-kedua, kesegaran, modal-mati, tesis
+if (!ilmu.karantina) ilmu.karantina = {}
+if (!ilmu.pengawas) ilmu.pengawas = { dinilai: 0, kena: 0, menyelamatkan: 0 }
+if (!ilmu.kesegaran) ilmu.kesegaran = { tinggi: { n: 0, benar: 0, net: 0 }, rendah: { n: 0, benar: 0, net: 0 } }
+if (!ilmu.modalMati) ilmu.modalMati = { kena: { n: 0, benar: 0, net: 0 }, sehat: { n: 0, benar: 0, net: 0 } }
+if (!ilmu.tesis) ilmu.tesis = { sehat: { n: 0, benar: 0, net: 0 }, patah: { n: 0, benar: 0, net: 0 } }
+// V260 AUTOPILOT-KALIBRASI — bucket medan utk lapis autopilot (semuanya dinilai medan):
+if (!ilmu.alt) ilmu.alt = { lebihBaik: { n: 0, net: 0 }, lebihBuruk: { n: 0, net: 0 } }   // regret pilihan: apakah alternatif seharusnya dipilih?
+if (!ilmu.kelly) ilmu.kelly = { kecil: { n: 0, benar: 0, net: 0 }, sedang: { n: 0, benar: 0, net: 0 }, besar: { n: 0, benar: 0, net: 0 } }   // apakah ukuran kecil memang lebih aman?
+if (!ilmu.rezimMedan) ilmu.rezimMedan = { tenang: { n: 0, benar: 0, net: 0 }, normal: { n: 0, benar: 0, net: 0 }, tinggi: { n: 0, benar: 0, net: 0 }, ekstrem: { n: 0, benar: 0, net: 0 } }   // apakah tenang memang menguntungkan?
+if (!ilmu.peluang) ilmu.peluang = { tinggi: { n: 0, benar: 0, net: 0 }, rendah: { n: 0, benar: 0, net: 0 } }   // apakah skor komposit tinggi memang menang lebih sering?
+if (!ilmu.stres) ilmu.stres = { tinggi: { n: 0, benar: 0, net: 0 }, rendah: { n: 0, benar: 0, net: 0 } }   // apakah denyut stres-tinggi memang lebih berbahaya?
+if (!ilmu.topTolak) ilmu.topTolak = {}   // topBlockReasons kumulatif — kesadaran atas penolakan sendiri
 // V253: bobot komite wawasan (genome per rezim + Hedge on-line) — 12 param baru belajar
 // dari vonis nyata dengan jalan yang sama persis seperti 5 dimensi lama
 if (!semuaGenome.waw) semuaGenome.waw = {}
@@ -2359,6 +2556,9 @@ if (forensik.arah.racun.some((z) => z.kunci === 'taker-searah')) {
 // ---- 1. kunci prediksi hari ini (pra-registrasi: SEBELUM pergerakan) ----
 const terkunciBaru = []
 const nearMiss = []
+// V259 KAIZEN-PULIH — penghitung siklus (param kaizen lapis siklus)
+let dinginSasaranCt = 0, dinginFamCt = 0
+const karantinaBaru = [], karantinaPulih = []
 // V255 METAKOGNISI-NEVRON — lapis monitor dihitung sekali per siklus:
 const biasKonteksGlobal = hitungBiasKonteks(forensik.arah.zona, closedArah, WAKTU.getTime())
 const deteksiLoopRes = deteksiLoop(closedArah)
@@ -2374,6 +2574,17 @@ if (deteksiLoopRes.length) {
 // yang layak dari zona racun terbukti (mandat investor: "berani mengurangi atau
 // menolak sinyal buruk — lebih baik tidak mengambil posisi daripada merugi").
 const kandidatArah = []
+// V260 AUTOPILOT — level-portofolio pra-loop: drawdown ledger, rezim-medan P&L
+// (baseline σ mandiri dipersistenkan), dan uji-tegang 5 skenario ke posisi terbuka.
+const _netUrut = [...closedArah].sort((a, b) => (a.waktuDinilai || '').localeCompare(b.waktuDinilai || ''))
+let _jalanAuto = 0, _puncakAuto = 0, ddAuto = 0
+for (const e of _netUrut) { _jalanAuto += e.net; _puncakAuto = Math.max(_puncakAuto, _jalanAuto); ddAuto = Math.max(ddAuto, (_puncakAuto - _jalanAuto) * 100) }
+if (!keadaan.auto) keadaan.auto = { baselineSigma: null }
+if (!Array.isArray(keadaan.kaizen.netHist)) keadaan.kaizen.netHist = []
+const rezimAuto = rezimMedan(keadaan.kaizen.netHist, keadaan.auto.baselineSigma)
+if (rezimAuto.sigma != null && keadaan.auto.baselineSigma == null) { keadaan.auto.baselineSigma = rezimAuto.sigma; log(`rezim-medan: baseline σ dikalibrasi mandiri dari window penuh pertama (${rezimAuto.sigma}%) — akan dibandingkan σ berikutnya`) }
+const tegangAuto = ujiTegang(ledger.filter((e) => e.status === 'TERBUKA'))
+log(`autopilot: dd ${ddAuto.toFixed(2)}% · rezim-medan ${rezimAuto.rezim} (${rezimAuto.mult}×) · uji-tegang terburuk ${tegangAuto.terburuk ? `${tegangAuto.terburuk.nama} ${tegangAuto.terburuk.rugiUnit} unit` : '—'} · posisi terbuka ${ledger.filter((e) => e.status === 'TERBUKA').length}`)
 for (const s of KANDANG) {
   const c = hasil[s]; if (!c) continue
   const id = `${s}-${TGL}`
@@ -2420,9 +2631,42 @@ for (const s of KANDANG) {
     { param: 'divergensi', domain: 'gekko-allora', lapis: 'gekko', nilai: divergA, arah: 0, ket: divergA == null ? 'divergensi jujur kosong — probPasar/meta belum terukur' : `divergensi ${divergA >= 0 ? '+' : ''}${divergA} — ${Math.abs(divergA) >= GEK.DIVERG_KUAT ? 'komite TERPISAH JAUH dari harga kerumunan (edge atau trap — dinilai medan)' : 'komite cukup selaras pasar'}` },
     { param: 'ekspresi', domain: 'gekko-allora', lapis: 'gekko', nilai: eksprA.skala, arah: 0, ket: `skala eksposur dinamis ${eksprA.skala}× unit (odds ${eksprA.faktor.odds >= 0 ? '+' : ''}${eksprA.faktor.odds}, keyakinan ${eksprA.faktor.keyakinan >= 0 ? '+' : ''}${eksprA.faktor.keyakinan}, volatilitas ${eksprA.faktor.volatilitas}, kerumunan ${eksprA.faktor.kerumunan}) — Allora×G.A.M.E` },
   )
-  kandidatArah.push({ s, id, b, v, waw, wp, buktiWaw, warA, mcA, eksA, buktiCand, kena, vetoW, estM, predM, peri: periA, deal: dealA, odds: oddsA, metaA, ppA, divergA, eksprA })
+  // V260 AUTOPILOT — slip-neto + peluang-skor + kelly-lapis (pra-registrasi per kandidat):
+  const qvLast = c[c.length - 1]?.qv ?? null
+  const sprBps = wp.penuh.find((p) => p.param === 'bukuSpread')?.nilai ?? null
+  const autoSlip = slipNeto({ qvUsd: qvLast, spreadBps: sprBps, edgePct: eksA ? eksA.evPct : null })
+  const nVonisS = closedArah.filter((e) => e.simbol === s).length
+  let streakKalahS = 0
+  for (let i = closedArah.length - 1; i >= 0; i--) { const _eS = closedArah[i]; if (_eS.simbol !== s) continue; if (_eS.net <= 0) streakKalahS++; else break }
+  const autoKelly = kellyLapis({ ddPct: ddAuto, nVonis: nVonisS, lossStreak: streakKalahS, sigma24jPct: warA.garch.sigma24jPct })
+  const autoPeluang = peluangSkor({ edgeBersih: autoSlip.edgeBersih, liqUsd: qvLast, keyakinan: v.keyakinan, spreadBps: sprBps, slipPct: autoSlip.slipPct })
+  wp.penuh.push(
+    { param: 'peluang', domain: 'autopilot-recogard', lapis: 'autopilot', nilai: autoPeluang.skor, arah: 0, ket: `${autoPeluang.ket} — gerbang: < ${AUT.PELUANG_AMBANG} ditolak dengan alasan` },
+    { param: 'slipPct', domain: 'autopilot-recogard', lapis: 'autopilot', nilai: autoSlip.slipPct, arah: 0, ket: autoSlip.ket },
+    { param: 'kellyMult', domain: 'autopilot-recogard', lapis: 'autopilot', nilai: autoKelly.mult, arah: 0, ket: `kelly-lapis ${autoKelly.mult}× unit (dd ${autoKelly.f.drawdown} · sampel ${autoKelly.f.sampel} · streak ${autoKelly.f.streakKalah} · vol ${autoKelly.f.vol}) — dynamic Kelly AutoPilotPM; skalaEfektif = ekspresi × kelly` },
+  )
+  kandidatArah.push({ s, id, b, v, waw, wp, buktiWaw, warA, mcA, eksA, buktiCand, kena, vetoW, estM, predM, peri: periA, deal: dealA, odds: oddsA, metaA, ppA, divergA, eksprA, auto: { slip: autoSlip, kelly: autoKelly, peluang: autoPeluang } })
 }
 const emasArah = (k) => k.kena.some((z) => z.status === 'EMAS')
+// V259 KESEGARAN GERAKAN (kaizen-trader: "1H ACCELERATION is THE key signal...
+// fresh breakouts > stale pumps. Late entries are exit liquidity"): skor kesegaran
+// per kandidat + veto POMPA-TUA — |24j| > 100% tanpa akselerasi 1 jam ≥ 5% ditolak;
+// umur gerakan tak terbaca diperlakukan TUA (konservatif pada kekaburan).
+let pompaTuaCt = 0
+let peluangVetoCt = 0, slipVetoCt = 0
+for (const k of kandidatArah) {
+  const cK = hasil[k.s]
+  if (!cK || cK.length < 26) { k.kaizen = { aks1: null, c24: null, kesegaran: 0.5, ket: 'lilin kurang — kesegaran tak terukur, diperlakukan netral-tua' }; continue }
+  const aks1 = (cK[cK.length - 1].c / cK[cK.length - 2].c - 1) * 100
+  const c24 = (cK[cK.length - 1].c / cK[cK.length - 25].c - 1) * 100
+  const skorSegar = +clamp(0.5 + Math.abs(aks1) / 20 - Math.max(0, Math.abs(c24) - 50) / 200, 0, 1).toFixed(3)
+  k.kaizen = { aks1: +aks1.toFixed(2), c24: +c24.toFixed(2), kesegaran: skorSegar }
+  if (Math.abs(c24) > KZN.KESEGARAN_24J && Math.abs(aks1) < KZN.KESEGARAN_AKS && k.vetoW) {
+    k.vetoW.push({ kunci: 'pompa-tua', ket: `pompa tua (kaizen-trader): |24j ${c24.toFixed(1)}%| > ${KZN.KESEGARAN_24J}% tanpa akselerasi segar (1j ${aks1.toFixed(2)}% < ${KZN.KESEGARAN_AKS}%) — entri telat = likuiditas keluar` })
+    pompaTuaCt++
+  }
+}
+if (pompaTuaCt) log(`kaizen-kesegaran: ${pompaTuaCt} kandidat ditolak pompa-tua (24j > ${KZN.KESEGARAN_24J}% tanpa aks 1j >= ${KZN.KESEGARAN_AKS}%)`)
 // V254: kandidat yang DI-VETO wawasan dipisah — bukan racun forensik, tapi ditolak
 // parameter medan (order book / funding-riwayat / tren 4h / volatilitas ekstrem).
 const divetoArah = kandidatArah.filter((k) => k.vetoW.length)
@@ -2432,9 +2676,25 @@ const tercemarArah = kandidatArah.filter((k) => k.kena.some((z) => z.status === 
 // SLOT EKSPLORASI forensik (bandit berbatas): 1 kandidat racun per denyut dengan
 // EV statistik >= 0 boleh lewat — tanpa informasi baru, zona tak pernah bisa menyembuh.
 const eksplorasiArah = tercemarArah.find((k) => k.eksA && k.eksA.evPct >= 0) || null
-const kunciEntriArah = (k, eksplor) => {
-  const { s, id, b, v, waw, wp, buktiWaw, warA, mcA, eksA, buktiCand, kena, estM, predM, peri, deal, odds, metaA, ppA, divergA, eksprA } = k
+const kunciEntriArah = (k, eksplor, runnerUp) => {
+  const { s, id, b, v, waw, wp, buktiWaw, warA, mcA, eksA, buktiCand, kena, estM, predM, peri, deal, odds, metaA, ppA, divergA, eksprA, auto } = k
   const emas = emasArah(k)
+  // V259 DINGIN-DENDAM (anti-revenge-trading ala kaizen-trader): sasaran/keluarga
+  // yang kekalahan beruntun dibekukan dari re-entry — balas-dendam adalah pajak mahal
+  const dSas = kaizen.dingin[s]
+  if (!eksplor && dSas && WAKTU.getTime() < (dSas.dinginSampai || 0)) {
+    nearMiss.push({ simbol: s, arah: v.arah, keyakinan: v.keyakinan, entry: b.harga, rezim: b.rezim, catatan: `DINGIN-DENDAM (kaizen-trader) — ${s} mencatat kekalahan beruntun; masa dingin ${KZN.DINGIN_SASARAN_JAM} jam aktif — larang re-entry dendam`, kunci: ['dingin-dendam'] })
+    dinginSasaranCt++
+    log(`dingin-dendam: tolak ${s} ${v.arah} — masa dingin sasaran aktif`)
+    return null
+  }
+  const famKey = `${b.rezim}-${v.arah}`
+  const dFam = kaizen.dinginFam[famKey]
+  if (!eksplor && dFam && SIKLUS < (dFam.dinginSampaiDenyut || 0)) {
+    nearMiss.push({ simbol: s, arah: v.arah, keyakinan: v.keyakinan, entry: b.harga, rezim: b.rezim, catatan: `DINGIN-DENDAM KELUARGA — ${famKey} ${KZN.DINGIN_FAM_KEJ} kekalahan beruntun; keluarga strategi didinginkan ${KZN.DINGIN_FAM_DENYUT} denyut`, kunci: ['dingin-dendam'] })
+    dinginFamCt++
+    return null
+  }
   // V255 METAKOGNISI — otak menilai dirinya sendiri SEBELUM mengunci (V256: dihitung di loop, dipakai ulang di sini):
   const biasB = biasKonteksGlobal[`${v.arah}-${b.rezim}`] ?? null
   const biasT = terapkanBias(v.keyakinan, biasB)
@@ -2448,7 +2708,26 @@ const kunciEntriArah = (k, eksplor) => {
     log(`metakognisi-veto: ${s} ${v.arah} — ${alasanMet.join('; ')}`)
     return null
   }
+  // V260 AUTOPILOT — dua gerbang baru yang HANYA MENOLAK (tak melonggarkan apa pun):
+  // (a) peluang-skor < ambang → tolak dengan alasan (topBlockReasons); (b) edge-bersih
+  // setelah slippage ≤ 0 → tolak: biaya jatuh-tempo menelen seluruh ekspektasi.
+  if (!eksplor && auto?.peluang && auto.peluang.skor < AUT.PELUANG_AMBANG) {
+    nearMiss.push({ simbol: s, arah: v.arah, keyakinan: v.keyakinan, entry: b.harga, rezim: b.rezim, catatan: `PELUANG RENDAH (AutoPilotPM) — skor ${auto.peluang.skor}/100 < ${AUT.PELUANG_AMBANG} · ${auto.peluang.ket} — komposit terbobot + penalti menolak dengan alasan, bukan mood`, kunci: ['peluang-rendah'] })
+    peluangVetoCt++
+    log(`autopilot-peluang: tolak ${s} ${v.arah} — skor ${auto.peluang.skor} < ${AUT.PELUANG_AMBANG}`)
+    return null
+  }
+  if (!eksplor && auto?.slip && auto.slip.edgeBersih != null && auto.slip.edgeBersih <= 0) {
+    nearMiss.push({ simbol: s, arah: v.arah, keyakinan: v.keyakinan, entry: b.harga, rezim: b.rezim, catatan: `SLIP-NETO (AutoPilotPM) — edge ${eksA ? eksA.evPct.toFixed(2) : '—'}% − slip ${auto.slip.slipPct}% ≤ 0: biaya jatuh-tempo menelen seluruh ekspektasi — TUNGGU (fallback-jujur: data kosong tidak memblokir)`, kunci: ['slip-neto'] })
+    slipVetoCt++
+    log(`autopilot-slip-neto: tolak ${s} ${v.arah} — edge bersih ${auto.slip.edgeBersih}%`)
+    return null
+  }
   const kal = kunciKeyakinan(biasT.keyakinan + (emas ? 4 : 0), ilmu.kalibrasi, kena)   // V252: kepastian zona medan; V255: masuk lewat bias konteks Nevron
+  // V259 KAIZEN — tesis-sehat disegel saat kunci: apakah funding/EMA4h searah arah?
+  const _WmK = Object.fromEntries(wp.penuh.map((p) => [p.param, p]))
+  const sgnV = v.arah === 'BUY' ? 1 : -1
+  const tesisSehatVal = ((_WmK.funding?.arah != null && _WmK.funding.arah * sgnV > 0) || (_WmK.ema4h?.arah != null && _WmK.ema4h.arah * sgnV > 0)) ? 1 : 0
   const nar = narasiSasaran(s, b, { arah: v.arah, keyakinan: kal.keyakinan }, wp.penuh, { fng, dominasi }, eksA, warA.garch.sigma24jPct, rezimGlobal)
   const entri = {
     id, simbol: s, jalur: 'ARAH', arah: v.arah, keyakinan: kal.keyakinan, keyakinanMentah: v.keyakinan,
@@ -2460,7 +2739,7 @@ const kunciEntriArah = (k, eksplor) => {
     entry: b.harga, waktuKunci: ISO, horizon: '24j', rezim: b.rezim, status: 'TERBUKA',
     bukti: buktiCand,
     buktiWaw,
-    paramsPenuh: Object.fromEntries(wp.penuh.map((p) => [p.param, +p.arah.toFixed(2)])),   // V254 sekolah parameter: nasihat tiap param disegel utk dinilai medan
+    paramsPenuh: Object.fromEntries([...wp.penuh.map((p) => [p.param, +p.arah.toFixed(2)]), ...(k.kaizen && Number.isFinite(k.kaizen.kesegaran) ? [['kesegaran', +(k.kaizen.kesegaran * 2 - 1).toFixed(2)], ['akselerasi1j', +clamp((k.kaizen.aks1 ?? 0) / 10, -1, 1).toFixed(2)], ['tesisSehat', tesisSehatVal]] : []), ...(auto ? [['peluang', +((auto.peluang.skor - 50) / 50).toFixed(2)], ['slipPct', +clamp((auto.slip.slipPct ?? 0) / 5, -1, 1).toFixed(2)], ['kellyMult', +clamp((auto.kelly.mult - 1) / 0.5, -1, 1).toFixed(2)]] : [])]),   // V254 sekolah parameter + V259 lapis kaizen + V260 lapis autopilot disegel utk dinilai medan
     daya: { volume: +b.dims.volume.daya.toFixed(2), volatilitas: +b.dims.volatilitas.daya.toFixed(2), likuiditas: +b.dims.likuiditas.daya.toFixed(2) },
     ketBukti: Object.fromEntries(DIM_ARAH.map((k2) => [k2, b.dims[k2].ket])),
     ketBuktiWaw: Object.fromEntries(wp.penuh.map((p) => [p.param, p.ket])),
@@ -2478,10 +2757,20 @@ const kunciEntriArah = (k, eksplor) => {
     topik: { metaArah: metaA.metaArah, metaKeyakinan: metaA.metaKeyakinan, terkuat: metaA.terkuat ?? null, terlemah: metaA.terlemah ?? null, suara: metaA.suara, ket: 'meta-inferensi kolektif ala Allora Topics — bobot topik = exp(-0.9·regret) dari medan sendiri' },
     probPasar: ppA,
     divergensi: divergA,
-    ekspresi: { ...eksprA, ket: 'skala eksposur dinamis ala Allora×G.A.M.E (0.25–1.0× unit) — dinilai medan: apakah ekspresi tinggi memang lebih menguntungkan?' },
+    ekspresi: { ...eksprA, skalaEfektif: +clamp(eksprA.skala * (auto?.kelly?.mult ?? 1), 0.2, 1.2).toFixed(3), ket: 'skala eksposur dinamis ala Allora×G.A.M.E (0.25–1.0× unit) × kelly-lapis AutoPilotPM → skalaEfektif clamp [0.2,1.2] — dinilai medan: apakah ukuran yang menyusut saat drawdown memang lebih aman?' },
     sidikPrakunci: sidik({ id, simbol: s, arah: v.arah, entry: b.harga, keyakinan: kal.keyakinan, odds: odds.skor, waktuKunci: ISO, params: wp.penuh.length }),
     peristiwa: peri,                                                // V256 tag peristiwa (OddsMaker event-based)
     rencanaDeal: deal,                                              // V256 mesin deal (3Commas)
+    // V259 KAIZEN-PULIH — kesegaran & tesis disegel + penjaga-kedua tercatat (dinilai medan saat matang)
+    kaizen: { ...(k.kaizen || {}), tesisSehat: tesisSehatVal, pengawas: { stopPct: KZN.PENGAWAS_STOP, targetPct: KZN.PENGAWAS_TARGET }, ket: 'lapis kaizen: kesegaran gerakan + tesis-sehat disegel saat kunci; penjaga-kedua (hard-stop 15%/target 40%) dicek tiap denyut — semuanya dinilai medan' },
+    // V260 AUTOPILOT-KALIBRASI — komposit terbobot + slip-neto + kelly + rezim + tegang
+    // disegel saat kunci; alt = pilihan kedua yang ditimbang (alternativesConsidered
+    // ala decision ledger AutoPilotPM) — regret-nya dihitung medan saat matang.
+    auto: {
+      ...(auto || {}), rezimMedan: rezimAuto.rezim, rezimMult: rezimAuto.mult, stresTerkburuk: tegangAuto.terburuk?.rugiUnit ?? null, stresSkenario: tegangAuto.terburuk?.nama ?? null,
+      alt: runnerUp ? { aksi: `${runnerUp.s} ${runnerUp.v.arah}`, simbol: runnerUp.s, arah: runnerUp.v.arah, entry: runnerUp.b.harga, rezim: runnerUp.b.rezim, alasanTolak: `runner-up odds ${runnerUp.odds.skor} vs ${odds.skor} — kuota & gerbang memilih yang terkuat` } : null,
+      ket: 'lapis autopilot: peluang 0-100 terbobot + slip-neto + kelly-lapis + rezim-medan + uji-tegang disegel saat kunci; alt = alternativesConsidered ala decision ledger AutoPilotPM',
+    },
   }
   ledger.push(entri); terkunciBaru.push(entri)
   return entri
@@ -2504,7 +2793,13 @@ const rankArah = [...bersihArah].sort((a, b) => b.odds.skor - a.odds.skor)
 const _mnPf = closedArah.filter((e) => e.net > 0), _klPf = closedArah.filter((e) => e.net <= 0)
 const _smPf = _mnPf.reduce((a, e) => a + e.net, 0), _skPf = _klPf.reduce((a, e) => a + e.net, 0)
 const pfArah = _skPf < 0 ? +(_smPf / -_skPf).toFixed(2) : null
-const suhu = suhuPasar({ fng: fng?.nilai ?? null, breadth: +(breadthNaik * 100).toFixed(1), rezim: rezimGlobal, profitFactor: pfArah })
+// V259 HENTI-HARIAN (circuit breaker kaizen-trader): rugi-net vonis ARAH yang DINILAI
+// hari UTC ini dikumulatifkan — tembus −4% → suhu BERTAHAN dipaksa (kuota mengetat sendiri)
+const rugiHarianNet = closedArah.filter((e) => (e.waktuDinilai || '').startsWith(TGL)).reduce((a, e) => a + e.net, 0)
+const rugiHarianPct = +(rugiHarianNet * 100).toFixed(2)
+const hentiHarianAktif = rugiHarianPct <= -KZN.HENTI_RUGI_PCT
+if (hentiHarianAktif) log(`henti-harian: rugi-net hari ini ${rugiHarianPct}% ≤ −${KZN.HENTI_RUGI_PCT}% — BERTAHAN dipaksa (circuit breaker kaizen)`)
+const suhu = suhuPasar({ fng: fng?.nilai ?? null, breadth: +(breadthNaik * 100).toFixed(1), rezim: rezimGlobal, profitFactor: pfArah, rugiHarianPct, rezimEkstrem: rezimAuto.rezim === 'ekstrem' })
 const ambangOdds = suhu.ambang
 const kuotaArahSuhu = suhu.kuota
 for (const k of rankArah) k.odds.ambangEfektif = ambangOdds
@@ -2514,7 +2809,7 @@ const sisaPosisi = Math.max(0, DEAL.MAX_POSISI - posisiTerbukaAwal)   // Global 
 const pilihArah = rankArah.filter((k) => k.odds.skor >= ambangOdds).slice(0, Math.min(kuotaArahSuhu, sisaPosisi))
 if (sisaPosisi === 0) log(`global-max-positions: ${posisiTerbukaAwal} posisi terbuka >= batas ${DEAL.MAX_POSISI} — sinyal ARAH baru diabaikan siklus ini`)
 const gagalOddsArah = rankArah.filter((k) => !pilihArah.includes(k))
-for (const k of pilihArah) kunciEntriArah(k, false)   // V255: fungsi mem-push sendiri; veto metakognitif = return null
+for (const [i, k] of pilihArah.entries()) kunciEntriArah(k, false, gagalOddsArah[0] || pilihArah[i + 1] || null)   // V255: fungsi mem-push sendiri; veto metakognitif = return null; V260: runner-up utk timbangan-alt
 for (const k of gagalOddsArah) {
   nearMiss.push({
     simbol: k.s, arah: k.v.arah, keyakinan: k.v.keyakinan, entry: k.b.harga, rezim: k.b.rezim,
@@ -2544,6 +2839,21 @@ for (const k of tercemarArah) {
 }
 blokForensikArah = tercemarArah.length - (eksplorasiArah ? 1 : 0)
 if (blokForensikArah) log(`forensik-gerbang: ${blokForensikArah} kandidat ARAH ditolak (zona racun), ${bersihArah.length} lolos`)
+// V260 TOP-TOLAK (AutoPilotPM ledger topBlockReasons): ranking alasan penolakan
+// jalur ARAH siklus ini + kumulatif — kesadaran atas penolakannya sendiri
+// ("mengapa aku berkata tidak" — bukan sekadar tahu kapan berkata ya).
+const tolakHitung = {}
+for (const nm of nearMiss) {
+  const kunciPertama = Array.isArray(nm.kunci) && nm.kunci.length ? nm.kunci[0]
+    : nm.catatan?.startsWith('ODDS MAKER') ? 'odds'
+    : nm.catatan?.startsWith('GERBANG FORENSIK') ? 'forensik'
+    : nm.catatan?.startsWith('GERBANG VETO') ? 'veto-wawasan' : 'lain'
+  tolakHitung[kunciPertama] = (tolakHitung[kunciPertama] || 0) + 1
+}
+if (pompaTuaCt) tolakHitung['pompa-tua'] = (tolakHitung['pompa-tua'] || 0) + pompaTuaCt
+for (const [_kT, _vT] of Object.entries(tolakHitung)) ilmu.topTolak[_kT] = (ilmu.topTolak[_kT] || 0) + _vT
+const topTolakSiklus = Object.entries(tolakHitung).sort((a, b) => b[1] - a[1])
+if (topTolakSiklus.length) log(`top-tolak: ${topTolakSiklus.slice(0, 3).map(([k2, v2]) => `${k2}×${v2}`).join(' · ')} — kesadaran atas penolakan sendiri (AutoPilotPM topBlockReasons)`)
 
 // 1b. lane PHOENIX — beli di ujung bawah hari, jual di ujung atas yang diprediksi
 // gerbang rezim-tegas — lahir dari pelajaran: melawan arus butuh bukti lebih kuat & kuota lebih kecil
@@ -2891,6 +3201,24 @@ for (const e of ledger) {
       if ((setuju && e.status === 'BENAR') || (!setuju && e.status === 'SALAH')) tI.benar++
       tI.net = +((tI.net ?? 0) + e.net * (setuju ? 1 : -1)).toFixed(5)
       tI.regret = +clamp(GEK.REGRET_DECAY * (tI.regret ?? 0.6) + (setuju ? (e.status === 'BENAR' ? -0.08 : 0.12) : (e.status === 'BENAR' ? -0.04 : 0.08)), 0, 3).toFixed(4)
+      // V259 KARANTINA (rule-healer ala kaizen): suara keliru beruntun + hit-rate rendah
+      // → suara topik DISITA (bobot 0); pulih hanya lewat bukti medan (setuju-saat-benar 2×)
+      if (ilmu.karantina[sv.topik]) {
+        const kar = ilmu.karantina[sv.topik]
+        if (setuju && e.status === 'BENAR') {
+          kar.pulih++
+          if (kar.pulih >= KZN.KARANTINA_PULIH) { delete ilmu.karantina[sv.topik]; karantinaPulih.push(sv.topik); log(`karantina-pulih: topik ${sv.topik} kembali bersuara (bukti medan terkumpul)`) }
+        }
+      } else {
+        const keliru = (setuju !== (e.status === 'BENAR'))
+        kaizen.karantinaStreak[sv.topik] = keliru ? (kaizen.karantinaStreak[sv.topik] || 0) + 1 : 0
+        if (keliru && tI.n >= 10 && (tI.benar / tI.n) < 0.44 && kaizen.karantinaStreak[sv.topik] >= KZN.KARANTINA_KEJ) {
+          ilmu.karantina[sv.topik] = { sejak: ISO, alasan: `hit-rate ${((tI.benar / tI.n) * 100).toFixed(0)}% dari ${tI.n} vonis + ${kaizen.karantinaStreak[sv.topik]} suara-keliru beruntun`, pulih: 0 }
+          kaizen.karantinaStreak[sv.topik] = 0
+          karantinaBaru.push(sv.topik)
+          log(`karantina: topik ${sv.topik} disita suaranya (rule-healer) — pulih lewat bukti`)
+        }
+      }
     }
   }
   // V258 EKSPOSUR DINAMIS — apakah ekspresi tinggi memang lebih menguntungkan?
@@ -2966,6 +3294,94 @@ for (const e of ledger) {
       ilmu.deal.trail.ekstraPctJumlah = +(ilmu.deal.trail.ekstraPctJumlah + ekstraPct).toFixed(2)
       ilmu.deal.trail.ekstraMaksPct = Math.max(ilmu.deal.trail.ekstraMaksPct, ekstraPct)
     }
+  }
+  // V259 KAIZEN-PULIH — medan menilai mesin penyembuh (semuanya dari lilin pasca-kunci):
+  if (barSetelahAll.length && e.entry > 0 && (e.jalur || 'ARAH') === 'ARAH') {
+    const sgnZ = e.arah === 'BUY' ? 1 : -1
+    // (a) PENJAGA-KEDUA: apakah hard-stop 15% tersentuh? kena + posisi SALAH = menyelamatkan
+    if (e.kaizen?.pengawas) {
+      const stopP = e.entry * (1 - sgnZ * KZN.PENGAWAS_STOP / 100)
+      const kenaP = barSetelahAll.some((bb) => (sgnZ === 1 ? bb.l <= stopP : bb.h >= stopP))
+      ilmu.pengawas.dinilai++
+      if (kenaP) { e.pengawasKena = true; ilmu.pengawas.kena++; if (e.status === 'SALAH') ilmu.pengawas.menyelamatkan++ }
+    }
+    // (b) MODAL-MATI (chop-exit): pernah menginap >= 4 jam tanpa progres +/-2%?
+    let chop = false
+    for (let i = KZN.MODALMATI_JAM; i < barSetelahAll.length; i++) {
+      const prog = sgnZ * (barSetelahAll[i].c / e.entry - 1) * 100
+      if (Math.abs(prog) < KZN.MODALMATI_PROGRES) { chop = true; break }
+    }
+    e.modalMati = chop
+    const bM = chop ? ilmu.modalMati.kena : ilmu.modalMati.sehat
+    bM.n++; if (e.status === 'BENAR') bM.benar++; bM.net = +((bM.net || 0) + e.net).toFixed(5)
+  }
+  // (c) TESIS-SEHAT (disegel saat kunci): apakah tesis searah memang memprediksi kemenangan?
+  if (e.kaizen?.tesisSehat != null) {
+    const bT = e.kaizen.tesisSehat === 1 ? ilmu.tesis.sehat : ilmu.tesis.patah
+    bT.n++; if (e.status === 'BENAR') bT.benar++; bT.net = +((bT.net || 0) + e.net).toFixed(5)
+  }
+  // (d) KESEGARAN: pompa segar vs tua — apakah kesegaran memang memprediksi kemenangan?
+  if (e.kaizen?.kesegaran != null) {
+    const bK = e.kaizen.kesegaran >= 0.5 ? ilmu.kesegaran.tinggi : ilmu.kesegaran.rendah
+    bK.n++; if (e.status === 'BENAR') bK.benar++; bK.net = +((bK.net || 0) + e.net).toFixed(5)
+  }
+  // (f-j) V260 AUTOPILOT-KALIBRASI — medan menilai lapis autopilot:
+  if (e.auto) {
+    // (f) TIMBANGAN-ALT: apakah pilihan kedua akan lebih baik? (alternativesConsidered)
+    if (e.auto.alt && barSetelahAll.length) {
+      const cAlt = hasil[e.auto.alt.simbol]
+      const barAlt = cAlt ? cAlt.filter((x) => x.t >= new Date(e.waktuKunci).getTime()) : []
+      if (barAlt.length && e.auto.alt.entry > 0) {
+        const sgnA = e.auto.alt.arah === 'BUY' ? 1 : -1
+        const exitA = barAlt[Math.min(barAlt.length - 1, 24)].c
+        const netAlt = sgnA * (exitA / e.auto.alt.entry - 1) - FEE
+        const bA = netAlt > e.net ? ilmu.alt.lebihBaik : ilmu.alt.lebihBuruk
+        bA.n++; bA.net = +((bA.net || 0) + (netAlt - e.net)).toFixed(5)
+        e.altMedan = { netAlt: +netAlt.toFixed(5), selisih: +(netAlt - e.net).toFixed(5), ket: netAlt > e.net ? 'alternatif lebih baik — regret pilihan tercatat (kejujuran atas jalan yang tak ditempuh)' : 'pilihan utama menang — keyakinan pilihan terbayar' }
+      }
+    }
+    // (g) KELLY-LAPIS: apakah ukuran kecil memang lebih aman?
+    if (e.auto.kelly?.mult != null) {
+      const bK2 = e.auto.kelly.mult < 0.7 ? ilmu.kelly.kecil : e.auto.kelly.mult < 1.0 ? ilmu.kelly.sedang : ilmu.kelly.besar
+      bK2.n++; if (e.status === 'BENAR') bK2.benar++; bK2.net = +((bK2.net || 0) + e.net).toFixed(5)
+    }
+    // (h) REZIM-MEDAN: apakah entri saat tenang memang lebih menguntungkan?
+    if (e.auto.rezimMedan && ilmu.rezimMedan[e.auto.rezimMedan]) {
+      const bR = ilmu.rezimMedan[e.auto.rezimMedan]
+      bR.n++; if (e.status === 'BENAR') bR.benar++; bR.net = +((bR.net || 0) + e.net).toFixed(5)
+    }
+    // (i) PELUANG: apakah skor komposit tinggi memang menang lebih sering?
+    if (e.auto.peluang?.skor != null) {
+      const bP = e.auto.peluang.skor >= AUT.PELUANG_AMBANG ? ilmu.peluang.tinggi : ilmu.peluang.rendah
+      bP.n++; if (e.status === 'BENAR') bP.benar++; bP.net = +((bP.net || 0) + e.net).toFixed(5)
+    }
+    // (j) UJI-TEGANG: apakah denyut stres-tinggi memang lebih berbahaya?
+    if (e.auto.stresTerkburuk != null) {
+      const bS = e.auto.stresTerkburuk >= AUT.STRES_AMBANG_PCT ? ilmu.stres.tinggi : ilmu.stres.rendah
+      bS.n++; if (e.status === 'BENAR') bS.benar++; bS.net = +((bS.net || 0) + e.net).toFixed(5)
+    }
+  }
+  // (e) DINGIN-DENDAM: kekalahan beruntun per sasaran & per keluarga rezim-arah (menang reset)
+  if (e.status === 'SALAH') {
+    const d = kaizen.dingin[e.simbol] || { beruntun: 0, dinginSampai: 0 }
+    d.beruntun++
+    if (d.beruntun >= KZN.DINGIN_SASARAN_KEJ) {
+      d.dinginSampai = WAKTU.getTime() + KZN.DINGIN_SASARAN_JAM * 36e5; d.beruntun = 0
+      log(`dingin-dendam: ${e.simbol} ${KZN.DINGIN_SASARAN_KEJ} kekalahan beruntun — dingin ${KZN.DINGIN_SASARAN_JAM} jam`)
+    }
+    kaizen.dingin[e.simbol] = d
+    const fam = `${e.rezim}-${e.arah}`
+    const df = kaizen.dinginFam[fam] || { beruntun: 0, dinginSampaiDenyut: 0 }
+    df.beruntun++
+    if (df.beruntun >= KZN.DINGIN_FAM_KEJ) {
+      df.dinginSampaiDenyut = SIKLUS + KZN.DINGIN_FAM_DENYUT; df.beruntun = 0
+      log(`dingin-dendam: keluarga ${fam} ${KZN.DINGIN_FAM_KEJ} kekalahan beruntun — dingin ${KZN.DINGIN_FAM_DENYUT} denyut`)
+    }
+    kaizen.dinginFam[fam] = df
+  } else if (e.status === 'BENAR') {
+    if (kaizen.dingin[e.simbol]) kaizen.dingin[e.simbol].beruntun = 0
+    const fam2 = `${e.rezim}-${e.arah}`
+    if (kaizen.dinginFam[fam2]) kaizen.dinginFam[fam2].beruntun = 0
   }
   if (e.jalur === 'PHOENIX') {
     // belajar radar: apakah prediksi ujung atasnya tersentuh? (bukan vonis resmi)
@@ -3098,6 +3514,40 @@ if (phxDinilai.length >= 3) {
   semuaGenome.phoenix[rezimGlobal].diperbarui = ISO
   evolusiPhxCatatan = `radar generasi ${semuaGenome.phoenix[rezimGlobal].generasi} rezim ${rezimGlobal}: bobot phoenix disesuaikan dari ${phxDinilai.length} vonis nyata`
   log(evolusiPhxCatatan, JSON.stringify(phxGenome))
+}
+
+// ---- 3c. V259 UJI-BALIK (delta-revert ala kaizen) — perubahan genome adalah
+//      EKSPERIMEN: dibandingkan vs baseline per KZN.UJI_JENDELA vonis matang;
+//      hasil lebih buruk → bobot DIREVERT ke snapshot (perbaikan harus
+//      DIVERIFIKASI medan, bukan diasumsikan — inti filosofi kaizen). ----
+let ujiBalikCatatan = kaizen.uji ? `eksperimen berjalan (mulai siklus ${kaizen.uji.mulaiSiklus}, baseline ${kaizen.uji.baseline})` : 'siaga — menunggu vonis matang'
+for (const e of dinilaiBaru) if ((e.jalur || 'ARAH') !== 'PHOENIX') kaizen.netHist.push(e.net)
+kaizen.netHist = kaizen.netHist.slice(-300)
+if (kaizen.uji && kaizen.uji.rezim !== rezimGlobal) {
+  ujiBalikCatatan = `eksperimen dibatalkan — rezim bergeser ${kaizen.uji.rezim} → ${rezimGlobal} (genome per-rezim tak boleh dicampur)`
+  log(`uji-balik: ${ujiBalikCatatan}`)
+  kaizen.uji = null
+}
+if (!kaizen.uji && kaizen.netHist.length >= 4 && dinilaiBaru.some((e) => (e.jalur || 'ARAH') !== 'PHOENIX')) {
+  const jend = kaizen.netHist.slice(-KZN.UJI_JENDELA)
+  kaizen.uji = { rezim: rezimGlobal, mulaiSiklus: SIKLUS, n0: kaizen.netHist.length, snap: { ...genome }, baseline: +(jend.reduce((a, x) => a + x, 0) / jend.length).toFixed(5) }
+  ujiBalikCatatan = `eksperimen baru: snapshot genome ${rezimGlobal} disegel (siklus ${SIKLUS}) — baseline ${kaizen.uji.baseline}`
+  log(`uji-balik: ${ujiBalikCatatan}`)
+}
+if (kaizen.uji && kaizen.netHist.length - kaizen.uji.n0 >= KZN.UJI_JENDELA) {
+  const post = +(kaizen.netHist.slice(-KZN.UJI_JENDELA).reduce((a, x) => a + x, 0) / KZN.UJI_JENDELA).toFixed(5)
+  if (post < kaizen.uji.baseline) {
+    for (const k2 of DIM_ARAH) genome[k2] = kaizen.uji.snap[k2] ?? GENOME_AWAL[k2]
+    semuaGenome[rezimGlobal].diperbarui = ISO
+    kaizen.revertCt++
+    ujiBalikCatatan = `DIREVERT: net/denis ${post} < baseline ${kaizen.uji.baseline} — bobot ${rezimGlobal} dikembalikan ke snapshot siklus ${kaizen.uji.mulaiSiklus} (kaizen: perbaikan tak terbukti = batal)`
+    log(`uji-balik: ${ujiBalikCatatan}`)
+  } else {
+    kaizen.lolosCt++
+    ujiBalikCatatan = `LOLOS: net/denis ${post} >= baseline ${kaizen.uji.baseline} — perubahan genome dipertahankan (bukti medan)`
+    log(`uji-balik: ${ujiBalikCatatan}`)
+  }
+  kaizen.uji = null
 }
 
 // ---- 3b. BAHAN AJAR — pelajaran & aturan lahir dari medan (mandat pemilik:
@@ -3466,6 +3916,8 @@ const guruPengajaran = [
   `ODDS (${bersihArah.length + lulusPhx.length} kandidat diranking · ambang ${DEAL.ODDS_MIN} · top-${DEAL.TOP_K} ala Money Machine): fokus modal hanya pada peluang terkuat — skor 0-100 dari 40% peluang-MC + 25% hit-rate zona + 20% metakognisi + 15% daya${PERISTIWA_DEFS.some((p) => (ilmu.peristiwa[p.nama]?.n ?? 0) >= 10) ? `; peristiwa paling terbukti: ${(PERISTIWA_DEFS.filter((p) => (ilmu.peristiwa[p.nama]?.n ?? 0) >= 10).map((p) => ({ nama: p.nama, hit: ilmu.peristiwa[p.nama].n ? ilmu.peristiwa[p.nama].benar / ilmu.peristiwa[p.nama].n : 0 })).sort((a, b) => b.hit - a.hit)[0] || {}).nama ?? '—'}` : '; peristiwa menunggu medan'} — menembak semua koin yang bergerak adalah cara tercepat jadi donatur pasar`,
   `GEKKO (suhu ${suhu.temper} · ambang efektif ${ambangOdds} · kuota ARAH ${kuotaArahSuhu} · ala Allora Topics/Axal): ${suhu.temper === 'BERTAHAN' ? 'suhu dingin — otak mengetatkan kuota & ambangnya sendiri saat medan memburuk; mengecil saat tak yakin adalah keterampilan, bukan kelemahan' : suhu.temper === 'AGRESIF' ? 'suhu hangat terukur — kuota dilonggarkan HANYA karena medan hijau terukur (PF, breadth, F&G), bukan karena rasa optimis; lantai ambang tetap 52' : 'suhu netral — standar odds & kuota berlaku; suhu bisa mengetat otomatis kapan pun PF turun di bawah 1'} — 6 topik pekerja memberi suara kolektif dan bobotnya berubah mengikuti regret medan`,
   `CZAR (akurasi ${akurasi.akurasiPct ?? '—'}% vs impas ${akurasi.profit?.impasPct ?? '—'}% · darah ${akurasi.profit?.darahAkurasi ?? '—'} · czar rata ${akurasi.profit?.czarRata ?? '—'}): ${akurasi.profit?.impasPct != null ? `impas dihitung dari rata menang/rugi medanmu sendiri — akurasi di bawah impas berarti SETIAP aktivitas menggerus modal, dan skor CZAR memberi nol credit untuk kemenangan kecil sambil menagih penalti penuh atas kekalahan` : 'impas belum terukur (butuh vonis matang menang & rugi) — rugi rata vs menang rata menentukan berapa hit-rate minimum yang benar-benar cukup'} — pelajaran CZAR Loss (arXiv 2609.36061): jangan biarkan prediktor-nol mengalahkanmu di atas kertas`,
+  `KAIZEN (uji-balik ${kaizen.revertCt} revert / ${kaizen.lolosCt} lolos · karantina ${Object.keys(ilmu.karantina || {}).length} topik · dingin ${Object.keys(kaizen.dingin || {}).length} sasaran · henti-harian ${hentiHarianAktif ? 'AKTIF' : 'tidak'}): ${ujiBalikCatatan} — filosofi kaizen: perbaikan harus DIVERIFIKASI medan per ${KZN.UJI_JENDELA} vonis, bukan diasumsikan; aturan yang terus keliru dikarantina, sasaran yang dendam dibekukan, dan rugi harian yang menembus −${KZN.HENTI_RUGI_PCT}% mengetatkan gerbang sendiri — profesional menyembuh dirinya lebih cepat daripada menyembuh P&L-nya`,
+  `AUTOPILOT (peluang ambang ${AUT.PELUANG_AMBANG} · slip ${peluangVetoCt + slipVetoCt} ditolak · rezim-medan ${rezimAuto.rezim} ${rezimAuto.mult}× · tegang terburuk ${tegangAuto.terburuk ? `${tegangAuto.terburuk.nama} ${tegangAuto.terburuk.rugiUnit} unit` : '—'} · dd ${ddAuto.toFixed(1)}%): ${topTolakSiklus.length ? `alasan penolakan teratas: ${topTolakSiklus.slice(0, 2).map(([k2, v2]) => `${k2} (${v2}×)`).join(', ')} — tahu MENGAPA berkata tidak adalah setengah kesadaran; ` : ''}ekspektasi dihitung SETELAH slippage (edge bersih, bukan edge kotor), ukuran menyusut otomatis saat drawdown & sampel kecil (Kelly-lapis ala AutoPilotPM), dan pilihan kedua SELALU dicatat — regret atas jalan yang tak ditempuh adalah guru paling jujur`,
 ]
 const guruKuis = (() => {
   const mtk = (x) => (x > 0 ? '+' : '') + (+x).toFixed(2)
@@ -3648,15 +4100,15 @@ const metakognisiLaporan = {
   ket: 'dua gerbang metakognitif (estimator + prediktor) berdiri SEBELUM ledger: mereka berhak menolak sinyal dari otaknya sendiri — dan kalibrasinya sendiri dinilai medan; slot eksplorasi forensik dikecualikan agar zona racun tetap bisa diuji',
 }
 const wawasan360 = {
-  versi: 'V258-GEKKO-CZAR', dihasilkan: ISO, siklus: SIKLUS,
+  versi: 'V260-AUTOPILOT-KALIBRASI', dihasilkan: ISO, siklus: SIKLUS,
   dimensi: DIM_ARAH.length + DIM_WAW.length,
   registri: {
     totalNama: TOTAL_PARAM_SEMUA, perKandang: TOTAL_PARAM_NAMA, metakognisi: TOTAL_PARAM_METAKOGNISI,
-    dealOdds: TOTAL_PARAM_DEAL_ODDS, gekko: TOTAL_PARAM_GEKKO,
+    dealOdds: TOTAL_PARAM_DEAL_ODDS, gekko: TOTAL_PARAM_GEKKO, kaizen: TOTAL_PARAM_KAIZEN, auto: TOTAL_PARAM_AUTO,
     intiBerbobot: DIM_WAW.length, observasi: PARAM_OBS.length, observasiV257: PARAM_OBS_V257.length, iklimParam: PARAM_IKLIM.length,
     perDomain: perDomainCount, jumlahKandang: perKandang.length,
-    pengukuranPerDenyut: TOTAL_PARAM_NAMA * perKandang.length + TOTAL_PARAM_METAKOGNISI * kandidatArah.length + PARAM_GEKKO_KANDANG.length * kandidatArah.length,
-    ket: `registri ${TOTAL_PARAM_SEMUA} parameter bernama = ${TOTAL_PARAM_NAMA} per kandang × ${perKandang.length} kandang + ${TOTAL_PARAM_METAKOGNISI} metakognitif Nevron per kandidat + ${TOTAL_PARAM_DEAL_ODDS} parameter deal/odds (V256) + ${TOTAL_PARAM_GEKKO} parameter gekko (V258: 5 per kandidat — metaArah/metaKeyakinan/probPasar/divergensi/ekspresi; 5 siklus — suhu/ambang-efektif/kuota/akurasi-impas/darah; 8 konstanta CZAR-regret-ekspresi) — lapis INTI (12) berbobot genome+Hedge, lapis OBSERVASI (${PARAM_OBS.length + PARAM_OBS_V257.length}) boleh MENOLAK via veto, lapis METAKOGNISI (35) menilai sinyal dari dalam, lapis DEAL/ODDS (20) merekayasa rencana posisi & meranking peluang, lapis GEKKO (18) memberi suara kolektif bertingkat-regret + tilangan CZAR + eksposur dinamis; sensus jujur, bukan karangan`,
+    pengukuranPerDenyut: TOTAL_PARAM_NAMA * perKandang.length + TOTAL_PARAM_METAKOGNISI * kandidatArah.length + PARAM_GEKKO_KANDANG.length * kandidatArah.length + PARAM_KAIZEN_KANDANG.length * kandidatArah.length + PARAM_AUTO_KANDANG.length * kandidatArah.length,
+    ket: `registri ${TOTAL_PARAM_SEMUA} parameter bernama = ${TOTAL_PARAM_NAMA} per kandang × ${perKandang.length} kandang + ${TOTAL_PARAM_METAKOGNISI} metakognitif Nevron per kandidat + ${TOTAL_PARAM_DEAL_ODDS} parameter deal/odds (V256) + ${TOTAL_PARAM_GEKKO} parameter gekko (V258: 5 per kandidat — metaArah/metaKeyakinan/probPasar/divergensi/ekspresi; 5 siklus — suhu/ambang-efektif/kuota/akurasi-impas/darah; 8 konstanta CZAR-regret-ekspresi) + ${TOTAL_PARAM_KAIZEN} parameter kaizen (V259: 3 per kandidat — kesegaran/akselerasi1j/tesisSehat; 6 siklus — dingin/henti-harian/uji-balik/karantina/pengawas; 13 konstanta penyembuhan) + ${TOTAL_PARAM_AUTO} parameter autopilot (V260: 3 per kandidat — peluang/slipPct/kellyMult; 6 siklus — rezimMedan/multRezim/stresTerkburuk/stresSkenario/topTolak; 15 konstanta kalibrasi) — lapis INTI (12) berbobot genome+Hedge, lapis OBSERVASI (${PARAM_OBS.length + PARAM_OBS_V257.length}) boleh MENOLAK via veto, lapis METAKOGNISI (35) menilai sinyal dari dalam, lapis DEAL/ODDS (20) merekayasa rencana posisi & meranking peluang, lapis GEKKO (18) memberi suara kolektif bertingkat-regret + tilangan CZAR + eksposur dinamis, lapis KAIZEN (22) menyembuh otaknya sendiri (uji-balik/karantina/dingin/henti/penjaga-kedua), lapis AUTOPILOT (24) mengukur ulang ekspektasi setelah slippage, ukuran setelah drawdown & sampel, medan lewat rezim σ-mandiri & 5 skenario tegang, dan mencatat pilihan kedua + alasan setiap penolakan; sensus jujur, bukan karangan`,
   },
   metakognisi: metakognisiLaporan,
   sekolahParameter: sekolahParam,
@@ -3777,6 +4229,96 @@ const gekkoLaporan = {
 }
 tulis(path.join(ROOT, 'laporan/gekko.json'), gekkoLaporan)
 log(`gekko: suhu ${suhu.temper} (ambang ${ambangOdds}, kuota ${kuotaArahSuhu}) · topik terkuat ${topikStat[0]?.topik ?? '—'} · czar rata ${gekkoLaporan.czar.rata ?? '—'}`)
+// ---------------- V259 KAIZEN-PULIH — laporan organ warisan keluarga "Kaizen Trader" ----------------
+const kaizenLaporan = {
+  versi: 'V260-AUTOPILOT-KALIBRASI', dihasilkan: ISO, siklus: SIKLUS,
+  identitas: 'deep-screening keluarga "Kaizen Trader": prateekjain98/kaizen-trader (open-source, kode sumber dibedah), KAIZEN Virtuals/Hyperliquid, Kaizen RegimeBot, kaizen.cash — EMPAT LOOP PENYEMBUHAN-DIRI diadopsi ke ledger pra-registrasi SAKTI lalu DINILAI MEDAN',
+  sumber: [
+    { platform: 'kaizen-trader (GitHub, prateekjain98)', url: 'https://github.com/prateekjain98/kaizen-trader', kunci: 'otonomous perp-futures engine: 11 data streams gratis, 14 strategi, 4 SELF-HEALING LOOPS (rule healer, Claude analysis, delta revert, Darwinian selector), cooldown anti-dendam per-simbol/per-strategi, daily loss halt, 8 kondisi keluar eksplisit, watchdog proses-terpisah' },
+    { platform: 'rule_brain.py (kode sumber)', url: 'https://github.com/prateekjain98/kaizen-trader/blob/main/src/engine/rule_brain.py', kunci: '12-faktor aditif berlabel + P0/P1/P2 audit fixes: atribusi strategi tunggal, bonus kontrarian tak boleh lawan arah, umur tak diketahui = tua (konservatif-pada-kekaburan)' },
+    { platform: 'claude_brain.py (kode sumber)', url: 'https://github.com/prateekjain98/kaizen-trader/blob/main/src/engine/claude_brain.py', kunci: '"1H ACCELERATION is THE key signal... fresh breakouts > stale pumps. Late entries are exit liquidity" + PATIENCE IS EDGE' },
+    { platform: 'Portofolio pencipta (Prateek Jain)', url: 'https://prateekjain.io', kunci: '4 Healing Loops eksplisit: Rule healer, Claude analysis, Delta revert, Darwinian selector — klaim live +18.2% @ 1x leverage' },
+    { platform: 'KAIZEN (Virtuals Protocol — HOL registry)', url: 'https://hol.org/registry/agent/uaid:aid:9quBQSRbaUGSZzJ5VCfvrF4AScUU5i75N78BrTdz39xC12V2UqwpokdGeiex3ZUqTy', kunci: 'quant trading agent kelas institusional eksklusif Hyperliquid — prinsip SPESIALIZASI satu-venue' },
+    { platform: 'Kaizen RegimeBot (kaizen-daytrading.com)', url: 'https://kaizen-daytrading.com/bots', kunci: 'regime-strategy binding: 5 input klasifikasi harian → TEPAT SATU strategi aktif ATAU OFF (~17% hari tanpa edge); fail-safe data-gagal = tetap flat; validasi out-of-sample 6 bulan' },
+    { platform: 'kaizen.cash', url: 'https://kaizen.cash', kunci: 'otonomi berjenjang: sarankan dulu → direview → eksekusi hanya dalam aturan pemilik (cermin sekolah OBSERVASI→berhak-veto→berbobot SAKTI)' },
+    { platform: 'thekaizentrader.com', url: 'https://thekaizentrader.com', kunci: 'jurnal + mental prep: strategi adalah perjalanan berkelanjutan, bukan tugas sekali-jadi' },
+  ],
+  kunciDiadopsi: [
+    'UJI-BALIK / DELTA-REVERT (loop 3 dari 4 healing loops) — perubahan genome disegel sebagai eksperimen; net/denis dibandingkan baseline per 8 vonis matang; lebih buruk → DIREVERT ke snapshot; lebih baik → LOLOS; rezim bergeser → eksperimen dibatalkan (genome per-rezim tak dicampur)',
+    'KARANTINA / RULE-HEALER (loop 1) — topik meta-inferensi dengan hit-rate < 44% + 3 suara-keliru beruntun disita suaranya (bobot 0, tak bersuara di komite); pulih lewat 2× setuju-saat-benar — sekolah SAKTI kini dua arah: lulus ATAS, karantina BAWAH',
+    'DINGIN-DENDAM (anti-revenge-trading ala kaizen-trader) — 2 kekalahan beruntun per sasaran → dingin 4 jam; 3 kekalahan beruntun per keluarga rezim×arah → dingin 1 denyut; menang me-reset; re-entry dendam ditolak DENGAN ALASAN',
+    'HENTI-HARIAN (daily loss halt) — rugi-net vonis ARAH yang dinilai hari UTC kumulatif ≤ −4% → suhu BERTAHAN dipaksa (ambang +5, kuota −1) — circuit breaker di atas PF<1',
+    'KESEGARAN GERAKAN ("fresh breakouts > stale pumps") — |24j| > 100% tanpa akselerasi 1j ≥ 5% = POMPA-TUA diveto; skor kesegaran 0-1 disegel per kandidat & dinilai medan (tinggi vs rendah); data tak terbaca = diperlakukan tua (konservatif-pada-kekaburan)',
+    'MODAL-MATI + TESIS-PATAH (chop & thesis-break exits) — menginap ≥4 jam tanpa progres ±2% = modal mati (dinilai: apakah chop-exit memang menyelamatkan?); tesis-sehat (funding/EMA4h searah) disegel saat kunci dan dibandingkan medan',
+    'PENJAGA-KEDUA (watchdog proses-terpisah ala kaizen-trader) — hard-stop 15% / hard-target 40% dipra-registrasi di rencana deal; dicek dari lilin pasca-kunci TIAP denyut di luar otak skor — pertahanan berlapis bila otak bingung',
+    'DARWINIAN-SELEKTOR + OTONOMI-BERJENJANG (kaizen.cash & filosofi kaizen) — seleksi via sekolah hit-rate yang kini dua arah; saran → review → eksekusi-dalam-aturan: param kaizen lahir OBSERVASI, tak berbobot genome sebelum medan bicara',
+  ],
+  paramKaizen: { kandang: PARAM_KAIZEN_KANDANG, siklus: PARAM_KAIZEN_SIKLUS, konst: PARAM_KAIZEN_KONST, total: TOTAL_PARAM_KAIZEN },
+  konstanta: { ujiJendela: KZN.UJI_JENDELA, karantinaKej: KZN.KARANTINA_KEJ, karantinaPulih: KZN.KARANTINA_PULIH, dinginSasaranKej: KZN.DINGIN_SASARAN_KEJ, dinginSasaranJam: KZN.DINGIN_SASARAN_JAM, dinginFamKej: KZN.DINGIN_FAM_KEJ, hentiRugiPct: KZN.HENTI_RUGI_PCT, modalMatiJam: KZN.MODALMATI_JAM, modalMatiProgres: KZN.MODALMATI_PROGRES, kesegaran24j: KZN.KESEGARAN_24J, kesegaranAks: KZN.KESEGARAN_AKS, pengawasStop: KZN.PENGAWAS_STOP, pengawasTarget: KZN.PENGAWAS_TARGET },
+  siklusIni: {
+    ujiBalik: ujiBalikCatatan, revertCt: kaizen.revertCt, lolosCt: kaizen.lolosCt,
+    karantinaAktif: ilmu.karantina, karantinaBaru, karantinaPulih,
+    dinginSasaranAktif: Object.fromEntries(Object.entries(kaizen.dingin || {}).filter(([, d]) => WAKTU.getTime() < (d.dinginSampai || 0)).map(([s, d]) => [s, new Date(d.dinginSampai).toISOString()])),
+    dinginFamAktif: Object.fromEntries(Object.entries(kaizen.dinginFam || {}).filter(([, d]) => SIKLUS < (d.dinginSampaiDenyut || 0)).map(([f, d]) => [f, `hingga denyut ${d.dinginSampaiDenyut}`])),
+    dinginSasaranTolak: dinginSasaranCt, dinginFamTolak: dinginFamCt,
+    hentiHarian: { aktif: hentiHarianAktif, rugiNetPct: rugiHarianPct, ambang: -KZN.HENTI_RUGI_PCT },
+    pompaTuaDitolak: pompaTuaCt,
+  },
+  medan: {
+    pengawas: { ...ilmu.pengawas, ket: 'berapa vonis yang hard-stop 15%-nya tersentuh, dan berapa di antaranya memang berakhir SALAH (penjaga-kedua akan menyelamatkan)' },
+    kesegaran: ilmu.kesegaran, modalMati: ilmu.modalMati, tesis: ilmu.tesis,
+  },
+  kejujuran: 'semua param kaizen lahir OBSERVASI — disegel, dinilai medan (sekolah paramsPenuh + bucket ilmu.kesegaran/modalMati/tesis/pengawas), TIDAK berbobot genome; uji-balik hanya menyentuh jalur evolusi genome ARAH (hedge on-line tak disentuh); satu perubahan gerbang (henti-harian → BERTAHAN) terikat-batas & terlog; entri lama tanpa lapis kaizen tampil apa adanya',
+}
+tulis(path.join(ROOT, 'laporan/kaizen.json'), kaizenLaporan)
+log(`kaizen: uji-balik ${kaizen.revertCt}/${kaizen.lolosCt} · karantina ${Object.keys(ilmu.karantina || {}).length} · henti-harian ${hentiHarianAktif ? 'AKTIF' : 'tidak'} · pompa-tua ${pompaTuaCt} ditolak`)
+// V260 AUTOPILOT-KALIBRASI — laporan warisan AutoPilotPM (sumber ber-URL + kunci + medan)
+const autopilotLaporan = {
+  diperbarui: ISO, organ: VERSI, siklus: SIKLUS,
+  mandat: 'periksa ai agent bernama autopilotpm yang only khusus trading — masuk, pelajari sistemnya, decrypt, ambil yang bermanfaat & kunci intinya, implementasikan pada micaprofita agar cyborg AGI benar-benar mahir, mawas & makin professional — bukan sekadar sadari tanpa wawasan (perintah pemilik)',
+  identitas: {
+    nama: 'AutoPilotPM', repo: 'recogardtech/AutoPilotPM', lisensi: 'MIT', bahasa: 'TypeScript (95 modul src)',
+    deskripsi: 'open-source autonomous trading system powered by AI — monitor & trade across 1,000+ markets (prediction markets + perp futures + DeFi Solana/EVM)',
+    ket: 'bukan sekadar app copy-trading — decision ledger, risk engine 10 gerbang, dan kalkulator Kelly-nya adalah kode sumber terbuka yang dibedah langsung',
+  },
+  sumber: [
+    { platform: 'AutoPilotPM (GitHub, recogardtech)', url: 'https://github.com/recogardtech/AutoPilotPM', kunci: 'self-hosted AI workspace utk market research & automated trading: 1000+ pasar, 118+ strategi, 4 peran agent, decision ledger dgn confidence calibration & on-chain anchoring' },
+    { platform: 'src/ledger (kode sumber)', url: 'https://github.com/recogardtech/AutoPilotPM/tree/main/src/ledger', kunci: 'DecisionRecord: inputs + analysis (observations/factors/ALTERNATIVES-CONSIDERED) + constraints[] + confidence 0-100; pasca-eksekusi accurate boolean; kalibrasi 5 bucket (0-19/…/80-100) masing-masing accuracyRate; SHA-256 integrity' },
+    { platform: 'src/trading/kelly.ts (kode sumber)', url: 'https://github.com/recogardtech/AutoPilotPM/blob/main/src/trading/kelly.ts', kunci: 'Dynamic Kelly 9-lapis: quarter-Kelly × confidence × drawdown (mulai 5%, 0.5× di 15%) × streak × vol-target (klamps 0.5-1.5) × kategori × sampel-kecil (0.5-1.0 di <10 trades) × bounds [1%,25%] + anti-martingale + keyakinan-ukuran 0.4/0.3/0.3' },
+    { platform: 'src/risk/volatility.ts (kode sumber)', url: 'https://github.com/recogardtech/AutoPilotPM/blob/main/src/risk/volatility.ts', kunci: '4 rezim (low 1.2×/normal 1.0×/high 0.5×/extreme 0.25×+halt) dgn BASELINE CALIBRATION dari window penuh pertama — rezim dinilai relatif thd sejarah sendiri, bukan ambang karangan' },
+    { platform: 'src/risk/stress.ts (kode sumber)', url: 'https://github.com/recogardtech/AutoPilotPM/blob/main/src/risk/stress.ts', kunci: '5 skenario terdefinisi: flash_crash 20% / liquidity_crunch 10% / platform_down 15% / correlation_spike 25% / black_swan 40% — dijalankan semua, diurut severity, keluarkan recommendations' },
+    { platform: 'docs/RISK_MANAGEMENT.md', url: 'https://github.com/recogardtech/AutoPilotPM/blob/main/docs/RISK_MANAGEMENT.md', kunci: 'RiskEngine validateTrade(): 10 gerbang BERURUTAN (kill-switch → breaker → order → exposure → daily-loss/DD/konsentrasi → VaR/CVaR → regime → Kelly non-blocking); circuit breaker pasar-sadar 5 kondisi + 3 preset' },
+    { platform: 'docs/OPPORTUNITY_FINDER.md', url: 'https://github.com/recogardtech/AutoPilotPM/blob/main/docs/OPPORTUNITY_FINDER.md', kunci: 'skor peluang 0-100 (Edge 35/Liq 25/Conf 25/Exec 15 − penalti eksplisit); slippage = sqrt(size/liquidity)·2·faktor + spread/2 — dgn catatan jujur "heuristic, not empirically validated"; statistik per pasangan platform & tipe peluang' },
+    { platform: 'docs/FEATURE_ENGINEERING.md', url: 'https://github.com/recogardtech/AutoPilotPM/blob/main/docs/FEATURE_ENGINEERING.md', kunci: 'fallback-jujur: semua feature check return TRUE saat data kosong — tidak memblokir dari ketidaktahuan; adaptive stop/TP widening berbasis volatilitas' },
+  ],
+  kunciDiadopsi: [
+    'TIMBANGAN-ALT (alternativesConsidered ala decision ledger) — pilihan kedua (runner-up odds) + alasan penolakannya disegel saat kunci; saat matang, net-hipotetis alternatif dihitung dari lilin pasca-kunci dan REGRET-nya dicatat (ilmu.alt.lebihBaik/lebihBuruk) — kejujuran atas jalan yang tak ditempuh',
+    'KELLY-LAPIS (dynamic Kelly) — pengecilan drawdown (mulai 5%, setengah di 15%), kerendahan-hati sampel-kecil (<10 vonis matang → 0.5–0.95×), penyusutan streak-kalah (lantai 0.5×), vol-target scaling (10%/σ, klamps [0.5,1.5]) — ditumpuk di atas ekspresi dinamis gekko → skalaEfektif clamp [0.2,1.2]; keyakinan-ukuran 0.4·sampel+0.3·kinerja+0.3·(1−DD) disegel per entri',
+    'REZIM-MEDAN (volatility regime 4-tingkat BASELINE-MANDIRI) — σ window P&L terakhir dibanding baseline σ window penuh PERTAMA milik sendiri (dipersistenkan): tenang 1.2×/normal 1.0×/tinggi 0.5×/ekstrem 0.25× + suhu BERTAHAN dipaksa saat ekstrem — terikat-batas: hanya mengetatkan, tak melonggarkan',
+    'UJI-TEGANG (stress test 5 skenario) — posisi terbuka dinilai di flash-crash/likuiditas/platform/korelasi/black-swan (fraksi 20/10/15/25/40% × skala eksposur); terburuk ≥ 30% unit → penalti peluang + BERTAHAN; hasil lengkap di laporan & denyut',
+    'SLIP-NETO (slippage-adjusted edge) — slip = sqrt(1/likuiditasUSD)·2·0.8 + spread/2; edgeBersih = EV − slip; edgeBersih ≤ 0 → TOLAK dengan alasan; data kosong TIDAK memblokir (fallback-jujur ala AutoPilot feature-engineering)',
+    'PELUANG-SKOR (opportunity scoring terbobot + penalti) — 0-100 = edge (0-40) + likuiditas (0-25) + keyakinan (0-25) + eksekusi (0-10) − penalti (spread lebar −5, slip>2% −4, keyakinan<70 −3); < 60 → TOLAK dengan alasan (gerbang baru yang hanya MENOLAK); dinilai medan: apakah skor tinggi memang menang lebih sering (ilmu.peluang)',
+    'TOP-TOLAK (topBlockReasons) — alasan penolakan jalur ARAH dihitung per kunci tiap siklus + kumulatif (ilmu.topTolak) — kesadaran atas penolakannya sendiri: tahu MENGAPA berkata tidak, bukan sekadar kapan berkata ya',
+  ],
+  paramAuto: { kandang: PARAM_AUTO_KANDANG, siklus: PARAM_AUTO_SIKLUS, konst: PARAM_AUTO_KONST, total: TOTAL_PARAM_AUTO },
+  konstanta: { kellyDdMulai: AUT.KELLY_DD_MULAI, kellyDdMaks: AUT.KELLY_DD_MAKS, kellyDdFaktor: AUT.KELLY_DD_FAKTOR, kellySampelN: AUT.KELLY_SAMPEL_N, kellyLossStreak: AUT.KELLY_LOSS_STREAK, kellyVolTarget: AUT.KELLY_VOL_TARGET, kellyVolKlip: AUT.KELLY_VOL_KLIP, stresAmbangPct: AUT.STRES_AMBANG_PCT, slipFaktor: AUT.SLIP_FAKTOR, slipAmbangPct: AUT.SLIP_AMBANG_PCT, peluangAmbang: AUT.PELUANG_AMBANG, bobot: { edge: AUT.BOBOT_EDGE, liq: AUT.BOBOT_LIQ, kiyak: AUT.BOBOT_KIYAK, eksekusi: AUT.BOBOT_EKSEKUSI } },
+  siklusIni: {
+    ddPct: +ddAuto.toFixed(2), rezimMedan: rezimAuto, stres: tegangAuto,
+    peluangVeto: peluangVetoCt, slipVeto: slipVetoCt,
+    topTolakSiklus, topTolakKumulatif: ilmu.topTolak,
+    baselineSigma: keadaan.auto?.baselineSigma ?? null,
+  },
+  medan: {
+    alt: { ...ilmu.alt, ket: 'berapa kali alternatif seharusnya dipilih (regret) vs pilihan utama menang' },
+    kelly: { ...ilmu.kelly, ket: 'apakah ukuran kecil (kelly < 0.7) memang lebih aman dari besar' },
+    rezimMedan: { ...ilmu.rezimMedan, ket: 'apakah entri saat σ-tenang memang lebih menguntungkan' },
+    peluang: { ...ilmu.peluang, ket: 'apakah skor komposit ≥ ambang memang menang lebih sering' },
+    stres: { ...ilmu.stres, ket: 'apakah denyut stres-tinggi (terburuk ≥ 30%) memang lebih berbahaya' },
+  },
+  kejujuran: 'semua param autopilot lahir OBSERVASI — disegel (paramsPenuh + bucket ilmu.alt/kelly/rezimMedan/peluang/stres), TIDAK berbobot genome; dua gerbang baru (peluang-rendah, slip-neto) HANYA MENOLAK; dua perubahan suhu (rezim-ekstrem → BERTAHAN, stres ≥ 30% → penalti) terikat-batas & terlog; slippage adalah HEURISTIK belum tervalidasi — dilabeli jujur ala dokumen AutoPilotPM; entri lama tanpa lapis autopilot tampil apa adanya',
+}
+tulis(path.join(ROOT, 'laporan/autopilot.json'), autopilotLaporan)
+log(`autopilot: peluang-veto ${peluangVetoCt} · slip-veto ${slipVetoCt} · rezim ${rezimAuto.rezim} · tegang ${tegangAuto.terburuk?.nama ?? '—'} · top-tolak ${topTolakSiklus[0] ? `${topTolakSiklus[0][0]}×${topTolakSiklus[0][1]}` : '—'}`)
 const laporan = {
   protokol: 'SASARAN-MICAPROFITA', organ: VERSI, dihasilkan: ISO, siklus: SIKLUS,
   sumber: { host, gagal: gagal.slice(0, 12) },
@@ -3848,6 +4390,24 @@ const laporan = {
     sidikPraKunci: gekkoLaporan.sidikPraKunci.jumlahTerkunci,
     sumber: 'rincian penuh di laporan/gekko.json',
   },
+  kaizen: {
+    identitas: kaizenLaporan.identitas,
+    sumberResmi: kaizenLaporan.sumber.map((s2) => `${s2.platform}: ${s2.url}`),
+    kunciDiadopsi: kaizenLaporan.kunciDiadopsi,
+    siklusIni: kaizenLaporan.siklusIni,
+    medan: kaizenLaporan.medan,
+    paramKaizen: kaizenLaporan.paramKaizen,
+    sumber: 'rincian penuh di laporan/kaizen.json',
+  },
+  auto: {
+    identitas: autopilotLaporan.identitas,
+    sumberResmi: autopilotLaporan.sumber.map((s2) => `${s2.platform}: ${s2.url}`),
+    kunciDiadopsi: autopilotLaporan.kunciDiadopsi,
+    siklusIni: autopilotLaporan.siklusIni,
+    medan: autopilotLaporan.medan,
+    paramAuto: autopilotLaporan.paramAuto,
+    sumber: 'rincian penuh di laporan/autopilot.json',
+  },
   piagam: {
     identitas: PIAGAM.identitas, pilar: PIAGAM.pilar, otak: OTAK,
     roadmapJujur: PIAGAM.roadmapJujur,
@@ -3864,6 +4424,8 @@ const laporan = {
       'V255 METAKOGNISI-NEVRON — bedah Neurobro AI/Nevron (axioma-ai-labs): 7 kunci metakognisi diadopsi — estimator keyakinan 7-faktor, prediktor kegagalan pra-kunci, kritik diri 5-field, reliabilitas pelajaran (penguatan+peluruhan), bias konteks per rezim×arah, deteksi loop, monitor intervensi — registri 46 → 81 parameter bernama; gerbang metakognitif berhak bilang TUNGGU pada otaknya sendiri, dan kalibrasinya dinilai medan',
       'V256 MESIN-DEAL-ODDS — deep-screening 3Commas & Trade Ideas (dokumentasi resmi): mesin deal DCA (safety orders maxSO/deviasi×multiplier/volume×multiplier + TP-dari-avg), Move SL to Breakeven, Trailing Take Profit, Global Max Open Positions — semuanya dipra-registrasi & dinilai medan; OddsMaker 0-100 (40% MC + 25% zona + 20% metakognisi + 15% daya) + Money Machine top-3 menguasai kuota; 6 tag peristiwa event-based dinilai hit-rate-nya — registri 81 → 101 parameter bernama',
       'V258 GEKKO-CZAR — deep-screening Gekko Agent (Axal × Virtuals × Allora) + CZAR Loss (Allora Foundation, arXiv 2609.36061): meta-inferensi kolektif 6 topik bertingkat-regret ala Allora Topics, skor CZAR asimetris magnitude-aware + akurasi-impas/darah-akurasi, eksposur dinamis 0.25–1.0×, divergensi vs probabilitas pasar, suhu Autopilot terikat-batas (PF<1 memaksa BERTAHAN), sidik sha256 pra-registrasi per prediksi — registri 127 → 145 parameter bernama',
+      'V259 KAIZEN-PULIH — deep-screening keluarga "Kaizen Trader" (prateekjain98/kaizen-trader open-source dibedah kode-nya + KAIZEN Virtuals/Hyperliquid + Kaizen RegimeBot + kaizen.cash): EMPAT LOOP PENYEMBUHAN-DIRI — uji-balik (delta-revert: perubahan genome dievaluasi vs baseline per 8 vonis matang, lebih buruk DIREVERT), karantina rule-healer (sekolah dua arah: lulus ATAS, karantina BAWAH), dingin-dendam (anti-revenge per sasaran/keluarga), henti-harian (rugi ≤ −4% memaksa BERTAHAN) + kesegaran gerakan (pompa-tua diveto ala fresh>stale) + modal-mati/tesis-patah + penjaga-kedua (hard-stop 15%/target 40% ala watchdog) — registri 145 → 167 parameter bernama',
+      'V260 AUTOPILOT-KALIBRASI — deep-screening AutoPilotPM (recogardtech/AutoPilotPM, MIT, kode sumber TypeScript 95 modul dibedah: src/ledger + src/risk + src/trading): TUJUH KUNCI KALIBRASI — timbangan-alt (alternativesConsidered: pilihan kedua disegel, regret dihitung medan), kelly-lapis (pengecilan drawdown/kerendahan-hati sampel/streak-kalah/vol-target di atas ekspresi, skalaEfektif clamp [0.2,1.2] + keyakinan-ukuran 0.4/0.3/0.3), rezim-medan (4 rezim σ-P&L dgn baseline MANDIRI — kalibrasi dari window penuh pertama milik sendiri), uji-tegang (5 skenario stress.ts), slip-neto (edge − slippage SEBELUM memutuskan; bersih ≤ 0 ditolak, data kosong tak memblokir — fallback-jujur), peluang-skor (0-100 terbobot + penalti; < 60 ditolak dengan alasan), top-tolak (topBlockReasons — kesadaran atas penolakannya sendiri) — registri 167 → 191 parameter bernama',
     ],
   },
   sadardiri,
@@ -3980,6 +4542,8 @@ denyut.push({
   suhu: suhu.temper, ambangOddsEfektif: ambangOdds, kuotaArahEfektif: kuotaArahSuhu,
   czarRata: ilmu.cz.n ? +(ilmu.cz.jumlah / ilmu.cz.n).toFixed(3) : null,
   impasPct: akurasi.profit?.impasPct ?? null, darahAkurasi: akurasi.profit?.darahAkurasi ?? null,
+  kaizen: { ujiBalik: kaizen.uji ? 'UJI' : 'SIAGA', revertCt: kaizen.revertCt, lolosCt: kaizen.lolosCt, karantina: Object.keys(ilmu.karantina || {}).length, dinginSasaran: dinginSasaranCt, dinginFam: dinginFamCt, hentiHarian: hentiHarianAktif, pompaTua: pompaTuaCt, pengawasKena: ilmu.pengawas.kena },
+  auto: { rezimMedan: rezimAuto.rezim, multRezim: rezimAuto.mult, stresTerkburuk: tegangAuto.terburuk?.rugiUnit ?? null, stresSkenario: tegangAuto.terburuk?.nama ?? null, peluangVeto: peluangVetoCt, slipVeto: slipVetoCt, ddPct: +ddAuto.toFixed(2), topTolak: topTolakSiklus.slice(0, 3).map(([k2, v2]) => `${k2}×${v2}`).join(' · ') || null },
   topikHidup: Object.values(ilmu.topik || {}).filter((h) => h.n > 0).length,
   peristiwaHidup: Object.values(ilmu.peristiwa || {}).filter((h) => h.n > 0).length,
 })
@@ -4015,6 +4579,8 @@ tulis(path.join(ROOT, 'laporan/jurnal-ilmu.json'), {
     warisan: 'mesinWarisan()/garch11()/monteCarlo24j()/profilVolume()/betaBTC() berjalan tiap telusur; pTarget MC tersimpan di e.warisan.mc (pra-registrasi) lalu dinilai saat matang (ilmu.brier.mc + ilmu.mcKalibrasi)',
     dealOdds: 'rencanaDeal()/skorOdds()/tagPeristiwa() dipasang V256 dari deep-screening 3Commas & Trade Ideas (dokumentasi resmi): SO/BEP/trailing dipra-registrasi per sasaran lalu dinilai medan (ilmu.deal), odds 0-100 meranking kuota (top-3), hit-rate per peristiwa di ilmu.peristiwa — rincian di laporan/odds.json',
     gekko: 'metaInferensi()/skorCzar()/probPasar()/ekspresiSkala()/suhuPasar()/sidikPrakunci dipasang V258 dari deep-screening Gekko Agent (Axal × Virtuals × Allora) + CZAR Loss (arXiv 2609.36061): suara topik bertingkat-regret disegel & diperbarui medan (ilmu.topik), czar per vonis (e.cz/ilmu.cz), impas/darah akurasi (akurasi.profit), ekspresi & divergensi dibandingkan medan (ilmu.ekspresi/ilmu.divergensi), suhu mengatur kuota terikat-batas — rincian di laporan/gekko.json',
+    kaizen: 'ujiBalik (delta-revert genome vs baseline per 8 vonis) + karantina topik (rule-healer dua arah) + dinginDendam (anti-revenge per sasaran/keluarga) + hentiHarian (rugi ≤ −4% memaksa BERTAHAN) + kesegaran/veto pompa-tua + modalMati/tesisSehat + pengawas (hard-stop 15%) dipasang V259 dari deep-screening keluarga "Kaizen Trader" (prateekjain98/kaizen-trader open-source dibedah + KAIZEN Virtuals + RegimeBot + kaizen.cash): 4 healing loops diadaptasi ke ledger pra-registrasi, semuanya dinilai medan — rincian di laporan/kaizen.json',
+    autopilot: 'timbangan-alt (alternativesConsidered: pilihan kedua disegel saat kunci, regret-nya dihitung medan → ilmu.alt) + kellyLapis (pengecilan drawdown/sampel-kecil/streak-kalah/vol-target di atas ekspresi → skalaEfektif clamp [0.2,1.2] → ilmu.kelly) + rezimMedan (σ window P&L vs baseline mandiri 4 rezim → ilmu.rezimMedan) + ujiTegang (5 skenario ala stress.ts → ilmu.stres) + slipNeto (edge − sqrt(1/likuiditas)·2·faktor − spread/2; bersih ≤ 0 ditolak) + peluangSkor (0-100 terbobot + penalti; < 60 ditolak dengan alasan → ilmu.peluang) + topTolak (topBlockReasons kumulatif) dipasang V260 dari deep-screening AutoPilotPM (recogardtech/AutoPilotPM, MIT — src/ledger + src/risk + src/trading dibedah): decision ledger dgn confidence-calibration diadaptasi ke pra-registrasi SAKTI, semuanya dinilai medan — rincian di laporan/autopilot.json',
   },
 })
 
