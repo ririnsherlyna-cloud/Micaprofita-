@@ -700,6 +700,56 @@ Hukum rumah TIDAK berubah: param baru lahir lapis OBSERVASI — dihitung, dinara
 disekolahkan, berhak veto — **TIDAK berbobot** sampai hit-rate medannya lulus.
 Seksi dasbor baru **"Dua Lapis Otak"** menampilkan sensus ini terukur per denyut.
 
+## 12b. EPOCH V258 — GEKKO-CZAR: warisan Gekko Agent (Axal) & keberanian terukur (2 Oktober 2026)
+
+**Perintah pemilik:** *"periksa ai agent Gekko Agent (tim Axal) yang khusus trading —
+masuk, pelajari sistemnya, decrypt, ambil apa yang bermanfaat & kunci inti mereka,
+implementasikan pada Micaprofita — deep screening dan inject, sekaligus peningkatan
+parameter agar AGI benar-benar sadar, mahir dan fasih."*
+
+**Identitas terverifikasi (bukti `scripts/riset_gekko/`):** Gekko Agent = Gekko AI by
+Virtuals (GEKKO, Base) — buatan **Axal**, jaringan verifiable agents; mesin pendukungnya
+**Allora Network** (prediksi kolektif) + Autopilot (eksekusi ber-profil-risiko). Riset
+CZAR Loss (Allora Foundation, **arXiv 2609.36061**, Sep 2026) menemukan inti matematisnya.
+
+**Registri 127 → 145 parameter bernama** (72/kandang + 35 metakognisi + 20 deal/odds
++ **18 gekko**). Enam kunci inti diadopsi:
+1. **Meta-inferensi kolektif (Allora Topics)** — 6 topik pekerja (momentum/tren/aliran/
+   derivatif/mikrostruktur/relatif) memberi suara arah per kandidat; bobot topik =
+   exp(−0.9·regret), regret diperbarui tiap vonis matang dari medan — tak ada topik
+   berkuasa permanen.
+2. **CZAR decisiveness** — skor asimetris magnitude-aware per vonis matang: benar
+   dibayar linear (cap 8%), benar-kecil ≈ nol credit (zero-agnostic — gerakan kecil =
+   derau), salah kena floor 1.5 + kuadratik; plus **akurasi-impas** (breakeven WR =
+   rugiRata/(menangRata+rugiRata), ambang jujur vs prediktor-nol) dan **darah akurasi**
+   (akurasi − impas; merah = setiap aktivitas menggerus modal) — masuk peringatan otomatis.
+3. **Eksposur dinamis (Allora×G.A.M.E)** — skala ekspresi 0.25–1.0× unit per sasaran
+   dari odds + keyakinan − volatilitas ekstrem − kerumunan funding; dipra-registrasi
+   dan dibandingkan medan (ekspresi tinggi vs rendah, dinilai net-nya).
+4. **Divergensi pasar-prediksi (Allora prediction markets)** — probPasar dari agresor
+   taker + kerumunan LS + funding + EMA4h; divergensi = keyakinan komite − P(arah
+   komite); bucket kuat (≥0.18)/lemah dinilai medan.
+5. **Temper Autopilot (Axal)** — suhu denyut AGRESIF/NETRAL/BERTAHAN dari PF-jendela +
+   rezim + breadth + F&G; BERTAHAN: ambang odds +5 & kuota −1; AGRESIF: −3 dengan
+   lantai 52; **PF<1 MEMAKSA BERTAHAN** — satu-satunya perubahan gerbang, terikat-batas
+   & terlog per denyut.
+6. **Verifiable autonomy (Axal)** — sidik sha256 pra-registrasi payload prediksi
+   (ARAH & PHOENIX): tamper-evident, bisa direkalkulasi siapa pun.
+
+**Bukti siklus uji (sandbox, data live):** registri 145 ✓; suhu otomatis BERTAHAN saat
+PF 0.55 (<1) dengan ambang efektif 60 & kuota 2 ✓; XRP ARAH membawa meta BUY 52% dari
+4 topik + probPasar 30.9% + divergensi +0.251 + ekspresi 0.85× + sidik sha256 ✓;
+siklus-2 (backdate 25j): czar n=24, topik regret bergerak (mikrostruktur hit 100% →
+regret turun; momentum/aliran kalah → regret naik), ekspresi tinggi/rendah terukur,
+sekolah 44 param kini membawa kolom czar ✓. Dasbor v2.8: seksi **"Warisan Gekko"**
+(6 kartu + tabel 6 topik + 8 sumber resmi ber-URL + chip suhu di header + chip
+meta/prob-pasar/divergensi/ekspresi/sidik di kartu sasaran) — 0 error console.
+
+Hukum rumah tetap: semua param gekko lahir OBSERVASI — disekolahkan via paramsPenuh,
+berhak veto lewat gerbang lama, TIDAK berbobot genome sebelum hit-rate medan lulus.
+Rincian per denyut: `laporan/gekko.json` (8 sumber ber-URL, kunci diadopsi, konstanta,
+topik, czar, ekspresi/divergensi medan, suhu siklus).
+
 ## 12. PENUTUP
 Cyborg ini dibangun dengan satu ikhtiar: **jujur pada data, tegas
 pada arah, hidup tanpa biaya, dan berkembang dari vonis nyata.**
