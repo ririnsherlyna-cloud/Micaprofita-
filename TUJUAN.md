@@ -750,6 +750,140 @@ berhak veto lewat gerbang lama, TIDAK berbobot genome sebelum hit-rate medan lul
 Rincian per denyut: `laporan/gekko.json` (8 sumber ber-URL, kunci diadopsi, konstanta,
 topik, czar, ekspresi/divergensi medan, suhu siklus).
 
+## 12c. EPOCH V259 — KAIZEN-PULIH: warisan keluarga "Kaizen Trader" & empat loop penyembuhan-diri (2 Oktober 2026)
+
+**Mandat pemilik:** "periksa ai agent bernama kaizen trader dimana dia only khusus trading
+juga — masuk, pelajari sistemnya, decrypt, ambil apa yang bermanfaat & kunci inti mereka,
+implementasikan pada micaprofita kita agar cyborg AGI benar-benar mahir, mawas & makin
+professional bukan sekadar sadari tanpa wawasan — deep screening dan inject, sekaligus
+peningkatan parameter agar dia benar-benar sadar dan mahir dan fasih."
+
+**Deep-screening (bukti: `scripts/riset_kaizen/` — 7 query + fetch sumber resmi):**
+"Kaizen Trader" ternyata SATU KELUARGA. Yang diaudit langsung: (1) **kaizen-trader**
+(prateekjain98, GitHub, MIT, open-source) — autonomous perp-futures engine: README penuh
++ 3 file kode sumber dibedah (rule_brain.py 808 baris, claude_brain.py, signal_detector.py);
+(2) **KAIZEN** (Virtuals Protocol — HOL registry) — quant agent kelas institusional eksklusif
+Hyperliquid; (3) **Kaizen RegimeBot** (kaizen-daytrading.com) — regime-strategy binding +
+fail-safe; (4) **kaizen.cash** — otonomi berjenjang; (5) **thekaizentrader.com** — jurnal.
+Kunci paling telanjang dari portofolio pencipta: **"4 Healing Loops: Rule healer, Claude
+analysis, Delta revert, Darwinian selector"** + klaim live +18.2% @ 1x leverage.
+
+**7 kunci inti diadopsi (diadaptasi ke ledger pra-registrasi SAKTI, semua dinilai medan):**
+1. **UJI-BALIK (delta-revert)** — perubahan genome disegel sebagai eksperimen; net/denis
+   dibandingkan baseline per 8 vonis matang; lebih buruk → **DIREVERT** ke snapshot; lebih
+   baik → LOLOS; rezim bergeser → eksperimen dibatalkan. Filosofi kaizen inti: perbaikan
+   harus DIVERIFIKASI medan, bukan diasumsikan.
+2. **KARANTINA (rule-healer)** — topik meta-inferensi hit-rate < 44% + 3 suara-keliru
+   beruntun → suara DISITA (bobot 0); pulih lewat 2× setuju-saat-benar. Sekolah SAKTI kini
+   **dua arah**: lulus ATAS, karantina BAWAH.
+3. **DINGIN-DENDAM (anti-revenge)** — 2 kekalahan beruntun per sasaran → dingin 4 jam;
+   3 per keluarga rezim×arah → dingin 1 denyut; menang me-reset; re-entry dendam ditolak
+   dengan alasan (nearMiss).
+4. **HENTI-HARIAN (daily loss halt)** — rugi-net vonis ARAH yang dinilai hari UTC ≤ −4% →
+   suhu **BERTAHAN dipaksa** (circuit breaker di atas PF<1).
+5. **KESEGARAN (freshness guard)** — |24j| > 100% tanpa akselerasi 1j ≥ 5% = **POMPA-TUA**
+   diveto ala "fresh breakouts > stale pumps. Late entries are exit liquidity"; skor
+   kesegaran 0-1 disegel per kandidat; data tak terbaca diperlakukan tua
+   (konservatif-pada-kekaburan, ala audit-fix kaizen-trader).
+6. **MODAL-MATI + TESIS-PATAH** — menginap ≥ 4 jam tanpa progres ±2% = dead capital
+   (diukur: apakah chop-exit memang menyelamatkan?); tesis-sehat (funding/EMA4h searah)
+   disegel saat kunci & dibandingkan medan.
+7. **PENJAGA-KEDUA (watchdog)** — hard-stop 15% / hard-target 40% dipra-registrasi di
+   rencana deal, dicek tiap denyut dari lilin pasca-kunci DI LUAR otak skor — pertahanan
+   berlapis ala watchdog proses-terpisah kaizen-trader.
+
+**Bukti sandbox (2 siklus data live, siap_v49.py):** registri **167** (kaizen 22: 3 per
+kandidat + 6 siklus + 13 konstanta) ✓; henti-harian terpicu sungguhan saat rugi harian
+−6,12% ≤ −4% → BERTAHAN dipaksa ✓; dingin-dendam membekukan XRP & LINK (2 kekalahan
+beruntun → 4 jam) + keluarga TURUN-SELL/TURUN-BUY (3 beruntun → 1 denyut) ✓; uji-balik
+menyegel eksperimen genome NAIK (baseline −0,00367) & berjalan dinilai ✓; pengawas 2
+dinilai; modal-mati n=13; kesegaran tinggi n=2; tesis sehat/patah n=1/1 ✓; entri baru
+membawa pengawas 15/40 + exitEkstra chop/tesis di rencanaDeal ✓; dasbor v2.9 seksi
+"Warisan Kaizen" 8 kartu + 8 sumber ber-URL.
+
+Hukum rumah tetap: semua param kaizen lahir OBSERVASI — disekolahkan via paramsPenuh +
+bucket medan (ilmu.kesegaran/modalMati/tesis/pengawas), TIDAK berbobot genome; uji-balik
+hanya menyentuh jalur evolusi genome ARAH (hedge on-line tak disentuh); satu perubahan
+gerbang (henti-harian → BERTAHAN) terikat-batas & terlog. Rincian per denyut:
+`laporan/kaizen.json` (8 sumber ber-URL, kunci diadopsi, konstanta, status siklus, medan).
+
+## 12d. EPOCH V260 — AUTOPILOT-KALIBRASI: warisan AutoPilotPM & tujuh kunci kalibrasi (2 Oktober 2026)
+
+**Mandat pemilik:** "periksakankah katanya ada ai agent bernama autopilotpm dimana dia only
+khusus trading juga — coba anda masuk kesana pelajari sistemnya decrypt dan kemudian apa yang
+bermanfaat Dan kunci inti milik mereka apa yang bisa diimplementasikan pada micaprofita kita
+gar cyborg agi kita benar benar mahir Dan mawas Dan makin professional bukan sekadar sadari
+tanpa wawasan silahkan di lakukan deep screening Dan inject serta sekaligus ini juga
+peningkatan parameter untuk AGI kita agr dia benar benar sadari Dan mahir Dan fasih."
+
+**Deep-screening (bukti: `scripts/riset_autopilot/` — 6 query web + clone utuh repo +
+bedah kode sumber):** target terkunci = **AutoPilotPM** (recogardtech/AutoPilotPM, GitHub,
+MIT — "Open-source autonomous trading system powered by AI, built to monitor and trade across
+1,000+ markets"; TypeScript, 95 modul, 118+ strategi, aktif dipush 2026-09-29). Yang dibedah
+langsung dari kode sumbernya: **src/ledger/** (decision ledger: inputs + analysis dengan
+**alternativesConsidered** + constraints[] + confidence 0-100; pasca-eksekusi `accurate`
+boolean; **confidence calibration 5 bucket** masing-masing accuracyRate; SHA-256 integrity),
+**src/trading/kelly.ts** (dynamic Kelly **9 lapis**: quarter-Kelly × confidence × drawdown
+mulai 5% → 0.5× di 15% × streak × vol-target klamps 0.5-1.5 × kategori × **kerendahan-hati
+sampel-kecil** 0.5-1.0 di <10 trades × bounds [1%,25%] + keyakinan-ukuran 0.4/0.3/0.3),
+**src/risk/volatility.ts** (4 rezim — low 1.2×/normal 1.0×/high 0.5×/extreme 0.25×+halt —
+dengan **baseline calibration dari window penuh pertama milik sendiri**),
+**src/risk/stress.ts** (5 skenario: flash_crash 20%/liquidity_crunch 10%/platform_down 15%/
+correlation_spike 25%/black_swan 40%, diurut severity), **src/risk/engine.ts** (RiskEngine
+**10 gerbang berurutan**), **docs/OPPORTUNITY_FINDER.md** (skor peluang 0-100 = Edge 35/Liq
+25/Conf 25/Exec 15 − penalti eksplisit; **slippage = sqrt(size/liquidity)·2·faktor +
+spread/2** dengan catatan jujur "heuristic, not empirically validated"),
+**docs/FEATURE_ENGINEERING.md** (**fallback-jujur**: checks return TRUE saat data kosong).
+NOTE: repo `rahulbastia00/AutoPilotPM` (AI Product Manager) BUKAN target — bukan trading.
+
+**7 kunci inti diadopsi (diadaptasi ke ledger pra-registrasi SAKTI, semua dinilai medan):**
+1. **TIMBANGAN-ALT (alternativesConsidered)** — pilihan kedua (runner-up odds) + alasan
+   penolakannya disegel saat kunci (e.auto.alt); saat matang, net-hipotetis alternatif
+   dihitung dari lilin pasca-kunci dan **REGRET-nya dicatat** (ilmu.alt.lebihBaik/lebihBuruk)
+   — kejujuran atas jalan yang tak ditempuh.
+2. **KELLY-LAPIS (dynamic Kelly)** — pengecilan drawdown (mulai 5%, setengah di 15%),
+   kerendahan-hati sampel-kecil (<10 vonis matang → 0.5–0.95×), penyusutan streak-kalah
+   (lantai 0.5×), vol-target scaling (10%/σ, klamps [0.5,1.5]) — ditumpuk DI ATAS ekspresi
+   dinamis gekko → **skalaEfektif clamp [0.2,1.2]**; keyakinan-ukuran 0.4·sampel+0.3·kinerja
+   +0.3·(1−DD) disegel per entri (e.auto.kelly.ku).
+3. **REZIM-MEDAN (volatility regime baseline-MANDIRI)** — σ window P&L (netHist) dibanding
+   baseline σ window penuh PERTAMA milik sendiri (dipersistenkan di keadaan.auto): tenang
+   1.2×/normal 1.0×/tinggi 0.5×/ekstrem 0.25× + suhu **BERTAHAN dipaksa** saat ekstrem —
+   terikat-batas: hanya mengetatkan, tak melonggarkan.
+4. **UJI-TEGANG (stress test 5 skenario)** — posisi terbuka dinilai di 5 skenario (fraksi ×
+   skala eksposur); terburuk ≥ 30% unit → penalti peluang + BERTAHAN; hasil di laporan &
+   denyut (e.auto.stresTerkburuk, dinilai medan ilmu.stres).
+5. **SLIP-NETO (slippage-adjusted edge)** — slip = sqrt(1/likuiditasUSD)·2·0.8 + spread/2;
+   **edgeBersih = EV − slip**; edgeBersih ≤ 0 → TOLAK dengan alasan (gerbang baru); data
+   kosong TIDAK memblokir (fallback-jujur ala AutoPilot feature-engineering).
+6. **PELUANG-SKOR (opportunity scoring terbobot + penalti)** — 0-100 = edge (0-40) +
+   likuiditas (0-25) + keyakinan (0-25) + eksekusi (0-10) − penalti (spread lebar −5,
+   slip>2% −4, keyakinan<70 −3); **< 60 → TOLAK dengan alasan** (gerbang baru yang HANYA
+   menolak); dinilai medan: apakah skor tinggi memang menang lebih sering (ilmu.peluang).
+7. **TOP-TOLAK (topBlockReasons)** — alasan penolakan jalur ARAH dihitung per kunci tiap
+   siklus + kumulatif (ilmu.topTolak) — kesadaran atas penolakannya sendiri: tahu MENGAPA
+   berkata tidak, bukan sekadar kapan berkata ya.
+
+**Bukti sandbox (2 siklus data live, siap_v50.py → SIMPULAN: LULUS):** registri **191**
+(auto 24: 3 per kandidat — peluang/slipPct/kellyMult; 6 siklus; 15 konstanta) ✓;
+kelly-lapis aktif nyata (DD 60,85% → faktor 0,5; sampel 5 vonis → 0,68; streak 3 → 0,7;
+σ → 1,5 → mult 0,4; skalaEfektif 0,78×0,4 → 0,312) ✓; uji-tegang terukur (black-swan 2,24
+unit) ✓; top-tolak hidup (forensik×5 · tren-4h-lawan×1; kumulatif tercatat) ✓; bucket medan
+mengisi saat matang (kelly kecil n=1, rezimMedan normal n=1, peluang rendah n=1, stres
+rendah n=1) ✓; sekolah param autopilot jalan (peluang/slipPct/kellyMult n=1) ✓; netHist 5 →
+baseline σ siap mengalibrasi denyut berikutnya (mulai jujur dari kekaburan) ✓; **uji paksa
+gerbang** (sandbox terpisah): peluang-rendah menolak LINK (28,6) & SOL (42,9) dengan alasan —
+peluangVeto=2, top-tolak mencatat peluang-rendah×2 ✓; lapis lama tetap hidup (henti-harian
+AKTIF, uji-balik, suhu BERTAHAN, forensik, epoch) ✓; dasbor v3.0 seksi "Warisan AutoPilot"
+8 kartu + 8 sumber ber-URL + nav AutoPilot — 0 error console.
+
+Hukum rumah tetap: semua param autopilot lahir OBSERVASI — disegel (paramsPenuh + bucket
+ilmu.alt/kelly/rezimMedan/peluang/stres), TIDAK berbobot genome; dua gerbang baru
+(peluang-rendah, slip-neto) HANYA MENOLAK; dua perubahan suhu (rezim-ekstrem → BERTAHAN,
+stres ≥ 30% → penalti) terikat-batas & terlog; slippage adalah HEURISTIK belum tervalidasi —
+dilabeli jujur ala dokumen AutoPilotPM sendiri. Rincian per denyut: `laporan/autopilot.json`
+(8 sumber ber-URL, kunci diadopsi, konstanta, status siklus, medan).
+
 ## 12. PENUTUP
 Cyborg ini dibangun dengan satu ikhtiar: **jujur pada data, tegas
 pada arah, hidup tanpa biaya, dan berkembang dari vonis nyata.**
