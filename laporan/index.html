@@ -228,6 +228,7 @@
     <a href="#kaizen-sec">Kaizen</a>
     <a href="#autopilot-sec">AutoPilot</a>
     <a href="#claw-sec">ClawTrade</a>
+    <a href="#impas-sec">Impas</a>
     <a href="#bahan-ajar-sec">Bahan Ajar</a>
     <a href="#ilmu-sec">Ilmu</a>
     <a href="#warisan-sec">Warisan</a>
@@ -342,7 +343,7 @@
   <div class="narasi-makro" id="narasi-makro">—</div>
   <div id="veto-waw" style="margin-top:10px"></div>
   <div class="gulir" style="margin-top:12px"><table class="tabel">
-    <thead id="waw-head"><tr><th>Simbol</th><th>Rezim</th><th>Funding</th><th>OI / Δ</th><th id="waw-cols" colspan="12" style="text-align:center">12 parameter inti berbobot (arah param — arahkan kursor untuk bacaan analis; 232 param bernama di wawasan.json)</th></tr></thead>
+    <thead id="waw-head"><tr><th>Simbol</th><th>Rezim</th><th>Funding</th><th>OI / Δ</th><th id="waw-cols" colspan="12" style="text-align:center">12 parameter inti berbobot (arah param — arahkan kursor untuk bacaan analis; 254 param bernama di wawasan.json)</th></tr></thead>
     <tbody id="waw-body"><tr><td colspan="16" style="color:var(--samar)">—</td></tr></tbody>
   </table></div>
   <div id="sekolah-box" style="margin-top:12px"></div>
@@ -374,6 +375,10 @@
   <h2 id="claw-sec">Warisan ClawTrade — Pagar-Baja &amp; Komite Panjia (Kelompok 5 Suara, Kartu Risiko 4×25, Tangga Ukuran, Menunggu-Mandat)</h2>
   <div class="sub" style="margin-top:-6px">hasil deep-screening keluarga <b>"ClawTrade"</b> dari KODE SUMBER — <b>yuxuan-lou/ClawTrade</b> (security middleware: <i>"treat your AI agent as an untrusted client"</i> — guardrails.py hard rules di luar jangkauan otak, confirmation.py antrean konfirmasi ber-kadaluarsa, audit.py append-only) + <b>clawtradeai-Agent/ClawTradeAI</b> (MIT, multi-agent Solana): disiplin struktural diterjemahkan jadi mekanisme — <b>pagar-baja</b> (konstanta keras yang otak baca tapi tak bisa tulis: kuota-harian, langit-langit slip, ukuran maks), <b>komite panjia</b> (5 suara berbobot tetap — tren/kerumunan/derivatif/buku/tegangan; suara rusak = bobot nol; koherensi searah &lt; minconf 0.6 → SKIP), <b>kartu risiko 4×25</b> (likuiditas/derivatif/kerumunan/volatilitas; &gt; 70 → veto-saksi), <b>tangga ukuran</b> (1.0/0.5/0.25/nol — tak ada ukuran antara), <b>menunggu-mandat</b> (ukuran tertinggi antre + kadaluarsa 12 jam, kunci hanya setelah lolos gerbang ulang), <b>daftar-hitam</b> (3× kartu-panas → pendingin 48 jam), dan <b>buku-tekok</b> (setiap blok tercatat per-aturan ala audit append-only)</div>
   <div id="claw-box" style="margin-top:12px"></div>
+
+  <h2 id="impas-sec">Warisan IMPAS — Lima Gerbang yang Mengikat (Zona-Chase, Karantina-Kalibrasi, Alokasi-Dinamis, Stop/Target Wajib, Ambang-Impas)</h2>
+  <div class="sub" style="margin-top:-6px">jawaban 4 kasus dev dari <b>ledger sendiri</b> (64 rapor matang: akurasi 37,5% · net −30,9% · PF 0,68 — ARAH ak 16,7%/PF 0,07 pendarah chasing dasar-rentang; PHOENIX ak 45,8%/PF 1,232 satu-satunya di atas impas): <b>zona-chase</b> (SELL di dasar / BUY di puncak rentang DIBLOK saat kunci — backtest PF 0,68→0,93), <b>karantina-kalibrasi</b> (keyakinan × faktor-jalur akurasi/jangkar &lt; 40 → jalur dikarantina otomatis, pulih saat medan membaik — backtest ekspek −0,48%→+0,07%), <b>alokasi-dinamis</b> (kuota per jalur dari EV trailing shrinkage Beta(4,4) — pendarah lantai 2, jalur sehat menerima sisanya, dua arah), <b>stop/target wajib</b> (36/36 ARAH lahir telanjang — kini dari kerucut MC, default-jujur bila kosong), <b>ambang-impas</b> (net-cum &lt; 0 → ambang odds naik maks +20, melonggar sendiri saat pulih)</div>
+  <div id="impas-box" style="margin-top:12px"></div>
 
   <h2 id="bahan-ajar-sec">Bahan Ajar — Pelajaran &amp; Aturan dari Medan</h2>
   <div id="aturan-baru" style="margin:0 0 12px"></div>
@@ -1005,14 +1010,14 @@ function isiWawasan(r){
     $('dualapis-box').innerHTML =
       '<div class="iklim-grid" style="margin:10px 0">'
       + kartu('Lapis OTAK (chat/arena)', 'triliunan param', 'model bahasa penuh + web real-time + memori penuh — tempat Anda bicara dengan SAKTI langsung')
-      + kartu('Lapis TUBUH (GitHub)', (reg.totalNama || 232) + ' param bernama', 'otak otonom di Actions: tanpa biaya, tanpa browser, kecerdasan dari parameter terukur di bawah ini')
+      + kartu('Lapis TUBUH (GitHub)', (reg.totalNama || 254) + ' param bernama', 'otak otonom di Actions: tanpa biaya, tanpa browser, kecerdasan dari parameter terukur di bawah ini')
       + kartu('Pengukuran / denyut', reg.pengukuranPerDenyut != null ? reg.pengukuranPerDenyut.toLocaleString('id-ID') : '—', 'parameter per kandang × 10 + metakognisi × kandidat — dihitung nyata tiap 30 menit')
       + kartu('Pengukuran terekam (est.)', kum ? (kum > 1e6 ? (kum / 1e6).toFixed(2) + ' jt' : kum.toLocaleString('id-ID')) : '—', 'estimasi = pengukuran/denyut × ' + (w.siklus || 0) + ' siklus hidup — tumbuh tiap denyut')
       + '</div>'
       + '<div style="margin:8px 0"><b style="font-size:12.5px">Jembatan dua lapis — domain parameter per kandang (' + (reg.perKandang || '—') + ' param):</b><div style="margin-top:6px">' + domChips + '</div></div>'
       + '<div style="margin:8px 0"><b style="font-size:12.5px">' + (reg.observasiV257 || 21) + ' param SAMUDRA-DALAM baru (V257) — status sekolah masing-masing (param baru lahir TANPA hak suara, mengumpulkan bukti dulu):</b><div style="margin-top:6px">' + v257Chips + '</div></div>'
       + '<div class="jnote" style="border-left-color:var(--sian)"><b>Kesimpulan jujur:</b> versi chat memang lebih canggih HARI INI — ia adalah otaknya. Tapi setiap denyut 30 menit, lapis tubuh mengerjakan yang tidak bisa lapis chat: <b>pra-registrasi prediksi, dinilai medan, disekolahkan, dievolusikan genome-nya, DAN KINI MENGUJI-BALIK SETIAP PERUBAHANNYA SENDIRI</b> — tanpa biaya, tanpa tidur, tanpa bisa berdalih. Jurang dua lapis ditutup dengan cara satu-satunya yang jujur: otak menuliskan wawasannya menjadi parameter terukur (167 kini), dan tubuh membuktikannya di medan.</div>'
-      .replace('167 kini', '232 kini');
+      .replace('167 kini', '254 kini');
   }
   // ===== V256 MESIN DEAL & ODDS — warisan 3Commas × Trade Ideas =====
   const dox = r.dealOdds || {};
@@ -1178,6 +1183,34 @@ function isiWawasan(r){
         + '<div class="sub" style="margin-top:8px">semua param claw lahir OBSERVASI — disegel per kandidat (komite/kartu/kuanta), disekolahkan via paramsPenuh, TIDAK berbobot genome; semua gerbang claw HANYA MENOLAK (pagar-baja, komite, kartu, kuanta, slip-maks, mandat); keyakinan komite = koherensi searah yang terukur dari param sendiri (kalibrasi jujur, bukan copy confidence LLM) — rincian penuh di laporan/clawtrade.json</div>';
     } else {
       clwBox.innerHTML = '<div class="jnote">Warisan ClawTrade menunggu denyut V261 berikutnya — data belum tersedia (jujur, tidak dikarang).</div>';
+    }
+  }
+  // ===== V262 IMPAS-CERDAS — audit 4 kasus dev + lima gerbang impas =====
+  const imp = r.impas || {};
+  const impBox = $('impas-box');
+  if (impBox){
+    if (imp.identitas){
+      const skI = imp.siklusIni || {};
+      const koI = imp.konstanta || {};
+      const btI = imp.backtest || {};
+      const j4 = imp.jawaban4Kasus || {};
+      const impKartu = (l, v, s2) => `<div class="kartu"><div class="label">${l}</div><div class="angka">${v}</div><div class="sub">${s2 || ''}</div></div>`;
+      const stJ4 = (k) => (j4[k] || {}).status || '—';
+      impBox.innerHTML =
+        '<div class="iklim-grid" style="margin:10px 0">'
+        + impKartu('Faktor kalibrasi medan', `ARAH ${skI.faktorKalibArah ?? '—'} · PHX ${skI.faktorKalibPhx ?? '—'}`, `janji vs penapaian: ARAH menjanjikan ~57% menepati ~32% → karantina; PHOENIX 70–74 terkalibrasi 50–53 → tetap mengalir — pulih sendiri saat hit-rate naik`)
+        + impKartu('Kuota dinamis per jalur', `ARAH ${skI.kuotaArah ?? '—'} · PHX ${skI.kuotaPhx ?? '—'}`, `dari EV trailing-20 shrinkage Beta(4,4) — pendarah tersisa lantai ${koI.KUOTA_FLOOR ?? 2} utk tetap belajar; potongan berlaku dua arah`)
+        + impKartu('Ambang-impas', `${skI.ambangOddsEfektif ?? '—'} (tambahan +${skI.tambahanAmbang ?? 0})`, `net-cum ${skI.netCumPct ?? '—'}% &lt; 0 → selektivitas naik saat darah; melonggar SENDIRI saat rapor pulih (maks +${koI.AMBANG_TAMBAH_MAKS ?? 20})`)
+        + impKartu('Gerbang impas menolak', `zona ${skI.zonaCt ?? 0} · karantina ${skI.karantinaCt ?? 0} · alokasi ${skI.alokasiCt ?? 0}`, `zona ≤ ${koI.ZONA_CHASE ?? 0.5} anti-chase · kalibrasi &lt; ${koI.KALIB_AMBANG ?? 40} → karantina — semua MENGIAT saat kunci, bukan catatan kosong`)
+        + impKartu('Backtest mundur', `PF ${(btI.baseline || {}).pf ?? '—'} → ${(btI.zonaSaja || {}).pf ?? '—'}`, `zona saja: net ${(btI.baseline || {}).netSumPct ?? '—'}% → ${(btI.zonaSaja || {}).netSumPct ?? '—'}%; kalibrasi saja: ekspek ${(btI.kalibrasiSaja || {}).netSumPct != null ? '→ +' + btI.kalibrasiSaja.netSumPct.toFixed(2) + '%' : '—'} — replay 64 rapor, bukan janji`)
+        + impKartu('Stop/target wajib (kasus D)', '36/36 → 0 telanjang', `stop/target pra-registrasi dari kerucut MC (rugi/gain median net-fee) · default-jujur ${koI.STOP_DEFAULT_PCT ?? 1.8}/${koI.TARGET_DEFAULT_PCT ?? 2.6}% bila MC kosong · penjaga-kedua hard 15%/40% di atasnya`)
+        + '</div>'
+        + '<div style="margin:8px 0"><b style="font-size:12.5px">Status jawaban 4 kasus dev:</b> '
+        + ['kasusA_biasSell', 'kasusB_volatilitas', 'kasusC_phoenixVsArah', 'kasusD_tanpaStop'].map((k) => `<span class="chip">${(j4[k] || {}).pertanyaan ? k.replace('kasus', '').split('_')[0] + ': ' + stJ4(k) : ''}</span>`).join(' ')
+        + '</div>'
+        + '<div class="jnote" style="border-left-color:var(--hijau)"><b>Organ aktif (V262):</b> ' + imp.identitas + '. <b>Rincian, jawaban lengkap per kasus &amp; kejujuran backtest:</b> laporan/impas.json — semua gerbang impas HANYA MENOLAK/MENGETATkan; faktor, kuota &amp; ambang dihitung ulang tiap denyut dari ledger (tanpa tangan manusia).</div>';
+    } else {
+      impBox.innerHTML = '<div class="jnote">Warisan IMPAS menunggu denyut V262 berikutnya — data belum tersedia (jujur, tidak dikarang).</div>';
     }
   }
 }
