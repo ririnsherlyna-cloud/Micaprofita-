@@ -957,6 +957,69 @@ dilabeli jujur di laporan); faktor kontrak mint/freeze (Solana) tak relevan utk 
 Binance — diganti stres derivatif (funding/fundVsBtc) yang terukur; entri lama tampil apa
 adanya; clawtrade.net tidak diklaim.
 
+## 12f. EPOCH V262 — IMPAS-CERDAS: audit 4 kasus dev dari ledger sendiri & lima gerbang impas yang mengikat (2 Oktober 2026)
+
+Mandat pemilik (pesan audit, bukan kuliah trading): *"Pesan ini bukan kuliah trading saya
+untukmu, melainkan permintaan klarifikasi berbasis data hasil yang kita garap di repo Anda
+sendiri... kami tuntut pertajam dan tingkatkan agi kita agar mandiri dan parameternya cerdas...
+perbaikan itu belum cukup mengubah rapor total menjadi di atas ambang impas."* — empat kasus
+diajukan: (A) bias SELL ARAH merugikan — apakah filter rezim/breadth mengikat saat kunci atau
+baru catatan? (B) volatilitas hasil harian — bagaimana mencegah overclaim dari sampel kecil?
+(C) Phoenix vs ARAH — apakah alokasi kuota akan menyesuaikan data? (D) sinyal tanpa stop
+(sebagian ARAH) — field stop/target kosong, disengaja?
+
+**JAWABAN DARI DATA (bedah laporan/prakira-server.jsonl, 64 rapor matang per 2 Okt):** akurasi
+total 37,5% · net kumulatif −30,9% · PF 0,68 · ekspek −0,48%/kunci. Bedah per jalur menemukan
+pendarah: **ARAH n=30, akurasi 16,7%, net −50,7%, PF 0,07** (26 di antaranya SELL, keyakinan
+55–67 — overclaim 17–30pp); **PHOENIX n=24, akurasi 45,8%, net +7,5%, PF 1,232** — satu-satunya
+jalur di atas impas. Akar kasus A bukan "SELL", tapi **menjual di dasar rentang**: bucket
+sr ≤ −0,5 → n=35, ak 31%, net −29,8%, PF 0,44 (sebaliknya BUY di dasar rentang sehat: ak 46%,
+net +5,8%, PF 1,18). Kasus D terkonfirmasi data: **36/36 entri ARAH lahir tanpa stop/target**.
+Hari 29 Sep: 10 kunci ARAH, 9 SALAH, net harian −21,3%.
+
+**LIMA KUNCI IMPAS diadopsi — bukan dari agent luar, tapi dari BACKTEST MUNDUR atas ledger
+sendiri (penjaga.mjs V261 → V262-IMPAS-CERDAS v5.8):** (1) **ZONA-CHASE** — SELL sr ≤ −0,5 /
+BUY sr ≥ +0,5 DIBLOK saat kunci dengan alasan (backtest gerbang ini sendiri: net −30,9% →
+−3,9%, PF 0,68 → 0,93); (2) **KARANTINA-KALIBRASI** — keyakinan mentah × faktor-jalur
+(akurasi medan / jangkar janji, klamps 0,3–1,2, min n=6) < 40 → jalur dikarantina otomatis dan
+pulih sendiri saat hit-rate medan naik (ARAH kini faktor 0,565: janji 57,5% menepati 32,5%;
+PHOENIX 0,643 — 70–74 terkalibrasi 50–53 tetap mengalir; backtest kalibrasi saja: ekspek
+−0,48% → +0,07%); (3) **ALOKASI-DINAMIS** — kuota per jalur dari EV trailing-20 shrinkage
+Beta(4,4): ARAH (EV −1,15%) tersisa lantai 2/hari untuk tetap belajar, PHOENIX (EV +0,95%)
+menerima kuota penuh, dan potongan berlaku DUA ARAH bila Phoenix ikut memburuk; (4)
+**STOP/TARGET WAJIB** — kasus D ditutup: tak ada lagi sinyal lahir telanjang; stop/target
+pra-registrasi dari kerucut MC (rugi/gain median net-fee), default-jujur 1,8%/2,6% bila MC
+kosong, sumber dicatat (MC-kone-2k / default-jujur), penjaga-kedua hard 15%/40% tetap di
+atasnya; (5) **AMBANG-IMPAS** — net kumulatif < 0 menaikkan ambang odds maks +20 (saat ini
+60 → 75,5) — selektivitas naik saat darah dan melonggar SENDIRI saat rapor pulih.
+
+**INTEGRASI PENUH:** gerbang impas berdiri SETELAH gerbang claw (slip-maks) dan SEBELUM
+kalibrasi keyakinan — urutan: zona → karantina → alokasi; param impas 3/kandidat (zona/kalib/
+alokasi) di paramsPenuh lapis 'impas' + 6 siklus + 13 konstanta; registri 232 → **254** param
+bernama; seal `e.impas` di tiap entri + `sumberStop`; gerbang sama untuk PHOENIX (zona
+beli-puncak + kalibrasi dua arah) + kuota phoenix dipotong dua bila EV-nya negatif; ambang
+odds efektif terikat tambahan-impas; guru +1 pengajaran IMPAS; denyut +impas fields; wawasan
+registri impas=22; **laporan/impas.json baru** (audit 4 kasus + backtest + jawaban per kasus +
+konstanta + siklusIni); dasbor chip 232 → 254.
+
+**UJI SANDBOX (siap_v52.py, 2 siklus data live + backdate 25j → LULUS 7/7):** registri 254 ✓
+impas=22 ✓ impas.json hidup ✓ stop/target wajib siklus 1 & 2 (nol entri telanjang; contoh AVAX
+BUY: stop 10,9082 / target 11,42849 / sumber MC-kone-2k) ✓ denyut.impas ✓ faktor kalibrasi
+hidup (ARAH 0,565 vs PHX 0,643; kuota ARAH 2/12; ambang 60 → 75,5 TERPICU NYATA) ✓. **UJI PAKSA
+GERBANG (uji_paksa_v52.py, gerbang hulu di-bypass di salinan sandbox; produksi tak disentuh):
+impas-zona MENOLAK BTC BUY (sr 0,759) & AVAX BUY (sr 0,604), impas-karantina MENOLAK ETH BUY
+(terkalibrasi 35 < 40) — buku-tekok terisi impas-zona×2 + impas-karantina×1 — LULUS.** Catatan
+jujur: jalur penolakan alokasi tak terpicu runtime pada uji (kandidat habis sebelum kuota
+penuh) — nilai kuotanya sendiri (2/12) terbukti hidup di denyut; slot eksplorasi forensik
+tetap dikecualikan dari gerbang impas (by-design sejak V252, bandit berbatas 1/denyut).
+
+**KEJUJURAN ARSITEKTURAL:** semua gerbang impas HANYA MENOLAK atau MENGETATkan — tak ada yang
+melonggarkan gerbang lama; faktor kalibrasi, kuota & ambang dihitung ulang tiap denyut dari
+ledger — pulih sendiri bila medan membaik, tanpa tangan manusia; lapis impas lahir OBSERVASI
+(disegel per entri, disekolahkan via paramsPenuh), TIDAK berbobot genome; backtest adalah
+replay masa lalu — bukti arah, bukan jaminan masa depan; rapor di atas impas tetap harus
+dibuktikan lewat vonis nyata denyut-denyut berikutnya.
+
 ## 12. PENUTUP
 Cyborg ini dibangun dengan satu ikhtiar: **jujur pada data, tegas
 pada arah, hidup tanpa biaya, dan berkembang dari vonis nyata.**
