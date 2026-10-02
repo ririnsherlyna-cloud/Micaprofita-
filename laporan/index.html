@@ -224,6 +224,7 @@
     <a href="#metakognisi-sec">Metakognisi</a>
     <a href="#dualapis-sec">Dua Lapis Otak</a>
     <a href="#dealodds-sec">Deal &amp; Odds</a>
+    <a href="#gekko-sec">Gekko</a>
     <a href="#bahan-ajar-sec">Bahan Ajar</a>
     <a href="#ilmu-sec">Ilmu</a>
     <a href="#warisan-sec">Warisan</a>
@@ -258,6 +259,7 @@
       <span class="chip">kompas <b id="kompaschip">…</b></span>
       <span class="chip">wawasan <b id="dimchip">…</b></span>
       <span class="chip">odds top <b id="oddschip">…</b></span>
+      <span class="chip">suhu <b id="suhuchip">…</b></span>
       <span class="chip">dimutakhir <b id="waktu">…</b></span>
     </div>
   </header>
@@ -337,7 +339,7 @@
   <div class="narasi-makro" id="narasi-makro">—</div>
   <div id="veto-waw" style="margin-top:10px"></div>
   <div class="gulir" style="margin-top:12px"><table class="tabel">
-    <thead id="waw-head"><tr><th>Simbol</th><th>Rezim</th><th>Funding</th><th>OI / Δ</th><th id="waw-cols" colspan="12" style="text-align:center">12 parameter inti berbobot (arah param — arahkan kursor untuk bacaan analis; 127 param bernama di wawasan.json)</th></tr></thead>
+    <thead id="waw-head"><tr><th>Simbol</th><th>Rezim</th><th>Funding</th><th>OI / Δ</th><th id="waw-cols" colspan="12" style="text-align:center">12 parameter inti berbobot (arah param — arahkan kursor untuk bacaan analis; 145 param bernama di wawasan.json)</th></tr></thead>
     <tbody id="waw-body"><tr><td colspan="16" style="color:var(--samar)">—</td></tr></tbody>
   </table></div>
   <div id="sekolah-box" style="margin-top:12px"></div>
@@ -353,6 +355,10 @@
   <h2 id="dealodds-sec">Mesin Deal &amp; Odds — Warisan 3Commas × Trade Ideas</h2>
   <div class="sub" style="margin-top:-6px">hasil deep-screening dua platform trading-AI profesional (dokumentasi resmi help.3commas.io + trade-ideas.com): tiap sasaran kini lahir dengan <b>rencana deal lengkap</b> — safety orders ala DCA-bot (Max SO hard-cap, deviasi ATR berkelipatan, volume multiplier), Move SL to Breakeven, Trailing Take Profit — dipra-registrasi lalu <b>dinilai medan</b> saat horizon matang; dan setiap denyut SEMUA kandidat diranked <b>odds 0-100</b> ala OddsMaker (40% MC + 25% zona + 20% metakognisi + 15% daya) — hanya <b>top-3 terkuat (Money Machine)</b> berodds ≥ 55 yang boleh mengunci; 6 tag peristiwa event-based dinilai hit-rate-nya: pinpoint winning filters, eliminate losing variables</div>
   <div id="dealodds-box" style="margin-top:12px"></div>
+
+  <h2 id="gekko-sec">Warisan Gekko — Prediksi Kolektif (Allora) &amp; Keberanian Terukur (CZAR)</h2>
+  <div class="sub" style="margin-top:-6px">hasil deep-screening <b>Gekko Agent</b> (Axal × Virtuals × Allora — agen trading AI di Base) + <b>CZAR Loss</b> (Allora Foundation, arXiv 2609.36061): 6 topik pekerja memberi <b>suara kolektif bertingkat-regret</b> ala Allora Topics — bobot topik berubah dari medan, tidak ada yang berkuasa permanen; tiap vonis matang ditilang <b>CZAR</b> — kemenangan kecil ≈ nol credit, kekalahan kena floor + kuadratik — lalu <b>akurasi-impas</b> dihitung dari rata menang/rugi medan sendiri; <b>ekspresi dinamis 0.25–1.0×</b> (Allora×G.A.M.E), <b>divergensi</b> ramalan vs probabilitas pasar, <b>suhu Autopilot</b> (AGRESIF/NETRAL/BERTAHAN terikat-batas — PF&lt;1 memaksa BERTAHAN), dan <b>sidik sha256 pra-registrasi</b> di tiap prediksi (verifiable autonomy)</div>
+  <div id="gekko-box" style="margin-top:12px"></div>
 
   <h2 id="bahan-ajar-sec">Bahan Ajar — Pelajaran &amp; Aturan dari Medan</h2>
   <div id="aturan-baru" style="margin:0 0 12px"></div>
@@ -599,13 +605,23 @@ function isiSasaran(r){
         const dm = s.dealMedan;
         db += '<div class="jnote" style="margin-top:8px;border-left-color:var(--hijau)"><b>HASIL MEDAN RENCANA DEAL:</b> ' + (dm.ket || '') + (dm.bep ? ' · BEP aktivasi: ' + (dm.bep.aktivasiKena ? 'kena' : 'tidak') + (dm.bep.menyelamatkan ? ' — MENYELAMATKAN posisi' : '') : '') + (dm.trail ? ' · trailing: peak ' + fmt(dm.trail.peakHarga) + ' (+' + dm.trail.ekstraPct + '% di atas T1)' : '') + '</div>';
       }
+      // V258 GEKKO-CZAR — meta-inferensi kolektif + probPasar + divergensi + ekspresi + sidik
+      if (s.topik && s.topik.metaArah){
+        const selaras = s.topik.metaArah === s.arah;
+        db += '<span class="wchip ' + (selaras ? 'up' : 'dn') + '" title="Meta-inferensi kolektif ala Allora Topics (mesin di balik Gekko Agent/Axal): 6 topik pekerja memberi suara arah, bobot = exp(-0.9·regret) dari medan">meta <b>' + s.topik.metaArah + (s.topik.metaKeyakinan != null ? ' ' + s.topik.metaKeyakinan + '%' : '') + '</b> ' + (selaras ? 'selaras' : 'LAWAN') + '</span>';
+        db += '<span class="wchip" title="Suara per topik (arah·bobot) — bobot topik berubah dari medan (regret-minimization ala Allora)">' + (s.topik.suara || []).map((sv) => sv.topik + ' ' + (sv.arah > 0 ? '▲' : '▼') + sv.bobot).join(' · ') + '</span>';
+      }
+      if (s.probPasar != null) db += '<span class="wchip" title="P(naik) implisit dari harga kerumunan NYATA: agresor taker + kerumunan LS + funding + EMA4h (Allora prediction-markets)">prob pasar <b>' + Math.round(s.probPasar * 100) + '%</b></span>';
+      if (s.divergensi != null) db += '<span class="wchip ' + (Math.abs(s.divergensi) >= 0.18 ? 'up' : '') + '" title="Divergensi = keyakinan komite − P(arah komite) pasar — terpisah ≥0.18 berarti komite melawan harga kerumunan (edge atau jebakan — dinilai medan)">divergensi <b>' + (s.divergensi > 0 ? '+' : '') + s.divergensi + '</b></span>';
+      if (s.ekspresi?.skala != null) db += '<span class="wchip" title="Skala eksposur dinamis ala Allora×G.A.M.E: 0.25–1.0× unit standar dari odds + keyakinan − volatilitas ekstrem − kerumunan funding">ekspresi <b>' + s.ekspresi.skala + '×</b></span>';
+      if (s.sidikPrakunci) db += '<span class="wchip" title="Sidik sha256 pra-registrasi payload prediksi — tamper-evident ala verifiable agents (Axal): siapa pun bisa rekalkulasi">sidik <b>' + String(s.sidikPrakunci).slice(0, 8) + '</b>…</span>';
       dbEl.innerHTML = db;
     }
     const nar = el.querySelector('.narasi');
     if (s.narasi){ nar.style.display = 'block'; nar.innerHTML = '<b style="color:var(--violet)">NARASI ANALIS —</b> ' + s.narasi; }
     el.querySelector('.wawgrid').innerHTML = (() => {
       const w = s.wawasan || [];
-      const inti = w.filter((p) => p.lapis !== 'observasi');
+      const inti = w.filter((p) => p.lapis !== 'observasi' && p.lapis !== 'gekko');
       const obs = w.length - inti.length;
       const chips = inti.map((p) => {
         const cls = p.arah > 0.15 ? 'up' : p.arah < -0.15 ? 'dn' : '';
@@ -874,6 +890,8 @@ function isiWawasan(r){
   const w = r.wawasan360 || {};
   const reg = w.registri || {};
   $('dimchip').textContent = reg.totalNama ? reg.totalNama + ' param' : (w.dimensi ? w.dimensi + ' dim' : '—');
+  const gkk = r.gekko || {};
+  $('suhuchip').textContent = gkk.suhuSiklusIni?.temper ? (gkk.suhuSiklusIni.temper + ' · ' + (gkk.suhuSiklusIni.ambangEfektif ?? '—')) : '—';
   const ik = w.iklim || {};
   const okx = ik.okx || {};
   const kartu = (label, angka, sub, warna) => `<div class="kartu"><div class="label">${label}</div><div class="angka"${warna ? ` style="color:${warna}"` : ''}>${angka}</div><div class="sub">${sub || ''}</div></div>`;
@@ -972,13 +990,13 @@ function isiWawasan(r){
     $('dualapis-box').innerHTML =
       '<div class="iklim-grid" style="margin:10px 0">'
       + kartu('Lapis OTAK (chat/arena)', 'triliunan param', 'model bahasa penuh + web real-time + memori penuh — tempat Anda bicara dengan SAKTI langsung')
-      + kartu('Lapis TUBUH (GitHub)', (reg.totalNama || 127) + ' param bernama', 'otak otonom di Actions: tanpa biaya, tanpa browser, kecerdasan dari parameter terukur di bawah ini')
+      + kartu('Lapis TUBUH (GitHub)', (reg.totalNama || 145) + ' param bernama', 'otak otonom di Actions: tanpa biaya, tanpa browser, kecerdasan dari parameter terukur di bawah ini')
       + kartu('Pengukuran / denyut', reg.pengukuranPerDenyut != null ? reg.pengukuranPerDenyut.toLocaleString('id-ID') : '—', 'parameter per kandang × 10 + metakognisi × kandidat — dihitung nyata tiap 30 menit')
       + kartu('Pengukuran terekam (est.)', kum ? (kum > 1e6 ? (kum / 1e6).toFixed(2) + ' jt' : kum.toLocaleString('id-ID')) : '—', 'estimasi = pengukuran/denyut × ' + (w.siklus || 0) + ' siklus hidup — tumbuh tiap denyut')
       + '</div>'
       + '<div style="margin:8px 0"><b style="font-size:12.5px">Jembatan dua lapis — domain parameter per kandang (' + (reg.perKandang || '—') + ' param):</b><div style="margin-top:6px">' + domChips + '</div></div>'
       + '<div style="margin:8px 0"><b style="font-size:12.5px">' + (reg.observasiV257 || 21) + ' param SAMUDRA-DALAM baru (V257) — status sekolah masing-masing (param baru lahir TANPA hak suara, mengumpulkan bukti dulu):</b><div style="margin-top:6px">' + v257Chips + '</div></div>'
-      + '<div class="jnote" style="border-left-color:var(--sian)"><b>Kesimpulan jujur:</b> versi chat memang lebih canggih HARI INI — ia adalah otaknya. Tapi setiap denyut 30 menit, lapis tubuh mengerjakan yang tidak bisa lapis chat: <b>pra-registrasi prediksi, dinilai medan, disekolahkan, dievolusikan genome-nya</b> — tanpa biaya, tanpa tidur, tanpa bisa berdalih. Jurang dua lapis ditutup dengan cara satu-satunya yang jujur: otak menuliskan wawasannya menjadi parameter terukur (127 kini), dan tubuh membuktikannya di medan.</div>';
+      + '<div class="jnote" style="border-left-color:var(--sian)"><b>Kesimpulan jujur:</b> versi chat memang lebih canggih HARI INI — ia adalah otaknya. Tapi setiap denyut 30 menit, lapis tubuh mengerjakan yang tidak bisa lapis chat: <b>pra-registrasi prediksi, dinilai medan, disekolahkan, dievolusikan genome-nya</b> — tanpa biaya, tanpa tidur, tanpa bisa berdalih. Jurang dua lapis ditutup dengan cara satu-satunya yang jujur: otak menuliskan wawasannya menjadi parameter terukur (145 kini), dan tubuh membuktikannya di medan.</div>';
   }
   // ===== V256 MESIN DEAL & ODDS — warisan 3Commas × Trade Ideas =====
   const dox = r.dealOdds || {};
@@ -1013,6 +1031,42 @@ function isiWawasan(r){
     } else {
       $('oddschip').textContent = '—';
       doxBox.innerHTML = '<div class="jnote">Mesin Deal &amp; Odds menunggu denyut V256 berikutnya — data belum tersedia (jujur, tidak dikarang).</div>';
+    }
+  }
+  // ===== V258 GEKKO-CZAR — warisan Gekko Agent (Axal) + CZAR Loss (arXiv 2609.36061) =====
+  const gk = r.gekko || {};
+  const gkBox = $('gekko-box');
+  if (gkBox){
+    if (gk.identitas){
+      const suh = gk.suhuSiklusIni || {};
+      const ai = gk.akurasiImpas || {};
+      const cz = gk.czar || {};
+      const tp = gk.topik || [];
+      const ex = gk.ekspresiMedan || {};
+      const dv = gk.divergensiMedan || {};
+      const suhuWarna = suh.temper === 'BERTAHAN' ? 'var(--merah)' : suh.temper === 'AGRESIF' ? 'var(--hijau)' : 'var(--amber)';
+      const darahNeg = ai.darahAkurasi != null && ai.darahAkurasi < 0;
+      const tK = (l, v, s2) => `<div class="kartu"><div class="label">${l}</div><div class="angka">${v}</div><div class="sub">${s2 || ''}</div></div>`;
+      const tpRows = tp.map((t) => `<tr><td><b>${t.topik}</b></td><td><b>${t.bobotKini}</b></td><td>${t.regret}</td><td>${t.n}</td><td>${t.hitPct != null ? t.hitPct + '%' : '—'}</td><td class="${(t.netPct || 0) > 0 ? 'net-pos' : (t.netPct || 0) < 0 ? 'net-neg' : ''}">${(t.netPct || 0) > 0 ? '+' : ''}${t.netPct}%</td><td style="color:${t.status === 'pembicara-dipercaya' ? 'var(--hijau)' : t.status === 'dibisukan' ? 'var(--merah)' : 'var(--amber)'}"><b>${t.status}</b></td></tr>`).join('');
+      const gKartu = (l, v, s2) => `<div class="kartu"><div class="label">${l}</div><div class="angka">${v}</div><div class="sub">${s2 || ''}</div></div>`;
+      gkBox.innerHTML =
+        '<div class="jnote" style="border-left-color:var(--sian)"><b>Organ aktif (V258):</b> ' + gk.identitas + '. <b>Sumber resmi:</b> ' + (gk.sumberResmi || []).map((u) => `<span style="font-size:10.5px">${u}</span>`).join(' · ') + '</div>'
+        + '<div class="iklim-grid" style="margin:10px 0">'
+        + gKartu('Suhu Autopilot', `<span style="color:${suhuWarna}">${suh.temper ?? '—'}</span>`, `ambang odds efektif <b>${suh.ambangEfektif ?? '—'}</b> (baseline ${suh.baselineAmbang ?? '—'}) · kuota ARAH <b>${suh.kuotaArah ?? '—'}</b> (baseline ${suh.baselineKuota ?? '—'}) — ${(suh.alasan || []).join('; ') || 'kondisi netral'}`)
+        + gKartu('Akurasi impas (CZAR)', (ai.impasPct != null ? ai.impasPct + '%' : '—'), `breakeven WR dari rata menang/rugi medan — akurasi ${ai.akurasiPct ?? '—'}% · <span style="color:${darahNeg ? 'var(--merah)' : 'var(--hijau)'}">darah ${ai.darahAkurasi != null ? (ai.darahAkurasi > 0 ? '+' : '') + ai.darahAkurasi : '—'}</span> (negatif = aktivitas menggerus modal)`)
+        + gKartu('CZAR rata', cz.rata ?? '—', 'skor asimetris rata per vonis matang — negatif = penalti kekalahan mendominasi; benar-kecil ≈ nol credit (n=' + (cz.n ?? 0) + ')')
+        + gKartu('Sidik pra-registrasi', gk.sidikPraKunci ?? '—', 'prediksi membawa sha256 pra-registrasi — tamper-evident ala verifiable agents (Axal)')
+        + gKartu('Ekspresi tinggi vs rendah', (ex.tinggi?.n ?? 0) + (ex.rendah?.n ?? 0) > 0 ? (ex.tinggi?.n ?? 0) + ' / ' + (ex.rendah?.n ?? 0) : '—', `net kumulatif: tinggi ${(ex.tinggi?.net ?? 0) > 0 ? '+' : ''}${((ex.tinggi?.net ?? 0) * 100).toFixed(1)}% vs rendah ${(ex.rendah?.net ?? 0) > 0 ? '+' : ''}${((ex.rendah?.net ?? 0) * 100).toFixed(1)}% — eksposur dinamis Allora×G.A.M.E dinilai medan`)
+        + gKartu('Divergensi kuat (n/hit)', (dv.kuat?.n ?? 0), `prediksi terpisah ≥0.18 dari probabilitas pasar — hit ${(dv.kuat?.n ? ((dv.kuat.benar / dv.kuat.n) * 100).toFixed(0) : '—')}% · net ${((dv.kuat?.net ?? 0) * 100).toFixed(1)}% — edge atau jebakan, diukur`)
+        + '</div>'
+        + '<h3 style="margin:10px 0 6px">Meta-Inferensi Kolektif — 6 topik ala Allora Topics</h3>'
+        + '<div class="gulir"><table class="tabel"><thead><tr><th>Topik</th><th>Bobot kini</th><th>Regret</th><th>n</th><th>Hit-rate</th><th>Net</th><th>Status</th></tr></thead><tbody>'
+        + (tpRows || '<tr><td colspan="7" style="color:var(--samar)">—</td></tr>') + '</tbody></table></div>'
+        + '<div class="sub" style="margin-top:6px">bobot topik = exp(−0.9·regret) — suara sesuai kemenangan menurunkan regret, suara keliru menaikkannya; lantai bobot 0.15 — tidak ada topik berkuasa permanen</div>'
+        + '<div class="jnote" style="margin-top:10px;border-left-color:var(--violet)"><b>Kunci inti diadopsi:</b> ' + (gk.kunciDiadopsi || []).map((k) => `<div style="margin-top:5px">▸ ${k}</div>`).join('') + '</div>'
+        + '<div class="sub" style="margin-top:8px">semua param gekko lahir OBSERVASI — disekolahkan via paramsPenuh, berhak veto lewat gerbang lama, TIDAK berbobot genome sebelum hit-rate medan lulus; satu perubahan gerbang (suhu Autopilot) terikat-batas &amp; terlog — rincian penuh di laporan/gekko.json</div>';
+    } else {
+      gkBox.innerHTML = '<div class="jnote">Warisan Gekko menunggu denyut V258 berikutnya — data belum tersedia (jujur, tidak dikarang).</div>';
     }
   }
 }
