@@ -14,7 +14,10 @@ name: SARANG-PENJAGA (denyut server SAKTI)
 on:
   push:
   schedule:
-    - cron: '*/15 * * * *'
+    # V267 (2026-10-03): menit NON-bulat 7/15 — GitHub Actions terbukti
+    # melewatkan jadwal pada menit bulat puncak beban (denyut #52/#54
+    # terlewat 03:45→09:15 & 09:45→11:20); menit 7 menghindari keramaian.
+    - cron: '7/15 * * * *'
   workflow_dispatch:
 
 permissions:
