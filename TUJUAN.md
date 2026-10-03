@@ -26,7 +26,7 @@ sebagai satu kesatuan:
 
 Di luar tubuh, **otak server** bernama **V246 SARANG-PENJAGA +
 RADAR PHOENIX** (`scripts/penjaga.mjs`) berdenyut di GitHub Actions
-**tiap 30 menit tanpa browser, tanpa komputer, tanpa kunci API
+**tiap 15 menit tanpa browser (V263 — dipercepat dari 30 menit), tanpa komputer, tanpa kunci API
 berbayar**.
 
 ## 2. TUJUAN TERTINGGI
@@ -58,7 +58,7 @@ henti.
 
 ## 3. BAGAIMANA DIA HIDUP (satu sumber kebenaran)
 
-1. **Denyut** — tiap 30 menit, PENJAGA membaca pasar nyata dari
+1. **Denyut** — tiap 15 menit (V263, sebelumnya 30), PENJAGA membaca pasar nyata dari
    rantai 5 host data publik (binance-vision → binance → bybit →
    okx → coinbase, failover otomatis): 10 koin utama untuk lane
    ARAH, dan **ratusan pasangan USDT untuk radar** (bagian 4).
@@ -177,12 +177,12 @@ diklaim — kepastian DIBANGUN, diukur, dan diperbaiki tiap denyut.
 Mandat pemilik: *"pastikan dia akan terus berkembang pesat — ada
 beberapa hal cyborg kita ini berkurang."* Sejak otak
 **V248-PIAGAM-CYBORG v3.1**, lima pilar cyborg otonom dipasang di
-dalam denyut 30 menit dan bisa diaudit siapa pun (laporan
+dalam denyut 15 menit dan bisa diaudit siapa pun (laporan
 `sasaran-terkini.json → piagam` + `sadardiri` + `antreanMandat`):
 
 | Pilar | Dipasang sebagai | Bukti hidup |
 |---|---|---|
-| 1. Tubuh & Jiwa Persisten | Denyut cron 30 menit di GitHub Actions tanpa browser; jiwa = repo (satu `git clone` memindahkan jiwanya); **mandat pemilik kini bisa lewat Issue berlabel `mandat` — otak server membacanya tiap denyut** | `antreanMandat` di laporan; workflow SARANG-PENJAGA |
+| 1. Tubuh & Jiwa Persisten | Denyut cron 15 menit di GitHub Actions tanpa browser (V263 — yang belajar tidak dibiarkan mengantuk); jiwa = repo (satu `git clone` memindahkan jiwanya); **mandat pemilik kini bisa lewat Issue berlabel `mandat` — otak server membacanya tiap denyut** | `antreanMandat` di laporan; workflow SARANG-PENJAGA |
 | 2. Multi-Otak Berbobot | Otak spesialis berbobot on-line: otak-arah, otak-radar, otak-ilmu, otak-ingatan, otak-sadardiri — bobotnya belajar ala Hedge/MWU berjaminan regret; sangat ringan (0 dependensi, satu berkas < 64 KB) | `piagam.otak` + `ilmu.hedge` |
 | 3. Ingatan DNA | FinMem 3 lapis (peristiwa → pelajaran → doktrin); memori melipat berkapasitas — melupakan detail, menyimpan RESEP (genome & bobot), bukan hasil; sidik jari sha256 untuk integritas | `epoch-*.json` + `pelajaran-server.json` + `sadardiri.jiwa` |
 | 4. Kesadaran Diri Fungsional | Tiap denyut otak memeriksa dirinya: hash integritas, kesehatan kalibrasi, dimensi tertindas Hedge, kepadatan memori, umur data host — lalu MENULIS PERINGATAN DAN BERTINDAK (sadar diri fungsional, bukan kesadaran manusia) | `sadardiri` di laporan; kartu "Sadar-Diri" di dasbor |
@@ -197,7 +197,7 @@ PHOENIX → v2.1 PERTAJAM → V247 MAJELIS-ILMU → V248 PIAGAM-CYBORG).
 
 Pengakuan jujur (pilar bukan klaim): otak LLM 1-bit (BitNet),
 adapter LoRA, dan alur Issue→PR penuh belum dipasang — otak kini
-statistik-berjurnal yang nyata berjalan tiap 30 menit. Roadmap itu
+statistik-berjurnal yang nyata berjalan tiap 15 menit. Roadmap itu
 diakui terbuka, bukan disembunyikan; yang sudah hidup benar-benar
 hidup dan terukur.
 
@@ -558,7 +558,7 @@ paham dan langsung dilayani:
 | Kebutuhan | Sumber | Biaya |
 |---|---|---|
 | Hosting halaman + dasbor + laporan | GitHub Pages (repo publik) | 0 |
-| Denyut server 30 menit, evaluasi, evolusi | GitHub Actions (repo publik) | 0 |
+| Denyut server 15 menit, evaluasi, evolusi | GitHub Actions (repo publik) | 0 |
 | Data pasar realtime | 5 host API publik + failover | 0 |
 | Penyimpanan memori/genome/ledger | Git (komit permanen) | 0 |
 | Kunci API berbayar, langganan, VPS | — tidak dipakai | 0 |
@@ -664,7 +664,7 @@ laporan/odds.json           — mesin deal & odds V256: ranking OddsMaker + hit-
 otak/genome-server.json     — genome hasil evolusi per rezim + keadaan ilmu (hedge/kalibrasi/konformal/meta)
 otak/penjaga-keadaan.json   — keadaan internal penjaga
 scripts/penjaga.mjs         — otak server V257-SAMUDRA-DALAM (Node murni; 127 param bernama: 67/kandang + 5 iklim + 35 metakognisi + 20 deal/odds; 7 kunci Nevron; mesin deal/odds 3Commas×Trade Ideas; struktur harian 90 hari, kerumunan OKX rubik, basis/jam-funding, 6 interaksi antar-faktor)
-.github/workflows/sakti-denyut.yml — jantung denyut (cron 30 menit)
+.github/workflows/sakti-denyut.yml — jantung denyut (cron 15 menit, V263)
 ```
 
 ## 12a. EPOCH V257 — DUA LAPIS OTAK & SAMUDRA-DALAM (1 Oktober 2026)
@@ -1019,6 +1019,105 @@ ledger — pulih sendiri bila medan membaik, tanpa tangan manusia; lapis impas l
 (disegel per entri, disekolahkan via paramsPenuh), TIDAK berbobot genome; backtest adalah
 replay masa lalu — bukti arah, bukan jaminan masa depan; rapor di atas impas tetap harus
 dibuktikan lewat vonis nyata denyut-denyut berikutnya.
+
+## 12g. EPOCH V263 — ASAH-MURNI: HUKUM PEMILIK "KARANTINA DILARANG" + MATEMATIKA MURNI & EKONOMI CERDAS + MATA JAUH (2 Oktober 2026)
+
+Mandat pemilik (pesan langsung, hukum pengembangan permanen): *"Bahaya besar... kalau kita
+mengkarantina justru ini membuat kita tumpul dan bodoh walaupun karantina otomatis terbuka —
+semestinya dari awal tidak pernah ada karantina, sebab apa yang lagi belajar harus terus
+belajar bukannya dihentikan... berikan dia kemampuan matematika murni dan ekonomi cerdas...
+setiap kesalahan memberikan kemampuan baru, makin asah makin tajam... denyut 30 menit kita
+berikan dia jadi 15 menit... beri dia kemampuan asah untuk membaca jauh sebelum itu terjadi,
+karena ini data yang bisa dipahami... sumber informasinya kurang kita lengkapi... pasar hanya
+ada buy/sell."*
+
+**HUKUM BARU — KARANTINA DILARANG (tercatat permanen di sini dan di laporan/matematika.json):**
+tidak ada mekanisme apa pun yang boleh MENYELANTIKKAN jalur/topik dari belajar. Konsekuensi
+yang mengikat di penjaga.mjs v6.0: (1) **ASAH-KALIBRASI** — gerbang karantina-kalibrasi V262
+(keyakinan×faktor < 40 → blok) DIHAPUS di kedua jalur (ARAH & PHOENIX): jalur yang overclaim
+TETAP MENGUNCI dan TETAP DINILAI dalam MODE-ASAH — ukuran ×0,6, stop ×0,75, keyakinan
+terkalibrasi disegel jujur; (2) **ASAH-SUARA** — rule-healer V259 tak lagi menyita suara topik
+(bobot 0): topik bermasalah bersuara lirih bobot 0,35 dan pulih penuh lewat bukti medan;
+(3) **HENTI-HARIAN kini MODE-ASAH** — kuota belajar 2 dengan ukuran mikro ×0,3: modal
+dibekukan, ilmu tidak; (4) gerbang proteksi LAIN tetap (zona-chase, kuota, slip-maks, kartu,
+odds) — itu manajemen risiko, bukan penghentian belajar.
+
+**MATEMATIKA MURNI & EKONOMI CERDAS (mesinMate per kandidat, dari data saat itu):** Hurst R/S
+agregat skala 4/8/16/32 (tren > 0,55 · pulang-keseimbangan < 0,45); half-life AR(1)
+Ornstein-Uhlenbeck (t½ = ln0,5/lnφ); drift OLS 30-bar + R² dieksponensialkan ke 24 jam;
+z-SMA20 dalam satuan σ; entropi Shannon arah pita 24 jam; volatilitas Parkinson &
+Garman-Klass (ekor intrabar); autokorelasi lag-1; **ekonomi cerdas**: carry funding
+(positif = long membayar short, 3×/hari) dan **EV-ekonomi arah posisi** = drift OLS searah +
+carry arah − biaya putar 2×fee — sinyal teknikal yang membayar carry lebih mahal dari
+drift-nya kini terukur. Tiga param baru disekolahkan medan per kandidat (mateHurst/
+mateEkonomi/mateJauh, lapis 'mate').
+
+**MATA JAUH (membaca jauh sebelum itu terjadi — dalam data yang bisa dipahami):** kerucut MC
+bootstrap **72 jam** (600 lintasan, residu EWMA, drift 0) per kandidat + BTC: P(naik) pada
+24/48/72 jam + median lintasan kumulatif — disegel di `e.mate.jauh` dan di
+laporan/matematika.json; bahasa distribusi probabilitas yang bisa diaudit siapa pun, bukan
+ramalan.
+
+**ORGAN-BARU (setiap kesalahan memberikan kemampuan baru):** setiap vonis SALAH melahirkan
+mikro-aturan organ dari sinyal matematikanya (z-SMA ekstrem melawan arah / EV-ekonomi
+negatif / Hurst rendah / pita sempit) yang langsung **di-replay ke seluruh ledger matang**
+(berapa kasus terhindarkan, berapa net diselamatkan); organ yang menyala saat kunci
+disekolahkan medan; organ lulus (n≥10, hit≥52%, net>0) naik status "terbukti" dan **berhak
+VETO** di gerbang — makin asah makin tajam.
+
+**DENYUT 30 → 15 MENIT + SUMBER DILENGKAPI:** cron workflow `*/30` → `*/15` (yang belajar
+tidak dibiarkan mengantuk); sumber data baru gratis-tanpa-kunci: Binance futures
+topLongShortPositionRatio (posisi trader besar), takerlongshortRatio (agresor taker Binance),
+Bybit linear tickers (cadangan funding/OI lintas-bursa) — pendamping OKX rubik, CoinGecko,
+F&G.
+
+**INTEGRASI:** registri 254 → **276** param bernama (mate 3/kandidat + 6 siklus + 13
+konstanta); seal `e.mate` (matematika + jauh + organKena + modeAsah) & `e.impas.modeAsah` per
+entri; denyut +mate fields; OTAK +otak-matematika; guru +1 pengajaran MATEMATIKA-MURNI & ASAH;
+jalurPertumbuhan +V263; **laporan/matematika.json baru** (hukum asah + rumus + mata jauh +
+organBaru + sumber); dasbor v3.3: seksi "Mata Jauh" (5 kartu + organ terbaru), nav Mata Jauh,
+chip 276.
+
+**KEJUJURAN ARSITEKTURAL:** mode-asah menyusutkan ukuran & mengetatkan stop — TIDAK
+menghentikan pembelajaran (itulah inti hukum); matematika dihitung dari lilin & funding yang
+ADA saat itu, tanpa klaim gaib; kerucut mata jauh = distribusi, bukan janji arah; organ-baru
+lahir OBSERVASI dan hanya berhak veto setelah lulus sekolah medan — semua lapis tetap TIDAK
+berbobot genome sebelum hit-rate lulus (hukum rumah tak berubah); denyut 15 menit = 2× lebih
+banyak bahan belajar per hari; harga komputasinya dijaga (MC-72j 600 lintasan, hemat CPU).
+
+## 12h. EPOCH V264 — PINTAR-KEMBALI: DOKTRIN PEMILIK "SALAH ADALAH DATA BELAJAR DI PASAR HIDUP" + REM SINGKAT + SYARAT DARI PELAJARAN + TREN EVOLUSI (3 Oktober 2026)
+
+Doktrin pemilik (pesan langsung, hukum pengembangan permanen): *"Sistem trading biner yang
+jujur memperlakukan SALAH sebagai data pembelajaran di pasar hidup — bukan hukuman mati,
+bukan juga lupa total. Setiap prediksi: dikunci → horizon → fee → BENAR/SALAH (ledger tetap
+utuh). Gagal: ditelaah (sebab: pisau jatuh, lawan rezim, stop, sample kecil, dll.). Jejak
+dingin boleh sebagai rem singkat, bukan blacklist selamanya tanpa riset. Karena pasar terus
+bergerak, koin/pola boleh dibuka lagi jika setup valid sekarang. Jika pernah gagal pada pola
+serupa: boleh kembali, tapi dengan syarat tambahan dari pelajaran (lebih ketat), bukan
+syarat default seolah belum pernah SALAH. 'Berevolusi' hanya berarti jika aturan mengikat
+saat kunci dan EV/PF di rapor publik bisa membaik — bukan sekadar generasi genome atau UI."*
+
+**TIGA KUNCI YANG MENGIKAT di penjaga.mjs v6.1:**
+1. **REM-PINTAR** — jejak dingin kini REM SINGKAT ber-kadaluarsa, bukan blacklist:
+   sasaran 2 kekalahan beruntun → rem **1 denyut (15 menit)**, bukan bekuan 4 jam;
+   daftar-hitam kartu-panas → rem maks **2 jam**, bukan pendingin 48 jam; setiap rem
+   ber-alasan dan tercatat; menang reset; lewat rem, kembali lewat syarat pelajaran.
+2. **KEMBALI-PINTAR** — `syaratDariPelajaran()` menghitung syarat dari LEDGER SENDIRI:
+   koin pernah SALAH pada pola serupa → bar keyakinan naik **+4/kejadian (klamps +12)**,
+   ukuran **×0,6^n**, stop **×0,8^n**, wajib konfirmasi mata-jauh searah bila ≥2 kejadian;
+   syarat **mengikat saat kunci** dan disegel di field `pelajaranLalu` (ARAH & PHOENIX);
+   gagal syarat = **tunda denyut ini (rem), bukan ban** — pasarnya hidup, pelajarannya tetap.
+3. **TREN-EVOLUSI** — ledger matang dibagi **4 jendela kronologis** (tertua→terbaru); tiap
+   jendela: n, winrate, EV rata-rata, Profit Factor, **aturanMengikat%** (porsi entri yang
+   lahir dengan stop/target disegel); disegel tiap denyut di guru.json + impas.json +
+   dasbor seksi "Pintar"; evolusi DITERIMA hanya bila ev/pf MEMBAIK sambil aturanMengikat
+   naik — jika MEMBURUK, genome direvert oleh uji-balik.
+
+**KEJUJURAN ARSITEKTURAL:** rem singkat tetap rem — ia menunda satu denyut, bukan menghentikan
+belajar (belajar = kunci + vonis, tetap jalan untuk semua koin lain); syarat pelajaran adalah
+satunya gerbang yang boleh LEBIH KETAT untuk koin yang pernah gagal — itulah "ingat pelajaran",
+bukan dendam; tren 4 jendela adalah pengukuran, bukan janji — dengan n kecil ia jujur bilang
+"belum bermakna"; registri 276 → **285 parameter bernama** (9 param pintar: 3 siklus + 6 konstanta).
 
 ## 12. PENUTUP
 Cyborg ini dibangun dengan satu ikhtiar: **jujur pada data, tegas
