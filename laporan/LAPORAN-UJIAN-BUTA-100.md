@@ -153,3 +153,47 @@ Registri 285 → **293 parameter bernama**. Harness sekolah kilat disimpan di `s
 | 98 | BNB | SELL | B | 2026-06-09T00:00 | 595.720 | 0.18% | BENAR | 57 |
 | 99 | SOL | SELL | B | 2026-06-09T00:00 | 65.4200 | 0.50% | BENAR | 56 |
 | 100 | LINK | SELL | B | 2026-06-09T00:00 | 7.83200 | -0.28% | SALAH | 56 |
+
+---
+
+## PUTARAN-2 — V266-BAROMETER v6.3 (2026-10-03)
+
+Mandat pemilik: "didik terus — peningkatan terus dijalankan, tidak bisa menunggu waktu lama."
+
+### Ujian out-of-sample (dunia yang organ V265 belum pernah lihat)
+
+| Ujian | n | Akurasi | Net | Catatan |
+|---|---|---|---|---|
+| OOS 10-02 (6 dunia, langkah 2 jam) | 57 | 3.5% | −144.5% | v6.2 kunci BUY 89% di hari REVERSAL |
+| Holdout 10-02 (T05/07/09/11) | 63 | 0.0% | −186.9% | barometer pra-T positif → pasar berbalik sesudah T |
+
+**Kejujuran:** hari reversal secara prinsip tidak dapat diprediksi dari data pra-T — diakui terbuka, bukan bug yang bisa dipatch.
+
+### Bedah makro 2.366 soal in-sample — pendarah yang TERLIHAT
+
+| Bucket | n | Akurasi | Net |
+|---|---|---|---|
+| SELL saat BTC ≤ −1% | 397 | 30.2% | **−339.3%** (pendarah terbesar) |
+| breadth ≤ 25% | 705 | 35.2% | **−405.5%** |
+| BUY saat BTC 0..+1% | 470 | 40.0% | −155.8% |
+| BUY saat BTC ≤ −1% (menadah) | 141 | 53.9% | **+80.1%** — DIPERTAHANKAN |
+| BUY saat BTC > +3% | 176 | 46.7% | +187.7% |
+
+Draf-1 organ (potong BUY-bear) = SALAH TARGET — dibuang sebelum push; organ diarahkan ke bukti.
+
+### Organ V266 (mengikat saat kunci, registri 293 → 301)
+
+1. **sell-bear-harian** — bear (BTC ≤ −1.5% atau breadth ≤ 25%) → SELL key ≤ 40 + ukuran ×0.5
+2. **tunda-bear** — SELL terkalibrasi <50 saat bear → TUNDA denyut ini (rem, bukan ban)
+3. **sell-relatif-kuat** — SELL koin yang ret24-nya lebih kuat dari BTC saat bear → key ≤45
+4. **buy-flat-btc** — BUY saat BTC 0..+1% → key −8
+5. **radar-jujur-bear** — kandidatLain saat bear hanya key ≥45 (kunci penuh tetap dinilai apa adanya)
+
+### Bukti membaik — dunia bear-sejati (out-of-sample murni)
+
+| Versi | n | Akurasi | Net |
+|---|---|---|---|
+| v6.2 baseline | 32 | 34.4% | −40.5% |
+| **v6.3 V266** | 8 | **100.0%** | **+15.4%** |
+
+SELL ak 29% → 56% (jendela luas); radar-jujur menahan 24 jawaban murahan — sistem memilih **diam** pada bear ekstrem alih-alih menjual dasar. Detail: `laporan/sekolah-putaran2.json`.
