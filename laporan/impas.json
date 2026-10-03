@@ -1,36 +1,36 @@
 {
   "protokol": "SASARAN-MICAPROFITA",
-  "organ": "V262-IMPAS-CERDAS v5.8",
-  "dihasilkan": "2026-10-03T00:38:31.774Z",
-  "siklus": 50,
+  "organ": "V264-PINTAR-KEMBALI v6.1",
+  "dihasilkan": "2026-10-03T03:36:59.963Z",
+  "siklus": 51,
   "mandat": "audit 4 kasus dev berbasis data + tuntutan \"pertajam dan tingkatkan AGI agar mandiri dan parameternya cerdas\" — dijawab dengan BACKTEST MUNDUR atas ledger sendiri (64 rapor matang, bukan copy agent luar)",
   "auditLedger": {
     "total": {
-      "n": 64,
-      "akurasiPct": 37.5,
-      "netCumPct": -30.92
+      "n": 70,
+      "akurasiPct": 38.6,
+      "netCumPct": -49.22
     },
     "jalurArah": {
-      "n": 40,
-      "benar": 13,
-      "faktor": 0.565,
-      "hitShrunk": 0.321,
-      "evShrunk": -0.011540190476190476,
-      "keyakinanRata": 57.5,
-      "akurasiPct": 32.5,
-      "menangRata": 0.007686,
-      "rugiRata": 0.020647333333333334
+      "n": 41,
+      "benar": 14,
+      "faktor": 0.593,
+      "hitShrunk": 0.357,
+      "evShrunk": -0.01174503401360544,
+      "keyakinanRata": 57.6,
+      "akurasiPct": 34.1,
+      "menangRata": 0.006648333333333333,
+      "rugiRata": 0.021963571428571426
     },
     "jalurPhoenix": {
-      "n": 24,
-      "benar": 11,
-      "faktor": 0.643,
+      "n": 29,
+      "benar": 13,
+      "faktor": 0.623,
       "hitShrunk": 0.5,
-      "evShrunk": 0.0095325,
-      "keyakinanRata": 71.3,
-      "akurasiPct": 45.8,
-      "menangRata": 0.038882999999999994,
-      "rugiRata": 0.019817999999999995
+      "evShrunk": -0.0012659999999999998,
+      "keyakinanRata": 71.9,
+      "akurasiPct": 44.8,
+      "menangRata": 0.032728,
+      "rugiRata": 0.03526
     },
     "temuan": [
       "ARAH: n=30, akurasi 16.7%, net −50.7%, PF 0.07 — pendarah utama; 26 di antaranya SELL di rezim apa pun dengan keyakinan 55–67",
@@ -69,8 +69,8 @@
     },
     "kasusB_volatilitas": {
       "pertanyaan": "Bagaimana mencegah overclaim dari sample kecil?",
-      "jawaban": "KALIBRASI-MEDAN multiplikatif: keyakinan × faktor-jalur (akurasi medan / jangkar janji, klamps 0.3–1.2, min n=6) < 40 → karantina; kuota jalur n<8 dipotong dua; ambang odds naik sendiri saat net-cum < 0 (maks +20); henti-harian V259 tetap aktif. Overclaim tidak lagi gratis.",
-      "status": "diperbaiki-mengikat"
+      "jawaban": "KALIBRASI-MEDAN multiplikatif mengikat: keyakinan × faktor-jalur (akurasi medan / jangkar janji, klamps 0.3–1.2, min n=6) — V263 REVISI (hukum pemilik: karantina DILARANG): di bawah ambang 40 jalur TIDAK lagi diblok, tapi masuk MODE-ASAH (ukuran ×0.6, stop ×0.75, terkalibrasi disegel jujur) — belajar terus tanpa overclaim gratis; kuota jalur n<8 dipotong dua; ambang odds naik sendiri saat net-cum < 0 (maks +20); henti-harian kini juga mode-asah (kuota belajar 2, ukuran ×0.3).",
+      "status": "diperbaiki-mengikat + disempurnakan-V263"
     },
     "kasusC_phoenixVsArah": {
       "pertanyaan": "Apakah alokasi fokus/kuota akan menyesuaikan data?",
@@ -129,14 +129,89 @@
     ],
     "total": 22
   },
+  "trenEvolusi": {
+    "cukupData": true,
+    "jendela": [
+      {
+        "n": 17,
+        "winratePct": 58.8,
+        "evPct": 0.01,
+        "pf": 1.01,
+        "aturanMengikatPct": 35,
+        "rentang": "2026-09-28 → 2026-09-29"
+      },
+      {
+        "n": 17,
+        "winratePct": 17.6,
+        "evPct": -1.27,
+        "pf": 0.31,
+        "aturanMengikatPct": 35,
+        "rentang": "2026-09-29 → 2026-09-30"
+      },
+      {
+        "n": 17,
+        "winratePct": 29.4,
+        "evPct": -0.81,
+        "pf": 0.36,
+        "aturanMengikatPct": 35,
+        "rentang": "2026-09-30 → 2026-10-01"
+      },
+      {
+        "n": 19,
+        "winratePct": 47.4,
+        "evPct": -0.74,
+        "pf": 0.64,
+        "aturanMengikatPct": 58,
+        "rentang": "2026-10-01 → 2026-10-02"
+      }
+    ],
+    "metode": "ledger matang dibagi 4 jendela kronologis tertua→terbaru — aturan yang mengikat harus terlihat di angka, bukan di klaim",
+    "kecenderungan": {
+      "ev": "MEMBURUK",
+      "pf": "MEMBURUK",
+      "winrate": "MEMBURUK",
+      "aturanMengikat": "MEMBAIK",
+      "evDeltaPct": -0.75,
+      "pfDelta": -0.37
+    },
+    "hukum": "evolusi DITERIMA hanya bila kecenderungan ev/pf MEMBAIK sambil aturanMengikatPct naik — jika MEMBURUK, genome direvert oleh uji-balik; klaim tanpa angka adalah kebohongan"
+  },
+  "doktrinPintar": {
+    "sumber": "hukum pemilik 2026-10-03: SALAH = data belajar di pasar hidup — bukan hukuman mati, bukan juga lupa total",
+    "remPintar": "jejak dingin = REM SINGKAT ber-kadaluarsa: sasaran 1 denyut (15 menit, sebelumnya 4 jam), keluarga 1 denyut, kartu-panas maks 2 jam (sebelumnya 48 jam) — setiap rem ber-alasan dan tidak pernah mematikan belajar",
+    "kembaliPintar": "koin/pola yang pernah gagal BOLEH dibuka lagi jika setup valid sekarang — dengan SYARAT TAMBAHAN dari pelajaran yang lebih ketat dan mengikat saat kunci (bar keyakinan +4/kejadian klamps +12, ukuran ×0.6^n, stop ×0.8^n, wajib mata-jauh searah ≥2 kejadian), disegel di field pelajaranLalu",
+    "siklusIni": {
+      "kembaliPintar": 0,
+      "remPelajaran": 0,
+      "remSasaranAktif": 0,
+      "dinginSasaran": 0,
+      "dinginFam": 0
+    },
+    "paramPintar": {
+      "siklus": [
+        "kembaliPintarCt",
+        "remPelajaranCt",
+        "remAktifCt"
+      ],
+      "konst": [
+        "syaratKeyPerKej",
+        "syaratKeyMaks",
+        "syaratSkalaF",
+        "syaratStopF",
+        "syaratWajibMate",
+        "wajibKeyDasar"
+      ],
+      "total": 9
+    }
+  },
   "siklusIni": {
-    "faktorKalibArah": 0.565,
-    "faktorKalibPhx": 0.643,
+    "faktorKalibArah": 0.593,
+    "faktorKalibPhx": 0.623,
     "kuotaArah": 2,
-    "kuotaPhx": 6,
-    "netCumPct": -30.92,
-    "tambahanAmbang": 15.5,
-    "ambangOddsEfektif": 75.5,
+    "kuotaPhx": 3,
+    "netCumPct": -49.22,
+    "tambahanAmbang": 20,
+    "ambangOddsEfektif": 80,
     "zonaCt": 0,
     "karantinaCt": 0,
     "alokasiCt": 0
