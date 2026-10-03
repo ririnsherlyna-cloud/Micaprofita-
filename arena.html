@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MICAPROFITA — Arena AGI Kripto (Permanen)</title>
+<meta name="description" content="Arena AGI kripto permanen: MICAPROFITA vs 5 rival, data Binance langsung, otak berevolusi di browser Anda.">
+<style>
+:root{
+  --bg:#0a0e17;--panel:#111827;--panel2:#0d1420;--line:#1f2a3d;--tx:#e5edf7;--dim:#8aa0b8;
+  --em:#10b981;--red:#ef4444;--amber:#f59e0b;--blue:#3b82f6;--vio:#8b5cf6;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font:14px/1.55 ui-sans-serif,system-ui,"Segoe UI",Roboto,Arial,sans-serif;padding-bottom:60px}
+a{color:var(--blue);text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header{border-bottom:1px solid var(--line);background:linear-gradient(180deg,#0d1322,#0a0e17);padding:18px 0 14px;position:sticky;top:0;z-index:50;backdrop-filter:blur(6px)}
+.hrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+h1{font-size:19px;letter-spacing:.4px}
+h1 b{color:var(--em)}
+.sub{color:var(--dim);font-size:12px;margin-top:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{font-size:11px;padding:3px 9px;border:1px solid var(--line);border-radius:999px;color:var(--dim);background:var(--panel2);white-space:nowrap}
+.chip.on{color:#a7f3d0;border-color:#065f46}
+.chip.warn{color:#fde68a;border-color:#78350f}
+.chip.vio{color:#ddd6fe;border-color:#4c1d95}
+h2{font-size:15px;margin:26px 0 10px;display:flex;align-items:center;gap:8px}
+h2 .t{color:var(--dim);font-weight:400;font-size:12px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{color:var(--dim);font-weight:600;text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+td{padding:8px;border-bottom:1px solid #16202f}
+tr:last-child td{border-bottom:none}
+.num{font-variant-numeric:tabular-nums;text-align:right}
+.up{color:var(--em);font-weight:600}
+.down{color:var(--red);font-weight:600}
+.dim{color:var(--dim)}
+.bar{height:7px;border-radius:4px;background:#1a2434;overflow:hidden;min-width:70px}
+.bar i{display:block;height:100%;border-radius:4px}
+.pos i{background:linear-gradient(90deg,#065f46,var(--em))}
+.neg i{background:linear-gradient(90deg,#7f1d1d,var(--red))}
+.me{outline:2px solid #065f46;border-radius:8px;background:#0c1a16}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:1fr 1fr}
+@media(max-width:860px){.g2{grid-template-columns:1fr}}
+.picks{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+.pk{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px}
+.pk .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.sym{font-size:16px;font-weight:700;letter-spacing:.3px}
+.dir{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px}
+.buy{background:#064e3b;color:#6ee7b7}
+.sell{background:#7f1d1d;color:#fca5a5}
+.conf{font-size:11px;color:var(--dim)}
+.pnl{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.rs{margin-top:8px;font-size:12px;color:var(--dim)}
+.rs li{margin-left:16px;margin-top:2px}
+.duty{display:inline-block;font-size:10.5px;margin:2px 3px 0 0;padding:1px 7px;border-radius:5px;background:#142032;color:#9fb6cd;border:1px solid #22334d}
+.duty.ok{border-color:#065f46;color:#6ee7b7}
+.duty.no{border-color:#7f1d1d;color:#fca5a5}
+.days{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.dcard{min-width:104px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px}
+.dcard .d{font-size:10.5px;color:var(--dim)}
+.dcard .v{font-size:15px;font-weight:700;margin-top:2px}
+.dcard .r{font-size:10.5px;color:var(--dim);margin-top:2px}
+.ev{font-size:12px;padding:7px 10px;border-left:3px solid var(--line);margin-top:6px;background:var(--panel2);border-radius:0 8px 8px 0}
+.ev.REVOLUSI{border-color:var(--vio)} .ev.UPGRADE{border-color:var(--amber)} .ev.SADARDIRI{border-color:var(--red)} .ev.BOOTSTRAP{border-color:var(--blue)} .ev.OTAK{border-color:var(--em)}
+.ev .d{color:var(--dim);font-size:10.5px;margin-right:6px}
+.knobs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.kn{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px}
+.kn .k{font-size:10.5px;color:var(--dim)}
+.kn .v{font-size:15px;font-weight:700;margin-top:1px}
+.wt td{padding:5px 8px}
+.small{font-size:12px;color:var(--dim)}
+footer{margin-top:34px;border-top:1px solid var(--line);padding-top:14px;color:var(--dim);font-size:12px}
+.btn{display:inline-block;font-size:12px;padding:6px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--tx);cursor:pointer}
+.btn:hover{border-color:var(--em)}
+.btn.danger{border-color:#7f1d1d;color:#fca5a5}
+#boot{position:fixed;inset:0;background:#060a12ee;z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;text-align:center;padding:20px}
+#boot .big{font-size:17px;font-weight:700}
+#boot .st{color:var(--dim);font-size:13px;max-width:520px}
+.pgt{width:320px;height:8px;background:#16202f;border-radius:5px;overflow:hidden}
+.pgt i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#065f46,var(--em));transition:width .3s}
+.hidden{display:none!important}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:10.5px;border:1px solid var(--line);color:var(--dim)}
+.livedot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--em);margin-right:5px;animation:pu 1.6s infinite}
+@keyframes pu{0%,100%{opacity:1}50%{opacity:.25}}
+.err{color:#fca5a5;font-size:12px;margin-top:8px}
+input[type=text]{background:var(--panel2);border:1px solid var(--line);color:var(--tx);border-radius:8px;padding:6px 10px;font-size:12px;width:280px}
+</style>
+</head>
+<body>
+<div id="boot">
+  <div class="big">MICAPROFITA ARENA AGI — membangkitkan arena permanen</div>
+  <div class="st" id="bootst">Menyiapkan data pasar Binance…</div>
+  <div class="pgt"><i id="pgbar"></i></div>
+  <div class="small" id="bootpg"></div>
+  <div class="err hidden" id="booterr"></div>
+</div>
+
+<header>
+  <div class="wrap">
+    <div class="hrow">
+      <h1>MICAPROFITA <b>ARENA AGI</b> <span class="dim" style="font-size:12px">· rumah permanen</span></h1>
+      <span style="flex:1"></span>
+      <span class="chip" id="chipJam">--:-- UTC</span>
+    </div>
+    <div class="sub">Enam petarung, aturan sama persis, data candle Binance nyata. Otak hidup &amp; berevolusi di browser Anda — tanpa server.</div>
+    <div class="chips" id="chips"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section>
+    <h2>Papan Skor <span class="t">kumulatif sejak arena dibangkitkan · entry close T-1 → exit close D (konvensi arena, bruto)</span></h2>
+    <div class="panel" style="padding:6px 10px">
+      <table id="tblBoard"><thead><tr>
+        <th>Petarung</th><th class="num">Kumulatif</th><th></th><th class="num">Hit</th><th class="num">Pick</th><th class="num">Hari</th><th class="num">Terbaik</th><th class="num">Terburuk</th>
+      </tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Arena Hari Ini <span class="t" id="hariLabel"></span></h2>
+    <div class="picks" id="picks"></div>
+    <div class="small" id="rivalLine" style="margin-top:10px"></div>
+  </section>
+
+  <section>
+    <h2>Barisan Hari <span class="t">vonis terakhir · MICAPROFITA vs rival terbaik hari itu</span></h2>
+    <div class="days" id="daysRow"></div>
+  </section>
+
+  <div class="grid g2">
+    <section>
+      <h2>Otak &amp; Evolusi <span class="t">genome knob + generasi</span></h2>
+      <div class="panel">
+        <div class="knobs" id="knobs"></div>
+        <div class="small" id="genLine" style="margin-top:10px"></div>
+      </div>
+      <h2>Bobot Komposit per Rezim <span class="t">berevolusi dari vonis nyata</span></h2>
+      <div class="panel" style="padding:6px 10px">
+        <table class="wt" id="tblW"><thead><tr><th>Faktor</th><th class="num">NAIK</th><th class="num">TURUN</th><th class="num">SIDE</th><th class="num">JATUH</th></tr></thead><tbody></tbody></table>
+      </div>
+    </section>
+    <section>
+      <h2>Ingatan &amp; Kronik <span class="t" id="memLine"></span></h2>
+      <div class="panel" id="evBox" style="max-height:420px;overflow:auto"></div>
+    </section>
+  </div>
+
+  <section>
+    <h2>Perlindungan Otak <span class="t">otak tinggal di localStorage perangkat ini — simpan cadangan berkala</span></h2>
+    <div class="panel small">
+      <button class="btn" id="btnExport">SIMPAN OTAK (unduh JSON)</button>
+      <button class="btn" id="btnImport">MUAT OTAK (unggah JSON)</button>
+      <button class="btn danger" id="btnReset">RESET ARENA</button>
+      <span style="margin-left:10px">Proxy jaringan (bila Binance diblokir ISP):</span>
+      <input type="text" id="proxyIn" placeholder="kosong = langsung (otomatis fallback)">
+      <input type="file" id="fileIn" accept="application/json" class="hidden">
+      <div id="proxyMsg" style="margin-top:8px"></div>
+    </div>
+  </section>
+
+  <footer>
+    <b>Cara kerja jujur:</b> setiap hari UTC, 6 petarung mengajukan pick arah biner memakai HANYA candle sebelum hari-D (bebas bocor). Entry = close T-1, exit = close hari-D, semua dinilai aturan sama. Setelah vonis: MICAPROFITA bermutasi (bobot + knob struktur), memori dipanen (dedup FNV-1a), REVOLUSI bila hit-6-hari &lt; 42%, MODE UPGRADE bila tertinggal dari AI ANALIS 7 hari. Verdict berita LLM &amp; organ warisan besar hanya hidup di arena penuh (wadah) — di sini AI ANALIS memakai mesin aturan. Bukan nasihat keuangan.
+  </footer>
+</main>
+
+<script>
+"use strict";
+/* ============================================================
+   MICAPROFITA ARENA AGI — PORT PERMANEN (mandiri di browser)
+   Sumber setia: src/lib/cyborg/{market,factors,brain,evolution,
+   memory,arena,rivals}.ts di wadah. Konvensi identik:
+   entry=close T-1, exit=close D, tanpa fee (bruto), bebas kebocoran.
+   ============================================================ */
+
+// ---------- util ----------
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pct = (v, d=1) => (v>=0?'+':'') + (v*100).toFixed(d) + '%';
+const pctS = (v, d=1) => (v>=0?'+':'') + v.toFixed(d) + '%';
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+const todayUTCstr = () => new Date().toISOString().slice(0,10);
+const dayOfTs = (ts) => new Date(ts).toISOString().slice(0,10);
+const dayOpenTs = (day) => Date.parse(day + 'T00:00:00.000Z');
+const addDays = (day, n) => dayOfTs(dayOpenTs(day) + n*86400000);
+
+function fnv1a(str){ let h=0x811c9dc5; for(let i=0;i<str.length;i++){ h^=str.charCodeAt(i); h=Math.imul(h,0x01000193);} return h>>>0; }
+function seededRng(seedStr){ let h=2166136261; for(let i=0;i<seedStr.length;i++){ h^=seedStr.charCodeAt(i); h=Math.imul(h,16777619);} return ()=>{ h^=h<<13; h^=h>>>17; h^=h<<5; return ((h>>>0)%100000)/100000; }; }
+
+// ---------- math (port market.ts) ----------
+function ema(vals, p){ if(!vals.length) return NaN; const k=2/(p+1); let e=vals[0]; for(let i=1;i<vals.length;i++) e=vals[i]*k+e*(1-k); return e; }
+function rsiFn(closes, p=14){ if(closes.length<p+1) return 50; let g=0,l=0; for(let i=closes.length-p;i<closes.length;i++){ const d=closes[i]-closes[i-1]; if(d>=0) g+=d; else l-=d; } if(l===0) return 100; const rs=(g/p)/(l/p); return 100-100/(1+rs); }
+function atrPctFn(candles, p=14){ const n=Math.min(p+1,candles.length); if(candles.length<2) return 0; let s=0; const st=Math.max(1,candles.length-n+1); for(let i=st;i<candles.length;i++){ const c=candles[i],pr=candles[i-1]||c; const tr=Math.max(c.h-c.l,Math.abs(c.h-pr.c),Math.abs(c.l-pr.c)); s+=tr; } const last=candles[candles.length-1]; return last.c>0?(s/(candles.length-st)/last.c)*100:0; }
+function pctChange(closes, n){ if(closes.length<n+1) return 0; const now=closes[closes.length-1], th=closes[closes.length-1-n]; return th>0?((now-th)/th)*100:0; }
+function corrFn(a,b){ const n=Math.min(a.length,b.length); if(n<10) return 0; const x=a.slice(-n),y=b.slice(-n); const mx=x.reduce((s,v)=>s+v,0)/n, my=y.reduce((s,v)=>s+v,0)/n; let sxy=0,sxx=0,syy=0; for(let i=0;i<n;i++){ const dx=x[i]-mx,dy=y[i]-my; sxy+=dx*dy; sxx+=dx*dx; syy+=dy*dy; } return sxx>0&&syy>0?sxy/Math.sqrt(sxx*syy):0; }
+function mom4hFrom(c4, cutoffTs){ if(!c4) return 0; const done=c4.filter(c=>c.t<cutoffTs); if(done.length<7) return 0; const cl=done.map(c=>c.c); const now=cl[cl.length-1], th=cl[cl.length-7]; return th>0?((now-th)/th)*100:0; }
+
+// ---------- state ----------
+const LS_KEY = 'micaprofita-arena-v1';
+const BACKFILL_DAYS = 21, POOL_SIZE = 120, UNIVERSE_SIZE = 40, HISTORY_DAYS = 140, HISTORY_4H = 180;
+const S = {
+  klines: {},        // sym -> [{t,o,h,l,c,q}] (1d)
+  k4h: {},           // sym -> [{t,o,h,l,c,q}] (4h, hanya untuk radar hari hidup)
+  ticker: [],        // universe pool saat ini
+  days: {},          // day -> {regime, picks:[{competitor,symbol,dir,conf,reason,entry,exit,ret,hit,evidence}], btcEntry}
+  order: [],         // urutan hari teradili
+  liveDay: null, livePicks: [], livePolicy: [],
+  weights: {}, genomeV2: null, generation: 1,
+  patternStats: {}, memory: { E:{}, P3:{}, PR:{}, P8:{} }, memRaw: 0,
+  events: [], brier: { jendela: [] }, lastRevDay: '', lastUpgDay: '', upgradeEtaUntil: null,
+  sadardiriTrimUntil: null, cumDelta: 0, brainV: 1,
+  lastEnsure: 0, klAt: {}, poolEver: [],
+};
+function saveState(){
+  try{
+    const kl = {};
+    for(const [s,c] of Object.entries(S.klines)) kl[s] = c.map(k=>[k.t,+k.o.toPrecision(9),+k.h.toPrecision(9),+k.l.toPrecision(9),+k.c.toPrecision(9),+k.q.toPrecision(7)]);
+    localStorage.setItem(LS_KEY, JSON.stringify({ v:1, brainV:S.brainV, kl, klAt:S.klAt, poolEver:S.poolEver, days:S.days, order:S.order,
+      weights:S.weights, genomeV2:S.genomeV2, generation:S.generation, patternStats:S.patternStats,
+      memory:S.memory, memRaw:S.memRaw, events:S.events.slice(-120), brier:S.brier,
+      lastRevDay:S.lastRevDay, lastUpgDay:S.lastUpgDay, upgradeEtaUntil:S.upgradeEtaUntil,
+      sadardiriTrimUntil:S.sadardiriTrimUntil, cumDelta:S.cumDelta, savedAt:Date.now() }));
+  }catch(e){ console.warn('gagal simpan', e); }
+}
+function loadState(){
+  try{
+    const raw = localStorage.getItem(LS_KEY); if(!raw) return false;
+    const d = JSON.parse(raw);
+    S.klines = {};
+    for(const [s,arr] of Object.entries(d.kl||{})) S.klines[s] = arr.map(a=>({t:a[0],o:a[1],h:a[2],l:a[3],c:a[4],q:a[5]}));
+    S.days = d.days||{}; S.order = d.order||[]; S.weights = d.weights||{};
+    S.genomeV2 = d.genomeV2||null; S.generation = d.generation||1; S.patternStats = d.patternStats||{};
+    S.memory = d.memory||{E:{},P3:{},PR:{},P8:{}}; S.memRaw = d.memRaw||0; S.events = d.events||[];
+    S.brier = d.brier||{jendela:[]}; S.lastRevDay=d.lastRevDay||''; S.lastUpgDay=d.lastUpgDay||'';
+    S.upgradeEtaUntil=d.upgradeEtaUntil||null; S.sadardiriTrimUntil=d.sadardiriTrimUntil||null;
+    S.cumDelta=d.cumDelta||0; S.brainV=d.brainV||1; S.klAt=d.klAt||{}; S.poolEver=d.poolEver||[];
+    return S.order.length > 0;
+  }catch(e){ return false; }
+}
+// ---------- data Binance (rantai host + proxy opsional, port market.ts) ----------
+const SPOT_HOSTS = ['https://api.binance.com','https://api1.binance.com','https://api-gcp.binance.com','https://data-api.binance.vision'];
+const PROXY_FALLBACK = 'https://api.allorigins.win/raw?url=';
+let spotHostLast = null;
+function proxyPrefix(){ const v = (localStorage.getItem('arena-proxy')||'').trim(); return v || null; }
+function wrapUrl(u){
+  const p = proxyPrefix();
+  if(p) return p + (p.includes('=') ? encodeURIComponent(u) : u);
+  return u;
+}
+async function bfetch(path, timeoutMs=15000){
+  const hosts = spotHostLast ? [spotHostLast, ...SPOT_HOSTS.filter(h=>h!==spotHostLast)] : [...SPOT_HOSTS];
+  let errLast;
+  for(const h of hosts){
+    try{
+      const ctrl = new AbortController(); const t = setTimeout(()=>ctrl.abort(), timeoutMs);
+      const res = await fetch(wrapUrl(h+path), {signal:ctrl.signal, cache:'no-store'});
+      clearTimeout(t);
+      if(!res.ok) throw new Error('binance '+res.status);
+      spotHostLast = h;
+      return res;
+    }catch(e){ errLast = e; }
+  }
+  // semua host gagal (mungkin ISP memblokir) → coba proxy publik terakhir
+  try{
+    const ctrl = new AbortController(); const t = setTimeout(()=>ctrl.abort(), 20000);
+    const res = await fetch(wrapUrl(PROXY_FALLBACK + encodeURIComponent('https://api.binance.com'+path)), {signal:ctrl.signal, cache:'no-store'});
+    clearTimeout(t);
+    if(!res.ok) throw new Error('proxy '+res.status);
+    return res;
+  }catch(e){ throw errLast || e; }
+}
+const BLACKLIST = new Set(['USDC','FDUSD','TUSD','USDP','DAI','BUSD','EURI','EUR','AEUR','USD1','USDE','USDS','PYUSD','PAXG','XUSD','USTC','BSCUSD']);
+async function getUniverse(){
+  const res = await bfetch('/api/v3/ticker/24hr');
+  const raw = await res.json();
+  const items = [];
+  for(const t of raw){
+    if(!t.symbol.endsWith('USDT')) continue;
+    if(/(UP|DOWN|BULL|BEAR)USDT$/.test(t.symbol)) continue;
+    const base = t.symbol.slice(0,-4);
+    if(BLACKLIST.has(base)) continue;
+    const qv = parseFloat(t.quoteVolume);
+    if(!Number.isFinite(qv) || qv < 15_000_000) continue;
+    items.push({symbol:t.symbol, base, quoteVolume:qv, lastPrice:parseFloat(t.lastPrice), changePct:parseFloat(t.priceChangePercent)});
+  }
+  items.sort((a,b)=>b.quoteVolume-a.quoteVolume);
+  return items.slice(0, POOL_SIZE);
+}
+function parseKlines(raw){
+  return raw.map(k=>({t:k[0], o:parseFloat(k[1]), h:parseFloat(k[2]), l:parseFloat(k[3]), c:parseFloat(k[4]), q:parseFloat(k[7])}));
+}
+async function getKlines(sym, interval='1d', limit=HISTORY_DAYS){
+  const res = await bfetch('/api/v3/klines?symbol='+sym+'&interval='+interval+'&limit='+limit);
+  return parseKlines(await res.json());
+}
+async function bulkKlines(symbols, onProg, interval='1d', limit=HISTORY_DAYS, conc=6){
+  const out = {};
+  let done = 0;
+  const queue = [...symbols];
+  async function worker(){
+    while(queue.length){
+      const s = queue.shift();
+      try{ out[s] = await getKlines(s, interval, limit); }catch(e){ /* lewati, diulang denyut berikut */ }
+      done++; if(onProg && done%5===0) onProg(done, symbols.length);
+    }
+  }
+  await Promise.all(Array.from({length:conc}, worker));
+  onProg && onProg(symbols.length, symbols.length);
+  return out;
+}
+function candleForDay(candles, day){ const ts=dayOpenTs(day); return candles.find(c=>c.t===ts); }
+function candlesBefore(candles, day){ const ts=dayOpenTs(day); return candles.filter(c=>c.t<ts); }
+function dynamicUniverse(kl, day, n){
+  const volRanked = [];
+  for(const [sym, ks] of Object.entries(kl)){
+    const before = candlesBefore(ks, day);
+    if(before.length < 35) continue;
+    volRanked.push({sym, qv: before[before.length-1].q});
+  }
+  volRanked.sort((a,b)=>b.qv-a.qv);
+  const out = volRanked.slice(0,n).map(x=>x.sym);
+  if(!out.includes('BTCUSDT')) out.unshift('BTCUSDT');
+  return out;
+}
+function getRegimeSync(btcBefore, universeCloses){
+  const closes = btcBefore.map(c=>c.c);
+  const e20 = ema(closes,20), e50 = ema(closes,50);
+  const atr = atrPctFn(btcBefore,14), mom7 = pctChange(closes,7);
+  let above=0, counted=0;
+  for(const cl of universeCloses.values()){
+    if(cl.length<20) continue;
+    counted++;
+    if(cl[cl.length-1] > ema(cl,20)) above++;
+  }
+  const breadth = counted>0 ? (above/counted)*100 : 50;
+  let regime, note;
+  if(mom7 < -7 && e20 < e50){ regime='JATUH'; note='BTC jatuh tajam di bawah EMA50 — mode bertahan.'; }
+  else if(e20 > e50 && mom7 > -1){ regime='TREND_NAIK'; note='EMA20 > EMA50, momentum positif — ofensif terukur.'; }
+  else if(e20 < e50 && mom7 < -1){ regime='TREND_TURUN'; note='Struktur turun — BUY selektif ketat.'; }
+  else { regime='SIDEWAYS'; note='Konsolidasi — rotasi dominan.'; }
+  return {regime, btcEma20:e20, btcEma50:e50, btcAtrPct:atr, btcMom7:mom7, breadth, note};
+}
+
+// ---------- faktor 8 sinyal (port factors.ts) ----------
+const FACTOR_IDS = ['mom7','mom30','emaAlign','rsi','volSurge','atrInv','distHigh','btcCorr'];
+const FACTOR_LABEL = {mom7:'Momentum 7h', mom30:'Momentum 30h', emaAlign:'Struktur EMA20/50', rsi:'RSI-14', volSurge:'Lonjakan Volume', atrInv:'Volatilitas Terkendali', distHigh:'Jarak dari Puncak 60h', btcCorr:'Korelasi BTC'};
+function computeFactors(sym, candles, btcCandles){
+  if(candles.length < 35) return null;
+  const closes = candles.map(c=>c.c);
+  const last = closes[closes.length-1];
+  const e20 = ema(closes,20), e50 = ema(closes,50);
+  const vols = candles.map(c=>c.q);
+  const volAvg20 = vols.slice(-21,-1).reduce((s,v)=>s+v,0)/20;
+  const volLast = vols[vols.length-1];
+  let high60 = 0;
+  for(const c of candles.slice(-60)) high60 = Math.max(high60, c.h);
+  const btcRets = [];
+  for(let i=1;i<btcCandles.length;i++) btcRets.push((btcCandles[i].c-btcCandles[i-1].c)/btcCandles[i-1].c);
+  const coinRets = [];
+  for(let i=1;i<closes.length;i++) coinRets.push((closes[i]-closes[i-1])/closes[i-1]);
+  return {
+    symbol:sym,
+    mom7: pctChange(closes,7), mom30: pctChange(closes,30),
+    emaAlign: e20>e50 ? (last>e20?1:0.4) : (last<e20?-1:-0.4),
+    rsi: rsiFn(closes,14),
+    volSurge: volAvg20>0 ? volLast/volAvg20 : 1,
+    atrPct: atrPctFn(candles,14),
+    distHigh: high60>0 ? ((last-high60)/high60)*100 : 0,
+    btcCorr: corrFn(coinRets, btcRets),
+    close: last,
+  };
+}
+function rankNormalize(factors){
+  const out = new Map();
+  if(factors.length < 4) return out;
+  const rankToScore = (m)=>{
+    const sorted=[...m.entries()].sort((a,b)=>a[1]-b[1]);
+    const pos=new Map(); sorted.forEach(([s],i)=>pos.set(s,i));
+    const n=sorted.length, res=new Map();
+    for(const [s,p] of pos) res.set(s, n<=1?0:(p/(n-1))*2-1);
+    return res;
+  };
+  const mk=(get)=>{ const m=new Map(); for(const f of factors) m.set(f.symbol,get(f)); return rankToScore(m); };
+  const mom7=mk(f=>f.mom7), mom30=mk(f=>f.mom30), emaAlign=mk(f=>f.emaAlign);
+  const volSurge=mk(f=>Math.min(f.volSurge,4)), atrInv=mk(f=>-f.atrPct);
+  const distHigh=mk(f=>f.distHigh), btcCorr=mk(f=>-Math.abs(f.btcCorr));
+  const rsiRaw=new Map();
+  for(const f of factors){ const dome=1-Math.abs(f.rsi-62)/45; rsiRaw.set(f.symbol, Math.max(-1,dome)); }
+  const rsiScore=rankToScore(rsiRaw);
+  for(const f of factors){
+    out.set(f.symbol, {mom7:mom7.get(f.symbol)||0, mom30:mom30.get(f.symbol)||0, emaAlign:emaAlign.get(f.symbol)||0,
+      rsi:rsiScore.get(f.symbol)||0, volSurge:volSurge.get(f.symbol)||0, atrInv:atrInv.get(f.symbol)||0,
+      distHigh:distHigh.get(f.symbol)||0, btcCorr:btcCorr.get(f.symbol)||0});
+  }
+  return out;
+}
+function factorBucket(norm){ return FACTOR_IDS.map(id=>{ const v=norm[id]||0; return v>0.33?'P':v<-0.33?'N':'Z'; }).join(''); }
+function coarseBucket(norm){
+  if(!norm) return 'ZZZ';
+  const s=(id)=>((norm[id]||0)>0.2?'P':(norm[id]||0)<-0.2?'N':'Z');
+  return s('mom7')+s('volSurge')+s('emaAlign');
+}
+// ---------- genome & bobot (port brain.ts / evolution.ts) ----------
+const DEFAULT_WEIGHTS = {mom7:1.4, mom30:0.6, emaAlign:1.0, rsi:0.4, volSurge:0.9, atrInv:0.35, distHigh:0.8, btcCorr:0.2};
+const DEFAULT_GENOME_V2 = {kBase:3, paraK:60, breadthK2:45, breadthK1:32, atrCap:16, corrCap:0.95, sellOn:false, anchorOn:true, minNorm:0.5, m4hReject:0, memVetoOn:true};
+const W_MIN=0.25, W_MAX=2.75;
+const clampW = v => clamp(v, W_MIN, W_MAX);
+function sanitizeGenome(g){
+  const d = DEFAULT_GENOME_V2;
+  const num=(v,def,lo,hi)=>{ const n=(typeof v==='number'&&Number.isFinite(v))?v:def; return clamp(n,lo,hi); };
+  const bk2 = num(g&&g.breadthK2,d.breadthK2,35,55);
+  return {
+    kBase: Math.round(num(g&&g.kBase,d.kBase,2,4)),
+    paraK: Math.round(num(g&&g.paraK,d.paraK,40,100)),
+    breadthK2: Math.round(bk2),
+    breadthK1: Math.round(num(g&&g.breadthK1,d.breadthK1,22,Math.max(24,Math.min(42,bk2-6)))),
+    atrCap: num(g&&g.atrCap,d.atrCap,11,19),
+    corrCap: num(g&&g.corrCap,d.corrCap,0.8,0.98),
+    sellOn: !!(g&&typeof g.sellOn==='boolean'?g.sellOn:d.sellOn),
+    anchorOn: !!(g&&typeof g.anchorOn==='boolean'?g.anchorOn:d.anchorOn),
+    minNorm: num(g&&g.minNorm,d.minNorm,0,0.8),
+    m4hReject: num(g&&g.m4hReject,d.m4hReject,-12,0),
+    memVetoOn: !!(g&&typeof g.memVetoOn==='boolean'?g.memVetoOn:d.memVetoOn),
+  };
+}
+function weightsFor(regime){ if(!S.weights[regime]) S.weights[regime]={...DEFAULT_WEIGHTS}; return S.weights[regime]; }
+function compositeScore(norm, w){ let s=0,tot=0; for(const id of FACTOR_IDS){ s+=(norm[id]||0)*w[id]; tot+=Math.abs(w[id]); } return tot>0?s/tot:0; }
+
+// ---------- memori berjenjang (port memory.ts loadMemoryLookup) ----------
+function memEdge(regime, sym, bucket8, bucket3, dir){
+  const avg = a => a.n>0 ? a.sumRet/a.n : 0;
+  const hitOf = a => a.n>0 ? a.hit/a.n : 0;
+  const e = S.memory.E[regime+'|'+sym+'|'+dir];
+  if(e && e.n>=2) return {level:'SIMBOL', n:e.n, edge:avg(e), hit:hitOf(e)};
+  const c = S.memory.P3[regime+'|'+bucket3+'|'+dir];
+  if(c && c.n>=2) return {level:'BUCKET3', n:c.n, edge:avg(c), hit:hitOf(c)};
+  const r = S.memory.PR[regime+'|'+dir];
+  if(r && r.n>=4) return {level:'REZIM', n:r.n, edge:avg(r), hit:hitOf(r)};
+  const best=[e,c].filter(Boolean).sort((a,b)=>b.n-a.n)[0];
+  return best ? {level:'LEMAH', n:best.n, edge:avg(best)*0.4, hit:hitOf(best)} : {level:'BARU', n:0, edge:0, hit:0};
+}
+function memRemember(kind, fp, rec){
+  S.memRaw++;
+  const m = kind==='E' ? S.memory.E : kind==='P3' ? S.memory.P3 : kind==='PR' ? S.memory.PR : S.memory.P8;
+  const old = m[fp];
+  if(old){ old.n++; old.sumRet+=rec.sumRet; old.hit+=rec.hitCount; }
+  else m[fp] = {n:1, sumRet:rec.sumRet, hit:rec.hitCount};
+}
+function memSize(){ return {E:Object.keys(S.memory.E).length, P3:Object.keys(S.memory.P3).length, PR:Object.keys(S.memory.PR).length, P8:Object.keys(S.memory.P8).length}; }
+
+// ---------- OTAK PREDATOR V2 (port brain.ts decidePredator, setia) ----------
+function decidePredator(ctx){
+  const {factors, norm, closes, regime, genome:G, weights:W} = ctx;
+  const generation = S.generation;
+  const breadth = regime.breadth;
+  const m4hOf = s => ctx.m4h.get(s) || 0;
+  const vetoed = s => (ctx.vetoSymbols && ctx.vetoSymbols.has(s)) || false;
+  const memOf = (sym, dir) => memEdge(regime.regime, sym, factorBucket(norm.get(sym)||{}), coarseBucket(norm.get(sym)), dir);
+  const ranked = factors.filter(f=>!vetoed(f.symbol)).sort((a,b)=>{
+    if(b.mom7!==a.mom7) return b.mom7-a.mom7;
+    const m4 = m4hOf(b.symbol)-m4hOf(a.symbol);
+    if(Math.abs(m4)>0.01) return m4;
+    const ma=memOf(a.symbol,'BUY').edge, mb=memOf(b.symbol,'BUY').edge;
+    if(Math.abs(mb-ma)>0.002) return mb-ma;
+    return compositeScore(norm.get(b.symbol)||{}, W) - compositeScore(norm.get(a.symbol)||{}, W);
+  });
+  const compositeOf = s => compositeScore(norm.get(s)||{}, W);
+  const leaderMom7 = ranked.length ? ranked[0].mom7 : 0;
+  let k = G.kBase;
+  const policy = [];
+  if(G.paraK>0 && leaderMom7>G.paraK){ k=Math.min(k,2); policy.push('MODE PARABOLIK: leader mom7 '+leaderMom7.toFixed(0)+'% > '+G.paraK+' → K='+k); }
+  if(breadth < G.breadthK2){ k=Math.min(k,2); policy.push('Breadth '+breadth.toFixed(0)+'% < '+G.breadthK2+'% → K='+k); }
+  if(breadth < G.breadthK1){ k=1; policy.push('Breadth '+breadth.toFixed(0)+'% < '+G.breadthK1+'% → K=1 FOKUS'); }
+  if(regime.regime==='JATUH'){ k=Math.min(k,1); policy.push('Rezim JATUH → K=1 hanya leader absolut'); }
+  const picks=[], rejected=[];
+  const mkDuties = f => {
+    const d=[];
+    const m4=m4hOf(f.symbol);
+    d.push({name:'Likuiditas', pass:true, note:'Top-'+UNIVERSE_SIZE+' likuiditas (universe dinamis)'});
+    d.push({name:'Volatilitas ≤ '+G.atrCap.toFixed(0)+'%', pass:f.atrPct<=G.atrCap, note:'ATR '+f.atrPct.toFixed(1)+'%'});
+    d.push({name:'Konfirmasi 4 jam', pass:!(G.m4hReject<0 && m4<G.m4hReject), note:'Momentum 24 jam '+(m4>=0?'+':'')+m4.toFixed(1)+'%'});
+    d.push({name:'Data cukup', pass:(closes.get(f.symbol)||[]).length>=30, note:((closes.get(f.symbol)||[]).length)+' candle'});
+    return d;
+  };
+  const buys=[];
+  for(const f of ranked){
+    if(buys.length>=k) break;
+    const m4=m4hOf(f.symbol);
+    if(G.m4hReject<0 && m4<G.m4hReject){ rejected.push({symbol:f.symbol, reason:'Momentum 4 jam '+m4.toFixed(1)+'% < '+G.m4hReject+'% — leader mati intraday'}); continue; }
+    if(f.atrPct>G.atrCap){ rejected.push({symbol:f.symbol, reason:'ATR '+f.atrPct.toFixed(1)+'% > '+G.atrCap}); continue; }
+    if((closes.get(f.symbol)||[]).length<30){ rejected.push({symbol:f.symbol, reason:'Data kurang'}); continue; }
+    if(G.memVetoOn){
+      const me=memOf(f.symbol,'BUY');
+      if(me.level==='BUCKET3' && me.n>=4 && me.edge<=-0.03 && me.hit<0.3){
+        rejected.push({symbol:f.symbol, reason:'MEMVETO: '+me.n+' episode serupa rata-rata '+(me.edge*100).toFixed(1)+'% (hit '+(me.hit*100).toFixed(0)+'%) — pola biasanya gagal'});
+        continue;
+      }
+    }
+    const cl=closes.get(f.symbol)||[];
+    let overlap=false;
+    for(const b of buys){
+      const clp=closes.get(b.f.symbol)||[];
+      const c=Math.abs(corrFn(cl.slice(-30), clp.slice(-30)));
+      if(c>G.corrCap){ overlap=true; rejected.push({symbol:f.symbol, reason:'Korelasi '+c.toFixed(2)+' dengan '+b.f.symbol}); break; }
+    }
+    if(overlap) continue;
+    const nrm=norm.get(f.symbol)||{};
+    if((nrm.mom7||0) < G.minNorm*2-1 && buys.length>0){ rejected.push({symbol:f.symbol, reason:'Kualitas komposit di bawah standar'}); continue; }
+    buys.push({f, score:compositeOf(f.symbol)});
+  }
+  if(G.anchorOn && buys.length<k && k>=3 && buys.length>=1){
+    const taken=new Set(buys.map(b=>b.f.symbol));
+    const anchorCand=factors.filter(f=>!taken.has(f.symbol)).sort((a,b)=>compositeOf(b.symbol)-compositeOf(a.symbol));
+    for(const f of anchorCand){
+      const nrm=norm.get(f.symbol)||{};
+      if((nrm.mom7||0) < -0.2) break;
+      if(f.atrPct>G.atrCap || (closes.get(f.symbol)||[]).length<30) continue;
+      const cl=closes.get(f.symbol)||[];
+      let overlap=false;
+      for(const b of buys){
+        const clp=closes.get(b.f.symbol)||[];
+        if(Math.abs(corrFn(cl.slice(-30), clp.slice(-30)))>G.corrCap){ overlap=true; break; }
+      }
+      if(overlap) continue;
+      buys.push({f, score:compositeOf(f.symbol)});
+      policy.push('Slot ANCHOR kualitas diisi '+f.symbol);
+      break;
+    }
+  }
+  function describeFactor(id, f, nv){
+    const sgn = nv>=0?'+':'';
+    switch(id){
+      case 'mom7': return (f.mom7>=0?'+':'')+f.mom7.toFixed(1)+'% / 7 hari ('+sgn+nv.toFixed(2)+')';
+      case 'mom30': return (f.mom30>=0?'+':'')+f.mom30.toFixed(1)+'% / 30 hari ('+sgn+nv.toFixed(2)+')';
+      case 'emaAlign': return f.emaAlign===1?'harga > EMA20 > EMA50, struktur naik utuh':f.emaAlign===-1?'harga < EMA20 < EMA50, struktur turun':'struktur campur';
+      case 'rsi': return 'RSI '+f.rsi.toFixed(0)+' '+(f.rsi>75?'(jenuh beli)':f.rsi<30?'(jenuh jual)':'(sehat)');
+      case 'volSurge': return 'Volume '+f.volSurge.toFixed(2)+'x rata-rata 20 hari';
+      case 'atrInv': return 'ATR '+f.atrPct.toFixed(1)+'%/hari';
+      case 'distHigh': return f.distHigh.toFixed(1)+'% dari puncak 60 hari';
+      case 'btcCorr': return 'korelasi BTC '+f.btcCorr.toFixed(2);
+    }
+  }
+  for(const b of buys){
+    const nrm=norm.get(b.f.symbol)||{};
+    const topIds=[...FACTOR_IDS].sort((x,y)=>(nrm[y]||0)*W[y]-(nrm[x]||0)*W[x]).slice(0,3);
+    const m4=m4hOf(b.f.symbol), me=memOf(b.f.symbol,'BUY');
+    const conf=Math.round(clamp(46+(nrm.mom7||0)*22+(m4>=0?4:-6)+(breadth>55?6:0)+(k===1?6:0)+clamp(me.edge*100*0.5,-8,8), 0, 96));
+    picks.push({symbol:b.f.symbol, direction:'BUY', confidence:conf, score:b.score,
+      evidence:{factors:{...nrm, m4h:Math.round(m4*10)/10}, topReasons:[
+        'Konfirmasi 4 jam: momentum 24 jam '+(m4>=0?'+':'')+m4.toFixed(1)+'%',
+        ...(me.level!=='BARU'&&me.n>=2?['Ingatan '+me.level+': '+me.n+' episode serupa → rata-rata '+(me.edge>=0?'+':'')+(me.edge*100).toFixed(1)+'%, hit '+(me.hit*100).toFixed(0)+'%']:[]),
+        ...topIds.map(id=>FACTOR_LABEL[id]+': '+describeFactor(id, b.f, nrm[id]||0))],
+        duties:[...mkDuties(b.f), {name:'Ingatan berjenjang', pass:true, note:me.level==='BARU'?'belum ada episode serupa (n=0)':me.level+': n='+me.n}],
+        policy, regime:regime.regime, genomeGeneration:generation}});
+  }
+  if(G.sellOn && (regime.regime==='TREND_TURUN'||regime.regime==='JATUH')){
+    const maxSell = regime.regime==='JATUH'?2:1;
+    let sells=0;
+    for(let i=ranked.length-1; i>=0 && sells<maxSell; i--){
+      const f=ranked[i], nrm=norm.get(f.symbol)||{};
+      if((nrm.mom7||0) > -0.35) break;
+      if(f.atrPct > G.atrCap+2){ continue; }
+      picks.push({symbol:f.symbol, direction:'SELL', confidence:Math.round(clamp(44+Math.abs(nrm.mom7||0)*24,0,92)), score:-compositeOf(f.symbol),
+        evidence:{factors:nrm, topReasons:[...FACTOR_IDS].sort((x,y)=>(nrm[x]||0)*W[x]-(nrm[y]||0)*W[y]).slice(0,3).map(id=>FACTOR_LABEL[id]+': '+describeFactor(id,f,nrm[id]||0)), duties:[{name:'Rezim', pass:true, note:regime.regime+': SELL legal'}], policy, regime:regime.regime, genomeGeneration:generation}});
+      sells++;
+    }
+  }
+  const scored = factors.map(f=>({symbol:f.symbol, score:compositeOf(f.symbol)})).sort((a,b)=>b.score-a.score);
+  return {picks, scored, rejected};
+}
+
+// ---------- RIVAL (port rivals.ts; AI_ANALIS versi aturan) ----------
+function momentumPick(factors){
+  const norm=rankNormalize(factors);
+  const sorted=[...factors].sort((a,b)=>b.mom7-a.mom7).slice(0,3);
+  return sorted.map(f=>({symbol:f.symbol, direction:'BUY', confidence:60+Math.round((norm.get(f.symbol)?.mom7||0)*20), reason:'momentum 7h tertinggi (naif)'}));
+}
+function meanRevPick(factors){
+  const sorted=[...factors].sort((a,b)=>a.mom7-b.mom7).slice(0,3);
+  return sorted.map(f=>({symbol:f.symbol, direction:'BUY', confidence:55, reason:'jatuh terdalam → tarik balik (naif)'}));
+}
+function bnhPick(){ return [{symbol:'BTCUSDT', direction:'BUY', confidence:50, reason:'beli-tahan Bitcoin selalu'}]; }
+function randomPick(factors, day){
+  const rng=seededRng('ACAK-'+day);
+  const pool=[...factors], picks=[];
+  const n=Math.min(3,pool.length);
+  for(let i=0;i<n;i++){
+    const idx=Math.floor(rng()*pool.length);
+    const f=pool.splice(idx,1)[0];
+    picks.push({symbol:f.symbol, direction:rng()>0.5?'BUY':'SELL', confidence:Math.round(30+rng()*40), reason:'dadu berbibit'});
+  }
+  return picks;
+}
+// AI ANALIS tanpa LLM: mesin aturan membaca snapshot yang sama — komposit terbaik
+// dengan struktur naik & momentum positif, maks 3. (Di arena wadah: LLM penuh.)
+function aiAnalisAturan(factors, norm, weights){
+  const cand=factors.filter(f=>{
+    const n=norm.get(f.symbol)||{};
+    return f.mom7>0 && f.emaAlign>0 && compositeScore(n, weights)>0.05;
+  }).sort((a,b)=>compositeScore(norm.get(b.symbol)||{}, weights)-compositeScore(norm.get(a.symbol)||{}, weights)).slice(0,3);
+  return cand.map(f=>({symbol:f.symbol, direction:'BUY', confidence:62, reason:'komposit aturan tertinggi (ANALIS-aturan)'}));
+}
+
+// ---------- evolusi (port evolution.ts) ----------
+function mutateWeights(w, episodes, eta){
+  const next={...w};
+  if(!episodes.length) return {weights:next, delta:0};
+  for(const id of FACTOR_IDS){
+    let contrib=0;
+    for(const e of episodes){
+      const f=(e.factors||{})[id]||0, ret=e.ret||0;
+      if(f===0||ret===0) continue;
+      contrib += Math.sign(f)*Math.sign(ret)*Math.abs(f);
+    }
+    contrib/=episodes.length;
+    next[id]=clampW(next[id]*(1+eta*contrib));
+    next[id]=clampW(next[id]+(1-next[id])*0.015);
+  }
+  let delta=0; for(const id of FACTOR_IDS) delta+=Math.abs(next[id]-w[id]);
+  return {weights:next, delta};
+}
+function mutateKnobs(g, ret3, hitRate6, daySeed){
+  const notes=[];
+  let h=2166136261;
+  for(let i=0;i<daySeed.length;i++){ h^=daySeed.charCodeAt(i); h=Math.imul(h,16777619); }
+  h=(h^(h<<13))>>>0; h=(h^(h>>>17))>>>0; h=(h^(h<<5))>>>0;
+  if(h%2===0) return {genome:g, notes};
+  const n={...g};
+  const PARA=[45,90], BK2=[38,52], BK1=[26,40], ATR=[12,18];
+  if(ret3 < -0.04){
+    n.breadthK2=Math.min(BK2[1], n.breadthK2+2);
+    n.breadthK1=Math.min(Math.min(BK1[1], n.breadthK2-8), n.breadthK1+2);
+    n.atrCap=Math.max(ATR[0], n.atrCap-0.5);
+    n.paraK=Math.min(PARA[1], n.paraK+2);
+    notes.push('3 hari merugi → guard diperketat');
+  } else if(ret3 > 0.06){
+    n.paraK=Math.max(PARA[0], n.paraK-2);
+    n.breadthK2=Math.max(BK2[0], n.breadthK2-2);
+    n.breadthK1=Math.max(BK1[0], n.breadthK1-2);
+    n.atrCap=Math.min(ATR[1], n.atrCap+0.25);
+    notes.push('3 hari profit → mode berburu diperluas');
+  } else if(hitRate6 < 0.4){
+    n.minNorm=Math.min(0.7, n.minNorm+0.03);
+    notes.push('hit rate rendah → standar leader naik');
+  } else {
+    const pull=n.paraK>60?-1:1;
+    n.paraK=clamp(n.paraK+pull, PARA[0], PARA[1]);
+  }
+  return {genome:sanitizeGenome(n), notes};
+}
+function revolutionize(){
+  const w={...DEFAULT_WEIGHTS}, g=sanitizeGenome(DEFAULT_GENOME_V2);
+  let used=0;
+  for(const id of FACTOR_IDS){
+    const st=S.patternStats[id];
+    if(!st || st.n<3) continue;
+    const acc=st.align/st.n;
+    w[id]=clampW(1.0+acc*1.1);
+    used++;
+  }
+  return {weights:w, genome:g, note: used>0 ? 'revolusi dari '+used+' faktor bermemori + knob ke baseline lab V2' : 'revolusi ke baseline lab V2'};
+}
+function pushEvent(kind, text, day){
+  S.events.push({day: day||todayUTCstr(), kind, text, at:Date.now()});
+  if(S.events.length>150) S.events=S.events.slice(-120);
+}
+// ---------- konteks hari & panen (port arena.ts buildDayContext/harvestDay) ----------
+function buildDayContext(day, kl, btcAll, kl4h, liveCutoff){
+  const btcBefore = candlesBefore(btcAll, day);
+  const universeSyms = dynamicUniverse(kl, day, UNIVERSE_SIZE);
+  const factors=[], closes=new Map(), m4h=new Map();
+  const cutoff = liveCutoff || dayOpenTs(day);
+  for(const sym of universeSyms){
+    const before = candlesBefore(kl[sym]||[], day);
+    if(before.length<35) continue;
+    const f = computeFactors(sym, before, btcBefore);
+    if(f){
+      factors.push(f);
+      closes.set(sym, before.map(c=>c.c));
+      if(kl4h && kl4h[sym]) m4h.set(sym, mom4hFrom(kl4h[sym], cutoff));
+    }
+  }
+  if(factors.length<10) return null;
+  factors.sort((a,b)=>{ // urut likuiditas candle terakhir sebelum D (port: urutan universe)
+    const ia=universeSyms.indexOf(a.symbol), ib=universeSyms.indexOf(b.symbol);
+    return (ia<0?999:ia)-(ib<0?999:ib);
+  });
+  const regime = getRegimeSync(btcBefore, closes);
+  const norm = rankNormalize(factors);
+  return {day, regime, factors, norm, closes, m4h};
+}
+function buildAllPicks(ctx){
+  const out=[];
+  const entryOf = s => (ctx.factors.find(f=>f.symbol===s)||{}).close ?? NaN;
+  const w = weightsFor(ctx.regime.regime);
+  const brain = decidePredator({factors:ctx.factors, norm:ctx.norm, closes:ctx.closes, regime:ctx.regime, genome:S.genomeV2, weights:w, m4h:ctx.m4h});
+  for(const p of brain.picks) out.push({competitor:'MICAPROFITA', symbol:p.symbol, dir:p.direction, conf:p.confidence, entry:entryOf(p.symbol), exit:null, ret:null, hit:null, evidence:p.evidence});
+  for(const p of aiAnalisAturan(ctx.factors, ctx.norm, w)) out.push({competitor:'AI_ANALIS', symbol:p.symbol, dir:p.direction, conf:p.confidence, reason:p.reason, entry:entryOf(p.symbol), exit:null, ret:null, hit:null, evidence:{}});
+  for(const p of momentumPick(ctx.factors)) out.push({competitor:'MOMENTUM', symbol:p.symbol, dir:p.direction, conf:p.confidence, reason:p.reason, entry:entryOf(p.symbol), exit:null, ret:null, hit:null, evidence:{}});
+  for(const p of meanRevPick(ctx.factors)) out.push({competitor:'MEANREV', symbol:p.symbol, dir:p.direction, conf:p.confidence, reason:p.reason, entry:entryOf(p.symbol), exit:null, ret:null, hit:null, evidence:{}});
+  for(const p of bnhPick()) out.push({competitor:'BNH_BTC', symbol:p.symbol, dir:p.direction, conf:p.confidence, reason:p.reason, entry:entryOf(p.symbol), exit:null, ret:null, hit:null, evidence:{}});
+  for(const p of randomPick(ctx.factors, ctx.day)) out.push({competitor:'ACAK', symbol:p.symbol, dir:p.direction, conf:p.confidence, reason:p.reason, entry:entryOf(p.symbol), exit:null, ret:null, hit:null, evidence:{}});
+  return out;
+}
+function harvestDay(ctx, picks){
+  for(const p of picks){
+    if(p.competitor!=='MICAPROFITA' || p.ret===null || p.ret===undefined) continue;
+    const norm = ctx.norm.get(p.symbol);
+    if(!norm) continue;
+    const bucket = factorBucket(norm), b3 = coarseBucket(norm);
+    const ret = p.ret, hit = ret>0?1:0;
+    const regime = ctx.regime.regime, dir = p.dir;
+    memRemember('E', fnv1a('EPS|'+regime+'|'+p.symbol+'|'+bucket+'|'+dir).toString(16), {sumRet:ret, hitCount:hit});
+    memRemember('P8', fnv1a('POLA|'+regime+'|'+bucket+'|'+dir).toString(16), {sumRet:ret, hitCount:hit});
+    memRemember('P3', fnv1a('POLA3|'+regime+'|'+b3+'|'+dir).toString(16), {sumRet:ret, hitCount:hit});
+    memRemember('PR', fnv1a('POLAR|'+regime+'|'+dir).toString(16), {sumRet:ret, hitCount:hit});
+    for(const id of FACTOR_IDS){
+      const v=norm[id]||0;
+      if(v===0||ret===0) continue;
+      const cur=S.patternStats[id]||{align:0,n:0};
+      cur.align += Math.sign(v)*Math.sign(ret);
+      cur.n += 1;
+      S.patternStats[id]=cur;
+    }
+  }
+  // pelajaran dari kegagalan keyakinan tinggi
+  const fail = picks.find(p=>p.competitor==='MICAPROFITA' && p.hit===false && p.conf>=72 && p.ret!==null);
+  if(fail){
+    const text = 'Keputusan '+fail.dir+' '+fail.symbol+' (keyakinan '+Math.round(fail.conf)+'%) di rezim '+ctx.regime.regime+' gagal ('+(fail.ret*100).toFixed(1)+'%) — '+ctx.day;
+    memRemember('PELAJARAN', fnv1a('PELAJARAN|'+text).toString(16), {sumRet:0, hitCount:0});
+    pushEvent('PELAJARAN', 'PELAJARAN: '+text, ctx.day);
+  }
+}
+
+// ---------- adili + evolusi satu hari (port scoreDay/evolveAfterDay) ----------
+function scoreDayPicks(day, kl, picks){
+  for(const p of picks){
+    if(p.exit!==null && p.exit!==undefined) continue;
+    const exit = (candleForDay(kl[p.symbol]||[], day)||{}).c ?? null;
+    if(exit===null || !p.entry) continue;
+    const sign = p.dir==='BUY' ? 1 : -1;
+    p.exit = exit;
+    p.ret = ((exit-p.entry)/p.entry)*sign;
+    p.hit = p.ret>0;
+  }
+}
+function evolveAfterDay(ctx, picks){
+  const episodes = picks.filter(p=>p.competitor==='MICAPROFITA'&&p.ret!==null&&p.ret!==undefined)
+    .map(p=>({factors:(p.evidence&&p.evidence.factors)||{}, ret:p.ret}));
+  const eta = S.upgradeEtaUntil && S.upgradeEtaUntil>ctx.day ? 0.07 : 0.04;
+  const regime = ctx.regime.regime;
+  const {weights:nw, delta} = mutateWeights(weightsFor(regime), episodes, eta);
+  S.weights[regime]=nw; S.cumDelta+=delta;
+  if(S.cumDelta>=0.8){ S.generation+=1; S.cumDelta=0; }
+  // Brier sadar-diri (port V250)
+  const mine = picks.filter(p=>p.competitor==='MICAPROFITA'&&p.ret!==null);
+  if(mine.length){
+    for(const p of mine) S.brier.jendela.push({day:ctx.day, conf:clamp(p.conf,0,100), hit:p.ret>0?1:0});
+    S.brier.jendela = S.brier.jendela.slice(-30);
+    let jumlah=0;
+    for(const e of S.brier.jendela) jumlah += (e.conf/100-e.hit)**2;
+    const brier = S.brier.jendela.length>0 ? jumlah/S.brier.jendela.length : null;
+    if(brier!==null && S.brier.jendela.length>=10 && brier>0.25 && !(S.sadardiriTrimUntil && S.sadardiriTrimUntil>ctx.day)){
+      S.sadardiriTrimUntil = addDays(ctx.day,2);
+      pushEvent('SADARDIRI', 'SADAR-DIRI: Brier keyakinan '+brier.toFixed(3)+' > 0.25 pada '+S.brier.jendela.length+' pick terakhir — keyakinan pick hari hidup dipangkas 10 poin s/d '+S.sadardiriTrimUntil, ctx.day);
+    }
+  }
+  // mutasi knob (ret3 & hit6, tanpa bocor)
+  const scoredDays = S.order.filter(d=>S.days[d] && S.days[d].picks.some(p=>p.ret!==null));
+  const last3 = scoredDays.slice(-3);
+  if(last3.length>=3){
+    let ret3=0;
+    for(const d of last3) for(const p of S.days[d].picks) if(p.competitor==='MICAPROFITA'&&p.ret!==null) ret3+=p.ret;
+    const last6 = scoredDays.slice(-6);
+    let hits=0, tot=0;
+    for(const d of last6) for(const p of S.days[d].picks) if(p.competitor==='MICAPROFITA'&&p.hit!==null){ tot++; if(p.hit) hits++; }
+    const hit6 = tot>0 ? hits/tot : 1;
+    const {genome:g2, notes} = mutateKnobs(S.genomeV2, ret3, hit6, ctx.day);
+    if(notes.length){ S.genomeV2=g2; pushEvent('KNOB', 'Knob: '+notes.join('; ')+' → K='+g2.kBase+' paraK='+g2.paraK+' brK2='+g2.breadthK2+' brK1='+g2.breadthK1+' ATR≤'+g2.atrCap.toFixed(1), ctx.day); }
+  }
+  // REVOLUSI: hit6 < 42%
+  if(scoredDays.length>=6 && S.lastRevDay < scoredDays[Math.max(0,scoredDays.length-6)]){
+    let hits=0, tot=0;
+    for(const d of scoredDays.slice(-6)) for(const p of S.days[d].picks) if(p.competitor==='MICAPROFITA'&&p.hit!==null){ tot++; if(p.hit) hits++; }
+    const hitRate = tot>0 ? hits/tot : 1;
+    if(hitRate<0.42){
+      const {weights:rw, genome:rg, note} = revolutionize();
+      for(const r of ['TREND_NAIK','TREND_TURUN','SIDEWAYS','JATUH']) S.weights[r]={...rw};
+      S.genomeV2=rg; S.lastRevDay=ctx.day; S.cumDelta=0;
+      pushEvent('REVOLUSI', 'REVOLUSI DIRI: hit rate 6 hari '+Math.round(hitRate*100)+'% < 42%. Genome direkonstruksi — '+note, ctx.day);
+    }
+  }
+  // UPGRADE: tertinggal dari AI ANALIS 7 hari
+  if(scoredDays.length>=5 && S.lastUpgDay < scoredDays[Math.max(0,scoredDays.length-7)]){
+    let mySum=0, aiSum=0;
+    for(const d of scoredDays.slice(-7)){
+      for(const p of S.days[d].picks){
+        if(p.ret===null) continue;
+        if(p.competitor==='MICAPROFITA') mySum+=p.ret;
+        else if(p.competitor==='AI_ANALIS') aiSum+=p.ret;
+      }
+    }
+    if(aiSum-mySum>0.03){
+      S.lastUpgDay=ctx.day; S.upgradeEtaUntil=addDays(ctx.day,4);
+      pushEvent('UPGRADE', 'MODE UPGRADE: tertinggal '+((aiSum-mySum)*100).toFixed(1)+' poin dari AI ANALIS (7 hari). Learning rate diperlebar s/d '+S.upgradeEtaUntil, ctx.day);
+    }
+  }
+}
+// ---------- siklus utama ----------
+let bootProgress = (done, tot, label) => {};
+function bootUI(done, tot, label){
+  const p = tot>0 ? Math.round(done/tot*100) : 0;
+  $('#pgbar').style.width = p+'%';
+  $('#bootpg').textContent = done+' / '+tot;
+  if(label) $('#bootst').textContent = label;
+}
+bootProgress = bootUI;
+
+async function runArenaCycle(first){
+  const t0 = Date.now();
+  // 1. data pasar — pool lebar
+  bootUI(0,100,'Membaca universe likuiditas Binance…');
+  const universe = await getUniverse();
+  S.ticker = universe;
+  for(const u of universe) if(!S.poolEver.includes(u.symbol)) S.poolEver.push(u.symbol);
+  if(S.poolEver.length>220) S.poolEver = S.poolEver.slice(-220);
+  const symbols = [...new Set([...universe.map(u=>u.symbol), ...S.poolEver, 'BTCUSDT'])];
+  if(!symbols.includes('BTCUSDT')) symbols.unshift('BTCUSDT');
+  if(symbols.length<20) throw new Error('Data universe tidak cukup ('+symbols.length+' simbol) — kemungkinan jaringan memblokir Binance. Isi kolom proxy di bawah.');
+  // gabungkan dengan klines lama; unduh yang hilang + segar yang basi (>6 jam)
+  const now = Date.now();
+  const need = symbols.filter(s=>!S.klines[s] || now-(S.klAt[s]||0) > 6*3600*1000);
+  bootUI(0,need.length,'Mengunduh candle harian '+need.length+' koin…');
+  const fresh = await bulkKlines(need, (d,t)=>bootUI(d,t,'Mengunduh candle harian…'));
+  for(const [s,c] of Object.entries(fresh)){ S.klines[s]=c; S.klAt[s]=now; }
+  const btcAll = S.klines['BTCUSDT']||[];
+  if(btcAll.length<60) throw new Error('Data BTC tidak cukup');
+  const liveCandle = btcAll[btcAll.length-1];
+  const today = dayOfTs(liveCandle.t);
+  // 2. radar 4 jam untuk universe hari hidup (top-40)
+  bootUI(0,1,'Radar intraday 4 jam (universe hari ini)…');
+  const uniToday = dynamicUniverse(S.klines, today, UNIVERSE_SIZE);
+  const kl4h = await bulkKlines(uniToday, (d,t)=>bootUI(d,t,'Radar 4 jam '+d+'/'+t+'…'), '4h', HISTORY_4H, 6);
+  S.k4h = kl4h;
+  // 3. adili hari yang belum teradili
+  const allScoreable = btcAll.filter(c=>c.t<liveCandle.t).map(c=>dayOfTs(c.t)).slice(-BACKFILL_DAYS);
+  const todo = allScoreable.filter(d=>!S.order.includes(d));
+  bootUI(0,Math.max(todo.length,1),todo.length? 'Mengadili '+todo.length+' hari sejarah…' : 'Memperbarui arena…');
+  let done=0;
+  for(const day of todo){
+    const ctx = buildDayContext(day, S.klines, btcAll, null);
+    if(!ctx){ done++; continue; }
+    const picks = buildAllPicks(ctx);
+    scoreDayPicks(day, S.klines, picks);
+    S.days[day] = {regime:ctx.regime.regime, note:ctx.regime.note, picks};
+    S.order.push(day); S.order.sort();
+    harvestDay(ctx, picks);
+    evolveAfterDay(ctx, picks);
+    if(done%5===4 || done===todo.length-1) saveState();
+    done++; bootUI(done, todo.length, 'Mengadili sejarah… '+day);
+  }
+  if(todo.length && first){
+    pushEvent('BOOTSTRAP', 'Arena permanen dibangkitkan: pool '+symbols.length+' simbol, '+todo.length+' hari sejarah diadili, otak PREDATOR V2 generasi '+S.generation+' aktif di browser Anda.');
+  }
+  // 4. hari hidup: pick PENDING (re-decide tiap denyut — data terkini)
+  const liveCtx = buildDayContext(today, S.klines, btcAll, kl4h, Date.now());
+  if(liveCtx){
+    let trim = false;
+    if(S.sadardiriTrimUntil && today<=S.sadardiriTrimUntil) trim = true;
+    const picks = buildAllPicks(liveCtx);
+    if(trim) for(const p of picks) if(p.competitor==='MICAPROFITA'){ p.conf = Math.max(35, p.conf-10); (p.evidence=p.evidence||{}).sadardiri='keyakinan dipangkas 10 poin (Brier > 0.25)'; }
+    S.liveDay = today; S.livePicks = picks; S.liveRegime = liveCtx.regime;
+    if(!S.firstLiveAt){ S.firstLiveAt=Date.now(); pushEvent('OTAK','Pick hari berjalan lahir: '+picks.filter(p=>p.competitor==='MICAPROFITA').map(p=>p.dir+' '+p.symbol).join(', ')||'-'); }
+  }
+  S.lastEnsure = Date.now();
+  saveState();
+  return {today, ms: Date.now()-t0};
+}
+
+// ---------- perhitungan papan ----------
+const COMPS = ['MICAPROFITA','AI_ANALIS','MOMENTUM','MEANREV','BNH_BTC','ACAK'];
+function standings(){
+  const rows = COMPS.map(c=>({competitor:c, days:0, picks:0, hits:0, cum:0, best:-Infinity, worst:Infinity}));
+  const idx = Object.fromEntries(rows.map((r,i)=>[r.competitor,i]));
+  for(const day of S.order){
+    const d = S.days[day]; if(!d) continue;
+    const scoredDays = d.picks.filter(p=>p.ret!==null&&p.ret!==undefined);
+    const dayRets = {};
+    for(const p of scoredDays){
+      const r = rows[idx[p.competitor]]; if(!r) continue;
+      r.picks++; r.hits += p.hit?1:0;
+      r.cum += p.ret; dayRets[p.competitor]=(dayRets[p.competitor]||0)+p.ret;
+    }
+    for(const [c,ret] of Object.entries(dayRets)){
+      const r = rows[idx[c]];
+      r.days++; r.best=Math.max(r.best,ret); r.worst=Math.min(r.worst,ret);
+    }
+  }
+  rows.sort((a,b)=>b.cum-a.cum);
+  return rows;
+}
+
+// ---------- render UI ----------
+function chip(txt, cls){ return '<span class="chip '+(cls||'')+'">'+esc(txt)+'</span>'; }
+function render(){
+  const rows = standings();
+  const me = rows.find(r=>r.competitor==='MICAPROFITA');
+  const maxAbs = Math.max(...rows.map(r=>Math.abs(r.cum)), 0.01);
+  $('#tblBoard tbody').innerHTML = rows.map(r=>{
+    const w = Math.max(3, Math.abs(r.cum)/maxAbs*100);
+    const cls = r.cum>=0?'pos':'neg';
+    const hit = r.picks>0 ? Math.round(r.hits/r.picks*100)+'%' : '-';
+    return '<tr'+(r.competitor==='MICAPROFITA'?' class="me"':'')+'>'+
+      '<td><b>'+esc(r.competitor)+'</b>'+(r.competitor==='MICAPROFITA'?' <span class="pill">cyborg kita</span>':'')+(r.competitor==='AI_ANALIS'?' <span class="pill">aturan</span>':'')+'</td>'+
+      '<td class="num '+(r.cum>=0?'up':'down')+'">'+pct(r.cum)+'</td>'+
+      '<td><div class="bar '+cls+'"><i style="width:'+w+'%"></i></div></td>'+
+      '<td class="num">'+hit+'</td><td class="num dim">'+r.picks+'</td><td class="num dim">'+r.days+'</td>'+
+      '<td class="num dim">'+(r.best>-Infinity?pctS(r.best*100):'-')+'</td>'+
+      '<td class="num dim">'+(r.worst<Infinity?pctS(r.worst*100):'-')+'</td></tr>';
+  }).join('');
+  // chips
+  const rg = S.liveRegime;
+  const st = standings();
+  const rank = st.findIndex(r=>r.competitor==='MICAPROFITA')+1;
+  $('#chips').innerHTML = [
+    S.liveDay ? chip('HARI '+S.liveDay+' (UTC)') : '',
+    rg ? chip('REZIM '+rg.regime+' · breadth '+rg.breadth.toFixed(0)+'%','on') : '',
+    chip('MICAPROFITA #'+rank+' · '+pct(me?me.cum:0), rank===1?'on':'warn'),
+    chip('GENOMA GENERASI '+S.generation,'vio'),
+    chip('PERINGKAT '+(rank===1?'JUARA':'#'+rank)),
+    '<span class="chip on"><span class="livedot"></span>DENYUT 15 MENIT HIDUP</span>',
+  ].filter(Boolean).join('');
+  $('#hariLabel').textContent = S.liveDay ? ('pick PENDING — dinilai saat candle tutup · rezim: '+(rg?rg.note:'')) : '';
+  // picks hari ini
+  const live = (S.livePicks||[]);
+  const mineP = live.filter(p=>p.competitor==='MICAPROFITA');
+  const lastPrice = s => { const tk=S.ticker.find(t=>t.symbol===s); if(tk) return tk.lastPrice; const kl=S.klines[s]; return kl&&kl.length?kl[kl.length-1].c:null; };
+  $('#picks').innerHTML = mineP.length ? mineP.map(p=>{
+    const px = lastPrice(p.symbol);
+    const lp = px&&p.entry ? ((px-p.entry)/p.entry)*(p.dir==='BUY'?1:-1) : null;
+    const ev = p.evidence||{};
+    return '<div class="pk"><div class="top"><span class="sym">'+esc(p.symbol)+'</span><span class="dir '+p.dir.toLowerCase()+'">'+p.dir+'</span></div>'+
+      '<div class="top" style="margin-top:4px"><span class="conf">keyakinan '+Math.round(p.conf)+'% · entry '+fmtPx(p.entry)+'</span>'+
+      '<span class="pnl '+(lp===null?'dim':lp>=0?'up':'down')+'">'+(lp===null?'…':pct(lp,2))+'</span></div>'+
+      (lp!==null?'<div class="small dim">harga kini '+fmtPx(px)+' · P/L hidup vs entry</div>':'')+
+      '<ul class="rs">'+(ev.topReasons||[]).slice(0,4).map(r=>'<li>'+esc(r)+'</li>').join('')+'</ul>'+
+      '<div style="margin-top:6px">'+(ev.duties||[]).map(d=>'<span class="duty '+(d.pass?'ok':'no')+'">'+esc(d.name)+'</span>').join('')+'</div>'+
+      (ev.sadardiri?'<div class="small" style="color:#fde68a;margin-top:5px">'+esc(ev.sadardiri)+'</div>':'')+
+      '</div>';
+  }).join('') : '<div class="small dim">Menunggu pick hari berjalan…</div>';
+  const rivals = live.filter(p=>p.competitor!=='MICAPROFITA');
+  const byC = {};
+  for(const p of rivals){ (byC[p.competitor]=byC[p.competitor]||[]).push(p.dir+' '+p.symbol); }
+  $('#rivalLine').innerHTML = '<b class="dim">Rival hari ini:</b> '+Object.entries(byC).map(([c,ps])=>'<b>'+esc(c)+'</b> '+esc(ps.join(', '))).join(' · ');
+  // barisan hari
+  const lastDays = S.order.slice(-8).reverse();
+  $('#daysRow').innerHTML = lastDays.map(day=>{
+    const d=S.days[day]; if(!d) return '';
+    const mine = d.picks.filter(p=>p.competitor==='MICAPROFITA'&&p.ret!==null);
+    const ret = mine.reduce((s,p)=>s+(p.ret||0),0);
+    const best = COMPS.map(c=>({c, v:d.picks.filter(p=>p.competitor===c&&p.ret!==null).reduce((s,p)=>s+(p.ret||0),0)})).sort((a,b)=>b.v-a.v)[0];
+    return '<div class="dcard"><div class="d">'+day+'</div><div class="v '+(ret>=0?'up':'down')+'">'+pct(ret)+'</div>'+
+      '<div class="r">vs '+esc(best.c)+' '+pct(best.v)+'</div>'+
+      '<div class="r dim">'+esc(mine.map(p=>p.symbol).join(', ')||'-')+'</div></div>';
+  }).join('') || '<div class="small dim">Belum ada hari teradili.</div>';
+  // knobs
+  const g = S.genomeV2||DEFAULT_GENOME_V2;
+  $('#knobs').innerHTML = [
+    ['K dasar', g.kBase], ['paraK (parabolik)', g.paraK+'%'], ['breadth K2', g.breadthK2+'%'], ['breadth K1', g.breadthK1+'%'],
+    ['ATR cap', g.atrCap.toFixed(1)+'%'], ['korelasi cap', g.corrCap.toFixed(2)], ['minNorm', g.minNorm.toFixed(2)],
+    ['SELL', g.sellOn?'AKTIF':'dorman'], ['ANCHOR', g.anchorOn?'aktif':'mati'], ['MEMVETO', g.memVetoOn?'aktif':'mati'],
+  ].map(([k,v])=>'<div class="kn"><div class="k">'+esc(k)+'</div><div class="v">'+esc(String(v))+'</div></div>').join('');
+  $('#genLine').innerHTML = 'Generasi <b>'+S.generation+'</b> · Brier keyakinan '+brierNow()+' · mode-upgrade '+(S.upgradeEtaUntil&&S.upgradeEtaUntil>=todayUTCstr()?'AKTIF s/d '+S.upgradeEtaUntil:'tidak')+' · revolusi terakhir '+(S.lastRevDay||'belum');
+  // bobot
+  const regs=['TREND_NAIK','TREND_TURUN','SIDEWAYS','JATUH'];
+  $('#tblW tbody').innerHTML = FACTOR_IDS.map(id=>'<tr><td>'+esc(FACTOR_LABEL[id])+'</td>'+regs.map(r=>{
+    const v=(S.weights[r]||DEFAULT_WEIGHTS)[id]||0;
+    return '<td class="num" style="color:'+(v>1?'#6ee7b7':v<0.6?'#fca5a5':'var(--tx)')+'">'+v.toFixed(2)+'</td>';
+  }).join('')+'</tr>').join('');
+  // memori + kronik
+  const ms = memSize();
+  $('#memLine').textContent = 'episode '+ms.E+' · pola halus '+ms.P8+' · bucket3 '+ms.P3+' · rezim '+ms.PR+' (raw '+S.memRaw+')';
+  $('#evBox').innerHTML = S.events.slice(-40).reverse().map(e=>'<div class="ev '+esc(e.kind)+'"><span class="d">'+esc(e.day)+'</span><b>'+esc(e.kind)+'</b> '+esc(e.text)+'</div>').join('') || '<div class="small dim">Belum ada peristiwa.</div>';
+  $('#chipJam').textContent = new Date().toISOString().slice(11,16)+' UTC';
+}
+function brierNow(){
+  const j=S.brier.jendela; if(j.length<10) return 'mengumpulkan ('+j.length+'/30)';
+  let s=0; for(const e of j) s+=(e.conf/100-e.hit)**2;
+  const b=s/j.length;
+  return b.toFixed(3)+(b>0.25?' (BOMBASTIS)':' (sehat)');
+}
+function fmtPx(v){ if(v===null||v===undefined||!Number.isFinite(v)) return '-'; return v>=1000? v.toFixed(1) : v>=1? v.toFixed(4) : v.toPrecision(4); }
+
+// ---------- denyut 15 menit + pergantian hari ----------
+let denying = false;
+async function denyut(){
+  if(denying) return; denying = true;
+  try{
+    const prevToday = S.liveDay;
+    await runArenaCycle(false);
+    if(prevToday && S.liveDay && prevToday!==S.liveDay){
+      pushEvent('OTAK','Hari berganti UTC: '+prevToday+' teradili, hari baru '+S.liveDay+' dimulai.');
+    }
+    render();
+  }catch(e){ console.warn('denyut gagal', e); $('#proxyMsg').innerHTML = '<span class="err">Denyut terakhir gagal: '+esc(String(e).slice(0,140))+'</span>'; }
+  finally{ denying=false; }
+}
+
+// ---------- pelindung otak ----------
+$('#btnExport').addEventListener('click', ()=>{
+  const blob = new Blob([localStorage.getItem(LS_KEY)||'{}'], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'otak-micaprofita-arena-'+todayUTCstr()+'.json';
+  a.click();
+});
+$('#btnImport').addEventListener('click', ()=>$('#fileIn').click());
+$('#fileIn').addEventListener('change', async (e)=>{
+  const f = e.target.files[0]; if(!f) return;
+  try{
+    const txt = await f.text();
+    JSON.parse(txt); // validasi
+    localStorage.setItem(LS_KEY, txt);
+    location.reload();
+  }catch(err){ alert('JSON tidak valid: '+err.message); }
+});
+$('#btnReset').addEventListener('click', ()=>{ if(confirm('Reset arena & otak di perangkat ini? Sejarah kembali diadili dari nol (21 hari).')){ localStorage.removeItem(LS_KEY); location.reload(); } });
+$('#proxyIn').value = localStorage.getItem('arena-proxy')||'';
+$('#proxyIn').addEventListener('change', ()=>{ localStorage.setItem('arena-proxy', $('#proxyIn').value.trim()); $('#proxyMsg').textContent='Proxy disimpan. Memuat ulang…'; setTimeout(()=>location.reload(), 600); });
+
+// pembaruan otak dari repo (didorong dari wadah — arena terus berkembang)
+async function cekOtakBaru(){
+  try{
+    const res = await fetch('brain.json', {cache:'no-store'});
+    if(!res.ok) return;
+    const b = await res.json();
+    if(b && (b.v||0) > (S.brainV||1)){
+      if(b.genome) S.genomeV2 = sanitizeGenome(b.genome);
+      if(b.weights) for(const [r,w] of Object.entries(b.weights)) S.weights[r]={...DEFAULT_WEIGHTS,...w};
+      S.brainV = b.v;
+      pushEvent('OTAK','Otak v'+b.v+' dipasang otomatis dari repo'+(b.catatan?': '+b.catatan:''));
+      saveState(); render();
+    }
+  }catch(e){ /* brain.json opsional */ }
+}
+
+// ---------- init ----------
+(async function init(){
+  try{
+    const punya = loadState();
+    S.genomeV2 = S.genomeV2 ? sanitizeGenome(S.genomeV2) : sanitizeGenome(DEFAULT_GENOME_V2);
+    bootUI(punya?60:5,100, punya? 'Memuat otak tersimpan & data terbaru…' : 'Membangkitkan arena dari nol (bootstrap 21 hari)…');
+    await runArenaCycle(!punya);
+    render();
+    $('#boot').classList.add('hidden');
+    setInterval(denyut, 15*60*1000);
+    setInterval(render, 60*1000);
+    cekOtakBaru();
+  }catch(e){
+    console.error(e);
+    $('#bootst').textContent = 'Gagal membangkitkan arena.';
+    $('#booterr').textContent = String(e && e.message || e) + (e && e.stack ? ' :: ' + String(e.stack).slice(0,400) : '');
+    $('#booterr').classList.remove('hidden');
+    const btn = document.createElement('button'); btn.className='btn'; btn.textContent='Coba Lagi'; btn.onclick=()=>location.reload();
+    $('#boot').appendChild(btn);
+  }
+})();
+</script>
+</body>
+</html>
