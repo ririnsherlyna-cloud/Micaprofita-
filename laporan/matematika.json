@@ -1,8 +1,8 @@
 {
   "protokol": "SASARAN-MICAPROFITA",
-  "organ": "V265-SEKOLAH-BUTA v6.2",
-  "dihasilkan": "2026-10-03T11:22:09.392Z",
-  "siklus": 54,
+  "organ": "V266-BAROMETER v6.3",
+  "dihasilkan": "2026-10-03T11:53:54.401Z",
+  "siklus": 55,
   "mandat": "hukum pemilik 2026-10-02: KARANTINA DILARANG — yang sedang belajar harus terus belajar; berikan dia kemampuan matematika murni dan ekonomi cerdas; setiap kesalahan memberikan kemampuan baru; makin asah makin tajam; denyut 30 → 15 menit; beri dia kemampuan membaca jauh sebelum itu terjadi; sumber informasinya dilengkapi",
   "hukumAsah": {
     "larangan": "karantina dilarang dalam bentuk apa pun: tidak ada jalur yang diselantikan dari belajar, tidak ada suara topik yang disita",
@@ -32,11 +32,11 @@
   "mataJauh": {
     "identitas": "kerucut MC bootstrap 72 jam (600 lintasan, residu EWMA, drift 0) — P(naik) & median lintasan pada 24/48/72 jam",
     "btc": {
-      "pNaik24": 0.463,
-      "pNaik48": 0.498,
-      "pNaik72": 0.478,
-      "med24": -0.09,
-      "med72": -0.12
+      "pNaik24": 0.477,
+      "pNaik48": 0.483,
+      "pNaik72": 0.487,
+      "med24": -0.08,
+      "med72": -0.13
     },
     "ket": "membaca jauh SEBELUM terjadi — dalam bahasa distribusi probabilitas yang bisa dipahami dan diaudit, bukan ramalan"
   },
@@ -121,7 +121,8 @@
       "metode": "penjaga.mjs ASLI dijalankan pada 306 dunia beku (T 2026-06-08 → 2026-10-02, langkah 9 jam); blind dijamin lapisan data (fetch dipotong pada T, Date dibekukan); vonis resmi = close T+24j − fee 0.002",
       "hasil": "akurasi 40.9% · net −462.5% · PF 0.839 — BUY 43.7% (+140.6%) vs SELL 37.6% (−603.1%) — SELL = pendarah; gerbang justru menyelamatkan (menolak jawaban yang akan rugi −458.7%)",
       "catatanJujur": "organ V265 dilatih dari ujian yang sama dengannya — perbaikan setelah ini adalah bukti in-sample; organ bersifat kalibrasi/ukuran (bukan pembalik arah) dan terus dinilai medan hidup yang belum pernah dilihatnya",
-      "bukti": "scripts/ujian-buta/ (pra_ambil, beku.cjs, orkestra, grade, bedah_sekolah) — harness lengkap untuk mengulang sekolah kilat kapan pun"
+      "bukti": "scripts/ujian-buta/ (pra_ambil, beku.cjs, orkestra, grade, bedah_sekolah) — harness lengkap untuk mengulang sekolah kilat kapan pun",
+      "putaran2": "out-of-sample 10-02 (dunia yang organ V265 belum pernah lihat): 57 soal OOS ak 3.5% + holdout 63 soal ak 0.0% net −186.9% — hari REVERSAL (barometer pra-T positif, pasar berbalik sesudahnya = buta prinsipil); bedah 2.366 soal menemukan pendarah makro sejati: SELL saat BTC<−1% (ak 30.2% net −339.3% n=397), breadth<25% (net −405.5% n=705), BUY saat BTC 0..+1% (net −155.8% n=470); draf-1 organ potong BUY-bear = SALAH TARGET (BUY-bear ak 53.9% net +80.1% terbukti untung) → organ diarahkan ulang ke bukti: sell-bear-harian + tunda-bear-SELL + buy-flat-btc"
     },
     "organ": {
       "JUAL_Z_MAKS": 0.5,
@@ -131,7 +132,15 @@
       "KEY_DRIFT_F": 0.75,
       "MOMENTUM_Z": 1.5,
       "MOMENTUM_DRIFT": 5,
-      "MOMENTUM_ODDS_BONUS": 8
+      "MOMENTUM_ODDS_BONUS": 8,
+      "BEAR_BTC_PCT": -1.5,
+      "BEAR_BREADTH_PCT": 25,
+      "SELL_BEAR_KEY_MAKS": 40,
+      "SELL_BEAR_KUNCI_MIN": 50,
+      "SELL_BEAR_SKALA_F": 0.5,
+      "BUY_FLAT_KEY_POTONG": 8,
+      "SELL_RELATIF_KEY_MAKS": 45,
+      "KANDIDAT_KEY_MIN": 45
     },
     "paramKonst": [
       "jualZMaks",
@@ -141,24 +150,38 @@
       "keyDriftF",
       "momentumZ",
       "momentumDrift",
-      "momentumOddsBonus"
+      "momentumOddsBonus",
+      "bearBtcPct",
+      "bearBreadthPct",
+      "sellBearKeyMaks",
+      "sellBearKunciMin",
+      "sellBearSkalaF",
+      "buyFlatKeyPotong",
+      "sellRelatifKeyMaks",
+      "kandidatKeyMin"
     ],
-    "total": 8,
+    "total": 16,
     "siklusIni": {
-      "asah": 5,
+      "asah": 3,
       "veto": 0,
       "bonus": 0
     },
-    "registri": 293,
-    "ket": "empat organ mengikat saat kunci; setiap denyut berikutnya terus dinilai medan hidup — kalau organ terbukti salah di medan, uji-balik akan merevisinya"
+    "registri": 301,
+    "ket": "delapan organ mengikat saat kunci (4 kalibrasi V265 + 3 barometer V266 + seleksi publik radar-bear); setiap denyut berikutnya terus dinilai medan hidup — kalau organ terbukti salah di medan, uji-balik akan merevisinya"
   },
   "siklusIni": {
-    "jauhPnaik24": 0.463,
-    "jauhPnaik48": 0.498,
-    "carryAktif": -0.0026,
+    "jauhPnaik24": 0.477,
+    "jauhPnaik48": 0.483,
+    "carryAktif": -0.0056,
     "modeAsahCt": 0,
     "organAktif": 0,
     "organLulus": 0,
+    "barometer": {
+      "ret24Btc": -2.01,
+      "breadthPct": 13,
+      "bearHarian": true,
+      "ket": "V266 barometer-makro mengikat saat kunci"
+    },
     "denyutMenit": 15
   },
   "kejujuran": "matematika dihitung dari data yang ada saat itu — bukan klaim gaib; kerucut MC = distribusi, bukan janji arah; organ-baru lahir dari kesalahan nyata dan harus lulus sekolah medan sebelum berhak veto; mode-asah menyusutkan ukuran, TIDAK menghentikan belajar"
