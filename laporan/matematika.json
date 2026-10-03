@@ -1,0 +1,127 @@
+{
+  "protokol": "SASARAN-MICAPROFITA",
+  "organ": "V264-PINTAR-KEMBALI v6.1",
+  "dihasilkan": "2026-10-03T02:14:33.290Z",
+  "siklus": 51,
+  "mandat": "hukum pemilik 2026-10-02: KARANTINA DILARANG — yang sedang belajar harus terus belajar; berikan dia kemampuan matematika murni dan ekonomi cerdas; setiap kesalahan memberikan kemampuan baru; makin asah makin tajam; denyut 30 → 15 menit; beri dia kemampuan membaca jauh sebelum itu terjadi; sumber informasinya dilengkapi",
+  "hukumAsah": {
+    "larangan": "karantina dilarang dalam bentuk apa pun: tidak ada jalur yang diselantikan dari belajar, tidak ada suara topik yang disita",
+    "konsekuensi": [
+      "ASAH-KALIBRASI (ARAH & PHOENIX): keyakinan×faktor < 40 tidak lagi memblokir — jalur masuk MODE-ASAH (ukuran ×0.6, stop ×0.75, terkalibrasi disegel jujur) dan terus mengunci + terus dinilai",
+      "ASAH-SUARA: topik bermasalah bersuara lirih bobot 0.35 (sebelumnya 0 = disita), pulih penuh lewat bukti medan",
+      "HENTI-HARIAN: kini mode-asah — kuota belajar 2 dengan ukuran mikro ×0.3, ilmu tetap bertambah",
+      "ORGAN-BARU: setiap SALAH melahirkan mikro-aturan yang di-replay ke ledger; organ terbukti (n≥10, hit≥52%, net>0) berhak VETO"
+    ]
+  },
+  "matematikaMurni": {
+    "mesin": "mesinMate() — dihitung per kandidat dari lilin 1 jam yang ada saat itu",
+    "rumus": [
+      "Hurst R/S agregat skala [4,8,16,32] (Hurst 1951) — >0.55 tren, <0.45 pulang-keseimbangan",
+      "Half-life AR(1) log-harga (Ornstein-Uhlenbeck): t½ = ln(0.5)/ln(φ)",
+      "Drift OLS 30-bar + R² — slope per jam dieksponensialkan ke 24 jam",
+      "z-SMA20 — jarak harga dari rata-rata dalam satuan σ",
+      "Entropi Shannon arah pita 24 jam: H = −p·log₂p − (1−p)·log₂(1−p)",
+      "Volatilitas Parkinson: σ² = Σln(H/L)²/(4·ln2·n) dan Garman-Klass — ekor intrabar",
+      "Autokorelasi lag-1 return — momentum vs berbalik"
+    ]
+  },
+  "ekonomiCerdas": {
+    "mesin": "carry funding: funding positif = long membayar short (3×/hari); EV-ekonomi arah posisi = drift OLS 24j searah + carry arah − biaya putar 2×fee",
+    "ket": "ekonomi biaya-nyata: sinyal teknikal yang membayar carry lebih mahal dari drift-nya = sedang membeli barang mahal — kini terukur dan disegel"
+  },
+  "mataJauh": {
+    "identitas": "kerucut MC bootstrap 72 jam (600 lintasan, residu EWMA, drift 0) — P(naik) & median lintasan pada 24/48/72 jam",
+    "btc": {
+      "pNaik24": 0.518,
+      "pNaik48": 0.525,
+      "pNaik72": 0.502,
+      "med24": 0.06,
+      "med72": 0.03
+    },
+    "ket": "membaca jauh SEBELUM terjadi — dalam bahasa distribusi probabilitas yang bisa dipahami dan diaudit, bukan ramalan"
+  },
+  "organBaru": {
+    "total": 0,
+    "lulus": 0,
+    "daftar": [],
+    "ket": "setiap kesalahan melahirkan kemampuan: organ = mikro-aturan dari vonis SALAH, di-replay ke ledger, disekolahkan medan, lulus → berhak VETO"
+  },
+  "sumberDilengkapi": {
+    "baru": [
+      {
+        "nama": "Binance futures topLongShortPositionRatio",
+        "url": "https://fapi.binance.com/futures/data/topLongShortPositionRatio",
+        "kunci": "posisi trader BESAR (smart money) per jam"
+      },
+      {
+        "nama": "Binance futures takerlongshortRatio",
+        "url": "https://fapi.binance.com/futures/data/takerlongshortRatio",
+        "kunci": "agresor taker Binance — pendamping OKX rubik"
+      },
+      {
+        "nama": "Bybit linear tickers",
+        "url": "https://api.bybit.com/v5/market/tickers?category=linear",
+        "kunci": "cadangan funding/OI lintas-bursa (kalibrasi silang)"
+      }
+    ],
+    "lama": "klines 1h/1d Binance (+vision), premiumIndex & OI fapi, OKX SWAP tickers/funding/rubik/books, CoinGecko global, alternative.me F&G",
+    "ket": "mandat \"sumber informasinya kurang kita lengkapi\" — semuanya publik & gratis, gagal = null jujur"
+  },
+  "konstanta": {
+    "BOBOT_SUARA": 0.35,
+    "STOP_KETAT_F": 0.75,
+    "UKURAN_F": 0.6,
+    "HENTI_KUOTA": 2,
+    "HENTI_UKURAN": 0.3,
+    "HURST_WINDOW": 64,
+    "OLS_WINDOW": 30,
+    "Z_WINDOW": 20,
+    "MC_JAUH_LANGKAH": 72,
+    "MC_JAUH_LINTASAN": 600,
+    "CARRY_PER_HARI": 3,
+    "ORGAN_MAKS": 40,
+    "ORGAN_LULUS_N": 10,
+    "ORGAN_LULUS_HIT": 0.52
+  },
+  "paramMate": {
+    "kandang": [
+      "mateHurst",
+      "mateEkonomi",
+      "mateJauh"
+    ],
+    "siklus": [
+      "jauhPnaik24",
+      "jauhPnaik48",
+      "carryAktif",
+      "evEkoAktif",
+      "organAktif",
+      "organLulus"
+    ],
+    "konst": [
+      "asahBobotSuara",
+      "asahStopKetatF",
+      "asahUkuranF",
+      "asahHentiKuota",
+      "asahHentiUkuran",
+      "hurstWindow",
+      "olsWindow",
+      "zWindow",
+      "mcJauhLangkah",
+      "mcJauhLintasan",
+      "carryPerHari",
+      "organMaks",
+      "organLulusHit"
+    ],
+    "total": 22
+  },
+  "siklusIni": {
+    "jauhPnaik24": 0.518,
+    "jauhPnaik48": 0.525,
+    "carryAktif": -0.0131,
+    "modeAsahCt": 0,
+    "organAktif": 0,
+    "organLulus": 0,
+    "denyutMenit": 15
+  },
+  "kejujuran": "matematika dihitung dari data yang ada saat itu — bukan klaim gaib; kerucut MC = distribusi, bukan janji arah; organ-baru lahir dari kesalahan nyata dan harus lulus sekolah medan sebelum berhak veto; mode-asah menyusutkan ukuran, TIDAK menghentikan belajar"
+}
