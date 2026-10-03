@@ -3449,7 +3449,7 @@ const kunciEntriArah = (k, eksplor, runnerUp) => {
     // seolah belum pernah SALAH, bukan juga blacklist (doktrin pemilik 2026-10-03)
     ...(syarat ? { pelajaranLalu: { ...syarat, terpenuhi: true, ket: 'V264 kembali-pintar: koin ini pernah SALAH pada pola serupa — kembali dengan syarat lebih ketat dari pelajarannya sendiri (bar keyakinan naik, ukuran menyusut, stop mengetat) yang mengikat saat kunci; pasar hidup — ia boleh kembali, ia juga dinilai ulang penuh' } } : {}),
     // V265 SEKOLAH-BUTA — seal organ yang berbicara saat kunci (bukti 2.533 soal blind):
-    ...(butaAsah.length ? { buta: { organ: butaAsah.map((x) => x.organ), keyLama: butaAsah.map((x) => x.keyLama), keyBaru: v.keyakinan, bonus: oddsA.butaBonus ?? null, ket: 'sekolah kilat 2.533 soal buta-histori: keyakinan dijujurkan organ jual-lemah (≤40, ukuran ×0.5) / key-melawan-drift (×0.75); bonus odds bila BUY momentum searah' } } : {}),
+    ...(butaAsah.length ? { buta: { organ: butaAsah.map((x) => x.organ), keyLama: butaAsah.map((x) => x.keyLama), keyBaru: v.keyakinan, bonus: odds.butaBonus ?? null, ket: 'sekolah kilat 2.533 soal buta-histori: keyakinan dijujurkan organ jual-lemah (≤40, ukuran ×0.5) / key-melawan-drift (×0.75); bonus odds bila BUY momentum searah' } } : {}),
   }
   ledger.push(entri); terkunciBaru.push(entri)
   return entri
