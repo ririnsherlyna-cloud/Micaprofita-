@@ -197,3 +197,43 @@ Draf-1 organ (potong BUY-bear) = SALAH TARGET — dibuang sebelum push; organ di
 | **v6.3 V266** | 8 | **100.0%** | **+15.4%** |
 
 SELL ak 29% → 56% (jendela luas); radar-jujur menahan 24 jawaban murahan — sistem memilih **diam** pada bear ekstrem alih-alih menjual dasar. Detail: `laporan/sekolah-putaran2.json`.
+
+---
+
+## PUTARAN-3 — V267-ANTI-ARUS v6.4 (2026-10-03)
+
+Mandat pemilik: "Lakukan dan benahi juga — intinya semuanya penting." Sekolah kilat dilanjutkan: bedah anti-arus atas 2.366 soal in-sample + verifikasi OOS putaran-2.
+
+### Temuan kunci — saksi pantulan TERBALIK
+
+| Kondisi BUY saat bear (ret24 BTC ≤ −1.5%) | n | Akurasi | Net | Keputusan |
+|---|---|---|---|---|
+| Dengan saksi pantulan (ret1h BTC ≥ 0) | 77 | 41.6% | **−23.4%** | organ baru: key −8 + ukuran ×0.6 |
+| Tanpa saksi (masih merah) | 64 | 68.8% | **+103.5%** | DIPERTAHANKAN — menadah dasar terbukti |
+
+Verifikasi di bear-dalam: dengan saksi ak 20% (n=10) vs tanpa saksi ak 70.6% (n=17) — konsisten. Membeli kenaikan sesaat di tengah jatuh = membeli puncak pantulan kecil; membeli saat masih merah = menadah dasar.
+
+### Organ (9) buy-jatuh-dalam — batas −2.5% tajam
+
+| ret24 BTC | n | Akurasi | Net |
+|---|---|---|---|
+| −2..−1% | 106 | 55.7% | +83.1% (menadah untung) |
+| −3..−2% | 31 | 51.6% | −7.4% (mulai bocor) |
+| −4..−3% | 4 | 25.0% | +4.3% (n kecil, jelek) |
+| ≤ −2.5% (gabungan) | 27 | 51.9% | −3.8% |
+
+BUY di atas −2.5% koreksi = menadah pantulan yang bekerja; di bawahnya = menadah pisau → key −8 + ukuran ×0.6 (tetap mengunci & belajar — anti-karantina).
+
+### Kejujuran putaran-3
+
+1. **Divergensi-reversal tetap buta prinsipil** — hari 10-02 (BTC ret24 +1.5..+3.7% & breadth 13-26%): 82 BUY 0% benar di OOS. In-sample divergensi justru untung (+15.2%, n=25) → organ pembalik TIDAK SAH dibuat; draf-2 dibuang sebelum push (anti-overfit — pelajaran draf-1 diulang).
+2. **SELL-bear V266 terbukti** — dunia bear murni 06-10T00: 8/8 SELL = 100% (dua run terpisah: net +15.4% / +17.7% — noise MC).
+3. **Sistem memilih diam** — dunia beku baru menghasilkan 0 kunci (ambang odds efektif 60, suhu BERTAHAN); jawaban radar tetap tercatat & dinilai.
+4. Organ berbasis kalibrasi/ukuran — bukan pembalik arah; terus dinilai medan hidup, uji-balik akan merevisi bila terbukti salah.
+
+### Infrastruktur
+
+- Cron denyut 15 menit yang sering dilewati scheduler GitHub pada menit bulat puncak beban diperbaiki ke menit non-bulat **7/15**.
+- Registri: 301 → **307** parameter bernama. Total organ mengikat: **10** (4 V265 + 3 V266 + 2 V267 + seleksi publik radar).
+
+Detail: `laporan/sekolah-putaran3.json`.
