@@ -123,8 +123,8 @@ const fmtPct = v => (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
 const fmt2 = n => String(n).padStart(2, '0');
 function jamWIB() {
   const kini = new Date();
-  const wib = new Date(kini.getTime() + (7 * 60 + kini.getTimezoneOffset()) * 60000);
-  return { h: wib.getHours(), m: wib.getMinutes(), s: wib.getSeconds(), menit: wib.getHours() * 60 + wib.getMinutes() };
+  const wib = new Date(kini.getTime() + 7 * 3600000);   // UTC + 7 — bebas zona perangkat
+  return { h: wib.getUTCHours(), m: wib.getUTCMinutes(), s: wib.getUTCSeconds(), menit: wib.getUTCHours() * 60 + wib.getUTCMinutes() };
 }
 function jamTeks() { const j = jamWIB(); return fmt2(j.h) + ':' + fmt2(j.m); }
 
