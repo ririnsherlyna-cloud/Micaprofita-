@@ -526,20 +526,28 @@ function isiCincin(el, s){
   fg.style.strokeDashoffset = (KEL * (1 - k/100)).toFixed(1);
   svg.querySelector('text').textContent = s.keyakinan;
 }
+// V277-JUAL-AMBISIUS — mandat pemilik: "harga ambisiusnya juga wajib ada".
+// Baris "jual ambisius" WAJIB tampil di setiap kartu sasaran — tak ada lagi
+// baris yang menghilang diam-diam saat datanya belum ada; yang belum terukur
+// tampil jujur sebagai '—' beserta alasannya di tooltip (anti-bisu).
 function isiTangga(el, s){
   const box = el.querySelector('.tangga');
   const mc = s.warisan?.mc || null;
   const rows = [];
-  if (s.highAmbisius) rows.push(['ujung atas ambisius', s.highAmbisius, 'amb', mc?.pAmbisius ?? null]);
-  if (s.target) rows.push(['sasaran jual', s.target, 'tgt', mc?.pTarget ?? null]);
-  rows.push(['entry', s.entry, 'ent', null]);
-  if (s.stop) rows.push(['stop', s.stop, 'stp', mc?.pStop ?? null]);
-  rows.sort((a,b) => b[1] - a[1]);
-  box.innerHTML = rows.map(([lbl, p, k, pr]) => {
-    const pct = (p / s.entry - 1) * 100;
+  rows.push(s.highAmbisius ? ['jual ambisius', s.highAmbisius, 'amb', mc?.pAmbisius ?? null, s.ketAmbisius || '']
+                           : ['jual ambisius', null, 'amb', null, s.ketAmbisius || 'perkiraan tertinggi belum terukur']);
+  if (s.target) rows.push(['sasaran jual', s.target, 'tgt', mc?.pTarget ?? null, '']);
+  rows.push(['entry', s.entry, 'ent', null, '']);
+  if (s.stop) rows.push(['stop', s.stop, 'stp', mc?.pStop ?? null, '']);
+  rows.sort((a,b) => (b[1] ?? -Infinity) - (a[1] ?? -Infinity));
+  box.innerHTML = rows.map(([lbl, p, k, pr, ket]) => {
+    const pct = p != null ? (p / s.entry - 1) * 100 : null;
     const panah = k === 'ent' ? ' &#9656;' : k === 'tgt' ? ' &#9656;' : '';
     const prob = pr != null ? `<span class="tpr">P ${Math.round(pr*100)}%</span>` : '<span class="tpr"></span>';
-    return `<div class="trow ${k}"><span class="tlbl">${lbl}${panah}</span><span class="tp">${fmt(p)}</span><span class="tpct">${pct>=0?'+':''}${pct.toFixed(2)}%</span>${prob}</div>`;
+    const harga = p != null ? fmt(p) : '—';
+    const persen = pct != null ? `${pct>=0?'+':''}${pct.toFixed(2)}%` : '—';
+    const judul = ket ? ` title="${ket}"` : '';
+    return `<div class="trow ${k}"${judul}><span class="tlbl">${lbl}${panah}</span><span class="tp">${harga}</span><span class="tpct">${persen}</span>${prob}</div>`;
   }).join('');
 }
 function isiDaya(el, s){
