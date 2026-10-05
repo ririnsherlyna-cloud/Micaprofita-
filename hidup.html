@@ -137,11 +137,11 @@ const FASE = [
   { id: 'SEKOLAH',   dari: 19, ke: 24, nama: 'SEKOLAH MALAM',   langit: ['#071a1d', '#0b2b26'], lampu: '#39d98a', aura: '#4de6a0', kata: 'malam = kelas. otakku disemen pelan-pelan' },
 ];
 function faseKini() {
-  const j = jamWIB().menit;
+  const j = jamWIB().h;            // satuan JAM — batas fase juga jam
   for (const f of FASE) if (j >= f.dari && j < f.ke) return f;
   return FASE[4];
 }
-function faseMengejar(m) { for (const f of FASE) if (m >= f.dari && m < f.ke) return f; return FASE[4]; }
+function faseMengejar(h) { for (const f of FASE) if (h >= f.dari && h < f.ke) return f; return FASE[4]; }
 
 /* ---------- 2. KEADAAN GLOBAL ---------- */
 const KVS = {
