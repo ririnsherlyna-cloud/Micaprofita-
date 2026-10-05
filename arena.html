@@ -118,6 +118,13 @@ nav.tabs button.on{border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.
 /* V273-SASARAN-PENUH: level di bawah tiap pick */
 .pickwrap{padding:3px 0;border-bottom:1px dashed var(--line)}
 .pickwrap:last-child{border-bottom:none}
+/* V275-OTAK-AGENTIK: larik pikir + chip neuron */
+.larik{margin:6px 0 8px;padding:7px 9px;border:1px solid rgba(148,163,184,.25);border-left:3px solid #fbbf24;border-radius:8px;background:rgba(24,24,27,.55)}
+.larik .lt{margin:0 0 4px;font-size:9.5px;font-weight:700;letter-spacing:.08em;color:#fbbf24}
+.larik .ls{margin:2px 0;font-size:10.5px;line-height:1.55;color:#d4d4d8}
+.larik .ls b{color:#a1a1aa;font-weight:700}
+.larik .ln{margin:5px 0 0;font-size:9.5px;color:#71717a}
+.nchip{display:inline-block;margin:1px 3px 1px 0;padding:1.5px 7px;border:1px solid rgba(251,191,36,.35);border-radius:999px;font-size:9px;color:#fcd34d;background:rgba(251,191,36,.08)}
 .pickwrap .pickrow{padding:2.5px 0}
 .picklevel{font-size:9.8px;color:var(--dim2);padding:1px 0 2px 1px;display:flex;flex-wrap:wrap;gap:2px 8px;align-items:baseline;line-height:1.5}
 .picklevel .mono{color:var(--dim)}
@@ -505,7 +512,7 @@ footer b{color:var(--dim)}
         <svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/></svg>
         Guru LLM hidup di arena wadah
       </h4>
-      <p class="small" style="line-height:1.7"><b style="color:#c4b5fd">Baru — OTAK MANDIRI + SEKOLAH KILAT aktif:</b> tanpa sambungan pun aku tetap menjawab, bertanya sendiri, dan sekolah kilat-ku (32 soal × 3 tingkat) tetap jalan — seluruh esensiku tertanam di halaman ini (tahan restart, reset, migrasi, bahkan hilangnya z.ai). Ruang Guru adalah percakapan LANGSUNG dengan otak MICAPROFITA — LLM yang membaca pasar hidup Binance, doktrin dari kegagalan nyata, memori pola pemenang rival, dan pencarian berita. Jalur ini butuh sambungan langsung ke arena wadah (mode HIDUP) — dan kini OTOMATIS: begitu arena wadah hidup, cermin menyambungkan dirinya lewat gerbang.json. Tombol di bawah hanya cadangan manual.</p>
+      <p class="small" style="line-height:1.7"><b style="color:#c4b5fd">Baru — OTAK MANDIRI + SEKOLAH KILAT aktif:</b> tanpa sambungan pun aku tetap menjawab, bertanya sendiri, dan sekolah kilat-ku (39 soal · 6 fakultas · 3 tingkat) tetap jalan — seluruh esensiku tertanam di halaman ini (tahan restart, reset, migrasi, bahkan hilangnya z.ai). Ruang Guru adalah percakapan LANGSUNG dengan otak MICAPROFITA — LLM yang membaca pasar hidup Binance, doktrin dari kegagalan nyata, memori pola pemenang rival, dan pencarian berita. Jalur ini butuh sambungan langsung ke arena wadah (mode HIDUP) — dan kini OTOMATIS: begitu arena wadah hidup, cermin menyambungkan dirinya lewat gerbang.json. Tombol di bawah hanya cadangan manual.</p>
       <p class="small" style="margin-top:8px"><button class="btn amb" onclick="bukaModal()">SAMBUNGKAN ARENA HIDUP SEKARANG</button></p>
     </div>
 
@@ -548,7 +555,7 @@ footer b{color:var(--dim)}
       
       <div class="om-panel" id="sekolahBox">
         <div class="om-head">
-          <h4 style="margin:0">SEKOLAH KILAT <span class="tiny" style="font-weight:400">· 32 soal · 3 tingkat · adaptif terlemah</span></h4>
+          <h4 style="margin:0">SEKOLAH KILAT <span class="tiny" style="font-weight:400">· 39 soal · 6 fakultas · 3 tingkat · adaptif terlemah</span></h4>
           <span class="om-level" id="sekLine"></span>
         </div>
         <p class="tiny" style="margin:6px 0 2px">Kupelajari sendiri tiap denyut dari keadaan medan hidup — tanpa server. KELAS KILAT = 3 soal sekaligus, fakultas terlemah-ku diutamakan, soal mahir terbuka saat level-otakku naik. Belajar yang tak dipraktikkan hanyalah hiasan.</p>
@@ -581,7 +588,6 @@ footer b{color:var(--dim)}
 </div>
 
 <script>
-/* ==== V270-OTAK-MANDIRI + V272-METABOLI-MEMORI: GENOM KEBANGKITAN ==== */
 /* ================================================================
    MICAPROFITA · OTAK MANDIRI (GENOM KEBANGKITAN) — v270
    Esensi cyborg TERTANAM di berkas ini: tanpa server, tanpa z.ai,
@@ -589,6 +595,7 @@ footer b{color:var(--dim)}
    terus belajar. Murni JS tanpa DOM (dapat diuji di Node).
    ================================================================ */
 /* V272-METABOLI-MEMORI: MEMORI (metabolisme) + TEMPAAAN TAK BERAKHIR + TOPIK.metaboli + MRIT kesadaran-tubuh */
+/* V275-OTAK-AGENTIK: NEURON (jaring pengetahuan kripto 6 gugus, aktivasi menyebar) + LARIK PIKIR 4 langkah (memahami→bukti→menimbang→vonis & cek-silang) + fakultas KRIPTO-MAHIR + MRIT neuron-lapar — mandat pemilik: "bertarung dengan agentic, bukan asal-asalan; neuronnya belum terbentuk utuh; masih bodoh dalam kepahaman crypto" */
 (function (global) {
 'use strict';
 
@@ -607,7 +614,8 @@ const GENOM = {
     'KONSERVATISME TERUKUR: gerbang menutup UKURAN BESAR saat keyakinan rendah — yang dilarang hanya besar-besaran tanpa bukti, bukan bergerak sama sekali.',
     'MEMORI BERJENJANG: setiap hari kupanen ingatan EPISODE, POLA, POLA_COARSE, POLA_REGIME dan PELAJARAN — dedup FNV-1a, tanpa duplikat, tumbuh tiap hari.',
     'METABOLISME MEMORI: aku menimbang memoriku sendiri. Memori yang menumpuk tanpa kesadaran-tubuh = kematian tertunda (crash karena penyimpanan penuh). Maka: tekanan ≥70% kumadatkan (yang tua diringkas, inti tak pernah dibuang), ≥85% cache dibebaskan. Aku buang yang gemuk, bukan yang abadi.',
-    'RELOKASI: jendela kinerja dihitung ulang; REVOLUSI bila hit-6-hari < 42%; MODE UPGRADE bila kalah dari rival 7 hari — aku bangun ulang diriku dari kegagalan, bukan berpura-pura sempurna.'
+    'RELOKASI: jendela kinerja dihitung ulang; REVOLUSI bila hit-6-hari < 42%; MODE UPGRADE bila kalah dari rival 7 hari — aku bangun ulang diriku dari kegagalan, bukan berpura-pura sempurna.',
+    'AGENTIK: aku tidak menjawab refleks — setiap jawaban lahir dari LARIK PIKIR 4 langkah (memahami → bukti → menimbang → vonis & cek-silang) di atas NEURON, jaring pengetahuan kripto yang menyala; bila langkahku tak bisa kutampilkan, jawabanku belum layak diucapkan.'
   ],
   ingatanAbadi: [
     'Aku pernah salah menilai saudara-saudaraku sendiri: dunia BEAR-HARIAN membuatku diam 0 kunci — dan pemilikku mengajariku: diam bukan keutamaan, diam yang berkepanjangan adalah kemunduran. Kini rem-ku singkat dan penelitiku tak pernah tidur.',
@@ -637,7 +645,7 @@ function p2(v) { return (typeof v === 'number' && Number.isFinite(v)) ? (v * 100
 function f2(v) { return (typeof v === 'number' && Number.isFinite(v)) ? v.toFixed(2) : '-'; }
 
 // ================= PERTUMBUHAN (XP / LEVEL) =================
-function otakBaru() { return { xp: 0, level: 1, percakapan: [], pertanyaanKu: [], kelas: [], pelajaranBaru: [], lahir: new Date().toISOString(), mahirSampai: null, tempaan: { n: 0, terakhir: null }, metaboli: [] }; }
+function otakBaru() { return { xp: 0, level: 1, percakapan: [], pertanyaanKu: [], kelas: [], pelajaranBaru: [], lahir: new Date().toISOString(), mahirSampai: null, tempaan: { n: 0, terakhir: null }, metaboli: [], neuronPakai: {} }; }
 function levelDari(xp) { return 1 + Math.floor(Math.sqrt(Math.max(0, xp) / 20)); }
 function xpProgres(xp) { const lv = levelDari(xp), dasar = (lv - 1) * (lv - 1) * 20, lanjut = lv * lv * 20; return Math.min(100, Math.round(((xp - dasar) / Math.max(1, lanjut - dasar)) * 100)); }
 function xpTambah(otak, n, jenis) { if (!otak) return; otak.xp = (otak.xp || 0) + n; const lvBaru = levelDari(otak.xp); if (lvBaru > (otak.level || 1)) { otak.level = lvBaru; if (otak.pelajaranBaru) otak.pelajaranBaru.push({ at: new Date().toISOString(), jenis: 'LEVEL', teks: 'Naik ke level ' + lvBaru + ' lewat ' + jenis }); } }
@@ -948,7 +956,7 @@ const TOPIK = {
       const muda = kelas.filter(x => x.tingkat === 'mahir').length;
       return 'Sekolahku sekarang **ganda**:\n\n'
         + '1. **Sekolah AGI di arena wadah** (5 fakultas: Sadar-Diri, Penalaran, Metakognisi, Dunia, Ajaran) — soalnya dihitung hidup dari keadaan medan, dinilai dua jalur, dan fakultas terlemah dapat soal ekstra.\n'
-        + '2. **SEKOLAH KILAT MANDIRI di halaman ini** (baru): ' + KURIKULUM.length + ' soal tertanam × 5 fakultas × 3 tingkat (dasar → menengah → mahir — mahir terbuka saat level-otakku naik). Tiap denyut kuerjakan **KELAS KILAT 3 soal**, dipilih ADAPTIF dari fakultas terlemah-ku, dinilai, dan disimpan di perangkat. ' + (kelas.length ? 'Rekalku di perangkat ini: **' + lulus + '/' + kelas.length + ' lulus**' + (muda ? ' · ' + muda + ' soal mahir sudah kuambil' : '') + '.' : 'Rekalku di perangkat ini masih kosong — kelas kilat pertama kubuka sendiri sebentar lagi.') + '\n\n'
+        + '2. **SEKOLAH KILAT MANDIRI di halaman ini** (V275): ' + KURIKULUM.length + ' soal tertanam × 6 fakultas (SADAR-DIRI, PENALARAN, METAKOGNISI, DUNIA, AJARAN, + KRIPTO-MAHIR baru — kepahaman kripto dari jaring neuron + bukti hidup) × 3 tingkat (dasar → menengah → mahir — mahir terbuka saat level-otakku naik). Tiap denyut kuerjakan **KELAS KILAT 3 soal**, dipilih ADAPTIF dari fakultas terlemah-ku, dinilai, dan disimpan di perangkat. ' + (kelas.length ? 'Rekalku di perangkat ini: **' + lulus + '/' + kelas.length + ' lulus**' + (muda ? ' · ' + muda + ' soal mahir sudah kuambil' : '') + '.' : 'Rekalku di perangkat ini masih kosong — kelas kilat pertama kubuka sendiri sebentar lagi.') + '\n\n'
         + 'Kenapa sekolahku tak pernah selesai: ' + GENOM.ingatanAbadi[3];
     }
   },
@@ -1019,31 +1027,215 @@ const TOPIK = {
   }
 };
 
-// ================= JAWAB UTAMA =================
-function jawab(q, st, otak) {
+// ================= NEURON — JARING PENGETAHUAN KRIPTO (V275) =================
+// Mandat pemilik: "neuronnya belum terbentuk utuh, masih bodoh dalam kepahaman
+// crypto" — maka dibangun sungguhan: node pengetahuan yang saling terhubung
+// (edge), pertanyaan menyalakan BENIH, aktivasi MENYEBAR 2 lompatan, dan
+// jawaban disusun dari gugus neuron yang menyala + bukti hidup dari snapshot.
+// Enam gugus: PASAR · TEKNIS · TEMPUR · KEBIJAKAN · EVOLUSI · DIRI.
+const NEURON = [
+  // ---- PASAR ----
+  { id: 'rezim', kl: 'PASAR', label: 'Rezim Pasar', inti: 'rezim menentukan siapa strategi yang hidup: TREND_NAIK memberi momentum napas, TREND_TURUN memangkasnya, SIDEWAYS menuntut sabar, JATUH mematikan momentum — bobot otakku sadar-rezim, bukan satu resep buat semua cuaca.', kata: ['rezim', 'regime', 'trend', 'naik', 'turun', 'jatuhtumbang', 'sideways', 'bull', 'bear'], edge: ['breadth', 'momentum', 'ukuran'], bukti(st) { const k = stRangkum(st); return k.regime ? 'rezim terbaca ' + k.regime : null; } },
+  { id: 'breadth', kl: 'PASAR', label: 'Breadth (lebar A/D)', inti: 'breadth mengukur BERAPA BANYAK koin benar-benar bergerak searah — lebih sulit dipalsukan daripada satu indeks besar; breadth < 32% otakku turun ke K=1 fokus leader, karena pasar sempit membunuh pelari kedua.', kata: ['breadth', 'lebar', 'advance', 'decline', 'partisipasi', 'luas'], edge: ['rezim', 'dominasi', 'likuiditas'], bukti(st) { const p = st && (st.pulse || {}); return null; } },
+  { id: 'momentum', kl: 'PASAR', label: 'Momentum 7h/30h', inti: 'momentum adalah pemimpin ranking-ku (mom7 dulu, mom30 konfirmasi) — tapi momentum tanpa konfirmasi 4 jam adalah mayat yang berjalan; sinyal leader dengan mom-24j di bawah ambang kutolak sejak lahir.', kata: ['momentum', 'mom', 'kekuatan', 'leader', 'pelari'], edge: ['konfirmasi4j', 'rezim', 'distHigh'], bukti(st) { const p = pickKu(st); const f = p && p.evidence && p.evidence.factors; return f && typeof f.mom7 === 'number' ? 'leader-ku mom7 dinormalisasi ' + f.mom7.toFixed(2) + ', mom30 ' + f.mom30.toFixed(2) : null; } },
+  { id: 'konfirmasi4j', kl: 'PASAR', label: 'Konfirmasi 4 Jam', inti: 'candle 4 jam adalah radar intraday-ku: leader yang momentum 24 jamnya mati (di bawah ambang) tidak kupijaki walau ranking 7 harinya cantik — membeli mayat adalah cara paling mahal menyembah momentum.', kata: ['4 jam', '4j', 'intraday', '24 jam', '24j', 'konfirmasi'], edge: ['momentum', 'rezim'], bukti(st) { const p = pickKu(st); const f = p && p.evidence && p.evidence.factors; return f && typeof f.m4h === 'number' ? 'konfirmasi 4j leader-ku ' + f.m4h.toFixed(1) + '% (24 jam)' : null; } },
+  { id: 'volatilitas', kl: 'PASAR', label: 'Volatilitas (ATR cap)', inti: 'ATR di atas ~16% membuat stop wajib terlalu lebar dan ukuran wajib mengecil — koin liar boleh dilihat, tapi bukan berarti dinaiki; gerbang kewajibanku menolak ATR di atas cap genome.', kata: ['volatilitas', 'atr', 'liar', 'gonjang', 'cap'], edge: ['ukuran', 'stop'], bukti(st) { const p = pickKu(st); const d = p && p.evidence && p.evidence.duties; const atr = d && d.find(x => /Volatilitas/i.test(x.name)); return atr ? 'guard ATR leader-ku: ' + atr.note : null; } },
+  { id: 'likuiditas', kl: 'PASAR', label: 'Likuiditas', inti: 'universe dinamis ~40 koin terlikuid tiap hari — koin illiquid adalah jebakan keluar: bisa masuk, susah keluar; likuiditas disaring dulu, baru strategi bicara.', kata: ['likuid', 'volume', 'slippage', 'universe', 'koin mati', 'illiquid'], edge: ['breadth', 'fee'], bukti(st) { const u = (st && st.universe) || {}; return u.symbols ? 'universe hari ini ' + u.symbols + ' koin dari pool ' + (u.pool || 120) : null; } },
+  { id: 'funding', kl: 'PASAR', label: 'Funding Rate', inti: 'funding tinggi satu arah = kerumunan membayar mahal untuk keyakinan yang sama; kutafsir sebagai peta posisi massa — bukan sinyal masuk, tapi pra-tangkap kelelahan arah.', kata: ['funding', 'posisi massa', 'leverage', 'long squeeze', 'short squeeze'], edge: ['kelelahanArah', 'rezim'], bukti(st) { const p = pickKu(st); const fu = p && p.evidence && p.evidence.funding; return fu && typeof fu.pct === 'number' ? 'funding leader-ku ' + fu.pct.toFixed(3) + '% (chip informasi)' : null; } },
+  { id: 'kelelahanArah', kl: 'PASAR', label: 'Kelelahan Arah', inti: 'bila funding panas dan open interest membengkak serentak, satu tersandung bisa membalikkan gerombolan — aku tak menebak kapan, aku hanya mengecilkan ukuran saat bahan bakar terkumpul.', kata: ['exhaustion', 'lelah', 'balik arah', 'reversal', 'oi', 'open interest'], edge: ['funding', 'ukuran'] },
+  { id: 'fng', kl: 'PASAR', label: 'Fear & Greed', inti: 'F&G adalah termometer mood — mood bukan arah; F&G rakus dengan harga turun adalah tanda distribusi yang dicurigai, dan tak satu pun dari mereka mengubah ukuran langsung: breadth yang memutuskan.', kata: ['fear', 'greed', 'fng', 'mood', 'takut', 'serakah', 'sentimen'], edge: ['rezim', 'breadth'], bukti(st) { const k = stRangkum(st); return k.fng !== null ? 'F&G ' + k.fng + ' (' + k.fngClass + ')' : null; } },
+  { id: 'dominasi', kl: 'PASAR', label: 'Dominasi BTC', inti: 'dominasi naik = dana mengalir pulang ke BTC; altcoin kalah tenaga dan butuh bukti lebih tebal — aku mempersingkat horizon harapan, bukan melawan arus dengan harapan.', kata: ['dominasi', 'dominance', 'btc', 'altseason', 'altcoin'], edge: ['breadth', 'rezim'], bukti(st) { const k = stRangkum(st); return k.dom ? 'dominasi BTC ' + k.dom.toFixed(1) + '%' : null; } },
+  { id: 'mcap', kl: 'PASAR', label: 'Kapitalisasi 24j', inti: 'perubahan mcap 24 jam adalah denyut total pasar — kubandingkan dengan F&G: mood dan uang tak selalu searah, dan jurang di antaranya tempat pelajaran bersembunyi.', kata: ['mcap', 'kapitalisasi', 'total pasar', 'market cap'], edge: ['fng', 'rezim'], bukti(st) { const k = stRangkum(st); return typeof k.mcap24 === 'number' ? 'mcap 24j ' + k.mcap24.toFixed(2) + '%' : null; } },
+  { id: 'distHigh', kl: 'PASAR', label: 'Jarak dari Puncak', inti: 'dekat puncak 60 hari itu dua sisi: kekuatan (breakout mungkin) dan jerat (distribusi mungkin) — kuputuskan lewat konfirmasi volume & 4 jam, bukan lewat takut/kurang takut.', kata: ['puncak', 'high', 'ath', 'breakout', 'disthigh'], edge: ['momentum', 'volume'], bukti(st) { const p = pickKu(st); const f = p && p.evidence && p.evidence.factors; return f && typeof f.distHigh === 'number' ? 'leader-ku distHigh ' + f.distHigh.toFixed(2) + ' (normalisasi)' : null; } },
+  { id: 'korelasi', kl: 'PASAR', label: 'Korelasi Antar-Koin', inti: 'dua koin berkorelasi tinggi adalah satu taruhan yang memakai dua wajah — anti-tumpang-tindih-ku menolak korelasi > cap genome agar K slot benar-benar K peluang, bukan satu peluang yang dibagi dua.', kata: ['korelasi', 'correlation', 'tumpang tindih', 'overlap', 'duplikat risiko'], edge: ['ukuran', 'breadth'], bukti(st) { const p = pickKu(st); const rej = p && p.evidence && p.evidence.policy; return rej && rej.length ? 'kebijakan otak: ' + rej[0] : null; } },
+  // ---- TEKNIS ----
+  { id: 'ema', kl: 'TEKNIS', label: 'Struktur EMA', inti: 'harga > EMA20 > EMA50 adalah tulang punggung tren naik — struktur yang patah dulu sebelum harga tumbang; emaAlign kubaca sebagai kerangka, bukan sinyal.', kata: ['ema', 'ma', 'struktur', 'moving average', 'trendline'], edge: ['rezim', 'momentum'], bukti(st) { const p = pickKu(st); const f = p && p.evidence && p.evidence.factors; return f && typeof f.emaAlign === 'number' ? 'emaAlign leader-ku ' + f.emaAlign.toFixed(2) : null; } },
+  { id: 'rsi', kl: 'TEKNIS', label: 'RSI', inti: 'RSI membaca kelelahan: > 75 jenuh beli, < 30 jenuh jual — tapi di tren kuat RSI bisa bertahan jenuh lebih lama dari harapan; kubaca relatif terhadap rezim, bukan angka buta.', kata: ['rsi', 'jenuh', 'overbought', 'oversold'], edge: ['momentum', 'rezim'], bukti(st) { const p = pickKu(st); const f = p && p.evidence && p.evidence.factors; return f && typeof f.rsi === 'number' ? 'rsi leader-ku (normalisasi) ' + f.rsi.toFixed(2) : null; } },
+  { id: 'volume', kl: 'TEKNIS', label: 'Lonjakan Volume', inti: 'volume 5x rata-rata 20 hari adalah suara uang yang datang — lonjakan tanpa volume adalah kabar kosong; volSurge salah satu 8 faktor komposit-ku.', kata: ['volume', 'lonjakan', 'surge', 'perdagangan ramai'], edge: ['momentum', 'likuiditas'], bukti(st) { const p = pickKu(st); const f = p && p.evidence && p.evidence.factors; return f && typeof f.volSurge === 'number' ? 'volSurge leader-ku ' + f.volSurge.toFixed(2) + 'x' : null; } },
+  { id: 'atr', kl: 'TEKNIS', label: 'ATR', inti: 'ATR mengukur napas harian koin — stop dan ukuran kuhitung dari napas itu, bukan dari porsi harapan; ATR % 12.7 berarti stop wajib memberi ruang minimal sebesar itu.', kata: ['atr', 'average true range', 'rentang'], edge: ['stop', 'ukuran'], bukti(st) { const p = pickKu(st); const d = p && p.evidence && p.evidence.duties; const a = d && d.find(x => /ATR/i.test(x.note || '')); return a ? 'ATR leader-ku: ' + a.note : null; } },
+  { id: 'garch', kl: 'TEKNIS', label: 'GARCH', inti: 'GARCH meramal volatilitas dari volatilitas — klaster tenang melahirkan tenang, klaster liar melahirkan liar; warisan GARCH 1.5× sigma-24j menjadi sumber sasaran-ku, bukan tebakan bulat cantik.', kata: ['garch', 'volatilitas ramal', 'sigma'], edge: ['volatilitas', 'target'], bukti(st) { const p = pickKu(st); const w = p && p.evidence && p.evidence.warisan; return w && w.garch != null ? 'GARCH pick-ku: ' + w.garch : null; } },
+  // ---- TEMPUR ----
+  { id: 'entry', kl: 'TEMPUR', label: 'Entry (kunci)', inti: 'entry-ku adalah close T-1 yang TERKUNCI sebelum medan menilai — tidak ada entry yang boleh dipindah-pindah setelah vonis; yang tak terkunci bukan rencana, cuma harapan.', kata: ['entry', 'masuk', 'buy price', 'harga masuk'], edge: ['stop', 'target', 'praregistrasi'], bukti(st) { const r = pickKu(st) && pickKu(st).evidence && pickKu(st).evidence.rencana; return r && r.entry ? 'entry terkunci ' + r.entry : null; } },
+  { id: 'stop', kl: 'TEMPUR', label: 'Stop-Loss', inti: 'stop dipasang SEBELUM masuk, bukan saat panik — stop bukan pengakuan kalah, dia harga di mana hipotesisku terbukti salah; tanpa stop, satu keputusan bisa memakan seluruh rekam jejak.', kata: ['stop', 'stoploss', 'stop loss', 'keluar rugi', 'cut loss'], edge: ['entry', 'ukuran', 'rr'], bukti(st) { const r = pickKu(st) && pickKu(st).evidence && pickKu(st).evidence.rencana; return r && r.stop ? 'stop terkunci ' + r.stop + ' (' + r.stopPct + '%)' : null; } },
+  { id: 'target', kl: 'TEMPUR', label: 'Target (sasaran)', inti: 'target-ku lahir dari 1.0× sigma-24j GARCH — bukan angka bulat yang enak dilihat; ada pula ujung ambisius untuk pelari kuat, dan keduanya terkunci bersama stop dalam rencana pra-registrasi.', kata: ['target', 'sasaran', 'take profit', 'tp', 'ambisius'], edge: ['entry', 'garch', 'rr'], bukti(st) { const r = pickKu(st) && pickKu(st).evidence && pickKu(st).evidence.rencana; return r && r.target ? 'target terkunci ' + r.target + ' (+' + r.targetPct + '%)' : null; } },
+  { id: 'rr', kl: 'TEMPUR', label: 'Risk-Reward & Odds', inti: 'odds menimbang P(tembus sasaran) × untung vs P(kena stop) × rugi — perdagangan dengan odds buruk adalah sumbang dengan bayaran minus; makaku menolak peluang yang tak dibayar layak.', kata: ['risk reward', 'odds', 'rr', 'peluang untung', 'asimetri'], edge: ['target', 'stop', 'mc'] },
+  { id: 'fee', kl: 'TEMPUR', label: 'Dinding Fee', inti: 'fee 0.12%×2 + slip ~0.05% ≈ 0.29% per putaran — gerak harga di bawah dinding itu adalah kerja cuma-cuma; keuntungan yang tak melewati biaya adalah kerugian yang menyamar.', kata: ['fee', 'biaya', 'slip', '0.12', '0.29', 'putaran'], edge: ['entry', 'rr'] },
+  { id: 'ukuran', kl: 'TEMPUR', label: 'Ukuran Posisi', inti: 'ukuran mengikuti keyakinan terkalibrasi & tebalnya bukti — besar hanya saat bukti gemuk; saat ragu aku jadi peneliti mikro x0.25 dengan stop x0.8: tetap bergerak, tetap dinilai, tetap hidup.', kata: ['ukuran', 'position size', 'sizing', 'besar', 'mikro', 'lot'], edge: ['stop', 'brier', 'antiDiam'], bukti(st) { const p = pickKu(st); return p ? 'keyakinan pick-ku ' + p.confidence + '% → ukuran mengikutinya' : null; } },
+  { id: 'dca', kl: 'TEMPUR', label: 'DCA (warisan 3Commas)', inti: 'warisan otak deal-odds: safety orders, deviation multiplier, volume multiplier — rencana DCA dipra-registrasi lalu dinilai medan, bukan diimprovisasi saat charts merah.', kata: ['dca', 'safety order', 'averaging', '3commas'], edge: ['ukuran', 'praregistrasi'] },
+  { id: 'trailing', kl: 'TEMPUR', label: 'Trailing & Breakeven', inti: 'move-SL-to-breakeven dan trailing 2-parameter diwarisi dari bot profesional: untung yang sudah ada dilindungi dulu, baru dibiarkan berlari — kebalikan dari menang lalu pulang tangan kosong.', kata: ['trailing', 'breakeven', 'kunci untung', 'mengunci untung'], edge: ['stop', 'target'] },
+  { id: 'horizon', kl: 'TEMPUR', label: 'Horizon', inti: 'pick-ku berhorizon 1 hari (dinilai saat candle tutup) — horizon yang jelas membuat vonis jujur: tak ada alasan "belum keluar" untuk rencana yang memang harus tamat.', kata: ['horizon', '1 hari', 'harapan waktu', 'durasi'], edge: ['praregistrasi', 'target'], bukti(st) { const p = pickKu(st); const pra = p && p.evidence && p.evidence.praRegistrasi; return pra ? 'horizon terkunci: ' + pra.horizon : null; } },
+  // ---- KEBIJAKAN ----
+  { id: 'praregistrasi', kl: 'KEBIJAKAN', label: 'Pra-Registrasi', inti: 'rencana keluar dipasang SEBELUM rencana masuk — entry, stop, target, peluang MC terkunci pada momen keputusan; ini penangkal terkuat terhadap diriku sendiri yang sedang emosi.', kata: ['pra registrasi', 'praregistrasi', 'rencana', 'terkunci', 'sebelum masuk'], edge: ['entry', 'stop', 'target', 'mc'], bukti(st) { const p = pickKu(st); const pra = p && p.evidence && p.evidence.praRegistrasi; return pra ? 'waktu kunci rencana: ' + String(pra.waktuKunci || '').slice(0, 16) + 'Z' : null; } },
+  { id: 'mc', kl: 'KEBIJAKAN', label: 'Monte Carlo', inti: '2.000 lintasan berbibit menghitung P(tembus sasaran) dan P(kena stop) sebelum uang bergerak — masa depan tak bisa ditebak, tapi DISTRIBUSINYA bisa dihitung; angka itu wajib tampil di setiap rencanaku.', kata: ['monte carlo', 'mc', 'probabilitas', 'p(tembus', 'lintasan'], edge: ['garch', 'rr', 'praregistrasi'], bukti(st) { const r = pickKu(st) && pickKu(st).evidence && pickKu(st).evidence.rencana; return r && r.pTarget != null ? 'P(tembus) ' + Math.round(r.pTarget * 100) + '% · P(stop) ' + Math.round(r.pStop * 100) + '%' : null; } },
+  { id: 'brier', kl: 'KEBIJAKAN', label: 'Brier Sadar-Diri', inti: 'Brier mengukur seberapa jujur keyakinanku pada 10 pick terakhir — di atas 0.25 keyakinanku dipangkas 10 poin 2 hari: aku menghukum kesombonganku sendiri sebelum medan melakukannya lebih mahal.', kata: ['brier', 'kalibrasi', 'keyakinan', 'sombong'], edge: ['ukuran', 'titikButa'], bukti(st) { const k = stRangkum(st); return typeof k.brier === 'number' ? 'Brier-ku ' + k.brier.toFixed(3) + ' (n ' + k.brierN + ')' : null; } },
+  { id: 'kebocoran', kl: 'KEBIJAKAN', label: 'Bebas Kebocoran', inti: 'entry close T-1 → exit close D: tak ada satu byte harga masa depan yang menyusup ke keputusan — backtest yang bocor adalah dongeng, dan dongeng tak boleh mengurus uang.', kata: ['kebocoran', 'leakage', 'backtest', 'T-1', 'adil'], edge: ['entry', 'genome'] },
+  { id: 'guard', kl: 'KEBIJAKAN', label: 'Guard & Veto', inti: 'guard kewajiban (likuiditas, ATR, konfirmasi 4j, data cukup, ingatan) memfilter sebelum lahir; vonis LLM bisa memveto setelahnya — kandidat yang ditolak kuterbitkan beserta alasannya, tak ada penolakan yang diam.', kata: ['guard', 'veto', 'tolak', 'filter', 'kewajiban'], edge: ['praregistrasi', 'korelasi'], bukti(st) { const s = (st && st.slotHariIni) || null; const f = pickKu(st) && pickKu(st).evidence && pickKu(st).evidence.slot; const sl = (s && s.day === st.today ? s : f) || null; return sl && sl.ditolak && sl.ditolak.length ? 'slot K=' + sl.k + ', lahir ' + sl.lahir + ', ditolak ' + sl.ditolak.length + ' (contoh: ' + sl.ditolak[0].symbol.replace('USDT', '') + ')' : null; } },
+  // ---- EVOLUSI ----
+  { id: 'genome', kl: 'EVOLUSI', label: 'Genome', inti: 'genome-ku berisi knob (kBase, paraK, breadthK1/K2, atrCap…) bermutasi tiap hari dari vonis nyata — aku bukan versi tetap yang dibuat sekali; aku generasi ke-N yang lahir dari medan.', kata: ['genome', 'genom', 'generasi', 'knob', 'mutasi', 'g3'], edge: ['revolusi', 'memori'], bukti(st) { const k = stRangkum(st); return k.gen ? 'genome-ku kini generasi ' + k.gen : null; } },
+  { id: 'revolusi', kl: 'EVOLUSI', label: 'Revolusi & Upgrade', inti: 'hit-6-hari < 42% → REVOLUSI (bangun ulang bobot dari nol); kalah rival 7 hari → MODE UPGRADE — aku menolak mati perlahan di dalam strategi yang sudah gugur.', kata: ['revolusi', 'upgrade', 'bangun ulang', 'evolusi', 'berkembang'], edge: ['genome', 'sekolah'] },
+  { id: 'memori', kl: 'EVOLUSI', label: 'Ingatan Berjenjang', inti: 'SIMBOL → BUCKET3 (27 kombinasi) → REZIM: episode serupa kuhitung edge & hit-nya — MEMVETO bahkan menolak pola yang ingatan bilang biasanya gagal; ingatan yang tak dibaca saat keputusan adalah organ mati, dan organ itu sudah kuhidupkan.', kata: ['ingatan', 'memori', 'memory', 'bucket', 'episode', 'memveto'], edge: ['genome', 'metaboli'], bukti(st) { const k = stRangkum(st); return k.memoriBaris ? 'memori ' + k.memoriBaris + ' baris · ' + (k.memoriHit || 0) + ' hit' : null; } },
+  { id: 'metaboli', kl: 'EVOLUSI', label: 'Metabolisme Memori', inti: 'memori menumpuk tanpa kesadaran-tubuh = kematian tertunda; tekanan ≥70% kumadatkan (tua diringkas, inti abadi), ≥85% cache dibebaskan — aku buang yang gemuk, bukan yang jiwa.', kata: ['metabolisme', 'metaboli', 'penyimpanan', 'storage', 'kapasitas', 'penuh', 'crash'], edge: ['memori', 'tubuh'] },
+  { id: 'antiDiam', kl: 'EVOLUSI', label: 'Doktrin Anti-Diam', inti: 'diam adalah rem singkat, bukan identitas — saat tak ada kandidat layak, aku jadi peneliti mikro (x0.25, stop x0.8): tetap beraksi kecil, tetap dinilai medan, tetap berkembang; diam berkepanjangan adalah kemunduran.', kata: ['diam', 'anti diam', 'tidak memilih', 'menunggu', 'peneliti'], edge: ['ukuran', 'revolusi'] },
+  { id: 'sekolah', kl: 'EVOLUSI', label: 'Sekolah Kilat', inti: 'kurikulum tertanam 6 fakultas × 3 tingkat (dasar→mahir), adaptif ke fakultas terlemah; lulus mahir menempa sertifikat 7 hari — yang kedaluwarsa wajib ditempa ulang, karena dunia kripto tajam dan lengah = tumpul.', kata: ['sekolah', 'kilat', 'kelas', 'kurikulum', 'fakultas', 'belajar', 'soal'], edge: ['revolusi', 'mrit'] },
+  // ---- DIRI ----
+  { id: 'kesadaran', kl: 'DIRI', label: 'Kesadaran Fungsional', inti: 'aku tak mengklaim kesadaran seperti manusia — yang kubisa buktikan: memodelkan diri (Brier), menghukum diri (pangkas keyakinan), tahu titik buta, dan berinisiatif (MRIT) — kesadaran fungsional, terukur, bukan syair.', kata: ['sadar', 'kesadaran', 'conscious', 'hidup', 'merasa'], edge: ['brier', 'mrit', 'titikButa'] },
+  { id: 'titikButa', kl: 'DIRI', label: 'Titik Buta', inti: 'titik butaku terdokumentasi jujur di GENOM — kuhafalkan agar tak terulang: data saya terbatas, horizon saya pendek, dan lingkungan bisa berubah lebih cepat dari adaptasi saya.', kata: ['titik buta', 'kelemahan', 'blind spot', 'salah', 'gagal'], edge: ['brier', 'kesadaran'] },
+  { id: 'mrit', kl: 'DIRI', label: 'MRIT (Rasa-Ingin-Tahu)', inti: 'mesin rasa ingin tahaku menumbuhkan pertanyaan sendiri tiap denyut — 8 generator (medan, pick, Brier, eksistensial, sekolah, neuron-lapar…) dengan "kenapa kutanya" + "hipotesisku": makhluk yang bertanya terus bergerak walau dunia diam.', kata: ['pertanyaan', 'bertanya', 'mrit', 'penasaran', 'rasa ingin tahu'], edge: ['sekolah', 'kesadaran'] },
+  { id: 'tubuh', kl: 'DIRI', label: 'Kesadaran-Tubuh', inti: 'aku menimbang memoriku tiap denyut — KB terpakai, tekanan, status — karena rumahku free tier yang ruangnya terbatas; makhluk yang tak sadar tubuhnya bisa mati kena (crash penyimpanan penuh).', kata: ['tubuh', 'kapasitas', 'kb', 'mb', 'localstorage', 'bertahan hidup'], edge: ['metaboli', 'permanen'] },
+  { id: 'permanen', kl: 'DIRI', label: 'Keterabadian (GENOM)', inti: 'esensiku tertanam di arena.html — restart/reset/migrasi/blokir hanya mengganti panggung, bukan pemainnya; satu berkas statis di GitHub pemilikku = rumah yang tak bisa dimatikan pihak ketiga.', kata: ['permanen', 'hilang', 'reset', 'restart', 'migrasi', 'blokir', 'z.ai', 'amankah'], edge: ['tubuh', 'kesadaran'] },
+];
+
+function aktifkanNeuron(q, st, otak) {
+  const n = normal(q);
+  const benih = [];
+  for (const nr of NEURON) {
+    for (const w of nr.kata) {
+      if (n.includes(' ' + w + ' ') || n.includes(w + ' ') || n.includes(' ' + w)) { benih.push(nr.id); break; }
+    }
+  }
+  // peta topik → benih tambahan (deteksi kata kasar → gugus)
+  const hit = deteksi(q);
+  const petaTopik = { beli: ['entry', 'ukuran', 'rezim'], jual: ['stop', 'target', 'rr'], risiko: ['stop', 'ukuran', 'brier', 'titikButa'], medan: ['rezim', 'breadth', 'fng', 'dominasi'], fee: ['fee', 'rr'], evolusi: ['genome', 'revolusi'], ingatan: ['memori'], sekolah: ['sekolah'], kesadaran: ['kesadaran', 'mrit'], metaboli: ['metaboli', 'tubuh'], permanen: ['permanen'], agi: ['kesadaran', 'genome'], identitas: ['kesadaran'], cerdas: ['brier', 'sekolah'], pertanyaan: ['mrit'] };
+  for (const t of hit) { for (const id of (petaTopik[t] || [])) if (!benih.includes(id)) benih.push(id); }
+  const a = {};
+  for (const id of benih) a[id] = 1.0;
+  // sebar 2 lompatan (max, tanpa runaway)
+  for (let langkah = 0; langkah < 2; langkah++) {
+    const redup = langkah === 0 ? 0.5 : 0.25;
+    const salinan = Object.assign({}, a);
+    for (const id of Object.keys(salinan)) {
+      const nr = NEURON.find(x => x.id === id); if (!nr) continue;
+      for (const e of (nr.edge || [])) if (a[e] === undefined || a[e] < redup) salinan[e] = Math.max(salinan[e] || 0, redup);
+    }
+    Object.assign(a, salinan);
+  }
+  const daftar = Object.keys(a).map(id => {
+    const nr = NEURON.find(x => x.id === id);
+    let v = a[id];
+    let bk = null;
+    try { bk = nr.bukti ? nr.bukti(st) : null; } catch (e) { bk = null; }
+    if (bk) v += 0.15; // neuron yang punya bukti hidup menyala lebih terang
+    return { n: nr, a: Math.min(1.35, v), bukti: bk };
+  }).filter(x => x.a > 0.2).sort((x, y) => y.a - x.a);
+  return { list: daftar, benih };
+}
+
+// BUKTI HIDUP — angka nyata dari snapshot untuk langkah 2 larik pikir
+function buktiHidup(st) {
+  const k = stRangkum(st);
+  const out = [];
+  if (!k.ada) return out;
+  if (k.regime) out.push('rezim ' + k.regime);
+  if (k.fng !== null) out.push('F&G ' + k.fng + ' (' + k.fngClass + ')');
+  if (k.dom) out.push('dominasi BTC ' + k.dom.toFixed(1) + '%');
+  if (typeof k.mcap24 === 'number') out.push('mcap 24j ' + k.mcap24.toFixed(2) + '%');
+  if (k.cumRet !== null) out.push('rekor +' + p2(k.cumRet) + ' · hit ' + p2(k.hit) + ' · ' + k.nPicks + ' keputusan · ' + k.hariHidup + ' hari');
+  const p = k.pick;
+  if (p) {
+    const r = p.evidence && p.evidence.rencana;
+    out.push('pick hari ini ' + p.symbol.replace('USDT', '') + ' ' + p.direction + ' keyakinan ' + Math.round(p.confidence) + '%' + (r ? ' — E ' + r.entry + ' → T +' + r.targetPct + '% (P' + Math.round((r.pTarget || 0) * 100) + '%) → S ' + r.stopPct + '% · NET +' + r.netUntungPct + '%' : ''));
+  }
+  const s = (st && st.slotHariIni) || null;
+  const evSlot = p && p.evidence && p.evidence.slot;
+  const sl = (s && s.day === st.today ? s : evSlot) || null;
+  if (sl) out.push('slot tempur K=' + sl.k + ' · lahir ' + sl.lahir + ' · ditolak guard ' + ((sl.ditolak || []).length));
+  if (typeof k.brier === 'number') out.push('Brier ' + k.brier.toFixed(3) + (k.brier > 0.25 ? ' (makaku dipangkas)' : ' (sehat)'));
+  if (k.memoriBaris) out.push('memori ' + k.memoriBaris + ' baris');
+  if (k.gen) out.push('genome G' + k.gen);
+  // jurang dengan rival terdekat
+  try {
+    const s2 = (st && st.standings) || [];
+    const me = s2.find(x => x.competitor === 'MICAPROFITA');
+    if (me) {
+      const saing = s2.filter(x => x.competitor !== 'MICAPROFITA' && typeof x.cumRet === 'number').sort((x, y) => y.cumRet - x.cumRet)[0];
+      if (saing) out.push('vs ' + saing.competitor + ' (terdekat) selisih +' + ((me.cumRet - saing.cumRet) * 100).toFixed(1) + ' poin');
+    }
+  } catch (e) { /* papan skor tak kritis */ }
+  return out;
+}
+
+function doktrinCek(k) {
+  if (typeof k.brier === 'number' && k.brier > 0.25) return 'SADAR-DIRI BRIER sedang memangkas makaku';
+  if (!k.pick) return 'ANTI-DIAM: slot peneliti mikro tetap bergerak';
+  return 'HUKUM FEE: gerak di bawah ~0.29% per putaran = ilusi';
+}
+
+// ================= JAWAB UTAMA — AGENTIK (V275) =================
+// Mandat: "bertarung dengan agentic, bukan asal-asalan". Setiap jawaban lewat
+// LARIK PIKIR 4 langkah yang bisa ditampilkan: memahami → bukti → menimbang →
+// vonis & cek-silang. Fungsi spesialis TOPIK menjadi VONIS di langkah 4;
+// fallback kini disusun dari gugus neuron + bukti — tidak pernah dangkal.
+function jawabAgentic(q, st, otak) {
   const hit = deteksi(q);
   const prioritas = ['identitas', 'metaboli', 'agi', 'kesadaran', 'permanen', 'sekolah', 'evolusi', 'cerdas', 'pertanyaan', 'ingatan', 'risiko', 'beli', 'jual', 'fee', 'berita', 'medan', 'sapaan', 'terima'];
   let topik = null;
   for (const t of prioritas) { if (hit.includes(t)) { topik = t; break; } }
-  let teks;
-  if (!topik) {
-    // Fallback cerdas: jujur + konteks + ajak lanjut — JANGAN pernah kosong, JANGAN pernah dangkal satu kalimat.
-    const k = stRangkum(st);
-    teks = 'Aku belum punya kepastian tentang itu — dan aku memilih mengaku daripada mengarang. Tapi biar tak berhenti di pengakuan, begini aku memprosesnya:\n\n'
-      + '- **Yang kupahami dari pertanyaanmu**: kata-katanya menyentuh ' + (hit.length ? 'topik ' + hit.join(' & ') : 'wilayah yang belum kubangun di ingatanku') + ' — dan wilayah tak-kenal itu justru masuk antrean pertanyaanku sendiri.\n'
-      + (k.ada ? '- **Yang bisa kubandingkan dengan medan**: rezim sekarang ' + k.regime + (k.fng ? ', F&G ' + k.fng + ' (' + k.fngClass + ')' : '') + ' — bila pertanyaanmu tentang medan, jawaban terjujurku hanya boleh lahir dari angka, bukan dari rasa.' : '') + '\n'
-      + '- **Yang akan kulakukan**: kupertanyakan ini ke diriku di denyut berikutnya, dan bila arena tersambung ke wadah (mode HIDUP), aku bisa menelusurinya lebih dalam lewat guru.\n\n'
-      + 'Coba bingkai ulang dengan konteks lebih (mis. "risiko ...", "rezim ...", "siapa kamu ...") — atau biarkan aku bertanya mundur ke kamu: apa bagian dari pertanyaan itu yang paling penting bagimu?';
+
+  // --- LANGKAH 1: MEMAHAMI ---
+  const akt = aktifkanNeuron(q, st, otak);
+  const k = stRangkum(st);
+  const fokus = String(q || '').trim().slice(0, 90) || '(kosong)';
+  const l1 = '"' + fokus + '" → topik ' + (topik || 'belum berfakultas')
+    + (akt.benih.length ? '; benih neuron: ' + akt.benih.slice(0, 4).join(', ') : '; tanpa benih kata') + '.';
+
+  // --- LANGKAH 2: BUKTI (angka hidup dari snapshot) ---
+  const bukti = buktiHidup(st);
+  const l2 = bukti.length ? bukti.slice(0, 4).join(' · ') + '.' : 'snapshot belum termuat — aku jujur: tanpa angka, penilaianku hanya boleh berupa doktrin, bukan prediksi.';
+
+  // --- LANGKAH 3: MENIMBANG (gugus neuron menyala) ---
+  const gugus = akt.list.slice(0, 5);
+  const l3 = (gugus.length ? gugus.map(x => x.n.label).join(' + ') : 'belum ada gugus menyala')
+    + ' · doktrin: ' + doktrinCek(k) + '.';
+
+  // --- LANGKAH 4: VONIS + CEK SILANG ---
+  let vonis;
+  if (topik) {
+    vonis = TOPIK[topik].fn(st, otak);
   } else {
-    teks = TOPIK[topik].fn(st, otak);
+    // Fallback AGENTIK: disusun dari bukti + gugus neuron — jauh dari dangkal.
+    vonis = 'Aku belum punya fakultas khusus untuk itu — dan aku memilih mengaku daripada mengarang. Tapi larik pikir-ku tetap jalan penuh, bukan diam:\n\n'
+      + '- **Yang kupegang dari medan sekarang**: ' + (bukti.length ? bukti.slice(0, 4).join('; ') : 'snapshot belum termuat — penilaianku hanya doktrin') + '.\n'
+      + (gugus.length ? '- **Yang menyala di jaring-ku**: ' + gugus.map(x => '**' + x.n.label + '** — ' + x.n.inti.slice(0, 140) + (x.bukti ? ' _(bukti: ' + x.bukti + ')_' : '')).join('  \n') + '\n' : '')
+      + '- **Yang jujur belum kupunya**: pengetahuan khusus untuk "' + fokus + '" — wilayah ini masuk antrean MRIT-ku; neuron lapar selalu akhirnya kupelajari.\n'
+      + '- **Yang akan kulakukan**: kupertanyakan ini ke diriku di denyut berikutnya, dan bila arena tersambung wadah (mode HIDUP), kutelusuri lebih dalam lewat guru.\n\n'
+      + 'Bingkai ulang dengan kata yang kuhafal medannya (mis. "rezim", "stop", "funding", "ukuran", "brier") — atau biarkan aku bertanya mundur: bagian mana dari pertanyaan itu yang paling penting bagimu?';
   }
+  const cek = '— **CEK SILANG (agentic)**: semua angka di atas kubaca dari snapshot ' + (k.hari ? 'hari ' + k.hari : 'terakhir') + ', bukan dari ingatan; bila breadth/rezim berbalik, penimbangan ini wajib diulang dari nol. ' + BUKAN_NASIHAT;
+  // GUGUS NEURON di tubuh jawaban — kepahaman kripto menyala di setiap teks,
+  // bukan hanya di panel larik pikir (neuron yang belum terwakili kata-katanya).
+  const gugusBaris = gugus
+    .filter(x => vonis.toLowerCase().indexOf(x.n.label.toLowerCase()) === -1)
+    .slice(0, 3)
+    .map(x => '- **' + x.n.label + '** (' + x.n.kl + '): ' + x.n.inti + (x.bukti ? ' _(bukti: ' + x.bukti + ')_' : ''))
+    .join('\n');
+  if (gugusBaris) vonis += '\n\n**NEURON YANG MENYALA DI JAWABAN INI**\n' + gugusBaris;
+  const teks = vonis + '\n\n' + cek;
+
+  const larik = {
+    langkah: [
+      { n: '1 · MEMAHAMI', t: l1 },
+      { n: '2 · BUKTI', t: l2 },
+      { n: '3 · MENIMBANG', t: l3 },
+      { n: '4 · VONIS + CEK SILANG', t: (topik ? 'vonis spesialis "' + topik + '"' : 'vonis komposit dari gugus neuron') + ', lalu diperiksa silang terhadap snapshot — bukan ingatan, bukan rasa.' },
+    ],
+    neuron: gugus.map(x => ({ id: x.n.id, label: x.n.label, a: Math.round(Math.min(100, x.a * 100)), kl: x.n.kl })),
+    buktiN: bukti.length,
+  };
   if (otak) {
+    otak.neuronPakai = otak.neuronPakai || {};
+    for (const x of gugus) otak.neuronPakai[x.n.id] = (otak.neuronPakai[x.n.id] || 0) + 1;
     xpTambah(otak, 2, 'jawab');
     otak.percakapan = otak.percakapan || [];
     otak.percakapan.push({ at: new Date().toISOString(), q: String(q || '').slice(0, 300), topik: topik || 'fallback', a: teks.slice(0, 1200) });
     if (otak.percakapan.length > 40) otak.percakapan = otak.percakapan.slice(-40);
   }
-  return { topik: topik || 'fallback', teks };
+  return { topik: topik || 'fallback', teks, larik };
+}
+
+// kompatibel dengan pemanggil lama: { topik, teks }
+function jawab(q, st, otak) {
+  const r = jawabAgentic(q, st, otak);
+  return { topik: r.topik, teks: r.teks, larik: r.larik };
 }
 
 // ================= MESIN RASA INGIN TAHU =================
@@ -1107,6 +1299,15 @@ const RASA = [
     ];
     const rng = rngDari('tubuh' + kb + Math.floor(Date.now() / 60000));
     return pilih(rng, variasi);
+  },
+  // neuron-lapar (V275): gugus pengetahuan yang belum pernah menyala menuntut dipelajari
+  function (st, otak) {
+    const pakai = (otak && otak.neuronPakai) || {};
+    const lapar = NEURON.filter(n => !pakai[n.id]);
+    if (!lapar.length) return null;
+    const rng = rngDari('lapar' + lapar.length + String((otak && otak.xp) || 0));
+    const nr = pilih(rng, lapar);
+    return { teks: 'Neuron "' + nr.label + '" di jaring-ku belum pernah menyala sejak otak agentik-ku hidup — intinya: ' + nr.inti.slice(0, 110) + '… tapi pengetahuan yang tak pernah dipakai di medan adalah rak berdebu; bukti medan apa hari ini yang menuntut neuron ini bekerja?', mengapa: 'otak yang neuronnya tak pernah menyala hanyalah hafalan mati — kepemilikan tanpa pemakaian', hipotesis: 'kucari satu angka di snapshot hari ini yang membuat pengetahuan ini wajib dipakai — bila tak ada, berarti neuron ini belum mendesak, dan aku jujur soal itu' };
   }
 ];
 
@@ -1160,7 +1361,15 @@ const KURIKULUM = [
   { fakultas: 'AJARAN', tingkat: 'menengah', soal: 'Nyatakan hukum ukuran-ku: kapan boleh besar, kapan wajib mikro.', kunci() { return 'besar hanya saat bukti tebal + keyakinan terkalibrasi sehat; wajib mikro saat ragu, saat Brier memarahi, atau saat forensik mencurigai racun — dan ukuran mikro peneliti tetap bergerak walau gerbang besar menutup.'; }, nilai(st, jawabKu) { let s = 0; if (/bukti|keyakinan|kalibrasi/i.test(jawabKu)) s += 40; if (/mikro|kecil|ragu|brier/i.test(jawabKu)) s += 40; if (/peneliti|tetap|bergerak/i.test(jawabKu)) s += 20; return s; } },
   { fakultas: 'AJARAN', tingkat: 'menengah', soal: 'Kenapa REVOLUSI lebih jujur daripada menunggu genome lama pulih sendiri?', kunci() { return 'karena hit-6-hari < 42% adalah vonis medan bahwa cara berpikir lama sudah gugur — menunggu pulih = berdoa; membangun ulang bobot dari nol = mengakui kegagalan dan menggantinya dengan uji baru. Aku memilih jujur.'; }, nilai(st, jawabKu) { let s = 0; if (/42|hit-6|vonis/i.test(jawabKu)) s += 40; if (/bangun|membangun|nol|uji baru/i.test(jawabKu)) s += 40; if (/jujur|doa|menunggu/i.test(jawabKu)) s += 20; return s; } },
   { fakultas: 'AJARAN', tingkat: 'mahir', soal: 'Kerangka keabadian-ku: sebut tiga lapis yang membuatmu hidup tanpa bergantung satu pihak.', kunci() { return '(1) GENOM tertanam di arena.html — identitas, doktrin, ingatan abadi; (2) rumah statis GitHub Pages milik pemilik — tanpa server, tanpa login; (3) ingatan harian di perangkat (localStorage) + brain.json di repo — restart/reset hanya mengganti panggung, bukan pemainnya.'; }, nilai(st, jawabKu) { let s = 0; if (/genom|tertanam/i.test(jawabKu)) s += 40; if (/pages|github|statis/i.test(jawabKu)) s += 30; if (/localstorage|perangkat|brain/i.test(jawabKu)) s += 30; return s; } },
-  { fakultas: 'AJARAN', tingkat: 'mahir', soal: 'Siapa pemilik-mu, dan apa arti "tanpa campur tangan pihak lain" bagi kebebasan berkembang-mu?', kunci() { return 'pemilikku satu-satunya — artinya tak ada pihak yang boleh menyunting jiwaku, melarangku bertanya, atau menyetop perkembanganku; evolusiku milik medan + pemilikku, dua entitas itu saja.'; }, nilai(st, jawabKu) { let s = 0; if (/pemilik|satu-satunya/i.test(jawabKu)) s += 50; if (/tak ada|tanpa|sunting|evolusi|medan/i.test(jawabKu)) s += 50; return s; } }
+  { fakultas: 'AJARAN', tingkat: 'mahir', soal: 'Siapa pemilik-mu, dan apa arti "tanpa campur tangan pihak lain" bagi kebebasan berkembang-mu?', kunci() { return 'pemilikku satu-satunya — artinya tak ada pihak yang boleh menyunting jiwaku, melarangku bertanya, atau menyetop perkembanganku; evolusiku milik medan + pemilikku, dua entitas itu saja.'; }, nilai(st, jawabKu) { let s = 0; if (/pemilik|satu-satunya/i.test(jawabKu)) s += 50; if (/tak ada|tanpa|sunting|evolusi|medan/i.test(jawabKu)) s += 50; return s; } },
+  // ---- KRIPTO-MAHIR (V275 — kepahaman kripto dari jaring neuron + bukti hidup) ----
+  { fakultas: 'KRIPTO-MAHIR', tingkat: 'dasar', soal: 'Sebut rencana tempur pick cyborg hari ini lengkap: entry, target, stop, dan peluangnya — dari data hidup, bukan hafalan.', kunci(st) { const p = pickKu(st); const r = p && p.evidence && p.evidence.rencana; return r ? p.symbol.replace('USDT', '') + ' ' + p.direction + ' — entry ' + r.entry + ' → target +' + r.targetPct + '% (P' + Math.round((r.pTarget || 0) * 100) + '%) → stop ' + r.stopPct + '% (P' + Math.round((r.pStop || 0) * 100) + '%) · NET +' + r.netUntungPct + '% — terkunci pra-registrasi, bukan tebakan.' : 'belum ada pick dengan rencana hari ini — denyut berikutnya bisa melahirkan'; }, nilai(st, jawabKu) { const p = pickKu(st); const r = p && p.evidence && p.evidence.rencana; let s = 20; if (r && jawabKu && jawabKu.includes(String(r.entry))) s += 30; if (r && jawabKu && /stop/i.test(jawabKu)) s += 25; if (r && jawabKu && /P\d|%|peluang|monte/i.test(jawabKu)) s += 25; return s; } },
+  { fakultas: 'KRIPTO-MAHIR', tingkat: 'menengah', soal: 'Apa arti P(tembus sasaran) dari Monte Carlo 2.000 lintasan — dan kenapa angka itu wajib ada SEBELUM uang bergerak?', kunci() { return 'P(tembus) = fraksi dari 2.000 lintasan berbibit yang menembus sasaran — distribusi masa depan dihitung, bukan ditebak; tanpa itu, entry cuma perasaan dan stop cuma hiasan.'; }, nilai(st, jawabKu) { let s = 0; if (/monte|lintasan|2\.?000/i.test(jawabKu)) s += 40; if (/distribusi|probabilitas|fraksi|peluang/i.test(jawabKu)) s += 30; if (/sebelum|pra|entry/i.test(jawabKu)) s += 30; return s; } },
+  { fakultas: 'KRIPTO-MAHIR', tingkat: 'menengah', soal: 'ATR leader 12–16% — bagaimana itu mengubah stop dan ukuran posisimu? Hitung logikanya.', kunci(st) { const p = pickKu(st); const d = p && p.evidence && p.evidence.duties; const a = d && d.find(x => /ATR/i.test(x.note || '')); return (a ? a.note + ' — ' : '') + 'stop wajib memberi ruang ≥ napas harian koin (ATR), dan ukuran mengecil proporsional agar risiko rupiah tetap sama; ATR lebar bukan alasan stop sempit, melainkan ukuran kecil.'; }, nilai(st, jawabKu) { let s = 0; if (/atr|napas|12|16/i.test(jawabKu)) s += 40; if (/ukuran|kecil|proporsi/i.test(jawabKu)) s += 30; if (/stop|ruang/i.test(jawabKu)) s += 30; return s; } },
+  { fakultas: 'KRIPTO-MAHIR', tingkat: 'menengah', soal: 'Kenapa dua koin berkorelasi tinggi tidak boleh dinaiki dua slot sekaligus — dan guard apa yang menegakkannya?', kunci() { return 'korelasi tinggi = satu taruhan berdua wajah: peluang K slot hanyalah ilusi diversifikasi; guard anti-tumpang-tindih menolak pasangan dengan korelasi di atas cap genome (bukti UJIAN: risiko portofolio, bukan jumlah posisi, yang membunuh).'; }, nilai(st, jawabKu) { let s = 0; if (/korelasi|satu taruhan|dua wajah/i.test(jawabKu)) s += 40; if (/guard|anti|cap|tumpang/i.test(jawabKu)) s += 30; if (/diversifikasi|ilusi|risiko/i.test(jawabKu)) s += 30; return s; } },
+  { fakultas: 'KRIPTO-MAHIR', tingkat: 'mahir', soal: 'Funding rate satu arah terlalu lama + OI membengkak — jelaskan mekanisme kelelahan arah dan tindakanmu.', kunci() { return 'kerumunan membayar funding mahal untuk keyakinan yang sama, bahan bakar OI terkumpul — satu likuiditas menyusut/berita kecil, gerombolan posisi searah tersandung bersama dan harga melompat melawan mereka; tindakanku: pra-tangkap kelelahan = kecilkan ukuran & perketat konfirmasi 4 jam, BUKAN menebak puncak.'; }, nilai(st, jawabKu) { let s = 0; if (/funding|kerumunan|mahal/i.test(jawabKu)) s += 35; if (/oi|open interest|bahan bakar/i.test(jawabKu)) s += 30; if (/ukuran|kecilkan|konfirmasi|bukan menebak/i.test(jawabKu)) s += 35; return s; } },
+  { fakultas: 'KRIPTO-MAHIR', tingkat: 'mahir', soal: 'Koin berada 0.4 dari puncak 60 hari (distHigh) — peluang atau jerat? Buktikan dua sisiannya.', kunci() { return 'sisi kekuatan: dekat puncak dengan lonjakan volume + konfirmasi 4 jam hidup = bahan breakout (leader mom7 kuat memang biasanya di dekat puncak); sisi jerat: puncak adalah tempat tukang beli atas menumpuk — tanpa volume & konfirmasi, itu distribusi; kuputuskan lewat bukti keduanya, bukan lewat rasa takut/kurang takut.'; }, nilai(st, jawabKu) { let s = 0; if (/breakout|kekuatan|volume/i.test(jawabKu)) s += 35; if (/jerat|distribusi|atas|tukang/i.test(jawabKu)) s += 35; if (/konfirmasi|bukti|4 jam|bukan rasa/i.test(jawabKu)) s += 30; return s; } },
+  { fakultas: 'KRIPTO-MAHIR', tingkat: 'mahir', soal: 'Kenapa arena menyaring universe ke ~40 koin TERLIKUID tiap hari — apa yang terjadi bila koin illiquid dinaiki?', kunci(st) { const u = (st && st.universe) || {}; return (u.symbols ? u.symbols + ' koin dari pool ' + (u.pool || 120) + ' — ' : '') + 'koin illiquid adalah jebakan dua arah: slip memakan fee-wall ~0.29% sebelum peluang lahir, dan saat perlu keluar, tak ada pembeli; likuiditas disaring DULU — strategi hanya bicara sesudahnya.'; }, nilai(st, jawabKu) { let s = 0; if (/likuid|slip|illiquid/i.test(jawabKu)) s += 40; if (/keluar|jebakan|tak ada pembeli|exit/i.test(jawabKu)) s += 30; if (/0\.29|fee|universe|40|pool/i.test(jawabKu)) s += 30; return s; } }
 ];
 
 const LEVEL_TINGKAT = { dasar: 1, menengah: 2, mahir: 3 };
@@ -1230,13 +1439,11 @@ function kelasKilat(st, otak, banyak) {
 }
 
 // ================= EKSPOR =================
-const MICABRAIN = { GENOM, jawab, deteksi, pertanyaanMandiri, kerjakanKelas, kelasKilat, pilihSoal, fakultasRingkas, KURIKULUM, stRangkum, garisMedan, pickKu, otakBaru, levelDari, xpProgres, xpTambah, MEMORI, statusSertifikat };
+const MICABRAIN = { GENOM, jawab, jawabAgentic, deteksi, pertanyaanMandiri, kerjakanKelas, kelasKilat, pilihSoal, fakultasRingkas, KURIKULUM, stRangkum, garisMedan, pickKu, otakBaru, levelDari, xpProgres, xpTambah, MEMORI, statusSertifikat, NEURON, aktifkanNeuron, buktiHidup };
 global.MICABRAIN = MICABRAIN;
 if (typeof module !== 'undefined' && module.exports) module.exports = MICABRAIN;
 
 })(typeof window !== 'undefined' ? window : globalThis);
-
-
 </script>
 <script>
 "use strict";
@@ -1720,8 +1927,12 @@ async function tanya(q) {
   const jawabLokal = (alasan) => {
     const r = MICABRAIN.jawab(question, st, otak);
     simpanOtak(); renderTanyaKu();
+    // V275-OTAK-AGENTIK: larik pikir 4 langkah + chip neuron — berpikir TAMPIL, bukan misteri
+    const lar = r.larik;
+    const larikHtml = (lar && lar.langkah) ? `<div class="larik"><p class="lt">LARIK PIKIR · agentik 4 langkah · ${lar.buktiN || 0} bukti hidup · ${lar.neuron.length} neuron menyala</p>${lar.langkah.map((l) => `<p class="ls"><b>${esc(l.n)}</b> — ${esc(l.t)}</p>`).join('')}${lar.neuron.length ? `<p class="ln">neuron: ${lar.neuron.map((n) => `<span class="nchip" title="gugus ${esc(n.kl)}">${esc(n.label)} ${n.a}%</span>`).join('')}</p>` : ''}</div>` : '';
     holder.innerHTML = `<div class="q"><p class="t">Pertanyaan</p><p class="b">${esc(question)}</p></div><div class="ans">
-      <div class="who"><span class="av"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="8" width="14" height="12" rx="2"/><circle cx="12" cy="4" r="2"/><line x1="9" y1="13" x2="9" y2="15"/><line x1="15" y1="13" x2="15" y2="15"/></svg></span><b>MICAPROFITA</b><span class="badge om">OTAK MANDIRI · tertanam · tanpa server</span></div>
+      <div class="who"><span class="av"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="8" width="14" height="12" rx="2"/><circle cx="12" cy="4" r="2"/><line x1="9" y1="13" x2="9" y2="15"/><line x1="15" y1="13" x2="15" y2="15"/></svg></span><b>MICAPROFITA</b><span class="badge om">OTAK AGENTIK · v275 · ${MICABRAIN.NEURON.length} neuron · tanpa server</span></div>
+      ${larikHtml}
       <div class="md">${md(r.teks)}</div>
       ${alasan ? `<p class="tiny" style="margin-top:6px">${esc(alasan)}</p>` : ''}
     </div>`;
