@@ -905,12 +905,21 @@ function pilihTarget(c, entry, rezimGlobal, magnet) {
   if (!pilih) {
     // jujur: tak ada magnet nyata yang memberi >= 1% bersih — radar MENOLAK, bukan mengarang level
     const palingJauh = kandidat.length ? kandidat[kandidat.length - 1].level : hi24
-    return { target: palingJauh, ketTarget: 'tak ada magnet nyata di depan — radar menolak', untung: palingJauh / entry - 1 - FEE, lemah: true }
+    return { target: palingJauh, ketTarget: 'tak ada magnet nyata di depan — radar menolak', untung: palingJauh / entry - 1 - FEE, lemah: true, highAmbisius: null, ketAmbisius: 'radar menolak — ambisius tak dikarang tanpa magnet nyata' }
   }
-  const hiAmbisius = Math.min(swing7h, batas)
+  // V277-JUAL-AMBISIUS — mandat pemilik: "harga ambisiusnya juga wajib ada".
+  // Ujung ambisius tak boleh mati diam-diam saat swing 7h tak melewati sasaran:
+  // bila begitu, sasaran dilanjutkan 50% jaraknya sendiri — tetap hormat cap
+  // rezim dan tetap di atas sasaran. Label selalu tampil; nilainya selalu ada.
+  const ujung = Math.min(swing7h, batas)
+  const lanjutan = Math.min(pilih.level * (1 + (pilih.level / entry - 1) * 0.5), batas)
+  const ambisius = Math.max(ujung, lanjutan)
   return {
     target: pilih.level, ketTarget: pilih.ket, untung: pilih.level / entry - 1 - FEE, lemah: false,
-    highAmbisius: hiAmbisius > pilih.level ? +hiAmbisius.toPrecision(7) : null,   // catatan belajar, bukan sasaran resmi
+    highAmbisius: +ambisius.toPrecision(7),
+    ketAmbisius: ujung > pilih.level ? 'ujung swing 7 hari, hormat cap rezim'
+      : ambisius > pilih.level ? 'sasaran dilanjutkan 50% jaraknya — swing 7h tak melewatinya'
+      : 'ujung tertinggi = cap rezim sendiri (tak ada ruang di atasnya)',
   }
 }
 
@@ -3454,11 +3463,17 @@ const kunciEntriArah = (k, eksplor, runnerUp, peneliti) => {
   const _asahStopF = (asahKalibAktif ? ASAH.STOP_KETAT_F : 1) * (hentiAsahAktif ? 0.9 : 1) * (syarat ? syarat.stopFaktor : 1) * (peneliti ? ANTI.PENELITI_STOP_F : 1)   // V264: pelajaran lalu mengetatkan stop ×0.8^n
   const _stopPctImp = (eksA ? eksA.rugiPct : IMPAS.STOP_DEFAULT_PCT) * _asahStopF
   const _tgtPctImp = eksA ? eksA.gainPct : IMPAS.TARGET_DEFAULT_PCT
+  // V277-JUAL-AMBISIUS — jalur ARAH pun wajib membawa harga ambisius: sasaran
+  // dilanjutkan 50% jaraknya sendiri (perkiraan tertinggi, bukan janji) — kartu
+  // sasaran tak pernah lagi tampil tanpa jual ambisius.
+  const _tgtHargaImp = v.arah === 'BUY' ? b.harga * (1 + _tgtPctImp / 100) : b.harga * (1 - _tgtPctImp / 100)
   const impasRencana = {
     stop: +(v.arah === 'BUY' ? b.harga * (1 - _stopPctImp / 100) : b.harga * (1 + _stopPctImp / 100)).toPrecision(7),
     target: +(v.arah === 'BUY' ? b.harga * (1 + _tgtPctImp / 100) : b.harga * (1 - _tgtPctImp / 100)).toPrecision(7),
     sumber: eksA ? 'MC-kone-2k' : 'default-jujur',
     ketTarget: eksA ? `ekspektasi MC: gain median +${(+_tgtPctImp).toFixed(2)}% / rugi median −${(+_stopPctImp).toFixed(2)}% net-fee` : `default konservatif tanpa MC: stop −${IMPAS.STOP_DEFAULT_PCT}% / target +${IMPAS.TARGET_DEFAULT_PCT}%`,
+    highAmbisius: +(v.arah === 'BUY' ? _tgtHargaImp * (1 + (_tgtPctImp / 100) * 0.5) : _tgtHargaImp * (1 - (_tgtPctImp / 100) * 0.5)).toPrecision(7),
+    ketAmbisius: 'sasaran dilanjutkan 50% jaraknya — perkiraan tertinggi, bukan janji',
   }
   const entri = {
     id, simbol: s, jalur: 'ARAH', arah: v.arah, keyakinan: kal.keyakinan, keyakinanMentah: v.keyakinan,
@@ -3484,6 +3499,7 @@ const kunciEntriArah = (k, eksplor, runnerUp, peneliti) => {
     },
     ...(eksA ? { ekspektasi: eksA } : {}),
     stop: impasRencana.stop, target: impasRencana.target, sumberStop: impasRencana.sumber, ketTarget: impasRencana.ketTarget,   // V262 kasus D: TIDAK ADA lagi sinyal tanpa rencana keluar
+    highAmbisius: impasRencana.highAmbisius, ketAmbisius: impasRencana.ketAmbisius,   // V277-JUAL-AMBISIUS: perkiraan tertinggi wajib ikut
     odds: odds,                                                     // V256 OddsMaker (Trade Ideas)
     // V258 GEKKO-CZAR — warisan Gekko Agent (Axal): meta-inferensi kolektif + probPasar
     // + divergensi + ekspresi dinamis dipra-registrasi; sidik sha256 = tamper-evident
@@ -3860,6 +3876,7 @@ const bangunEntriPhx = (p, eksplor) => {
     untungBersih: +tgt.untung.toFixed(4),
     stop: stopHarga,
     highAmbisius: tgt.highAmbisius ?? null,
+    ketAmbisius: tgt.ketAmbisius ?? null,   // V277-JUAL-AMBISIUS: alasan jujur ikut disegel
     ekspektasi: {
       pSumber: 'MC 2.000 lintasan (barier TARGET/STOP)',
       pTarget: +pT.toFixed(3), pStop: pStop != null ? +pStop.toFixed(3) : null,
@@ -4719,7 +4736,7 @@ try {
 const barisDari = (e) => ({
   simbol: e.simbol, jalur: e.jalur || 'ARAH', arah: e.arah, keyakinan: e.keyakinan, entry: e.entry,
   ...(e.ketKeyakinan ? { ketKeyakinan: e.ketKeyakinan } : {}),
-  ...(e.jalur === 'PHOENIX' ? { target: e.target, ketTarget: e.ketTarget, untungBersihPct: +(e.untungBersih * 100).toFixed(1), stop: e.stop, skorPhoenix: e.skorPhoenix, highAmbisius: e.highAmbisius ?? null } : e.sumberStop ? { target: e.target, ketTarget: e.ketTarget, stop: e.stop, sumberStop: e.sumberStop } : {}),   // V262: stop/target ARAH (MC-kone) ikut dilaporkan — kasus D tertutup
+  ...(e.jalur === 'PHOENIX' ? { target: e.target, ketTarget: e.ketTarget, untungBersihPct: +(e.untungBersih * 100).toFixed(1), stop: e.stop, skorPhoenix: e.skorPhoenix, highAmbisius: e.highAmbisius ?? null, ketAmbisius: e.ketAmbisius ?? null } : e.sumberStop ? { target: e.target, ketTarget: e.ketTarget, stop: e.stop, sumberStop: e.sumberStop, highAmbisius: e.highAmbisius ?? null, ketAmbisius: e.ketAmbisius ?? null } : {}),   // V277-JUAL-AMBISIUS: ambisius & alasannya wajib dilaporkan di kedua jalur
   ...(e.pitaUjungAtas ? { pitaUjungAtas: e.pitaUjungAtas } : {}),
   ...(e.ekspektasi ? { ekspektasi: e.ekspektasi } : {}),
   ...(e.skorKomite ? { skorKomite: e.skorKomite } : {}),
