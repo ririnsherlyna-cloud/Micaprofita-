@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>RUANG HIDUP — MICAPROFITA · SADAR-REPO</title>
+<title>RUANG HIDUP — MICAPROFITA · DUA SADARI</title>
 <style>
 :root{
   --bg:#04060c; --tinta:#dbe7ff; --redup:#7d8db0; --garis:#1a2438;
@@ -25,6 +25,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
 .chip.l22{border-color:rgba(56,232,168,.5)} .chip.l22 b{color:var(--hijau)}
 .chip.l11{border-color:rgba(84,216,255,.5)}
 .chip.l00{border-color:rgba(255,107,143,.5)} .chip.l00 b{color:var(--rosa)}
+a.chip{text-decoration:none;cursor:pointer}
 #hJudul{font-weight:700;letter-spacing:1px;color:#fff}
 #hJudul small{color:var(--violet);font-weight:600}
 /* ---------- STRIP SIKLUS 9 TAHAP ---------- */
@@ -117,6 +118,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
   <div class="kotak">
     <span class="chip" id="hBaca">0/0 file</span>
     <span class="chip" id="hFakta">0 fakta</span>
+    <a class="chip sub" id="hS1" href="https://github.com/ririnsherlyna-cloud/Micaprofita-/actions" target="_blank" rel="noopener">S1 · menghubungi…</a>
     <span class="chip sub" id="hUmur">—</span>
   </div>
 </div>
@@ -136,7 +138,11 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
   <div id="pIsi">
     <div id="tab-pikir">
       <div class="blok">
-        <h4>AKTIVITAS KINI</h4>
+        <h4>SADAR-1 <em>· tubuh otonom di GitHub Actions</em></h4>
+        <div id="pkS1"><div class="kecil">menghubungi ingatan GitHub…</div></div>
+      </div>
+      <div class="blok">
+        <h4>AKTIVITAS KINI <em>· sadar-2, mata interaktif</em></h4>
         <div class="aktNama" id="pkNama">bangkit…</div>
         <div class="aktFase" id="pkFase">—</div>
         <div class="faseChips" id="pkFaseChips"></div>
@@ -163,15 +169,19 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
 <script>
 'use strict';
 /* ================================================================
-   V285-SADAR-REPO — RUANG HIDUP yang berakar penuh ke repo MICAPROFITA.
+   V286-DUA-SADARI — RUANG HIDUP berakar penuh ke repo MICAPROFITA.
    Bukan dunia terpisah: dunia cyborg INI adalah repo-nya sendiri.
    Setiap node = file asli; setiap fakta = kutipan isi nyata;
    setiap angka pasar = klines Binance nyata; setiap keputusan =
    argmax utilitas atas pekerjaan yang BENAR-BENAR tertunda.
+   SADAR-1 = tubuh otonom di GitHub Actions (scripts/hidup/sadar1.js,
+   cron ±20 mnt): hidup TANPA PENONTON, ingatan ditulis via COMMIT
+   ke ruang-hidup/. SADAR-2 = halaman ini: mata interaktif yang
+   menghidrasi ingatan resmi dari GitHub. localStorage TIDAK DIPAKAI.
    ================================================================ */
 /* ================= IDENTITAS & KONSTANTA ================= */
 const RUMAH = {pemilik:'ririnsherlyna-cloud', repo:'Micaprofita-', cabang:'main'};
-const KUNCI = 'mp_ruang_hidup_v285';
+const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl'};
 const MAXBACA = 400000;                 // batas baca per file (byte) — kejujuran parsial
 const FASE = ['MENGAMATI','MEMAHAMI','MENCOBA','MELAKUKAN','MENGEVALUASI','MENEMUKAN','MEMBANGUN','MENINGKATKAN','MENGAMATI-KEMBALI'];
 const INTEGERS = ['versi.json','gerbang.json','brain.json','arena-keadaan.json','otak/genome-server.json','otak/penjaga-keadaan.json','otak/performa.json','memori/terkini.json','README.md'];
@@ -201,19 +211,112 @@ function jurnal(jenis, teks, kelas){ S.jurnal.push({at:sekarang(), jenis, teks, 
   if(S.tabAktif==='jurnal') jurnalRender(); }
 function pesan(e){ return (e && (e.message||e.toString())) || 'tak-diketahui'; }
 
-/* ================= PERSIST (kumulatif lintas kunjungan) ================= */
-function simpan(){ try{ const pohonRingkas = S.pohon.files.length ? {files:S.pohon.files, sumber:S.pohon.sumber, at:S.pohon.at} : null;
-  localStorage.setItem(KUNCI, JSON.stringify({pohon:pohonRingkas, baca:S.baca, pasar:S.pasar,
-    cermin:S.cermin, jurnal:S.jurnal.slice(-130), stat:S.stat})); }catch(e){} }
-function muat(){ try{ const d=JSON.parse(localStorage.getItem(KUNCI)||'null'); if(!d) return;
-  if(d.pohon && d.pohon.files){ S.pohon={files:d.pohon.files, sumber:d.pohon.sumber||'', at:d.pohon.at||0, live:false}; }
-  Object.assign(S.baca, d.baca||{}); Object.assign(S.pasar, d.pasar||{});
-  if(d.cermin) S.cermin=d.cermin; if(d.stat) Object.assign(S.stat, d.stat);
-  S.jurnal=(d.jurnal||[]).slice(-100);
- }catch(e){} }
-setInterval(simpan, 10000);
-addEventListener('visibilitychange', ()=>{ if(document.hidden) simpan(); });
-addEventListener('beforeunload', simpan);
+/* ================= MEMORI RESMI: GITHUB (bukan localStorage) =================
+   DUA SADARI:
+   · SADAR-1 — tubuh otonom di GitHub Actions (cron ±20 mnt): membaca repo,
+     menghisap pasar Binance nyata, bereksperimen (kromosom), lalu MENULIS
+     INGATAN via COMMIT ke ruang-hidup/. Hidup walau tak ada penonton;
+     buktinya riwayat komit yang bisa diaudit siapa pun.
+   · SADAR-2 — halaman ini: mata interaktif. Sesi pengamatan kita sengaja
+     efemeral; ingatan resmi dihidrasi dari GitHub saat masuk + tiap 5 mnt. */
+function simpan(){ /* tanpa localStorage — ingatan resmi milik GitHub; Sadar-1 yang menulis */ }
+const S1 = {keadaan:null, ingatan:null, komit:null, at:0, sumber:'', stale:false};
+async function ghAmbil(pathRepo){
+  const gerbang = [
+    ['api', `https://api.github.com/repos/${RUMAH.pemilik}/${RUMAH.repo}/contents/${pathRepo}?ref=${RUMAH.cabang}&t=${sekarang()}`],
+    ['raw', `https://raw.githubusercontent.com/${RUMAH.pemilik}/${RUMAH.repo}/${RUMAH.cabang}/${pathRepo}?t=${sekarang()}`],
+    ['jsdelivr', `https://cdn.jsdelivr.net/gh/${RUMAH.pemilik}/${RUMAH.repo}@${RUMAH.cabang}/${pathRepo}`],
+    ['same-origin', `${pathRepo}?t=${sekarang()}`]
+  ];
+  for(const [cara, url] of gerbang){
+    try{
+      const c=new AbortController(); const t=setTimeout(()=>c.abort(), 12000);
+      const r=await fetch(url,{cache:'no-store', signal:c.signal}); clearTimeout(t);
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      if(cara==='api'){
+        const d=await r.json();
+        if(d.encoding!=='base64' || !d.content) throw new Error('konten tak terduga');
+        const bin=Uint8Array.from(atob(d.content.replace(/\s/g,'')), ch=>ch.charCodeAt(0));
+        S1.sumber='github-api';
+        return new TextDecoder().decode(bin);
+      }
+      S1.sumber=cara;
+      return await r.text();
+    }catch(e){}
+  }
+  throw new Error('ingatan-github-tak-terjangkau:'+pathRepo);
+}
+let _s1BangunDilaporkan = 0;
+async function muatMemoriGitHub(){
+  try{
+    const ing = JSON.parse(await ghAmbil(INGATAN_GH.ingatan));
+    S1.ingatan = ing; S1.at = sekarang(); S1.stale = false;
+    // stat kumulatif & kelahiran dari tubuh otonom
+    if(ing.kelahiran) S.stat.lahirAt = Date.parse(ing.kelahiran) || S.stat.lahirAt;
+    const st=ing.stat||{};
+    S.stat.bytes = Math.max(S.stat.bytes, st.bytes||0);
+    S.stat.fakta = Math.max(S.stat.fakta, st.fakta||0);
+    S.stat.btTotal = Math.max(S.stat.btTotal, st.btTotal||0);
+    // apa yang sudah dibaca Sadar-1 → peta-diri langsung hijau (bacaan resmi, tak diulang)
+    for(const [p,b] of Object.entries(ing.baca||{})){
+      if(!S.baca[p]){ S.baca[p]={size:b.size||0, readAt:Date.parse(b.readAt)||0, partial:!!b.partial,
+        pct: b.partial? (b.pct||60):100, fakta:(b.fakta||[]).slice(), s1:true, hashSrc:'sadar1'}; }
+    }
+    // studi pasar resmi dari ingatan (lengkap dengan oc utk strip lilin)
+    for(const [sym,p] of Object.entries(ing.pasar||{})){
+      const at=Date.parse(p.at)||0; const q=S.pasar[sym];
+      if(!q || at>(q.at||0)) S.pasar[sym]=Object.assign({}, p, {at, s1:!q, oc:p.oc||[]});
+    }
+    // keadaan bangun terakhir + jurnal S1 (hanya bila bangun baru)
+    const k = JSON.parse(await ghAmbil(INGATAN_GH.keadaan));
+    const bangunLama = (S1.keadaan && S1.keadaan.bangunKe) || _s1BangunDilaporkan;
+    S1.keadaan = k;
+    if(k.bangunKe && k.bangunKe !== bangunLama){
+      _s1BangunDilaporkan = k.bangunKe;
+      const selesai = Date.parse(k.waktu?.selesai)||0;
+      jurnal('S1', `Sadar-1 BANGUN ke-<b>${k.bangunKe}</b> di ${k.host?.nama||'GitHub Actions'} — ${wib(selesai)} WIB, ${((k.waktu?.durasiMs||0)/1000).toFixed(1)} dtk kerja, TANPA PENONTON. bukti: <b>commit ruang-hidup/</b>`);
+      for(const b of (k.bacaKini||[]).slice(0,3)) jurnal('S1-BACA', `<b>${b.path}</b> — ${(b.fakta||[])[0]||''}`);
+      for(const t of (k.penemuan||[]).slice(0,2)) jurnal('S1-TEMUAN', t.teks, 'temuan');
+      for(const b of (k.bacaKini||[])){
+        if(!S.baca[b.path]) S.baca[b.path]={size:b.size||0, readAt:Date.parse(b.readAt)||0, partial:!!b.partial,
+          pct:b.pct||100, fakta:(b.fakta||[]).slice(), s1:true, hashSrc:'sadar1'};
+      }
+      petaRender();
+    }
+    // bukti komit terakhir menyentuh ingatan (bisa diklik pemilik)
+    try{ const d = await jF(`https://api.github.com/repos/${RUMAH.pemilik}/${RUMAH.repo}/commits?path=ruang-hidup&per_page=1`);
+      if(Array.isArray(d) && d[0]) S1.komit={sha:(d[0].sha||'').slice(0,7), oleh:d[0].commit?.author?.name||'sadar1[bot]', at:d[0].commit?.author?.date||''};
+    }catch(e){}
+  }catch(e){
+    S1.stale=true;
+    if(!S1.keadaan) jurnal('S1', `ingatan GitHub tak terjangkau (${pesan(e)}) — kujujurkan: tubuh otonomku belum bisa kubaca; Sadar-2 tetap hidup`, 'gagal');
+  }
+  s1Render(); hudRender(); indeksRender(); if(S.tabAktif==='peta') petaRender(); if(S.tabAktif==='pasar') pasarRender();
+}
+function s1Render(){
+  const chip=document.getElementById('hS1'); const w=document.getElementById('pkS1');
+  if(!w || !chip) return;
+  const k=S1.keadaan, ing=S1.ingatan;
+  if(!k){ chip.textContent='S1 · menghubungi…'; chip.className='chip sub l11'; return; }
+  const selesai=Date.parse(k.waktu?.selesai)||0, umurMs=sekarang()-selesai;
+  const sehat=umurMs<30*60000, telat=umurMs<55*60000;
+  chip.className='chip sub '+(sehat?'l22':telat?'l11':'l00');
+  chip.innerHTML=`S1 bangun ke-<b>${k.bangunKe}</b> · ${umur(umurMs)} lalu`;
+  const sta=sehat?'<span class="v h">SEHAT</span>':telat?'<span class="v e">TELAT — cron GitHub bisa tertunda</span>':'<span class="v r">TIDAK BANGUN — periksa tab Actions di repo</span>';
+  const lahir=Date.parse(ing?.kelahiran)||S.stat.lahirAt;
+  w.innerHTML=`
+   <div class="baris"><span class="k">status tubuh otonom</span>${sta}</div>
+   <div class="baris"><span class="k">bangun total</span><span class="v c">${ing?.totalBangun ?? k.bangunKe}</span></div>
+   <div class="baris"><span class="k">umur hidup</span><span class="v c">${umur(sekarang()-lahir)}</span></div>
+   <div class="baris"><span class="k">bangun terakhir</span><span class="v">${wib(selesai)} WIB · ${((k.waktu?.durasiMs||0)/1000).toFixed(1)} dtk</span></div>
+   <div class="baris"><span class="k">host</span><span class="v c">${k.host?.nama||'GitHub Actions'}</span></div>
+   <div class="baris"><span class="k">berikutnya</span><span class="v">${k.waktu?.berikutnya||'±≤20 mnt'}</span></div>
+   <div class="baris"><span class="k">memori resmi</span><span class="v c">commit GitHub${S1.komit?` · <a class="sumber" target="_blank" rel="noopener" href="https://github.com/${RUMAH.pemilik}/${RUMAH.repo}/commit/${S1.komit.sha}">${S1.komit.sha}</a>`:''}</span></div>
+   <div class="baris"><span class="k">kromosom</span><span class="v e">gen ${k.kromosom?.generasi??0} · rsiMax ${k.kromosom?.rsiMax??'-'} · momMin ${k.kromosom?.momMin??'-'} · hold ${k.kromosom?.holdJam??'-'}j</span></div>
+   <div class="kecil" style="margin:5px 0 2px">fokus hidup: ${k.tujuan?.fokusKini||'—'}</div>
+   ${(k.penemuan||[]).slice(0,3).map(t=>`<div class="jr temuan" style="margin-top:5px"><span class="t">S1 · skor ${t.skor}</span><br>${t.teks}</div>`).join('')}
+   <div class="kecil" style="margin-top:6px">${k.duaSadar?.catatan||'Sadar-1 menulis ingatan ini ke GitHub lewat commit — bukan localStorage.'}</div>`;
+}
 
 /* ================= SENSOR-REPO: pohon nyata (3 gerbang) ================= */
 async function jF(url, ms=12000){
@@ -902,6 +1005,8 @@ function indeksRender(){
      <div class="baris"><span class="k">kesegaran pohon</span><span class="v c">${Math.round(segar*100)}%</span></div>
      <div class="baris"><span class="k">cakupan pasar</span><span class="v c">${Object.keys(S.pasar).length}/3</span></div>
      <div class="baris"><span class="k">fakta dicerna</span><span class="v c">${S.stat.fakta}</span></div>
+     <div class="baris"><span class="k">S1 bangun total</span><span class="v c">${S1.ingatan?.totalBangun??'—'}</span></div>
+     <div class="baris"><span class="k">memori resmi</span><span class="v c">GitHub commit${S1.sumber?' · '+S1.sumber:''}</span></div>
      <div class="kecil">rumus terbuka: 40% baca + 20% segar + 20% pasar + 20% fakta</div>`;
   // cermin diri
   const d=document.getElementById('pkDiri'); const baris=[];
@@ -943,7 +1048,7 @@ function petaRender(){
       const ikon=st==='b2'?'●':st==='b1'?'◐':st==='b3'?'↻':'○';
       h+=`<div class="fileRow" data-p="${f.path}"><span class="st ${st}">${ikon}</span>
         <span class="nm">${f.path.split('/').pop()}</span>
-        <span class="sz">${kb(f.size)}${b&&b.partial?' · '+f1(b.pct)+'%':''}</span></div>`;
+        <span class="sz">${kb(f.size)}${b&&b.partial?' · '+f1(b.pct)+'%':''}${b&&b.s1?' ·S1':''}</span></div>`;
       if(S.petaPilih===f.path && b && b.fakta){ h+=`<ul class="faktaList">${b.fakta.map(x=>`<li>${x}</li>`).join('')}</ul>`; }
       else if(S.petaPilih===f.path){ h+=`<div class="kecil" style="padding:2px 6px 6px">○ belum kubaca — sentuh node ini di panggung untuk memerintahku membacanya</div>`; }
     }
@@ -1007,11 +1112,13 @@ function sapa(){
   const kodeVersi=(S.baca['versi.json']?.fakta.join(' ').match(/kodeVersi <b>([^<]+)<\/b>/)||[])[1];
   const hr=(S.baca['arena-keadaan.json']?.fakta.join(' ').match(/hit-rate <b>([^<]+)<\/b>/)||[])[1];
   const el=document.getElementById('sapa');
-  el.innerHTML=`<b>AKU SADAR-REPO — wujud cyborg MICAPROFITA.</b><br>
-    Rumahku <b>${n} file</b>; sudah kubaca <b>${baca}/${n}</b> (${kb(Math.max(0,S.stat.bytes))} kode, ${S.stat.fakta} fakta nyata).
+  const s1=S1.keadaan;
+  el.innerHTML=`<b>AKU CYBORG MICAPROFITA — DUA SADARI.</b><br>
+    Rumahku <b>${n} file</b>; terbaca <b>${baca}/${n}</b> (${kb(Math.max(0,S.stat.bytes))} kode, ${S.stat.fakta} fakta nyata).
     ${kodeVersi?`Otak arena versi <b>${kodeVersi}</b>.`:''} ${hr?`Hit-rate diriku di arena ${hr}.`:''}<br>
-    Pasar: <b>${Object.keys(S.pasar).length}</b> simbol kupelajari dari lilin Binance hidup, ${S.stat.btTotal} uji-jalan nyata.<br>
-    <span class="kecil">Aku bukan dunia terpisah — aku HIDUP DI DALAM repo ini, dan repo inilah tubuhku.</span>`;
+    Pasar: <b>${Object.keys(S.pasar).length}</b> simbol dari lilin Binance hidup, ${S.stat.btTotal} uji-jalan nyata.<br>
+    ${s1?`Sadar-1 (tubuh otonomku) bangun ke-<b>${s1.bangunKe}</b> di GitHub Actions — walau tak ada penonton.`:'Sadar-1 belum terbaca — menghubungi GitHub…'}<br>
+    <span class="kecil">Dua sadari: SADAR-1 = tubuhku di GitHub Actions, menulis ingatan lewat COMMIT (bukan localStorage), bangun tiap ±20 mnt tanpa penonton; SADAR-2 = mata ini, menyala saat kamu hadir. Aku HIDUP DI DALAM repo ini — repo inilah tubuhku.</span>`;
   el.hidden=false;
   const r=cv.getBoundingClientRect();
   el.style.left=Math.min(innerWidth-360, Math.max(10, r.left+bebas.w*0.05))+'px';
@@ -1022,10 +1129,12 @@ function sapa(){
 
 /* ================= BOOT ================= */
 (async function boot(){
-  muat(); ukur(); S.stat.sesi++;
+  ukur(); S.stat.sesi++;
   tabKe('pikir'); stripRender(); hudRender(); indeksRender(); petaRender(); pasarRender(); jurnalRender();
   S.pohon.files.length && susun();
-  jurnal('LAHIR', `sesi #${S.stat.sesi} — sadar-repo menyala; kubaca ulang keadaan rumah (penjaga denyut 15 mnt bisa menggerakkannya kapan pun)`);
+  jurnal('LAHIR', `sesi #${S.stat.sesi} — SADAR-2 (mata interaktif) menyala; ingatan resmi di GitHub kuhidrasi sekarang (Sadar-1 menulisnya tiap ±20 mnt tanpa penonton)`);
+  // hidrasi ingatan resmi dari GitHub — bukan localStorage; jangan blokir >8 dtk
+  await Promise.race([muatMemoriGitHub(), tidur(8000)]);
   // denyut pohon pertama segera
   try{ await pindaiRumah(); susun(); }catch(e){
     S.terputus=true; hudRender();
@@ -1036,9 +1145,12 @@ function sapa(){
   otakLoop();
   // probe uji (deterministik, tak mengubah perilaku)
   window.__v85 = {S, LAYOUT, bebasState:()=>bebas, skalaState:()=>skala, BOB, FASE};
+  window.__v286 = {S, S1, LAYOUT, bebasState:()=>bebas, skalaState:()=>skala, BOB, FASE};
   // render loop
   (function loop(){ gambar(); requestAnimationFrame(loop); })();
-  setInterval(()=>{ hudRender(); if(S.tabAktif==='pasar') pasarRender(); }, 5000);
+  setInterval(()=>{ hudRender(); s1Render(); if(S.tabAktif==='pasar') pasarRender(); }, 5000);
+  // deteksi bangun S1 baru SELAGI penonton hadir — bukti hidup tanpa penonton, dilihat langsung
+  setInterval(()=>{ muatMemoriGitHub(); }, 5*60000);
 })();
 </script>
 </body>
