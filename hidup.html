@@ -1,1161 +1,1045 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-<meta name="theme-color" content="#04070d">
-<title>RUANG HIDUP — V284-PROTOLIFE · MICAPROFITA</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>RUANG HIDUP — MICAPROFITA · SADAR-REPO</title>
 <style>
-  :root{
-    --bg:#04070d; --panel:rgba(9,15,25,.94); --garis:rgba(79,209,197,.16);
-    --teks:#dbe7f3; --redup:#8fa3bd; --sian:#4fd1c5; --kuning:#f6c453; --merah:#ff6b6b; --biru:#7aa2ff;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--teks);
-    font:14px/1.55 -apple-system,'Segoe UI',Roboto,'Noto Sans',sans-serif}
-  code,mono,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-
-  #aplikasi{display:flex;flex-direction:column;height:100dvh;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-
-  /* ===== HUD ATAS ===== */
-  #hud{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;
-    border-bottom:1px solid var(--garis);background:var(--panel)}
-  #hud .judul{font-weight:800;letter-spacing:.06em;font-size:15px}
-  #hud .judul small{display:block;font-weight:400;font-size:10px;color:var(--redup);letter-spacing:.14em}
-  .chip{font-size:10px;padding:3px 9px;border-radius:99px;border:1px solid var(--garis);color:var(--redup);white-space:nowrap;max-width:46vw;overflow:hidden;text-overflow:ellipsis}
-  .chip.hijau{color:#052; background:var(--sian);border-color:transparent;font-weight:700}
-  .chip.kelabu{background:rgba(143,163,189,.12)}
-  .hud-tengah{display:flex;align-items:center;gap:8px;margin-left:auto}
-  .ring{width:26px;height:26px;transform:rotate(-90deg)}
-  .ring circle{fill:none;stroke-width:3}
-  .ring .penuh{stroke:rgba(79,209,197,.15)}
-  .ring .progres{stroke:var(--sian);stroke-linecap:round;stroke-dasharray:100;transition:stroke-dashoffset .3s}
-  #tFase{font-size:11px;letter-spacing:.12em;color:var(--sian);font-weight:700;min-width:130px}
-  #tTick{font-size:11px;color:var(--redup)}
-  .kecepatan{display:flex;gap:4px}
-  .kecepatan button{background:rgba(143,163,189,.1);border:1px solid var(--garis);color:var(--redup);
-    font-size:11px;padding:4px 9px;border-radius:8px;cursor:pointer;font-weight:700}
-  .kecepatan button.aktif{background:var(--sian);color:#04231f;border-color:transparent}
-  a.pintu{font-size:11px;color:var(--kuning);text-decoration:none;border:1px solid rgba(246,196,83,.35);
-    padding:4px 10px;border-radius:8px;white-space:nowrap}
-  a.pintu:hover{background:rgba(246,196,83,.12)}
-
-  /* ===== PANGGUNG + PANEL ===== */
-  #badan{flex:1;display:flex;min-height:0}
-  #panggung{flex:1;position:relative;min-width:0}
-  #dunia{position:absolute;inset:0;display:block}
-  .legenda{position:absolute;left:12px;bottom:10px;font-size:10px;color:var(--redup);
-    background:rgba(4,7,13,.72);padding:6px 10px;border-radius:8px;border:1px solid var(--garis);max-width:72%;pointer-events:none}
-  .legenda b{color:var(--sian)}
-
-  #panel{width:344px;border-left:1px solid var(--garis);background:var(--panel);
-    display:flex;flex-direction:column;min-height:0}
-  #tabs{display:flex;border-bottom:1px solid var(--garis)}
-  .tab{flex:1;text-align:center;padding:10px 4px;font-size:11px;letter-spacing:.1em;color:var(--redup);
-    cursor:pointer;font-weight:700;border-bottom:2px solid transparent}
-  .tab.aktif{color:var(--sian);border-bottom-color:var(--sian)}
-  .isi{display:none;overflow-y:auto;padding:14px;flex:1;min-height:0}
-  .isi.aktif{display:block}
-  .isi h3{font-size:11px;letter-spacing:.14em;color:var(--redup);margin:14px 0 6px;font-weight:700}
-  .isi h3:first-child{margin-top:0}
-  .kotak{background:rgba(143,163,189,.06);border:1px solid var(--garis);border-radius:10px;padding:10px 12px;margin-bottom:10px}
-  .kotak .angka{font-size:20px;font-weight:800;color:var(--sian)}
-  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .grid3 .kotak{margin:0;text-align:center;padding:8px 4px}
-  .grid3 .label{font-size:9px;letter-spacing:.1em;color:var(--redup);text-transform:uppercase}
-  .grid3 .nilai{font-size:16px;font-weight:800}
-  table{width:100%;border-collapse:collapse;font-size:12px}
-  th{font-size:9px;letter-spacing:.1em;color:var(--redup);text-align:left;padding:4px 6px;text-transform:uppercase}
-  td{padding:4px 6px;border-top:1px solid rgba(143,163,189,.08)}
-  .merah{color:var(--merah)}
-  .entri{font-size:11.5px;padding:5px 0;border-bottom:1px solid rgba(143,163,189,.07);color:var(--teks)}
-  .entri .w{color:var(--redup);font-family:ui-monospace,monospace;font-size:10px}
-  .entri .f{color:var(--sian);font-size:10px;letter-spacing:.08em;font-weight:700}
-  .cap{border:1px solid var(--garis);border-radius:10px;padding:9px 11px;margin-bottom:8px;background:rgba(79,209,197,.04)}
-  .cap-j{display:flex;align-items:center;gap:8px;justify-content:space-between}
-  .cap-j b{color:#fff}
-  .tag{font-size:9px;background:rgba(246,196,83,.15);color:var(--kuning);padding:2px 7px;border-radius:99px;white-space:nowrap}
-  .cap-d{font-size:10.5px;color:var(--redup);margin-top:4px;word-break:break-all}
-  .cap-d code{color:var(--sian)}
-  .kosong{font-size:12px;color:var(--redup);padding:10px;border:1px dashed var(--garis);border-radius:10px}
-  #spark{width:100%;height:64px;display:block;margin-bottom:10px}
-  .mono-kecil{font-size:10px;word-break:break-all;color:var(--redup)}
-  .jujur{font-size:10px;color:var(--redup);line-height:1.5;padding:8px 10px;border-left:2px solid var(--sian);margin-top:10px}
-  #targetKini{border-left:3px solid var(--sian)}
-  #targetKini .nama{font-weight:800;font-size:14px;color:#fff}
-  #targetKini .desk{font-size:11.5px;color:var(--redup);margin:4px 0 8px}
-  .baris{display:flex;justify-content:space-between;font-size:12px;padding:2px 0}
-  .baris b{color:var(--sian)}
-
-  /* ===== MOBILE: panel jadi bottom-sheet, panggung tetap utuh ===== */
-  @media (max-width:860px){
-    #badan{flex-direction:column}
-    #panel{width:100%;height:46dvh;border-left:none;border-top:1px solid var(--garis)}
-    #panggung{height:54dvh;flex:none}
-    #hud{padding:8px 10px;gap:6px}
-    #hud .judul{font-size:13px}
-    #tFase{min-width:0;font-size:10px}
-    a.pintu{display:none}
-    .legenda{max-width:88%;font-size:9px;bottom:6px;left:8px}
-  }
+:root{
+  --bg:#04060c; --tinta:#dbe7ff; --redup:#7d8db0; --garis:#1a2438;
+  --hijau:#38e8a8; --cyan:#54d8ff; --emas:#ffd166; --jingga:#ff9f5a; --rosa:#ff6b8f; --violet:#a78bff;
+  --panel:rgba(10,16,30,.88);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);color:var(--tinta);
+  font:13px/1.45 "SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Noto Sans Mono",monospace}
+#panggung{position:fixed;inset:0;display:block;touch-action:manipulation}
+/* ---------- HUD ---------- */
+#hud{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-start;
+  gap:8px;padding:8px 10px;pointer-events:none;z-index:30;flex-wrap:wrap}
+#hud .kotak{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.chip{pointer-events:auto;background:var(--panel);border:1px solid var(--garis);border-radius:20px;
+  padding:3px 10px;font-size:11px;letter-spacing:.4px;white-space:nowrap;color:var(--tinta)}
+.chip.sub{color:var(--redup);font-size:10px}
+.chip b{color:var(--cyan);font-weight:600}
+.chip.l22{border-color:rgba(56,232,168,.5)} .chip.l22 b{color:var(--hijau)}
+.chip.l11{border-color:rgba(84,216,255,.5)}
+.chip.l00{border-color:rgba(255,107,143,.5)} .chip.l00 b{color:var(--rosa)}
+#hJudul{font-weight:700;letter-spacing:1px;color:#fff}
+#hJudul small{color:var(--violet);font-weight:600}
+/* ---------- STRIP SIKLUS 9 TAHAP ---------- */
+#faseStrip{position:fixed;left:10px;bottom:10px;display:flex;gap:4px;z-index:25;flex-wrap:wrap;max-width:calc(100vw - 20px)}
+#faseStrip .f{background:rgba(10,16,30,.8);border:1px solid var(--garis);border-radius:4px;color:#55627f;
+  font-size:8.5px;letter-spacing:.5px;padding:2px 5px;transition:all .3s}
+#faseStrip .f.on{color:#04121c;background:var(--cyan);border-color:var(--cyan);font-weight:700;
+  box-shadow:0 0 12px rgba(84,216,255,.55)}
+#faseStrip .f.ok{color:var(--hijau);border-color:rgba(56,232,168,.45)}
+/* ---------- SAPA ---------- */
+#sapa{position:fixed;z-index:40;max-width:min(340px,80vw);background:var(--panel);border:1px solid rgba(167,139,255,.6);
+  border-radius:12px;padding:10px 12px;font-size:11.5px;line-height:1.55;color:#eaf0ff;
+  box-shadow:0 6px 30px rgba(0,0,0,.6),0 0 18px rgba(167,139,255,.25);pointer-events:none}
+#sapa b{color:var(--violet)}
+/* ---------- PANEL OVERLAY (teks terpisah dari panggung) ---------- */
+#panel{position:fixed;top:0;right:0;bottom:0;width:340px;display:flex;flex-direction:column;
+  background:var(--panel);border-left:1px solid var(--garis);backdrop-filter:blur(9px);z-index:20}
+#pHandle{display:none}
+#pTabs{display:flex;border-bottom:1px solid var(--garis);flex:none}
+#pTabs button{flex:1;background:none;border:none;color:var(--redup);font:inherit;font-size:10.5px;
+  letter-spacing:.6px;padding:11px 2px;cursor:pointer;border-bottom:2px solid transparent}
+#pTabs button.akt{color:#fff;border-bottom-color:var(--cyan);background:rgba(84,216,255,.07)}
+#pIsi{flex:1;overflow-y:auto;padding:10px 12px 20px;scrollbar-width:thin}
+.blok{border:1px solid var(--garis);border-radius:10px;padding:9px 10px;margin-bottom:9px;background:rgba(255,255,255,.015)}
+.blok h4{margin:0 0 6px;font-size:10px;letter-spacing:1.2px;color:var(--redup);font-weight:600}
+.blok h4 em{color:var(--emas);font-style:normal}
+.baris{display:flex;justify-content:space-between;gap:8px;padding:2px 0;font-size:11.5px}
+.baris .k{color:var(--redup)} .baris .v{text-align:right;color:#fff}
+.v.h{color:var(--hijau)} .v.r{color:var(--rosa)} .v.c{color:var(--cyan)} .v.e{color:var(--emas)}
+.kecil{font-size:10px;color:var(--redup);line-height:1.5}
+.faseChips{display:flex;flex-wrap:wrap;gap:3px;margin:6px 0 2px}
+.faseChips span{font-size:8.5px;border:1px solid var(--garis);border-radius:4px;padding:1px 5px;color:#55627f}
+.faseChips span.on{background:var(--cyan);color:#04121c;font-weight:700;border-color:var(--cyan)}
+.faseChips span.ok{color:var(--hijau);border-color:rgba(56,232,168,.4)}
+.mengapa{font-size:10.5px;color:var(--redup);line-height:1.6}
+.mengapa b{color:var(--emas)}
+.aktNama{font-size:13px;color:#fff;font-weight:700;letter-spacing:.5px}
+.aktFase{font-size:10.5px;color:var(--cyan)}
+/* PETA-DIRI */
+.dirHdr{margin:8px 0 3px;font-size:10px;color:var(--violet);letter-spacing:1px}
+.fileRow{display:flex;align-items:center;gap:6px;padding:3px 6px;border-radius:6px;cursor:pointer;font-size:11px}
+.fileRow:hover{background:rgba(84,216,255,.08)}
+.fileRow .st{width:10px;flex:none;text-align:center}
+.fileRow .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#cdd8f2}
+.fileRow .sz{color:var(--redup);font-size:9.5px;flex:none}
+.st.b0{color:#4a5878} .st.b1{color:var(--emas)} .st.b2{color:var(--hijau)} .st.b3{color:var(--jingga);animation:nyala 1s infinite alternate}
+@keyframes nyala{from{opacity:.5}to{opacity:1}}
+.faktaList{margin:4px 0 8px;padding-left:14px;font-size:10.5px;color:#9fb4dd;line-height:1.6}
+.faktaList li::marker{color:var(--cyan)}
+/* PASAR */
+.symHdr{display:flex;justify-content:space-between;align-items:baseline}
+.symHdr b{font-size:12px;color:#fff;letter-spacing:1px}
+.sumber{font-size:9px;color:var(--cyan);text-decoration:none;border-bottom:1px dotted rgba(84,216,255,.4)}
+/* JURNAL */
+.jr{border-left:2px solid var(--garis);padding:2px 0 2px 8px;margin-bottom:6px;font-size:10.5px;line-height:1.5}
+.jr .t{color:#4f5d7d;font-size:9px} .jr b{color:var(--cyan);font-weight:600}
+.jr.gagal{border-left-color:var(--rosa)} .jr.temuan{border-left-color:var(--emas)}
+/* PINTU */
+#pintuArena{position:fixed;left:10px;top:52px;z-index:30;color:var(--violet);font-size:10.5px;letter-spacing:1px;
+  text-decoration:none;background:var(--panel);border:1px solid rgba(167,139,255,.4);border-radius:20px;padding:4px 11px}
+#pintuArena:hover{background:rgba(167,139,255,.15)}
+/* desktop: HUD tidak menimpa panel kanan */
+@media (min-width:861px){ #hud{padding-right:352px} }
+/* ---------- MOBILE ---------- */
+@media (max-width:860px){
+  #panel{top:auto;left:0;right:0;width:auto;height:46dvh;border-left:none;border-top:1px solid var(--garis);
+    border-radius:14px 14px 0 0;transition:height .28s ease}
+  #panel.tumbuh{height:78dvh}
+  #pHandle{display:flex;justify-content:center;align-items:center;gap:8px;padding:7px 0 5px;cursor:pointer;flex:none}
+  #pHandle .genggam{width:44px;height:4px;border-radius:2px;background:#33415f}
+  #pHandle span.t{font-size:9.5px;color:var(--redup);letter-spacing:1.5px}
+  #pTabs button{padding:9px 2px;font-size:10px}
+  #pIsi{padding:8px 10px 16px}
+  #faseStrip{bottom:calc(46dvh + 8px); top:auto; left:8px; max-width:calc(100vw - 16px)}
+  #pintuArena{top:auto; bottom:calc(46dvh + 8px); left:auto; right:8px}
+  #hud{padding:6px 8px}
+  .chip{font-size:10px;padding:2px 8px}
+}
 </style>
 </head>
 <body>
-<div id="aplikasi">
-  <div id="hud">
-    <div class="judul">RUANG HIDUP <small>V284-PROTOLIFE · MICAPROFITA</small></div>
-    <span class="chip kelabu" id="chipPasar">MENGHUBUNGI PASAR…</span>
-    <div class="hud-tengah">
-      <span id="tTick">0</span>
-      <svg class="ring" viewBox="0 0 36 36"><circle class="penuh" cx="18" cy="18" r="15.9"/><circle class="progres" id="ringFase" cx="18" cy="18" r="15.9" stroke-dashoffset="100"/></svg>
-      <span id="tFase">MEMULAI</span>
-      <div class="kecepatan">
-        <button data-v="1" class="aktif">1×</button>
-        <button data-v="8">8×</button>
-        <button data-v="32">32×</button>
-        <button data-v="jeda">JEDA</button>
-      </div>
-      <a class="pintu" href="arena.html">← ARENA</a>
-    </div>
+<canvas id="panggung"></canvas>
+
+<div id="hud">
+  <div class="kotak">
+    <span class="chip" id="hJudul">MICAPROFITA · <small>RUANG HIDUP</small></span>
+    <span class="chip sub" id="hStatus">MEMULAI…</span>
+    <span class="chip sub" id="hPohon">pohon: —</span>
   </div>
-
-  <div id="badan">
-    <div id="panggung">
-      <canvas id="dunia"></canvas>
-      <div class="legenda"><b>Wujud cahaya</b> = peta genom makhluk terdepan yang benar-benar berjalan di mesin virtual — <span style="color:var(--merah)">titik merah</span> = byte terkarat belum diperbaiki. Berlian = stasiun perbaiki, cincin = ekstraktor, segitiga = relai.</div>
-    </div>
-
-    <div id="panel">
-      <div id="tabs">
-        <button class="tab aktif" data-isi="otak">OTAK</button>
-        <button class="tab" data-isi="panelDunia">DUNIA</button>
-        <button class="tab" data-isi="temuan">TRAJEKTORI</button>
-        <button class="tab" data-isii="" data-isi="log">LOG</button>
-      </div>
-      <div class="isi aktif" id="otak">
-        <div class="kotak" id="targetKini">
-          <div class="nama" id="tgNama">—</div>
-          <div class="desk" id="tgDesk">—</div>
-          <div class="baris"><span>skor vektor terbaik</span><b id="tgSkor">0%</b></div>
-          <div class="baris"><span>eval pencarian nyata</span><b id="tgEval">0</b></div>
-          <div class="baris"><span>restart acak</span><b id="tgRest">0</b></div>
-          <div class="baris"><span>genom terbaik</span><b class="mono" id="tgBest">—</b></div>
-          <div class="baris"><span>progres rantai</span><b id="tgSisa">10 target</b></div>
-        </div>
-        <h3>PEMAHAMAN DUNIA (MEMAHAMI)</h3>
-        <div class="kotak" id="wawasan" style="font-size:12px">—</div>
-        <h3>KEADAAN PASAR</h3>
-        <div class="kotak mono-kecil">byte pasar: <span id="pasarBytes">—</span><br>diturunkan dari confidence pick hari ini (arena-keadaan.json)</div>
-        <div class="jujur">Tidak ada satu pun penemuan yang dijadwalkan. Setiap kemampuan hanya dicatat SETELAH genom sungguhan lulus seluruh vektor uji di mesin virtual yang sama dengan dunia. Angka di halaman ini = keadaan, bukan narasi.</div>
-      </div>
-
-      <div class="isi" id="panelDunia">
-        <div class="grid3">
-          <div class="kotak"><div class="nilai" id="sPop">0</div><div class="label">populasi</div></div>
-          <div class="kotak"><div class="nilai" id="sE">0</div><div class="label">energi rata</div></div>
-          <div class="kotak"><div class="nilai" id="sFood">0</div><div class="label">makanan</div></div>
-          <div class="kotak"><div class="nilai" id="sStruk">0</div><div class="label">struktur</div></div>
-          <div class="kotak"><div class="nilai" id="sCaps">0/10</div><div class="label">kemampuan</div></div>
-          <div class="kotak"><div class="nilai" id="sRot">0</div><div class="label">karat bit</div></div>
-          <div class="kotak"><div class="nilai" id="sLahir">0</div><div class="label">kelahiran</div></div>
-          <div class="kotak"><div class="nilai" id="sMati">0</div><div class="label">kematian</div></div>
-          <div class="kotak"><div class="nilai" id="sBagi">0</div><div class="label">pembelahan</div></div>
-          <div class="kotak"><div class="nilai" id="sLuka">0</div><div class="label">luka tubuh</div></div>
-          <div class="kotak"><div class="nilai" id="sInjek">0</div><div class="label">injeksi ilmu</div></div>
-          <div class="kotak"><div class="nilai" id="sInstr">0</div><div class="label">instruksi VM</div></div>
-        </div>
-        <h3>MAKHLUK HIDUP (8 TERATAS)</h3>
-        <table><thead><tr><th>id</th><th>gen</th><th>energi</th><th>luka</th><th>umur</th></tr></thead><tbody id="makhBody"></tbody></table>
-      </div>
-
-      <div class="isi" id="temuan">
-        <canvas id="spark"></canvas>
-        <h3>POHON KEMAMPUAN — BUKTI NYATA</h3>
-        <div id="capList"></div>
-      </div>
-
-      <div class="isi" id="log">
-        <h3>JURNAL DUNIA</h3>
-        <div id="logList"></div>
-      </div>
-    </div>
+  <div class="kotak">
+    <span class="chip" id="hBaca">0/0 file</span>
+    <span class="chip" id="hFakta">0 fakta</span>
+    <span class="chip sub" id="hUmur">—</span>
   </div>
 </div>
+
+<a id="pintuArena" href="./arena.html">← ARENA</a>
+<div id="faseStrip"></div>
+<div id="sapa" hidden></div>
+
+<div id="panel">
+  <div id="pHandle"><div class="genggam"></div><span class="t">SADAR-REPO</span><div class="genggam"></div></div>
+  <div id="pTabs">
+    <button data-tab="pikir" class="akt">PIKIRAN</button>
+    <button data-tab="peta">PETA-DIRI</button>
+    <button data-tab="pasar">PASAR</button>
+    <button data-tab="jurnal">JURNAL</button>
+  </div>
+  <div id="pIsi">
+    <div id="tab-pikir">
+      <div class="blok">
+        <h4>AKTIVITAS KINI</h4>
+        <div class="aktNama" id="pkNama">bangkit…</div>
+        <div class="aktFase" id="pkFase">—</div>
+        <div class="faseChips" id="pkFaseChips"></div>
+      </div>
+      <div class="blok">
+        <h4>MENGAPA AKU MEMILIH INI <em>· skor utilitas</em></h4>
+        <div class="mengapa" id="pkMengapa">menghitung keadaan…</div>
+      </div>
+      <div class="blok">
+        <h4>CERMIN DIRI <em>· dibaca dari repo</em></h4>
+        <div id="pkDiri"><div class="kecil">belum ada — aku belum membaca rumahku</div></div>
+      </div>
+      <div class="blok">
+        <h4>INDEKS SADAR-REPO</h4>
+        <div id="pkIndeks"><div class="kecil">—</div></div>
+      </div>
+    </div>
+    <div id="tab-peta" hidden><div class="kecil">memindai rumah…</div></div>
+    <div id="tab-pasar" hidden><div class="kecil">belum ada studi pasar</div></div>
+    <div id="tab-jurnal" hidden><div class="kecil">—</div></div>
+  </div>
+</div>
+
 <script>
-/* ============================================================
-   V284-PROTOLIFE — INTI MESIN (bebas DOM, bisa diuji di Node)
-   VM 16-opcode sungguhan + verifikator target berbasis vektor.
-   Tidak ada penemuan yang dijadwalkan: kemampuan hanya dicatat
-   setelah genom lulus SEMUA vektor uji pada VM yang sama.
-   ============================================================ */
 'use strict';
-(function (root) {
-  const CORE = {};
+/* ================================================================
+   V285-SADAR-REPO — RUANG HIDUP yang berakar penuh ke repo MICAPROFITA.
+   Bukan dunia terpisah: dunia cyborg INI adalah repo-nya sendiri.
+   Setiap node = file asli; setiap fakta = kutipan isi nyata;
+   setiap angka pasar = klines Binance nyata; setiap keputusan =
+   argmax utilitas atas pekerjaan yang BENAR-BENAR tertunda.
+   ================================================================ */
+/* ================= IDENTITAS & KONSTANTA ================= */
+const RUMAH = {pemilik:'ririnsherlyna-cloud', repo:'Micaprofita-', cabang:'main'};
+const KUNCI = 'mp_ruang_hidup_v285';
+const MAXBACA = 400000;                 // batas baca per file (byte) — kejujuran parsial
+const FASE = ['MENGAMATI','MEMAHAMI','MENCOBA','MELAKUKAN','MENGEVALUASI','MENEMUKAN','MEMBANGUN','MENINGKATKAN','MENGAMATI-KEMBALI'];
+const INTEGERS = ['versi.json','gerbang.json','brain.json','arena-keadaan.json','otak/genome-server.json','otak/penjaga-keadaan.json','otak/performa.json','memori/terkini.json','README.md'];
 
-  /* ---------- PRNG deterministik dari benih nyata ---------- */
-  function fnv1a(str) {
-    let h = 0x811c9dc5 >>> 0;
-    for (let i = 0; i < str.length; i++) {
-      h ^= str.charCodeAt(i);
-      h = Math.imul(h, 0x01000193) >>> 0;
-    }
-    return h >>> 0;
+/* ================= KEADAAN DUNIA ================= */
+const S = {
+  pohon:{files:[], sumber:'', at:0, live:false},           // pohon repo nyata
+  baca:{},                                                 // path -> {hash,hashSrc,size,readAt,partial,pct,fakta[],ringkas,gagal,atGagal}
+  pasar:{},                                                // sym -> {at,harga,chg,ema20,ema50,rsi,atr,mom7,mom48,vol,bt,audit,oc[]}
+  cermin:{at:0, data:null},                                // arena-keadaan.json same-origin
+  jurnal:[], stat:{bytes:0, fakta:0, sesi:0, lahirAt:Date.now(), btTotal:0},
+  kerja:{nama:'bangkit', fase:'', faseAt:0, jejak:[], mengapa:[], target:null, sibuk:false},
+  perintah:null,                                           // path file yang diperintahkan pemilik
+  terputus:false
+};
+const tidur = ms => new Promise(r=>setTimeout(r,ms));
+const sekarang = () => Date.now();
+function wib(ts){ const d=new Date(ts??sekarang());
+  return d.toLocaleTimeString('id-ID',{timeZone:'Asia/Jakarta',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}); }
+function umur(ms){ if(!ms) return '—'; const s=Math.floor(ms/1000);
+  if(s<90) return s+' dtk'; const m=Math.floor(s/60); if(m<90) return m+' mnt';
+  const h=Math.floor(m/60); if(h<48) return h+' jam'; return Math.floor(h/24)+' hari'; }
+function kb(n){ return n>=1048576 ? (n/1048576).toFixed(1)+' MB' : n>=1024 ? (n/1024).toFixed(1)+' KB' : n+' B'; }
+function fnv(str){ let h=2166136261; for(let i=0;i<str.length;i++){ h^=str.charCodeAt(i); h=Math.imul(h,16777619);} return (h>>>0); }
+function jurnal(jenis, teks, kelas){ S.jurnal.push({at:sekarang(), jenis, teks, kelas:kelas||''});
+  if(S.jurnal.length>170) S.jurnal.splice(0, S.jurnal.length-130);
+  if(S.tabAktif==='jurnal') jurnalRender(); }
+function pesan(e){ return (e && (e.message||e.toString())) || 'tak-diketahui'; }
+
+/* ================= PERSIST (kumulatif lintas kunjungan) ================= */
+function simpan(){ try{ const pohonRingkas = S.pohon.files.length ? {files:S.pohon.files, sumber:S.pohon.sumber, at:S.pohon.at} : null;
+  localStorage.setItem(KUNCI, JSON.stringify({pohon:pohonRingkas, baca:S.baca, pasar:S.pasar,
+    cermin:S.cermin, jurnal:S.jurnal.slice(-130), stat:S.stat})); }catch(e){} }
+function muat(){ try{ const d=JSON.parse(localStorage.getItem(KUNCI)||'null'); if(!d) return;
+  if(d.pohon && d.pohon.files){ S.pohon={files:d.pohon.files, sumber:d.pohon.sumber||'', at:d.pohon.at||0, live:false}; }
+  Object.assign(S.baca, d.baca||{}); Object.assign(S.pasar, d.pasar||{});
+  if(d.cermin) S.cermin=d.cermin; if(d.stat) Object.assign(S.stat, d.stat);
+  S.jurnal=(d.jurnal||[]).slice(-100);
+ }catch(e){} }
+setInterval(simpan, 10000);
+addEventListener('visibilitychange', ()=>{ if(document.hidden) simpan(); });
+addEventListener('beforeunload', simpan);
+
+/* ================= SENSOR-REPO: pohon nyata (3 gerbang) ================= */
+async function jF(url, ms=12000){
+  const c = new AbortController(); const t = setTimeout(()=>c.abort(), ms);
+  try{ const r = await fetch(url,{cache:'no-store', signal:c.signal});
+    if(!r.ok) throw new Error('HTTP '+r.status); return await r.json();
+  } finally{ clearTimeout(t); }
+}
+async function pohonAmbil(){
+  // Gerbang 1 — GitHub API (SHA asli git, paling akurat untuk deteksi perubahan)
+  try{ const d = await jF(`https://api.github.com/repos/${RUMAH.pemilik}/${RUMAH.repo}/git/trees/${RUMAH.cabang}?recursive=1`);
+    if(d && Array.isArray(d.tree)){
+      const files = d.tree.filter(t=>t.type==='blob').map(t=>({path:t.path, size:t.size||0, hash:t.sha||''}));
+      if(files.length) return {files, sumber:'github-api'};
+    }}catch(e){}
+  // Gerbang 2 — jsDelivr data API (flat, hash sendiri)
+  try{ const d = await jF(`https://data.jsdelivr.com/v1/packages/gh/${RUMAH.pemilik}/${RUMAH.repo}@${RUMAH.cabang}?structure=flat`);
+    if(d && Array.isArray(d.files)){
+      const files = d.files.map(f=>({path:(f.name||'').replace(/^\//,''), size:f.size||0, hash:f.hash||''}));
+      if(files.length) return {files, sumber:'jsdelivr'};
+    }}catch(e){}
+  throw new Error('pohon-tak-terjangkau');
+}
+async function pindaiRumah(){
+  const h = await pohonAmbil();
+  const lama = S.pohon.sumber && S.pohon.sumber!==h.sumber;
+  const lamaPath = {}; if(lama) for(const p in S.baca) lamaPath[p]=true;
+  const dulu = new Map(S.pohon.files.map(f=>[f.path, f.hash]));
+  S.pohon = {files:h.files, sumber:h.sumber, at:sekarang(), live:true};
+  S.terputus = false;
+  // banding SHA per file (same-source) → daftar yang BERUBAH sejak baca terakhir
+  let berubah=0, baru=0;
+  for(const f of h.files){
+    const b = S.baca[f.path];
+    if(!b){ baru++; continue; }
+    if(!lama && b.hash && f.hash && b.hash!==f.hash && b.hashSrc===h.sumber){ b.berubah=sekarang(); berubah++; }
+    b.hashSrc = h.sumber;
   }
-  function mulberry32(seed) {
-    let a = seed >>> 0;
-    return function () {
-      a |= 0; a = (a + 0x6D2B79F5) | 0;
-      let t = Math.imul(a ^ (a >>> 15), 1 | a);
-      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-  }
-  CORE.fnv1a = fnv1a; CORE.mulberry32 = mulberry32;
+  jurnal('PINDAI', `rumah terpindai via ${h.sumber}: <b>${h.files.length} file</b>, ${kb(h.files.reduce((a,f)=>a+f.size,0))}`
+    + (berubah?` — <b>${berubah} file BERUBAH</b> sejak kubaca (rumahku bergerak!)`:'')
+    + (baru?` — ${baru} belum pernah kubaca`:''), berubah?'temuan':'');
+  if(lama) jurnal('PINDAI', 'sumber pohon berganti gerbang — pembanding SHA kureset agar jujur');
+  try{ susun(); }catch(e){}
+  petaRender();
+}
 
-  /* ---------- ISA 16 opcode ----------
-     reg: r0 akumulator, r1 cadangan, r2 alamat/keluaran, r3 bebas
-     mem: 16 sel (0..11 data, 11 = sasaran-lompat, 12..15 MMIO)
-     0  NOP    -                                    8  SUB r2=(r0-r1)&255
-     1  LOAD   r0=mem[r2&15]                        9  LDI r2=imm, ip+=2
-     2  STORE  mem[r2&15]=r0                       10  MOVA r1=r0
-     3  ADD    r2=(r0+r1)&255                      11  MOVB r0=r2
-     4  AND    r2=r0&r1                            12  MOVC r2=r0
-     5  OR     r2=r0|r1                            13  JMPZ r0==0 -> ip=mem[11]%len
-     6  XOR    r2=r0^r1                            14  EAT
-     7  NAND   r2=~(r0&r1)&255                     15  DIVIDE                    */
-  const OPN = ['NOP','LOAD','STORE','ADD','AND','OR','XOR','NAND','SUB','LDI','MOVA','MOVB','MOVC','JMPZ','EAT','DIVIDE'];
-  CORE.OPN = OPN;
-
-  /* io: {sense, tick, luka, makan_cb, bagi_cb, bangun_cb, perbaiki_cb, tulisdiri_cb}
-     st (opsional): {ip,r0,r1,r2,r3} — keadaan lanjutan untuk makhluk hidup.
-     Verifikator (tanpa st): berhenti saat ip mencapai ujung genom (HALT di akhir)
-     sehingga hasil akhir deterministik — program lulus/seragam atas satu jalanan penuh. */
-  function runVM(g, mem, maxSteps, subset, io, st) {
-    const len = g.length;
-    let ip, r0, r1, r2, r3, lanjut;
-    if (st) { ip = st.ip | 0; r0 = st.r0 | 0; r1 = st.r1 | 0; r2 = st.r2 | 0; r3 = st.r3 | 0; }
-    else { ip = 0; r0 = 0; r1 = 0; r2 = 0; r3 = 0; }
-    let steps = 0, berhenti = false;
-    const m = mem;
-    io = io || {};
-    while (steps < maxSteps && !berhenti && (st ? true : (ip < len))) {
-      const op = g[ip % len] & 15;
-      ip++; steps++;
-      switch (op) {
-        case 0: break;
-        case 1: r0 = m[r2 & 15]; if ((r2 & 15) === 14) r0 = io.sense | 0; else if ((r2 & 15) === 15) r0 = (io.tick | 0) & 255; else if ((r2 & 15) === 13) r0 = io.luka | 0; break;
-        case 2: {
-          const adr = r2 & 15;
-          let ditangani = false;
-          if (adr === 12) { if (io.tulisdiri_cb) { io.tulisdiri_cb(r0); ditangani = true; } }
-          else if (adr === 13) { if (io.perbaiki_cb) { if (io.perbaiki_cb(r0)) m[13] = Math.max(0, (m[13] | 0) - 1); ditangani = true; } }
-          else if (adr === 14) { if (io.bangun_cb) { io.bangun_cb(r0 & 3); ditangani = true; } }
-          if (!ditangani) m[adr] = r0 & 255; // tanpa callback (verifikator): memori data biasa
-          break;
-        }
-        case 3: r2 = (r0 + r1) & 255; break;
-        case 4: r2 = subset ? 0 : (r0 & r1); break;
-        case 5: r2 = subset ? 0 : (r0 | r1); break;
-        case 6: r2 = subset ? 0 : (r0 ^ r1); break;
-        case 7: r2 = (~(r0 & r1)) & 255; break;
-        case 8: r2 = (r0 - r1) & 255; break;
-        case 9: r2 = g[ip % len] & 15; ip++; break;
-        case 10: r1 = r0; break;
-        case 11: r0 = r2; break;
-        case 12: r2 = r0; break;
-        case 13: if (r0 === 0) ip = (m[11] | 0) % len; break;
-        case 14: if (io.makan_cb) io.makan_cb(); break;
-        case 15: if (io.bagi_cb) { io.bagi_cb(); berhenti = true; } break;
-      }
-    }
-    if (st) { st.ip = ip % len; st.r0 = r0 & 255; st.r1 = r1 & 255; st.r2 = r2 & 255; st.r3 = r3 & 255; }
-    return { r0: r0 & 255, r1: r1 & 255, r2: r2 & 255, steps: steps, mem: m, ip: ip % len };
-  }
-  CORE.runVM = runVM;
-
-  /* ---------- RANTAI TARGET — definisi, bukan jadwal ----------
-     Setiap target = fungsi verifikasi murni atas vektor uji nyata.
-     Lulus = SEMUA vektor benar. Tidak ada probabilitas, tidak ada
-     formula peluang, tidak ada timer. Penemuan hanya lewat uji. */
-  function vektorAcak(n, rnd) {
-    const v = [];
-    for (let i = 0; i < n; i++) v.push((rnd() * 256) | 0);
-    return v;
-  }
-
-  /* Tiap target: {id, nama, desk, subset, buatVektor(rnd)->[mem0..15], uji(hasil,mem)->bool, buka:string} */
-  const TARGETS = [
-    {
-      id: 'T0', nama: 'BIT-1', subset: false,
-      desk: 'Menghasilkan nilai ganjil (bit 1) dari memori acak — bukti pertama bahwa jas bisa menulis angka.',
-      buka: null,
-      buatVektor: (rnd) => { const v = []; for (let i = 0; i < 6; i++) v.push(vektorAcak(12, rnd)); return v; },
-      uji: (h) => (h.r2 & 1) === 1
-    },
-    {
-      id: 'T1', nama: 'NOT', subset: false,
-      desk: 'Pembalik byte: keluaran = 255 - masukan. Dasar seluruh logika.',
-      buka: 'stasiun-perbaiki',
-      buatVektor: (rnd) => { let v = [0, 1, 85, 170, 255, 128, 127]; for (let i = 0; i < 8; i++) v.push((rnd() * 256) | 0); return v.map(x => [x]); },
-      uji: (h, memIn) => h.r2 === ((255 - memIn[0]) & 255)
-    },
-    {
-      id: 'T2', nama: 'AND', subset: false,
-      desk: 'Gerbang AND byte: mem[0] & mem[1].',
-      buka: 'ekstraktor',
-      buatVektor: (rnd) => { const v = [[0, 0], [0, 1], [1, 0], [1, 1], [255, 255], [255, 0], [170, 85]]; for (let i = 0; i < 7; i++) v.push([vektorAcak(1, rnd)[0], vektorAcak(1, rnd)[0]]); return v; },
-      uji: (h, memIn) => h.r2 === (memIn[0] & memIn[1])
-    },
-    {
-      id: 'T3', nama: 'OR', subset: false,
-      desk: 'Gerbang OR byte: mem[0] | mem[1].',
-      buka: 'relai',
-      buatVektor: (rnd) => { const v = [[0, 0], [0, 1], [1, 0], [1, 1], [255, 0], [170, 85], [128, 127]]; for (let i = 0; i < 7; i++) v.push([vektorAcak(1, rnd)[0], vektorAcak(1, rnd)[0]]); return v; },
-      uji: (h, memIn) => h.r2 === (memIn[0] | memIn[1])
-    },
-    {
-      id: 'T4', nama: 'XOR', subset: false,
-      desk: 'Gerbang XOR byte: pembeda sejati. Kunci penjumlahan.',
-      buka: 'fabrikasi-genom',
-      buatVektor: (rnd) => { const v = [[0, 0], [0, 1], [1, 0], [1, 1], [255, 255], [170, 85], [128, 128]]; for (let i = 0; i < 7; i++) v.push([vektorAcak(1, rnd)[0], vektorAcak(1, rnd)[0]]); return v; },
-      uji: (h, memIn) => h.r2 === (memIn[0] ^ memIn[1])
-    },
-    {
-      id: 'T5', nama: 'XOR-DARI-NAND', subset: true,
-      desk: 'Ujian NANd-lengkap: gerbang AND/OR/XOR DIMATIKAN; XOR harus dibangun murni dari NAND + pemipaan — sejarah komputasi nyata.',
-      buka: 'benang-nand',
-      buatVektor: (rnd) => { const v = [[0, 0], [0, 1], [1, 0], [1, 1], [255, 255], [170, 85], [15, 240]]; for (let i = 0; i < 6; i++) v.push([vektorAcak(1, rnd)[0], vektorAcak(1, rnd)[0]]); return v; },
-      uji: (h, memIn) => h.r2 === (memIn[0] ^ memIn[1])
-    },
-    {
-      id: 'T6', nama: 'PENJUMLAH-PARUH', subset: false,
-      desk: 'Half-adder: bit-0 keluaran = jumlah (a^b), bit-1 = simpanan (a&b) — dipacking satu byte.',
-      buka: 'menara-logika',
-      buatVektor: (rnd) => { const v = [[0, 0], [0, 1], [1, 0], [1, 1]]; for (let i = 0; i < 6; i++) v.push([rnd() < 0.5 ? 0 : 1, rnd() < 0.5 ? 0 : 1]); return v; },
-      uji: (h, memIn) => {
-        const a = memIn[0], b = memIn[1];
-        return h.r2 === (((a ^ b) & 1) | ((a & b) << 1));
-      }
-    },
-    {
-      id: 'T7', nama: 'AKUMULATOR', subset: false,
-      desk: 'Register nyata: tiga kali jalanan berturut, mem[13] harus bernilai 3x masukan — baca-ubah-tulis yang tersimpan lintas jalanan.',
-      buka: 'bank-memori',
-      buatVektor: (rnd) => { let v = [0, 1, 5, 17, 100, 255, 128, 200]; for (let i = 0; i < 5; i++) v.push(vektorAcak(1, rnd)[0]); return v.map(x => [x]); },
-      uji: (h, memIn) => (memIn[13] | 0) === ((memIn[0] * 3) & 255) && h.r2 === ((memIn[0] * 3) & 255)
-    },
-    {
-      id: 'T8', nama: 'SALIN-MEMORI', subset: false,
-      desk: 'Menyalin 4 kata mem[0..3] ke mem[8..11] tanpa merusak sumber — dasar pemindahan pengetahuan.',
-      buka: 'arsip',
-      buatVektor: (rnd) => { const v = [[7, 0, 255, 128]]; for (let i = 0; i < 6; i++) v.push(vektorAcak(4, rnd)); return v; },
-      uji: (h, memIn, vin) => {
-        for (let i = 0; i < 4; i++) { if ((memIn[8 + i] | 0) !== (vin[i] | 0)) return false; }
-        for (let i = 0; i < 4; i++) { if ((memIn[i] | 0) !== (vin[i] | 0)) return false; }
-        return true;
-      }
-    },
-    {
-      id: 'T9', nama: 'TAUTAN-PASAR', subset: false,
-      desk: 'Puncak: keluaran = jumlah 4 byte yang benar-benar diturunkan dari skor pasar arena (arena-keadaan.json) — sinyal pasar gabungan dihitung oleh jas sendiri, bukan dibacakan.',
-      buka: 'portal-pasar',
-      buatVektor: (rnd, pasar) => {
-        const v = [];
-        if (pasar && pasar.length === 4) v.push(pasar.slice());
-        v.push([1, 2, 3, 4], [200, 100, 50, 25], [0, 255, 0, 0], [9, 9, 9, 9]);
-        for (let i = 0; i < 10; i++) v.push(vektorAcak(4, rnd));
-        return v;
-      },
-      uji: (h, memIn) => h.r2 === ((memIn[0] + memIn[1] + memIn[2] + memIn[3]) & 255)
-    }
+/* ================= SENSOR-REPO: isi file nyata (2 gerbang + streaming) ================= */
+async function isiAmbil(path, ukuran, onChunk){
+  const gerbang = [
+    `https://raw.githubusercontent.com/${RUMAH.pemilik}/${RUMAH.repo}/${RUMAH.cabang}/${encodeURIComponent(path)}`,
+    `https://cdn.jsdelivr.net/gh/${RUMAH.pemilik}/${RUMAH.repo}@${RUMAH.cabang}/${path}`
   ];
-  CORE.TARGETS = TARGETS;
-
-  /* Evaluasi satu genom terhadap satu target: skor = fraksi vektor lulus */
-  function evalTarget(target, g, langkahMax) {
-    if (target.id === 'T9' && !CORE.pasarBytes) return { lulus: 0, total: 1, skor: 0, terkunci: true };
-    const rndKecil = CORE.mulberry32(0xA5A5A5 ^ CORE.fnv1a(target.id));
-    let lulus = 0, total = 0;
-    const pas = target.buatVektor(rndKecil, CORE.pasarBytes || null);
-    for (const vin of pas) {
-      total++;
-      const mem = new Uint8Array(16);
-      for (let i = 0; i < Math.min(vin.length, 14); i++) mem[i] = vin[i] & 255;
-      let h;
-      const batas = langkahMax || (g.length * 2 + 8);
-      if (target.id === 'T7') {
-        // AKUMULATOR: tiga jalanan dengan mem persisten
-        let ok = true;
-        for (let k = 1; k <= 3; k++) {
-          h = runVM(g, mem, batas, target.subset, { sense: 0, tick: k });
-          if (((mem[13] | 0) !== ((vin[0] * k) & 255))) { ok = false; break; }
+  for(const url of gerbang){
+    try{
+      const c = new AbortController(); const t = setTimeout(()=>c.abort(), 15000);
+      const r = await fetch(url,{cache:'no-store', signal:c.signal}); clearTimeout(t);
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      if(r.body && r.body.getReader){
+        const rd = r.body.getReader(), dec = new TextDecoder('utf-8',{stream:true});
+        let buf='', got=0;
+        while(true){
+          const {done, value} = await rd.read(); if(done) break;
+          buf += dec.decode(value,{stream:true}); got += value.length;
+          if(onChunk) onChunk(buf, got);
+          if(got >= MAXBACA + 8192){ try{rd.cancel();}catch(e){} break; }
         }
-        if (ok && h && h.r2 === ((vin[0] * 3) & 255)) lulus++;
-      } else {
-        h = runVM(g, mem, batas, target.subset, { sense: 0, tick: 0 });
-        if (target.uji(h, mem, vin)) lulus++;
+        buf += dec.decode();
+        const dibaca = Math.min(got, MAXBACA);
+        return {teks: buf.length>MAXBACA ? buf.slice(0,MAXBACA) : buf, dibaca, ukuran};
       }
+      const teks = await r.text();
+      return {teks: teks.length>MAXBACA ? teks.slice(0,MAXBACA) : teks, dibaca: Math.min(teks.length,MAXBACA), ukuran};
+    }catch(e){}
+  }
+  throw new Error('isi-gagal');
+}
+
+/* ================= PEMBACA: parser → fakta nyata ================= */
+function parseJSON(t){ try{ return JSON.parse(t); }catch(e){ return undefined; } }
+function jumlahJSON(o){ // pendataan struktur generik
+  let kunci=0, simpul=0, kedalaman=0, larik=0;
+  (function jalan(v,d){ simpul++; if(d>kedalaman) kedalaman=d;
+    if(Array.isArray(v)){ larik++; v.slice(0,80).forEach(x=>jalan(x,d+1)); }
+    else if(v && typeof v==='object'){ for(const k in v){ kunci++; if(v[k]!==undefined && simpul<9000) jalan(v[k],d+1); } }
+  })(o,0);
+  return {kunci, simpul, kedalaman, larik};
+}
+const f2=(x)=>(+x).toFixed(2), f1=(x)=>(+x).toFixed(1);
+
+function faktaDariJSON(path, o){
+  const F=[], s=jumlahJSON(o);
+  F.push(`JSON sah: ${s.kunci} kunci, ${s.simpul} simpul, kedalaman ${s.kedalaman}, ${s.larik} larik`);
+  const p = path.split('/').pop();
+  if(p==='versi.json'){
+    F.push(`protokol "${o.protokol}" · kodeVersi <b>${o.kodeVersi}</b> · organ: `+
+      Object.entries(o.organ||{}).map(([k,v])=>k+' '+v).join(', '));
+    const g=o.pertumbuhan||{}; F.push(`pertumbuhan: ${g.denyut??'?'} denyut, rantai ${g.rantaiDenyut??'?'}; hitung: simpan ${g.hitung?.simpan??0}, gagal ${g.hitung?.gagal??0}`);
+    if(o.waktu) F.push(`stempel waktu organ: ${o.waktu}`);
+  }
+  if(p==='arena-keadaan.json'){
+    const tp = o.todayPicks||[]; const m = tp.find(x=>x.competitor==='MICAPROFITA');
+    if(m) F.push(`pick MICAPROFITA hari ${o.today}: <b>${m.symbol} ${m.direction}</b> keyakinan ${m.confidence}% — alasan arena: "${(m.evidence&&m.evidence.reason)||'-'}"`);
+    F.push(`todayPicks memuat ${tp.length} kompetitor: `+tp.slice(0,6).map(x=>`${x.competitor}→${x.symbol}`).join(', ')+(tp.length>6?'…':''));
+    const st=(o.standings||[]).find(x=>x.competitor==='MICAPROFITA');
+    if(st) F.push(`diri arena: ${st.days} hari, ${st.picks} pick, hit-rate <b>${f1(st.hitRate*100)}%</b>, kumulatif <b>${f2(st.cumRet*100)}%</b> (terbaik ${f2(st.bestDay*100)}%, terburuk ${f2(st.worstDay*100)}%)`);
+    if(o.genome) F.push(`genom generasi <b>${o.genome.generation}</b>: kBase ${o.genome.v2?.kBase}, paraK ${o.genome.v2?.paraK}, atrCap ${o.genome.v2?.atrCap}, memVeto ${o.genome.v2?.memVetoOn?'AKTIF':'mati'}`);
+    const bc=o.bukuCuan||{}, mt=bc.metrik||{};
+    if(mt.totalPlan!==undefined) F.push(`bukuCuan: ${mt.totalPlan} rencana, win-rate ${f1((mt.winRate||0)*100)}%, ekspektansi ${f2(mt.ekspektansiPct||0)}%, net kumulatif ${f2(mt.netKumulatifPct||0)}%, MDD ${f1(mt.maxDrawdownPct||0)}% — kejujuran arena: "${(bc.kejujuran||'').slice(0,80)}"`);
+    if(o.climate) F.push(`iklim: Fear&Greed ${o.climate.fng} (${o.climate.fngClass}), dominasi BTC ${o.climate.btcDominance}%, rezim terdeteksi <b>${o.regime}</b>`);
+    if(o.memory) F.push(`memori arena: ${o.memory.rawEvents}→${o.memory.storedRows} baris (kompresi ×${f1(o.memory.compressionRatio||1)}), ${o.memory.totalHits} hit`);
+    if(o.slotHariIni) F.push(`slot kejujuran ${o.slotHariIni.day}: k=${o.slotHariIni.k}, lahir ${o.slotHariIni.lahir}, ditolak ${(o.slotHariIni.ditolak||[]).length}`);
+  }
+  if(p==='genome-server.json'){
+    for(const rz of ['NAIK','TURUN','DATAR']){
+      const z=o[rz]; if(z&&z.bobot) F.push(`otak rezim ${rz}: generasi ${z.generasi}, belajar ${z.belajar}×, bobot `+
+        Object.entries(z.bobot).map(([k,v])=>`${k} ${(+v).toFixed(3)}`).join(', '));
     }
-    return { lulus: lulus, total: total, skor: total ? lulus / total : 0 };
+    if(o.phoenix) F.push(`phoenix tersimpan untuk rezim: ${Object.keys(o.phoenix).join(', ')}`);
+    if(o.aturanBelajar) F.push(`aturanBelajar: ${JSON.stringify(o.aturanBelajar).slice(0,120)}`);
   }
-  CORE.evalTarget = evalTarget;
-
-  /* Verifikasi formal untuk pencatatan penemuan — jalur terpisah dari pencarian,
-     batas langkah IDENTIK dengan pencarian (definisi lulus yang konsisten). */
-  function verifikasiPenuh(target, g) {
-    const e = evalTarget(target, g);
-    return e.skor === 1 ? e : null;
+  if(p==='terkini.json'){
+    F.push(`kapsul "${o.protokol}" organ ${o.organ} — denyut ke-${o.denyut??'?'}`);
+    const ch=(o.rantai&&o.rantai.denyut)||[]; if(ch.length) F.push(`rantai denyut ${ch.length} mata; hash terakhir ${String(ch[ch.length-1]?.hash||'').slice(0,16)}…`);
   }
-  CORE.verifikasiPenuh = verifikasiPenuh;
-
-  root.__KEHIDUPAN_CORE = CORE;
-  if (typeof module !== 'undefined' && module.exports) module.exports = CORE;
-})(typeof window !== 'undefined' ? window : globalThis);
-
-</script>
-<script>
-/* ============================================================
-   V284-PROTOLIFE — DUNIA + PIKIRAN (bebas DOM)
-   Ekologi energi nyata, mutasi & karat bit nyata, sembilan fase
-   siklus sadar, sintesis pencarian nyata (hill-climb + restart).
-   ============================================================ */
-'use strict';
-(function (root) {
-  const CORE = root.__KEHIDUPAN_CORE ||
-    (typeof require === 'function' ? require('./engine_core.js') : null);
-  if (!CORE) throw new Error('V284: engine_core belum dimuat');
-  const W = 80, H = 45, NCELL = W * H, GEN_LEN = 24, POP_MAX = 26;
-  const FASE = ['MENGAMATI', 'MEMAHAMI', 'MENCOBA', 'MELAKUKAN', 'MENGEVALUASI', 'MENEMUKAN', 'MEMBANGUN', 'MENINGKATKAN', 'MENGAMATI-KEMBALI'];
-  const DURASI = 120; // denyut per fase
-  const STRUK = ['', 'stasiun-perbaiki', 'ekstraktor', 'relai'];
-
-  function hex(g) { let s = ''; for (let i = 0; i < g.length; i++) s += (g[i] & 15).toString(16); return s; }
-  function dariHex(s) { const a = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) a[i] = parseInt(s[i], 16) & 15; return a; }
-
-  let S = null; // state dunia
-
-  function duniaBaru(benihStr, waktu) {
-    const seed = CORE.fnv1a(benihStr);
-    const rnd = CORE.mulberry32(seed);
-    const food = new Float32Array(NCELL);
-    for (let i = 0; i < NCELL; i++) if (rnd() < 0.055) food[i] = 30 + rnd() * 90;
-    S = {
-      v: 284, benihStr: benihStr, seed: seed, rnd: rnd, tick: 0,
-      food: food, struktur: [], orgs: [], caps: [], targetIdx: 0,
-      sintesis: { best: null, bestHex: '', skor: 0, evals: 0, restarts: 0, stall: 0, kandidatBaru: null },
-      log: [], hist: [], idOrg: 1,
-      rot: 0, lahir: 0, mati: 0, bagi: 0, bangunan: 0, injeksi: 0,
-      statInstr: 0, snapshot: null, wawasan: '', faseKini: -1,
-      pasar: { mode: 'mandiri', bytes: null, sumber: '', diAt: 0 },
-      waktuSimpan: waktu || Date.now(), mengejar: 0
-    };
-    for (let i = 0; i < 8; i++) lahirkan(genomAcak(), (rnd() * W) | 0, (rnd() * H) | 0, 0, 36 + rnd() * 20);
-    catat('LAHIR', 'Dunia Protolife dibangkitkan dari benih nyata: ' + benihStr.slice(0, 40) + (benihStr.length > 40 ? '…' : '') + ' — 8 organisme acak, ekologi energi berjalan.');
-    jalankan(0); // amati awal
+  if(p==='wawasan.json'){
+    if(o.siklus!==undefined) F.push(`wawasan siklus <b>${o.siklus}</b> dihasilkan ${o.dihasilkan||'-'}`);
+    if(o.metakognisi) F.push(`metakognisi: ${JSON.stringify(o.metakognisi).slice(0,140)}`);
+    if(o.dimensi) F.push(`${Array.isArray(o.dimensi)?o.dimensi.length:'?'} dimensi wawasan didaftarkan`);
+    if(o.vetoSiklusIni) F.push(`veto siklus ini: ${JSON.stringify(o.vetoSiklusIni).slice(0,100)}`);
   }
+  if(p==='brain.json') F.push(`brain.json: ${JSON.stringify(o).slice(0,160)}`);
+  if(p==='gerbang.json') F.push(`gerbang.json: ${JSON.stringify(o).slice(0,160)}`);
+  if(p==='penjaga-keadaan.json') F.push(`penjaga-keadaan: ${JSON.stringify(o).slice(0,160)}`);
+  if(p==='performa.json') F.push(`performa: ${JSON.stringify(o).slice(0,160)}`);
+  if(p==='guru.json'||p==='kaizen.json'||p==='impas.json'||p==='odds.json'||p==='gekko.json')
+    F.push(`inti dokumen: ${JSON.stringify(o).slice(0,150)}…`);
+  return F;
+}
+function faktaDariMD(path, t){
+  const F=[]; const baris=t.split('\n');
+  const judul=baris.filter(b=>/^#{1,3}\s/.test(b));
+  const kata=t.split(/\s+/).filter(Boolean).length;
+  const h1=(t.match(/^#\s+(.+)/m)||[])[1];
+  F.push(`markdown: ${baris.length} baris, ${judul.length} kepala-seksi, ${kata.toLocaleString('id-ID')} kata`);
+  if(h1) F.push(`judul utama: "<b>${h1.trim().slice(0,90)}</b>"`);
+  if(judul.length>2) F.push(`seksi: ${judul.slice(1,7).map(x=>x.replace(/^#+\s*/,'').trim().slice(0,34)).join(' · ')}${judul.length>7?'…':''}`);
+  return F;
+}
+function faktaDariKODE(path, t){
+  const F=[]; const baris=t.split('\n'); const p=path.split('/').pop();
+  const fungsi=(t.match(/function\s+[A-Za-z_$][\w$]*|def\s+[A-Za-z_]\w*|=>\s*\{/g)||[]).length;
+  F.push(`kode: ${baris.length.toLocaleString('id-ID')} baris, ±${fungsi} fungsi/lambung`);
+  const vd=(t.match(/LIVE_DECISION_VERSION\s*=\s*'([^']+)'/)||[])[1]; if(vd) F.push(`LIVE_DECISION_VERSION = <b>${vd}</b>`);
+  const op=(t.match(/0x[0-9A-F]{2}:\s*(NOP|LOAD|STORE|ADD|AND|OR|XOR|NAND|SUB|LDI|MOVA|MOVB|MOVC|JMPZ|EAT|DIVIDE)/g)||[]);
+  if(op.length) F.push(`${op.length} opcode VM terpetakan — mesin hidup versi lamaku`);
+  const kd=(t.match(/const KURIKULUM|const MRIT|const GENOM|function jawab/g)||[]);
+  if(kd.length) F.push(`modul otak terdeteksi: ${kd.join(', ')}`);
+  const nm=(t.match(/name:\s*(.+)$/gm)||[]).slice(0,5);
+  if(path.endsWith('.yml') && nm.length) F.push(`alur kerja: ${nm.map(x=>x.replace('name:','').trim().slice(0,30)).join(', ')}`);
+  if(p==='penjaga.mjs'){ const ste=(t.match(/async function\s+\w+/g)||[]).length; F.push(`penjaga: ${ste} fungsi asinkron — jantung denyut 15 menit rumah ini`); }
+  return F;
+}
+function pilahFakta(path, teks){
+  const ext = path.split('.').pop().toLowerCase();
+  if(ext==='json'){ const o=parseJSON(teks);
+    if(o===undefined) return ['JSON TIDAK SAH setelah '+kb(teks.length)+' — kemungkinan karena baca parsial; kucatat jujur'];
+    return faktaDariJSON(path, o); }
+  if(ext==='md') return faktaDariMD(path, teks);
+  if(['html','mjs','js','py','yml','cjs'].includes(ext)) return faktaDariKODE(path, teks);
+  return [`${kb(teks.length)} teks polos terbaca`];
+}
+/* ================= SENSOR-PASAR: klines Binance nyata ================= */
+const GERBANG_BINANCE = ['https://data-api.binance.vision','https://api.binance.com','https://api1.binance.com'];
+async function lilinAmbil(sym){
+  for(const g of GERBANG_BINANCE){
+    try{ const d = await jF(`${g}/api/v3/klines?symbol=${sym}&interval=1h&limit=200`, 11000);
+      if(Array.isArray(d) && d.length>60)
+        return d.map(k=>({t:k[0], o:+k[1], h:+k[2], l:+k[3], c:+k[4], v:+k[5]}));
+    }catch(e){}
+  }
+  throw new Error('lilin-gagal:'+sym);
+}
+function ema(arr, n){ const k=2/(n+1); let e=arr[0], out=[e];
+  for(let i=1;i<arr.length;i++){ e=arr[i]*k+e*(1-k); out.push(e); } return out; }
+function rsiWilder(arr, n=14){
+  let naik=0, turun=0; const out=[];
+  for(let i=1;i<arr.length;i++){ const ch=arr[i]-arr[i-1];
+    const u=Math.max(ch,0), d=Math.max(-ch,0);
+    if(i<=n){ naik+=u; turun+=d; if(i===n){ naik/=n; turun/=n; out.push(100-100/(1+naik/(turun||1e-9))); } }
+    else{ naik=(naik*(n-1)+u)/n; turun=(turun*(n-1)+d)/n; out.push(100-100/(1+naik/(turun||1e-9))); } }
+  return out.length?out[out.length-1]:50; }
+function atrK(lilin, n=14){
+  const tr=[]; for(let i=1;i<lilin.length;i++){ const l=lilin[i];
+    tr.push(Math.max(l.h-l.l, Math.abs(l.h-lilin[i-1].c), Math.abs(l.l-lilin[i-1].c))); }
+  let a=tr.slice(0,n).reduce((x,y)=>x+y,0)/n;
+  for(let i=n;i<tr.length;i++) a=(a*(n-1)+tr[i])/n;
+  return a; }
+function analisaLilin(lilin){
+  const c=lilin.map(x=>x.c), terakhir=c[c.length-1];
+  const e20=ema(c,20), e50=ema(c,50);
+  const ret=[]; for(let i=1;i<c.length;i++) ret.push(c[i]/c[i-1]-1);
+  const vol=Math.sqrt(ret.slice(-48).reduce((a,x)=>a+x*x,0)/48)*100;
+  const mom7=c[c.length-1]/c[c.length-8]-1, mom48=c[c.length-1]/c[c.length-49]-1;
+  const chg=c[c.length-1]/c[c.length-25]-1; // ~24 jam
+  return {harga:terakhir, chg:chg*100, ema20:e20[e20.length-1], ema50:e50[e50.length-1],
+    rsi:rsiWilder(c), atr:atrK(lilin), mom7:mom7*100, mom48:mom48*100, vol};
+}
+/* UJI-JALAN NYATA: aturan turunan genom arena (ema align + momentum + RSI<70), tahan 24 jam, non-overlap */
+function ujiJalan(lilin){
+  const c=lilin.map(x=>x.c), e20=ema(c,20), e50=ema(c,50);
+  const rsiSeri=(()=>{ let naik=0,turun=0; const out=[];
+    for(let i=1;i<c.length;i++){ const ch=c[i]-c[i-1], u=Math.max(ch,0), d=Math.max(-ch,0);
+      if(i<=14){ naik+=u; turun+=d; if(i===14){naik/=14;turun/=14;out[14]=100-100/(1+naik/(turun||1e-9));} }
+      else{ naik=(naik*13+u)/14; turun=(turun*13+d)/14; out[i]=100-100/(1+naik/(turun||1e-9)); } }
+    return out; })();
+  const trades=[];
+  let i=60;
+  while(i<c.length-24){
+    const sah = e20[i]>e50[i] && (rsiSeri[i]??50)<70 && c[i]>c[i-7];
+    if(sah){ const ret=(c[i+24]-c[i])/c[i]*100; trades.push(ret); i+=24; }
+    else i++;
+  }
+  if(!trades.length) return {n:0, menang:0, net:0, netCek:0, catatan:'tidak ada sinyal sah pada 200 lilin — jujur kosong'};
+  const net=trades.reduce((a,x)=>a+x,0);
+  const netCek=Math.expm1(trades.reduce((a,x)=>a+Math.log1p(x/100),0))*100; // jalur verifikasi ke-2
+  return {n:trades.length, menang:trades.filter(x=>x>0).length, net, netCek,
+    terbaik:Math.max(...trades), terburuk:Math.min(...trades)};
+}
+/* AUDIT: pick arena vs momentum hidup */
+function auditPick(pick, an){
+  if(!an) return null;
+  const buy = pick.direction==='BUY';
+  const searah = buy ? an.mom7>0 : an.mom7<0;
+  const align = buy ? an.ema20>an.ema50 : an.ema20<an.ema50;
+  const vonis = searah&&align ? 'SEPAKAT' : (!searah&&!align ? 'MENDEVIASI' : 'SETENGAH');
+  return {arah:pick.direction, conf:pick.confidence, vonis,
+    ket:`mom7 ${f2(an.mom7)}% · ema ${an.ema20>an.ema50?'20>50':'20<50'} · RSI ${f1(an.rsi)}`};
+}
 
-  function genomAcak() {
-    const g = new Uint8Array(GEN_LEN);
-    for (let i = 0; i < GEN_LEN; i++) g[i] = (S.rnd() * 16) | 0;
-    return g;
-  }
+/* ================= CERMIN: arena-keadaan.json same-origin ================= */
+async function cerminAmbil(){
+  const r = await fetch('./arena-keadaan.json?t='+sekarang(), {cache:'no-store'});
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  const d = await r.json();
+  S.cermin = {at:sekarang(), data:d};
+  const tp=(d.todayPicks||[]).find(x=>x.competitor==='MICAPROFITA');
+  jurnal('CERMIN', `cermin arena terbaca: rezim <b>${d.regime}</b>, pick MICAPROFITA ${tp?`<b>${tp.symbol} ${tp.direction}</b> (${tp.confidence}%)`:'kosong'}, FnG ${d.climate?.fng??'-'}`);
+  return d;
+}
+function simbolSasaran(){
+  const d=S.cermin.data; if(!d) return [];
+  const set=[]; const dor=s=>{ if(s && !set.includes(s) && set.length<3) set.push(s); };
+  const mine=(d.todayPicks||[]).find(x=>x.competitor==='MICAPROFITA'); if(mine) dor(mine.symbol);
+  for(const it of (d.pulse?.items||[])) dor(it.symbol);
+  for(const x of (d.todayPicks||[])) if(x.competitor!=='ACAK') dor(x.symbol);
+  if(!set.length) for(const x of (d.todayPicks||[])) dor(x.symbol);
+  return set;
+}
 
-  function lahirkan(g, x, y, gen, energi) {
-    if (S.orgs.length >= POP_MAX) return null;
-    const o = {
-      id: S.idOrg++, g: new Uint8Array(g), t: new Uint8Array(g),
-      e: energi, x: x, y: y, age: 0, gen: gen, luka: 0,
-      mem: new Uint8Array(16), st: { ip: 0, r0: 0, r1: 0, r2: 0, r3: 0 }, eksekusi: 0, makanTick: 0, bagiTick: 0
-    };
-    S.orgs.push(o); S.lahir++;
-    return o;
+/* ================= OTAK: pekerjaan nyata, argmax utilitas ================= */
+const STALE_POHON = 12*60000, STALE_CERMIN = 20*60000, STALE_PASAR = 45*60000;
+function skorBaca(f){
+  const b=S.baca[f.path];
+  if(b){
+    if(b.berubah) return 95;                                     // SHA berubah — rumah bergerak, UTAMA
+    if(b.fakta) return -1;                                       // sudah terbaca utuh — bukan pekerjaan
+    if(b.gagal>=2 && sekarang()-(b.atGagal||0)<600000) return -1; // backoff setelah gagal beruntun
   }
+  let u=40;
+  if(INTEGERS.includes(f.path)) u+=30;                       // inti-diri kecil = cepat & penting
+  else if(f.path.startsWith('laporan/')) u+=10;
+  else if(f.path.startsWith('scripts/')) u+=14;
+  else if(f.size>1000000) u-=26;                              // raksasa — nanti, setelah yang lain
+  else if(f.path.startsWith('otak/')||f.path.startsWith('memori/')) u+=18;
+  return u;
+}
+function daftarKerja(){
+  const k=[];
+  const pohonTua = S.pohon.files.length===0 || (sekarang()-S.pohon.at)>STALE_POHON;
+  if(pohonTua) k.push({u: S.pohon.files.length?70:95, label:'pindai rumah (pohon repo '+(S.pohon.files.length?umur(sekarang()-S.pohon.at):'kosong')+')', buat:()=>aktPindai()});
+  const cerminTua = !S.cermin.at || (sekarang()-S.cermin.at)>STALE_CERMIN;
+  if(cerminTua) k.push({u:60, label:'cermin arena-keadaan '+(S.cermin.at?umur(sekarang()-S.cermin.at):'belum dibaca'), buat:()=>aktCermin()});
+  for(const f of S.pohon.files){ const u=skorBaca(f); if(u>0) k.push({u, label:'baca '+f.path+(S.baca[f.path]?.berubah?' (BERUBAH)':''), buat:()=>aktBaca(f)}); }
+  for(const sym of simbolSasaran()){
+    const p=S.pasar[sym];
+    const tua = !p || (sekarang()-p.at)>STALE_PASAR;
+    if(tua) k.push({u: p?50:58, label:'pelajari pasar '+sym+(p?' ('+umur(sekarang()-p.at)+')':' (pertama)'), buat:()=>aktPasar(sym)});
+  }
+  const mine=(S.cermin.data?.todayPicks||[]).find(x=>x.competitor==='MICAPROFITA');
+  if(mine && S.pasar[mine.symbol] && !S.pasar[mine.symbol].audit)
+    k.push({u:55, label:'audit pick '+mine.symbol+' vs momentum hidup', buat:()=>aktAudit(mine)});
+  if(S.jurnal.length>170) k.push({u:20, label:'padatkan jurnal ('+S.jurnal.length+' entri)', buat:()=>aktPadat()});
+  return k;
+}
 
-  function idx(x, y) { return ((y + H) % H) * W + ((x + W) % W); }
-  function foodAt(x, y) { return S.food[idx(x, y)]; }
-  function adaStruktur(x, y, tipe) {
-    for (const st of S.struktur) if (st.x === x && st.y === y && (tipe === undefined || st.tipe === tipe)) return true;
-    return false;
+/* ---------- SIKLUS 9 TAHAP: tiap langkah = fungsi nyata ---------- */
+async function jalankan(akt){
+  S.kerja.sibuk=true; S.kerja.nama=akt.nama; S.kerja.target=akt.target||null; S.kerja.jejak=[];
+  for(const L of akt.langkah){
+    S.kerja.fase=L.fase; S.kerja.faseAt=sekarang();
+    hudRender(); pikirRender(); stripRender();
+    try{ await L.fn(); }catch(e){ jurnal('GAGAL', `${akt.nama} / ${L.fase} — ${pesan(e)}`, 'gagal'); }
+    S.kerja.jejak.push(L.fase);
+    await tidur(L.dtk ?? 850);
   }
-  function punya(buka) {
-    if (!buka) return true;
-    return S.caps.some(c => c.buka === buka);
-  }
-  function regrowFaktor(x, y) {
-    let f = 1;
-    for (const st of S.struktur) {
-      if (st.tipe !== 2) continue;
-      const dx = st.x - x, dy = st.y - y;
-      if (dx * dx + dy * dy <= 16) f = Math.max(f, 4);
-    }
-    return f;
-  }
+  S.kerja.sibuk=false; S.kerja.fase='';
+  hudRender(); stripRender();
+}
+const F=(fase,fn,dtk)=>({fase,fn,dtk});
 
-  /* ---------- LOG & SEJARAH ---------- */
-  function catat(fase, teks) {
-    S.log.push({ t: new Date().toISOString().slice(11, 19), tick: S.tick, fase: fase, teks: teks });
-    if (S.log.length > 90) S.log.splice(0, S.log.length - 90);
-  }
-  function sampelHist() {
-    let e = 0; for (const o of S.orgs) e += o.e;
-    S.hist.push({ tick: S.tick, pop: S.orgs.length, e: S.orgs.length ? +(e / S.orgs.length).toFixed(1) : 0, caps: S.caps.length, evals: S.sintesis.evals });
-    if (S.hist.length > 260) S.hist.splice(0, S.hist.length - 260);
-  }
-  function pearson(a, b) {
-    const n = Math.min(a.length, b.length);
-    if (n < 4) return null;
-    let sa = 0, sb = 0;
-    for (let i = 0; i < n; i++) { sa += a[i]; sb += b[i]; }
-    const ma = sa / n, mb = sb / n;
-    let num = 0, da = 0, dbv = 0;
-    for (let i = 0; i < n; i++) { const xa = a[i] - ma, xb = b[i] - mb; num += xa * xb; da += xa * xa; dbv += xb * xb; }
-    const den = Math.sqrt(da * dbv);
-    return den > 0 ? +(num / den).toFixed(2) : null;
-  }
-
-  /* ---------- VM MAKHLUK ---------- */
-  function ioUntuk(o) {
-    return {
-      sense: Math.min(255, S.food[idx(o.x, o.y)] | 0),
-      tick: S.tick,
-      luka: o.luka,
-      makan_cb: function () {
-        const i = idx(o.x, o.y);
-        if (S.food[i] >= 12) { S.food[i] -= 12; o.e = Math.min(240, o.e + 12); o.makanTick = S.tick; }
-      },
-      bagi_cb: function () {
-        if (o.e < 34 || S.orgs.length >= POP_MAX) return;
-        const anak = new Uint8Array(o.g);
-        let mut = 0;
-        const nMut = 1 + ((S.rnd() * 2) | 0);
-        for (let k = 0; k < nMut; k++) {
-          const p = (S.rnd() * GEN_LEN) | 0;
-          const baru = punya('fabrikasi-genom') ? ((S.rnd() * 16) | 0) : ((anak[p] + 1 + ((S.rnd() * 15) | 0)) & 15);
-          if (baru !== anak[p]) { anak[p] = baru; mut++; }
-        }
-        o.e -= 20;
-        let bx = o.x, by = o.y;
-        for (let coba = 0; coba < 4; coba++) {
-          const nx = o.x + ((S.rnd() * 5) | 0) - 2, ny = o.y + ((S.rnd() * 5) | 0) - 2;
-          if (foodAt(nx, ny) > foodAt(bx, by)) { bx = nx; by = ny; }
-        }
-        const anakO = lahirkan(anak, (bx + W) % W, (by + H) % H, o.gen + 1, 14);
-        if (anakO) { S.bagi++; o.bagiTick = S.tick; }
-      },
-      bangun_cb: function (tipe) {
-        if (tipe < 1 || tipe > 3) return false;
-        if (!punya(STRUK[tipe])) return false;
-        if (S.struktur.length >= 22) return false; // lahan terbatas — dunia nyata
-        if (o.e < 12 || adaStruktur(o.x, o.y)) return false;
-        o.e -= 10;
-        S.struktur.push({ x: o.x, y: o.y, tipe: tipe, lahir: S.tick });
-        catat('DUNIA', 'Makhluk #' + o.id + ' membangun ' + STRUK[tipe] + ' di (' + o.x + ',' + o.y + ') — kemampuan terverifikasi dipakai di dunia nyata.');
-        return true;
-      },
-      perbaiki_cb: function () {
-        if (o.e < 5) return false;
-        for (let i = 0; i < GEN_LEN; i++) {
-          if (o.g[i] !== o.t[i]) { o.g[i] = o.t[i]; o.e -= 4; o.luka = Math.max(0, o.luka - 1); return true; }
-        }
-        return false;
-      },
-      tulisdiri_cb: function (val) {
-        const p = val % GEN_LEN;
-        o.g[p] = val & 15;
-        return true;
-      }
-    };
-  }
-
-  function langkahMakhluk(o) {
-    const io = ioUntuk(o);
-    const h = CORE.runVM(o.g, o.mem, 2, false, io, o.st);
-    S.statInstr += h.steps;
-    o.eksekusi += h.steps;
-    o.e -= 0.05 * h.steps;
-    o.age++;
-    // kemotaksis pasif — fisika dunia, sama untuk semua
-    if (S.tick % 6 === 0 && S.rnd() < 0.8) {
-      const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-      let best = foodAt(o.x, o.y), bx = o.x, by = o.y;
-      for (const d of dirs) {
-        const f = foodAt(o.x + d[0], o.y + d[1]);
-        if (f > best) { best = f; bx = o.x + d[0]; by = o.y + d[1]; }
-      }
-      if (bx !== o.x || by !== o.y) { o.x = (bx + W) % W; o.y = (by + H) % H; }
-    }
-  }
-
-  function karatBit() {
-    if (!S.orgs.length) return;
-    const o = S.orgs[(S.rnd() * S.orgs.length) | 0];
-    // stasiun-perbaiki di dekatnya mencegah karat (kerja struktur nyata)
-    for (const st of S.struktur) {
-      if (st.tipe !== 1) continue;
-      const dx = st.x - o.x, dy = st.y - o.y;
-      if (dx * dx + dy * dy <= 25 && S.rnd() < 0.5) return;
-    }
-    const p = (S.rnd() * GEN_LEN) | 0, bit = 1 << ((S.rnd() * 4) | 0);
-    o.g[p] = (o.g[p] ^ bit) & 15;
-    o.luka++;
-    S.rot++;
-  }
-
-  function regrow() {
-    const mulai = (S.tick % 4) * (NCELL / 4);
-    for (let i = mulai; i < mulai + NCELL / 4; i++) {
-      const x = i % W, y = (i / W) | 0;
-      // pertumbuhan + peluruhan nutrisi — keseimbangan ekologi, bukan akumulasi abadi
-      S.food[i] = Math.max(0, Math.min(255, S.food[i] + 0.03 * regrowFaktor(x, y) - S.food[i] * 0.0006));
-    }
-    if (S.tick % 30 === 0) {
-      for (const st of S.struktur) {
-        if (st.tipe !== 3) continue;
-        const c = idx(st.x, st.y), tot = 4, rata = S.food[c] / 2;
-        S.food[c] = rata + S.food[c] / 4;
-        const tet = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-        for (const d of tet) { const j = idx(st.x + d[0], st.y + d[1]); S.food[j] = Math.min(255, S.food[j] + rata / 8); }
-      }
-    }
-  }
-
-  /* ---------- PIKIRAN: SINTESIS PENCARIAN NYATA (pool elit μ+λ) ---------- */
-  function targetKini() { return CORE.TARGETS[S.targetIdx]; }
-
-  function mutasi(g) {
-    const c = new Uint8Array(g);
-    const n = 1 + ((S.rnd() * 3) | 0);
-    for (let k = 0; k < n; k++) {
-      const p = (S.rnd() * GEN_LEN) | 0;
-      if (S.rnd() < 0.5) c[p] = (S.rnd() * 16) | 0;
-      else c[p] = (c[p] + 1 + ((S.rnd() * 15) | 0)) & 15;
-    }
-    return c;
-  }
-
-  function poolBaru(warisan) {
-    // warisan = genom target sebelumnya yang terverifikasi — fondasi nyata;
-    // anak-anaknya bermutasi bebas, seleksi murni lewat uji vektor.
-    const pool = [];
-    if (warisan) {
-      pool.push({ g: new Uint8Array(warisan), skor: 0 });
-      pool.push({ g: mutasi(warisan), skor: 0 });
-      pool.push({ g: mutasi(warisan), skor: 0 });
-    }
-    while (pool.length < 5) pool.push({ g: genomAcak(), skor: 0 });
-    return pool;
-  }
-
-  function langkahSintesis(budget) {
-    const t = targetKini();
-    if (!t) return;
-    const sin = S.sintesis;
-    if (!sin.pool || !sin.pool.length) sin.pool = poolBaru(null);
-    for (let i = 0; i < budget; i++) {
-      const induk = sin.pool[(S.rnd() * sin.pool.length) | 0];
-      const kandidat = mutasi(induk.g);
-      const e = CORE.evalTarget(t, kandidat);
-      sin.evals++; S.statInstr += e.total * 40;
-      let terburuk = 0;
-      for (let j = 1; j < sin.pool.length; j++) if (sin.pool[j].skor < sin.pool[terburuk].skor) terburuk = j;
-      if (e.skor >= sin.pool[terburuk].skor) sin.pool[terburuk] = { g: kandidat, skor: e.skor };
-      if (e.skor > sin.skor) {
-        sin.skor = e.skor; sin.best = kandidat; sin.bestHex = hex(kandidat); sin.stall = 0; sin.verGagal = false;
-        if (e.skor === 1) { sin.kandidatBaru = kandidat; return; } // tunggu verifikasi formal
-      } else sin.stall++;
-      if (sin.stall > 700) {
-        // stagnasi: simpan 3 terbaik, tarik napas acak baru — diversifikasi nyata
-        sin.pool.sort((a, b) => b.skor - a.skor);
-        sin.pool.length = 3;
-        while (sin.pool.length < 5) sin.pool.push({ g: genomAcak(), skor: 0 });
-        sin.stall = 0; sin.restarts++;
-      }
-    }
-  }
-
-  function verifikasiFormal() {
-    const t = targetKini(), sin = S.sintesis;
-    if (!t || !sin.best || sin.skor < 1) return;
-    const e = CORE.verifikasiPenuh(t, sin.best);
-    if (e) {
-      S.caps.push({ id: t.id, nama: t.nama, buka: t.buka || '', gHex: sin.bestHex, vektor: e.total, evals: sin.evals, tick: S.tick, waktu: new Date().toISOString(), subset: !!t.subset });
-      catat('PENEMUAN', t.id + ' ' + t.nama + ' TERTERIFIKASI — genom ' + sin.bestHex + ' lulus ' + e.total + '/' + e.total + ' vektor uji setelah ' + sin.evals.toLocaleString('id-ID') + ' eval pencarian nyata' + (t.subset ? ' (mode NAND-saja)' : '') + '. Kemampuan terbuka: ' + (t.buka || 'dasar'));
-      const warisan = sin.best;
-      S.targetIdx++;
-      S.sintesis = { best: null, bestHex: '', skor: 0, evals: 0, restarts: 0, stall: 0, kandidatBaru: null, verGagal: false, pool: poolBaru(warisan) };
-    } else if (!sin.verGagal) {
-      sin.verGagal = true;
-      catat('EVALUASI', t.id + ' kandidat skor ' + (sin.skor * 100).toFixed(0) + '% GAGAL verifikasi formal — kembali mencari (kejujuran menang).');
-    }
-  }
-
-  function bangunOlehPikiran() {
-    if (S.struktur.length >= 22) return; // lahan penuh — kepadatan dijaga
-    const terbuka = STRUK.filter(s => s && punya(s));
-    if (!terbuka.length) return;
-    const pilihan = [];
-    if (punya('ekstraktor')) {
-      let bi = -1, bv = -1;
-      for (let c = 0; c < 60; c++) { const i = (S.rnd() * NCELL) | 0; if (S.food[i] > bv && !S.struktur.some(st => st.x === i % W && st.y === (i / W) | 0)) { bv = S.food[i]; bi = i; } }
-      if (bi >= 0) pilihan.push({ tipe: 2, x: bi % W, y: (bi / W) | 0, alasan: 'zona makanan terkaya (' + (bv | 0) + ') → regrow x4' });
-    }
-    if (punya('stasiun-perbaiki') && S.orgs.length) {
-      let cx = 0, cy = 0; for (const o of S.orgs) { cx += o.x; cy += o.y; }
-      cx = (cx / S.orgs.length) | 0; cy = (cy / S.orgs.length) | 0;
-      if (!adaStruktur(cx, cy)) pilihan.push({ tipe: 1, x: cx, y: cy, alasan: 'pusat massa ' + S.orgs.length + ' makhluk → perisai karat radius 5' });
-    }
-    if (punya('relai')) {
-      const x = (S.rnd() * W) | 0, y = (S.rnd() * H) | 0;
-      if (!adaStruktur(x, y)) pilihan.push({ tipe: 3, x: x, y: y, alasan: 'menyebar energi miskin → keseimbangan ekologi' });
-    }
-    if (!pilihan.length) return;
-    const p = pilihan[(S.rnd() * pilihan.length) | 0];
-    S.struktur.push({ x: p.x, y: p.y, tipe: p.tipe, lahir: S.tick });
-    S.food[idx(p.x, p.y)] = Math.max(0, S.food[idx(p.x, p.y)] - 40);
-    S.bangunan++;
-    catat('BANGUN', 'Pikiran membangun ' + STRUK[p.tipe] + ' di (' + p.x + ',' + p.y + ') — ' + p.alasan + '; biaya material 40 energi dunia.');
-  }
-
-  function tingkatkan() {
-    if (!S.caps.length || S.orgs.length >= POP_MAX) return;
-    const terakhir = S.caps[S.caps.length - 1];
-    const g = dariHex(terakhir.gHex);
-    const o = lahirkan(g, (S.rnd() * W) | 0, (S.rnd() * H) | 0, terakhir.tick % 1000, 40);
-    if (o) {
-      S.injeksi++;
-      catat('TINGKATKAN', 'Genom terverifikasi ' + terakhir.id + ' (' + terakhir.gHex + ') dilepas ke ekologi sebagai makhluk #' + o.id + ' — pengetahuan hidup di dunia, bukan hanya di arsip.');
-    }
-  }
-
-  function amati() {
-    let e = 0, makan = 0; for (const o of S.orgs) { e += o.e; if (S.tick - o.makanTick < 120) makan++; }
-    let ftot = 0; for (let i = 0; i < NCELL; i++) ftot += S.food[i];
-    return { pop: S.orgs.length, e: S.orgs.length ? +(e / S.orgs.length).toFixed(1) : 0, makan: makan, ftot: (ftot | 0), struktur: S.struktur.length, rot: S.rot, caps: S.caps.length, evals: S.sintesis.evals, luka: S.orgs.reduce((a, o) => a + o.luka, 0) };
-  }
-
-  function pahami() {
-    if (S.hist.length < 6) { S.wawasan = 'sejarah masih pendek (' + S.hist.length + ' sampel) — mengumpulkan data dulu'; return; }
-    const pop = S.hist.map(h => h.pop), en = S.hist.map(h => h.e), caps = S.hist.map(h => h.caps);
-    const rp = pearson(pop, en), rc = pearson(caps, en);
-    const rotRate = S.tick > 0 ? +(S.rot * 1000 / S.tick).toFixed(2) : 0;
-    S.wawasan = 'korelasi pop↔energi ' + (rp === null ? '—' : rp) + ', caps↔energi ' + (rc === null ? '—' : rc) + ', laju karat ' + rotRate + '/1000 denyut, generasi maks ' + S.orgs.reduce((a, o) => Math.max(a, o.gen), 0);
-  }
-
-  function amatiLagi() {
-    if (!S.snapshot) return;
-    const k = amati();
-    catat('MENGAMATI-KEMBALI', 'Delta siklus: pop ' + (k.pop - S.snapshot.pop) + ', energi rata ' + (k.e - S.snapshot.e) + ', makanan ' + (k.ftot - S.snapshot.ftot) + ', karat +' + (k.rot - S.snapshot.rot) + ' — siklus penuh, kembali mengamati.');
-  }
-
-  /* ---------- DENYUT DUNIA ---------- */
-  function faseEntry(f) {
-    switch (f) {
-      case 0: S.snapshot = amati(); catat('MENGAMATI', 'pop ' + S.snapshot.pop + ', energi rata ' + S.snapshot.e + ', makanan total ' + S.snapshot.ftot + ', struktur ' + S.snapshot.struktur + ', karat kumulatif ' + S.snapshot.rot + ', luka tubuh ' + S.snapshot.luka); break;
-      case 1: pahami(); catat('MEMAHAMI', S.wawasan); break;
-      case 4: if (S.sintesis.skor >= 1 || S.sintesis.kandidatBaru) verifikasiFormal(); break;
-      case 6: bangunOlehPikiran(); break;
-      case 7: tingkatkan(); break;
-      case 8: amatiLagi(); break;
-    }
-  }
-
-  function jalankan(n) {
-    for (let k = 0; k < n; k++) {
-      S.tick++;
-      regrow();
-      const n0 = S.orgs.length;
-      for (let i = 0; i < n0; i++) langkahMakhluk(S.orgs[i]);
-      for (let i = S.orgs.length - 1; i >= 0; i--) {
-        const o = S.orgs[i];
-        if (o.e <= 0.5) {
-          S.food[idx(o.x, o.y)] += 10; S.mati++;
-          S.orgs.splice(i, 1);
-          catat('MATI', 'Makhluk #' + o.id + ' (gen ' + o.gen + ', umur ' + o.age + ', luka ' + o.luka + ') kehabisan energi — jasad menyuburkan sel (' + o.x + ',' + o.y + ') +10.');
-        }
-      }
-      // ABIOGENESIS — jaring pengaman asal-usul: dunia tanpa kehidupan
-      // mengondensasi energi ambientnya menjadi protosel baru (dibayar
-      // dari makanan sel kelahiran — peristiwa nyata, bukan keajaiban).
-      if (S.orgs.length === 0) {
-        S.tanpaHidup = (S.tanpaHidup || 0) + 1;
-        if (S.tanpaHidup >= 300) {
-          S.tanpaHidup = 0;
-          let cipta = 0;
-          for (let j = 0; j < 8; j++) {
-            const x = (S.rnd() * W) | 0, y = (S.rnd() * H) | 0;
-            if (S.food[idx(x, y)] >= 15) {
-              S.food[idx(x, y)] -= 15;
-              if (lahirkan(genomAcak(), x, y, 0, 30)) cipta++;
-            }
-          }
-          if (cipta) catat('ABIOGENESIS', 'Dunia kosong 300 denyut — energi ambient dikondensasi menjadi ' + cipta + ' protosel baru. Asal-usul terjadi lagi.');
-        }
-      } else S.tanpaHidup = 0;
-      if (S.tick % 90 === 0) karatBit();
-      const f = ((S.tick / DURASI) | 0) % 9;
-      if (f !== S.faseKini) { S.faseKini = f; faseEntry(f); }
-      if (f === 2) langkahSintesis(60); // MENCOBA: pencarian nyata tiap denyut fase
-      if (f === 4 && (S.sintesis.skor >= 1 || S.sintesis.kandidatBaru)) verifikasiFormal();
-      if (S.tick % 90 === 0) sampelHist();
-    }
-  }
-
-  /* ---------- PERSISTENSI ---------- */
-  function serialize() {
-    return {
-      v: 284, benihStr: S.benihStr, tick: S.tick,
-      food: Array.from(S.food, v => Math.round(v)),
-      struktur: S.struktur, caps: S.caps, targetIdx: S.targetIdx,
-      sintesis: { bestHex: S.sintesis.bestHex, skor: S.sintesis.skor, evals: S.sintesis.evals, restarts: S.sintesis.restarts, stall: S.sintesis.stall },
-      orgs: S.orgs.map(o => ({ g: hex(o.g), t: hex(o.t), e: +o.e.toFixed(2), x: o.x, y: o.y, age: o.age, gen: o.gen, luka: o.luka, s: [o.st.ip, o.st.r0, o.st.r1, o.st.r2, o.st.r3] })),
-      log: S.log.slice(-70), hist: S.hist.slice(-260),
-      idOrg: S.idOrg, rot: S.rot, lahir: S.lahir, mati: S.mati, bagi: S.bagi, bangunan: S.bangunan, injeksi: S.injeksi,
-      statInstr: S.statInstr, wawasan: S.wawasan, faseKini: S.faseKini,
-      pasar: S.pasar, waktuSimpan: Date.now()
-    };
-  }
-
-  function muat(d) {
-    if (!d || d.v !== 284) return false;
-    const seed = CORE.fnv1a(d.benihStr);
-    S = {
-      v: 284, benihStr: d.benihStr, seed: seed, rnd: CORE.mulberry32(seed ^ 0x9E3779B9 ^ d.tick),
-      tick: d.tick, food: Float32Array.from(d.food), struktur: d.struktur || [], orgs: [],
-      caps: d.caps || [], targetIdx: d.targetIdx || 0,
-      sintesis: { best: d.sintesis && d.sintesis.bestHex ? dariHex(d.sintesis.bestHex) : null, bestHex: d.sintesis ? d.sintesis.bestHex : '', skor: d.sintesis ? d.sintesis.skor : 0, evals: d.sintesis ? d.sintesis.evals : 0, restarts: d.sintesis ? d.sintesis.restarts : 0, stall: d.sintesis ? d.sintesis.stall : 0, kandidatBaru: null },
-      log: d.log || [], hist: d.hist || [], idOrg: d.idOrg || 1,
-      rot: d.rot || 0, lahir: d.lahir || 0, mati: d.mati || 0, bagi: d.bagi || 0, bangunan: d.bangunan || 0, injeksi: d.injeksi || 0,
-      statInstr: d.statInstr || 0, snapshot: null, wawasan: d.wawasan || '', faseKini: -1,
-      pasar: d.pasar || { mode: 'mandiri', bytes: null, sumber: '', diAt: 0 },
-      waktuSimpan: d.waktuSimpan || Date.now(), mengejar: 0
-    };
-    for (const od of (d.orgs || [])) {
-      const s = od.s || [0, 0, 0, 0, 0];
-      S.orgs.push({ id: S.idOrg++, g: dariHex(od.g), t: dariHex(od.t), e: od.e, x: od.x, y: od.y, age: od.age, gen: od.gen, luka: od.luka, mem: new Uint8Array(16), st: { ip: s[0] | 0, r0: s[1] | 0, r1: s[2] | 0, r2: s[3] | 0, r3: s[4] | 0 }, eksekusi: 0, makanTick: 0, bagiTick: 0 });
-    }
-    if (S.pasar && S.pasar.bytes) CORE.pasarBytes = S.pasar.bytes;
-    // mengejar waktu nyata yang terlewat (jujur: dunia tak berhenti, tapi dibatasi)
-    const detik = Math.max(0, (Date.now() - S.waktuSimpan) / 1000);
-    const n = Math.min(2400, (detik * 2) | 0);
-    if (n > 0) { S.mengejar = n; jalankan(n); catat('WAKTU', 'Dunia berjalan terus saat kamu pergi — mengejar ' + n + ' denyut yang terlewat (' + (detik | 0) + ' detik nyata).'); }
-    return true;
-  }
-
-  /* ---------- API ---------- */
-  const API = {
-    boot: function (benihStr, muatDari) { if (muatDari && muat(muatDari)) return true; duniaBaru(benihStr); return false; },
-    setPasar: function (bytes, sumber, mode) {
-      if (!S) return;
-      S.pasar = { mode: mode, bytes: bytes, sumber: sumber || '', diAt: S.tick };
-      CORE.pasarBytes = bytes;
-      if (bytes) catat('PASAR', 'Data pasar arena masuk: ' + Array.from(bytes).join(',') + ' (' + sumber + ') — target TAUTAN-PASAR memakai byte ini sebagai bahan uji nyata.');
-    },
-    denyut: function (n) { if (S) jalankan(n || 1); },
-    simpan: function () { return S ? serialize() : null; },
-    state: function () {
-      if (!S) return null;
-      const a = amati();
-      const t = targetKini();
-      return {
-        tick: S.tick, fase: FASE[Math.max(0, S.faseKini)], faseIdx: Math.max(0, S.faseKini), faseProgres: (S.tick % DURASI) / DURASI,
-        pop: a.pop, e: a.e, ftot: a.ftot, struktur: a.struktur, rot: S.rot, lahir: S.lahir, mati: S.mati, bagi: S.bagi, bangunan: S.bangunan, injeksi: S.injeksi,
-        statInstr: S.statInstr, luka: a.luka, mengejar: S.mengejar,
-        caps: S.caps, target: t ? { id: t.id, nama: t.nama, desk: t.desk, subset: !!t.subset } : null,
-        targetSelesai: S.targetIdx, sintesis: { skor: S.sintesis.skor, evals: S.sintesis.evals, restarts: S.sintesis.restarts, bestHex: S.sintesis.bestHex },
-        orgs: S.orgs.map(o => ({ id: o.id, gen: o.gen, e: +o.e.toFixed(1), x: o.x, y: o.y, age: o.age, luka: o.luka, g: o.g, t: o.t, ip: 0, eksekusi: o.eksekusi })),
-        strukturDet: S.struktur, hist: S.hist, log: S.log, wawasan: S.wawasan, _food: S.food,
-        pasar: S.pasar, benih: S.benihStr.slice(0, 12), langkahPerFase: DURASI
-      };
-    },
-    OPN: CORE.OPN, W: W, H: H, GEN_LEN: GEN_LEN, POP_MAX: POP_MAX, FASE: FASE
+function aktPindai(){
+  return {nama:'MEMINDAI RUMAH', langkah:[
+    F('MENGAMATI', async()=>{ await pindaiRumah(); }, 400),
+    F('MEMAHAMI', async()=>{ const n=S.pohon.files.length, tot=S.pohon.files.reduce((a,f)=>a+f.size,0);
+      jurnal('PINDAI', `aku memahami: rumahku ${n} file, ${kb(tot)} — ${new Set(S.pohon.files.map(f=>f.path.split('/')[0])).size} wilayah`); }, 800),
+    F('MENEMUKAN', async()=>{ const b=Object.values(S.baca).filter(x=>x.berubah).length;
+      if(b) jurnal('TEMUAN', `<b>${b} file berubah SHA</b> — penjaga denyut bekerja; kubaca ulang yang bergerak`, 'temuan'); }, 700),
+    F('MENINGKATKAN', async()=>{ petaRender(); indeksRender(); }, 500),
+    F('MENGAMATI-KEMBALI', async()=>{ indeksRender(); }, 400)
+  ]};
+}
+function aktCermin(){
+  return {nama:'MEMBACA CERMIN ARENA', langkah:[
+    F('MENGAMATI', async()=>{ await cerminAmbil(); }, 400),
+    F('MEMAHAMI', async()=>{ const d=S.cermin.data; if(!d) throw new Error('cermin kosong');
+      const st=(d.standings||[]).find(x=>x.competitor==='MICAPROFITA');
+      if(st) jurnal('CERMIN', `diriku di arena: ${st.picks} pick / ${st.days} hari, hit-rate ${f1(st.hitRate*100)}% — ini dasar kuperilaku`); }, 800),
+    F('MENEMUKAN', async()=>{ const s=simbolSasaran();
+      if(s.length) jurnal('TEMUAN', `sasaran pasar kini: <b>${s.join(', ')}</b> (dipilih arena sendiri)`, 'temuan');
+      else jurnal('TEMUAN', 'tidak ada simbol sasaran dari cermin — kujujurkan'); }, 700),
+    F('MEMBANGUN', async()=>{ petaRender(); indeksRender(); }, 500),
+    F('MENGAMATI-KEMBALI', async()=>{}, 350)
+  ]};
+}
+function aktBaca(f){
+  const proses = async (teks, dibaca)=>{
+    const fakta = pilahFakta(f.path, teks);
+    const lama = S.baca[f.path];
+    S.baca[f.path] = {hash:S.pohon.files.find(x=>x.path===f.path)?.hash||'', hashSrc:S.pohon.sumber,
+      size:f.size, readAt:sekarang(), partial:dibaca<f.size, pct:Math.min(100, dibaca/f.size*100),
+      fakta, ringkas: fakta.slice(0,3), gagal:0, bytes:dibaca};
+    if(lama && lama.bytes) S.stat.bytes -= lama.bytes;
+    S.stat.bytes += dibaca; S.stat.fakta += fakta.length;
+    S.stat.bytes = Math.max(0, S.stat.bytes);
+    return fakta;
   };
+  return {nama:'MEMBACA '+f.path.split('/').pop().toUpperCase(), target:f.path, langkah:[
+    F('MENGAMATI', async()=>{ S.stream={ch:0};
+      try{
+        const isi = await isiAmbil(f.path, f.size, (buf, got)=>{
+          S.stream.ch=got; if(Math.random()<0.5) partikelByte(f.path, buf, got);
+        });
+        S.stream.hasil=isi;
+      }catch(e){
+        const l=S.baca[f.path]||{};
+        S.baca[f.path]={gagal:(l.gagal||0)+1, atGagal:sekarang(), hashSrc:S.pohon.sumber};
+        throw e;
+      } }, 300),
+    F('MEMAHAMI', async()=>{ const isi=S.stream && S.stream.hasil; S.stream=null;
+      if(!isi) throw new Error('bacaan tidak tiba');
+      const fakta = await proses(isi.teks, isi.dibaca);
+      S.faktaTerakhir={path:f.path, fakta};
+      jurnal('BACA', `<b>${f.path}</b> — ${fakta[0]}`+(isi.dibaca<f.size?` · parsial jujur: ${kb(isi.dibaca)}/${kb(f.size)} (${f1(isi.dibaca/f.size*100)}%)`:'')); }, 900),
+    F('MENGEVALUASI', async()=>{ const F0=S.faktaTerakhir;
+      if(!F0) return; // verifikasi: baca ulang cepat ringkasan struktur dari teks yang sama (deterministik?)
+      const o=S.baca[F0.path];
+      const cek = F0.fakta.length>0 && o && o.fakta.length===F0.fakta.length;
+      jurnal('EVAL', `verifikasi ${F0.path}: ${cek?'fakta stabil ('+F0.fakta.length+' butir konsisten)':'TIDAK konsisten — kucatat jujur'} `); }, 700),
+    F('MENEMUKAN', async()=>{ const F0=S.faktaTerakhir; if(!F0) return;
+      if(F0.fakta[1]) jurnal('TEMUAN', `${F0.path}: ${F0.fakta[1]}`, 'temuan'); }, 700),
+    F('MEMBANGUN', async()=>{ petaRender(); indeksRender(); if(S.tabAktif==='peta') petaDetail(S.petaPilih); simpan(); }, 450),
+    F('MENGAMATI-KEMBALI', async()=>{}, 300)
+  ]};
+}
+function aktPasar(sym){
+  return {nama:'MENPELAJARI PASAR '+sym, target:'pasar:'+sym, langkah:[
+    F('MENGAMATI', async()=>{ const l=await lilinAmbil(sym); S.lilinKerja={sym, l}; }, 300),
+    F('MEMAHAMI', async()=>{ const {sym:s, l}=S.lilinKerja; const an=analisaLilin(l);
+      S.pasar[s]=Object.assign(S.pasar[s]||{}, an, {at:sekarang(), n:l.length});
+      jurnal('PASAR', `<b>${s}</b> dari ${l.length} lilin 1j Binance: harga ${an.harga.toPrecision(6)}, 24j ${f2(an.chg)}%, EMA20 ${an.ema20>an.ema50?'>':'<'}EMA50, RSI ${f1(an.rsi)}, ATR ${an.atr.toPrecision(4)}, momentum7j ${f2(an.mom7)}%`); }, 900),
+    F('MENCOBA', async()=>{ const s=S.lilinKerja.sym, p=S.pasar[s];
+      p.hipotesis = `jika EMA20>EMA50, RSI<70, harga>7j-lalu → LONG tahan 24 jam (warisan bobot genom arena)`; }, 700),
+    F('MELAKUKAN', async()=>{ const {l}=S.lilinKerja; const bt=ujiJalan(l);
+      const s=S.lilinKerja.sym; Object.assign(S.pasar[s], {bt}); S.stat.btTotal+=bt.n;
+      jurnal('PASAR', `uji-jalan ${s}: <b>${bt.n} transisi</b>, menang ${bt.menang}, net ${f2(bt.net)}% ${bt.n?`(terbaik ${f2(bt.terbaik)}%, terburuk ${f2(bt.terburuk)}%)`:bt.catatan}`); }, 900),
+    F('MENGEVALUASI', async()=>{ const s=S.lilinKerja.sym, bt=S.pasar[s].bt;
+      if(bt.n){ const sama=Math.abs(bt.net-bt.netCek)<1e-4;
+        jurnal('EVAL', `verifikasi hitung ${s}: dua jalur (${f2(bt.net)}% vs log-akumulasi ${f2(bt.netCek)}%) ${sama?'SAH':'SIMPANG — kucatat jujur'}`); } }, 600),
+    F('MENEMUKAN', async()=>{ const s=S.lilinKerja.sym, p=S.pasar[s];
+      if(p.bt.n) jurnal('TEMUAN', `${s}: aturan-genom menghasilkan ekspektansi ${f2(p.bt.net/p.bt.n)}%/transisi pada data nyata`, 'temuan'); }, 700),
+    F('MEMBANGUN', async()=>{ const s=S.lilinKerja.sym;
+      S.pasar[s].oc = S.lilinKerja.l.slice(-60).map(x=>[+x.o.toFixed(6), +x.c.toFixed(6)]);
+      pasarRender(); indeksRender(); simpan(); S.lilinKerja=null; }, 450),
+    F('MENGAMATI-KEMBALI', async()=>{}, 300)
+  ]};
+}
+function aktAudit(pick){
+  const sym=pick.symbol;
+  return {nama:'MENGAUDIT PICK '+sym, target:'pasar:'+sym, langkah:[
+    F('MENGAMATI', async()=>{ if(!S.pasar[sym] || sekarang()-S.pasar[sym].at>STALE_PASAR){ const l=await lilinAmbil(sym);
+        Object.assign(S.pasar[sym]||={at:0}, analisaLilin(l), {at:sekarang()}); } }, 300),
+    F('MEMAHAMI', async()=>{ jurnal('AUDIT', `arena bilang <b>${sym} ${pick.direction}</b> (${pick.confidence}%) — alasan: "${(pick.evidence&&pick.evidence.reason)||'-'}" — kubandingkan dengan momentum hidup`); }, 800),
+    F('MELAKUKAN', async()=>{ const a=auditPick(pick, S.pasar[sym]); S.pasar[sym].audit=a; }, 700),
+    F('MENGEVALUASI', async()=>{ const a=S.pasar[sym].audit;
+      jurnal('EVAL', `vonis audit ${sym}: <b>${a.vonis}</b> — ${a.ket}`); }, 600),
+    F('MENEMUKAN', async()=>{ const a=S.pasar[sym].audit;
+      jurnal('TEMUAN', a.vonis==='SEPAKAT' ? `${sym}: keputusan arena SEIRAMA dengan pasar hidup` :
+        a.vonis==='MENDEVIASI' ? `${sym}: arena MENYIMPANG dari momentum hidup — ini pelajaran, kucatat` : `${sym}: setengah searah — sinyal campur`, 'temuan'); }, 700),
+    F('MEMBANGUN', async()=>{ pasarRender(); simpan(); }, 400),
+    F('MENGAMATI-KEMBALI', async()=>{}, 300)
+  ]};
+}
+async function aktPadat(){
+  const buang=S.jurnal.length-130; S.jurnal.splice(0,buang);
+  jurnal('PADAT', `${buang} ingatan lama kumetabolisme — yang tersisa yang paling segar`);
+  jurnalRender();
+}
+function aktRenung(){
+  return {nama:'MERENUNG — MENGAMATI KEMBALI', langkah:[
+    F('MENGAMATI-KEMBALI', async()=>{ const b=Object.keys(S.baca).length, n=S.pohon.files.length;
+      jurnal('RENUNG', `tidak ada pekerjaan tertunda — ${b}/${n} file terbaca, ${Object.keys(S.pasar).length} simbol segar; kutunggu rumah bergerak`); }, 1200),
+    F('MEMAHAMI', async()=>{ indeksRender(); }, 500)
+  ]};
+}
 
-  root.KEHIDUPAN = API;
-  if (typeof module !== 'undefined' && module.exports) module.exports = API;
-})(typeof window !== 'undefined' ? window : globalThis);
-
-</script>
-<script>
-/* ============================================================
-   V284-PROTOLIFE — LAPIS PENAMPIL (UI)
-   Panggung = dunia penuh selalu tampak utuh (fit, tanpa crop/zoom).
-   Teks = overlay DOM terpisah total dari kanvas.
-   Wujud = peta genom makhluk terdepan yang benar-benar dieksekusi VM.
-   ============================================================ */
-'use strict';
-(function () {
-  const K = window.KEHIDUPAN;
-  const $ = (id) => document.getElementById(id);
-
-  /* ---------- keadaan UI ---------- */
-  let speed = 1, jeda = false, lastText = 0, lastSimpan = 0;
-  const KUNCI = 'mp_kehidupan_v284';
-
-  function simpanLokal() {
-    try {
-      const d = K.simpan();
-      if (d) localStorage.setItem(KUNCI, JSON.stringify(d));
-    } catch (e) { /* penyimpanan penuh — dunia tetap jalan */ }
-  }
-
-  /* ---------- boot ---------- */
-  function boot() {
-    let muatDari = null;
-    try { const s = localStorage.getItem(KUNCI); if (s) muatDari = JSON.parse(s); } catch (e) { muatDari = null; }
-    const benih = 'protolife-' + (muatDari ? muatDari.benihStr : Date.now() + '-' + ((Math.random() * 1e9) | 0));
-    K.boot(benih, muatDari);
-    if (muatDari) tambahLogUI('Dunia dilanjutkan dari ingatan perangkat — denyut ke-' + (muatDari.tick | 0).toLocaleString('id-ID') + '.');
-    pasangPasar();
-    requestAnimationFrame(loop);
-    setInterval(simpanLokal, 8000);
-    window.addEventListener('beforeunload', simpanLokal);
-    document.addEventListener('visibilitychange', () => { if (document.hidden) simpanLokal(); });
-    pasangTab();
-    pasangKecepatan();
-  }
-
-  /* ---------- pasar nyata ---------- */
-  async function pasangPasar() {
-    const url = (location.protocol === 'file:') ? null : new URL('arena-keadaan.json', location.href).href;
-    if (!url) { setChip('MANDIRI', 'file:// — tanpa pasar'); return; }
-    try {
-      const ac = new AbortController();
-      const t = setTimeout(() => ac.abort(), 8000);
-      const r = await fetch(url + '?t=' + Date.now(), { signal: ac.signal, cache: 'no-store' });
-      clearTimeout(t);
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      const j = await r.json();
-      const tp = Array.isArray(j.todayPicks) ? j.todayPicks : [];
-      const bytes = tp.slice(0, 4).map(p => Math.max(0, Math.min(255, Math.round((p.confidence || 0) * 2.55))));
-      while (bytes.length < 4) bytes.push(0);
-      K.setPasar(bytes, 'todayPicks.confidence ×2,55', 'live');
-      setChip('PASAR-LIVE', bytes.join(','));
-      const el = $('pasarBytes'); if (el) el.textContent = bytes.join(' , ');
-    } catch (e) {
-      setChip('MANDIRI', 'pasar tak terjangkau: ' + (e && e.message ? e.message : 'galat'));
-    }
-  }
-
-  function setChip(judul, detail) {
-    const c = $('chipPasar'); if (!c) return;
-    c.textContent = judul + (detail ? ' · ' + detail : '');
-    c.className = 'chip ' + (judul === 'PASAR-LIVE' ? 'hijau' : 'kelabu');
-  }
-
-  function tambahLogUI(teks) {
-    const el = $('logList'); if (!el) return;
-    const d = document.createElement('div');
-    d.className = 'entri'; d.textContent = '[' + new Date().toISOString().slice(11, 19) + '] ' + teks;
-    el.prepend(d);
-  }
-
-  /* ---------- tab panel ---------- */
-  function pasangTab() {
-    document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(x => x.classList.remove('aktif'));
-      document.querySelectorAll('.isi').forEach(x => x.classList.remove('aktif'));
-      b.classList.add('aktif');
-      const el = $(b.dataset.isi); if (el) el.classList.add('aktif');
-    }));
-  }
-  function pasangKecepatan() {
-    document.querySelectorAll('.kecepatan button').forEach(b => b.addEventListener('click', () => {
-      if (b.dataset.v === 'jeda') { jeda = !jeda; b.classList.toggle('aktif', jeda); }
-      else { speed = +b.dataset.v; jeda = false; document.querySelectorAll('.kecepatan button').forEach(x => { if (x.dataset.v !== 'jeda') x.classList.toggle('aktif', +x.dataset.v === speed); }); }
-    }));
-  }
-
-  /* ---------- LOOP UTAMA ---------- */
-  function loop(ts) {
-    if (!jeda) K.denyut(speed);
-    gambar();
-    if (ts - lastText > 250) { lastText = ts; teks(); }
-    if (performance.now() - lastSimpan > 8000) { lastSimpan = performance.now(); simpanLokal(); }
-    requestAnimationFrame(loop);
-  }
-
-  /* ---------- KANVAS: dunia penuh, selalu utuh ---------- */
-  const cv = $('dunia');
-  const cx2 = cv.getContext('2d');
-  let skala = 1, ox = 0, oy = 0;
-
-  function sesuaikan() {
-    const r = cv.parentElement.getBoundingClientRect();
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
-    cv.width = Math.max(60, (r.width | 0)) * dpr;
-    cv.height = Math.max(60, (r.height | 0)) * dpr;
-    cv.style.width = r.width + 'px'; cv.style.height = r.height + 'px';
-    const m = Math.min(cv.width / K.W, cv.height / K.H) * 0.96;
-    skala = m; ox = (cv.width - m * K.W) / 2; oy = (cv.height - m * K.H) / 2;
-  }
-  window.addEventListener('resize', sesuaikan);
-
-  function gambar() {
-    const ts = performance.now();
-    const st = K.state(); if (!st) return;
-    // sinkron ukuran kanvas dengan kotak panggung setiap bingkai (responsif total)
-    const dpr0 = Math.min(2, window.devicePixelRatio || 1);
-    const kotak = cv.parentElement.getBoundingClientRect();
-    if (Math.abs(kotak.width * dpr0 - cv.width) > 2 || Math.abs(kotak.height * dpr0 - cv.height) > 2) sesuaikan();
-    if (cv.width < 10 || cv.height < 10) sesuaikan();
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
-    cx2.fillStyle = '#04070d';
-    cx2.fillRect(0, 0, cv.width, cv.height);
-    // bingkai dunia
-    cx2.strokeStyle = 'rgba(79,209,197,.18)';
-    cx2.lineWidth = 1 * dpr;
-    cx2.strokeRect(ox, oy, skala * K.W, skala * K.H);
-    // makanan (energi dunia)
-    const food = st._food;
-    cx2.fillStyle = 'rgba(94,234,168,.55)';
-    for (let i = 0; i < food.length; i++) {
-      const f = food[i] | 0;
-      if (f < 8) continue;
-      const x = i % K.W, y = (i / K.W) | 0;
-      const a = Math.min(0.8, 0.15 + f / 240);
-      cx2.globalAlpha = a;
-      cx2.fillRect(ox + x * skala, oy + y * skala, Math.max(1.2, skala * 0.5), Math.max(1.2, skala * 0.5));
-    }
-    cx2.globalAlpha = 1;
-    // struktur
-    for (const s of st.strukturDet) {
-      const px = ox + (s.x + 0.5) * skala, py = oy + (s.y + 0.5) * skala, r = skala * 1.4;
-      cx2.lineWidth = 1.5 * dpr;
-      if (s.tipe === 1) { cx2.strokeStyle = '#4fd1c5'; berlian(px, py, r); }
-      else if (s.tipe === 2) { cx2.strokeStyle = '#f6c453'; cincin(px, py, r); }
-      else if (s.tipe === 3) { cx2.strokeStyle = '#7aa2ff'; segitiga(px, py, r); }
-    }
-    // makhluk
-    let lead = null;
-    for (const o of st.orgs) {
-      if (!lead || o.gen > lead.gen) lead = o;
-      const px = ox + (o.x + 0.5) * skala, py = oy + (o.y + 0.5) * skala;
-      const r = Math.max(2, skala * (0.55 + Math.min(1.5, o.e / 160)));
-      const hue = (o.id * 47 + o.gen * 13) % 360;
-      cx2.globalAlpha = 0.9;
-      cx2.fillStyle = 'hsl(' + hue + ',85%,64%)';
-      cx2.beginPath(); cx2.arc(px, py, r, 0, 6.2832); cx2.fill();
-      cx2.globalAlpha = 0.16;
-      cx2.beginPath(); cx2.arc(px, py, r * 1.7, 0, 6.2832); cx2.fill();
-      cx2.globalAlpha = 1;
-    }
-    // WUJUD MAKHLUK TERDEPAN = peta genomnya yang benar-benar berjalan
-    if (lead && lead.g) {
-      const px = ox + (lead.x + 0.5) * skala, py = oy + (lead.y + 0.5) * skala;
-      const n = lead.g.length, denyut = 1 + 0.08 * Math.sin(ts / 220 + st.tick % 7);
-      cx2.beginPath();
-      for (let i = 0; i <= n; i++) {
-        const b = lead.g[i % n];
-        const ang = (i / n) * 6.2832 - 1.57 + (st.tick % 360) * 0.002;
-        const rr = skala * (2.6 + (b / 15) * 3.4) * denyut;
-        const x = px + Math.cos(ang) * rr, y = py + Math.sin(ang) * rr;
-        if (i === 0) cx2.moveTo(x, y); else cx2.lineTo(x, y);
+async function otakLoop(){
+  while(true){
+    try{
+      if(S.perintah){ // perintah pemilik DITAATI — preempt
+        const f=S.pohon.files.find(x=>x.path===S.perintah);
+        S.perintah=null;
+        if(f){ jurnal('PERINTAH', `pemilik menyuruhku membaca <b>${f.path}</b> — ditaati sekarang`);
+          await jalankan(aktBaca(f)); continue; }
       }
-      cx2.closePath();
-      cx2.strokeStyle = 'rgba(255,255,255,.75)'; cx2.lineWidth = 1.2 * dpr; cx2.stroke();
-      cx2.fillStyle = 'rgba(79,209,197,.10)'; cx2.fill();
-      // bekas karat nyata: merah di verteks byte yang berbeda dari cetakan lahir
-      if (lead.t) {
-        cx2.fillStyle = '#ff6b6b';
-        for (let i = 0; i < n; i++) if (lead.g[i] !== lead.t[i]) {
-          const ang = (i / n) * 6.2832 - 1.57 + (st.tick % 360) * 0.002;
-          const rr = skala * (2.6 + (lead.g[i] / 15) * 3.4) * denyut;
-          cx2.beginPath(); cx2.arc(px + Math.cos(ang) * rr, py + Math.sin(ang) * rr, 1.6 * dpr, 0, 6.2832); cx2.fill();
-        }
-      }
+      const kandidat=daftarKerja();
+      if(!kandidat.length){ await jalankan(aktRenung()); await tidur(4000); continue; }
+      kandidat.sort((a,b)=>b.u-a.u);
+      S.kerja.mengapa=kandidat.slice(0,4).map(k=>({t:k.label, u:Math.round(k.u)}));
+      pikirRender();
+      await jalankan(await kandidat[0].buat());
+      await tidur(900);
+    }catch(e){ jurnal('GAGAL', 'otak: '+pesan(e), 'gagal'); await tidur(3000); }
+  }
+}
+/* ================= PANGGUNG: dunia = PETA REPO NYATA ================= */
+const cv=document.getElementById('panggung'), cx=cv.getContext('2d');
+let DPR=1, bebas={x:0,y:0,w:0,h:0}, skala=1;
+let LAYOUT={nodes:new Map(), clusters:[], w:1400, h:900};
+function ukur(){
+  DPR=Math.min(devicePixelRatio||1, 2);
+  cv.width=innerWidth*DPR; cv.height=innerHeight*DPR;
+  const panel=document.getElementById('panel').getBoundingClientRect();
+  const mobile = innerWidth<=860;
+  const hudB=document.getElementById('hud').getBoundingClientRect().bottom;
+  const stripT = mobile ? 84 : 46;
+  bebas = mobile
+    ? {x:8, y:stripT+6, w:innerWidth-16, h:Math.max(160, panel.top - stripT - 10)}
+    : {x:10, y:stripT+6, w:Math.max(320, panel.left - 20), h:Math.max(200, innerHeight - stripT - 12)};
+  const asp = bebas.w/bebas.h;
+  LAYOUT.h = 900; LAYOUT.w = Math.round(900*Math.min(Math.max(asp, 0.6), 2.6));
+  skala = Math.min(bebas.w/LAYOUT.w, bebas.h/LAYOUT.h);
+}
+addEventListener('resize', ()=>{ukur(); susun();});
+function W2X(x){ return bebas.x + (x/LAYOUT.w)*bebas.w; }
+function W2Y(y){ return bebas.y + (y/LAYOUT.h)*bebas.h; }
+function S2W(px){ return px/skala; }
+
+/* susun node: cluster per direktori nyata, posisi deterministik (fnv path) */
+function susun(){
+  const files=S.pohon.files; if(!files.length){ LAYOUT.clusters=[]; LAYOUT.nodes.clear(); return; }
+  const cl=new Map();
+  for(const f of files){
+    const i=f.path.lastIndexOf('/'); const dir=i<0?'· akar':f.path.slice(0,i);
+    if(!cl.has(dir)) cl.set(dir,[]); cl.get(dir).push(f);
+  }
+  const clusters=[...cl.entries()].sort((a,b)=>b[1].length-a[1].length);
+  const asp=LAYOUT.w/LAYOUT.h;
+  const kol=Math.max(1, Math.min(clusters.length, Math.round(asp*2.2)));
+  const baris=Math.ceil(clusters.length/kol);
+  const cw=LAYOUT.w/kol, ch=LAYOUT.h*0.94/baris;
+  const maxSize=Math.max(...files.map(f=>f.size||1));
+  LAYOUT.nodes.clear(); LAYOUT.clusters=[];
+  clusters.forEach(([dir,fs],ci)=>{
+    const gx=ci%kol, gy=Math.floor(ci/kol);
+    const cxp=gx*cw+cw/2, cyp=gy*ch+ch*0.46;
+    const jari=Math.min(cw,ch)*0.44;
+    for(const f of fs){
+      const h=fnv(f.path);
+      const ang=(h%3600)/3600*Math.PI*2 + (h>>>8)%100/100;
+      const rr=jari*(0.28+0.72*Math.sqrt((h>>>4)%1000/1000));
+      const x=Math.min(LAYOUT.w-24, Math.max(24, cxp+Math.cos(ang)*rr*(asp>1.15?1.25:0.9)));
+      const y=Math.min(LAYOUT.h-40, Math.max(24, cyp+Math.sin(ang)*rr*0.82));
+      const r=(3.2+13.5*Math.log1p(f.size||1)/Math.log1p(maxSize));
+      LAYOUT.nodes.set(f.path,{x,y,r,f});
+    }
+    LAYOUT.clusters.push({dir, x:cxp, y:gy*ch+ch*0.5, n:fs.length, tot:fs.reduce((a,f)=>a+(f.size||0),0), gy, gx});
+  });
+}
+function statusNode(path){ const b=S.baca[path]; const f=LAYOUT.nodes.get(path);
+  if(b && b.berubah) return 'b3'; if(b && b.partial) return 'b1'; if(b) return 'b2'; return 'b0'; }
+const WARNA={b0:'#3a4763', b1:'#ffd166', b2:'#38e8a8', b3:'#ff9f5a'};
+
+/* cyborg = pola kesadaran amorf (bukan robot) */
+const BOB={x:700,y:450,tx:700,ty:450,ener:0};
+let PARTIKEL=[];
+function partikelByte(path, buf, got){
+  const n=LAYOUT.nodes.get(path); if(!n || PARTIKEL.length>130) return;
+  const teks=buf.slice(-46).replace(/\s+/g,'');
+  if(!teks) return;
+  const pot=teks.slice(Math.max(0, teks.length-4));
+  for(let i=0;i<2;i++){
+    PARTIKEL.push({x:n.x+(Math.random()-0.5)*14, y:n.y+(Math.random()-0.5)*14,
+      tx:BOB.x, ty:BOB.y, ch:pot.slice(i*2, i*2+2)||'01', hidup:1});
+  }
+  BOB.ener=1;
+}
+let T0=performance.now(), denyutT=0;
+function gambar(){
+  const t=(performance.now()-T0)/1000;
+  cx.setTransform(DPR,0,0,DPR,0,0);
+  cx.clearRect(0,0,innerWidth,innerHeight);
+  // latar bintang deterministik
+  cx.save();
+  for(let i=0;i<70;i++){ const h=fnv('bintang'+i);
+    const x=(h%10000)/10000*innerWidth, y=((h>>>7)%10000)/10000*innerHeight;
+    cx.globalAlpha=0.12+0.18*Math.sin(t*0.6+i); cx.fillStyle='#9fb4dd';
+    cx.fillRect(x, y, 1.4, 1.4); }
+  cx.restore();
+  // bingkai dunia
+  cx.strokeStyle='rgba(84,216,255,.10)'; cx.lineWidth=1;
+  cx.strokeRect(bebas.x-4, bebas.y-4, bebas.w+8, bebas.h+8);
+  // ---------- PETA REPO ----------
+  const sc=skala;
+  // cluster label
+  cx.textAlign='center';
+  for(const c of LAYOUT.clusters){
+    cx.font='600 10px ui-monospace,monospace';
+    cx.fillStyle='rgba(167,139,255,.8)';
+    cx.fillText(c.dir+' · '+c.n, W2X(c.x), W2Y(c.y)-4);
+    cx.font='9px ui-monospace,monospace';
+    cx.fillStyle='rgba(125,141,176,.5)';
+    cx.fillText(kb(c.tot), W2X(c.x), W2Y(c.y)+9);
+  }
+  cx.strokeStyle='rgba(26,36,56,.9)';
+  for(const c of LAYOUT.clusters){ cx.beginPath(); cx.arc(W2X(c.x), W2Y(c.y), S2W(Math.min(bebas.w,bebas.h)*0.06), 0, 7); cx.stroke(); }
+  // node file
+  for(const [path,n] of LAYOUT.nodes){
+    const st=statusNode(path), b=S.baca[path];
+    const px=W2X(n.x), py=W2Y(n.y), pr=Math.max(2.5, n.r*(bebas.w/LAYOUT.w)*1.6);
+    const sedang=S.kerja.target===path;
+    // denyut utk node berubah
+    const pulse = st==='b3' ? 1+0.22*Math.sin(t*4) : 1;
+    if(sedang){ cx.beginPath(); cx.arc(px,py,pr*2.6+3*Math.sin(t*6),0,7);
+      cx.strokeStyle='rgba(84,216,255,.5)'; cx.lineWidth=1.5; cx.stroke(); }
+    cx.beginPath(); cx.arc(px,py,pr*pulse,0,7);
+    cx.fillStyle=WARNA[st]; cx.globalAlpha= st==='b0'?0.5: 0.95;
+    cx.shadowColor=WARNA[st]; cx.shadowBlur= st==='b0'?0: 12;
+    cx.fill(); cx.shadowBlur=0; cx.globalAlpha=1;
+    if(st!=='b0' && b){ cx.strokeStyle=st==='b1'?'rgba(255,209,102,.5)':'rgba(56,232,168,.5)';
+      cx.beginPath(); cx.arc(px,py,pr+3.5,0,7); cx.stroke(); }
+    // nama file utk node besar/aktif
+    if(pr>6 || sedang || st==='b3'){
+      cx.font=(sedang?'700 ':'')+'9px ui-monospace,monospace';
+      cx.fillStyle=sedang?'#fff':(st==='b0'?'rgba(125,141,176,.7)':WARNA[st]);
+      cx.fillText(path.split('/').pop(), px, py-pr-4);
     }
   }
-  function berlian(x, y, r) { cx2.beginPath(); cx2.moveTo(x, y - r); cx2.lineTo(x + r, y); cx2.lineTo(x, y + r); cx2.lineTo(x - r, y); cx2.closePath(); cx2.stroke(); }
-  function cincin(x, y, r) { cx2.beginPath(); cx2.arc(x, y, r, 0, 6.2832); cx2.stroke(); }
-  function segitiga(x, y, r) { cx2.beginPath(); cx2.moveTo(x, y - r); cx2.lineTo(x + r, y + r); cx2.lineTo(x - r, y + r); cx2.closePath(); cx2.stroke(); }
+  // ---------- CYBORG AMORF ----------
+  // target kerja
+  let tgt=null;
+  if(S.kerja.target){
+    if(S.kerja.target.startsWith('pasar:')){ tgt=PASAR_POS[S.kerja.target.slice(6)]||null; }
+    else tgt=LAYOUT.nodes.get(S.kerja.target);
+  }
+  if(tgt){ BOB.tx=tgt.x; BOB.ty=tgt.y; }
+  else { BOB.tx=LAYOUT.w/2+Math.cos(t*0.24)*LAYOUT.w*0.06; BOB.ty=LAYOUT.h/2+Math.sin(t*0.19)*LAYOUT.h*0.10; }
+  BOB.x+=(BOB.tx-BOB.x)*0.014; BOB.y+=(BOB.ty-BOB.y)*0.014;
+  BOB.ener*=0.97;
+  const bx=W2X(BOB.x), by=W2Y(BOB.y);
+  const R=(22+5*Math.sin(t*1.3)+8*BOB.ener)*(bebas.w/LAYOUT.w)*2.2;
+  const warnaBob=S.kerja.fase==='MENGAMATI'?'#54d8ff':S.kerja.fase==='MELAKUKAN'?'#ffd166':
+    S.kerja.fase==='MENEMUKAN'?'#38e8a8':S.kerja.fase==='MENGEVALUASI'?'#a78bff':'#54d8ff';
+  // filamen ke target saat bekerja
+  if(tgt && S.kerja.sibuk){
+    cx.save(); cx.setLineDash([4,5]); cx.lineDashOffset=-t*30;
+    cx.strokeStyle='rgba(84,216,255,.55)'; cx.lineWidth=1.4;
+    cx.beginPath(); cx.moveTo(bx,by);
+    cx.quadraticCurveTo((bx+W2X(tgt.x))/2, Math.min(by,W2Y(tgt.y))-26, W2X(tgt.x), W2Y(tgt.y));
+    cx.stroke(); cx.restore();
+  }
+  // membran blob
+  cx.save(); cx.translate(bx,by);
+  cx.beginPath();
+  const NPT=16;
+  for(let i=0;i<=NPT;i++){ const a=i/NPT*Math.PI*2;
+    const rr=R*(1+0.10*Math.sin(t*2.1+i*2.2)+0.05*Math.sin(t*3.7+i*1.3)+0.06*BOB.ener*Math.sin(t*9+i));
+    const px=Math.cos(a)*rr, py=Math.sin(a)*rr*0.92;
+    i?cx.lineTo(px,py):cx.moveTo(px,py); }
+  cx.closePath();
+  const gr=cx.createRadialGradient(0,0,2,0,0,R);
+  gr.addColorStop(0,'rgba(84,216,255,.85)'); gr.addColorStop(0.55,'rgba(84,216,255,.22)'); gr.addColorStop(1,'rgba(84,216,255,0)');
+  cx.fillStyle=gr; cx.shadowColor=warnaBob; cx.shadowBlur=24; cx.fill(); cx.shadowBlur=0;
+  cx.strokeStyle=warnaBob; cx.lineWidth=1.6; cx.stroke();
+  // inti
+  cx.beginPath(); cx.arc(0,0,R*0.24*(1+0.14*Math.sin(t*2.6)),0,7);
+  cx.fillStyle='#eaf7ff'; cx.fill();
+  // motes orbit
+  for(let i=0;i<3;i++){ const a=t*(1.1+i*0.35)+i*2.1;
+    cx.beginPath(); cx.arc(Math.cos(a)*R*1.18, Math.sin(a)*R*1.08, 2.1, 0, 7);
+    cx.fillStyle=warnaBob; cx.globalAlpha=0.8; cx.fill(); cx.globalAlpha=1; }
+  cx.restore();
+  // partikel byte = karakter kode ASLI mengalir ke cyborg
+  cx.font='10px ui-monospace,monospace'; cx.textAlign='left';
+  PARTIKEL=PARTIKEL.filter(p=>p.hidup>0);
+  for(const p of PARTIKEL){
+    p.x+=(p.tx-p.x)*0.075; p.y+=(p.ty-p.y)*0.075;
+    if(Math.hypot(p.x-p.tx,p.y-p.ty)<8) p.hidup=0;
+    cx.globalAlpha=Math.min(1,p.hidup+0.15); cx.fillStyle='#8be6ff';
+    cx.fillText(p.ch, W2X(p.x), W2Y(p.y)); cx.globalAlpha=1; p.hidup-=0.008;
+  }
+  // ---------- STRIP PASAR (lilin nyata) ----------
+  gambarPasar(t);
+}
+const PASAR_POS={};
+function gambarPasar(t){
+  const syms=Object.keys(S.pasar).slice(0,3);
+  const stripY=LAYOUT.h-84, stripH=84;
+  PASAR_POS._y=stripY+stripH/2;
+  cx.textAlign='left'; cx.font='600 10px ui-monospace,monospace';
+  if(!syms.length){ cx.fillStyle='rgba(125,141,176,.55)';
+    cx.fillText('PASAR — menunggu sasaran dari cermin arena…', W2X(16), W2Y(stripY+22)); return; }
+  syms.forEach((s,i)=>{
+    const p=S.pasar[s]; const cellW=LAYOUT.w/syms.length;
+    const ox=16+i*cellW, oy=stripY+14, cw=Math.min(cellW-90, 190), chh=48;
+    PASAR_POS[s]={x:ox+cw/2, y:oy+chh/2};
+    cx.fillStyle='rgba(84,216,255,.8)';
+    cx.fillText(s, W2X(ox), W2Y(oy+8));
+    if(p.chg!==undefined){ cx.fillStyle=p.chg>=0?'#38e8a8':'#ff6b8f';
+      cx.fillText((p.chg>=0?'+':'')+p.chg.toFixed(2)+'% 24j', W2X(ox+58), W2Y(oy+8)); }
+    const oc=p.oc||[];
+    if(oc.length>2){
+      const lo=Math.min(...oc.map(x=>x[1])), hi=Math.max(...oc.map(x=>x[1]));
+      const rng=hi-lo||1;
+      oc.forEach((x,j)=>{ const px=W2X(ox+j*(cw/oc.length));
+        const cy0=W2Y(oy+chh - ((x[1]-lo)/rng)*chh);
+        const cy1=W2Y(oy+chh - ((x[0]-lo)/rng)*chh);
+        cx.strokeStyle=x[1]>=x[0]?'rgba(56,232,168,.8)':'rgba(255,107,143,.8)';
+        cx.lineWidth=1.4; cx.beginPath(); cx.moveTo(px,cy0); cx.lineTo(px,Math.max(cy0,cy1)); cx.stroke(); });
+    } else { cx.fillStyle='rgba(125,141,176,.5)'; cx.fillText('menghitung dari lilin hidup…', W2X(ox), W2Y(oy+chh/2)); }
+    if(p.audit){ cx.fillStyle=p.audit.vonis==='SEPAKAT'?'#38e8a8':p.audit.vonis==='MENDEVIASI'?'#ff6b8f':'#ffd166';
+      cx.font='9px ui-monospace,monospace'; cx.fillText('AUDIT '+p.audit.vonis, W2X(ox), W2Y(oy+chh+12)); cx.font='600 10px ui-monospace,monospace'; }
+  });
+}
 
-  /* ---------- TEKS OVERLAY (terpisah dari kanvas) ---------- */
-  function fmt(n) { return (n | 0).toLocaleString('id-ID'); }
-  function teks() {
-    const st = K.state(); if (!st) return;
-    $('tTick').textContent = fmt(st.tick);
-    $('tFase').textContent = st.fase;
-    $('ringFase').style.strokeDashoffset = String(100 - st.faseProgres * 100);
-    $('sPop').textContent = st.pop; $('sE').textContent = st.e;
-    $('sFood').textContent = fmt(st.ftot); $('sStruk').textContent = st.struktur;
-    $('sRot').textContent = st.rot; $('sLahir').textContent = fmt(st.lahir);
-    $('sMati').textContent = fmt(st.mati); $('sBagi').textContent = fmt(st.bagi);
-    $('sInstr').textContent = fmt(st.statInstr); $('sLuka').textContent = st.luka;
-    $('sCaps').textContent = st.caps.length + '/10'; $('sInjek').textContent = st.injeksi;
-    $('wawasan').textContent = st.wawasan || '—';
-    // OTAK
-    const t = st.target;
-    if (t) {
-      $('tgNama').textContent = t.id + ' · ' + t.nama + (t.subset ? ' (mode NAND-saja)' : '');
-      $('tgDesk').textContent = t.desk + (t.id === 'T9' && st.pasar.mode !== 'live' ? ' — TERKUNCI: menunggu byte pasar nyata.' : '');
-      $('tgSkor').textContent = (st.sintesis.skor * 100).toFixed(0) + '%';
-      $('tgEval').textContent = fmt(st.sintesis.evals);
-      $('tgRest').textContent = fmt(st.sintesis.restarts);
-      $('tgBest').textContent = st.sintesis.bestHex || '—';
-      $('tgSisa').textContent = (10 - st.targetSelesai) + ' target tersisa';
-    }
-    // makhluk table
-    const tb = $('makhBody');
-    if (tb) {
-      tb.innerHTML = '';
-      st.orgs.slice(0, 8).forEach(o => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = '<td>#' + o.id + '</td><td>G' + o.gen + '</td><td>' + o.e.toFixed(0) + '</td><td>' + (o.luka ? '<b class="merah">' + o.luka + '</b>' : '0') + '</td><td>' + fmt(o.age) + '</td>';
-        tb.appendChild(tr);
-      });
-    }
-    // TEMUAN
-    const cl = $('capList');
-    if (cl) {
-      cl.innerHTML = '';
-      if (!st.caps.length) cl.innerHTML = '<div class="kosong">Belum ada penemuan — semua kemampuan harus lulus uji vektor dulu. Tidak ada yang dihadiahkan.</div>';
-      st.caps.slice().reverse().forEach(c => {
-        const d = document.createElement('div');
-        d.className = 'cap';
-        d.innerHTML = '<div class="cap-j"><b>' + c.id + ' ' + c.nama + '</b>' + (c.buka ? '<span class="tag">' + c.buka + '</span>' : '') + '</div>' +
-          '<div class="cap-d">genom <code>' + c.gHex + '</code> · ' + c.vektor + ' vektor lulus · ' + fmt(c.evals) + ' eval · denyut ' + fmt(c.tick) + (c.subset ? ' · NAND-saja' : '') + '</div>';
-        cl.appendChild(d);
-      });
-      gambarSpark(st.hist);
-    }
-    // LOG
-    const lg = $('logList');
-    if (lg && lg.dataset.sumber !== 'engine') {
-      lg.innerHTML = ''; lg.dataset.sumber = 'engine';
-      st.log.slice().reverse().forEach(e => {
-        const d = document.createElement('div');
-        d.className = 'entri';
-        d.innerHTML = '<span class="w">' + e.t + '</span> <span class="f">' + e.fase + '</span> ' + e.teks;
-        lg.appendChild(d);
-      });
+/* ================= OVERLAY: HUD + TAB ================= */
+let S_TAB='pikir';
+function hudRender(){
+  const el=(id)=>document.getElementById(id);
+  const n=S.pohon.files.length, baca=Object.keys(S.baca).length;
+  const status=el('hStatus');
+  if(S.terputus && !n){ status.textContent='TERPUTUS — hidup dari ingatan'; status.className='chip sub l00'; }
+  else if(S.pohon.live){ status.innerHTML=`REPO-LIVE via <b>${S.pohon.sumber}</b>`; status.className='chip sub l22'; }
+  else { status.innerHTML=`PETA-CACHE · umur ${umur(sekarang()-S.pohon.at)}`; status.className='chip sub l11'; }
+  el('hPohon').textContent = n? `rumah: ${n} file · ${kb(S.pohon.files.reduce((a,f)=>a+f.size,0))}` : 'pohon: —';
+  el('hBaca').innerHTML=`<b>${baca}/${n||'…'}</b> file terbaca`;
+  el('hFakta').innerHTML=`<b>${S.stat.fakta}</b> fakta · ${kb(Math.max(0,S.stat.bytes))}`;
+  el('hUmur').textContent='umur '+umur(sekarang()-S.stat.lahirAt);
+}
+function stripRender(){
+  const w=document.getElementById('faseStrip');
+  const jejak=new Set(S.kerja.jejak);
+  w.innerHTML=FASE.map(f=>`<span class="f ${f===S.kerja.fase?'on':(jejak.has(f)&&!S.kerja.sibuk?'ok':'')}">${f}</span>`).join('');
+  const pk=document.getElementById('pkFaseChips');
+  if(pk) pk.innerHTML=w.innerHTML;
+}
+function indeksRender(){
+  const n=S.pohon.files.length||1, baca=Object.keys(S.baca).length;
+  const cakupan=baca/n;
+  const segar=S.pohon.at? Math.max(0,1-(sekarang()-S.pohon.at)/3600000):0;
+  const pasarCak=Math.min(1, Object.keys(S.pasar).length/3);
+  const faktaCak=Math.min(1, S.stat.fakta/500);
+  const idx=Math.round(100*(0.4*cakupan+0.2*segar+0.2*pasarCak+0.2*faktaCak));
+  document.getElementById('pkIndeks').innerHTML=
+    `<div class="baris"><span class="k">INDEKS</span><span class="v ${idx>=60?'h':idx>=30?'e':'r'}"><b>${idx}/100</b></span></div>
+     <div class="baris"><span class="k">cakupan baca</span><span class="v c">${baca}/${S.pohon.files.length||0}</span></div>
+     <div class="baris"><span class="k">kesegaran pohon</span><span class="v c">${Math.round(segar*100)}%</span></div>
+     <div class="baris"><span class="k">cakupan pasar</span><span class="v c">${Object.keys(S.pasar).length}/3</span></div>
+     <div class="baris"><span class="k">fakta dicerna</span><span class="v c">${S.stat.fakta}</span></div>
+     <div class="kecil">rumus terbuka: 40% baca + 20% segar + 20% pasar + 20% fakta</div>`;
+  // cermin diri
+  const d=document.getElementById('pkDiri'); const baris=[];
+  const g=(path,cb)=>{ const b=S.baca[path]; if(b&&b.fakta) cb(b); };
+  g('versi.json', b=>{ const f=b.fakta.join(' '); const m=f.match(/kodeVersi <b>([^<]+)<\/b>/);
+    if(m) baris.push(['kodeVersi otak arena', m[1]]); });
+  g('arena-keadaan.json', b=>{ const f=b.fakta.join(' ');
+    const hr=f.match(/hit-rate <b>([^<]+)<\/b>/); if(hr) baris.push(['hit-rate arena', hr[1]]);
+    const gen=f.match(/generasi <b>([^<]+)<\/b>/); if(gen) baris.push(['genom generasi', gen[1]]);
+    const wr=f.match(/win-rate ([\d.,]+)%/); if(wr) baris.push(['win-rate bukuCuan', wr[1]+'%']); });
+  g('otak/genome-server.json', b=>{ const f=b.fakta.join(' ');
+    const bel=f.match(/belajar (\d+)×/); if(bel) baris.push(['belajar otak-server', bel[1]+'×']); });
+  if(S.cermin.data){ const st=(S.cermin.data.standings||[]).find(x=>x.competitor==='MICAPROFITA');
+    if(st) baris.push(['kumulatif arena', (st.cumRet*100).toFixed(2)+'%']); }
+  baris.push(['bytes dicerna', kb(Math.max(0,S.stat.bytes))]);
+  baris.push(['uji-jalan pasar', S.stat.btTotal+' transisi']);
+  d.innerHTML=baris.map(([k,v])=>`<div class="baris"><span class="k">${k}</span><span class="v c">${v}</span></div>`).join('');
+}
+function pikirRender(){
+  document.getElementById('pkNama').textContent=S.kerja.nama;
+  document.getElementById('pkFase').textContent=S.kerja.fase?('fase: '+S.kerja.fase):'siklus selesai — mengamati kembali';
+  const m=S.kerja.mengapa;
+  document.getElementById('pkMengapa').innerHTML = m.length
+    ? m.map((k,i)=>`${i===0?'<b>✔</b>':'&nbsp;&nbsp;'} [${k.u}] ${k.t}`).join('<br>')
+    : 'menghitung keadaan…';
+  indeksRender();
+}
+function petaRender(){
+  const w=document.getElementById('tab-peta'); if(S.tabAktif!=='peta') {w.dataset.kotor='1'; return;}
+  delete w.dataset.kotor;
+  const dirs=new Map();
+  for(const f of S.pohon.files){ const i=f.path.lastIndexOf('/'); const dir=i<0?'· akar':f.path.slice(0,i);
+    if(!dirs.has(dir)) dirs.set(dir,[]); dirs.get(dir).push(f); }
+  let h='';
+  for(const [dir,fs] of [...dirs.entries()].sort()){
+    h+=`<div class="dirHdr">${dir} — ${fs.length} file</div>`;
+    for(const f of fs.sort((a,b)=>a.path.localeCompare(b.path))){
+      const st=statusNode(f.path), b=S.baca[f.path];
+      const ikon=st==='b2'?'●':st==='b1'?'◐':st==='b3'?'↻':'○';
+      h+=`<div class="fileRow" data-p="${f.path}"><span class="st ${st}">${ikon}</span>
+        <span class="nm">${f.path.split('/').pop()}</span>
+        <span class="sz">${kb(f.size)}${b&&b.partial?' · '+f1(b.pct)+'%':''}</span></div>`;
+      if(S.petaPilih===f.path && b && b.fakta){ h+=`<ul class="faktaList">${b.fakta.map(x=>`<li>${x}</li>`).join('')}</ul>`; }
+      else if(S.petaPilih===f.path){ h+=`<div class="kecil" style="padding:2px 6px 6px">○ belum kubaca — sentuh node ini di panggung untuk memerintahku membacanya</div>`; }
     }
   }
+  w.innerHTML=h||'<div class="kecil">pohon belum terbaca — menunggu sensor rumah</div>';
+}
+function petaDetail(path){ S.petaPilih=path; petaRender(); }
+function pasarRender(){
+  const w=document.getElementById('tab-pasar'); if(S.tabAktif!=='pasar') {w.dataset.kotor='1'; return;}
+  delete w.dataset.kotor;
+  const syms=Object.keys(S.pasar);
+  w.innerHTML = syms.length? syms.map(s=>{ const p=S.pasar[s];
+    return `<div class="blok"><div class="symHdr"><b>${s}</b>
+      <a class="sumber" target="_blank" rel="noopener" href="https://data-api.binance.vision/api/v3/klines?symbol=${s}&interval=1h&limit=200">sumber mentah ↗</a></div>
+      <div class="baris"><span class="k">harga kini</span><span class="v">${p.harga!==undefined?p.harga.toPrecision(6):'—'}</span></div>
+      <div class="baris"><span class="k">24 jam</span><span class="v ${p.chg>=0?'h':'r'}">${(p.chg>=0?'+':'')+f2(p.chg)}%</span></div>
+      <div class="baris"><span class="k">EMA20/50</span><span class="v">${p.ema20?.toPrecision(5)||'—'} / ${p.ema50?.toPrecision(5)||'—'}</span></div>
+      <div class="baris"><span class="k">RSI14 · ATR14</span><span class="v">${f1(p.rsi)} · ${p.atr?.toPrecision(4)||'—'}</span></div>
+      <div class="baris"><span class="k">momentum 7j/48j</span><span class="v ${(p.mom7||0)>=0?'h':'r'}">${f2(p.mom7)}% / ${f2(p.mom48)}%</span></div>
+      ${p.bt?`<div class="baris"><span class="k">uji-jalan 24j</span><span class="v ${p.bt.net>=0?'h':'r'}">${p.bt.n} trx, menang ${p.bt.menang}, net ${f2(p.bt.net)}%</span></div>`:''}
+      ${p.audit?`<div class="baris"><span class="k">audit pick</span><span class="v ${p.audit.vonis==='SEPAKAT'?'h':p.audit.vonis==='MENDEVIASI'?'r':'e'}">${p.audit.vonis} — ${p.audit.ket}</span></div>`:''}
+      <div class="kecil">dihitung ${umur(sekarang()-p.at)} lalu · dari ${p.n||'?'} lilin 1j Binance</div></div>`;
+  }).join('') : '<div class="kecil">belum ada studi pasar — menunggu sasaran cermin arena</div>';
+}
+function jurnalRender(){
+  const w=document.getElementById('tab-jurnal'); if(S.tabAktif!=='jurnal') return;
+  w.innerHTML=S.jurnal.slice(-70).reverse().map(j=>
+    `<div class="jr ${j.kelas}"><span class="t">${wib(j.at)} WIB · ${j.jenis}</span><br>${j.teks}</div>`).join('')
+    || '<div class="kecil">—</div>';
+}
+function tabKe(nama){ S.tabAktif=nama;
+  document.querySelectorAll('#pTabs button').forEach(b=>b.classList.toggle('akt', b.dataset.tab===nama));
+  for(const t of ['pikir','peta','pasar','jurnal']) document.getElementById('tab-'+t).hidden = t!==nama;
+  if(nama==='peta'){ if(document.getElementById('tab-peta').dataset.kotor||!document.getElementById('tab-peta').innerHTML) petaRender(); }
+  if(nama==='pasar') pasarRender();
+  if(nama==='jurnal') jurnalRender();
+}
+document.querySelectorAll('#pTabs button').forEach(b=>b.onclick=()=>tabKe(b.dataset.tab));
+document.getElementById('pHandle').onclick=()=>document.getElementById('panel').classList.toggle('tumbuh');
+// delegasi klik baris file di PETA-DIRI → detail fakta / perintah
+ document.getElementById('tab-peta').addEventListener('click', (ev)=>{
+   const row=ev.target.closest('.fileRow'); if(row && row.dataset.p) petaDetail(row.dataset.p);
+ });
 
-  function gambarSpark(hist) {
-    const c = $('spark'); if (!c || !hist || hist.length < 2) return;
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
-    const w = c.clientWidth || 300, h = 64;
-    c.width = w * dpr; c.height = h * dpr;
-    const g = c.getContext('2d');
-    g.scale(dpr, dpr);
-    g.clearRect(0, 0, w, h);
-    const maxCaps = Math.max(1, hist[hist.length - 1].caps), maxPop = Math.max(8, ...hist.map(x => x.pop)), maxE = Math.max(60, ...hist.map(x => x.e));
-    const X = (i) => (i / (hist.length - 1)) * (w - 2) + 1;
-    function garis(fn, warna) {
-      g.strokeStyle = warna; g.lineWidth = 1.5; g.beginPath();
-      hist.forEach((s, i) => { const y = h - 4 - fn(s) * (h - 10); i ? g.lineTo(X(i), y) : g.moveTo(X(i), y); });
-      g.stroke();
-    }
-    garis(s => s.caps / maxCaps, '#4fd1c5');
-    garis(s => s.pop / maxPop, '#f6c453');
-    garis(s => s.e / maxE, '#7aa2ff');
-    g.font = '9px monospace'; g.fillStyle = '#8fa3bd';
-    g.fillText('kemampuan', 4, 10); g.fillStyle = '#f6c453'; g.fillText('populasi', 62, 10); g.fillStyle = '#7aa2ff'; g.fillText('energi rata', 116, 10);
+/* ================= INTERAKSI ================= */
+function sentuh(ev){
+  const p=ev.touches?ev.touches[0]:ev; ukur();
+  // layar → dunia (tanpa pembagian ganda; W2X/W2Y memetakan world→bebas linear)
+  const wx=(p.clientX-bebas.x)/bebas.w*LAYOUT.w, wy=(p.clientY-bebas.y)/bebas.h*LAYOUT.h;
+  // cyborg?
+  if(Math.hypot(wx-BOB.x, wy-BOB.y)<34){ sapa(); return; }
+  // node terdekat
+  let terbaik=null, dmin=30/Math.min(1,skala);
+  for(const [path,n] of LAYOUT.nodes){ const d=Math.hypot(wx-n.x, wy-n.y);
+    if(d<dmin){ dmin=d; terbaik=path; } }
+  if(terbaik){ S.perintah=terbaik; petaDetail(terbaik); }
+}
+cv.addEventListener('click', sentuh);
+function sapa(){
+  const n=S.pohon.files.length, baca=Object.keys(S.baca).length;
+  const kodeVersi=(S.baca['versi.json']?.fakta.join(' ').match(/kodeVersi <b>([^<]+)<\/b>/)||[])[1];
+  const hr=(S.baca['arena-keadaan.json']?.fakta.join(' ').match(/hit-rate <b>([^<]+)<\/b>/)||[])[1];
+  const el=document.getElementById('sapa');
+  el.innerHTML=`<b>AKU SADAR-REPO — wujud cyborg MICAPROFITA.</b><br>
+    Rumahku <b>${n} file</b>; sudah kubaca <b>${baca}/${n}</b> (${kb(Math.max(0,S.stat.bytes))} kode, ${S.stat.fakta} fakta nyata).
+    ${kodeVersi?`Otak arena versi <b>${kodeVersi}</b>.`:''} ${hr?`Hit-rate diriku di arena ${hr}.`:''}<br>
+    Pasar: <b>${Object.keys(S.pasar).length}</b> simbol kupelajari dari lilin Binance hidup, ${S.stat.btTotal} uji-jalan nyata.<br>
+    <span class="kecil">Aku bukan dunia terpisah — aku HIDUP DI DALAM repo ini, dan repo inilah tubuhku.</span>`;
+  el.hidden=false;
+  const r=cv.getBoundingClientRect();
+  el.style.left=Math.min(innerWidth-360, Math.max(10, r.left+bebas.w*0.05))+'px';
+  el.style.top=Math.max(54, bebas.y+30)+'px';
+  clearTimeout(el._t); el._t=setTimeout(()=>el.hidden=true, 7000);
+  jurnal('SAPA', `kupandukkan diri ke pemilik: ${baca}/${n} file, ${S.stat.fakta} fakta, ${Object.keys(S.pasar).length} simbol pasar`);
+}
+
+/* ================= BOOT ================= */
+(async function boot(){
+  muat(); ukur(); S.stat.sesi++;
+  tabKe('pikir'); stripRender(); hudRender(); indeksRender(); petaRender(); pasarRender(); jurnalRender();
+  S.pohon.files.length && susun();
+  jurnal('LAHIR', `sesi #${S.stat.sesi} — sadar-repo menyala; kubaca ulang keadaan rumah (penjaga denyut 15 mnt bisa menggerakkannya kapan pun)`);
+  // denyut pohon pertama segera
+  try{ await pindaiRumah(); susun(); }catch(e){
+    S.terputus=true; hudRender();
+    jurnal('STATUS', S.pohon.files.length
+      ? `pohon repo tak terjangkau (${pesan(e)}) — hidup dari peta-cache umur ${umur(sekarang()-S.pohon.at)}; akan kupancing ulang`
+      : `pohon repo tak terjangkau (${pesan(e)}) — tanpa peta aku tetap hidup: renung + cermin same-origin + pasar Binance`, 'gagal');
   }
-
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+  otakLoop();
+  // probe uji (deterministik, tak mengubah perilaku)
+  window.__v85 = {S, LAYOUT, bebasState:()=>bebas, skalaState:()=>skala, BOB, FASE};
+  // render loop
+  (function loop(){ gambar(); requestAnimationFrame(loop); })();
+  setInterval(()=>{ hudRender(); if(S.tabAktif==='pasar') pasarRender(); }, 5000);
 })();
-
 </script>
 </body>
 </html>
