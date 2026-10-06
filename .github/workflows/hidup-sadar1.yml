@@ -1,0 +1,30 @@
+name: SADAR-1 — detak hidup otonom
+# DUA SADARI: tubuh otonom cyborg MICAPROFITA.
+# Bangun tiap 20 menit WALAU TIDAK ADA PENONTON — membaca repo sendiri,
+# menghisap pasar Binance nyata, bereksperimen (kromosom), lalu menulis
+# ingatan ke GitHub via commit (bukan localStorage). Sadar-2 (hidup.html)
+# hanyalah mata interaktif yang membaca ingatan ini.
+on:
+  schedule:
+    - cron: '*/20 * * * *'
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency:
+  group: sadar1-otonom
+  cancel-in-progress: false
+jobs:
+  bangun:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: BANGUN — baca rumah, hisap pasar nyata, tulis ingatan ke GitHub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/hidup/sadar1.js
