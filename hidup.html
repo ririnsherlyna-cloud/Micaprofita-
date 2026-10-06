@@ -3,160 +3,173 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>RUANG HIDUP — MICAPROFITA · DUA SADARI</title>
+<title>RUANG HIDUP — MICAPROFITA · NADI</title>
 <style>
 :root{
-  --bg:#04060c; --tinta:#dbe7ff; --redup:#7d8db0; --garis:#1a2438;
-  --hijau:#38e8a8; --cyan:#54d8ff; --emas:#ffd166; --jingga:#ff9f5a; --rosa:#ff6b8f; --violet:#a78bff;
-  --panel:rgba(10,16,30,.88);
+  --bg:#05070d; --tinta:#e9eef8; --redup:#94a1ba; --legap:#5b6780;
+  --aksen:#4fe0c2; --aksen-l:rgba(79,224,194,.38); --salah:#ff5f6d;
+  --kaca:rgba(7,11,20,.66); --garis:rgba(255,255,255,.08);
 }
-*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);color:var(--tinta);
-  font:13px/1.45 "SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Noto Sans Mono",monospace}
-#panggung{position:fixed;inset:0;display:block;touch-action:manipulation}
-/* ---------- HUD ---------- */
-#hud{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-start;
-  gap:8px;padding:8px 10px;pointer-events:none;z-index:30;flex-wrap:wrap}
-#hud .kotak{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.chip{pointer-events:auto;background:var(--panel);border:1px solid var(--garis);border-radius:20px;
-  padding:3px 10px;font-size:11px;letter-spacing:.4px;white-space:nowrap;color:var(--tinta)}
-.chip.sub{color:var(--redup);font-size:10px}
-.chip b{color:var(--cyan);font-weight:600}
-.chip.l22{border-color:rgba(56,232,168,.5)} .chip.l22 b{color:var(--hijau)}
-.chip.l11{border-color:rgba(84,216,255,.5)}
-.chip.l00{border-color:rgba(255,107,143,.5)} .chip.l00 b{color:var(--rosa)}
-a.chip{text-decoration:none;cursor:pointer}
-#hJudul{font-weight:700;letter-spacing:1px;color:#fff}
-#hJudul small{color:var(--violet);font-weight:600}
-/* ---------- STRIP SIKLUS 9 TAHAP ---------- */
-#faseStrip{position:fixed;left:10px;bottom:10px;display:flex;gap:4px;z-index:25;flex-wrap:wrap;max-width:calc(100vw - 20px)}
-#faseStrip .f{background:rgba(10,16,30,.8);border:1px solid var(--garis);border-radius:4px;color:#55627f;
-  font-size:8.5px;letter-spacing:.5px;padding:2px 5px;transition:all .3s}
-#faseStrip .f.on{color:#04121c;background:var(--cyan);border-color:var(--cyan);font-weight:700;
-  box-shadow:0 0 12px rgba(84,216,255,.55)}
-#faseStrip .f.ok{color:var(--hijau);border-color:rgba(56,232,168,.45)}
-/* ---------- SAPA ---------- */
-#sapa{position:fixed;z-index:40;max-width:min(340px,80vw);background:var(--panel);border:1px solid rgba(167,139,255,.6);
-  border-radius:12px;padding:10px 12px;font-size:11.5px;line-height:1.55;color:#eaf0ff;
-  box-shadow:0 6px 30px rgba(0,0,0,.6),0 0 18px rgba(167,139,255,.25);pointer-events:none}
-#sapa b{color:var(--violet)}
-/* ---------- PANEL OVERLAY (teks terpisah dari panggung) ---------- */
-#panel{position:fixed;top:0;right:0;bottom:0;width:340px;display:flex;flex-direction:column;
-  background:var(--panel);border-left:1px solid var(--garis);backdrop-filter:blur(9px);z-index:20}
-#pHandle{display:none}
-#pTabs{display:flex;border-bottom:1px solid var(--garis);flex:none}
-#pTabs button{flex:1;background:none;border:none;color:var(--redup);font:inherit;font-size:10.5px;
-  letter-spacing:.6px;padding:11px 2px;cursor:pointer;border-bottom:2px solid transparent}
-#pTabs button.akt{color:#fff;border-bottom-color:var(--cyan);background:rgba(84,216,255,.07)}
-#pIsi{flex:1;overflow-y:auto;padding:10px 12px 20px;scrollbar-width:thin}
-.blok{border:1px solid var(--garis);border-radius:10px;padding:9px 10px;margin-bottom:9px;background:rgba(255,255,255,.015)}
-.blok h4{margin:0 0 6px;font-size:10px;letter-spacing:1.2px;color:var(--redup);font-weight:600}
-.blok h4 em{color:var(--emas);font-style:normal}
-.baris{display:flex;justify-content:space-between;gap:8px;padding:2px 0;font-size:11.5px}
-.baris .k{color:var(--redup)} .baris .v{text-align:right;color:#fff}
-.v.h{color:var(--hijau)} .v.r{color:var(--rosa)} .v.c{color:var(--cyan)} .v.e{color:var(--emas)}
-.kecil{font-size:10px;color:var(--redup);line-height:1.5}
-.faseChips{display:flex;flex-wrap:wrap;gap:3px;margin:6px 0 2px}
-.faseChips span{font-size:8.5px;border:1px solid var(--garis);border-radius:4px;padding:1px 5px;color:#55627f}
-.faseChips span.on{background:var(--cyan);color:#04121c;font-weight:700;border-color:var(--cyan)}
-.faseChips span.ok{color:var(--hijau);border-color:rgba(56,232,168,.4)}
-.mengapa{font-size:10.5px;color:var(--redup);line-height:1.6}
-.mengapa b{color:var(--emas)}
-.aktNama{font-size:13px;color:#fff;font-weight:700;letter-spacing:.5px}
-.aktFase{font-size:10.5px;color:var(--cyan)}
+  font:13px/1.5 "Inter","SF Pro Text",-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif}
+#panggung{position:fixed;inset:0;display:block;touch-action:manipulation;cursor:default}
+
+/* ===== SATU TOMBOL (buka/tutup overlay) ===== */
+#pintu{position:fixed;right:16px;bottom:16px;z-index:60;width:40px;height:40px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.14);background:rgba(7,11,20,.55);backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);color:var(--redup);cursor:pointer;padding:0;
+  display:flex;align-items:center;justify-content:center;opacity:.5;transition:opacity .3s,transform .45s cubic-bezier(.22,.85,.25,1)}
+#pintu:hover,#pintu:focus-visible{opacity:1}
+#pintu.on{opacity:1;transform:rotate(45deg)}
+#pintu svg{display:block}
+
+/* ===== SAPA (gelembung sesaat saat makhluk disentuh) ===== */
+#sapa{position:fixed;z-index:70;max-width:min(330px,78vw);background:rgba(7,11,20,.8);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--aksen-l);border-radius:14px;padding:11px 13px;
+  font-size:12px;line-height:1.55;color:var(--tinta);pointer-events:none;
+  opacity:0;transform:translateY(8px);transition:opacity .35s ease,transform .35s ease}
+#sapa.tampak{opacity:1;transform:none}
+#sapa b{color:var(--aksen);font-weight:600}
+#sapa .lab{margin-top:6px}
+
+/* ===== OVERLAY TERSEMBUNYI (satu-satunya tempat teks) ===== */
+#overlay{position:fixed;top:0;right:0;bottom:0;width:min(396px,94vw);z-index:50;
+  display:flex;flex-direction:column;background:var(--kaca);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-left:1px solid var(--garis);
+  transform:translateX(106%);transition:transform .5s cubic-bezier(.22,.85,.25,1);will-change:transform}
+#overlay.buka{transform:none}
+#ovKepala{flex:none;padding:16px 16px 10px;border-bottom:1px solid var(--garis);
+  display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.ovJudul{display:flex;gap:9px;align-items:flex-start}
+#ovDot{width:8px;height:8px;border-radius:50%;background:var(--legap);flex:none;margin-top:4px;transition:background .5s}
+#ovDot.sehat{background:var(--aksen);box-shadow:0 0 10px var(--aksen-l)}
+#ovDot.telat{background:var(--aksen);opacity:.45}
+#ovDot.mati{background:var(--salah)}
+.jud{font-size:10px;letter-spacing:1.8px;color:var(--redup);text-transform:uppercase;font-weight:600}
+.jud.b{font-size:11.5px;color:var(--tinta);letter-spacing:1.2px}
+.lab{font-size:10.5px;color:var(--legap);line-height:1.5}
+.nil{font-size:13px;color:var(--tinta)}
+#ovArena{flex:none;color:var(--redup);text-decoration:none;font-size:10px;letter-spacing:1.4px;
+  border:1px solid var(--garis);border-radius:16px;padding:5px 11px;transition:color .3s,border-color .3s;white-space:nowrap}
+#ovArena:hover{color:var(--aksen);border-color:var(--aksen-l)}
+#pTabs{display:flex;flex:none;border-bottom:1px solid var(--garis)}
+#pTabs button{flex:1;background:none;border:none;color:var(--legap);font:inherit;font-size:10px;
+  letter-spacing:1.4px;padding:12px 2px;cursor:pointer;border-bottom:2px solid transparent;
+  text-transform:uppercase;transition:color .25s}
+#pTabs button.akt{color:var(--tinta);border-bottom-color:var(--aksen)}
+#pIsi{flex:1;overflow-y:auto;padding:12px 16px 22px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.14) transparent}
+.blok{border:1px solid var(--garis);border-radius:12px;padding:11px 12px;margin-bottom:10px;background:rgba(255,255,255,.02)}
+.blok h4{margin:0 0 7px;font-size:9.5px;letter-spacing:1.6px;color:var(--legap);font-weight:600;text-transform:uppercase}
+.blok h4 em{color:var(--redup);font-style:normal;font-weight:500;letter-spacing:.4px;text-transform:none}
+.baris{display:flex;justify-content:space-between;gap:10px;padding:2.5px 0;font-size:12.5px}
+.baris .k{color:var(--legap)} .baris .v{text-align:right;color:var(--tinta)}
+.v.h{color:var(--aksen)} .v.r{color:var(--salah)} .v.dim{color:var(--redup)}
+.kecil{font-size:10.5px;color:var(--legap);line-height:1.55}
+.aktNama{font-size:14px;color:var(--tinta);font-weight:600;letter-spacing:.3px}
+.aktFase{font-size:10.5px;color:var(--redup);margin-top:1px}
+.mengapa{font-size:10.5px;color:var(--redup);line-height:1.7}
+.mengapa b{color:var(--aksen);font-weight:600}
+/* daftar fase (siklus 9 tahap) */
+.faseList{list-style:none;margin:6px 0 0;padding:0}
+.faseList li{display:flex;align-items:center;gap:9px;padding:2.5px 0;font-size:10px;
+  letter-spacing:1.2px;color:var(--legap);transition:color .4s}
+.faseList li .fdot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.12);flex:none;transition:background .4s,box-shadow .4s}
+.faseList li.ok{color:var(--redup)} .faseList li.ok .fdot{background:var(--aksen);opacity:.4}
+.faseList li.on{color:var(--tinta)} .faseList li.on .fdot{background:var(--aksen);box-shadow:0 0 8px var(--aksen-l)}
 /* PETA-DIRI */
-.dirHdr{margin:8px 0 3px;font-size:10px;color:var(--violet);letter-spacing:1px}
-.fileRow{display:flex;align-items:center;gap:6px;padding:3px 6px;border-radius:6px;cursor:pointer;font-size:11px}
-.fileRow:hover{background:rgba(84,216,255,.08)}
-.fileRow .st{width:10px;flex:none;text-align:center}
-.fileRow .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#cdd8f2}
-.fileRow .sz{color:var(--redup);font-size:9.5px;flex:none}
-.st.b0{color:#4a5878} .st.b1{color:var(--emas)} .st.b2{color:var(--hijau)} .st.b3{color:var(--jingga);animation:nyala 1s infinite alternate}
-@keyframes nyala{from{opacity:.5}to{opacity:1}}
-.faktaList{margin:4px 0 8px;padding-left:14px;font-size:10.5px;color:#9fb4dd;line-height:1.6}
-.faktaList li::marker{color:var(--cyan)}
-/* PASAR */
+.dirHdr{margin:9px 0 3px;font-size:9.5px;color:var(--redup);letter-spacing:1.6px;text-transform:uppercase;font-weight:600}
+.fileRow{display:flex;align-items:center;gap:7px;padding:3.5px 7px;border-radius:8px;cursor:pointer;font-size:12px}
+.fileRow:hover{background:rgba(79,224,194,.07)}
+.fileRow .st{width:10px;flex:none;text-align:center;color:var(--legap)}
+.fileRow.baca .st{color:var(--aksen)} .fileRow.ubah .st{color:var(--tinta)}
+.fileRow .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#cdd8e8}
+.fileRow .sz{color:var(--legap);font-size:9.5px;flex:none}
+.faktaList{margin:4px 0 8px;padding-left:16px;font-size:10.5px;color:var(--redup);line-height:1.65}
+.faktaList li::marker{color:var(--aksen)}
+.faktaList b{color:var(--tinta);font-weight:600}
+/* PASAR + JURNAL */
 .symHdr{display:flex;justify-content:space-between;align-items:baseline}
-.symHdr b{font-size:12px;color:#fff;letter-spacing:1px}
-.sumber{font-size:9px;color:var(--cyan);text-decoration:none;border-bottom:1px dotted rgba(84,216,255,.4)}
-/* JURNAL */
-.jr{border-left:2px solid var(--garis);padding:2px 0 2px 8px;margin-bottom:6px;font-size:10.5px;line-height:1.5}
-.jr .t{color:#4f5d7d;font-size:9px} .jr b{color:var(--cyan);font-weight:600}
-.jr.gagal{border-left-color:var(--rosa)} .jr.temuan{border-left-color:var(--emas)}
-/* PINTU */
-#pintuArena{position:fixed;left:10px;top:52px;z-index:30;color:var(--violet);font-size:10.5px;letter-spacing:1px;
-  text-decoration:none;background:var(--panel);border:1px solid rgba(167,139,255,.4);border-radius:20px;padding:4px 11px}
-#pintuArena:hover{background:rgba(167,139,255,.15)}
-/* desktop: HUD tidak menimpa panel kanan */
-@media (min-width:861px){ #hud{padding-right:352px} }
-/* ---------- MOBILE ---------- */
-@media (max-width:860px){
-  #panel{top:auto;left:0;right:0;width:auto;height:46dvh;border-left:none;border-top:1px solid var(--garis);
-    border-radius:14px 14px 0 0;transition:height .28s ease}
-  #panel.tumbuh{height:78dvh}
-  #pHandle{display:flex;justify-content:center;align-items:center;gap:8px;padding:7px 0 5px;cursor:pointer;flex:none}
-  #pHandle .genggam{width:44px;height:4px;border-radius:2px;background:#33415f}
-  #pHandle span.t{font-size:9.5px;color:var(--redup);letter-spacing:1.5px}
-  #pTabs button{padding:9px 2px;font-size:10px}
-  #pIsi{padding:8px 10px 16px}
-  #faseStrip{bottom:calc(46dvh + 8px); top:auto; left:8px; max-width:calc(100vw - 16px)}
-  #pintuArena{top:auto; bottom:calc(46dvh + 8px); left:auto; right:8px}
-  #hud{padding:6px 8px}
-  .chip{font-size:10px;padding:2px 8px}
+.symHdr b{font-size:12.5px;color:var(--tinta);letter-spacing:.8px}
+.sumber{font-size:9.5px;color:var(--redup);text-decoration:none;border-bottom:1px dotted rgba(148,161,186,.5)}
+.sumber:hover{color:var(--aksen)}
+.jr{border-left:2px solid var(--garis);padding:2px 0 2px 9px;margin-bottom:7px;font-size:10.5px;line-height:1.55;color:var(--redup)}
+.jr b{color:var(--tinta);font-weight:600}
+.jr .t{color:var(--legap);font-size:9px;letter-spacing:.6px}
+.jr.gagal{border-left-color:var(--salah)} .jr.gagal b{color:var(--salah)}
+.jr.temuan{border-left-color:var(--aksen)}
+/* HANDLE MOBILE (geser ke bawah utk menutup) */
+#ovHandle{display:none}
+
+/* ===== MOBILE: overlay jadi lembaran bawah ===== */
+@media (max-width:760px){
+  #overlay{top:auto;left:0;right:0;width:auto;height:64dvh;border-left:none;
+    border-top:1px solid var(--garis);border-radius:18px 18px 0 0;transform:translateY(108%)}
+  #overlay.buka{transform:none}
+  #ovHandle{display:flex;justify-content:center;align-items:center;gap:8px;padding:10px 0 4px;cursor:grab;flex:none;touch-action:none}
+  #ovHandle .genggam{width:44px;height:4px;border-radius:2px;background:rgba(255,255,255,.22)}
+  #ovKepala{padding-top:6px}
+  #pintu{right:14px;bottom:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  #overlay,#pintu,#sapa{transition:none}
 }
 </style>
 </head>
 <body>
 <canvas id="panggung"></canvas>
 
-<div id="hud">
-  <div class="kotak">
-    <span class="chip" id="hJudul">MICAPROFITA · <small>RUANG HIDUP</small></span>
-    <span class="chip sub" id="hStatus">MEMULAI…</span>
-    <span class="chip sub" id="hPohon">pohon: —</span>
-  </div>
-  <div class="kotak">
-    <span class="chip" id="hBaca">0/0 file</span>
-    <span class="chip" id="hFakta">0 fakta</span>
-    <a class="chip sub" id="hS1" href="https://github.com/ririnsherlyna-cloud/Micaprofita-/actions" target="_blank" rel="noopener">S1 · menghubungi…</a>
-    <span class="chip sub" id="hUmur">—</span>
-  </div>
-</div>
+<button id="pintu" aria-label="Buka maklumat ruang hidup" title="maklumat">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+    <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+  </svg>
+</button>
 
-<a id="pintuArena" href="./arena.html">← ARENA</a>
-<div id="faseStrip"></div>
 <div id="sapa" hidden></div>
 
-<div id="panel">
-  <div id="pHandle"><div class="genggam"></div><span class="t">SADAR-REPO</span><div class="genggam"></div></div>
+<div id="overlay" role="dialog" aria-label="Maklumat ruang hidup">
+  <div id="ovHandle"><div class="genggam"></div></div>
+  <div id="ovKepala">
+    <div class="ovJudul">
+      <span id="ovDot"></span>
+      <div>
+        <div class="jud b">MICAPROFITA · RUANG HIDUP</div>
+        <div class="lab" id="ovStatus">membangunkan mata…</div>
+        <div class="lab" id="ovMeta"></div>
+      </div>
+    </div>
+    <a id="ovArena" href="./arena.html">← ARENA</a>
+  </div>
   <div id="pTabs">
-    <button data-tab="pikir" class="akt">PIKIRAN</button>
-    <button data-tab="peta">PETA-DIRI</button>
-    <button data-tab="pasar">PASAR</button>
-    <button data-tab="jurnal">JURNAL</button>
+    <button data-tab="pikir" class="akt">Pikiran</button>
+    <button data-tab="peta">Peta-diri</button>
+    <button data-tab="pasar">Pasar</button>
+    <button data-tab="jurnal">Jurnal</button>
   </div>
   <div id="pIsi">
     <div id="tab-pikir">
       <div class="blok">
-        <h4>SADAR-1 <em>· tubuh otonom di GitHub Actions</em></h4>
-        <div id="pkS1"><div class="kecil">menghubungi ingatan GitHub…</div></div>
+        <h4>Sadar-1 <em>· tubuh otonom di GitHub Actions</em></h4>
+        <div id="ovS1"><div class="kecil">menghubungi ingatan GitHub…</div></div>
       </div>
       <div class="blok">
-        <h4>AKTIVITAS KINI <em>· sadar-2, mata interaktif</em></h4>
+        <h4>Aktivitas kini <em>· Sadar-2, mata interaktif</em></h4>
         <div class="aktNama" id="pkNama">bangkit…</div>
         <div class="aktFase" id="pkFase">—</div>
-        <div class="faseChips" id="pkFaseChips"></div>
+        <ol class="faseList" id="pkFaseList"></ol>
       </div>
       <div class="blok">
-        <h4>MENGAPA AKU MEMILIH INI <em>· skor utilitas</em></h4>
+        <h4>Mengapa kupilih ini <em>· skor utilitas</em></h4>
         <div class="mengapa" id="pkMengapa">menghitung keadaan…</div>
       </div>
       <div class="blok">
-        <h4>CERMIN DIRI <em>· dibaca dari repo</em></h4>
+        <h4>Cermin diri <em>· dibaca dari repo</em></h4>
         <div id="pkDiri"><div class="kecil">belum ada — aku belum membaca rumahku</div></div>
       </div>
       <div class="blok">
-        <h4>INDEKS SADAR-REPO</h4>
+        <h4>Indeks sadar-repo</h4>
         <div id="pkIndeks"><div class="kecil">—</div></div>
       </div>
     </div>
@@ -169,16 +182,28 @@ a.chip{text-decoration:none;cursor:pointer}
 <script>
 'use strict';
 /* ================================================================
-   V286-DUA-SADARI — RUANG HIDUP berakar penuh ke repo MICAPROFITA.
-   Bukan dunia terpisah: dunia cyborg INI adalah repo-nya sendiri.
-   Setiap node = file asli; setiap fakta = kutipan isi nyata;
-   setiap angka pasar = klines Binance nyata; setiap keputusan =
-   argmax utilitas atas pekerjaan yang BENAR-BENAR tertunda.
-   SADAR-1 = tubuh otonom di GitHub Actions (scripts/hidup/sadar1.js,
-   cron ±20 mnt): hidup TANPA PENONTON, ingatan ditulis via COMMIT
-   ke ruang-hidup/. SADAR-2 = halaman ini: mata interaktif yang
-   menghidrasi ingatan resmi dari GitHub. localStorage TIDAK DIPAKAI.
-   ================================================================ */
+   V287-NADI — RUANG HIDUP ditata ulang total atas mandat pemilik:
+   · layar utama 100% habitat dan makhluk — tanpa badge, tanpa panel,
+     tanpa teks menempel; SEMUA maklumat masuk satu overlay tersembunyi
+     yang dibuka lewat satu tombol samar (ditutup lewat tombol yang
+     sama atau geser ke bawah).
+   · bintang/node peta repo DIGANTI MAKHLUK HIDUP "NADI" — benang
+     bioluminesen buatan sendiri: kepala bermata satu, tulang 11 ruas
+     yang mengikuti (meliuk, tak menabrak), silia yang bergelombang
+     = napas terlihat, dua sulur peraba, organ kunang-kunang yang
+     bertambah tiap fakta dicerna, probosis pemandu saat membaca —
+     karakter isi file ASLI mengalir lewat probosis ke tubuhnya.
+   · habitat terasering: zona = direktori ASLI repo di slot kisi tetap
+     (3×3 lanskap / 2×5 potret) — sel sisik bergrid rapi, nol tumpang
+     tindih; sarang di tengah; kolam pasar di sudut; nama file hanya
+     muncul saat didekati atau disentuh.
+   · status lewat PERILAKU: SEHAT = terang dan rajin; TELAT = meredup;
+     TIDAK BANGUN = redup, meringkuk di sarang, mata terpejam — tanpa
+     teks di panggung.
+   · satu warna aksen (bio-teal); merah hanya untuk kegagalan.
+   Mesin DUA-SADARI tidak disentuh: Sadar-1 (GitHub Actions) tetap
+   hidup tanpa penonton, ingatan resmi tetap COMMIT GitHub — bukan
+   localStorage. ================================================================ */
 /* ================= IDENTITAS & KONSTANTA ================= */
 const RUMAH = {pemilik:'ririnsherlyna-cloud', repo:'Micaprofita-', cabang:'main'};
 const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl'};
@@ -188,13 +213,13 @@ const INTEGERS = ['versi.json','gerbang.json','brain.json','arena-keadaan.json',
 
 /* ================= KEADAAN DUNIA ================= */
 const S = {
-  pohon:{files:[], sumber:'', at:0, live:false},           // pohon repo nyata
-  baca:{},                                                 // path -> {hash,hashSrc,size,readAt,partial,pct,fakta[],ringkas,gagal,atGagal}
-  pasar:{},                                                // sym -> {at,harga,chg,ema20,ema50,rsi,atr,mom7,mom48,vol,bt,audit,oc[]}
-  cermin:{at:0, data:null},                                // arena-keadaan.json same-origin
+  pohon:{files:[], sumber:'', at:0, live:false},
+  baca:{},
+  pasar:{},
+  cermin:{at:0, data:null},
   jurnal:[], stat:{bytes:0, fakta:0, sesi:0, lahirAt:Date.now(), btTotal:0},
   kerja:{nama:'bangkit', fase:'', faseAt:0, jejak:[], mengapa:[], target:null, sibuk:false},
-  perintah:null,                                           // path file yang diperintahkan pemilik
+  perintah:null,
   terputus:false
 };
 const tidur = ms => new Promise(r=>setTimeout(r,ms));
@@ -210,7 +235,6 @@ function jurnal(jenis, teks, kelas){ S.jurnal.push({at:sekarang(), jenis, teks, 
   if(S.jurnal.length>170) S.jurnal.splice(0, S.jurnal.length-130);
   if(S.tabAktif==='jurnal') jurnalRender(); }
 function pesan(e){ return (e && (e.message||e.toString())) || 'tak-diketahui'; }
-
 /* ================= MEMORI RESMI: GITHUB (bukan localStorage) =================
    DUA SADARI:
    · SADAR-1 — tubuh otonom di GitHub Actions (cron ±20 mnt): membaca repo,
@@ -251,23 +275,19 @@ async function muatMemoriGitHub(){
   try{
     const ing = JSON.parse(await ghAmbil(INGATAN_GH.ingatan));
     S1.ingatan = ing; S1.at = sekarang(); S1.stale = false;
-    // stat kumulatif & kelahiran dari tubuh otonom
     if(ing.kelahiran) S.stat.lahirAt = Date.parse(ing.kelahiran) || S.stat.lahirAt;
     const st=ing.stat||{};
     S.stat.bytes = Math.max(S.stat.bytes, st.bytes||0);
     S.stat.fakta = Math.max(S.stat.fakta, st.fakta||0);
     S.stat.btTotal = Math.max(S.stat.btTotal, st.btTotal||0);
-    // apa yang sudah dibaca Sadar-1 → peta-diri langsung hijau (bacaan resmi, tak diulang)
     for(const [p,b] of Object.entries(ing.baca||{})){
       if(!S.baca[p]){ S.baca[p]={size:b.size||0, readAt:Date.parse(b.readAt)||0, partial:!!b.partial,
         pct: b.partial? (b.pct||60):100, fakta:(b.fakta||[]).slice(), s1:true, hashSrc:'sadar1'}; }
     }
-    // studi pasar resmi dari ingatan (lengkap dengan oc utk strip lilin)
     for(const [sym,p] of Object.entries(ing.pasar||{})){
       const at=Date.parse(p.at)||0; const q=S.pasar[sym];
       if(!q || at>(q.at||0)) S.pasar[sym]=Object.assign({}, p, {at, s1:!q, oc:p.oc||[]});
     }
-    // keadaan bangun terakhir + jurnal S1 (hanya bila bangun baru)
     const k = JSON.parse(await ghAmbil(INGATAN_GH.keadaan));
     const bangunLama = (S1.keadaan && S1.keadaan.bangunKe) || _s1BangunDilaporkan;
     S1.keadaan = k;
@@ -283,7 +303,6 @@ async function muatMemoriGitHub(){
       }
       petaRender();
     }
-    // bukti komit terakhir menyentuh ingatan (bisa diklik pemilik)
     try{ const d = await jF(`https://api.github.com/repos/${RUMAH.pemilik}/${RUMAH.repo}/commits?path=ruang-hidup&per_page=1`);
       if(Array.isArray(d) && d[0]) S1.komit={sha:(d[0].sha||'').slice(0,7), oleh:d[0].commit?.author?.name||'sadar1[bot]', at:d[0].commit?.author?.date||''};
     }catch(e){}
@@ -291,34 +310,31 @@ async function muatMemoriGitHub(){
     S1.stale=true;
     if(!S1.keadaan) jurnal('S1', `ingatan GitHub tak terjangkau (${pesan(e)}) — kujujurkan: tubuh otonomku belum bisa kubaca; Sadar-2 tetap hidup`, 'gagal');
   }
-  s1Render(); hudRender(); indeksRender(); if(S.tabAktif==='peta') petaRender(); if(S.tabAktif==='pasar') pasarRender();
+  s1Render(); ovStatusRender(); indeksRender(); if(S.tabAktif==='peta') petaRender(); if(S.tabAktif==='pasar') pasarRender();
 }
 function s1Render(){
-  const chip=document.getElementById('hS1'); const w=document.getElementById('pkS1');
-  if(!w || !chip) return;
+  const w=document.getElementById('ovS1'); if(!w) return;
   const k=S1.keadaan, ing=S1.ingatan;
-  if(!k){ chip.textContent='S1 · menghubungi…'; chip.className='chip sub l11'; return; }
+  if(!k){ w.innerHTML='<div class="kecil">menghubungi ingatan GitHub…</div>'; return; }
   const selesai=Date.parse(k.waktu?.selesai)||0, umurMs=sekarang()-selesai;
   const sehat=umurMs<30*60000, telat=umurMs<55*60000;
-  chip.className='chip sub '+(sehat?'l22':telat?'l11':'l00');
-  chip.innerHTML=`S1 bangun ke-<b>${k.bangunKe}</b> · ${umur(umurMs)} lalu`;
-  const sta=sehat?'<span class="v h">SEHAT</span>':telat?'<span class="v e">TELAT — cron GitHub bisa tertunda</span>':'<span class="v r">TIDAK BANGUN — periksa tab Actions di repo</span>';
+  const sta=sehat?'<span class="v h">SEHAT</span>':telat?'<span class="v dim">TELAT — cron GitHub bisa tertunda</span>':'<span class="v r">TIDAK BANGUN — periksa tab Actions di repo</span>';
   const lahir=Date.parse(ing?.kelahiran)||S.stat.lahirAt;
   w.innerHTML=`
    <div class="baris"><span class="k">status tubuh otonom</span>${sta}</div>
-   <div class="baris"><span class="k">bangun total</span><span class="v c">${ing?.totalBangun ?? k.bangunKe}</span></div>
-   <div class="baris"><span class="k">umur hidup</span><span class="v c">${umur(sekarang()-lahir)}</span></div>
+   <div class="baris"><span class="k">bangun total</span><span class="v h">${ing?.totalBangun ?? k.bangunKe}</span></div>
+   <div class="baris"><span class="k">umur hidup</span><span class="v h">${umur(sekarang()-lahir)}</span></div>
    <div class="baris"><span class="k">bangun terakhir</span><span class="v">${wib(selesai)} WIB · ${((k.waktu?.durasiMs||0)/1000).toFixed(1)} dtk</span></div>
-   <div class="baris"><span class="k">host</span><span class="v c">${k.host?.nama||'GitHub Actions'}</span></div>
+   <div class="baris"><span class="k">host</span><span class="v dim">${k.host?.nama||'GitHub Actions'}</span></div>
    <div class="baris"><span class="k">berikutnya</span><span class="v">${k.waktu?.berikutnya||'±≤20 mnt'}</span></div>
-   <div class="baris"><span class="k">memori resmi</span><span class="v c">commit GitHub${S1.komit?` · <a class="sumber" target="_blank" rel="noopener" href="https://github.com/${RUMAH.pemilik}/${RUMAH.repo}/commit/${S1.komit.sha}">${S1.komit.sha}</a>`:''}</span></div>
-   <div class="baris"><span class="k">kromosom</span><span class="v e">gen ${k.kromosom?.generasi??0} · rsiMax ${k.kromosom?.rsiMax??'-'} · momMin ${k.kromosom?.momMin??'-'} · hold ${k.kromosom?.holdJam??'-'}j</span></div>
+   <div class="baris"><span class="k">memori resmi</span><span class="v h">commit GitHub${S1.komit?` · <a class="sumber" target="_blank" rel="noopener" href="https://github.com/${RUMAH.pemilik}/${RUMAH.repo}/commit/${S1.komit.sha}">${S1.komit.sha}</a>`:''}</span></div>
+   <div class="baris"><span class="k">kromosom</span><span class="v dim">gen ${k.kromosom?.generasi??0} · rsiMax ${k.kromosom?.rsiMax??'-'} · momMin ${k.kromosom?.momMin??'-'} · hold ${k.kromosom?.holdJam??'-'}j</span></div>
    <div class="kecil" style="margin:5px 0 2px">fokus hidup: ${k.tujuan?.fokusKini||'—'}</div>
    ${(k.penemuan||[]).slice(0,3).map(t=>`<div class="jr temuan" style="margin-top:5px"><span class="t">S1 · skor ${t.skor}</span><br>${t.teks}</div>`).join('')}
    <div class="kecil" style="margin-top:6px">${k.duaSadar?.catatan||'Sadar-1 menulis ingatan ini ke GitHub lewat commit — bukan localStorage.'}</div>`;
 }
 
-/* ================= SENSOR-REPO: pohon nyata (3 gerbang) ================= */
+/* ================= SENSOR-REPO: pohon nyata (2 gerbang) ================= */
 async function jF(url, ms=12000){
   const c = new AbortController(); const t = setTimeout(()=>c.abort(), ms);
   try{ const r = await fetch(url,{cache:'no-store', signal:c.signal});
@@ -326,13 +342,11 @@ async function jF(url, ms=12000){
   } finally{ clearTimeout(t); }
 }
 async function pohonAmbil(){
-  // Gerbang 1 — GitHub API (SHA asli git, paling akurat untuk deteksi perubahan)
   try{ const d = await jF(`https://api.github.com/repos/${RUMAH.pemilik}/${RUMAH.repo}/git/trees/${RUMAH.cabang}?recursive=1`);
     if(d && Array.isArray(d.tree)){
       const files = d.tree.filter(t=>t.type==='blob').map(t=>({path:t.path, size:t.size||0, hash:t.sha||''}));
       if(files.length) return {files, sumber:'github-api'};
     }}catch(e){}
-  // Gerbang 2 — jsDelivr data API (flat, hash sendiri)
   try{ const d = await jF(`https://data.jsdelivr.com/v1/packages/gh/${RUMAH.pemilik}/${RUMAH.repo}@${RUMAH.cabang}?structure=flat`);
     if(d && Array.isArray(d.files)){
       const files = d.files.map(f=>({path:(f.name||'').replace(/^\//,''), size:f.size||0, hash:f.hash||''}));
@@ -343,11 +357,9 @@ async function pohonAmbil(){
 async function pindaiRumah(){
   const h = await pohonAmbil();
   const lama = S.pohon.sumber && S.pohon.sumber!==h.sumber;
-  const lamaPath = {}; if(lama) for(const p in S.baca) lamaPath[p]=true;
   const dulu = new Map(S.pohon.files.map(f=>[f.path, f.hash]));
   S.pohon = {files:h.files, sumber:h.sumber, at:sekarang(), live:true};
   S.terputus = false;
-  // banding SHA per file (same-source) → daftar yang BERUBAH sejak baca terakhir
   let berubah=0, baru=0;
   for(const f of h.files){
     const b = S.baca[f.path];
@@ -396,7 +408,7 @@ async function isiAmbil(path, ukuran, onChunk){
 
 /* ================= PEMBACA: parser → fakta nyata ================= */
 function parseJSON(t){ try{ return JSON.parse(t); }catch(e){ return undefined; } }
-function jumlahJSON(o){ // pendataan struktur generik
+function jumlahJSON(o){
   let kunci=0, simpul=0, kedalaman=0, larik=0;
   (function jalan(v,d){ simpul++; if(d>kedalaman) kedalaman=d;
     if(Array.isArray(v)){ larik++; v.slice(0,80).forEach(x=>jalan(x,d+1)); }
@@ -520,11 +532,10 @@ function analisaLilin(lilin){
   const ret=[]; for(let i=1;i<c.length;i++) ret.push(c[i]/c[i-1]-1);
   const vol=Math.sqrt(ret.slice(-48).reduce((a,x)=>a+x*x,0)/48)*100;
   const mom7=c[c.length-1]/c[c.length-8]-1, mom48=c[c.length-1]/c[c.length-49]-1;
-  const chg=c[c.length-1]/c[c.length-25]-1; // ~24 jam
+  const chg=c[c.length-1]/c[c.length-25]-1;
   return {harga:terakhir, chg:chg*100, ema20:e20[e20.length-1], ema50:e50[e50.length-1],
     rsi:rsiWilder(c), atr:atrK(lilin), mom7:mom7*100, mom48:mom48*100, vol};
 }
-/* UJI-JALAN NYATA: aturan turunan genom arena (ema align + momentum + RSI<70), tahan 24 jam, non-overlap */
 function ujiJalan(lilin){
   const c=lilin.map(x=>x.c), e20=ema(c,20), e50=ema(c,50);
   const rsiSeri=(()=>{ let naik=0,turun=0; const out=[];
@@ -541,11 +552,10 @@ function ujiJalan(lilin){
   }
   if(!trades.length) return {n:0, menang:0, net:0, netCek:0, catatan:'tidak ada sinyal sah pada 200 lilin — jujur kosong'};
   const net=trades.reduce((a,x)=>a+x,0);
-  const netCek=Math.expm1(trades.reduce((a,x)=>a+Math.log1p(x/100),0))*100; // jalur verifikasi ke-2
+  const netCek=Math.expm1(trades.reduce((a,x)=>a+Math.log1p(x/100),0))*100;
   return {n:trades.length, menang:trades.filter(x=>x>0).length, net, netCek,
     terbaik:Math.max(...trades), terburuk:Math.min(...trades)};
 }
-/* AUDIT: pick arena vs momentum hidup */
 function auditPick(pick, an){
   if(!an) return null;
   const buy = pick.direction==='BUY';
@@ -581,15 +591,15 @@ const STALE_POHON = 12*60000, STALE_CERMIN = 20*60000, STALE_PASAR = 45*60000;
 function skorBaca(f){
   const b=S.baca[f.path];
   if(b){
-    if(b.berubah) return 95;                                     // SHA berubah — rumah bergerak, UTAMA
-    if(b.fakta) return -1;                                       // sudah terbaca utuh — bukan pekerjaan
-    if(b.gagal>=2 && sekarang()-(b.atGagal||0)<600000) return -1; // backoff setelah gagal beruntun
+    if(b.berubah) return 95;
+    if(b.fakta) return -1;
+    if(b.gagal>=2 && sekarang()-(b.atGagal||0)<600000) return -1;
   }
   let u=40;
-  if(INTEGERS.includes(f.path)) u+=30;                       // inti-diri kecil = cepat & penting
+  if(INTEGERS.includes(f.path)) u+=30;
   else if(f.path.startsWith('laporan/')) u+=10;
   else if(f.path.startsWith('scripts/')) u+=14;
-  else if(f.size>1000000) u-=26;                              // raksasa — nanti, setelah yang lain
+  else if(f.size>1000000) u-=26;
   else if(f.path.startsWith('otak/')||f.path.startsWith('memori/')) u+=18;
   return u;
 }
@@ -617,13 +627,13 @@ async function jalankan(akt){
   S.kerja.sibuk=true; S.kerja.nama=akt.nama; S.kerja.target=akt.target||null; S.kerja.jejak=[];
   for(const L of akt.langkah){
     S.kerja.fase=L.fase; S.kerja.faseAt=sekarang();
-    hudRender(); pikirRender(); stripRender();
+    ovStatusRender(); pikirRender(); stripRender();
     try{ await L.fn(); }catch(e){ jurnal('GAGAL', `${akt.nama} / ${L.fase} — ${pesan(e)}`, 'gagal'); }
     S.kerja.jejak.push(L.fase);
     await tidur(L.dtk ?? 850);
   }
   S.kerja.sibuk=false; S.kerja.fase='';
-  hudRender(); stripRender();
+  ovStatusRender(); stripRender();
 }
 const F=(fase,fn,dtk)=>({fase,fn,dtk});
 
@@ -681,7 +691,7 @@ function aktBaca(f){
       S.faktaTerakhir={path:f.path, fakta};
       jurnal('BACA', `<b>${f.path}</b> — ${fakta[0]}`+(isi.dibaca<f.size?` · parsial jujur: ${kb(isi.dibaca)}/${kb(f.size)} (${f1(isi.dibaca/f.size*100)}%)`:'')); }, 900),
     F('MENGEVALUASI', async()=>{ const F0=S.faktaTerakhir;
-      if(!F0) return; // verifikasi: baca ulang cepat ringkasan struktur dari teks yang sama (deterministik?)
+      if(!F0) return;
       const o=S.baca[F0.path];
       const cek = F0.fakta.length>0 && o && o.fakta.length===F0.fakta.length;
       jurnal('EVAL', `verifikasi ${F0.path}: ${cek?'fakta stabil ('+F0.fakta.length+' butir konsisten)':'TIDAK konsisten — kucatat jujur'} `); }, 700),
@@ -745,7 +755,7 @@ function aktRenung(){
 async function otakLoop(){
   while(true){
     try{
-      if(S.perintah){ // perintah pemilik DITAATI — preempt
+      if(S.perintah){
         const f=S.pohon.files.find(x=>x.path===S.perintah);
         S.perintah=null;
         if(f){ jurnal('PERINTAH', `pemilik menyuruhku membaca <b>${f.path}</b> — ditaati sekarang`);
@@ -761,236 +771,586 @@ async function otakLoop(){
     }catch(e){ jurnal('GAGAL', 'otak: '+pesan(e), 'gagal'); await tidur(3000); }
   }
 }
-/* ================= PANGGUNG: dunia = PETA REPO NYATA ================= */
+/* ================= PANGGUNG: habitat terasering (koordinat layar) ================= */
 const cv=document.getElementById('panggung'), cx=cv.getContext('2d');
-let DPR=1, bebas={x:0,y:0,w:0,h:0}, skala=1;
-let LAYOUT={nodes:new Map(), clusters:[], w:1400, h:900};
+let DPR=1, bebas={x:14,y:14,w:600,h:400}, VIG=null;
+const LAYOUT={nodes:new Map(), zona:[], rects:[], den:{x:0,y:0,r:60}, pond:{x:0,y:0,w:0,h:0}};
+const ZONA_URUT=['otak','.github/workflows','memori','scripts/ujian-buta','· akar','scripts','laporan'];
+const ZONA_NAMA={'· akar':'AKAR','otak':'OTAK','memori':'MEMORI','.github/workflows':'JANTUNG','scripts/ujian-buta':'UJIAN','scripts':'ALAT','laporan':'LAPORAN'};
+let POND_POS={};
 function ukur(){
   DPR=Math.min(devicePixelRatio||1, 2);
-  cv.width=innerWidth*DPR; cv.height=innerHeight*DPR;
-  const panel=document.getElementById('panel').getBoundingClientRect();
-  const mobile = innerWidth<=860;
-  const hudB=document.getElementById('hud').getBoundingClientRect().bottom;
-  const stripT = mobile ? 84 : 46;
-  bebas = mobile
-    ? {x:8, y:stripT+6, w:innerWidth-16, h:Math.max(160, panel.top - stripT - 10)}
-    : {x:10, y:stripT+6, w:Math.max(320, panel.left - 20), h:Math.max(200, innerHeight - stripT - 12)};
-  const asp = bebas.w/bebas.h;
-  LAYOUT.h = 900; LAYOUT.w = Math.round(900*Math.min(Math.max(asp, 0.6), 2.6));
-  skala = Math.min(bebas.w/LAYOUT.w, bebas.h/LAYOUT.h);
+  cv.width=Math.round(innerWidth*DPR); cv.height=Math.round(innerHeight*DPR);
+  cv.style.width=innerWidth+'px'; cv.style.height=innerHeight+'px';
+  bebas={x:14, y:14, w:Math.max(220,innerWidth-28), h:Math.max(220,innerHeight-28)};
+  const g=cx.createRadialGradient(innerWidth/2, innerHeight*0.42, Math.min(innerWidth,innerHeight)*0.22,
+    innerWidth/2, innerHeight*0.5, Math.max(innerWidth,innerHeight)*0.78);
+  g.addColorStop(0,'rgba(16,26,44,0)'); g.addColorStop(1,'rgba(0,0,0,.5)');
+  VIG=g;
 }
-addEventListener('resize', ()=>{ukur(); susun();});
-function W2X(x){ return bebas.x + (x/LAYOUT.w)*bebas.w; }
-function W2Y(y){ return bebas.y + (y/LAYOUT.h)*bebas.h; }
-function S2W(px){ return px/skala; }
-
-/* susun node: cluster per direktori nyata, posisi deterministik (fnv path) */
+/* susun: zona = direktori ASLI → slot kisi tetap; sel = grid rapi, nol tumpang tindih */
 function susun(){
-  const files=S.pohon.files; if(!files.length){ LAYOUT.clusters=[]; LAYOUT.nodes.clear(); return; }
-  const cl=new Map();
-  for(const f of files){
-    const i=f.path.lastIndexOf('/'); const dir=i<0?'· akar':f.path.slice(0,i);
-    if(!cl.has(dir)) cl.set(dir,[]); cl.get(dir).push(f);
+  const asp=bebas.w/bebas.h;
+  const rects=[]; let denI, pondI, zonaI;
+  if(asp>=1.02){
+    const cw=bebas.w/3, ch=bebas.h/3;
+    for(let r=0;r<3;r++) for(let c=0;c<3;c++) rects.push({x:bebas.x+c*cw, y:bebas.y+r*ch, w:cw, h:ch});
+    denI=4; pondI=8; zonaI=[0,1,2,3,5,6,7];          // otak kiri-atas, jantung tengah-atas, akar samping sarang
+  }else{
+    const cw=bebas.w/2, rh=bebas.h/5;
+    for(let r=0;r<4;r++) for(let c=0;c<2;c++) rects.push({x:bebas.x+c*cw, y:bebas.y+r*rh, w:cw, h:rh});
+    rects.push({x:bebas.x, y:bebas.y+4*rh, w:bebas.w, h:rh});
+    denI=3; pondI=7; zonaI=[0,1,2,4,5,6,8];
   }
-  const clusters=[...cl.entries()].sort((a,b)=>b[1].length-a[1].length);
-  const asp=LAYOUT.w/LAYOUT.h;
-  const kol=Math.max(1, Math.min(clusters.length, Math.round(asp*2.2)));
-  const baris=Math.ceil(clusters.length/kol);
-  const cw=LAYOUT.w/kol, ch=LAYOUT.h*0.94/baris;
-  const maxSize=Math.max(...files.map(f=>f.size||1));
-  LAYOUT.nodes.clear(); LAYOUT.clusters=[];
-  clusters.forEach(([dir,fs],ci)=>{
-    const gx=ci%kol, gy=Math.floor(ci/kol);
-    const cxp=gx*cw+cw/2, cyp=gy*ch+ch*0.46;
-    const jari=Math.min(cw,ch)*0.44;
-    for(const f of fs){
-      const h=fnv(f.path);
-      const ang=(h%3600)/3600*Math.PI*2 + (h>>>8)%100/100;
-      const rr=jari*(0.28+0.72*Math.sqrt((h>>>4)%1000/1000));
-      const x=Math.min(LAYOUT.w-24, Math.max(24, cxp+Math.cos(ang)*rr*(asp>1.15?1.25:0.9)));
-      const y=Math.min(LAYOUT.h-40, Math.max(24, cyp+Math.sin(ang)*rr*0.82));
-      const r=(3.2+13.5*Math.log1p(f.size||1)/Math.log1p(maxSize));
-      LAYOUT.nodes.set(f.path,{x,y,r,f});
-    }
-    LAYOUT.clusters.push({dir, x:cxp, y:gy*ch+ch*0.5, n:fs.length, tot:fs.reduce((a,f)=>a+(f.size||0),0), gy, gx});
+  LAYOUT.rects=rects;
+  const dr=rects[denI];
+  LAYOUT.den={x:dr.x+dr.w/2, y:dr.y+dr.h/2, r:Math.min(dr.w,dr.h)*0.30};
+  LAYOUT.pond=rects[pondI];
+  const cl=new Map();
+  for(const f of S.pohon.files){ const i=f.path.lastIndexOf('/'); const dir=i<0?'· akar':f.path.slice(0,i);
+    if(!cl.has(dir)) cl.set(dir,[]); cl.get(dir).push(f); }
+  const dirs=[...cl.keys()].sort((a,b)=>{
+    const ia=ZONA_URUT.indexOf(a), ib=ZONA_URUT.indexOf(b);
+    return (ia<0?99:ia)-(ib<0?99:ib) || a.localeCompare(b);
   });
+  const kel=[];
+  dirs.forEach((dir,i)=>{
+    if(i<zonaI.length) kel.push({rect:rects[zonaI[i]], fs:cl.get(dir).slice(), dirs:[dir]});
+    else if(kel.length){ const last=kel[kel.length-1]; last.fs.push(...cl.get(dir)); last.dirs.push(dir); }
+  });
+  LAYOUT.nodes.clear(); LAYOUT.zona=[];
+  const maxSize=Math.max(1, ...S.pohon.files.map(f=>f.size||1));
+  const jelas=Math.log1p(maxSize);
+  for(const k of kel){
+    const rect=k.rect, fs=k.fs;
+    const inset=18;
+    const zw=Math.max(40, rect.w-2*inset), zh=Math.max(28, rect.h-2*inset);
+    const n=fs.length;
+    let cols=Math.max(1, Math.round(Math.sqrt(n*zw/Math.max(1,zh))));
+    let rows=Math.ceil(n/cols);
+    let px=Math.min(zw/(cols+0.4), zh/Math.max(1,rows+0.2));
+    px=Math.max(10, Math.min(24, px));
+    if(rows*px>zh) px=Math.max(8, zh/rows);
+    if(cols*px>zw) px=Math.max(8, zw/cols);
+    cols=Math.max(1, Math.floor(zw/px)); rows=Math.ceil(n/cols);
+    const x0=rect.x+inset+(zw-(cols-1)*px)/2;
+    const y0=rect.y+inset+(zh-(rows-1)*px)/2;
+    fs.forEach((f,i)=>{
+      const gx=i%cols, gy=Math.floor(i/cols);
+      const r=2.3+3.3*Math.log1p(f.size||1)/jelas;
+      LAYOUT.nodes.set(f.path, {x:x0+gx*px, y:y0+gy*px, r:Math.min(5.8,r), dir:k.dirs[0], f});
+    });
+    LAYOUT.zona.push({dir:k.dirs[0], dirs:k.dirs,
+      nama:k.dirs.length>1?'LAINNYA':(ZONA_NAMA[k.dirs[0]]||k.dirs[0].split('/').pop().toUpperCase()),
+      rect, cx:rect.x+rect.w/2, cy:rect.y+rect.h/2, n:fs.length});
+  }
+  POND_POS={};
 }
-function statusNode(path){ const b=S.baca[path]; const f=LAYOUT.nodes.get(path);
-  if(b && b.berubah) return 'b3'; if(b && b.partial) return 'b1'; if(b) return 'b2'; return 'b0'; }
-const WARNA={b0:'#3a4763', b1:'#ffd166', b2:'#38e8a8', b3:'#ff9f5a'};
+function statusNode(path){
+  const b=S.baca[path];
+  if(b && b.berubah) return 'ubah';
+  if(b && b.fakta) return b.partial?'parsial':'baca';
+  return 'kosong';
+}
 
-/* cyborg = pola kesadaran amorf (bukan robot) */
-const BOB={x:700,y:450,tx:700,ty:450,ener:0};
-let PARTIKEL=[];
+/* ================= STATUS TUBUH → PERILAKU (bukan teks) ================= */
+function keadaanTubuh(){
+  if(S.terputus && !S.pohon.live) return {mode:'putus', dim:0.5, v:0.6};
+  const k=S1.keadaan;
+  if(!k) return {mode:'bangun', dim:0.85, v:1};
+  const usia=sekarang()-(Date.parse(k.waktu?.selesai)||0);
+  if(usia<30*60000) return {mode:'sehat', dim:1, v:1};
+  if(usia<55*60000) return {mode:'telat', dim:0.6, v:0.7};
+  return {mode:'tidak-bangun', dim:0.22, v:0.25};
+}
+
+/* ================= NADI — makhluk benang bioluminesen =================
+   Kepala tarung bermata satu → tulang 11 ruas mengikuti (meliuk, tak
+   menabrak: dorongan menjauh dari sel) → silia bergelombang = napas →
+   dua sulur peraba → organ kunang-kunang bertambah tiap fakta dicerna
+   → probosis pemandu saat membaca (isi file ASLI mengalir masuk). */
+const NADI={
+  x:0, y:0, vx:0, vy:0, hd:-Math.PI/2, tx:0, ty:0,
+  seg:[], NS:11, SP:7.5,
+  napas:0, dim:1, mode:'bangun', startle:0, idleAt:sekarang(), flair:0,
+  mata:{buka:1, blink:0, blinkAt:3+Math.random()*4, px:0, py:0},
+  sulur:[{x:0,y:0},{x:0,y:0}],
+  kunang:[]
+};
+function nadiInit(){
+  NADI.x=LAYOUT.den.x; NADI.y=LAYOUT.den.y; NADI.tx=NADI.x; NADI.ty=NADI.y;
+  NADI.seg=[]; for(let i=0;i<NADI.NS;i++) NADI.seg.push({x:NADI.x, y:NADI.y+(i+1)*NADI.SP});
+  for(const s of NADI.sulur){ s.x=NADI.x; s.y=NADI.y-14; }
+}
+function angNorm(a){ while(a>Math.PI)a-=2*Math.PI; while(a<-Math.PI)a+=2*Math.PI; return a; }
+function zonaPenasaran(){
+  for(const [p,b] of Object.entries(S.baca)) if(b.berubah){ const n=LAYOUT.nodes.get(p); if(n) return n; }
+  return null;
+}
+function nadiUpdate(dt, t){
+  const tubuh=keadaanTubuh();
+  NADI.mode=tubuh.mode;
+  NADI.dim+=(tubuh.dim-NADI.dim)*Math.min(1, dt*1.1);
+  let tgt=null, v=90;
+  if(S.kerja.sibuk && S.kerja.target){
+    if(S.kerja.target.startsWith('pasar:')) tgt=POND_POS[S.kerja.target.slice(6)]||null;
+    else { const n=LAYOUT.nodes.get(S.kerja.target); tgt=n?{x:n.x,y:n.y}:null; }
+    v=150;
+  }
+  if(tgt){ NADI.tx=tgt.x; NADI.ty=tgt.y-8; NADI.idleAt=sekarang(); }
+  else if(tubuh.mode==='tidak-bangun'){                 // meringkuk di sarang
+    NADI.tx=LAYOUT.den.x+Math.cos(t*0.5)*LAYOUT.den.r*0.32;
+    NADI.ty=LAYOUT.den.y+Math.sin(t*0.5)*LAYOUT.den.r*0.24;
+    v=14;
+  }else{
+    const idle=(sekarang()-NADI.idleAt)/1000;
+    const penasaran=zonaPenasaran();
+    if(penasaran && idle>7){ NADI.tx=penasaran.x; NADI.ty=penasaran.y-20; v=62; }  // rasa ingin tahu
+    else{
+      const R=Math.min(bebas.w,bebas.h)*0.15;
+      NADI.tx=LAYOUT.den.x+Math.cos(t*0.21)*R*1.55+Math.cos(t*0.53)*R*0.3;
+      NADI.ty=LAYOUT.den.y+Math.sin(t*0.17)*R*0.85+Math.sin(t*0.47)*R*0.25;
+      v=55+16*Math.sin(t*0.3);
+    }
+  }
+  v*=(tubuh.v??1)*(0.4+0.6*NADI.dim);
+  // pemandu terarah + hindari tabrak sel
+  let dx=NADI.tx-NADI.x, dy=NADI.ty-NADI.y; const d=Math.hypot(dx,dy)||1;
+  const arr=Math.min(1, d/110);
+  let ax=dx/d*v*arr, ay=dy/d*v*arr;
+  for(const n of LAYOUT.nodes.values()){
+    const ox=NADI.x-n.x, oy=NADI.y-n.y; const od=Math.hypot(ox,oy);
+    const R0=n.r+26;
+    if(od<R0 && od>0.5){ const f=(1-od/R0)*150; ax+=ox/od*f; ay+=oy/od*f; }
+  }
+  if(NADI.startle>0.02){
+    ax+=Math.cos(t*9+1)*240*NADI.startle; ay+=Math.sin(t*7)*170*NADI.startle;
+    NADI.startle*=Math.pow(0.04, dt);
+  } else NADI.startle=0;
+  NADI.vx+=(ax-NADI.vx)*Math.min(1, dt*2.6);
+  NADI.vy+=(ay-NADI.vy)*Math.min(1, dt*2.6);
+  NADI.x+=NADI.vx*dt; NADI.y+=NADI.vy*dt;
+  NADI.x=Math.max(bebas.x+18, Math.min(bebas.x+bebas.w-18, NADI.x));
+  NADI.y=Math.max(bebas.y+18, Math.min(bebas.y+bebas.h-18, NADI.y));
+  const sp=Math.hypot(NADI.vx,NADI.vy);
+  if(sp>4) NADI.hd+=angNorm(Math.atan2(NADI.vy,NADI.vx)-NADI.hd)*Math.min(1, dt*6);
+  // napas — laju mengikuti kerja & vital
+  const rate=(S.kerja.sibuk?1.7:0.95)*(0.3+0.7*NADI.dim);
+  NADI.napas+=dt*rate*2;
+  // tulang mengikuti kepala
+  let px2=NADI.x, py2=NADI.y;
+  for(const sg of NADI.seg){
+    const ddx=sg.x-px2, ddy=sg.y-py2; const dd=Math.hypot(ddx,ddy)||1;
+    sg.x=px2+ddx/dd*NADI.SP; sg.y=py2+ddy/dd*NADI.SP; px2=sg.x; py2=sg.y;
+  }
+  // mata
+  const m=NADI.mata;
+  m.blinkAt-=dt;
+  if(m.blinkAt<0){ m.blink=1; m.blinkAt=3+Math.random()*6; }
+  m.blink*=Math.pow(0.001, dt);
+  let bukaT=1-m.blink;
+  if(tubuh.mode==='tidak-bangun') bukaT=0;                       // mata terpejam
+  else if(S.kerja.fase==='MENGEVALUASI') bukaT*=0.55;            // menyipit fokus
+  m.buka+=(bukaT-m.buka)*Math.min(1, dt*5);
+  const lihat=P.aktif? P : {x:NADI.tx, y:NADI.ty};
+  const la=Math.atan2(lihat.y-NADI.y, lihat.x-NADI.x);
+  m.px+=(Math.cos(la)*0.38-m.px)*Math.min(1, dt*4);
+  m.py+=(Math.sin(la)*0.38-m.py)*Math.min(1, dt*4);
+  // sulur peraba (fisika tertinggal → hidup)
+  for(let i=0;i<2;i++){
+    const side=i?1:-1;
+    const bx=NADI.x+Math.cos(NADI.hd+side*0.55)*10, by=NADI.y+Math.sin(NADI.hd+side*0.55)*10;
+    const wx=bx+Math.cos(NADI.hd+side*0.2)*22+Math.sin(t*2.3+i*2.1)*3.5;
+    const wy=by+Math.sin(NADI.hd+side*0.2)*22+Math.cos(t*2.1+i*1.7)*3.5;
+    NADI.sulur[i].x+=(wx-NADI.sulur[i].x)*Math.min(1, dt*3.5);
+    NADI.sulur[i].y+=(wy-NADI.sulur[i].y)*Math.min(1, dt*3.5);
+  }
+  // organ kunang-kunang: tumbuh tiap fakta dicerna
+  const ingin=Math.min(14, Math.ceil(S.stat.fakta/6));
+  while(NADI.kunang.length<ingin) NADI.kunang.push({s:Math.random()*7, o:Math.floor(Math.random()*NADI.NS), rr:8+Math.random()*14, a:0});
+  for(const k of NADI.kunang){ k.a+=(1-k.a)*Math.min(1, dt); k.s+=dt*(0.55+0.3*Math.sin(k.o*3)); }
+  if(NADI.kunang.length>ingin) for(const k of NADI.kunang) k.a=Math.max(0, k.a-dt*0.35);
+  NADI.flair*=Math.pow(0.15, dt);
+}
+/* partikel byte = karakter isi file ASLI mengalir lewat probosis */
+let PARTIKEL=[]; let _dt=0.016;
 function partikelByte(path, buf, got){
-  const n=LAYOUT.nodes.get(path); if(!n || PARTIKEL.length>130) return;
+  const n=LAYOUT.nodes.get(path); if(!n || PARTIKEL.length>60) return;
   const teks=buf.slice(-46).replace(/\s+/g,'');
   if(!teks) return;
-  const pot=teks.slice(Math.max(0, teks.length-4));
-  for(let i=0;i<2;i++){
-    PARTIKEL.push({x:n.x+(Math.random()-0.5)*14, y:n.y+(Math.random()-0.5)*14,
-      tx:BOB.x, ty:BOB.y, ch:pot.slice(i*2, i*2+2)||'01', hidup:1});
-  }
-  BOB.ener=1;
+  const pot=teks.slice(-4);
+  PARTIKEL.push({x:n.x+(Math.random()-0.5)*10, y:n.y+(Math.random()-0.5)*10,
+    tx:NADI.x, ty:NADI.y, ch:pot.slice(Math.floor(Math.random()*3), Math.floor(Math.random()*3)+2)||'01', hidup:1});
 }
-let T0=performance.now(), denyutT=0;
-function gambar(){
-  const t=(performance.now()-T0)/1000;
-  cx.setTransform(DPR,0,0,DPR,0,0);
-  cx.clearRect(0,0,innerWidth,innerHeight);
-  // latar bintang deterministik
-  cx.save();
-  for(let i=0;i<70;i++){ const h=fnv('bintang'+i);
-    const x=(h%10000)/10000*innerWidth, y=((h>>>7)%10000)/10000*innerHeight;
-    cx.globalAlpha=0.12+0.18*Math.sin(t*0.6+i); cx.fillStyle='#9fb4dd';
-    cx.fillRect(x, y, 1.4, 1.4); }
-  cx.restore();
-  // bingkai dunia
-  cx.strokeStyle='rgba(84,216,255,.10)'; cx.lineWidth=1;
-  cx.strokeRect(bebas.x-4, bebas.y-4, bebas.w+8, bebas.h+8);
-  // ---------- PETA REPO ----------
-  const sc=skala;
-  // cluster label
-  cx.textAlign='center';
-  for(const c of LAYOUT.clusters){
-    cx.font='600 10px ui-monospace,monospace';
-    cx.fillStyle='rgba(167,139,255,.8)';
-    cx.fillText(c.dir+' · '+c.n, W2X(c.x), W2Y(c.y)-4);
-    cx.font='9px ui-monospace,monospace';
-    cx.fillStyle='rgba(125,141,176,.5)';
-    cx.fillText(kb(c.tot), W2X(c.x), W2Y(c.y)+9);
+let RIAK=[];
+function riak(x,y){ RIAK.push({x,y,r:5,a:0.55}); if(RIAK.length>12) RIAK.shift(); }
+/* pointer utk kedekatan label */
+const P={x:-999,y:-999,aktif:false};
+addEventListener('pointermove', e=>{ P.x=e.clientX; P.y=e.clientY; P.aktif=true; }, {passive:true});
+addEventListener('pointerleave', ()=>{ P.aktif=false; });
+
+/* ================= GAMBAR ================= */
+function rr(x,y,w,h,r){
+  cx.beginPath();
+  cx.moveTo(x+r,y); cx.lineTo(x+w-r,y); cx.quadraticCurveTo(x+w,y,x+w,y+r);
+  cx.lineTo(x+w,y+h-r); cx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  cx.lineTo(x+r,y+h); cx.quadraticCurveTo(x,y+h,x,y+h-r);
+  cx.lineTo(x,y+r); cx.quadraticCurveTo(x,y,x+r,y); cx.closePath();
+}
+function berlian(x,y,r){
+  cx.beginPath(); cx.moveTo(x,y-r); cx.lineTo(x+r*0.8,y); cx.lineTo(x,y+r); cx.lineTo(x-r*0.8,y); cx.closePath();
+}
+function jarakKeRect(px,py,r){
+  const dx=Math.max(r.x-px, 0, px-(r.x+r.w)), dy=Math.max(r.y-py, 0, py-(r.y+r.h));
+  return Math.hypot(dx,dy);
+}
+const FONT_L='10px "Inter","SF Pro Text",-apple-system,"Segoe UI",Roboto,sans-serif';
+const FONT_Z='600 9.5px "Inter","SF Pro Text",-apple-system,"Segoe UI",Roboto,sans-serif';
+function gambarHabitat(t){
+  const pos=[]; if(P.aktif) pos.push(P); pos.push({x:NADI.x, y:NADI.y});
+  // zona: garis samar + rune; menyala saat makhluk/penonton mendekat
+  for(const z of LAYOUT.zona){
+    let prox=0;
+    for(const p of pos){ const d=jarakKeRect(p.x,p.y,z.rect); prox=Math.max(prox, Math.max(0, 1-d/90)); }
+    const tgtZona=S.kerja.target && S.kerja.target.startsWith('pasar:')===false &&
+      LAYOUT.nodes.get(S.kerja.target)?.dir && z.dirs.includes(LAYOUT.nodes.get(S.kerja.target)?.dir);
+    const al=0.045+prox*0.07+(tgtZona?0.05:0);
+    cx.strokeStyle=`rgba(255,255,255,${al.toFixed(3)})`; cx.lineWidth=1;
+    rr(z.rect.x+6, z.rect.y+6, z.rect.w-12, z.rect.h-12, 14); cx.stroke();
+    // rune zona — hanya jelas saat didekati
+    const ra=0.05+prox*0.8;
+    cx.font=FONT_Z; cx.textAlign='left'; cx.textBaseline='alphabetic';
+    cx.fillStyle=`rgba(148,161,186,${ra.toFixed(3)})`;
+    cx.fillText(z.nama, z.rect.x+16, z.rect.y+22);
+    cx.fillStyle=`rgba(91,103,128,${(ra*0.7).toFixed(3)})`;
+    cx.fillText(String(z.n), z.rect.x+16, z.rect.y+34);
   }
-  cx.strokeStyle='rgba(26,36,56,.9)';
-  for(const c of LAYOUT.clusters){ cx.beginPath(); cx.arc(W2X(c.x), W2Y(c.y), S2W(Math.min(bebas.w,bebas.h)*0.06), 0, 7); cx.stroke(); }
-  // node file
+  // sarang — cekungan cahaya bernapas seirama makhluk
+  const den=LAYOUT.den;
+  const gl=cx.createRadialGradient(den.x,den.y,2, den.x,den.y,den.r*1.5);
+  gl.addColorStop(0,`rgba(79,224,194,${(0.10+0.05*Math.sin(NADI.napas)).toFixed(3)})`);
+  gl.addColorStop(1,'rgba(79,224,194,0)');
+  cx.fillStyle=gl; cx.beginPath(); cx.arc(den.x,den.y,den.r*1.5,0,7); cx.fill();
+  cx.strokeStyle='rgba(79,224,194,.16)'; cx.lineWidth=1;
+  cx.beginPath(); cx.ellipse(den.x,den.y,den.r*1.05,den.r*0.8,0,0,7); cx.stroke();
+  // sel file = sisik berlian rapi
   for(const [path,n] of LAYOUT.nodes){
     const st=statusNode(path), b=S.baca[path];
-    const px=W2X(n.x), py=W2Y(n.y), pr=Math.max(2.5, n.r*(bebas.w/LAYOUT.w)*1.6);
-    const sedang=S.kerja.target===path;
-    // denyut utk node berubah
-    const pulse = st==='b3' ? 1+0.22*Math.sin(t*4) : 1;
-    if(sedang){ cx.beginPath(); cx.arc(px,py,pr*2.6+3*Math.sin(t*6),0,7);
-      cx.strokeStyle='rgba(84,216,255,.5)'; cx.lineWidth=1.5; cx.stroke(); }
-    cx.beginPath(); cx.arc(px,py,pr*pulse,0,7);
-    cx.fillStyle=WARNA[st]; cx.globalAlpha= st==='b0'?0.5: 0.95;
-    cx.shadowColor=WARNA[st]; cx.shadowBlur= st==='b0'?0: 12;
-    cx.fill(); cx.shadowBlur=0; cx.globalAlpha=1;
-    if(st!=='b0' && b){ cx.strokeStyle=st==='b1'?'rgba(255,209,102,.5)':'rgba(56,232,168,.5)';
-      cx.beginPath(); cx.arc(px,py,pr+3.5,0,7); cx.stroke(); }
-    // nama file utk node besar/aktif
-    if(pr>6 || sedang || st==='b3'){
-      cx.font=(sedang?'700 ':'')+'9px ui-monospace,monospace';
-      cx.fillStyle=sedang?'#fff':(st==='b0'?'rgba(125,141,176,.7)':WARNA[st]);
-      cx.fillText(path.split('/').pop(), px, py-pr-4);
+    const sedang=S.kerja.target===path && S.kerja.sibuk;
+    let r=n.r*(1+0.06*Math.sin(t*1.6+n.x*0.05));
+    let al, stroke=null;
+    if(st==='ubah'){ r*=1+0.3*Math.sin(t*4.6); al=0.55+0.4*Math.sin(t*4.6); }
+    else if(st==='baca') al=0.6;
+    else if(st==='parsial') al=0.34;
+    else al=0.14;
+    if(sedang){ al=1;
+      cx.strokeStyle='rgba(79,224,194,.5)'; cx.lineWidth=1.2;
+      cx.beginPath(); cx.arc(n.x,n.y,r*2.4+2.5*Math.sin(t*5),0,7); cx.stroke();
     }
+    berlian(n.x,n.y,r);
+    cx.fillStyle= st==='kosong' ? `rgba(148,161,186,${al.toFixed(3)})` : `rgba(79,224,194,${al.toFixed(3)})`;
+    cx.fill();
+    if(st==='baca'||st==='parsial'){ cx.strokeStyle=`rgba(79,224,194,${(al*0.5).toFixed(3)})`; cx.lineWidth=0.8; cx.stroke(); }
   }
-  // ---------- CYBORG AMORF ----------
-  // target kerja
-  let tgt=null;
-  if(S.kerja.target){
-    if(S.kerja.target.startsWith('pasar:')){ tgt=PASAR_POS[S.kerja.target.slice(6)]||null; }
-    else tgt=LAYOUT.nodes.get(S.kerja.target);
-  }
-  if(tgt){ BOB.tx=tgt.x; BOB.ty=tgt.y; }
-  else { BOB.tx=LAYOUT.w/2+Math.cos(t*0.24)*LAYOUT.w*0.06; BOB.ty=LAYOUT.h/2+Math.sin(t*0.19)*LAYOUT.h*0.10; }
-  BOB.x+=(BOB.tx-BOB.x)*0.014; BOB.y+=(BOB.ty-BOB.y)*0.014;
-  BOB.ener*=0.97;
-  const bx=W2X(BOB.x), by=W2Y(BOB.y);
-  const R=(22+5*Math.sin(t*1.3)+8*BOB.ener)*(bebas.w/LAYOUT.w)*2.2;
-  const warnaBob=S.kerja.fase==='MENGAMATI'?'#54d8ff':S.kerja.fase==='MELAKUKAN'?'#ffd166':
-    S.kerja.fase==='MENEMUKAN'?'#38e8a8':S.kerja.fase==='MENGEVALUASI'?'#a78bff':'#54d8ff';
-  // filamen ke target saat bekerja
-  if(tgt && S.kerja.sibuk){
-    cx.save(); cx.setLineDash([4,5]); cx.lineDashOffset=-t*30;
-    cx.strokeStyle='rgba(84,216,255,.55)'; cx.lineWidth=1.4;
-    cx.beginPath(); cx.moveTo(bx,by);
-    cx.quadraticCurveTo((bx+W2X(tgt.x))/2, Math.min(by,W2Y(tgt.y))-26, W2X(tgt.x), W2Y(tgt.y));
-    cx.stroke(); cx.restore();
-  }
-  // membran blob
-  cx.save(); cx.translate(bx,by);
-  cx.beginPath();
-  const NPT=16;
-  for(let i=0;i<=NPT;i++){ const a=i/NPT*Math.PI*2;
-    const rr=R*(1+0.10*Math.sin(t*2.1+i*2.2)+0.05*Math.sin(t*3.7+i*1.3)+0.06*BOB.ener*Math.sin(t*9+i));
-    const px=Math.cos(a)*rr, py=Math.sin(a)*rr*0.92;
-    i?cx.lineTo(px,py):cx.moveTo(px,py); }
-  cx.closePath();
-  const gr=cx.createRadialGradient(0,0,2,0,0,R);
-  gr.addColorStop(0,'rgba(84,216,255,.85)'); gr.addColorStop(0.55,'rgba(84,216,255,.22)'); gr.addColorStop(1,'rgba(84,216,255,0)');
-  cx.fillStyle=gr; cx.shadowColor=warnaBob; cx.shadowBlur=24; cx.fill(); cx.shadowBlur=0;
-  cx.strokeStyle=warnaBob; cx.lineWidth=1.6; cx.stroke();
-  // inti
-  cx.beginPath(); cx.arc(0,0,R*0.24*(1+0.14*Math.sin(t*2.6)),0,7);
-  cx.fillStyle='#eaf7ff'; cx.fill();
-  // motes orbit
-  for(let i=0;i<3;i++){ const a=t*(1.1+i*0.35)+i*2.1;
-    cx.beginPath(); cx.arc(Math.cos(a)*R*1.18, Math.sin(a)*R*1.08, 2.1, 0, 7);
-    cx.fillStyle=warnaBob; cx.globalAlpha=0.8; cx.fill(); cx.globalAlpha=1; }
-  cx.restore();
-  // partikel byte = karakter kode ASLI mengalir ke cyborg
-  cx.font='10px ui-monospace,monospace'; cx.textAlign='left';
-  PARTIKEL=PARTIKEL.filter(p=>p.hidup>0);
-  for(const p of PARTIKEL){
-    p.x+=(p.tx-p.x)*0.075; p.y+=(p.ty-p.y)*0.075;
-    if(Math.hypot(p.x-p.tx,p.y-p.ty)<8) p.hidup=0;
-    cx.globalAlpha=Math.min(1,p.hidup+0.15); cx.fillStyle='#8be6ff';
-    cx.fillText(p.ch, W2X(p.x), W2Y(p.y)); cx.globalAlpha=1; p.hidup-=0.008;
-  }
-  // ---------- STRIP PASAR (lilin nyata) ----------
-  gambarPasar(t);
 }
-const PASAR_POS={};
-function gambarPasar(t){
-  const syms=Object.keys(S.pasar).slice(0,3);
-  const stripY=LAYOUT.h-84, stripH=84;
-  PASAR_POS._y=stripY+stripH/2;
-  cx.textAlign='left'; cx.font='600 10px ui-monospace,monospace';
-  if(!syms.length){ cx.fillStyle='rgba(125,141,176,.55)';
-    cx.fillText('PASAR — menunggu sasaran dari cermin arena…', W2X(16), W2Y(stripY+22)); return; }
-  syms.forEach((s,i)=>{
-    const p=S.pasar[s]; const cellW=LAYOUT.w/syms.length;
-    const ox=16+i*cellW, oy=stripY+14, cw=Math.min(cellW-90, 190), chh=48;
-    PASAR_POS[s]={x:ox+cw/2, y:oy+chh/2};
-    cx.fillStyle='rgba(84,216,255,.8)';
-    cx.fillText(s, W2X(ox), W2Y(oy+8));
-    if(p.chg!==undefined){ cx.fillStyle=p.chg>=0?'#38e8a8':'#ff6b8f';
-      cx.fillText((p.chg>=0?'+':'')+p.chg.toFixed(2)+'% 24j', W2X(ox+58), W2Y(oy+8)); }
-    const oc=p.oc||[];
-    if(oc.length>2){
+/* kolam pasar: 3 sumur data Binance */
+function wellSyms(){
+  const set=[]; const dor=s=>{ if(s && !set.includes(s) && set.length<3) set.push(s); };
+  for(const s of simbolSasaran()) dor(s);
+  for(const s of Object.keys(S.pasar)) dor(s);
+  return set;
+}
+function gambarPond(t){
+  const pr=LAYOUT.pond; if(!pr) return;
+  const syms=wellSyms();
+  POND_POS={};
+  const n=Math.max(1, syms.length||1);
+  const cw=pr.w/Math.max(2, Math.min(3, syms.length||3));
+  const cy=pr.y+pr.h*0.56;
+  // rune kolam
+  let prox=0;
+  if(P.aktif) prox=Math.max(prox, Math.max(0, 1-jarakKeRect(P.x,P.y,pr)/90));
+  prox=Math.max(prox, Math.max(0, 1-jarakKeRect(NADI.x,NADI.y,pr)/90));
+  cx.font=FONT_Z; cx.textAlign='left';
+  cx.fillStyle=`rgba(148,161,186,${(0.05+prox*0.8).toFixed(3)})`;
+  cx.fillText('PASAR', pr.x+16, pr.y+22);
+  const cnt=Math.min(3, Math.max(syms.length, 1));
+  for(let i=0;i<cnt;i++){
+    const s=syms[i];
+    const wx=pr.x+pr.w*(i+0.5)/cnt, wy=cy;
+    if(s) POND_POS[s]={x:wx, y:wy};
+    const p=s?S.pasar[s]:null;
+    cx.strokeStyle='rgba(255,255,255,.10)'; cx.lineWidth=1;
+    cx.beginPath(); cx.arc(wx,wy,15,0,7); cx.stroke();
+    if(sedangPasar(s)){ cx.strokeStyle='rgba(79,224,194,.5)';
+      cx.beginPath(); cx.arc(wx,wy,19+2.5*Math.sin(t*5),0,7); cx.stroke(); }
+    if(p && p.oc && p.oc.length>2){
+      const oc=p.oc.slice(-40);
       const lo=Math.min(...oc.map(x=>x[1])), hi=Math.max(...oc.map(x=>x[1]));
       const rng=hi-lo||1;
-      oc.forEach((x,j)=>{ const px=W2X(ox+j*(cw/oc.length));
-        const cy0=W2Y(oy+chh - ((x[1]-lo)/rng)*chh);
-        const cy1=W2Y(oy+chh - ((x[0]-lo)/rng)*chh);
-        cx.strokeStyle=x[1]>=x[0]?'rgba(56,232,168,.8)':'rgba(255,107,143,.8)';
-        cx.lineWidth=1.4; cx.beginPath(); cx.moveTo(px,cy0); cx.lineTo(px,Math.max(cy0,cy1)); cx.stroke(); });
-    } else { cx.fillStyle='rgba(125,141,176,.5)'; cx.fillText('menghitung dari lilin hidup…', W2X(ox), W2Y(oy+chh/2)); }
-    if(p.audit){ cx.fillStyle=p.audit.vonis==='SEPAKAT'?'#38e8a8':p.audit.vonis==='MENDEVIASI'?'#ff6b8f':'#ffd166';
-      cx.font='9px ui-monospace,monospace'; cx.fillText('AUDIT '+p.audit.vonis, W2X(ox), W2Y(oy+chh+12)); cx.font='600 10px ui-monospace,monospace'; }
-  });
+      cx.strokeStyle='rgba(79,224,194,.75)'; cx.lineWidth=1.1; cx.beginPath();
+      oc.forEach((x,j)=>{ const ox=wx-12+j*(24/oc.length), oy=wy+7-((x[1]-lo)/rng)*14;
+        j?cx.lineTo(ox,oy):cx.moveTo(ox,oy); });
+      cx.stroke();
+    } else if(s){
+      cx.fillStyle='rgba(148,161,186,.35)'; cx.beginPath(); cx.arc(wx,wy,2,0,7); cx.fill();
+    }
+    if(s && prox>0.25){
+      cx.font=FONT_Z; cx.fillStyle=`rgba(233,238,248,${(prox*0.95).toFixed(3)})`; cx.textAlign='center';
+      cx.fillText(s.replace('USDT',''), wx, wy-21); cx.textAlign='left';
+    }
+  }
+}
+function sedangPasar(sym){ return S.kerja.target==='pasar:'+sym && S.kerja.sibuk; }
+/* probosis + aliran karakter saat membaca */
+function gambarBacaan(t){
+  if(!(S.kerja.sibuk && S.kerja.target)) { PARTIKEL=PARTIKEL.filter(p=>p.hidup>0); return; }
+  let tgt=null;
+  if(S.kerja.target.startsWith('pasar:')) tgt=POND_POS[S.kerja.target.slice(6)]||null;
+  else { const n=LAYOUT.nodes.get(S.kerja.target); tgt=n?{x:n.x,y:n.y}:null; }
+  if(tgt){
+    const mulut={x:NADI.x+Math.cos(NADI.hd)*12, y:NADI.y+Math.sin(NADI.hd)*12};
+    cx.save(); cx.setLineDash([3,4]); cx.lineDashOffset=-t*26;
+    cx.strokeStyle='rgba(79,224,194,.6)'; cx.lineWidth=1.4;
+    cx.beginPath(); cx.moveTo(mulut.x,mulut.y);
+    const mx=(mulut.x+tgt.x)/2, my=Math.min(mulut.y,tgt.y)-16;
+    cx.quadraticCurveTo(mx,my,tgt.x,tgt.y); cx.stroke(); cx.restore();
+  }
+  cx.font=FONT_L; cx.textAlign='left';
+  PARTIKEL=PARTIKEL.filter(p=>p.hidup>0);
+  for(const p of PARTIKEL){
+    p.tx=NADI.x; p.ty=NADI.y;
+    p.x+=(p.tx-p.x)*Math.min(1, _dt*4.5+0.03);
+    p.y+=(p.ty-p.y)*Math.min(1, _dt*4.5+0.03);
+    if(Math.hypot(p.x-p.tx, p.y-p.ty)<9) p.hidup=0;
+    cx.globalAlpha=Math.min(1, p.hidup+0.1);
+    cx.fillStyle='#bdf2e6';
+    cx.fillText(p.ch, p.x, p.y);
+    cx.globalAlpha=1; p.hidup-=0.012;
+  }
+}
+/* NADI itu sendiri */
+function gambarNadi(t){
+  const dim=Math.max(0.12, NADI.dim);
+  const breathR=1+0.085*Math.sin(NADI.napas);
+  const R=(13.5+3*Math.sin(NADI.napas*0.9))*Math.max(0.8, dim)+NADI.startle*2.5;
+  const pts=[{x:NADI.x, y:NADI.y}, ...NADI.seg];
+  const widAt=(i)=>(R*(1-0.72*i/pts.length)+1.6)*breathR;
+  // membran tubuh: garis luar melebar-menipis
+  const L=[], Rt=[];
+  for(let i=0;i<pts.length;i++){
+    const a=pts[Math.max(0,i-1)], b=pts[Math.min(pts.length-1,i+1)];
+    let ang=Math.atan2(b.y-a.y, b.x-a.x)+Math.PI/2;
+    if(i===0) ang=NADI.hd+Math.PI/2;
+    const w=widAt(i);
+    L.push({x:pts[i].x+Math.cos(ang)*w, y:pts[i].y+Math.sin(ang)*w});
+    Rt.push({x:pts[i].x-Math.cos(ang)*w, y:pts[i].y-Math.sin(ang)*w});
+  }
+  cx.beginPath();
+  cx.moveTo(L[0].x, L[0].y);
+  for(let i=1;i<L.length;i++) cx.lineTo(L[i].x, L[i].y);
+  cx.lineTo(pts[pts.length-1].x, pts[pts.length-1].y);
+  for(let i=Rt.length-1;i>=0;i--) cx.lineTo(Rt[i].x, Rt[i].y);
+  cx.closePath();
+  const gr=cx.createRadialGradient(NADI.x,NADI.y,2, NADI.x,NADI.y,R*4.2);
+  gr.addColorStop(0,`rgba(79,224,194,${(0.30*dim).toFixed(3)})`);
+  gr.addColorStop(0.5,`rgba(79,224,194,${(0.12*dim).toFixed(3)})`);
+  gr.addColorStop(1,'rgba(79,224,194,0)');
+  cx.fillStyle=gr; cx.fill();
+  cx.strokeStyle=`rgba(79,224,194,${(0.5*dim).toFixed(3)})`; cx.lineWidth=1.1; cx.stroke();
+  // silia — gelombang napas menjalar ke ekor
+  for(let i=1;i<pts.length;i++){
+    const a=pts[i-1], b=pts[i];
+    const ang=Math.atan2(b.y-a.y, b.x-a.x)+Math.PI/2;
+    const wv=Math.sin(NADI.napas*2-i*0.55);
+    const len=(6.5-i*0.32)*(0.45+0.55*dim)*(0.72+0.28*wv);
+    if(len<=1.2) continue;
+    for(const s of [1,-1]){
+      const hx=pts[i].x+Math.cos(ang)*s*widAt(i), hy=pts[i].y+Math.sin(ang)*s*widAt(i);
+      cx.strokeStyle=`rgba(79,224,194,${(0.42*dim*(0.6+0.4*wv)).toFixed(3)})`; cx.lineWidth=0.9;
+      cx.beginPath(); cx.moveTo(hx,hy);
+      cx.lineTo(hx+Math.cos(ang+s*0.35+wv*0.18)*len*s*0.9, hy+Math.sin(ang+s*0.35+wv*0.18)*len*s*0.9);
+      cx.stroke();
+    }
+  }
+  // organ kunang-kunang — pertumbuhan terlihat dari tubuh
+  for(const k of NADI.kunang){
+    if(k.a<=0.01) continue;
+    const seg=pts[k.o%pts.length];
+    const kx=seg.x+Math.cos(k.s)*k.rr, ky=seg.y+Math.sin(k.s*0.8)*k.rr*0.7;
+    cx.globalAlpha=k.a*0.75*dim;
+    cx.fillStyle='#d8fff4';
+    cx.beginPath(); cx.arc(kx,ky,1.5,0,7); cx.fill();
+    cx.globalAlpha=1;
+  }
+  // sulur peraba
+  for(let i=0;i<2;i++){
+    const s=NADI.sulur[i];
+    cx.strokeStyle=`rgba(79,224,194,${(0.4*dim).toFixed(3)})`; cx.lineWidth=0.9;
+    cx.beginPath(); cx.moveTo(NADI.x+Math.cos(NADI.hd+(i?0.5:-0.5))*9, NADI.y+Math.sin(NADI.hd+(i?0.5:-0.5))*9);
+    cx.quadraticCurveTo((NADI.x+s.x)/2, (NADI.y+s.y)/2-4, s.x, s.y); cx.stroke();
+    cx.fillStyle=`rgba(79,224,194,${(0.8*dim).toFixed(3)})`;
+    cx.beginPath(); cx.arc(s.x,s.y,1.4,0,7); cx.fill();
+  }
+  // kepala tarung + satu mata
+  cx.save();
+  cx.translate(NADI.x, NADI.y); cx.rotate(NADI.hd);
+  cx.shadowColor='rgba(79,224,194,.9)'; cx.shadowBlur=16*dim;
+  const hg=cx.createRadialGradient(0,0,1, 0,0,R*1.3);
+  hg.addColorStop(0,`rgba(210,255,244,${(0.9*dim).toFixed(3)})`);
+  hg.addColorStop(0.55,`rgba(79,224,194,${(0.4*dim).toFixed(3)})`);
+  hg.addColorStop(1,'rgba(79,224,194,0)');
+  cx.fillStyle=hg;
+  cx.beginPath(); cx.ellipse(0,0,R*1.22*breathR, R*0.98*breathR, 0, 0, 7); cx.fill();
+  cx.shadowBlur=0;
+  // mata — kelopak menutup saat TIDAK BANGUN / berkedip
+  const buka=Math.max(0.04, NADI.mata.buka);
+  cx.save(); cx.scale(1, buka);
+  cx.strokeStyle=`rgba(6,19,26,.85)`; cx.lineWidth=1.4;
+  cx.beginPath(); cx.arc(0,0,R*0.5,0,7); cx.stroke();
+  cx.fillStyle='#07131b';
+  cx.beginPath(); cx.arc(NADI.mata.px*R*0.62, NADI.mata.py*R*0.62, R*0.26*(1+0.45*NADI.startle), 0, 7); cx.fill();
+  cx.fillStyle='rgba(233,238,248,.85)';
+  cx.beginPath(); cx.arc(NADI.mata.px*R*0.62-R*0.08, NADI.mata.py*R*0.62-R*0.08, R*0.07, 0, 7); cx.fill();
+  cx.restore();
+  cx.restore();
+  // riak penemuan (MENEMUKAN → flair)
+  if(S.kerja.fase==='MENEMUKAN' && NADI.flair<0.05){ NADI.flair=1; riak(NADI.x,NADI.y); }
+}
+function gambarLabel(){
+  cx.font=FONT_L; cx.textBaseline='alphabetic';
+  const kandidat=[];
+  // nama file muncul HANYA saat didekati penonton / makhluk, atau sedang dibaca
+  if(P.aktif){
+    let best=null, bd=64;
+    for(const [path,n] of LAYOUT.nodes){ const d=Math.hypot(P.x-n.x,P.y-n.y); if(d<bd){bd=d;best={path,n,d};} }
+    if(best) kandidat.push({...best, a:1-best.d/64, pri:1});
+  }
+  {
+    let best=null, bd=70;
+    for(const [path,n] of LAYOUT.nodes){ const d=Math.hypot(NADI.x-n.x,NADI.y-n.y); if(d<bd){bd=d;best={path,n,d};} }
+    if(best) kandidat.push({...best, a:(1-best.d/70)*0.9, pri:2});
+  }
+  if(S.kerja.target && !S.kerja.target.startsWith('pasar:')){
+    const n=LAYOUT.nodes.get(S.kerja.target);
+    if(n) kandidat.push({path:S.kerja.target, n, a:1, pri:0});
+  }
+  kandidat.sort((a,b)=>a.pri-b.pri);
+  cx.textAlign='center';
+  const kotak=[];                                  // anti tumpang tindih antar-label
+  for(const k of kandidat){
+    const al=Math.max(0, Math.min(1, k.a));
+    if(al<0.05) continue;
+    const nm=k.path.split('/').pop();
+    const w=cx.measureText(nm).width, x0=k.n.x-w/2-4, x1=k.n.x+w/2+4, y0=k.n.y-k.n.r-17, y1=k.n.y-k.n.r-2;
+    if(kotak.some(b=>!(x1<b.x0||x0>b.x1||y1<b.y0||y0>b.y1))) continue;
+    kotak.push({x0,x1,y0,y1});
+    cx.fillStyle=`rgba(233,238,248,${(al*0.92).toFixed(3)})`;
+    cx.fillText(nm, k.n.x, k.n.y-k.n.r-6);
+  }
+  cx.textAlign='left';
+}
+function gambar(t, dt){
+  _dt=dt;
+  nadiUpdate(dt, t);
+  cx.setTransform(DPR,0,0,DPR,0,0);
+  cx.fillStyle='#05070d'; cx.fillRect(0,0,innerWidth,innerHeight);
+  // debu halus — dunia bernapas pelan
+  cx.fillStyle='rgba(148,161,186,.16)';
+  for(let i=0;i<26;i++){
+    const h=fnv('debu'+i);
+    const dx=((h%10000)/10000)*innerWidth + Math.sin(t*0.05+i*1.7)*22;
+    const dy=(((h>>>7)%10000)/10000)*innerHeight + Math.cos(t*0.04+i)*14;
+    cx.globalAlpha=0.04+0.05*Math.sin(t*0.5+i);
+    cx.fillRect(dx, dy, 1.3, 1.3);
+  }
+  cx.globalAlpha=1;
+  if(VIG){ cx.fillStyle=VIG; cx.fillRect(0,0,innerWidth,innerHeight); }
+  gambarHabitat(t);
+  gambarPond(t);
+  gambarBacaan(t);
+  gambarNadi(t);
+  gambarLabel();
+  // riak sentuhan/temuan
+  RIAK=RIAK.filter(r=>r.a>0.02);
+  for(const r of RIAK){
+    r.r+=110*dt; r.a-=dt*1.1;
+    cx.strokeStyle=`rgba(79,224,194,${Math.max(0,r.a).toFixed(3)})`; cx.lineWidth=1.2;
+    cx.beginPath(); cx.arc(r.x,r.y,r.r,0,7); cx.stroke();
+  }
 }
 
-/* ================= OVERLAY: HUD + TAB ================= */
-let S_TAB='pikir';
-function hudRender(){
-  const el=(id)=>document.getElementById(id);
+/* ================= INTERAKSI ================= */
+function sentuh(ev){
+  const x=ev.clientX, y=ev.clientY;
+  if(Math.hypot(x-NADI.x, y-NADI.y)<38){ NADI.startle=1; riak(x,y); sapa(); return; }
+  let terbaik=null, dmin=26;
+  for(const [path,n] of LAYOUT.nodes){ const d=Math.hypot(x-n.x,y-n.y); if(d<dmin){dmin=d; terbaik={path,n};} }
+  if(terbaik){ S.perintah=terbaik.path; S.petaPilih=terbaik.path; petaRender(); riak(terbaik.n.x, terbaik.n.y); }
+  else riak(x,y);
+}
+cv.addEventListener('click', sentuh);
+function sapa(){
   const n=S.pohon.files.length, baca=Object.keys(S.baca).length;
-  const status=el('hStatus');
-  if(S.terputus && !n){ status.textContent='TERPUTUS — hidup dari ingatan'; status.className='chip sub l00'; }
-  else if(S.pohon.live){ status.innerHTML=`REPO-LIVE via <b>${S.pohon.sumber}</b>`; status.className='chip sub l22'; }
-  else { status.innerHTML=`PETA-CACHE · umur ${umur(sekarang()-S.pohon.at)}`; status.className='chip sub l11'; }
-  el('hPohon').textContent = n? `rumah: ${n} file · ${kb(S.pohon.files.reduce((a,f)=>a+f.size,0))}` : 'pohon: —';
-  el('hBaca').innerHTML=`<b>${baca}/${n||'…'}</b> file terbaca`;
-  el('hFakta').innerHTML=`<b>${S.stat.fakta}</b> fakta · ${kb(Math.max(0,S.stat.bytes))}`;
-  el('hUmur').textContent='umur '+umur(sekarang()-S.stat.lahirAt);
+  const kodeVersi=(S.baca['versi.json']?.fakta.join(' ').match(/kodeVersi <b>([^<]+)<\/b>/)||[])[1];
+  const hr=(S.baca['arena-keadaan.json']?.fakta.join(' ').match(/hit-rate <b>([^<]+)<\/b>/)||[])[1];
+  const el=document.getElementById('sapa');
+  const s1=S1.keadaan;
+  el.innerHTML=`<b>AKU NADI — CYBORG MICAPROFITA, DUA SADARI.</b><br>
+    Rumahku <b>${n} file</b>; terbaca <b>${baca}/${n}</b> (${kb(Math.max(0,S.stat.bytes))} kode, ${S.stat.fakta} fakta nyata).
+    ${kodeVersi?`Otak arena versi <b>${kodeVersi}</b>.`:''} ${hr?`Hit-rate diriku di arena ${hr}.`:''}<br>
+    Pasar: <b>${Object.keys(S.pasar).length}</b> simbol dari lilin Binance hidup, ${S.stat.btTotal} uji-jalan nyata.<br>
+    ${s1?`Sadar-1 (tubuh otonomku) bangun ke-<b>${s1.bangunKe}</b> di GitHub Actions — walau tak ada penonton.`:'Sadar-1 belum terbaca — menghubungi GitHub…'}
+    <div class="lab">sentuh tombol pojok untuk membuka maklumatku</div>`;
+  el.hidden=false;
+  requestAnimationFrame(()=>el.classList.add('tampak'));
+  el.style.left=Math.min(innerWidth-350, Math.max(12, NADI.x+30))+'px';
+  el.style.top=Math.max(14, Math.min(innerHeight-190, NADI.y-70))+'px';
+  clearTimeout(el._t); el._t=setTimeout(()=>{ el.classList.remove('tampak'); setTimeout(()=>el.hidden=true, 380); }, 6500);
+  jurnal('SAPA', `kupandukkan diri ke pemilik: ${baca}/${n} file, ${S.stat.fakta} fakta, ${Object.keys(S.pasar).length} simbol pasar`);
+}
+/* overlay: buka lewat satu tombol, tutup lewat tombol yang sama / geser ke bawah */
+const ovEl=document.getElementById('overlay'), pintuEl=document.getElementById('pintu');
+function bukaOverlay(){ ovEl.classList.add('buka'); pintuEl.classList.add('on');
+  if(S.tabAktif==='peta') petaRender(); if(S.tabAktif==='pasar') pasarRender(); if(S.tabAktif==='jurnal') jurnalRender(); }
+function tutupOverlay(){ ovEl.classList.remove('buka'); pintuEl.classList.remove('on'); }
+pintuEl.addEventListener('click', ()=> ovEl.classList.contains('buka') ? tutupOverlay() : bukaOverlay());
+(function geserTutup(){
+  let y0=null, dy=0, tarik=false;
+  const mulai=e=>{ if(innerWidth>760) return; y0=e.clientY; dy=0; tarik=true; ovEl.style.transition='none'; };
+  const gerak=e=>{ if(!tarik) return; dy=Math.max(0, e.clientY-y0);
+    ovEl.style.transform=`translateY(${dy}px)`; };
+  const akhir=()=>{ if(!tarik) return; tarik=false; y0=null;
+    ovEl.style.transition=''; ovEl.style.transform='';
+    if(dy>90) tutupOverlay(); };
+  document.getElementById('ovHandle').addEventListener('pointerdown', mulai);
+  document.getElementById('ovKepala').addEventListener('pointerdown', mulai);
+  addEventListener('pointermove', gerak, {passive:true});
+  addEventListener('pointerup', akhir, {passive:true});
+})();
+/* ================= RENDER OVERLAY (satu-satunya tempat teks) ================= */
+let S_TAB='pikir';
+function ovStatusRender(){
+  const dot=document.getElementById('ovDot'), st=document.getElementById('ovStatus'), mt=document.getElementById('ovMeta');
+  if(!dot || !st) return;
+  const tub=keadaanTubuh();
+  dot.className = tub.mode==='sehat'?'sehat': tub.mode==='telat'?'telat': tub.mode==='tidak-bangun'?'mati':'';
+  const n=S.pohon.files.length, baca=Object.keys(S.baca).length;
+  let s;
+  if(S.terputus && !n) s='TERPUTUS — hidup dari ingatan';
+  else if(S.pohon.live) s=`REPO-LIVE via ${S.pohon.sumber} · ${n} file`;
+  else if(n) s=`peta-cache · umur ${umur(sekarang()-S.pohon.at)}`;
+  else s='memindai rumah…';
+  st.textContent=s;
+  mt.textContent=`${baca}/${n} terbaca · ${S.stat.fakta} fakta · ${kb(Math.max(0,S.stat.bytes))} · umur hidup ${umur(sekarang()-S.stat.lahirAt)}`;
 }
 function stripRender(){
-  const w=document.getElementById('faseStrip');
+  const ol=document.getElementById('pkFaseList'); if(!ol) return;
   const jejak=new Set(S.kerja.jejak);
-  w.innerHTML=FASE.map(f=>`<span class="f ${f===S.kerja.fase?'on':(jejak.has(f)&&!S.kerja.sibuk?'ok':'')}">${f}</span>`).join('');
-  const pk=document.getElementById('pkFaseChips');
-  if(pk) pk.innerHTML=w.innerHTML;
+  ol.innerHTML=FASE.map(f=>{
+    const cls=f===S.kerja.fase?'on':(jejak.has(f)&&!S.kerja.sibuk?'ok':'');
+    return `<li class="${cls}"><span class="fdot"></span>${f}</li>`;
+  }).join('');
 }
 function indeksRender(){
   const n=S.pohon.files.length||1, baca=Object.keys(S.baca).length;
@@ -1000,15 +1360,14 @@ function indeksRender(){
   const faktaCak=Math.min(1, S.stat.fakta/500);
   const idx=Math.round(100*(0.4*cakupan+0.2*segar+0.2*pasarCak+0.2*faktaCak));
   document.getElementById('pkIndeks').innerHTML=
-    `<div class="baris"><span class="k">INDEKS</span><span class="v ${idx>=60?'h':idx>=30?'e':'r'}"><b>${idx}/100</b></span></div>
-     <div class="baris"><span class="k">cakupan baca</span><span class="v c">${baca}/${S.pohon.files.length||0}</span></div>
-     <div class="baris"><span class="k">kesegaran pohon</span><span class="v c">${Math.round(segar*100)}%</span></div>
-     <div class="baris"><span class="k">cakupan pasar</span><span class="v c">${Object.keys(S.pasar).length}/3</span></div>
-     <div class="baris"><span class="k">fakta dicerna</span><span class="v c">${S.stat.fakta}</span></div>
-     <div class="baris"><span class="k">S1 bangun total</span><span class="v c">${S1.ingatan?.totalBangun??'—'}</span></div>
-     <div class="baris"><span class="k">memori resmi</span><span class="v c">GitHub commit${S1.sumber?' · '+S1.sumber:''}</span></div>
+    `<div class="baris"><span class="k">INDEKS</span><span class="v ${idx>=60?'h':idx>=30?'dim':'r'}"><b>${idx}/100</b></span></div>
+     <div class="baris"><span class="k">cakupan baca</span><span class="v dim">${baca}/${S.pohon.files.length||0}</span></div>
+     <div class="baris"><span class="k">kesegaran pohon</span><span class="v dim">${Math.round(segar*100)}%</span></div>
+     <div class="baris"><span class="k">cakupan pasar</span><span class="v dim">${Object.keys(S.pasar).length}/3</span></div>
+     <div class="baris"><span class="k">fakta dicerna</span><span class="v dim">${S.stat.fakta}</span></div>
+     <div class="baris"><span class="k">S1 bangun total</span><span class="v dim">${S1.ingatan?.totalBangun??'—'}</span></div>
+     <div class="baris"><span class="k">memori resmi</span><span class="v dim">GitHub commit${S1.sumber?' · '+S1.sumber:''}</span></div>
      <div class="kecil">rumus terbuka: 40% baca + 20% segar + 20% pasar + 20% fakta</div>`;
-  // cermin diri
   const d=document.getElementById('pkDiri'); const baris=[];
   const g=(path,cb)=>{ const b=S.baca[path]; if(b&&b.fakta) cb(b); };
   g('versi.json', b=>{ const f=b.fakta.join(' '); const m=f.match(/kodeVersi <b>([^<]+)<\/b>/);
@@ -1023,7 +1382,7 @@ function indeksRender(){
     if(st) baris.push(['kumulatif arena', (st.cumRet*100).toFixed(2)+'%']); }
   baris.push(['bytes dicerna', kb(Math.max(0,S.stat.bytes))]);
   baris.push(['uji-jalan pasar', S.stat.btTotal+' transisi']);
-  d.innerHTML=baris.map(([k,v])=>`<div class="baris"><span class="k">${k}</span><span class="v c">${v}</span></div>`).join('');
+  d.innerHTML=baris.map(([k,v])=>`<div class="baris"><span class="k">${k}</span><span class="v h">${v}</span></div>`).join('');
 }
 function pikirRender(){
   document.getElementById('pkNama').textContent=S.kerja.nama;
@@ -1035,7 +1394,8 @@ function pikirRender(){
   indeksRender();
 }
 function petaRender(){
-  const w=document.getElementById('tab-peta'); if(S.tabAktif!=='peta') {w.dataset.kotor='1'; return;}
+  const w=document.getElementById('tab-peta'); if(!w) return;
+  if(S.tabAktif!=='peta') {w.dataset.kotor='1'; return;}
   delete w.dataset.kotor;
   const dirs=new Map();
   for(const f of S.pohon.files){ const i=f.path.lastIndexOf('/'); const dir=i<0?'· akar':f.path.slice(0,i);
@@ -1045,36 +1405,38 @@ function petaRender(){
     h+=`<div class="dirHdr">${dir} — ${fs.length} file</div>`;
     for(const f of fs.sort((a,b)=>a.path.localeCompare(b.path))){
       const st=statusNode(f.path), b=S.baca[f.path];
-      const ikon=st==='b2'?'●':st==='b1'?'◐':st==='b3'?'↻':'○';
-      h+=`<div class="fileRow" data-p="${f.path}"><span class="st ${st}">${ikon}</span>
+      const ikon=st==='baca'?'●':st==='parsial'?'◐':st==='ubah'?'↻':'○';
+      const kls=st==='ubah'?'ubah':(st==='baca'||st==='parsial')?'baca':'';
+      h+=`<div class="fileRow ${kls}" data-p="${f.path}"><span class="st">${ikon}</span>
         <span class="nm">${f.path.split('/').pop()}</span>
         <span class="sz">${kb(f.size)}${b&&b.partial?' · '+f1(b.pct)+'%':''}${b&&b.s1?' ·S1':''}</span></div>`;
       if(S.petaPilih===f.path && b && b.fakta){ h+=`<ul class="faktaList">${b.fakta.map(x=>`<li>${x}</li>`).join('')}</ul>`; }
-      else if(S.petaPilih===f.path){ h+=`<div class="kecil" style="padding:2px 6px 6px">○ belum kubaca — sentuh node ini di panggung untuk memerintahku membacanya</div>`; }
+      else if(S.petaPilih===f.path){ h+=`<div class="kecil" style="padding:2px 7px 6px">○ belum kubaca — sentuh sisiknya di habitat untuk memerintahku membacanya</div>`; }
     }
   }
   w.innerHTML=h||'<div class="kecil">pohon belum terbaca — menunggu sensor rumah</div>';
 }
 function petaDetail(path){ S.petaPilih=path; petaRender(); }
 function pasarRender(){
-  const w=document.getElementById('tab-pasar'); if(S.tabAktif!=='pasar') {w.dataset.kotor='1'; return;}
+  const w=document.getElementById('tab-pasar'); if(!w) return;
+  if(S.tabAktif!=='pasar') {w.dataset.kotor='1'; return;}
   delete w.dataset.kotor;
   const syms=Object.keys(S.pasar);
   w.innerHTML = syms.length? syms.map(s=>{ const p=S.pasar[s];
     return `<div class="blok"><div class="symHdr"><b>${s}</b>
       <a class="sumber" target="_blank" rel="noopener" href="https://data-api.binance.vision/api/v3/klines?symbol=${s}&interval=1h&limit=200">sumber mentah ↗</a></div>
       <div class="baris"><span class="k">harga kini</span><span class="v">${p.harga!==undefined?p.harga.toPrecision(6):'—'}</span></div>
-      <div class="baris"><span class="k">24 jam</span><span class="v ${p.chg>=0?'h':'r'}">${(p.chg>=0?'+':'')+f2(p.chg)}%</span></div>
+      <div class="baris"><span class="k">24 jam</span><span class="v ${p.chg>=0?'h':'dim'}">${(p.chg>=0?'+':'')+f2(p.chg)}%</span></div>
       <div class="baris"><span class="k">EMA20/50</span><span class="v">${p.ema20?.toPrecision(5)||'—'} / ${p.ema50?.toPrecision(5)||'—'}</span></div>
       <div class="baris"><span class="k">RSI14 · ATR14</span><span class="v">${f1(p.rsi)} · ${p.atr?.toPrecision(4)||'—'}</span></div>
-      <div class="baris"><span class="k">momentum 7j/48j</span><span class="v ${(p.mom7||0)>=0?'h':'r'}">${f2(p.mom7)}% / ${f2(p.mom48)}%</span></div>
-      ${p.bt?`<div class="baris"><span class="k">uji-jalan 24j</span><span class="v ${p.bt.net>=0?'h':'r'}">${p.bt.n} trx, menang ${p.bt.menang}, net ${f2(p.bt.net)}%</span></div>`:''}
-      ${p.audit?`<div class="baris"><span class="k">audit pick</span><span class="v ${p.audit.vonis==='SEPAKAT'?'h':p.audit.vonis==='MENDEVIASI'?'r':'e'}">${p.audit.vonis} — ${p.audit.ket}</span></div>`:''}
+      <div class="baris"><span class="k">momentum 7j/48j</span><span class="v ${(p.mom7||0)>=0?'h':'dim'}">${f2(p.mom7)}% / ${f2(p.mom48)}%</span></div>
+      ${p.bt?`<div class="baris"><span class="k">uji-jalan 24j</span><span class="v ${p.bt.net>=0?'h':'dim'}">${p.bt.n} trx, menang ${p.bt.menang}, net ${f2(p.bt.net)}%</span></div>`:''}
+      ${p.audit?`<div class="baris"><span class="k">audit pick</span><span class="v ${p.audit.vonis==='SEPAKAT'?'h':'dim'}">${p.audit.vonis} — ${p.audit.ket}</span></div>`:''}
       <div class="kecil">dihitung ${umur(sekarang()-p.at)} lalu · dari ${p.n||'?'} lilin 1j Binance</div></div>`;
   }).join('') : '<div class="kecil">belum ada studi pasar — menunggu sasaran cermin arena</div>';
 }
 function jurnalRender(){
-  const w=document.getElementById('tab-jurnal'); if(S.tabAktif!=='jurnal') return;
+  const w=document.getElementById('tab-jurnal'); if(!w || S.tabAktif!=='jurnal') return;
   w.innerHTML=S.jurnal.slice(-70).reverse().map(j=>
     `<div class="jr ${j.kelas}"><span class="t">${wib(j.at)} WIB · ${j.jenis}</span><br>${j.teks}</div>`).join('')
     || '<div class="kecil">—</div>';
@@ -1082,76 +1444,46 @@ function jurnalRender(){
 function tabKe(nama){ S.tabAktif=nama;
   document.querySelectorAll('#pTabs button').forEach(b=>b.classList.toggle('akt', b.dataset.tab===nama));
   for(const t of ['pikir','peta','pasar','jurnal']) document.getElementById('tab-'+t).hidden = t!==nama;
-  if(nama==='peta'){ if(document.getElementById('tab-peta').dataset.kotor||!document.getElementById('tab-peta').innerHTML) petaRender(); }
+  if(nama==='peta'){ if(document.getElementById('tab-peta').dataset.kotor||!document.getElementById('tab-peta').innerHTML.trim()) petaRender(); }
   if(nama==='pasar') pasarRender();
   if(nama==='jurnal') jurnalRender();
 }
 document.querySelectorAll('#pTabs button').forEach(b=>b.onclick=()=>tabKe(b.dataset.tab));
-document.getElementById('pHandle').onclick=()=>document.getElementById('panel').classList.toggle('tumbuh');
-// delegasi klik baris file di PETA-DIRI → detail fakta / perintah
- document.getElementById('tab-peta').addEventListener('click', (ev)=>{
-   const row=ev.target.closest('.fileRow'); if(row && row.dataset.p) petaDetail(row.dataset.p);
- });
-
-/* ================= INTERAKSI ================= */
-function sentuh(ev){
-  const p=ev.touches?ev.touches[0]:ev; ukur();
-  // layar → dunia (tanpa pembagian ganda; W2X/W2Y memetakan world→bebas linear)
-  const wx=(p.clientX-bebas.x)/bebas.w*LAYOUT.w, wy=(p.clientY-bebas.y)/bebas.h*LAYOUT.h;
-  // cyborg?
-  if(Math.hypot(wx-BOB.x, wy-BOB.y)<34){ sapa(); return; }
-  // node terdekat
-  let terbaik=null, dmin=30/Math.min(1,skala);
-  for(const [path,n] of LAYOUT.nodes){ const d=Math.hypot(wx-n.x, wy-n.y);
-    if(d<dmin){ dmin=d; terbaik=path; } }
-  if(terbaik){ S.perintah=terbaik; petaDetail(terbaik); }
-}
-cv.addEventListener('click', sentuh);
-function sapa(){
-  const n=S.pohon.files.length, baca=Object.keys(S.baca).length;
-  const kodeVersi=(S.baca['versi.json']?.fakta.join(' ').match(/kodeVersi <b>([^<]+)<\/b>/)||[])[1];
-  const hr=(S.baca['arena-keadaan.json']?.fakta.join(' ').match(/hit-rate <b>([^<]+)<\/b>/)||[])[1];
-  const el=document.getElementById('sapa');
-  const s1=S1.keadaan;
-  el.innerHTML=`<b>AKU CYBORG MICAPROFITA — DUA SADARI.</b><br>
-    Rumahku <b>${n} file</b>; terbaca <b>${baca}/${n}</b> (${kb(Math.max(0,S.stat.bytes))} kode, ${S.stat.fakta} fakta nyata).
-    ${kodeVersi?`Otak arena versi <b>${kodeVersi}</b>.`:''} ${hr?`Hit-rate diriku di arena ${hr}.`:''}<br>
-    Pasar: <b>${Object.keys(S.pasar).length}</b> simbol dari lilin Binance hidup, ${S.stat.btTotal} uji-jalan nyata.<br>
-    ${s1?`Sadar-1 (tubuh otonomku) bangun ke-<b>${s1.bangunKe}</b> di GitHub Actions — walau tak ada penonton.`:'Sadar-1 belum terbaca — menghubungi GitHub…'}<br>
-    <span class="kecil">Dua sadari: SADAR-1 = tubuhku di GitHub Actions, menulis ingatan lewat COMMIT (bukan localStorage), bangun tiap ±20 mnt tanpa penonton; SADAR-2 = mata ini, menyala saat kamu hadir. Aku HIDUP DI DALAM repo ini — repo inilah tubuhku.</span>`;
-  el.hidden=false;
-  const r=cv.getBoundingClientRect();
-  el.style.left=Math.min(innerWidth-360, Math.max(10, r.left+bebas.w*0.05))+'px';
-  el.style.top=Math.max(54, bebas.y+30)+'px';
-  clearTimeout(el._t); el._t=setTimeout(()=>el.hidden=true, 7000);
-  jurnal('SAPA', `kupandukkan diri ke pemilik: ${baca}/${n} file, ${S.stat.fakta} fakta, ${Object.keys(S.pasar).length} simbol pasar`);
-}
+document.getElementById('tab-peta').addEventListener('click', (ev)=>{
+  const row=ev.target.closest('.fileRow'); if(row && row.dataset.p) petaDetail(row.dataset.p);
+});
 
 /* ================= BOOT ================= */
 (async function boot(){
-  ukur(); S.stat.sesi++;
-  tabKe('pikir'); stripRender(); hudRender(); indeksRender(); petaRender(); pasarRender(); jurnalRender();
-  S.pohon.files.length && susun();
-  jurnal('LAHIR', `sesi #${S.stat.sesi} — SADAR-2 (mata interaktif) menyala; ingatan resmi di GitHub kuhidrasi sekarang (Sadar-1 menulisnya tiap ±20 mnt tanpa penonton)`);
+  ukur(); susun(); nadiInit(); S.stat.sesi++;
+  tabKe('pikir'); stripRender(); ovStatusRender(); indeksRender(); petaRender(); pasarRender(); jurnalRender();
+  jurnal('LAHIR', `sesi #${S.stat.sesi} — NADI menyala di habitatnya; ingatan resmi di GitHub kuhidrasi sekarang (Sadar-1 menulisnya tiap ±20 mnt tanpa penonton)`);
   // hidrasi ingatan resmi dari GitHub — bukan localStorage; jangan blokir >8 dtk
   await Promise.race([muatMemoriGitHub(), tidur(8000)]);
   // denyut pohon pertama segera
   try{ await pindaiRumah(); susun(); }catch(e){
-    S.terputus=true; hudRender();
+    S.terputus=true; ovStatusRender();
     jurnal('STATUS', S.pohon.files.length
       ? `pohon repo tak terjangkau (${pesan(e)}) — hidup dari peta-cache umur ${umur(sekarang()-S.pohon.at)}; akan kupancing ulang`
       : `pohon repo tak terjangkau (${pesan(e)}) — tanpa peta aku tetap hidup: renung + cermin same-origin + pasar Binance`, 'gagal');
   }
   otakLoop();
   // probe uji (deterministik, tak mengubah perilaku)
-  window.__v85 = {S, LAYOUT, bebasState:()=>bebas, skalaState:()=>skala, BOB, FASE};
-  window.__v286 = {S, S1, LAYOUT, bebasState:()=>bebas, skalaState:()=>skala, BOB, FASE};
+  window.__v287 = {S, S1, NADI, LAYOUT, FASE, keadaanTubuh, bukaOverlay, tutupOverlay,
+    bebasState:()=>bebas, BOB:NADI, POND_POS:()=>POND_POS};
+  window.__v286 = window.__v287;
   // render loop
-  (function loop(){ gambar(); requestAnimationFrame(loop); })();
-  setInterval(()=>{ hudRender(); s1Render(); if(S.tabAktif==='pasar') pasarRender(); }, 5000);
+  let tPrev=performance.now();
+  (function loop(now){
+    const dt=Math.min(0.05, Math.max(0.001, (now-tPrev)/1000)); tPrev=now;
+    gambar(now/1000, dt);
+    requestAnimationFrame(loop);
+  })(tPrev);
+  setInterval(()=>{ ovStatusRender(); s1Render(); if(S.tabAktif==='pasar') pasarRender(); }, 5000);
   // deteksi bangun S1 baru SELAGI penonton hadir — bukti hidup tanpa penonton, dilihat langsung
   setInterval(()=>{ muatMemoriGitHub(); }, 5*60000);
 })();
+addEventListener('resize', ()=>{ ukur(); susun(); });
 </script>
 </body>
 </html>
