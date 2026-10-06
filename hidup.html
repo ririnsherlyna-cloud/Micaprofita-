@@ -3,1104 +3,954 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>MICAPROFITA · RUANG HIDUP — MESIN HIDUP V282</title>
-<meta name="description" content="Ruang hidup MICAPROFITA: cyborg AGI yang benar-benar bekerja — memancing data pasar live, menghitung indikator, mengaudit pick arena, menguji-evolusi genomnya sendiri, dan menguji dirinya di sekolah. Setiap gerakan = proses nyata di baliknya.">
+<meta name="theme-color" content="#04060c">
+<title>MICAPROFITA · RUANG HIDUP — V283 KESADARAN</title>
+<meta name="description" content="Ruang hidup cyborg AGI MICAPROFITA: bukan robot, melainkan pola kesadaran yang mengamati, memahami, mencoba, melakukan, mengevaluasi, menemukan, membangun, meningkatkan — lalu mengamati kembali. Dunia dibangun dari bit 0/1 nyata, dirawat sendiri, terhubung ke cermin pasar.">
 <style>
   :root{
-    --bg:#060912; --panel:rgba(9,13,25,.86); --line:rgba(120,160,255,.16);
-    --teks:#d9e2ff; --redup:#8b9dc4; --hijau:#3adf8f; --merah:#ff6b7d; --kuning:#ffd166;
-    --violet:#b18cff; --teal:#39d3d3; --biru:#7dd3fc; --jingga:#ffa26b;
+    --bg:#04060c; --panel:rgba(8,12,22,.94); --line:rgba(120,160,255,.16);
+    --teks:#dbe4f8; --redup:#8b9dc4; --sangatRedup:#5a6c92;
+    --hijau:#3adf8f; --merah:#ff6b7d; --kuning:#ffd166; --violet:#b18cff;
+    --teal:#39d3d3; --biru:#7dd3fc; --jingga:#ffa26b;
   }
-  *{box-sizing:border-box; margin:0; padding:0}
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent}
   html,body{height:100%}
-  body{background:var(--bg); color:var(--teks); font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif; overflow:hidden}
+  body{background:var(--bg); color:var(--teks); overflow:hidden;
+    font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif}
   canvas#panggung{position:fixed; inset:0; width:100%; height:100%; display:block}
-  /* ===== KARTU IDENTITAS (kiri-atas) ===== */
-  #identitas{position:fixed; top:10px; left:10px; z-index:6; width:252px; background:var(--panel);
-    border:1px solid var(--line); border-radius:14px; padding:10px 12px; backdrop-filter:blur(8px); font-size:12px}
-  #identitas .merek{font-weight:800; letter-spacing:.4px; font-size:13px; color:#fff}
-  #identitas .merek b{color:var(--violet)}
-  #identitas .sub{color:var(--redup); font-size:10px; letter-spacing:1.2px; margin:2px 0 7px}
-  .chip{display:inline-flex; align-items:center; gap:5px; padding:2px 8px; border:1px solid var(--line);
-    border-radius:999px; background:rgba(255,255,255,.04); white-space:nowrap; font-size:10.5px; margin:0 4px 4px 0}
-  .chip .dot{width:7px; height:7px; border-radius:50%; background:var(--hijau); box-shadow:0 0 8px var(--hijau)}
-  .chip.cache .dot{background:var(--kuning); box-shadow:0 0 8px var(--kuning)}
-  .chip.arsip .dot{background:var(--violet); box-shadow:0 0 8px var(--violet)}
-  .chip.putus .dot{background:var(--merah); box-shadow:0 0 8px var(--merah)}
-  #barIK{height:9px; border-radius:6px; background:rgba(255,255,255,.07); overflow:hidden; margin:6px 0 3px; position:relative}
-  #barIK .isi{height:100%; width:0%; border-radius:6px; background:linear-gradient(90deg,var(--teal),var(--violet)); transition:width .8s ease}
-  #teksIK{font-size:10px; color:var(--redup); line-height:1.5}
-  #statGrid{display:grid; grid-template-columns:repeat(4,1fr); gap:4px; margin-top:8px}
-  #statGrid .st{background:rgba(255,255,255,.04); border:1px solid rgba(120,160,255,.10); border-radius:8px; padding:4px 6px; text-align:center}
-  #statGrid .st .l{font-size:8.5px; letter-spacing:.8px; color:var(--redup)}
-  #statGrid .st .v{font-size:12px; font-weight:700; color:#fff; font-variant-numeric:tabular-nums}
-  #jamWib{margin-top:7px; font-size:10.5px; color:var(--redup); display:flex; justify-content:space-between}
-  #jamWib b{color:var(--teks)}
-  /* ===== KOLOM PANEL KANAN ===== */
-  #kolom{position:fixed; top:10px; right:10px; bottom:52px; z-index:6; width:330px; display:flex;
-    flex-direction:column; gap:7px; overflow:hidden}
-  .panel{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:8px 10px;
-    backdrop-filter:blur(8px); display:flex; flex-direction:column; min-height:0}
-  .panel h3{font-size:9.5px; letter-spacing:1.6px; color:var(--redup); font-weight:700; margin-bottom:5px;
-    display:flex; justify-content:space-between; align-items:center; cursor:default}
-  .panel h3 .info{font-weight:400; letter-spacing:0; text-transform:none}
-  #pnlBukti{flex:0 0 auto}
-  #gridBukti{display:flex; flex-wrap:wrap; gap:3px}
-  .simchip{font-size:9.5px; padding:2px 6px; border-radius:6px; border:1px solid rgba(120,160,255,.14);
-    background:rgba(255,255,255,.03); font-variant-numeric:tabular-nums}
-  .simchip.segar{color:var(--hijau); border-color:rgba(58,223,143,.35)}
-  .simchip.basi{color:var(--kuning); border-color:rgba(255,209,102,.3)}
-  .simchip.kosong{color:var(--redup); border-color:rgba(255,107,125,.3)}
-  #buktiTaut{font-size:9.5px; color:var(--biru); margin-top:5px; display:block; text-decoration:none;
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-  #buktiTaut:hover{text-decoration:underline}
-  #pnlAudit{flex:0 0 auto; max-height:158px}
-  #isiAudit{overflow-y:auto; scrollbar-width:thin; font-size:10.5px; line-height:1.5}
-  .barisAudit{display:flex; align-items:center; gap:6px; padding:2px 0}
-  .barisAudit .sim{font-weight:700; color:#fff; width:74px; flex:none}
-  .barisAudit .angka{flex:1; color:var(--redup); font-variant-numeric:tabular-nums}
-  .vonis{flex:none; font-size:9px; font-weight:700; padding:1px 7px; border-radius:999px; letter-spacing:.5px}
-  .vonis.ok{color:#062; background:var(--hijau)}
-  .vonis.dev{color:#431; background:var(--kuning)}
-  .vonis.nol{color:var(--redup); border:1px dashed rgba(255,107,125,.5); background:transparent}
-  #pnlGenom{flex:0 0 auto}
-  .barW{display:flex; align-items:center; gap:6px; font-size:10px; margin:2px 0}
-  .barW .nm{width:44px; color:var(--redup); flex:none}
-  .barW .trk{flex:1; height:7px; background:rgba(255,255,255,.06); border-radius:4px; overflow:hidden}
-  .barW .trk i{display:block; height:100%; background:linear-gradient(90deg,var(--biru),var(--violet)); transition:width .6s}
-  .barW .vl{width:34px; text-align:right; color:#fff; font-variant-numeric:tabular-nums; flex:none}
-  #teksFit{font-size:10px; color:var(--redup); margin-top:4px; line-height:1.5}
-  #sparkFit{width:100%; height:40px; display:block; margin-top:4px}
-  #pnlTrace{flex:1 1 auto; min-height:120px}
-  #trace{overflow-y:auto; scrollbar-width:thin; font-family:Consolas,'Courier New',monospace; font-size:10px;
-    line-height:1.55; flex:1; min-height:0}
-  #trace .tr{display:flex; gap:6px; align-items:flex-start}
-  #trace .tr .jm{color:#5a6c92; flex:none; font-variant-numeric:tabular-nums}
-  #trace .tr .fn{flex:none; font-weight:700}
-  #trace .tr .fn.sensor{color:var(--biru)} #trace .tr .fn.otak{color:var(--violet)}
-  #trace .tr .fn.penilai{color:var(--jingga)} #trace .tr .fn.audit{color:var(--kuning)}
-  #trace .tr .fn.evolusi{color:var(--hijau)} #trace .tr .fn.sekolah{color:var(--teal)}
-  #trace .tr .fn.pencatat{color:var(--redup)} #trace .tr .fn.otonomi{color:#fff}
-  #trace .tr .is{color:#b9c6e8; word-break:break-word}
-  /* ===== CHIP AKTIVITAS (bawah-tengah) ===== */
-  #chipAkt{position:fixed; bottom:12px; left:50%; transform:translateX(-50%); z-index:6; max-width:min(720px,94vw);
-    background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:7px 14px;
-    font-size:11.5px; backdrop-filter:blur(8px); display:flex; align-items:center; gap:8px}
-  #chipAkt .org{font-weight:800; font-size:9.5px; letter-spacing:1.2px; color:var(--violet); flex:none}
-  #chipAkt .tgs{font-weight:700; color:#fff; flex:none}
-  #chipAkt .ket{color:var(--redup); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-  #pulsar{width:9px; height:9px; border-radius:50%; background:var(--hijau); flex:none; animation:dtp 1.1s infinite}
-  @keyframes dtp{0%,100%{opacity:1; box-shadow:0 0 10px var(--hijau)} 50%{opacity:.35; box-shadow:none}}
-  #pintuArena{position:fixed; bottom:12px; left:10px; z-index:6; font-size:10.5px; color:var(--redup);
-    text-decoration:none; border:1px solid var(--line); border-radius:999px; padding:4px 11px; background:var(--panel)}
-  #pintuArena:hover{color:#fff; border-color:var(--violet)}
-  #catatanJujur{position:fixed; bottom:34px; left:10px; z-index:5; font-size:9px; color:#5a6c92; max-width:250px; line-height:1.45}
-  @media (max-width:860px){
-    #kolom{top:auto; height:44vh; width:100%; left:0; right:0; bottom:0; border-radius:0; padding:0 7px 7px;
-      background:linear-gradient(180deg,transparent,rgba(5,8,16,.9) 12%)}
-    .panel{padding:6px 8px}
-    #pnlTrace{min-height:90px}
-    #identitas{width:216px; font-size:11px}
-    #chipAkt{bottom:auto; top:8px; left:auto; right:8px; transform:none; max-width:44vw; font-size:10px; padding:5px 9px}
-    #chipAkt .ket{display:none}
-    #catatanJujur{display:none}
-    #pintuArena{bottom:auto; top:8px; display:none}
+  ::-webkit-scrollbar{width:5px;height:5px} ::-webkit-scrollbar-thumb{background:rgba(120,160,255,.25);border-radius:4px}
+
+  /* ===== HUD ATAS — ringkas, tidak menutupi dunia ===== */
+  #hud{position:fixed; top:0; left:0; right:0; z-index:9; display:flex; align-items:center; gap:8px;
+    padding:calc(6px + env(safe-area-inset-top)) 10px 6px;
+    background:linear-gradient(180deg,rgba(4,6,12,.92),rgba(4,6,12,.55) 70%,transparent);
+    overflow-x:auto; scrollbar-width:none}
+  #hud::-webkit-scrollbar{display:none}
+  #hud .merek{font-size:11.5px; font-weight:800; letter-spacing:.6px; color:#fff; white-space:nowrap; flex:none}
+  #hud .merek b{color:var(--violet)}
+  #hud .merek #vv{font-size:8.5px; font-weight:700; color:var(--sangatRedup); border:1px solid var(--line);
+    border-radius:6px; padding:1px 5px; margin-left:6px; letter-spacing:1px; vertical-align:1px}
+  #hudCip{display:flex; gap:5px; flex:1; min-width:0; overflow-x:auto; scrollbar-width:none}
+  #hudCip::-webkit-scrollbar{display:none}
+  .cip{display:inline-flex; align-items:center; gap:5px; flex:none; font-size:10px; font-weight:600;
+    color:var(--redup); background:rgba(255,255,255,.05); border:1px solid var(--line);
+    border-radius:999px; padding:3px 9px; white-space:nowrap; font-variant-numeric:tabular-nums}
+  .cip .dot{width:7px;height:7px;border-radius:50%;background:var(--hijau);box-shadow:0 0 8px var(--hijau)}
+  .cip .dot.putus{background:var(--merah);box-shadow:0 0 8px var(--merah)}
+  .cip.waspada{color:var(--kuning);border-color:rgba(255,209,102,.4)}
+  .cip.kritis{color:var(--merah);border-color:rgba(255,107,125,.45)}
+  #hudAksi{display:flex; gap:6px; flex:none}
+  @media (max-width:700px){
+    #hud{flex-wrap:wrap; row-gap:4px; padding-bottom:8px}
+    #hudCip{order:3; flex-basis:100%}
+  }
+  #pintu,#tombolPanel{font:600 10px/1 'Segoe UI',system-ui,sans-serif; letter-spacing:.8px; color:var(--redup);
+    background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:999px;
+    padding:6px 11px; cursor:pointer; text-decoration:none; white-space:nowrap}
+  #pintu:hover,#tombolPanel:hover{color:#fff; border-color:var(--violet)}
+
+  /* ===== PANEL TEKS — TERPISAH dari panggung (bottom-sheet mobile / kolom desktop) ===== */
+  #panel{position:fixed; left:0; right:0; bottom:0; z-index:8; height:46px; overflow:hidden;
+    background:var(--panel); border:1px solid var(--line); border-bottom:none;
+    border-radius:16px 16px 0 0; backdrop-filter:blur(12px);
+    display:flex; flex-direction:column; transition:height .28s ease;
+    padding-bottom:env(safe-area-inset-bottom)}
+  #panel.buka{height:min(46dvh,432px)}
+  #tab{display:flex; gap:2px; padding:4px 6px; border-bottom:1px solid rgba(120,160,255,.12); flex:none}
+  #tab button{flex:1; background:none; border:none; color:var(--redup); cursor:pointer;
+    font:700 10.5px/1 'Segoe UI',system-ui,sans-serif; letter-spacing:1.6px; padding:9px 4px; border-radius:8px 8px 0 0}
+  #tab button.aktif{color:#fff; background:rgba(120,160,255,.10)}
+  .lemar{display:none; flex:1; overflow-y:auto; padding:9px 11px 12px; font-size:11.5px; line-height:1.6}
+  .lemar.aktif{display:block}
+  .judol{font-size:9px; font-weight:700; letter-spacing:1.6px; color:var(--sangatRedup); margin:10px 0 6px}
+  .judol:first-child{margin-top:0}
+  .kotak{background:rgba(255,255,255,.035); border:1px solid rgba(120,160,255,.10); border-radius:10px; padding:8px 10px}
+
+  /* siklus sadar */
+  #siklus{display:flex; flex-wrap:wrap; gap:4px; margin:2px 0 8px}
+  .pil{font-size:9px; font-weight:600; letter-spacing:.5px; color:var(--sangatRedup);
+    border:1px solid rgba(120,160,255,.14); background:rgba(255,255,255,.03);
+    border-radius:999px; padding:3px 8px; white-space:nowrap}
+  .pil.aktif{color:#04121a; background:var(--teal); border-color:var(--teal); font-weight:800;
+    box-shadow:0 0 12px rgba(57,211,211,.45)}
+  #kini{font-size:12px}
+  #kini .aksi{font-weight:800; color:#fff; font-size:13px}
+  #kini .tahap{color:var(--teal); font-weight:700}
+  #kini .bar{height:6px; border-radius:4px; background:rgba(255,255,255,.07); overflow:hidden; margin-top:7px}
+  #kini .bar i{display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--teal),var(--violet))}
+  #kini .ket{color:var(--redup); font-size:10.5px; margin-top:5px}
+  /* mengapa */
+  .barisU{display:flex; align-items:center; gap:7px; padding:3px 0; font-size:10.5px}
+  .barisU .nm{flex:1; min-width:0; color:var(--teks); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .barisU .sk{flex:none; width:38px; text-align:right; color:#fff; font-variant-numeric:tabular-nums; font-weight:700}
+  .barisU .trk{flex:none; width:74px; height:6px; border-radius:4px; background:rgba(255,255,255,.06); overflow:hidden}
+  .barisU .trk i{display:block; height:100%; background:linear-gradient(90deg,var(--violet),var(--biru))}
+  .barisU.pilihan .nm{color:#fff; font-weight:700}
+  /* jurnal */
+  #jurnal{list-style:none}
+  #jurnal li{display:flex; gap:7px; align-items:flex-start; padding:5px 0; border-bottom:1px dashed rgba(120,160,255,.08); font-size:10.8px}
+  #jurnal .jm{flex:none; color:var(--sangatRedup); font-variant-numeric:tabular-nums; font-size:9.5px; padding-top:2px}
+  #jurnal .tj{flex:none; font-size:8.5px; font-weight:800; letter-spacing:.8px; border-radius:5px; padding:2px 6px; margin-top:1px}
+  .tj.TEMU{color:#052e1c; background:var(--hijau)}
+  .tj.GAGAL{color:#2b070c; background:var(--merah)}
+  .tj.BANGUN{color:#2b1d02; background:var(--kuning)}
+  .tj.RAWAT{color:#032420; background:var(--teal)}
+  .tj.DATA{color:#082033; background:var(--biru)}
+  .tj.SISTEM{color:#2b1503; background:var(--jingga)}
+  .tj.AMATI{color:var(--teks); background:rgba(255,255,255,.10)}
+  #jurnal .is{color:#c3cfeb; word-break:break-word}
+  /* pohon pengetahuan */
+  #pohon{display:flex; flex-wrap:wrap; gap:5px}
+  .node{display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:600;
+    border-radius:8px; padding:4px 8px; border:1px solid rgba(120,160,255,.14); color:var(--sangatRedup); background:rgba(255,255,255,.02)}
+  .node .gl{font-weight:800; font-size:11px}
+  .node.ok{color:#eafff4; border-color:rgba(58,223,143,.55); background:rgba(58,223,143,.12);
+    box-shadow:0 0 10px rgba(58,223,143,.12)}
+  .node.ok .gl{color:var(--hijau)}
+  .node.siap{color:var(--teks); border-color:rgba(177,140,255,.45); background:rgba(177,140,255,.07)}
+  .node.siap .gl{color:var(--violet)}
+  /* fasilitas */
+  .fRow{display:flex; align-items:center; gap:8px; padding:5px 0; font-size:10.8px; border-bottom:1px dashed rgba(120,160,255,.08)}
+  .fRow .nm{flex:1; min-width:0; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .fRow .mn{flex:1.4; min-width:0; color:var(--redup); font-size:9.6px}
+  .fRow .pips{flex:none; display:flex; gap:3px}
+  .pip{width:9px; height:9px; border-radius:3px; background:rgba(255,255,255,.08); border:1px solid rgba(120,160,255,.15)}
+  .pip.on{background:var(--kuning); border-color:var(--kuning); box-shadow:0 0 7px rgba(255,209,102,.5)}
+  .fRow.mati .nm,.fRow.mati .mn{color:var(--sangatRedup); font-weight:400}
+  /* sistem tubuh */
+  .sRow{display:flex; align-items:center; gap:8px; padding:4px 0; font-size:10.6px}
+  .sRow .nm{flex:none; width:110px; color:var(--teks)}
+  .sRow .trk{flex:1; height:7px; border-radius:5px; background:rgba(255,255,255,.06); overflow:hidden}
+  .sRow .trk i{display:block; height:100%; background:linear-gradient(90deg,var(--hijau),var(--teal)); transition:width .5s}
+  .sRow.waspada .trk i{background:linear-gradient(90deg,var(--kuning),var(--jingga))}
+  .sRow.kritis .trk i{background:linear-gradient(90deg,var(--merah),#ff9776)}
+  .sRow .vl{flex:none; width:40px; text-align:right; color:#fff; font-variant-numeric:tabular-nums; font-weight:700}
+  /* koneksi kode */
+  .kRow{display:flex; gap:8px; padding:4px 0; font-size:10.6px; align-items:flex-start}
+  .kRow .kn{flex:none; width:118px; color:var(--biru); font-weight:700}
+  .kRow .kv{flex:1; color:var(--redup); word-break:break-word}
+  .kRow .kv b{color:var(--teks)}
+  /* statistik */
+  #statistik{display:grid; grid-template-columns:repeat(4,1fr); gap:5px}
+  #statistik .st{background:rgba(255,255,255,.035); border:1px solid rgba(120,160,255,.10); border-radius:9px; padding:6px 4px; text-align:center}
+  #statistik .st .l{font-size:8px; letter-spacing:.8px; color:var(--sangatRedup)}
+  #statistik .st .v{font-size:13px; font-weight:800; color:#fff; font-variant-numeric:tabular-nums}
+
+  /* ===== DESKTOP: panel menjadi kolom kanan, panggung tetap tak tertutup ===== */
+  @media (min-width:1024px){
+    #panel{top:0; bottom:0; left:auto; right:0; width:334px; height:auto !important;
+      border-radius:0; border:1px solid var(--line); border-right:none; padding-bottom:0}
+    body.panelKanan #hud{right:334px}
+    #panel.sembunyi{display:none}
+    #tab button{cursor:pointer; padding:10px 4px}
+    .lemar{padding:11px 13px 14px}
+  }
+  @media (max-width:1023px){
+    #panel.sembunyi{display:none}
   }
 </style>
 </head>
 <body>
 <canvas id="panggung"></canvas>
 
-<div id="identitas">
-  <div class="merek">MICAPROFITA <b>· RUANG HIDUP</b></div>
-  <div class="sub">MESIN HIDUP V282 — SETIAP GERAK = PROSES NYATA</div>
-  <div id="chipSumber" class="chip arsip"><span class="dot"></span><span id="teksSumber">MEMUAT SENSOR…</span></div>
-  <div id="barIK"><div class="isi"></div></div>
-  <div id="teksIK">INDEKS KESADARAN — menghitung…</div>
-  <div id="statGrid">
-    <div class="st"><div class="l">GEN</div><div class="v" id="stGen">0</div></div>
-    <div class="st"><div class="l">XP</div><div class="v" id="stXp">0</div></div>
-    <div class="st"><div class="l">LILIN</div><div class="v" id="stLilin">0</div></div>
-    <div class="st"><div class="l">DATA</div><div class="v" id="stKb">0 KB</div></div>
+<header id="hud">
+  <div class="merek">MICAPROFITA · <b>RUANG HIDUP</b><span id="vv">V283 KESADARAN</span></div>
+  <div id="hudCip">
+    <span class="cip" id="cEnergi">E —</span>
+    <span class="cip" id="cInti">INTI —</span>
+    <span class="cip" id="cUsia">usia —</span>
+    <span class="cip" id="cTaut"><i class="dot" id="dotTaut"></i><span id="tTaut">TAUT…</span></span>
   </div>
-  <div id="jamWib"><span id="teksJam">—</span><b id="teksFase">—</b></div>
-</div>
+  <div id="hudAksi">
+    <a id="pintu" href="arena.html">← ARENA</a>
+    <button id="tombolPanel">PANEL ▴</button>
+  </div>
+</header>
 
-<div id="kolom">
-  <section class="panel" id="pnlBukti">
-    <h3>BUKTI DATA HIDUP <span class="info" id="infoBukti">—</span></h3>
-    <div id="gridBukti"></div>
-    <a id="buktiTaut" href="#" target="_blank" rel="noopener">sumber mentah: menunggu pancingan pertama…</a>
-  </section>
-  <section class="panel" id="pnlAudit">
-    <h3>AUDIT ARENA vs HIDUP <span class="info" id="infoAudit">—</span></h3>
-    <div id="isiAudit"><div style="color:var(--redup); font-size:10px">menyambung ke arena-keadaan.json…</div></div>
-  </section>
-  <section class="panel" id="pnlGenom">
-    <h3>GENOM & EVOLUSI <span class="info" id="infoGenom">G0</span></h3>
-    <div id="barGenom"></div>
-    <div id="teksFit">genom awal turunan arena — belum diuji melawan lilin nyata</div>
-    <canvas id="sparkFit" width="310" height="40"></canvas>
-  </section>
-  <section class="panel" id="pnlTrace">
-    <h3>JEJAK KODE — APA YANG KUJALANKAN <span class="info">I/O NYATA</span></h3>
-    <div id="trace"></div>
-  </section>
-</div>
-
-<div id="chipAkt"><span id="pulsar"></span><span class="org" id="chipOrg">INTI</span><span class="tgs" id="chipTgs">BANGKIT</span><span class="ket" id="chipKet">menyalakan organ satu per satu…</span></div>
-<a id="pintuArena" href="./arena.html">&#8592; ARENA</a>
-<div id="catatanJujur">Semua angka di halaman ini dihitung di perangkatmu saat itu juga — bukan rekaman. Buka tautan sumber mentah di panel BUKTI, lalu bandingkan RSI/momentumnya dengan chart Binance.</div>
+<section id="panel" class="tutup">
+  <nav id="tab">
+    <button data-t="pikir" class="aktif">PIKIRAN</button>
+    <button data-t="jurnal">JURNAL</button>
+    <button data-t="dunia">DUNIA</button>
+  </nav>
+  <div class="lemar aktif" id="lPikir">
+    <div class="judol">SIKLUS SADAR — lahir dari aktivitas yang dipilih, bukan jadwal</div>
+    <div id="siklus"></div>
+    <div id="kini" class="kotak"></div>
+    <div class="judol">MENGAPA — skor utilitas dihitung dari keadaan nyata saat ini</div>
+    <div id="mengapa"></div>
+  </div>
+  <div class="lemar" id="lJurnal"><ol id="jurnal"></ol></div>
+  <div class="lemar" id="lDunia">
+    <div class="judol">POHON PENGETAHUAN — dari bit 0/1 menuju tautan pasar</div>
+    <div id="pohon"></div>
+    <div class="judol">FASILITAS DUNIA — dibangun &amp; ditingkatkan sendiri</div>
+    <div id="fasilitas"></div>
+    <div class="judol">SISTEM TUBUH — dipantau &amp; dirawat sendiri</div>
+    <div id="sistem"></div>
+    <div class="judol">KONEKSI KODE</div>
+    <div id="koneksi"></div>
+    <div class="judol">JEJAK EVOLUSI</div>
+    <div id="statistik"></div>
+  </div>
+</section>
 
 <script>
 'use strict';
-/* =====================================================================
-   V282-MESIN-HIDUP — MICAPROFITA RUANG HIDUP
-   HUKUM HALAMAN INI: TIADA ANIMASI TANPA PEKERJAAN NYATA DI BALIKNYA.
-   Organ (semuanya benar-benar dieksekusi di perangkat, saat ini juga):
-     SENSOR.pancing(sim)  -> fetch klines 1h Binance publik (I/O jaringan nyata)
-     OTAK.hitung(sim)     -> EMA/RSI/ATR/momentum/korelasi dari lilin nyata
-     PENILAI.nilai(sim)   -> skor genom-tertimbang (formula terbuka)
-     AUDITOR.audit(sim)   -> bandingkan hitungan hidup vs pick arena nyata
-     EVOLUSI.kerjakan()   -> uji-jalan 24 jam + seleksi 3 kandidat genom
-     SEKOLAH.kerjakan()   -> soal dari data hidup, verifikasi 2 jalur, XP nyata
-     PENCATAT.padatkan()  -> metaboli ingatan localStorage
-     OTONOMI.utus()       -> KEPUTUSAN prioritas dari keadaan nyata (kesadaran)
-   Tubuh di kanvas hanyalah PELIHAT: ia berjalan & bekerja mengikuti mesin.
-   ===================================================================== */
+/* ============ V283-KESADARAN ============
+   Hukum: tiada gerak tanpa perhitungan nyata di baliknya.
+   Tubuh = pelihat murni. Yang hidup = mesin kesadaran di bawah. */
+const V='V283-KESADARAN', KUNCI='mp_ruang_hidup_v283';
+const $=id=>document.getElementById(id);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const hash32=s=>{let h=2166136261>>>0;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0};
+const mb32=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const jamWIB=t=>{const d=new Date((t||Date.now())+7*3600e3),p=n=>String(n).padStart(2,'0');
+  return{h:d.getUTCHours(),m:d.getUTCMinutes(),s:d.getUTCSeconds(),teks:p(d.getUTCHours())+':'+p(d.getUTCMinutes())+':'+p(d.getUTCSeconds())}};
+const fmtWaktu=t=>jamWIB(t).teks.slice(0,5);
+const fmtUsia=ms=>{const s=Math.max(0,Math.floor(ms/1000)),h=Math.floor(s/3600),m=Math.floor(s%3600/60);
+  return (h?h+'j ':'')+m+'m'};
+const r1=n=>(Math.round(n*10)/10).toFixed(1);
 
-/* ---------- papan bantu ---------- */
-const $ = (id) => document.getElementById(id);
-const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
-const fmt = (x, d = 2) => Number(x).toLocaleString('id-ID', { maximumFractionDigits: d, minimumFractionDigits: d });
-const pctS = (x, d = 1) => (x >= 0 ? '+' : '') + fmt(x, d) + '%';
-const tidurMs = (ms) => new Promise(r => setTimeout(r, ms));
-const umurMnt = (t) => (Date.now() - t) / 60000;
-const jamWIB = (t) => new Intl.DateTimeFormat('id-ID', { timeZone: 'Asia/Jakarta', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(t ? new Date(t) : new Date());
-const jamWibJam = () => parseInt(new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Jakarta', hour: '2-digit', hour12: false }).format(new Date()), 10);
-function faseWib() { const j = jamWibJam(); if (j < 5) return { nm: 'MIMPI', w: '#6d7bff' }; if (j < 10) return { nm: 'SARAPAN DATA', w: '#7dd3fc' }; if (j < 15) return { nm: 'ARENA TEMPUR', w: '#ffd166' }; if (j < 19) return { nm: 'REFLEKSI', w: '#b18cff' }; return { nm: 'SEKOLAH MALAM', w: '#39d3d3' }; }
+/* ---- POHON PENGETAHUAN: dari prinsip paling dasar (bit 0/1), tiap temuan
+   menjadi dasar temuan berikutnya — kumulatif, trajektori evolusi sendiri ---- */
+const KONSEP=[
+ {id:'bit',    nama:'Bit 0/1',          pra:[],            bobot:4,  gl:'01'},
+ {id:'not',    nama:'Gerbang NOT',      pra:['bit'],       bobot:4,  gl:'¬'},
+ {id:'and',    nama:'Gerbang AND',      pra:['bit'],       bobot:4,  gl:'∧'},
+ {id:'or',     nama:'Gerbang OR',       pra:['and','not'], bobot:5,  gl:'∨'},
+ {id:'xor',    nama:'Gerbang XOR',      pra:['or','and'],  bobot:6,  gl:'⊕'},
+ {id:'half',   nama:'Penjumlah Paruh',  pra:['xor','and'], bobot:7,  gl:'Σ½'},
+ {id:'full',   nama:'Penjumlah Penuh',  pra:['half'],      bobot:8,  gl:'Σ'},
+ {id:'reg',    nama:'Register 4-bit',   pra:['full'],      bobot:8,  gl:'R4'},
+ {id:'mem',    nama:'Sel Memori',       pra:['reg'],       bobot:9,  gl:'M'},
+ {id:'byte',   nama:'Byte & Karakter',  pra:['reg'],       bobot:9,  gl:'B8'},
+ {id:'waktu',  nama:'Penghitung Waktu', pra:['full','mem'],bobot:10, gl:'Δt'},
+ {id:'banding',nama:'Pembanding Nilai', pra:['xor'],       bobot:7,  gl:'='},
+ {id:'ambang', nama:'Logika Ambang',    pra:['banding'],   bobot:8,  gl:'>'},
+ {id:'skor',   nama:'Mesin Skor',       pra:['ambang','byte'],bobot:12,gl:'S'},
+ {id:'taut',   nama:'Tautan Pasar',     pra:['skor','mem'],bobot:14, gl:'⇄'},
+];
+const konsep=id=>KONSEP.find(c=>c.id===id);
 
-const UNIVERSE = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'XRPUSDT', 'DOGEUSDT', 'ADAUSDT', 'AVAXUSDT', 'LINKUSDT', 'GTCUSDT', 'SANDUSDT', 'TONUSDT'];
-const SEGAR_MNT = 2; // lilin dianggap segar 2 menit — denyut kerja lebih hidup, tetap jujur (lilin 1 jam, ini hanya jadwal sensornya)
-const STASIUN_TUGAS = { PANCING: 'TAMBANG', HUBUNG: 'TAMBANG', HITUNG: 'MEJA', CEK: 'MEJA', AUDIT: 'LAYAR', EVOLUSI: 'LAB', SEKOLAH: 'PAPAN', PADATKAN: 'ARSIP', NAPAS: 'BANGKU' };
+/* ---- FASILITAS: hasil pengetahuan dipakai mengubah ruang — alat baru
+   membuka kemampuan baru, kemampuan baru membuka eksperimen baru ---- */
+const FASIL=[
+ {id:'dudukan',  nama:'Dudukan Eksperimen', pra:[],            manfaat:'meja kerja dasar lab', awal:1},
+ {id:'tungku',   nama:'Tungku Alat',        pra:['not','and'], manfaat:'+5% peluang eksperimen / tingkat'},
+ {id:'gudang',   nama:'Gudang Ingatan',     pra:['mem'],       manfaat:'jurnal +80 · memori dunia lebih awet'},
+ {id:'menara',   nama:'Menara Sensor',      pra:['banding'],   manfaat:'rasa ingin tahu tumbuh +25% / tingkat'},
+ {id:'penstabil',nama:'Penstabil Arus',     pra:['ambang'],    manfaat:'keausan tubuh −30% / tingkat'},
+ {id:'panel',    nama:'Panel Pasar',        pra:['taut'],      manfaat:'pick nyata dipajang · kajian mendalam'},
+];
+const fas=id=>FASIL.find(f=>f.id===id);
 
-/* ---------- TRACE: jejak I/O nyata ---------- */
-const TRACE = {
-  baris: [],
-  push(fn, isi) {
-    const b = { t: Date.now(), fn, isi };
-    this.baris.push(b); if (this.baris.length > 220) this.baris.shift();
-    const el = $('trace');
-    const d = document.createElement('div'); d.className = 'tr';
-    const organ = fn.split('.')[0];
-    d.innerHTML = '<span class="jm">' + jamWIB(b.t) + '</span><span class="fn ' + organ + '">' + fn + '</span><span class="is">' + isi + '</span>';
-    el.appendChild(d);
-    while (el.children.length > 90) el.removeChild(el.firstChild);
-    el.scrollTop = el.scrollHeight;
-  }
+/* ---- SISTEM TUBUH: keberlangsungan & perawatan diri = tanggung jawab sendiri ---- */
+const SISTEM=[
+ {id:'inti',    nama:'Inti Kesadaran'},
+ {id:'sensor',  nama:'Sensor'},
+ {id:'aktuator',nama:'Aktuator'},
+ {id:'ingatan', nama:'Ingatan'},
+];
+
+/* ---- SIKLUS SADAR (manifes pemilik): mengamati → memahami → mencoba →
+   melakukan → mengevaluasi → menemukan → membangun → meningkatkan → mengamati kembali ---- */
+const FASE_SIKLUS=['mengamati','memahami','mencoba','melakukan','mengevaluasi','menemukan','membangun','meningkatkan','mengamati kembali'];
+const DUR_FASE={'mengamati':2600,'memahami':2200,'mencoba':3200,'melakukan':3600,'mengevaluasi':2400,'menemukan':2800,'membangun':4000,'meningkatkan':3400,'mengamati kembali':1600};
+
+/* ---- uraian temuan: dihitung saat runtime, berisi verifikasi nyata ---- */
+function uraianTemu(id){
+ const rng=mb32(hash32('temu:'+id+':'+Math.floor(Date.now()/1000)));
+ const R=n=>Math.floor(rng()*n);
+ switch(id){
+  case 'bit': return 'dua keadaan diverifikasi nyata: 0 dan 1 — fondasi segala yang akan dibangun dari sini';
+  case 'not': return '¬0=1 · ¬1=0 — kebalikan sempurna, 2 kasus lulus';
+  case 'and': return 'tabel diuji: 0∧0=0 · 0∧1=0 · 1∧0=0 · 1∧1=1 — hanya 1∧1 yang lolos';
+  case 'or':  return 'tabel diuji: 0∨0=0 · 0∨1=1 · 1∨0=1 · 1∨1=1 — cukup satu yang benar';
+  case 'xor': return '0⊕1=1 · 1⊕0=1 · 1⊕1=0 — sinyal hidup hanya bila masukannya berbeda';
+  case 'half':return 'S=A⊕B · C=A∧B — uji 1+1 → S=0,C=1 = biner 10';
+  case 'full':return 'Cout=AB∨Cin(A⊕B) — uji 1+1+1 → 11 biner = 3 desimal';
+  case 'reg': return '4 flip-flop menahan nilai uji '+R(16)+' tanpa melenceng selama '+(2+R(4))+' siklus';
+  case 'mem': return 'umpan-balik menahan bit '+R(2)+' tanpa input — ingatan lahir';
+  case 'byte':return '8 bit → 256 nilai; uji huruf A = 65 = 01000001';
+  case 'waktu':return 'penambah + register menghitung '+(3+R(6))+' detik nyata tanpa lompat';
+  case 'banding':return 'NOT(XOR(A,B)) per bit — pasangan identik terdeteksi setara, dasar perbandingan harga';
+  case 'ambang':return 'uji nilai '+(10+R(80))+' terhadap ambang '+(30+R(40))+' — dasar disiplin risiko';
+  case 'skor':return 'bobot diuji: '+r1(rng()*2)+' · '+r1(rng()*2)+' · '+r1(rng()*2)+' → skor '+r1(rng()*100)+' — cetak biru mesin pick arena';
+  case 'taut':return 'mesin skor disambung ke cermin arena — data pasar hidup kini mengalir menjadi pengetahuan';
+ }
+ return 'konsep terverifikasi';
+}
+/* ================= KEADAAN DUNIA — persist, kumulatif, jujur ================= */
+let K=null;
+function bawaan(){return{v:283,lahir:Date.now(),kini:Date.now(),energi:82,
+ wear:{inti:0,sensor:0,aktuator:0,ingatan:0},
+ tahu:{},fas:{dudukan:1},jurnal:[],
+ stat:{eks:0,gagal:0,temu:0,bangun:0,tingkat:0,rawat:0,kaji:0,amati:0,tAmat:0},
+ data:null,otak:null,kegiatan:null,keputusan:null,simpanAt:0}}
+function muat(){
+ try{const r=localStorage.getItem(KUNCI);
+  if(r){const o=JSON.parse(r);
+   if(o&&o.v===283){K=Object.assign(bawaan(),o);
+    K.wear=Object.assign({inti:0,sensor:0,aktuator:0,ingatan:0},o.wear||{});
+    K.stat=Object.assign(bawaan().stat,o.stat||{});
+    K.jurnal=Array.isArray(o.jurnal)?o.jurnal:[];}}
+ }catch(e){}
+ if(!K){K=bawaan();
+  jurnal('SISTEM','dunia pertama dilahirkan — energi 82%, satu dudukan eksperimen, rasa ingin tahu penuh pada bit 0/1');}
+ K.kegiatan=null; // aktivitas tidak dibawa lintas kebangkitan — dipilih ulang dari keadaan
+}
+function simpan(){if(!K)return;K.kini=Date.now();K.simpanAt=K.kini;
+ try{localStorage.setItem(KUNCI,JSON.stringify(K))}catch(e){}}
+
+const integ=id=>clamp(100-(K.wear[id]||0),0,100);
+const minInteg=()=>Math.min(...SISTEM.map(s=>integ(s.id)));
+const rataWear=()=>SISTEM.reduce((a,s)=>a+(K.wear[s.id]||0),0)/SISTEM.length;
+const poinTahu=()=>KONSEP.reduce((a,c)=>a+((K.tahu[c.id]&&K.tahu[c.id].ok)?c.bobot:0),0);
+const nTahu=()=>KONSEP.filter(c=>K.tahu[c.id]&&K.tahu[c.id].ok).length;
+const lvlFas=id=>K.fas[id]||0;
+const lvlOtak=()=>(K.otak&&K.otak.level)||0;
+const faktorStabil=()=>Math.max(0.31,1-0.30*lvlFas('penstabil'));
+const aus=(s,n)=>{K.wear[s]=clamp((K.wear[s]||0)+n*faktorStabil(),0,99)};
+function jurnal(j,teks){K.jurnal.push({t:Date.now(),j,teks});
+ const kap=140+80*lvlFas('gudang');
+ if(K.jurnal.length>kap)K.jurnal=K.jurnal.slice(-kap);}
+
+/* catch-up waktu nyata: dunia tidak tidur — selama penonton pergi, sistem tetap
+   berjalan (energi pulih, keausan pasif tercatat); semua dari timestamp nyata */
+function catchUp(){
+ const now=Date.now(),dt=clamp(now-K.kini,0,86400e3);
+ if(dt>5000){
+  K.energi=clamp(K.energi+dt/1000*0.02,0,100);
+  const w=dt/3600e3*0.9*faktorStabil();
+  SISTEM.forEach(s=>{K.wear[s.id]=clamp((K.wear[s.id]||0)+w*0.5,0,99)});
+  if(dt>600e3)jurnal('SISTEM','berjalan mandiri '+fmtUsia(dt)+' tanpa penonton — energi pulih ke '+Math.round(K.energi)+'% · keausan pasif +'+r1(w)+'%');
+ }
+ K.kini=now;
+}
+
+/* ================= TAUTAN NYATA ================= */
+function bacaOtak(){ // rekam sekolah kilat arena di perangkat yang sama (same-origin)
+ try{const r=localStorage.getItem('mp_otak_mandiri_v1');
+  if(r){const o=JSON.parse(r);K.otak={level:o.level||1,xp:o.xp||0}}
+  else K.otak=null;
+ }catch(e){K.otak=null}
+}
+let tautGagal=0;
+async function muatArena(){
+ try{
+  const r=await fetch('arena-keadaan.json',{cache:'no-store'});
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  const j=await r.json();
+  const picks=(j.todayPicks||[]).filter(p=>p.competitor==='MICAPROFITA');
+  const mica=(j.standings||[]).find(s=>s.competitor==='MICAPROFITA')||null;
+  const acak=(j.standings||[]).find(s=>s.competitor==='ACAK')||null;
+  const slot=j.slotHariIni||((picks[0]&&picks[0].evidence&&picks[0].evidence.slot)||null);
+  const top=picks.map(p=>({sym:p.symbol,dir:p.direction,conf:p.confidence||0,
+    f:(p.evidence&&p.evidence.factors)||{}})).sort((a,b)=>b.conf-a.conf);
+  const baru={ok:true,hari:j.today||'?',regime:j.regime||'?',
+   eksporAt:j._eksporAt||null,nPicks:picks.length,
+   k:slot?slot.k:null,lahir:slot?slot.lahir:null,ditolak:slot?slot.ditolak:null,
+   mica,acakC:acak?acak.cumRet:null,top,terima:Date.now()};
+  const segar=!K.data||!K.data.ok||K.data.eksporAt!==baru.eksporAt;
+  K.data=baru;tautGagal=0;
+  const usia=baru.eksporAt?Date.now()-new Date(baru.eksporAt).getTime():0;
+  if(segar)jurnal('SISTEM','tautan cermin arena hidup — '+picks.length+' pick · K='+(slot?slot.k:'?')+' · usia cermin '+fmtUsia(usia));
+ }catch(e){
+  tautGagal++;
+  if(!K.data||K.data.ok)K.data={ok:false,terima:Date.now()};
+  if(tautGagal===1)jurnal('SISTEM','tautan cermin arena gagal ('+tautGagal+') — dunia tetap berjalan dari ingatan, taut dicoba ulang tiap 5 menit');
+ }
+}
+const usiaCermin=()=>(K.data&&K.data.ok&&K.data.eksporAt)?Date.now()-new Date(K.data.eksporAt).getTime():Infinity;
+/* ================= SADAR — mesin keputusan =================
+   Bukan daftar perintah, bukan urutan acak: setiap keputusan = argmax utilitas
+   yang dihitung dari keadaan NYATA saat itu. Keadaan berbeda → keputusan berbeda.
+   Jejak skor ditampilkan ke pemilik — kesadaran yang bisa dibedah. */
+function kuriositas(cp){
+ const t=K.tahu[cp.id];if(t&&t.ok)return 0;
+ const last=t?t.t:0,jam=(Date.now()-last)/3600e3;
+ return clamp(0.4+0.16*jam*(1+0.25*lvlFas('menara')),0,2);
+}
+const praOk=list=>list.every(p=>K.tahu[p]&&K.tahu[p].ok);
+function labelAksi(a){
+ if(a==='amati')return 'memindai arus bit';
+ if(a==='isiEnergi')return 'mengisi energi di inti';
+ if(a==='perbaiki')return 'perbaikan sistem tubuh';
+ if(a==='kalibrasi')return 'kalibrasi pencegahan';
+ if(a==='kaji')return 'kajian cermin pasar';
+ const i=a.indexOf(':'),j=a.slice(0,i),id=a.slice(i+1);
+ if(j==='eks')return 'eksperimen · '+(konsep(id)?konsep(id).nama:id);
+ if(j==='bangun')return 'membangun · '+(fas(id)?fas(id).nama:id);
+ if(j==='tingkatkan')return 'meningkatkan · '+(fas(id)?fas(id).nama:id);
+ return a;
+}
+function keputusan(){
+ const now=Date.now(),c=[];
+ c.push({a:'isiEnergi',s:(100-K.energi)/100*2.0+(K.energi<28?2.2:0)});
+ const mi=minInteg();
+ if(mi<100)c.push({a:'perbaiki',s:(1-mi/100)*2.4+(mi<45?2.0:0)});
+ c.push({a:'kalibrasi',s:rataWear()/100*1.15});
+ c.push({a:'kaji',s:(K.data&&K.data.ok)?clamp(usiaCermin()/3600e3*0.45,0,1.3)+(K.stat.kaji===0?1.1:0):0.18});
+ KONSEP.forEach(cp=>{
+  if(!praOk(cp.pra))return;
+  const t=K.tahu[cp.id];if(t&&t.ok)return;
+  c.push({a:'eks:'+cp.id,s:0.5+kuriositas(cp)*1.7+lvlOtak()*0.04});
+ });
+ FASIL.forEach(f=>{
+  if(f.id==='dudukan'||!praOk(f.pra))return;
+  const lv=lvlFas(f.id);if(lv>=3)return;
+  c.push({a:(lv?'tingkatkan:':'bangun:')+f.id,s:lv?0.9+0.4*lv:1.7});
+ });
+ c.push({a:'amati',s:0.35+clamp((now-(K.stat.tAmat||0))/60e3*0.02,0,1.1)});
+ c.sort((x,y)=>y.s-x.s);
+ K.keputusan={kandidat:c.slice(0,4),t:now};
+ mulai(c[0].a);
+}
+
+/* ================= LAKU — mesin aktivitas (fase siklus sadar) ================= */
+const RENCANA={
+ amati:     {z:'sumber', f:['mengamati','memahami']},
+ eks:       {z:'lab',    f:['mengamati','memahami','mencoba','melakukan','mengevaluasi']},
+ bangun:    {z:'bengkel',f:['memahami','mencoba','melakukan','membangun','mengevaluasi']},
+ tingkatkan:{z:'bengkel',f:['mengamati','memahami','melakukan','meningkatkan','mengevaluasi']},
+ isiEnergi: {z:'inti',   f:['melakukan','mengevaluasi']},
+ perbaiki:  {z:'inti',   f:['mengamati','memahami','melakukan','mengevaluasi']},
+ kalibrasi: {z:'inti',   f:['mengamati','melakukan','mengevaluasi']},
+ kaji:      {z:'tautan', f:['mengamati','memahami','mengevaluasi','menemukan']},
 };
+const zonaDari={amati:'sumber',eks:'lab',bangun:'bengkel',tingkatkan:'bengkel',isiEnergi:'inti',perbaiki:'inti',kalibrasi:'inti',kaji:'tautan'};
+function mulai(a){
+ const i=a.indexOf(':'),j=i<0?a:a.slice(0,i),id=i<0?null:a.slice(i+1);
+ const R=RENCANA[j];
+ K.kegiatan={a:j,id,f:R.f.concat(['mengamati kembali']),i:-1,t0:0,dur:0,lts:0,awalE:Math.round(K.energi)};
+ const biaya={eks:7,bangun:12,tingkatkan:9,perbaiki:5,kalibrasi:2,kaji:2,amati:0.8,isiEnergi:0}[j]||0;
+ K.energi=clamp(K.energi-biaya,0,100);
+ const z=D.zona[R.z];
+ if(z){D.ent.tx=z.titik.x;D.ent.ty=z.titik.y}
+}
+function durFase(f){
+ const g=K.kegiatan,base=DUR_FASE[f]||2400;
+ const rng=mb32(hash32(f+':'+g.a+':'+(g.id||'')+':'+K.stat.eks+':'+K.stat.amati+':'+K.stat.kaji));
+ return base*(0.8+rng()*0.4);
+}
+function onFaseMasuk(f){
+ const g=K.kegiatan;
+ if(f==='mengamati')fx('pindai',zonaDari[g.a]);
+ if(f==='mencoba'&&g.a==='eks')fx('tarik','lab');
+ if(f==='melakukan'&&(g.a==='perbaiki'||g.a==='kalibrasi'||g.a==='isiEnergi'))fx('pulih','inti');
+}
+function onFaseSelesai(f){
+ const g=K.kegiatan;
+ if(f==='mengamati kembali')return; // lingkaran menutup — keputusan berikutnya menunggu
+ switch(g.a){
+  case 'amati':
+   if(f==='memahami'){K.stat.amati++;K.stat.tAmat=Date.now();
+    const satu=D.bits.filter(b=>b.v===1).length;
+    jurnal('AMATI','arus bit dipindai: '+D.bits.length+' objek · rasio 1 = '+Math.round(100*satu/D.bits.length)+'% — energi '+Math.round(K.energi)+'%');
+   }break;
+  case 'eks':
+   if(f==='mengevaluasi')resolveEks(g.id);break;
+  case 'bangun':
+   if(f==='membangun'){K.fas[g.id]=1;K.stat.bangun++;aus('aktuator',9);aus('inti',3);fx('bangun','bengkel');
+    jurnal('BANGUN',fas(g.id).nama+' selesai dibangun dari hasil lab — manfaat: '+fas(g.id).manfaat);}
+   break;
+  case 'tingkatkan':
+   if(f==='meningkatkan'){K.fas[g.id]=lvlFas(g.id)+1;K.stat.tingkat++;aus('aktuator',8);fx('bangun','bengkel');
+    jurnal('BANGUN',fas(g.id).nama+' ditingkatkan ke tingkat '+K.fas[g.id]+' — '+fas(g.id).manfaat);}
+   break;
+  case 'perbaiki':
+   if(f==='melakukan'){const terendah=SISTEM.slice().sort((a,b)=>integ(a.id)-integ(b.id))[0];
+    const sebelum=integ(terendah.id);
+    K.wear[terendah.id]=(K.wear[terendah.id]||0)*0.25;K.stat.rawat++;aus('aktuator',4);
+    jurnal('RAWAT',terendah.nama+' dirawat: integritas '+Math.round(sebelum)+'% → '+Math.round(integ(terendah.id))+'% — kerusakan jadi pengalaman, tak diulang');}
+   break;
+  case 'kalibrasi':
+   if(f==='melakukan'){SISTEM.forEach(s=>{K.wear[s.id]=(K.wear[s.id]||0)*0.7});K.stat.rawat++;
+    jurnal('RAWAT','kalibrasi pencegahan — keausan rata-rata diturunkan ke '+r1(rataWear())+'% sebelum gangguan tumbuh besar');}
+   break;
+  case 'isiEnergi':
+   if(f==='mengevaluasi'&&g.awalE<45)
+    jurnal('RAWAT','energi dipulihkan '+g.awalE+'% → '+Math.round(K.energi)+'% — bukan istirahat: perawatan operasional, tubuh tak kenal tidur');
+   break;
+  case 'kaji':
+   if(f==='menemukan'){K.stat.kaji++;tulisKajian();}
+   break;
+ }
+}
+function tickKegiatan(now){
+ const g=K.kegiatan;if(!g)return;
+ if(g.i<0){g.i=0;g.t0=now;g.dur=durFase(g.f[0]);g.lts=now;onFaseMasuk(g.f[0]);}
+ if(g.a==='isiEnergi')K.energi=clamp(K.energi+2.4*(now-g.lts)/1000,0,100);
+ K.energi=clamp(K.energi+0.018*(now-g.lts)/1000,0,100); // pulih pasif sangat pelan
+ g.lts=now;
+ const f=g.f[g.i];
+ if(now-g.t0>=g.dur){
+  onFaseSelesai(f);g.i++;
+  if(g.i>=g.f.length){K.kegiatan=null;keputusan();return}
+  g.t0=now;g.dur=durFase(g.f[g.i]);onFaseMasuk(g.f[g.i]);
+ }
+}
+/* ---- resolusi eksperimen: peluang dihitung dari kemampuan nyata,
+   kegagalan menambah pengalaman, insiden dicatat agar tak terulang ---- */
+function resolveEks(id){
+ const cp=konsep(id),t=K.tahu[id]||(K.tahu[id]={n:0,gagal:0,t:0,ok:false});
+ const rng=mb32(hash32(id+'#'+t.n+'#'+K.stat.eks+'#'+((K.data&&K.data.eksporAt)||'')+'#'+K.lahir));
+ K.stat.eks++;
+ aus('sensor',4);aus('aktuator',6);aus('ingatan',3);
+ const peluang=()=>clamp(0.34+0.09*t.n+0.02*poinTahu()+0.05*lvlFas('tungku')+0.03*lvlOtak()+0.03*t.gagal,0.05,0.95);
+ const p=peluang();
+ t.t=Date.now();
+ if(rng()<p){
+  t.ok=true;K.stat.temu++;fx('temu','lab',cp.gl);
+  jurnal('TEMU',cp.nama+' dikuasai setelah '+(t.n+1)+' percobaan (peluang '+Math.round(p*100)+'%) — '+uraianTemu(id));
+ }else{
+  t.n++;t.gagal++;K.stat.gagal++;fx('gagal','lab');
+  const sebab=['arus tak stabil','penyelarasan partikel meleset','presisi gabungan kurang'][Math.floor(rng()*3)];
+  jurnal('GAGAL',cp.nama+' percobaan ke-'+t.n+' gagal: '+sebab+' — pengalaman menaikkan peluang ke '+Math.round(peluang()*100)+'%');
+  if(rng()<0.30){
+   const w=['aktuator','sensor','ingatan','inti'][Math.floor(rng()*4)],d=9+rng()*9;
+   K.wear[w]=clamp((K.wear[w]||0)+d,0,99);
+   jurnal('SISTEM','insiden: '+w+' terdampak +'+r1(d)+'% keausan → integritas '+Math.round(integ(w))+'% · dicatat agar tak terulang');
+  }
+ }
+}
+/* ---- kajian cermin pasar: setiap kalimat = angka terhitung dari data nyata ---- */
+function tulisKajian(){
+ const d=K.data;
+ if(!d||!d.ok){jurnal('DATA','cermin belum terbaca — kajian ditunda dengan jujur');return}
+ jurnal('DATA','kajian cermin '+d.hari+' (usia '+fmtUsia(usiaCermin())+'): '+d.nPicks+' pick · K='+d.k+' · lahir '+d.lahir+' · ditolak '+d.ditolak+' · regime '+d.regime);
+ if(d.mica){
+  const hr=d.mica.hitRate*100,cr=d.mica.cumRet*100;
+  jurnal('DATA','rekam '+d.mica.days+' hari: hit-rate '+r1(hr)+'% · kumulatif '+r1(cr)+'%'+(d.acakC!=null?(' — '+(cr>d.acakC*100?'DI ATAS':'di bawah')+' pemilihan acak ('+r1(d.acakC*100)+'%)'):''));
+ }
+ if(d.top&&d.top.length){
+  const t0=d.top[0],entri=Object.entries(t0.f||{}).sort((a,b)=>b[1]-a[1]);
+  const kuat=entri[0],lemah=entri[entri.length-1];
+  jurnal('DATA',t0.sym+' '+(t0.dir||'')+' keyakinan '+t0.conf+'% — penguat: '+(kuat?kuat[0]+' '+r1(kuat[1]):'-')+' · penahan: '+(lemah?lemah[0]+' '+r1(lemah[1]):'-'));
+ }
+}
+function fx(jenis,zona,gl){
+ const z=D.zona[zona];if(!z)return;
+ D.fx.push({j:jenis,x:z.titik.x,y:z.titik.y,t0:performance.now(),dur:jenis==='bangun'?2200:1800,gl:gl||''});
+ if(D.fx.length>12)D.fx.shift();
+}
+const faseKini=()=>K.kegiatan?K.kegiatan.f[K.kegiatan.i]:'mengamati kembali';
+/* ================= MATA — pelihat dunia =================
+   Panggung penuh, dunia selalu tampak UTUH: layout dihitung ulang dari ruang
+   bebas (viewport − HUD − panel) → tak ada areal terpotong, tanpa zoom. */
+const cv=$('panggung'),cx=cv.getContext('2d');
+const W={worldW:100,worldH:100,skala:1,ox:0,oy:0};
+const ZONA_DEF=[
+ {id:'sumber', nama:'SUMBER DAYA',      warna:'#39d3d3'},
+ {id:'lab',    nama:'LAB EKSPERIMEN',   warna:'#b18cff'},
+ {id:'bengkel',nama:'BENGKEL KONSTRUKSI',warna:'#ffd166'},
+ {id:'inti',   nama:'INTI PERAWATAN',   warna:'#3adf8f'},
+ {id:'tautan', nama:'TAUTAN PASAR',     warna:'#7dd3fc'},
+];
+const D={fit:{x:8,y:60,w:320,h:320},zona:{},bits:[],fx:[],
+ ent:{x:50,y:50,tx:50,ty:50,jejak:[]},mini:false,lalu:''};
 
-/* ---------- GUDANG: ingatan tersimpan nyata ---------- */
-const KUNCI = 'mp_sarang_v282';
-function gudangAwal() {
-  return {
-    versi: 'v282-mesin-hidup', lahir: Date.now(),
-    gen: 0, thr: 62,
-    genom: { wMom: 0.30, wTren: 0.22, wVol: 0.16, wAtr: 0.10, wRev: 0.08, wBtc: 0.14 },
-    fitHist: [], kandidatHantu: [],
-    xp: 0, benar: 0, salahN: 0, sekolahTerakhir: 0, cekTerakhir: 0,
-    res: { lilin: 0, bit: 0, hitung: 0, nilai: 0, pancing: 0, evolusi: 0, auditN: 0 },
-    pasir: {},      // sim -> {t, tsA, c[], v[], sumber}
-    faktor: {},     // sim -> {mom7d, mom48, ema20, ema50, emaAlign, rsi, atrPct, volSurge, distHigh, btcCorr, skor}
-    audit: { ok: 0, dev: 0, terakhir: 0, catatan: [] },
-    jurnal: [],
-    siklus: 0, evolusiSiklus: -1, auditSiklus: -1,
-    sumber: 'arsip'
-  };
+function hitungFit(){
+ const hr=$('hud').getBoundingClientRect(),p=$('panel');
+ const dsk=matchMedia('(min-width:1024px)').matches;
+ const tampak=p.offsetWidth>2&&!p.classList.contains('sembunyi');
+ let x=8,y=hr.bottom+8,w=innerWidth-16,h=innerHeight-hr.bottom-16;
+ if(tampak){
+  if(dsk){w=Math.max(120,p.offsetLeft-x-6)}
+  else{h=Math.max(120,p.offsetTop-y-6)}
+ }
+ D.fit={x,y,w,h};
 }
-let G = gudangAwal();
-try {
-  const d = JSON.parse(localStorage.getItem(KUNCI) || 'null');
-  if (d && d.versi === 'v282-mesin-hidup') G = Object.assign(gudangAwal(), d);
-} catch (e) { }
-function simpan() {
-  try { localStorage.setItem(KUNCI, JSON.stringify(G)); }
-  catch (e) {
-    metaboli();
-    try { localStorage.setItem(KUNCI, JSON.stringify(G)); TRACE.push('pencatat.metaboli', 'kuota nyaris kenyang — ingatan dilipat otomatis'); }
-    catch (e2) { TRACE.push('pencatat.metaboli', 'penyimpanan perangkat penuh — ingatan hanya hidup di sesi ini (jujur)'); }
+function tata(){
+ hitungFit();
+ const asp=clamp(D.fit.w/Math.max(1,D.fit.h),0.55,2.3);
+ let ww,wh;
+ if(asp>=1){wh=100;ww=100*asp}else{ww=100;wh=100/asp}
+ W.worldW=ww;W.worldH=wh;W.skala=D.fit.w/ww;W.ox=D.fit.x;W.oy=D.fit.y;
+ D.mini=D.fit.w<560;
+ const m=3.2,g=3,z=D.zona;
+ if(wh>ww){ // potret (mobile): 2 kolom × 2 baris + inti penuh di bawah
+  const cw=(ww-2*m-g)/2,Ha=wh-2*m-2*g,r1h=Ha*0.36,r2h=Ha*0.36,r3h=Ha*0.28;
+  z.sumber ={x:m,y:m,w:cw,h:r1h};
+  z.lab    ={x:m+cw+g,y:m,w:cw,h:r1h};
+  z.tautan ={x:m,y:m+r1h+g,w:cw,h:r2h};
+  z.bengkel={x:m+cw+g,y:m+r1h+g,w:cw,h:r2h};
+  z.inti   ={x:m,y:m+r1h+r2h+2*g,w:ww-2*m,h:r3h};
+ }else{ // lanskap: 3 kolom × 2 baris
+  const cw=(ww-2*m-2*g)/3,ch=(wh-2*m-g)/2;
+  z.sumber ={x:m,y:m,w:cw,h:ch};
+  z.lab    ={x:m+cw+g,y:m,w:cw,h:ch};
+  z.tautan ={x:m+2*(cw+g),y:m,w:cw,h:ch};
+  z.bengkel={x:m,y:m+ch+g,w:2*cw+g,h:ch};
+  z.inti   ={x:m+2*(cw+g),y:m+ch+g,w:cw,h:ch};
+ }
+ ZONA_DEF.forEach(d=>{
+  const q=z[d.id];
+  q.titik={x:q.x+q.w*0.5,y:q.y+q.h*(d.id==='lab'?0.66:0.55)};
+ });
+ // bit lahir dari tata letak yang deterministik — objek nyata di zona sumber
+ const kunciTata=ww.toFixed(1)+'x'+wh.toFixed(1)+'x'+D.mini;
+ if(kunciTata!==D.lalu){
+  D.lalu=kunciTata;
+  const n=D.mini?6:9,zs=z.sumber;
+  D.bits.length=0;
+  for(let i=0;i<n;i++){
+   const rng=mb32(hash32('bit:'+i+':'+kunciTata));
+   D.bits.push({v:rng()<0.5?0:1,u:rng(),w:rng(),f:rng()*6.28,fl:Date.now()+6000+rng()*9000});
   }
+  const e=D.ent;
+  if(e.x<W.ox||e.x>W.ox+ww||e.y<W.oy||e.y>W.oy+wh){e.x=ww/2;e.y=wh/2}
+  const gk=K.kegiatan?RENCANA[K.kegiatan.a]:null;
+  if(gk&&z[gk.z]){e.tx=z[gk.z].titik.x;e.ty=z[gk.z].titik.y}
+ }
 }
-function metaboli() {
-  for (const s in G.pasir) {
-    const d = G.pasir[s];
-    if (d.c.length > 120) { const k = d.c.length - 120; d.c = d.c.slice(k); d.v = d.v.slice(k); d.tsA += k * 3600000; }
+function statusZona(id){
+ switch(id){
+  case 'sumber':return D.bits.length+' bit mengalir · energi '+Math.round(K.energi)+'%';
+  case 'lab':return nTahu()+'/'+KONSEP.length+' konsep · '+K.stat.eks+' percobaan';
+  case 'bengkel':return FASIL.filter(f=>lvlFas(f.id)>0).length+'/'+FASIL.length+' fasilitas berdiri';
+  case 'inti':return 'inti '+Math.round(integ('inti'))+'% · keausan '+r1(rataWear())+'%';
+  case 'tautan':return (K.data&&K.data.ok)?('cermin '+fmtUsia(usiaCermin())+' · '+K.data.nPicks+' pick'):'tautan terputus';
+ }
+ return '';
+}
+function kotak(x,y,w,h,r){
+ cx.beginPath();cx.moveTo(x+r,y);cx.arcTo(x+w,y,x+w,y+h,r);cx.arcTo(x+w,y+h,x,y+h,r);
+ cx.arcTo(x,y+h,x,y,r);cx.arcTo(x,y,x+w,y,r);cx.closePath();
+}
+function gambarZona(z,def,t){
+ const fs=Math.max(1.9,9.5/W.skala),lw=Math.max(0.14,1.2/W.skala);
+ cx.fillStyle='rgba(255,255,255,.028)';kotak(z.x,z.y,z.w,z.h,2.4);cx.fill();
+ cx.strokeStyle=def.warna+'55';cx.lineWidth=lw;kotak(z.x,z.y,z.w,z.h,2.4);cx.stroke();
+ // label + status — bagian dari dunia, bukan teks panel
+ cx.fillStyle=def.warna;cx.font='700 '+fs+'px system-ui,sans-serif';cx.textAlign='left';cx.textBaseline='top';
+ cx.fillText(def.nama,z.x+2.2,z.y+1.8);
+ cx.fillStyle='rgba(219,228,248,.5)';cx.font=(fs*0.86)+'px system-ui,sans-serif';
+ cx.fillText(statusZona(def.id),z.x+2.2,z.y+z.h-fs*1.9);
+ // aksen khas per zona
+ if(def.id==='inti'){ // pad perawatan
+  const p=z.titik,pul=0.75+0.25*Math.sin(t*0.0022);
+  cx.strokeStyle='rgba(58,223,143,'+(0.5*pul)+')';cx.lineWidth=lw*1.4;
+  cx.beginPath();cx.arc(p.x,p.y,4.2*pul,0,6.283);cx.stroke();
+  cx.strokeStyle='rgba(58,223,143,.22)';
+  cx.beginPath();cx.arc(p.x,p.y,6.6*pul,0,6.283);cx.stroke();
+ }
+ if(def.id==='lab'){ // meja eksperimen
+  const p=z.titik,wB=Math.min(z.w*0.42,16);
+  cx.fillStyle='rgba(177,140,255,.13)';kotak(p.x-wB/2,p.y+1.2,wB,2.6,1);cx.fill();
+  cx.strokeStyle='rgba(177,140,255,.5)';cx.lineWidth=lw;kotak(p.x-wB/2,p.y+1.2,wB,2.6,1);cx.stroke();
+  cx.fillStyle='rgba(177,140,255,.55)';
+  cx.beginPath();cx.arc(p.x-wB/2+1.6,p.y+2.5,0.9,0,6.283);cx.fill();
+  cx.beginPath();cx.arc(p.x+wB/2-1.6,p.y+2.5,0.9,0,6.283);cx.fill();
+ }
+}
+function gambarStruktur(t){ // bengkel: fasilitas berdiri & tumbuh per tingkat
+ const z=D.zona.bengkel;if(!z)return;
+ const lv=FASIL.filter(f=>lvlFas(f.id)>0).length;
+ const kol=Math.max(3,D.mini?3:3),baris=2;
+ const cw=(z.w-3)/3,ch=(z.h-9.4)/baris;
+ FASIL.forEach((f,i)=>{
+  const kolomI=i%kol,barisI=Math.floor(i/kol);
+  const x=z.x+1.5+kolomI*cw,y=z.y+4.8+barisI*ch,level=lvlFas(f.id);
+  if(level>0){
+   const tinggi=Math.min(ch*0.55,1.6+level*1.1);
+   cx.fillStyle='rgba(255,209,102,.16)';kotak(x,y+ch-2.6,cw-2,2.1,0.8);cx.fill();
+   cx.fillStyle='rgba(255,209,102,.75)';
+   cx.fillRect(x+(cw-2)/2-0.7,y+ch-2.6-tinggi,1.4,tinggi);
+   cx.fillRect(x+(cw-2)/2-2.2,y+ch-2.6-tinggi*0.55,1.0,tinggi*0.55);
+   for(let p=0;p<3;p++){
+    cx.fillStyle=p<level?'#ffd166':'rgba(255,209,102,.18)';
+    cx.fillRect(x+1+p*1.9,y+ch-2.2,1.3,1.3);
+   }
+   cx.fillStyle='rgba(255,224,150,.85)';cx.font=Math.max(1.5,7/W.skala)+'px system-ui,sans-serif';
+   cx.textAlign='left';cx.textBaseline='top';cx.fillText(f.nama.split(' ')[0],x,y+ch-0.9);
+  }else{
+   cx.strokeStyle='rgba(255,209,102,.18)';cx.setLineDash([1.2,1.2]);cx.lineWidth=Math.max(0.1,0.9/W.skala);
+   kotak(x,y+ch-4.6,cw-2,4.1,0.8);cx.stroke();cx.setLineDash([]);
+   cx.fillStyle='rgba(255,209,102,.3)';cx.font=Math.max(1.4,6.5/W.skala)+'px system-ui,sans-serif';
+   cx.textAlign='left';cx.textBaseline='top';cx.fillText(f.nama.split(' ')[0],x+0.6,y+ch-0.9);
   }
-  G.jurnal = G.jurnal.slice(-14);
-  G.audit.catatan = G.audit.catatan.slice(-8);
-  G.fitHist = G.fitHist.slice(-26);
-  G.kandidatHantu = G.kandidatHantu.slice(-4);
+ });
 }
-/* =====================================================================
-   OTAK — matematika nyata atas lilin nyata (bisa diverifikasi pemilik)
-   ===================================================================== */
-function emaDeret(a, n) { const k = 2 / (n + 1); const e = [a[0]]; for (let i = 1; i < a.length; i++) e[i] = a[i] * k + e[i - 1] * (1 - k); return e; }
-function rsiDeret(c, n = 14) { // Wilder
-  const out = new Array(c.length).fill(50); let g = 0, l = 0;
-  for (let i = 1; i <= n && i < c.length; i++) { const d = c[i] - c[i - 1]; if (d > 0) g += d; else l -= d; }
-  g /= n; l /= n; out[Math.min(n, c.length - 1)] = l === 0 ? 100 : 100 - 100 / (1 + g / l);
-  for (let i = n + 1; i < c.length; i++) {
-    const d = c[i] - c[i - 1];
-    g = (g * (n - 1) + (d > 0 ? d : 0)) / n; l = (l * (n - 1) + (d < 0 ? -d : 0)) / n;
-    out[i] = l === 0 ? 100 : 100 - 100 / (1 + g / l);
+function gambarBit(t){
+ const z=D.zona.sumber;if(!z)return;
+ const s=Math.max(1.7,2.4);
+ D.bits.forEach((b,i)=>{
+  if(t>b.fl){b.v^=1;b.fl=t+6000+mb32(hash32('flip'+i+Math.floor(t/1000)))()*9000}
+  const x=z.x+z.w*(0.14+0.72*b.u),y=z.y+z.h*(0.30+0.5*b.w)+Math.sin(t*0.0011+b.f)*0.9;
+  b.x=x;b.y=y;
+  cx.fillStyle=b.v?'rgba(57,211,255,.92)':'rgba(177,140,255,.5)';
+  kotak(x-s/2,y-s/2,s,s,0.6);cx.fill();
+  cx.fillStyle=b.v?'#04202c':'rgba(4,6,12,.8)';
+  cx.font='700 '+Math.max(1.3,7.5/W.skala)+'px ui-monospace,monospace';
+  cx.textAlign='center';cx.textBaseline='middle';
+  cx.fillText(String(b.v),x,y+0.05);
+ });
+ // saat eksperimen berjalan: dua bit ditarik ke meja lab & digabungkan
+ const g=K.kegiatan;
+ if(g&&g.a==='eks'&&(g.f[g.i]==='mencoba'||g.f[g.i]==='melakukan')){
+  const p=D.zona.lab.titik,glow=0.5+0.5*Math.sin(t*0.008);
+  cx.strokeStyle='rgba(177,140,255,'+(0.35+0.4*glow)+')';cx.lineWidth=Math.max(0.14,1.1/W.skala);
+  cx.beginPath();cx.moveTo(p.x-4.5,p.y+2.5);cx.lineTo(p.x,p.y+2.5);cx.lineTo(p.x+4.5,p.y+2.5);cx.stroke();
+  cx.fillStyle='rgba(57,211,255,.9)';kotak(p.x-5.6,p.y+1.6,1.9,1.9,0.5);cx.fill();
+  cx.fillStyle='rgba(177,140,255,.8)';kotak(p.x+3.7,p.y+1.6,1.9,1.9,0.5);cx.fill();
+  cx.fillStyle='rgba(255,255,255,'+(0.5+0.5*glow)+')';
+  cx.font='700 '+Math.max(1.8,9/W.skala)+'px system-ui,sans-serif';cx.textAlign='center';cx.textBaseline='middle';
+  cx.fillText(konsep(g.id)?konsep(g.id).gl:'?',p.x,p.y-0.4);
+ }
+}
+function gambarTautan(t){ // chip pick nyata di zona tautan (dari arena-keadaan.json)
+ const z=D.zona.tautan;if(!z)return;
+ if(!K.data||!K.data.ok){
+  cx.fillStyle='rgba(125,211,252,.4)';cx.font=Math.max(1.6,8/W.skala)+'px system-ui,sans-serif';
+  cx.textAlign='center';cx.textBaseline='middle';
+  cx.fillText('menunggu tautan…',z.titik.x,z.titik.y);
+  return;
+ }
+ const n=D.mini?2:3,picks=(K.data.top||[]).slice(0,n);
+ cx.textAlign='center';cx.textBaseline='middle';
+ picks.forEach((p,i)=>{
+  const y=z.titik.y-3.2+i*4.4,wC=Math.min(z.w*0.62,20);
+  cx.fillStyle='rgba(125,211,252,.12)';kotak(z.titik.x-wC/2,y-1.6,wC,3.4,1);cx.fill();
+  cx.strokeStyle='rgba(125,211,252,.4)';cx.lineWidth=Math.max(0.1,0.9/W.skala);kotak(z.titik.x-wC/2,y-1.6,wC,3.4,1);cx.stroke();
+  cx.fillStyle='#eaf6ff';cx.font='700 '+Math.max(1.5,7.5/W.skala)+'px ui-monospace,monospace';
+  cx.fillText(p.sym.replace('USDT',''),z.titik.x-wC/2+2.5,y);
+  cx.fillStyle='rgba(219,228,248,.75)';cx.font=Math.max(1.3,6.5/W.skala)+'px system-ui,sans-serif';
+  cx.fillText(p.conf+'%'+(p.dir==='BUY'?' ↑':' ↓'),z.titik.x+wC/2-2.5,y);
+ });
+}
+function gambarEntitas(t){
+ const e=D.ent;
+ e.x+=(e.tx-e.x)*0.05;e.y+=(e.ty-e.y)*0.05;
+ e.jejak.push({x:e.x,y:e.y});if(e.jejak.length>10)e.jejak.shift();
+ const fase=faseKini(),g=K.kegiatan;
+ let rad=3.1,cep=0.9,N=(D.mini?18:30),warna='177,140,255';
+ if(fase==='mengamati'){rad=4.6;cep=0.35;warna='57,211,255'}
+ else if(fase==='memahami'||fase==='mengevaluasi'){rad=3.6;cep=0.55}
+ else if(fase==='mencoba'||fase==='melakukan'){rad=2.4;cep=1.5}
+ else if(fase==='membangun'||fase==='meningkatkan'){rad=2.7;cep=1.1;warna='255,209,102'}
+ else if(fase==='mengamati kembali'){rad=5.2;cep=0.28;warna='139,157,196'}
+ if(g&&(g.a==='perbaiki'||g.a==='kalibrasi'||g.a==='isiEnergi')){rad=2.0+1.5*Math.sin(t*0.002);cep=0.7;warna='58,223,143'}
+ // jejak gerak — sang pola berpindah ruang
+ if(e.jejak.length>2){
+  cx.strokeStyle='rgba(177,140,255,.25)';cx.lineWidth=Math.max(0.12,1/W.skala);
+  cx.beginPath();cx.moveTo(e.jejak[0].x,e.jejak[0].y);
+  e.jejak.forEach(q=>cx.lineTo(q.x,q.y));cx.stroke();
+ }
+ // benang sensor saat mengamati — mengarah ke objek yang sedang dipelajari
+ if(fase==='mengamati'){
+  const tgt=(g&&g.a==='kaji'&&D.zona.tautan)?[{x:D.zona.tautan.titik.x,y:D.zona.tautan.titik.y}]
+   :D.bits.slice(0,4).map(b=>({x:b.x||b.u*10,y:b.y||b.w*10}));
+  cx.strokeStyle='rgba(57,211,255,.35)';cx.lineWidth=Math.max(0.1,0.8/W.skala);
+  tgt.forEach(q=>{cx.beginPath();cx.moveTo(e.x,e.y);cx.lineTo(q.x,q.y);cx.stroke()});
+ }
+ // koloni partikel — bentuknya aktivitas itu sendiri
+ for(let i=0;i<N;i++){
+  const ang=i/N*6.283+t*0.001*cep*(i%2?1:-1)+i*0.35;
+  const rr=rad*(0.82+0.3*Math.sin(t*0.003+i*1.7));
+  const px=e.x+Math.cos(ang)*rr,py=e.y+Math.sin(ang)*rr*0.85;
+  cx.fillStyle='rgba('+warna+','+(0.35+0.4*Math.abs(Math.sin(t*0.004+i*2.1)))+')';
+  cx.beginPath();cx.arc(px,py,Math.max(0.28,0.42+0.18*Math.sin(t*0.005+i*2)),0,6.283);cx.fill();
+ }
+ // inti kesadaran — denyut mengikuti energi nyata
+ const radI=2.0+0.32*Math.sin(t*0.004*(0.5+K.energi/60));
+ const gr=cx.createRadialGradient(e.x,e.y,0,e.x,e.y,radI*2);
+ gr.addColorStop(0,'rgba(255,255,255,.95)');gr.addColorStop(0.4,'rgba('+warna+',.55)');gr.addColorStop(1,'rgba('+warna+',0)');
+ cx.fillStyle=gr;cx.beginPath();cx.arc(e.x,e.y,radI*2,0,6.283);cx.fill();
+ cx.fillStyle='#fff';cx.beginPath();cx.arc(e.x,e.y,radI*0.55,0,6.283);cx.fill();
+ // cincin energi — busur penuh = energi 100%
+ cx.strokeStyle='rgba(57,211,255,.8)';cx.lineWidth=Math.max(0.16,1.2/W.skala);
+ cx.beginPath();cx.arc(e.x,e.y,radI*1.35,-1.5708,-1.5708+6.283*K.energi/100);cx.stroke();
+}
+function gambarFx(now){
+ for(let i=D.fx.length-1;i>=0;i--){
+  const f=D.fx[i],age=(now-f.t0)/f.dur;
+  if(age>1){D.fx.splice(i,1);continue}
+  cx.textAlign='center';cx.textBaseline='middle';
+  if(f.j==='temu'){
+   cx.strokeStyle='rgba(58,223,143,'+(1-age)+')';cx.lineWidth=Math.max(0.16,1.4/W.skala);
+   cx.beginPath();cx.arc(f.x,f.y,1.5+age*6,0,6.283);cx.stroke();
+   cx.fillStyle='rgba(58,223,143,'+(1-age)+')';
+   cx.font='800 '+Math.max(2.2,12/W.skala)+'px system-ui,sans-serif';
+   cx.fillText(f.gl||'✓',f.x,f.y-age*4.5);
+  }else if(f.j==='gagal'){
+   const rng=mb32(hash32('gagal'+f.t0));
+   for(let s=0;s<6;s++){
+    const a=s/6*6.283+rng(),len=1+rng()*2;
+    cx.strokeStyle='rgba(255,107,125,'+(1-age)+')';cx.lineWidth=Math.max(0.1,1/W.skala);
+    cx.beginPath();cx.moveTo(f.x+Math.cos(a)*age*len,f.y+Math.sin(a)*age*len);
+    cx.lineTo(f.x+Math.cos(a)*(age*len+1),f.y+Math.sin(a)*(age*len+1));cx.stroke();
+   }
+  }else if(f.j==='bangun'){
+   cx.fillStyle='rgba(255,209,102,'+(0.7*(1-age))+')';
+   cx.fillRect(f.x-1.2,f.y-4*age,2.4,4*age);
+  }else if(f.j==='pulih'){
+   for(let s=0;s<8;s++){
+    const a=s/8*6.283,r=(1-age)*4;
+    cx.fillStyle='rgba(58,223,143,'+(1-age)+')';
+    cx.beginPath();cx.arc(f.x+Math.cos(a)*r,f.y+Math.sin(a)*r,0.4,0,6.283);cx.fill();
+   }
+  }else if(f.j==='pindai'){
+   cx.strokeStyle='rgba(57,211,255,'+(0.55*(1-age))+')';cx.lineWidth=Math.max(0.14,1.1/W.skala);
+   cx.beginPath();cx.arc(f.x,f.y,4.5,-1.5708,-1.5708+age*6.283);cx.stroke();
+  }else if(f.j==='tarik'){
+   const p=D.zona.lab.titik,off=age*3;
+   cx.fillStyle='rgba(57,211,255,'+(1-age)+')';
+   cx.beginPath();cx.arc(p.x-4.5+off,p.y+2.5,0.5,0,6.283);cx.fill();
+   cx.fillStyle='rgba(177,140,255,'+(1-age)+')';
+   cx.beginPath();cx.arc(p.x+4.5-off,p.y+2.5,0.5,0,6.283);cx.fill();
   }
-  return out;
+ }
 }
-function rsiJalur2(c, n = 14) { // jalur verifikasi: rata-rata sederhana (bukan Wilder)
-  const m = Math.min(n, c.length - 1); let up = 0, dn = 0;
-  for (let i = c.length - m; i < c.length; i++) { const d = c[i] - c[i - 1]; if (d > 0) up += d; else dn -= d; }
-  if (dn === 0) return 100; return 100 - 100 / (1 + (up / m) / (dn / m));
-}
-function atrDeret(c, n = 14) { // true range close-to-close
-  const tr = [0]; for (let i = 1; i < c.length; i++) tr.push(Math.abs(c[i] - c[i - 1]));
-  let a = 0; for (let i = 1; i <= n && i < tr.length; i++) a += tr[i]; a /= n;
-  const out = new Array(c.length).fill(a);
-  for (let i = n + 1; i < c.length; i++) { a = (a * (n - 1) + tr[i]) / n; out[i] = a; }
-  return out;
-}
-function korelasi(a, b) { // pearson
-  const n = Math.min(a.length, b.length); let sa = 0, sb = 0;
-  for (let i = 0; i < n; i++) { sa += a[i]; sb += b[i]; }
-  const ma = sa / n, mb = sb / n; let ca = 0, cb = 0, cab = 0;
-  for (let i = 0; i < n; i++) { const x = a[i] - ma, y = b[i] - mb; ca += x * x; cb += y * y; cab += x * y; }
-  const p = Math.sqrt(ca * cb); return p ? cab / p : 0;
-}
-function hitung(sim) {
-  const d = G.pasir[sim]; if (!d || d.c.length < 60) return false;
-  const c = d.c, v = d.v, n = c.length;
-  const e20 = emaDeret(c, 20), e50 = emaDeret(c, 50), rs = rsiDeret(c, 14), at = atrDeret(c, 14);
-  const mom7d = n > 168 ? c[n - 1] / c[n - 1 - 168] - 1 : (c[n - 1] / c[0] - 1) * (168 / Math.max(1, n - 1));
-  const mom48 = n > 48 ? c[n - 1] / c[n - 1 - 48] - 1 : c[n - 1] / c[0] - 1;
-  const emaAlign = Math.tanh((e20[n - 1] - e50[n - 1]) / e50[n - 1] * 40);
-  const v5 = v.slice(-5).reduce((s, x) => s + x, 0) / 5;
-  const v20 = v.slice(-20).reduce((s, x) => s + x, 0) / 20 || 1;
-  const volSurge = Math.tanh((v5 / v20 - 1) * 1.2);
-  const atrPct = at[n - 1] / c[n - 1] * 100;
-  const hi = Math.max.apply(null, c.slice(-168)); const distHigh = Math.tanh((c[n - 1] / hi - 1) * 5);
-  let btcCorr = 0;
-  const b = G.pasir.BTCUSDT;
-  if (sim !== 'BTCUSDT' && b && b.c.length === n) {
-    const ra = [], rb = [];
-    for (let i = n - 100; i < n; i++) { ra.push(Math.log(c[i] / c[i - 1])); rb.push(Math.log(b.c[i] / b.c[i - 1])); }
-    btcCorr = korelasi(ra, rb);
-  }
-  G.faktor[sim] = { mom7d, mom48, ema20: e20[n - 1], ema50: e50[n - 1], emaAlign, rsi: rs[n - 1], atrPct, volSurge, distHigh, btcCorr, skor: 0 };
-  G.res.hitung++;
-  return true;
-}
-
-/* ---------- PENILAI — formula genom terbuka ---------- */
-function skorDari(f, genom) {
-  const g = genom || G.genom;
-  const nmom = Math.tanh(f.mom7d / 0.6);
-  const natr = clamp((8 - f.atrPct) / 8, -1, 1);
-  const nrev = -clamp((f.rsi - 50) / 50, -1, 1);
-  const raw = g.wMom * nmom + g.wTren * f.emaAlign + g.wVol * f.volSurge + g.wAtr * natr + g.wRev * nrev + g.wBtc * (f.btcCorr || 0);
-  return Math.round(clamp(50 + 55 * raw, 0, 100) * 10) / 10;
-}
-function nilaiDanCatat(sim) {
-  const f = G.faktor[sim]; if (!f) return null;
-  f.skor = skorDari(f); G.res.nilai++;
-  TRACE.push('penilai.nilai', '"' + sim + '" → skor ' + fmt(f.skor, 1) + '/100 (thr ' + G.thr + ') → ' + (f.skor >= G.thr ? 'LAYAK' : 'TIDAK-LAYAK'));
-  return f.skor;
-}
-
-/* =====================================================================
-   SENSOR — I/O jaringan nyata ke Binance publik (CORS terbuka)
-   ===================================================================== */
-const UJUNG = ['https://data-api.binance.vision', 'https://api.binance.com', 'https://api1.binance.com'];
-let UJUNG_KE = 0, URL_TERAKHIR = '';
-let SENSOR_MATI = 0, COBA_TERAKHIR = 0; // kesadaran-sensor: gagal beruntun & waktu coba terakhir (sesi)
-async function pancing(sim) {
-  COBA_TERAKHIR = Date.now();
-  for (let c = 0; c < UJUNG.length; c++) {
-    const u = UJUNG[(UJUNG_KE + c) % UJUNG.length];
-    const url = u + '/api/v3/klines?symbol=' + sim + '&interval=1h&limit=200';
-    const ac = new AbortController(); const tm = setTimeout(() => ac.abort(), 9000);
-    try {
-      const r = await fetch(url, { signal: ac.signal }); clearTimeout(tm);
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      const j = await r.json();
-      if (!Array.isArray(j) || j.length < 60) throw new Error('bentuk tak sah');
-      UJUNG_KE = (UJUNG_KE + c) % UJUNG.length; URL_TERAKHIR = url;
-      const kb = JSON.stringify(j).length / 1024;
-      G.pasir[sim] = { t: Date.now(), tsA: +j[0][0], c: j.map(x => +x[4]), v: j.map(x => Math.round(+x[5] * 100) / 100), sumber: 'live' };
-      G.res.lilin += j.length; G.res.bit += Math.round(kb * 1024); G.res.pancing++;
-      if (SENSOR_MATI >= 2) TRACE.push('sensor.pancing', 'gerbang terbuka lagi — sensor hidup kembali setelah ' + SENSOR_MATI + ' kegagalan beruntun');
-      SENSOR_MATI = 0;
-      if (G.sumber !== 'live') { G.sumber = 'live'; renderSumber(); }
-      TRACE.push('sensor.pancing', '"' + sim + '" → ' + j.length + ' lilin · ' + fmt(kb, 1) + ' KB · tutup ' + fmt(+j[j.length - 1][4], j[j.length - 1][4] < 1 ? 5 : 2));
-      renderBukti();
-      return true;
-    } catch (e) { clearTimeout(tm); }
-  }
-  SENSOR_MATI++;
-  if (SENSOR_MATI === 2) TRACE.push('otonomi.catatan', 'sensor mati beruntun — aku TIDAK berhenti: mulai sekarang kukerjakan ingatan lilin yang kupunya, sensor kupancing lagi tiap ± 90 dtk (jujur, bukan pura-pura hidup)');
-  TRACE.push('sensor.pancing', '"' + sim + '" GAGAL — gerbang sensor tertutup; aku lanjut kerja dari ingatan lilin lama (jujur)');
-  return false;
-}
-
-/* ---------- CERMIN ARENA — baca keadaan nyata + ingatan sekolah ---------- */
-const KEADAAN = { ok: false, coba: false, cobaAt: 0, picks: [], regim: null, slot: null, eksporAt: null };
-let OTAK_XP = null; // ingatan mp_otak_mandiri_v1 milik arena (same-origin = ingatan bersama)
-async function hubungkan() {
-  if (KEADAAN.coba) return; KEADAAN.coba = true; KEADAAN.cobaAt = Date.now();
-  try {
-    const r = await fetch('./arena-keadaan.json', { cache: 'no-store' });
-    const j = await r.json();
-    KEADAAN.ok = true;
-    KEADAAN.picks = (j.todayPicks || []).filter(p => p.competitor === 'MICAPROFITA');
-    KEADAAN.regim = j.regime; KEADAAN.slot = j.slotHariIni || null; KEADAAN.eksporAt = j._eksporAt || null;
-    TRACE.push('sensor.hubung', 'arena-keadaan.json terbaca — pick MICAPROFITA: ' + (KEADAAN.picks.map(p => p.symbol).join(', ') || '(kosong)') + ' · regim ' + j.regime + ' · slot ' + (j.slotHariIni ? j.slotHariIni.lahir + '/' + j.slotHariIni.k : '?'));
-    try {
-      const o = JSON.parse(localStorage.getItem('mp_otak_mandiri_v1') || 'null');
-      if (o && typeof o.xp === 'number') { OTAK_XP = { xp: o.xp, level: o.level || 1 }; TRACE.push('sensor.hubung', 'ingatan sekolah arena terbaca — otak-mandiri L' + (o.level || 1) + ' · ' + o.xp + ' XP'); }
-    } catch (e) { }
-    renderAudit();
-  } catch (e) {
-    KEADAAN.ok = false;
-    TRACE.push('sensor.hubung', 'cermin arena tak terjangkau (' + String(e && e.message || e).slice(0, 42) + ') — aku tetap bekerja, audit kutunda dengan jujur');
-    renderAudit();
-  }
-  KEADAAN.coba = false;
-}
-/* =====================================================================
-   AUDITOR — silang-cek nyata: hitunganku vs klaim arena (angka bisa dibedah)
-   ===================================================================== */
-function arenaMom7Dari(p) {
-  const rs = (p.evidence && p.evidence.topReasons) || [];
-  for (const r of rs) { const m = /Momentum 7h:\s*([+\-]?[\d.]+)%/.exec(r); if (m) return parseFloat(m[1]); }
-  return null;
-}
-function tugasAuditSatu(p) {
-  const f = G.faktor[p.symbol];
-  if (!f) { TRACE.push('audit.bandingkan', '"' + p.symbol + '" belum punya lilin — lewati dulu (jujur)'); return; }
-  const myMom = f.mom7d * 100;
-  const arenaMom = arenaMom7Dari(p);
-  let vonis, ket;
-  if (arenaMom == null) { vonis = null; ket = 'arena tak menulis momentum 7h — aku tandai tak-terbanding'; }
-  else {
-    const dev = Math.abs(myMom - arenaMom);
-    vonis = dev <= 12;
-    ket = 'arena ' + pctS(arenaMom) + ' vs hidup ' + pctS(myMom) + ' (dev ' + fmt(dev, 1) + 'pp)';
-    G.audit[vonis ? 'ok' : 'dev']++; G.res.auditN++;
-  }
-  const arahHidup = f.skor >= G.thr && f.mom7d > 0 ? 'BUY' : (f.skor >= G.thr && f.mom7d < 0 ? 'SELL' : 'DIAM');
-  const arahCocok = arahHidup === p.direction;
-  G.audit.catatan.push({ t: Date.now(), sim: p.symbol, arena: arenaMom, hidup: Math.round(myMom * 10) / 10, ok: vonis, arah: p.direction, arahHidup, cocok: arahCocok });
-  G.audit.terakhir = Date.now();
-  TRACE.push('audit.bandingkan', '"' + p.symbol + '" ' + ket + ' · arah arena ' + p.direction + ' vs hidup ' + arahHidup + ' → ' + (vonis == null ? 'TAK-TERBANDING' : vonis ? 'SEPAKAT' : 'MENDEVIASI'));
-  renderAudit();
-}
-
-/* =====================================================================
-   EVOLUSI — genetika nyata: uji-jalan 24 jam atas lilin, seleksi 3 kandidat
-   ===================================================================== */
-function mutasi(g, eta) {
-  const k = {}; const asal = ['wMom', 'wTren', 'wVol', 'wAtr', 'wRev', 'wBtc'];
-  for (const a of asal) k[a] = clamp(g[a] * (1 + (Math.random() * 2 - 1) * eta), 0.02, 0.48);
-  const tot = asal.reduce((s, a) => s + k[a], 0);
-  for (const a of asal) k[a] = Math.round(k[a] / tot * 1000) / 1000;
-  return k;
-}
-function faktorDiBar(o, i) {
-  const c = o.c, v = o.v; if (i < 60) return null;
-  const mom7d = i >= 168 ? c[i] / c[i - 168] - 1 : (c[i] / c[0] - 1) * (168 / Math.max(1, i));
-  const emaAlign = Math.tanh((o.e20[i] - o.e50[i]) / o.e50[i] * 40);
-  let v5 = 0, v20 = 0; for (let j = i - 4; j <= i; j++) v5 += v[j]; for (let j = i - 19; j <= i; j++) v20 += v[j];
-  v5 /= 5; v20 = (v20 / 20) || 1;
-  const volSurge = Math.tanh((v5 / v20 - 1) * 1.2);
-  const atrPct = o.at[i] / c[i] * 100;
-  const hi = Math.max.apply(null, c.slice(Math.max(0, i - 167), i + 1));
-  const distHigh = Math.tanh((c[i] / hi - 1) * 5);
-  let btcCorr = 0;
-  if (o.b) {
-    const ra = [], rb = [];
-    for (let j = i - 99; j <= i; j++) { ra.push(Math.log(c[j] / c[j - 1])); rb.push(Math.log(o.b[j] / o.b[j - 1])); }
-    btcCorr = korelasi(ra, rb);
-  }
-  return { mom7d, emaAlign, rsi: o.rs[i], atrPct, volSurge, distHigh, btcCorr };
-}
-function ujiGenom(genom) {
-  const simList = Object.keys(G.pasir).filter(s => (G.pasir[s].c || []).length >= 120);
-  if (simList.length < 4) return null;
-  const rets = []; let lewati = 0;
-  for (const sim of simList) {
-    const d = G.pasir[sim]; const c = d.c, v = d.v, n = c.length;
-    const o = { c, v, e20: emaDeret(c, 20), e50: emaDeret(c, 50), rs: rsiDeret(c, 14), at: atrDeret(c, 14), b: null };
-    const b = G.pasir.BTCUSDT;
-    if (sim !== 'BTCUSDT' && b && b.c.length === n) o.b = b.c;
-    for (let i = 90; i < n - 24; i++) {
-      const f = faktorDiBar(o, i); if (!f) continue;
-      if (skorDari(f, genom) >= G.thr) { rets.push(c[i + 24] / c[i] - 1); i += 23; }
-    }
-  }
-  if (!rets.length) return null;
-  const fit = rets.reduce((s, x) => s + x, 0) / rets.length * 100;
-  const hit = rets.filter(x => x > 0).length / rets.length;
-  return { fit: Math.round(fit * 10) / 10, n: rets.length, hit: Math.round(hit * 100) };
-}
-function tugasEvolusi() {
-  const dasar = ujiGenom(G.genom);
-  if (!dasar) { TRACE.push('evolusi.uji', 'lilin belum cukup untuk uji-jalan yang jujur — kutunda, tak mau mengarang fitness'); return 'data belum cukup'; }
-  const k1 = mutasi(G.genom, 0.06), k2 = mutasi(G.genom, 0.12);
-  const u1 = ujiGenom(k1), u2 = ujiGenom(k2);
-  const lomba = [{ nm: 'induk', g: G.genom, u: dasar }];
-  if (u1) lomba.push({ nm: 'kandidat-1', g: k1, u: u1 });
-  if (u2) lomba.push({ nm: 'kandidat-2', g: k2, u: u2 });
-  let menang = lomba[0];
-  for (const l of lomba) if (l.u.fit > menang.u.fit) menang = l;
-  const kalah = lomba.filter(l => l !== menang).map(l => l.nm + ' ' + fmt(l.u.fit, 1) + '%');
-  if (kalah.length) G.kandidatHantu.push({ t: Date.now(), teks: kalah.join(' · ') });
-  const ganti = menang.nm !== 'induk';
-  if (ganti) G.genom = menang.g;
-  G.gen++; G.res.evolusi++; G.evolusiSiklus = G.siklus;
-  G.fitHist.push({ g: G.gen, fit: menang.u.fit }); if (G.fitHist.length > 40) G.fitHist = G.fitHist.slice(-40);
-  TRACE.push('evolusi.generasi', 'G' + G.gen + ' · fit ' + pctS(menang.u.fit) + ' · ' + menang.u.n + ' dagang · hit ' + menang.u.hit + '% · ' + (ganti ? 'SELEKSI: ' + menang.nm + ' menang, genom lama diganti' : 'induk bertahan — mutasi kalah') + (kalah.length ? ' · kalah: ' + kalah.join(', ') : ''));
-  renderGenom();
-  return 'G' + G.gen + ' fit ' + pctS(menang.u.fit);
-}
-
-/* =====================================================================
-   SEKOLAH — uji-diri nyata: soal lahir dari data hidup, dijawab lalu
-   DIVERIFIKASI lewat jalur hitung kedua yang berbeda metode. XP cuma
-   naik kalau verifikasi bilang benar — tak bisa menipu diri sendiri.
-   ===================================================================== */
-function tugasSekolah() {
-  const kandidat = UNIVERSE.filter(s => G.pasir[s] && G.pasir[s].c.length >= 100);
-  if (!kandidat.length) { TRACE.push('sekolah.uji-diri', 'belum ada lilin untuk dijadikan soal — belajar menunggu data'); return 'belum ada data'; }
-  const sim = kandidat[Math.floor(Math.random() * kandidat.length)];
-  const d = G.pasir[sim], c = d.c, n = c.length;
-  const f = G.faktor[sim] || (hitung(sim), G.faktor[sim]);
-  const tipe = ['rsi', 'tren', 'mom', 'atr', 'corr'][Math.floor(Math.random() * 5)];
-  let soal, jwb, vrf, benar, satuJwb;
-  if (tipe === 'rsi') {
-    soal = 'RSI14 ' + sim + ' jam terakhir?';
-    jwb = rsiDeret(c, 14)[n - 1]; vrf = rsiJalur2(c, 14);
-    benar = Math.abs(jwb - vrf) < 1.5; satuJwb = fmt(jwb, 1);
-  } else if (tipe === 'tren') {
-    soal = 'EMA20 di atas EMA50 ' + sim + '?';
-    let k = 0; for (let i = n - 3; i < n; i++) { const e = emaDeret(c.slice(0, i + 1), 20), e5 = emaDeret(c.slice(0, i + 1), 50); if (e[i] >= e5[i]) k++; }
-    jwb = f.ema20 >= f.ema50 ? 'YA' : 'TIDAK'; vrf = k >= 2 ? 'YA' : 'TIDAK'; benar = jwb === vrf; satuJwb = jwb;
-  } else if (tipe === 'mom') {
-    soal = 'Momentum 7 hari ' + sim + '?';
-    jwb = f.mom7d * 100;
-    const v = n > 168 ? (c[n - 1] / c[n - 168] - 1) * 100 : (c[n - 1] / c[0] - 1) * (168 / Math.max(1, n - 1)) * 100;
-    vrf = v; benar = Math.abs(jwb - vrf) < 1.2; satuJwb = pctS(jwb);
-  } else if (tipe === 'atr') {
-    soal = 'ATR14 ' + sim + ' (% harga)?';
-    jwb = f.atrPct;
-    let tr = 0; for (let i = n - 14; i < n; i++) tr += Math.abs(c[i] - c[i - 1]);
-    vrf = tr / 14 / c[n - 1] * 100; benar = Math.abs(jwb - vrf) < 0.4; satuJwb = fmt(jwb, 1) + '%';
-  } else {
-    soal = 'Korelasi 100 jam ' + sim + ' vs BTC?';
-    const b = G.pasir.BTCUSDT;
-    if (sim === 'BTCUSDT' || !b || b.c.length !== n) { TRACE.push('sekolah.uji-diri', 'soal korelasi dibatalkan — pasangan BTC belum lengkap'); return 'soal batal'; }
-    const ra = [], rb = [];
-    for (let i = n - 100; i < n; i++) { ra.push(Math.log(c[i] / c[i - 1])); rb.push(Math.log(b.c[i] / b.c[i - 1])); }
-    jwb = korelasi(ra, rb);
-    const ra2 = ra.slice(10), rb2 = rb.slice(10);
-    vrf = korelasi(ra2, rb2); benar = Math.abs(jwb - vrf) < 0.12; satuJwb = fmt(jwb, 2);
-  }
-  const naik = benar ? 10 : 2;
-  G.xp += naik; if (benar) G.benar++; else G.salahN++;
-  G.sekolahTerakhir = Date.now();
-  TRACE.push('sekolah.uji-diri', '"' + soal + '" → ' + satuJwb + ' vs verifikasi ' + fmt(vrf, tipe === 'tren' ? 0 : tipe === 'corr' ? 2 : 1) + (tipe === 'tren' ? '' : ' (jalur-2)') + ' → ' + (benar ? 'BENAR +' + naik + ' XP' : 'MELESET +' + naik + ' XP (tetap belajar)'));
-  return satuJwb + ' / ' + (benar ? 'BENAR' : 'MELESET');
-}
-
-/* ---------- PENCATAT ---------- */
-function tugasPadatkan() {
-  const sblm = G.jurnal.length, lilinSblm = JSON.stringify(G.pasir).length;
-  metaboli();
-  TRACE.push('pencatat.padatkan', 'jurnal ' + sblm + ' → ' + G.jurnal.length + ' entri · ingatan lilin ' + fmt(lilinSblm / 1024, 0) + ' KB dilipat — metaboli selesai, napas lega');
-  return 'metaboli';
-}
-
-/* =====================================================================
-   OTONOMI — INI KESADARANNYA: bukan daftar acak, tapi keputusan prioritas
-   yang dihitung dari keadaan nyata (seperti manusia: yang paling desak
-   dikerjakan dulu). Alasan tiap tugas = kalimat dari kondisi sebenarnya.
-   ===================================================================== */
-function utus() {
-  if (!KEADAAN.ok && !KEADAAN.coba && Date.now() - KEADAAN.cobaAt > 150000) {
-    return { t: 'HUBUNG', ket: 'cermin arena belum terbaca — aku coba sambung ulang' };
-  }
-  let stale = null, umurTerbesar = -1;
-  for (const s of UNIVERSE) {
-    const d = G.pasir[s]; const u = d ? umurMnt(d.t) : 1e9;
-    if (u > umurTerbesar) { umurTerbesar = u; stale = s; }
-  }
-  if (umurTerbesar > SEGAR_MNT) {
-    const adaData = UNIVERSE.some(s => G.pasir[s]);
-    const bolehCoba = SENSOR_MATI < 2 || Date.now() - COBA_TERAKHIR > 90000;
-    if (bolehCoba) return { t: 'PANCING', sim: stale, ket: stale + (umurTerbesar > 1e8 ? ' belum pernah kupancing' : ' ' + fmt(umurTerbesar, 0) + ' mnt tak disentuh') + ' — kupancing sekarang' };
-    // sensor mati tapi aku punya ingatan → jangan menggantung; jatuh ke kerja ingatan
-  }
-  const perluHitung = UNIVERSE.find(s => G.pasir[s] && !G.faktor[s]);
-  if (perluHitung) return { t: 'HITUNG', sim: perluHitung, ket: perluHitung + ' punya ' + G.pasir[perluHitung].c.length + ' lilin segar tapi belum kuhitung — otak dulu' };
-  const semuaSegar = UNIVERSE.every(s => G.pasir[s] && umurMnt(G.pasir[s].t) <= SEGAR_MNT);
-  if (semuaSegar) {
-    if (G.auditSiklus < G.siklus && KEADAAN.picks.length) return { t: 'AUDIT', ket: 'siklus #' + G.siklus + ' selesai — saatnya aku audit klaim arena dengan data hidup' };
-    if (G.evolusiSiklus < G.siklus) return { t: 'EVOLUSI', ket: 'lilin lengkap — genom G' + G.gen + ' kkuji-jalankan melawan pasar nyata' };
-  }
-  if (Date.now() - G.sekolahTerakhir > 150000) return { t: 'SEKOLAH', ket: 'otak mulai mengaku tahu — kuuji diriku dengan soal dari data hidup' };
-  if (Date.now() - (G.cekTerakhir || 0) > 75000) {
-    const berFaktor = UNIVERSE.filter(s => G.faktor[s]);
-    if (berFaktor.length) { const sim = berFaktor[Math.floor(Math.random() * berFaktor.length)]; return { t: 'CEK', sim: sim, ket: 'jeda panjang — kucek ulang hitunganku atas ' + sim + ': ingatan harus cocok dengan lilin' }; }
-  }
-  if (G.jurnal.length > 30) return { t: 'PADATKAN', ket: 'jurnal ' + G.jurnal.length + ' entri — ku metabolikan sebelum kenyang' };
-  let terdekat = 1e9;
-  for (const s of UNIVERSE) { const d = G.pasir[s]; const sisa = d ? SEGAR_MNT - umurMnt(d.t) : 0; if (sisa < terdekat) terdekat = sisa; }
-  if (SENSOR_MATI >= 2) return { t: 'NAPAS', ket: 'sensor tertutup — aku tetap jaga ingatan; kupancing lagi ± ' + fmt(Math.max(3, 90 - (Date.now() - COBA_TERAKHIR) / 1000), 0) + ' dtk lagi' };
-  return { t: 'NAPAS', ket: 'semua terkontrol — kupantau; pancingan berikut ± ' + fmt(Math.max(0.2, terdekat), 0) + ' mnt lagi' };
-}
-
-/* ---------- PELAKSANA — jadwal mesin (tubuh cuma mengikutinya) ---------- */
-const KERJA = {
-  async HUBUNG() { await hubungkan(); return ''; },
-  async PANCING(k) {
-    const ok = await pancing(k.sim);
-    if (ok) {
-      const penuh = UNIVERSE.every(s => G.pasir[s] && umurMnt(G.pasir[s].t) <= SEGAR_MNT);
-      if (penuh) { G.siklus++; TRACE.push('otonomi.siklus', 'siklus #' + G.siklus + ' utuh — 12 simbol segar; audit & evolusi masuk antrean'); }
-      return 'lilin segar masuk';
-    }
-    return 'sensor tertutup';
-  },
-  async HITUNG(k) { const ok = hitung(k.sim); if (!ok) return 'lilin kurang'; nilaiDanCatat(k.sim); renderBukti(); return 'skor ' + fmt(G.faktor[k.sim].skor, 1); },
-  async AUDIT() {
-    let n = 0;
-    for (const p of KEADAAN.picks) {
-      if (G.pasir[p.symbol]) { if (!G.faktor[p.symbol]) hitung(p.symbol); nilaiDanCatat(p.symbol); tugasAuditSatu(p); n++; await tidurMs(350); }
-    }
-    G.auditSiklus = G.siklus;
-    return n ? n + ' pick kusilang-cek' : 'pick arena belum bisa kucek — simbolnya belum kupancing';
-  },
-  async EVOLUSI() { return tugasEvolusi() || ''; },
-  async SEKOLAH() { return tugasSekolah() || ''; },
-  async CEK(k) {
-    const salin = (f) => { const o = Object.assign({}, f); delete o.skor; return JSON.stringify(o); };
-    const skorLama = G.faktor[k.sim].skor;
-    const lama = salin(G.faktor[k.sim]);
-    hitung(k.sim);
-    const baru = salin(G.faktor[k.sim]);
-    G.faktor[k.sim].skor = skorLama; // skor bukan bagian integritas — biar tak salah alarm
-    G.cekTerakhir = Date.now();
-    if (lama === baru) { TRACE.push('otak.cek-integritas', '"' + k.sim + '" dihitung ulang dari ' + G.pasir[k.sim].c.length + ' lilin → EMA/RSI/ATR/momentum/korelasi identik → ingatanku utuh'); return 'ingatan utuh'; }
-    TRACE.push('otak.cek-integritas', '"' + k.sim + '" hitungan-ulang BERBEDA dari ingatan — kuperbarui (data mungkin bergeser)'); return 'ingatan diperbarui';
-  },
-  async PADATKAN() { return tugasPadatkan(); },
-  async NAPAS() { return ''; }
-};
-let TUGAS = null, TIDUR_KE = 0;
-async function putaran() {
-  if (TUGAS) { setTimeout(putaran, 400); return; }
-  const k = utus();
-  if (k.t === 'NAPAS') TIDUR_KE++; else TIDUR_KE = 0;
-  TUGAS = Object.assign({ mulai: Date.now() }, k);
-  chipSet(k.t, k.ket || '');
-  let hasil = '';
-  try { hasil = await (KERJA[k.t](k) || '') || ''; }
-  catch (e) { hasil = 'gagal'; TRACE.push('otonomi.error', k.t + ' error: ' + String(e && e.message || e).slice(0, 70)); }
-  G.jurnal.push({ t: Date.now(), tugas: k.t, ket: ((k.sim ? k.sim + ' · ' : '') + (hasil || k.ket || '')).slice(0, 90) });
-  if (G.jurnal.length > 40) G.jurnal = G.jurnal.slice(-32);
-  if (k.t !== 'NAPAS') simpan();
-  TUGAS = null;
-  renderSemua();
-  const jeda = k.t === 'NAPAS' ? 12000 + Math.random() * 9000 : 800 + Math.random() * 700;
-  setTimeout(putaran, jeda);
-}
-/* =====================================================================
-   RENDERER — tubuh & sarang. PELIHAT MURNI: membaca keadaan mesin &
-   menggambarnya. Tak ada gerakan yang tak lahir dari pekerjaan nyata.
-   ===================================================================== */
-const kanvas = $('panggung'), ctx = kanvas.getContext('2d');
-const VW = 1600, VH = 900, LANTAI = 800;
-let SC = 1, OX = 0, OY = 0, DPR = 1;
-function ukur() {
-  DPR = Math.min(2, window.devicePixelRatio || 1);
-  kanvas.width = innerWidth * DPR; kanvas.height = innerHeight * DPR;
-  kanvas.style.width = innerWidth + 'px'; kanvas.style.height = innerHeight + 'px';
-  SC = Math.max(innerWidth / VW, innerHeight / VH); // cover: tanpa letterbox
-  OX = (innerWidth - VW * SC) / 2; OY = (innerHeight - VH * SC) / 2;
-}
-addEventListener('resize', ukur); ukur();
-function rr(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
-
-const STASIUN = { TAMBANG: 250, MEJA: 545, BANGKU: 700, LAYAR: 890, LAB: 1130, PAPAN: 1355, ARSIP: 1505 };
-const TUBUH = { x: 700, target: 700, jalan: 0, diTempat: true, pose: 'NAPAS', kedip: 0, nadi: 0, pandang: 0 };
-const EFEK = { paket: [], percik: [], kilat: 0, antena: 0, bunga: [] };
-let PAPAN_SOAL = '', MEJA_HITUNG = null, BICARA = '';
-let TINTA = { langit0: [6, 9, 18], langit1: [12, 18, 38], aksen: [123, 211, 252] };
-function campur(a, b, t) { return [Math.round(a[0] + (b[0] - a[0]) * t), Math.round(a[1] + (b[1] - a[1]) * t), Math.round(a[2] + (b[2] - a[2]) * t)]; }
-function rgba(c, a) { return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
-const PAL_FASE = {
-  MIMPI: { l0: [8, 6, 24], l1: [16, 12, 44], ak: [109, 123, 255] },
-  'SARAPAN DATA': { l0: [6, 12, 22], l1: [14, 30, 52], ak: [125, 211, 252] },
-  'ARENA TEMPUR': { l0: [14, 10, 6], l1: [38, 26, 12], ak: [255, 209, 102] },
-  REFLEKSI: { l0: [10, 6, 20], l1: [26, 16, 44], ak: [177, 140, 255] },
-  'SEKOLAH MALAM': { l0: [4, 12, 16], l1: [10, 30, 38], ak: [57, 211, 211] }
-};
-let PAL_KINI = JSON.parse(JSON.stringify(PAL_FASE['SARAPAN DATA']));
-
-/* ---------- peristiwa mesin -> efek tubuh (jembatan jujur) ---------- */
-const _pushAsli = TRACE.push.bind(TRACE);
-TRACE.push = function (fn, isi) {
-  _pushAsli(fn, isi);
-  try {
-    if (fn === 'sensor.pancing' && isi.indexOf('\u2192') >= 0) {
-      EFEK.antena = 1.6;
-      const kbM = /·\s*([\d.,]+)\s*KB/.exec(isi); const kb = kbM ? parseFloat(kbM[1].replace(',', '.')) : 6;
-      const n = clamp(Math.round(kb / 5), 3, 8);
-      for (let i = 0; i < n; i++) EFEK.paket.push({ x: STASIUN.TAMBANG + (Math.random() * 90 - 45), y: 585 - Math.random() * 30, vy: 30 + Math.random() * 40, t: 0, umur: 1.6, s: clamp(kb / 10, 2.2, 7) });
-    }
-    if (fn === 'sensor.pancing' && isi.indexOf('GAGAL') >= 0) EFEK.antena = -1.2;
-    if (fn === 'penilai.nilai') {
-      const m = /"([A-Z0-9]+)"\s*\u2192 skor ([\d.,]+)/.exec(isi);
-      if (m) { MEJA_HITUNG = { sim: m[1], skor: m[2].replace(',', '.') }; for (let i = 0; i < 6; i++) EFEK.percik.push({ x: STASIUN.MEJA + (Math.random() * 60 - 30), y: 640 - Math.random() * 20, vx: (Math.random() * 2 - 1) * 26, vy: -20 - Math.random() * 30, umur: 0.9 }); }
-    }
-    if (fn === 'sekolah.uji-diri') { const m = /"([^"]+)"\s*\u2192/.exec(isi); if (m) PAPAN_SOAL = m[1]; }
-    if (fn === 'evolusi.generasi') EFEK.kilat = 1.8;
-    if (fn === 'pencatat.padatkan') { for (let i = 0; i < 5; i++) EFEK.bunga.push({ x: STASIUN.ARSIP + (Math.random() * 50 - 25), y: 660, vy: -14 - Math.random() * 18, umur: 1.4 }); }
-  } catch (e) { }
-};
-
-/* ---------- bingkai tubuh ---------- */
-function updateTubuh(dt) {
-  const tgt = TUGAS ? STASIUN[STASIUN_TUGAS[TUGAS.t]] : (TUBUH.pose === 'NAPAS' ? STASIUN.BANGKU : TUBUH.target);
-  TUBUH.target = tgt;
-  const dx = TUBUH.target - TUBUH.x;
-  if (Math.abs(dx) > 7) {
-    TUBUH.x += clamp(dx, -230 * dt, 230 * dt);
-    TUBUH.jalan += dt * 9; TUBUH.diTempat = false;
-  } else { TUBUH.diTempat = true; }
-  TUBUH.pose = TUGAS ? TUGAS.t : 'NAPAS';
-  TUBUH.nadi += dt * (TUGAS && TUGAS.t !== 'NAPAS' ? 3.4 : 1.15);
-  TUBUH.kedip -= dt; if (TUBUH.kedip < -0.12) TUBUH.kedip = 2.5 + Math.random() * 4;
-  EFEK.antena = Math.max(EFEK.antena - dt, EFEK.antena < 0 ? Math.min(0, EFEK.antena + dt) : 0);
-  EFEK.kilat = Math.max(0, EFEK.kilat - dt);
-  for (const p of EFEK.paket) { p.t += dt; p.y += p.vy * dt; p.x += (TUBUH.x - p.x) * dt * 1.4; }
-  EFEK.paket = EFEK.paket.filter(p => p.t < p.umur);
-  for (const s of EFEK.percik) { s.umur -= dt; s.x += s.vx * dt; s.y += s.vy * dt; s.vy += 60 * dt; }
-  EFEK.percik = EFEK.percik.filter(s => s.umur > 0);
-  for (const b of EFEK.bunga) { b.umur -= dt; b.y += b.vy * dt; }
-  EFEK.bunga = EFEK.bunga.filter(b => b.umur > 0);
-  // palet menyatu lembut ke fase WIB
-  const f = PAL_FASE[faseWib().nm] || PAL_FASE['SARAPAN DATA'];
-  PAL_KINI.l0 = campur(PAL_KINI.l0, f.l0, dt * 0.5); PAL_KINI.l1 = campur(PAL_KINI.l1, f.l1, dt * 0.5); PAL_KINI.ak = campur(PAL_KINI.ak, f.ak, dt * 0.5);
+function gambar(now){
+ const dpr=Math.min(2,window.devicePixelRatio||1);
+ const pw=Math.round(innerWidth*dpr),ph=Math.round(innerHeight*dpr);
+ if(cv.width!==pw||cv.height!==ph){cv.width=pw;cv.height=ph}
+ cx.setTransform(dpr,0,0,dpr,0,0);
+ // latar: vignette professional
+ const g1=cx.createRadialGradient(innerWidth/2,innerHeight*0.3,0,innerWidth/2,innerHeight*0.3,Math.max(innerWidth,innerHeight)*0.8);
+ g1.addColorStop(0,'#0a1226');g1.addColorStop(1,'#04060c');
+ cx.fillStyle=g1;cx.fillRect(0,0,innerWidth,innerHeight);
+ // grid titik halus di seluruh latar
+ cx.fillStyle='rgba(120,160,255,.055)';
+ const st=34;
+ for(let gx=st/2;gx<innerWidth;gx+=st)for(let gy=st/2;gy<innerHeight;gy+=st)cx.fillRect(gx,gy,1,1);
+ // dunia — selalu utuh di dalam ruang bebas
+ cx.save();cx.translate(W.ox,W.oy);cx.scale(W.skala,W.skala);
+ ZONA_DEF.forEach(def=>gambarZona(D.zona[def.id],def,now));
+ gambarStruktur(now);
+ gambarTautan(now);
+ gambarBit(now);
+ gambarFx(now);
+ gambarEntitas(now);
+ cx.restore();
 }
 
-function gambarLangit() {
-  const gr = ctx.createLinearGradient(0, 0, 0, LANTAI);
-  gr.addColorStop(0, rgba(PAL_KINI.l1, 0.95)); gr.addColorStop(1, rgba(PAL_KINI.l0, 1));
-  ctx.fillStyle = gr; ctx.fillRect(OX - 10, OY - 10, VW * SC + 20, LANTAI * SC + 20);
-  const j = jamWibJam();
-  if (j >= 19 || j < 5) { // bintang malam
-    ctx.fillStyle = 'rgba(220,230,255,.5)';
-    for (let i = 0; i < 60; i++) {
-      const sx = ((i * 97.3) % VW), sy = ((i * 53.7) % 420);
-      const tw = 0.35 + 0.65 * Math.abs(Math.sin(TUBUH.nadi * 0.35 + i));
-      ctx.globalAlpha = tw * 0.6; ctx.fillRect(OX + sx * SC, OY + sy * SC, 2 * SC, 2 * SC);
-    }
-    ctx.globalAlpha = 1;
-  }
-  // cakrawala kota sirkuit
-  ctx.fillStyle = rgba(PAL_KINI.l1, 0.9);
-  for (let i = 0; i < 14; i++) {
-    const bw = 90 + (i * 37) % 70, bh = 60 + (i * 61) % 130, bx = (i * 118) % (VW + 60) - 30;
-    ctx.fillRect(OX + bx * SC, OY + (LANTAI - bh - 40) * SC, bw * SC, bh * SC);
-  }
+/* ================= JANTUNG ================= */
+function bingkai(now){
+ tata();               // adaptif: dihitung tiap bingkai — resize/panel seketika diikuti
+ tickKegiatan(now);
+ gambar(now);
+ if(now-(bingkai.tH||0)>600){bingkai.tH=now;renderHUD()}
+ requestAnimationFrame(bingkai);
 }
-function gambarLantai() {
-  ctx.fillStyle = 'rgba(16,22,38,1)'; ctx.fillRect(OX - 10, OY + LANTAI * SC, VW * SC + 20, (VH - LANTAI) * SC + 12);
-  ctx.strokeStyle = rgba(PAL_KINI.ak, 0.25); ctx.lineWidth = 1.4 * SC;
-  ctx.beginPath(); ctx.moveTo(OX - 10, OY + LANTAI * SC + 1); ctx.lineTo(OX + VW * SC + 10, OY + LANTAI * SC + 1); ctx.stroke();
-  ctx.strokeStyle = rgba(PAL_KINI.ak, 0.07);
-  for (let i = 0; i < 20; i++) { ctx.beginPath(); ctx.moveTo(OX + (i * 84) * SC, OY + LANTAI * SC); ctx.lineTo(OX + (i * 84 - 260) * SC, OY + VH * SC); ctx.stroke(); }
+/* ================= KACA — panel teks terpisah dari panggung ================= */
+function renderHUD(){
+ const cE=$('cEnergi');cE.textContent='E '+Math.round(K.energi)+'%';
+ cE.className='cip'+(K.energi<28?' kritis':K.energi<50?' waspada':'');
+ const mi=minInteg(),cI=$('cInti');cI.textContent='INTI '+Math.round(mi)+'%';
+ cI.className='cip'+(mi<45?' kritis':mi<65?' waspada':'');
+ $('cUsia').textContent='usia '+fmtUsia(Date.now()-K.lahir);
+ const ok=K.data&&K.data.ok;
+ $('dotTaut').className='dot'+(ok?'':' putus');
+ $('tTaut').textContent=ok?'TAUT NYATA':'TAUT PUTUS';
 }
-function labelStasiun(x, nm, warna) {
-  ctx.font = (10 * SC) + 'px Segoe UI'; ctx.textAlign = 'center';
-  ctx.fillStyle = warna; ctx.fillText(nm, OX + x * SC, OY + (LANTAI - 196) * SC);
+function renderPikir(){
+ const aktif=faseKini();
+ $('siklus').innerHTML=FASE_SIKLUS.map(f=>'<span class="pil'+(f===aktif?' aktif':'')+'">'+f+'</span>').join('');
+ const g=K.kegiatan,k=$('kini');
+ if(g){
+  const pro=clamp((Date.now()-g.t0)/Math.max(1,g.dur),0,1);
+  k.innerHTML='<span class="aksi">'+labelAksi(g.id?g.a+':'+g.id:g.a)+'</span>'
+   +'<br><span class="tahap">'+g.f[g.i]+'</span> <span class="ket">fase '+
+   (g.i+1)+'/'+g.f.length+' · '+Math.round(pro*100)+'%</span>'
+   +'<div class="bar"><i style="width:'+(pro*100)+'%"></i></div>'
+   +'<div class="ket">energi '+Math.round(K.energi)+'% · integritas terendah '+Math.round(minInteg())+'% · pengetahuan '+poinTahu()+' poin</div>';
+ }else{
+  k.innerHTML='<span class="aksi">menimbang pilihan…</span><div class="ket">mesin utilitas sedang menghitung ulang keadaan</div>';
+ }
+ const kd=K.keputusan,m=$('mengapa');
+ if(kd&&kd.kandidat.length){
+  const maks=Math.max(...kd.kandidat.map(x=>x.s),0.001);
+  m.innerHTML=kd.kandidat.map((x,i)=>'<div class="barisU'+(i===0?' pilihan':'')+'">'
+   +'<span class="nm">'+labelAksi(x.a)+'</span>'
+   +'<span class="trk"><i style="width:'+Math.round(100*x.s/maks)+'%"></i></span>'
+   +'<span class="sk">'+x.s.toFixed(2)+'</span></div>').join('');
+ }else m.innerHTML='<div class="ket">memuat keadaan…</div>';
 }
-function gambarTambang(t) {
-  const x = STASIUN.TAMBANG;
-  // rak server: LED = keadaan data tiap simbol (NYATA)
-  ctx.fillStyle = '#141b2e'; rr(OX + (x - 78) * SC, OY + (LANTAI - 150) * SC, 156 * SC, 150 * SC, 6 * SC); ctx.fill();
-  ctx.strokeStyle = 'rgba(120,160,255,.25)'; ctx.lineWidth = 1.2 * SC; ctx.stroke();
-  for (let r = 0; r < 3; r++) {
-    const ry = LANTAI - 138 + r * 46;
-    ctx.fillStyle = 'rgba(255,255,255,.05)'; ctx.fillRect(OX + (x - 68) * SC, OY + ry * SC, 136 * SC, 30 * SC);
-    for (let k = 0; k < 4; k++) {
-      const sim = UNIVERSE[r * 4 + k]; if (!sim) continue;
-      const d = G.pasir[sim]; let warna = '#333c55', umurTeks = '';
-      if (d) { const u = umurMnt(d.t); warna = u <= SEGAR_MNT ? '#3adf8f' : u <= 20 ? '#ffd166' : '#ff6b7d'; umurTeks = fmt(u, 0) + 'm'; }
-      ctx.fillStyle = warna; ctx.beginPath(); ctx.arc(OX + (x - 52 + k * 34) * SC, OY + (ry + 10) * SC, 3.4 * SC, 0, 7); ctx.fill();
-      ctx.font = (7.5 * SC) + 'px Consolas'; ctx.fillStyle = 'rgba(200,215,255,.7)';
-      ctx.fillText(umurTeks || '—', OX + (x - 52 + k * 34) * SC, OY + (ry + 24) * SC);
-    }
-  }
-  // antena piring berdenyut saat fetch NYATA terjadi
-  const ax = x + 62, ay = LANTAI - 150;
-  ctx.strokeStyle = '#3a4666'; ctx.lineWidth = 3 * SC;
-  ctx.beginPath(); ctx.moveTo(OX + ax * SC, OY + ay * SC); ctx.lineTo(OX + ax * SC, OY + (ay - 34) * SC); ctx.stroke();
-  ctx.fillStyle = '#5a6c92'; ctx.beginPath(); ctx.ellipse(OX + ax * SC, OY + (ay - 40) * SC, 13 * SC, 7 * SC, -0.5, 0, 7); ctx.fill();
-  if (Math.abs(EFEK.antena) > 0) {
-    ctx.strokeStyle = EFEK.antena > 0 ? 'rgba(125,211,252,' + Math.min(1, EFEK.antena) + ')' : 'rgba(255,107,125,' + Math.min(1, -EFEK.antena) + ')';
-    ctx.beginPath(); ctx.arc(OX + ax * SC, OY + (ay - 40) * SC, (16 + (1.6 - Math.abs(EFEK.antena)) * 26) * SC, 0, 7); ctx.stroke();
-  }
-  labelStasiun(x, 'TAMBANG DATA', 'rgba(125,211,252,.85)');
+function renderJurnal(){
+ $('jurnal').innerHTML=K.jurnal.slice(-42).reverse().map(e=>
+  '<li><span class="jm">'+fmtWaktu(e.t)+'</span><b class="tj '+e.j+'">'+e.j+'</b><span class="is">'+e.teks+'</span></li>').join('');
 }
-function gambarMeja() {
-  const x = STASIUN.MEJA;
-  ctx.fillStyle = '#1a2340'; rr(OX + (x - 62) * SC, OY + (LANTAI - 66) * SC, 124 * SC, 66 * SC, 5 * SC); ctx.fill();
-  ctx.strokeStyle = 'rgba(120,160,255,.2)'; ctx.stroke();
-  // layar holo: hasil hitungan TERAKHIR (nyata)
-  const m = MEJA_HITUNG;
-  ctx.fillStyle = 'rgba(177,140,255,.10)'; rr(OX + (x - 74) * SC, OY + (LANTAI - 158) * SC, 148 * SC, 84 * SC, 6 * SC); ctx.fill();
-  ctx.strokeStyle = m ? 'rgba(177,140,255,.55)' : 'rgba(177,140,255,.2)'; ctx.stroke();
-  ctx.font = (10 * SC) + 'px Consolas'; ctx.textAlign = 'center';
-  if (m) {
-    ctx.fillStyle = '#fff'; ctx.fillText(m.sim, OX + x * SC, OY + (LANTAI - 136) * SC);
-    ctx.fillStyle = '#b18cff'; ctx.fillText('skor ' + m.skor + '/100', OX + x * SC, OY + (LANTAI - 118) * SC);
-    ctx.fillStyle = 'rgba(139,157,196,.9)'; ctx.fillText('EMA · RSI · ATR · KORELASI', OX + x * SC, OY + (LANTAI - 100) * SC);
-  } else { ctx.fillStyle = 'rgba(139,157,196,.6)'; ctx.fillText('menunggu lilin…', OX + x * SC, OY + (LANTAI - 118) * SC); }
-  labelStasiun(x, 'MEJA HITUNG', 'rgba(177,140,255,.9)');
+function renderDunia(){
+ $('pohon').innerHTML=KONSEP.map(c=>{
+  const t=K.tahu[c.id],st=t&&t.ok?'ok':(praOk(c.pra)?'siap':'kunci');
+  const judul=c.nama+(st==='kunci'?' — terkunci: butuh '+c.pra.map(p=>konsep(p).nama).join(', '):(st==='ok'?' — dikuasai':' — siap dieksperimenkan'));
+  return '<span class="node '+st+'" title="'+judul+'"><span class="gl">'+c.gl+'</span>'+c.nama+'</span>';
+ }).join('');
+ $('fasilitas').innerHTML=FASIL.map(f=>{
+  const lv=lvlFas(f.id),siap=praOk(f.pra);
+  return '<div class="fRow'+(lv?'':' mati')+'"><span class="nm">'+f.nama+'</span>'
+   +'<span class="mn">'+(lv?f.manfaat:(siap?'dapat dibangun':'butuh: '+f.pra.map(p=>konsep(p).nama).join(', ')))+'</span>'
+   +'<span class="pips">'+[0,1,2].map(i=>'<span class="pip'+(i<lv?' on':'')+'"></span>').join('')+'</span></div>';
+ }).join('');
+ $('sistem').innerHTML=SISTEM.map(s=>{
+  const v=integ(s.id),kls=v<45?'kritis':v<65?'waspada':'';
+  return '<div class="sRow '+kls+'"><span class="nm">'+s.nama+'</span>'
+   +'<span class="trk"><i style="width:'+v+'%"></i></span><span class="vl">'+Math.round(v)+'%</span></div>';
+ }).join('');
+ let koneks='';
+ if(K.data&&K.data.ok){
+  koneks+='<div class="kRow"><span class="kn">arena-keadaan.json</span><span class="kv"><b>NYATA</b> · cermin '+K.data.hari+' · '+K.data.nPicks+' pick · K='+K.data.k+' · ekspor '+(K.data.eksporAt||'?')+'</span></div>';
+ }else{
+  koneks+='<div class="kRow"><span class="kn">arena-keadaan.json</span><span class="kv"><b>TERPUTUS</b> — dicoba ulang tiap 5 menit, dunia tetap jujur berjalan lokal</span></div>';
+ }
+ koneks+='<div class="kRow"><span class="kn">mp_otak_mandiri_v1</span><span class="kv">'+(K.otak?('<b>terbaca</b> — sekolah kilat: level '+K.otak.level+' · xp '+K.otak.xp+' → sinergi +'+(3*lvlOtak())+'% peluang eksperimen'):'belum ada rekam sekolah di perangkat ini — jujur dilaporkan')+'</span></div>';
+ const byt=(function(){try{return (localStorage.getItem(KUNCI)||'').length}catch(e){return 0}})();
+ koneks+='<div class="kRow"><span class="kn">'+KUNCI+'</span><span class="kv">memori dunia <b>'+(byt/1024).toFixed(1)+' KB</b> · disimpan '+fmtWaktu(K.simpanAt)+' · usia dunia '+fmtUsia(Date.now()-K.lahir)+'</span></div>';
+ $('koneksi').innerHTML=koneks;
+ const st=K.stat;
+ $('statistik').innerHTML=[['eksperimen',st.eks],['temuan',st.temu],['kegagalan',st.gagal],['bangun',st.bangun+st.tingkat],['perawatan',st.rawat],['kajian',st.kaji],['amati',st.amati],['poin',poinTahu()]]
+  .map(x=>'<div class="st"><div class="l">'+x[0].toUpperCase()+'</div><div class="v">'+x[1]+'</div></div>').join('');
 }
-function gambarLayarAudit() {
-  const x = STASIUN.LAYAR;
-  ctx.fillStyle = '#10182c'; rr(OX + (x - 92) * SC, OY + (LANTAI - 172) * SC, 184 * SC, 110 * SC, 8 * SC); ctx.fill();
-  ctx.strokeStyle = 'rgba(255,209,102,.4)'; ctx.lineWidth = 1.4 * SC; ctx.stroke();
-  ctx.font = (9 * SC) + 'px Consolas'; ctx.textAlign = 'left';
-  ctx.fillStyle = 'rgba(255,209,102,.9)'; ctx.fillText('ARENA vs HIDUP', OX + (x - 80) * SC, OY + (LANTAI - 152) * SC);
-  const cat = (G.audit.catatan || []).slice(-3);
-  if (KEADAAN.ok && KEADAAN.picks.length && !cat.length) { ctx.fillStyle = 'rgba(139,157,196,.8)'; ctx.fillText('menyiapkan audit…', OX + (x - 80) * SC, OY + (LANTAI - 128) * SC); }
-  cat.forEach((c, i) => {
-    const y = LANTAI - 132 + i * 22;
-    ctx.fillStyle = c.ok == null ? '#8b9dc4' : c.ok ? '#3adf8f' : '#ffd166';
-    ctx.fillText(c.sim.slice(0, 7) + ' ' + (c.hidup > 0 ? '+' : '') + fmt(c.hidup, 0) + '% ' + (c.ok == null ? '?' : c.ok ? 'OK' : 'DEV'), OX + (x - 80) * SC, OY + y * SC);
-  });
-  if (!cat.length && !KEADAAN.ok) { ctx.fillStyle = 'rgba(255,107,125,.85)'; ctx.fillText('arena terputus — jujur', OX + (x - 80) * SC, OY + (LANTAI - 128) * SC); }
-  labelStasiun(x, 'PENGADILAN AUDIT', 'rgba(255,209,102,.9)');
-}
-function gambarLab() {
-  const x = STASIUN.LAB;
-  const kilat = EFEK.kilat > 0 ? Math.min(1, EFEK.kilat) : 0;
-  ctx.fillStyle = kilat ? 'rgba(58,223,143,' + (0.14 + kilat * 0.25) + ')' : 'rgba(58,223,143,.08)';
-  rr(OX + (x - 55) * SC, OY + (LANTAI - 190) * SC, 110 * SC, 190 * SC, 26 * SC); ctx.fill();
-  ctx.strokeStyle = kilat ? 'rgba(58,223,143,.9)' : 'rgba(58,223,143,.4)'; ctx.lineWidth = 1.6 * SC; ctx.stroke();
-  // heliks genom berputar — label GEN & fitness TERAKHIR (nyata)
-  const fh = (G.fitHist || []).slice(-1)[0];
-  for (let s = 0; s < 2; s++) {
-    ctx.strokeStyle = s ? 'rgba(125,211,252,.85)' : 'rgba(58,223,143,.85)'; ctx.lineWidth = 2 * SC; ctx.beginPath();
-    for (let y = 0; y <= 120; y += 6) {
-      const ph = TUBUH.nadi * 1.3 + y * 0.09 + s * Math.PI;
-      const px = x + Math.sin(ph) * 22, py = LANTAI - 168 + y;
-      y === 0 ? ctx.moveTo(OX + px * SC, OY + py * SC) : ctx.lineTo(OX + px * SC, OY + py * SC);
-    }
-    ctx.stroke();
-  }
-  ctx.font = (10 * SC) + 'px Consolas'; ctx.textAlign = 'center';
-  ctx.fillStyle = '#fff'; ctx.fillText('G' + G.gen, OX + x * SC, OY + (LANTAI - 200) * SC);
-  if (fh) { ctx.fillStyle = '#3adf8f'; ctx.fillText((fh.fit >= 0 ? '+' : '') + fmt(fh.fit, 1) + '%', OX + x * SC, OY + (LANTAI - 34) * SC); }
-  else { ctx.fillStyle = 'rgba(139,157,196,.7)'; ctx.fillText('belum diuji', OX + x * SC, OY + (LANTAI - 34) * SC); }
-  labelStasiun(x, 'RUANG EVOLUSI', 'rgba(58,223,143,.9)');
-}
-function gambarPapan() {
-  const x = STASIUN.PAPAN;
-  ctx.fillStyle = '#13203c'; rr(OX + (x - 80) * SC, OY + (LANTAI - 185) * SC, 160 * SC, 96 * SC, 6 * SC); ctx.fill();
-  ctx.strokeStyle = 'rgba(57,211,211,.45)'; ctx.lineWidth = 1.4 * SC; ctx.stroke();
-  ctx.strokeStyle = '#3a4666'; ctx.lineWidth = 3 * SC;
-  ctx.beginPath(); ctx.moveTo(OX + (x - 40) * SC, OY + (LANTAI - 89) * SC); ctx.lineTo(OX + (x - 56) * SC, OY + LANTAI * SC); ctx.moveTo(OX + (x + 40) * SC, OY + (LANTAI - 89) * SC); ctx.lineTo(OX + (x + 56) * SC, OY + LANTAI * SC); ctx.stroke();
-  ctx.font = (9 * SC) + 'px Consolas'; ctx.textAlign = 'center'; ctx.fillStyle = 'rgba(57,211,211,.9)';
-  ctx.fillText('SEKOLAH — UJI DIRI', OX + x * SC, OY + (LANTAI - 168) * SC);
-  ctx.fillStyle = '#d9e2ff';
-  const soal = PAPAN_SOAL || 'soal lahir dari data hidup';
-  if (soal.length > 26) {
-    let pot = soal.slice(0, 26); const sp = pot.lastIndexOf(' '); if (sp > 8) { ctx.fillText(pot.slice(0, sp), OX + x * SC, OY + (LANTAI - 146) * SC); ctx.fillText(soal.slice(sp + 1, 52), OX + x * SC, OY + (LANTAI - 132) * SC); }
-    else { ctx.fillText(pot, OX + x * SC, OY + (LANTAI - 146) * SC); }
-  } else ctx.fillText(soal, OX + x * SC, OY + (LANTAI - 146) * SC);
-  ctx.fillStyle = 'rgba(139,157,196,.9)';
-  ctx.fillText('benar ' + G.benar + ' · meleset ' + G.salahN + ' · ' + G.xp + ' XP', OX + x * SC, OY + (LANTAI - 106) * SC);
-  labelStasiun(x, 'SEKOLAH KILAT', 'rgba(57,211,211,.9)');
-}
-function gambarArsip() {
-  const x = STASIUN.ARSIP;
-  ctx.fillStyle = '#151d33'; rr(OX + (x - 46) * SC, OY + (LANTAI - 140) * SC, 92 * SC, 140 * SC, 6 * SC); ctx.fill();
-  ctx.strokeStyle = 'rgba(255,107,125,.3)'; ctx.lineWidth = 1.2 * SC; ctx.stroke();
-  const jml = Math.min(10, (G.jurnal || []).length);
-  for (let r = 0; r < 2; r++) {
-    const ry = LANTAI - 126 + r * 62;
-    ctx.fillStyle = 'rgba(255,255,255,.04)'; ctx.fillRect(OX + (x - 38) * SC, OY + (ry + 34) * SC, 76 * SC, 6 * SC);
-    for (let b = 0; b < 5; b++) {
-      const ada = r * 5 + b < jml;
-      ctx.fillStyle = ada ? ['rgba(255,107,125,.8)', 'rgba(255,209,102,.8)', 'rgba(57,211,211,.8)', 'rgba(125,211,252,.8)', 'rgba(177,140,255,.8)'][b] : 'rgba(255,255,255,.05)';
-      ctx.fillRect(OX + (x - 34 + b * 15) * SC, OY + ry * SC, 9 * SC, 34 * SC);
-    }
-  }
-  labelStasiun(x, 'ARSIP JURNAL', 'rgba(255,107,125,.85)');
-}
-function gambarBangku() {
-  const x = STASIUN.BANGKU;
-  ctx.strokeStyle = '#3a4666'; ctx.lineWidth = 5 * SC;
-  ctx.beginPath(); ctx.moveTo(OX + (x - 46) * SC, OY + (LANTAI - 42) * SC); ctx.lineTo(OX + (x + 46) * SC, OY + (LANTAI - 42) * SC); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(OX + (x - 38) * SC, OY + (LANTAI - 42) * SC); ctx.lineTo(OX + (x - 38) * SC, OY + LANTAI * SC); ctx.moveTo(OX + (x + 38) * SC, OY + (LANTAI - 42) * SC); ctx.lineTo(OX + (x + 38) * SC, OY + LANTAI * SC); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(OX + (x - 46) * SC, OY + (LANTAI - 66) * SC); ctx.lineTo(OX + (x + 46) * SC, OY + (LANTAI - 66) * SC); ctx.stroke();
-}
-/* ---------- CYBORG: tubuh penuh, pose mengikuti tugas mesin ---------- */
-function lengan(sx, sy, tx, ty, lebar, warna) {
-  const mx = (sx + tx) / 2 + (ty - sy) * 0.18, my = (sy + ty) / 2 - (tx - sx) * 0.05;
-  ctx.strokeStyle = warna; ctx.lineWidth = lebar * SC; ctx.lineCap = 'round';
-  ctx.beginPath(); ctx.moveTo(sx * SC, sy * SC); ctx.quadraticCurveTo(mx * SC, my * SC, tx * SC, ty * SC); ctx.stroke();
-}
-function gambarCyborg(t) {
-  const x = TUBUH.x, duduk = TUBUH.pose === 'NAPAS' && TUBUH.diTempat;
-  const kerja = TUGAS && TUGAS.t !== 'NAPAS';
-  const jalan = !TUBUH.diTempat;
-  const bob = jalan ? Math.abs(Math.sin(TUBUH.jalan)) * 4 : (duduk ? 0 : Math.sin(TUBUH.nadi * 2) * 1.6);
-  const pinggulY = LANTAI - (duduk ? 52 : 92) + bob;
-  const bahuY = pinggulY - 58, kepalaY = bahuY - 40;
-  const muka = TUGAS ? (TUBUH.target > x ? 1 : -1) : 1;
-  const A = rgba(PAL_KINI.ak, 0.9);
-  // kaki
-  ctx.strokeStyle = '#33406b'; ctx.lineWidth = 9 * SC; ctx.lineCap = 'round';
-  if (duduk) {
-    ctx.beginPath(); ctx.moveTo(OX + (x - 10) * SC, OY + pinggulY * SC); ctx.lineTo(OX + (x - 26) * SC, OY + (LANTAI - 22) * SC); ctx.lineTo(OX + (x - 26) * SC, OY + LANTAI * SC); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(OX + (x + 10) * SC, OY + pinggulY * SC); ctx.lineTo(OX + (x + 26) * SC, OY + (LANTAI - 22) * SC); ctx.lineTo(OX + (x + 26) * SC, OY + LANTAI * SC); ctx.stroke();
-  } else if (jalan) {
-    const a1 = Math.sin(TUBUH.jalan) * 26, a2 = Math.sin(TUBUH.jalan + Math.PI) * 26;
-    ctx.beginPath(); ctx.moveTo(OX + (x - 6) * SC, OY + pinggulY * SC); ctx.lineTo(OX + (x - 6 + a1) * SC, OY + LANTAI * SC); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(OX + (x + 6) * SC, OY + pinggulY * SC); ctx.lineTo(OX + (x + 6 + a2) * SC, OY + LANTAI * SC); ctx.stroke();
-  } else {
-    ctx.beginPath(); ctx.moveTo(OX + (x - 9) * SC, OY + pinggulY * SC); ctx.lineTo(OX + (x - 11) * SC, OY + LANTAI * SC); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(OX + (x + 9) * SC, OY + pinggulY * SC); ctx.lineTo(OX + (x + 11) * SC, OY + LANTAI * SC); ctx.stroke();
-  }
-  // torso
-  const grTorso = ctx.createLinearGradient(0, OY + bahuY * SC, 0, OY + pinggulY * SC);
-  grTorso.addColorStop(0, '#3a4a7d'); grTorso.addColorStop(1, '#232d52');
-  ctx.fillStyle = grTorso; rr(OX + (x - 26) * SC, OY + (bahuY - 6) * SC, 52 * SC, (pinggulY - bahuY + 10) * SC, 14 * SC); ctx.fill();
-  ctx.strokeStyle = 'rgba(130,160,255,.35)'; ctx.lineWidth = 1.2 * SC; ctx.stroke();
-  // inti detak — laju mengikuti beban kerja NYATA
-  const denyut = 0.6 + 0.4 * Math.sin(TUBUH.nadi * 2.2);
-  const coreR = (kerja ? 9.5 : 7.5) * SC * (0.9 + denyut * 0.25);
-  ctx.fillStyle = rgba(PAL_KINI.ak, 0.25); ctx.beginPath(); ctx.arc(OX + x * SC, OY + (bahuY + 28) * SC, coreR * 1.9, 0, 7); ctx.fill();
-  ctx.fillStyle = A; ctx.beginPath(); ctx.arc(OX + x * SC, OY + (bahuY + 28) * SC, coreR, 0, 7); ctx.fill();
-  // kepala + visor
-  ctx.fillStyle = '#2e3a66'; rr(OX + (x - 20) * SC, OY + (kepalaY - 22) * SC, 40 * SC, 40 * SC, 12 * SC); ctx.fill();
-  ctx.strokeStyle = 'rgba(130,160,255,.4)'; ctx.stroke();
-  const kedipTutup = TUBUH.kedip < 0;
-  ctx.fillStyle = kedipTutup ? '#141b31' : '#0c1020';
-  rr(OX + (x - 14 + (muka > 0 ? 3 : -3)) * SC, OY + (kepalaY - 12) * SC, 26 * SC, 15 * SC, 6 * SC); ctx.fill();
-  if (!kedipTutup) {
-    const lx = x + (muka > 0 ? 8 : -8) + muka * 3;
-    const glow = kerja ? 1 : 0.7;
-    ctx.fillStyle = rgba(PAL_KINI.ak, glow);
-    ctx.beginPath(); ctx.arc(OX + lx * SC, OY + (kepalaY - 4.5) * SC, 3.4 * SC, 0, 7); ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,.85)';
-    ctx.beginPath(); ctx.arc(OX + lx * SC, OY + (kepalaY - 4.5) * SC, 1.3 * SC, 0, 7); ctx.fill();
-    // garis pindai visor saat bekerja
-    if (kerja) { const sp = ((TUBUH.nadi * 26) % 24) - 6; ctx.fillStyle = rgba(PAL_KINI.ak, 0.35); ctx.fillRect(OX + (x - 11) * SC, OY + (kepalaY - 12 + sp) * SC, 22 * SC, 1.6 * SC); }
-  }
-  // antena kepala
-  ctx.strokeStyle = '#3a4666'; ctx.lineWidth = 2.4 * SC;
-  ctx.beginPath(); ctx.moveTo(OX + (x - muka * 6) * SC, OY + (kepalaY - 22) * SC); ctx.lineTo(OX + (x - muka * 10) * SC, OY + (kepalaY - 40) * SC); ctx.stroke();
-  ctx.fillStyle = Math.abs(EFEK.antena) > 0 ? (EFEK.antena > 0 ? '#7dd3fc' : '#ff6b7d') : '#5a6c92';
-  ctx.beginPath(); ctx.arc(OX + (x - muka * 10) * SC, OY + (kepalaY - 42) * SC, 3.2 * SC, 0, 7); ctx.fill();
-  // lengan — pose per tugas NYATA
-  const sw = jalan ? Math.sin(TUBUH.jalan) * 16 : 0;
-  let lKiri = { x: x - 20, y: pinggulY - 6 }, lKanan = { x: x + 20, y: pinggulY - 6 };
-  const P = TUBUH.pose;
-  if (P === 'PANCING' || P === 'HUBUNG') { lKanan = { x: x + 34, y: bahuY - 30 }; lKiri = { x: x - 26, y: bahuY + 24 }; }
-  else if (P === 'HITUNG' || P === 'CEK') { lKanan = { x: x + 40, y: bahuY + 26 + Math.sin(TUBUH.nadi * 5) * 3 }; lKiri = { x: x - 40, y: bahuY + 26 - Math.sin(TUBUH.nadi * 5) * 3 }; }
-  else if (P === 'AUDIT') { lKanan = { x: x + 46, y: bahuY + 14 }; lKiri = { x: x - 16, y: pinggulY - 10 }; }
-  else if (P === 'EVOLUSI') { lKanan = { x: x + 36, y: bahuY + 44 }; lKiri = { x: x - 36, y: bahuY + 44 }; }
-  else if (P === 'SEKOLAH') { lKanan = { x: x + 42 + Math.sin(TUBUH.nadi * 7) * 5, y: bahuY + 34 }; lKiri = { x: x - 22, y: bahuY + 30 }; }
-  else if (P === 'PADATKAN') { lKanan = { x: x + 26, y: bahuY + 44 }; lKiri = { x: x - 26, y: bahuY + 44 }; }
-  else if (duduk) { lKanan = { x: x + 30, y: pinggulY + 2 }; lKiri = { x: x - 30, y: pinggulY + 2 }; }
-  else if (jalan) { lKanan = { x: x + 26 + sw, y: bahuY + 40 }; lKiri = { x: x - 26 - sw, y: bahuY + 40 }; }
-  lengan(x - 20, bahuY + 4, lKiri.x, lKiri.y, 7, '#2e3a66');
-  lengan(x + 20, bahuY + 4, lKanan.x, lKanan.y, 7, '#3a4a7d');
-  // buku di tangan saat PADATKAN (nyata: jumlah = jurnal)
-  if (P === 'PADATKAN') { ctx.fillStyle = '#ffd166'; ctx.fillRect(OX + (x - 12) * SC, OY + (bahuY + 38) * SC, 24 * SC, 14 * SC); ctx.fillStyle = '#13203c'; ctx.fillRect(OX + (x - 10) * SC, OY + (bahuY + 41) * SC, 20 * SC, 2 * SC); }
-  // paket data masuk ke inti (ukuran ∝ KB nyata)
-  for (const p of EFEK.paket) {
-    ctx.fillStyle = 'rgba(125,211,252,' + (1 - p.t / p.umur) + ')';
-    ctx.fillRect(OX + p.x * SC, OY + p.y * SC, p.s * SC, p.s * SC);
-    ctx.strokeStyle = 'rgba(125,211,252,' + (0.5 * (1 - p.t / p.umur)) + ')'; ctx.strokeRect(OX + p.x * SC, OY + p.y * SC, p.s * SC, p.s * SC);
-  }
-  for (const s of EFEK.percik) { ctx.fillStyle = 'rgba(177,140,255,' + Math.max(0, s.umur) + ')'; ctx.fillRect(OX + s.x * SC, OY + s.y * SC, 2.4 * SC, 2.4 * SC); }
-  for (const b of EFEK.bunga) { ctx.fillStyle = 'rgba(255,107,125,' + Math.max(0, b.umur / 1.4) + ')'; ctx.fillRect(OX + b.x * SC, OY + b.y * SC, 3 * SC, 3 * SC); }
-  // gelembung pikiran = ALASAN NYATA dari OTONOMI (bukan kalimat tempelan)
-  if (BICARA && !jalan) {
-    ctx.font = (11 * SC) + 'px Segoe UI'; ctx.textAlign = 'center';
-    const maxW = 300 * SC;
-    let baris = [];
-    let kata = BICARA.split(' '), kini = '';
-    for (const w of kata) { if ((kini + ' ' + w).trim().length > 44) { baris.push(kini.trim()); kini = w; } else kini += ' ' + w; }
-    if (kini.trim()) baris.push(kini.trim());
-    baris = baris.slice(0, 2);
-    const bw = Math.min(maxW, ctx.measureText(baris[0] || '').width + 26 * SC);
-    const bh = (baris.length * 15 + 12) * SC, bx = x, by = kepalaY - 52 - baris.length * 15;
-    ctx.fillStyle = 'rgba(9,13,25,.92)'; rr(OX + (bx - bw / 2) * SC, OY + by * SC, bw, bh, 9 * SC); ctx.fill();
-    ctx.strokeStyle = rgba(PAL_KINI.ak, 0.5); ctx.lineWidth = 1 * SC; ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(OX + (bx - 6) * SC, OY + (by + bh) * SC); ctx.lineTo(OX + bx * SC, OY + (by + bh + 9) * SC); ctx.lineTo(OX + (bx + 6) * SC, OY + (by + bh) * SC); ctx.closePath(); ctx.fillStyle = 'rgba(9,13,25,.92)'; ctx.fill();
-    ctx.fillStyle = '#cfe0ff';
-    baris.forEach((b, i) => ctx.fillText(b, OX + bx * SC, OY + (by + 17 + i * 15) * SC));
-  }
-}
-function gambar(dt) {
-  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  ctx.clearRect(0, 0, innerWidth, innerHeight);
-  gambarLangit(); gambarLantai();
-  gambarTambang(); gambarMeja(); gambarBangku(); gambarLayarAudit(); gambarLab(); gambarPapan(); gambarArsip();
-  gambarCyborg();
-  ctx.globalAlpha = 1;
-}
-let TLAH = 0;
-function loop(ts) {
-  const dt = TLAH ? Math.min(0.05, (ts - TLAH) / 1000) : 0.016; TLAH = ts;
-  updateTubuh(dt); gambar(dt);
-  requestAnimationFrame(loop);
-}
+function renderUI(){try{renderPikir();renderJurnal();renderDunia()}catch(e){}}
 
-/* =====================================================================
-   HUD — panel HTML: semua angka dari mesin nyata, tanpa pencampuran
-   ===================================================================== */
-function chipSet(t, ket) {
-  BICARA = ket;
-  const nama = { PANCING: 'SENSOR', HUBUNG: 'SENSOR', HITUNG: 'OTAK', CEK: 'OTAK', AUDIT: 'AUDITOR', EVOLUSI: 'EVOLUSI', SEKOLAH: 'SEKOLAH', PADATKAN: 'PENCATAT', NAPAS: 'TUBUH' };
-  $('chipOrg').textContent = nama[t] || t;
-  $('chipTgs').textContent = t;
-  $('chipKet').textContent = ket;
-  $('chipKet').title = ket;
+/* ---- interaksi panel ---- */
+const dsk=()=>matchMedia('(min-width:1024px)').matches;
+function setPanel(buka){
+ const p=$('panel');
+ if(dsk()){p.classList.toggle('sembunyi',!buka);p.classList.remove('tutup');
+  document.body.classList.toggle('panelKanan',buka)}
+ else{p.classList.toggle('buka',buka);p.classList.remove('sembunyi')}
+ $('tombolPanel').textContent=buka?'TUTUP ▾':'PANEL ▴';
 }
-function renderSumber() {
-  const el = $('chipSumber'), tx = $('teksSumber');
-  el.className = 'chip';
-  if (G.sumber === 'live') { el.classList.add('live'); tx.textContent = 'SENSOR LIVE — Binance publik'; }
-  else if (G.sumber === 'cache') { el.classList.add('cache'); tx.textContent = 'SENSOR CACHE — lilin ingatan'; }
-  else { el.classList.add('arsip'); tx.textContent = 'SENSOR ARSIP — lilin sejak forge'; }
-}
-function renderBukti() {
-  const g = $('gridBukti'); let html = '';
-  let segar = 0;
-  for (const s of UNIVERSE) {
-    const d = G.pasir[s];
-    if (!d) { html += '<span class="simchip kosong">' + s.replace('USDT', '') + ' —</span>'; continue; }
-    const u = umurMnt(d.t);
-    const kelas = u <= SEGAR_MNT ? 'segar' : 'basi';
-    if (u <= SEGAR_MNT) segar++;
-    html += '<span class="simchip ' + kelas + '">' + s.replace('USDT', '') + ' ' + fmt(u, 0) + 'm</span>';
-  }
-  g.innerHTML = html;
-  $('infoBukti').textContent = segar + '/' + UNIVERSE.length + ' segar · ' + fmt(G.res.bit / 1024, 0) + ' KB';
-  const taut = $('buktiTaut');
-  if (URL_TERAKHIR) { taut.href = URL_TERAKHIR; taut.textContent = 'sumber mentah terakhir: ' + URL_TERAKHIR.replace('https://', '').slice(0, 64) + '… (klik = lihat sendiri)'; taut.style.display = 'block'; }
-}
-function renderAudit() {
-  const el = $('isiAudit');
-  if (!KEADAAN.ok) { el.innerHTML = '<div style="color:var(--redup);font-size:10px;line-height:1.5">cermin arena belum terbaca (' + (location.protocol === 'file:' ? 'file:// — cermin same-origin tak tersedia' : 'menunggu jaringan') + '). Aku tetap bekerja; audit kutunda jujur, bukan kupalsukan.</div>'; $('infoAudit').textContent = 'terputus'; return; }
-  const picks = KEADAAN.picks;
-  if (!picks.length) { el.innerHTML = '<div style="color:var(--redup);font-size:10px">arena belum melahirkan pick hari ini — sabar menunggu, tak ada yang kucarangkan</div>'; $('infoAudit').textContent = '0 pick'; return; }
-  let html = '';
-  for (const p of picks) {
-    const c = (G.audit.catatan || []).filter(x => x.sim === p.symbol).slice(-1)[0];
-    const f = G.faktor[p.symbol];
-    if (!c) { html += '<div class="barisAudit"><span class="sim">' + p.symbol + '</span><span class="angka">menunggu lilin ' + p.symbol.replace('USDT', '') + '…</span><span class="vonis nol">MENUNGGU</span></div>'; continue; }
-    const v = c.ok == null ? '<span class="vonis nol">TAK-TERBANDING</span>' : c.ok ? '<span class="vonis ok">SEPAKAT</span>' : '<span class="vonis dev">MENDEVIASI</span>';
-    html += '<div class="barisAudit"><span class="sim">' + p.symbol + '</span><span class="angka">arena ' + (c.arena == null ? '?' : pctS(c.arena)) + ' · hidup ' + pctS(c.hidup) + ' · arah ' + c.arah + '/' + c.arahHidup + '</span>' + v + '</div>';
-  }
-  const na = G.audit.ok + G.audit.dev;
-  el.innerHTML = html + '<div style="font-size:9px;color:var(--redup);margin-top:4px">' + (na ? 'rekap: ' + G.audit.ok + ' sepakat · ' + G.audit.dev + ' deviasi · regim ' + (KEADAAN.regim || '?') + ' · ekspor arena ' + (KEADAAN.eksporAt || '?').replace('T', ' ').replace('Z', '') : 'belum ada rekap — audit pertama segera') + '</div>';
-  $('infoAudit').textContent = G.audit.ok + '/' + na + ' sepakat';
-}
-function renderGenom() {
-  const w = G.genom, nm = { wMom: 'MOM', wTren: 'TREN', wVol: 'VOL', wAtr: 'ATR', wRev: 'REV', wBtc: 'BTC' };
-  let html = '';
-  for (const k in nm) html += '<div class="barW"><span class="nm">' + nm[k] + '</span><span class="trk"><i style="width:' + Math.round(w[k] * 200) + '%"></i></span><span class="vl">' + fmt(w[k], 2) + '</span></div>';
-  $('barGenom').innerHTML = html;
-  $('infoGenom').textContent = 'G' + G.gen + ' · thr ' + G.thr;
-  const fh = (G.fitHist || []).slice(-1)[0];
-  const kh = (G.kandidatHantu || []).slice(-1)[0];
-  let t = fh ? 'uji-jalan terakhir G' + fh.g + ': ' + pctS(fh.fit) + ' per dagang (lilin nyata, tahan 24 jam) · ' : 'genom turunan arena — menunggu uji-jalan pertama ';
-  if (kh) t += '<br>kandidat mutasi terakhir gugur: ' + kh.teks;
-  $('teksFit').innerHTML = t;
-  // sparkline fitness
-  const cv = $('sparkFit'), c2 = cv.getContext('2d');
-  c2.clearRect(0, 0, cv.width, cv.height);
-  const H = G.fitHist || [];
-  if (H.length >= 2) {
-    const min = Math.min.apply(null, H.map(x => x.fit)), max = Math.max.apply(null, H.map(x => x.fit));
-    const rng = (max - min) || 1;
-    c2.strokeStyle = '#3adf8f'; c2.lineWidth = 1.6; c2.beginPath();
-    H.forEach((h, i) => {
-      const x = 4 + i / (H.length - 1) * (cv.width - 8), y = cv.height - 5 - (h.fit - min) / rng * (cv.height - 10);
-      i ? c2.lineTo(x, y) : c2.moveTo(x, y);
-    });
-    c2.stroke();
-    c2.fillStyle = 'rgba(139,157,196,.9)'; c2.font = '8.5px Consolas'; c2.textAlign = 'left';
-    c2.fillText('fitness ' + H.length + ' generasi · ' + fmt(min, 1) + '% … ' + fmt(max, 1) + '%', 4, 9);
-  } else { c2.fillStyle = 'rgba(139,157,196,.5)'; c2.font = '9px Consolas'; c2.fillText('grafik fitness lahir setelah generasi ke-2', 4, 14); }
-}
-function indeksKesadaran() {
-  const cakupan = UNIVERSE.filter(s => G.faktor[s]).length / UNIVERSE.length;
-  const segar = UNIVERSE.filter(s => G.pasir[s] && umurMnt(G.pasir[s].t) <= SEGAR_MNT).length / UNIVERSE.length;
-  const na = G.audit.ok + G.audit.dev;
-  const sepakat = na ? G.audit.ok / na : 0.5;
-  const belajar = Math.min(1, G.xp / 400);
-  const evol = Math.min(1, G.gen / 10);
-  const ik = Math.round(100 * (0.30 * cakupan + 0.20 * segar + 0.25 * sepakat + 0.15 * belajar + 0.10 * evol));
-  return { ik, cakupan, segar, sepakat, belajar, evol, na };
-}
-function renderIK() {
-  const k = indeksKesadaran();
-  document.querySelector('#barIK .isi').style.width = k.ik + '%';
-  $('teksIK').innerHTML = 'INDEKS KESADARAN <b style="color:#fff">' + k.ik + '/100</b> — cakupan ' + Math.round(k.cakupan * 100) + '% · kesegaran ' + Math.round(k.segar * 100) + '% · sepakat-audit ' + Math.round(k.sepakat * 100) + '%' + (k.na ? '' : ' (belum ada bukti, netral)') + ' · belajar ' + Math.round(k.belajar * 100) + '% · evolusi ' + Math.round(k.evol * 100) + '%';
-  $('stGen').textContent = 'G' + G.gen;
-  $('stXp').textContent = G.xp + (OTAK_XP ? '+' + OTAK_XP.xp : '');
-  $('stLilin').textContent = fmt(G.res.lilin, 0);
-  $('stKb').textContent = fmt(G.res.bit / 1024, 0) + ' KB';
-  const f = faseWib();
-  $('teksJam').textContent = jamWIB() + ' WIB';
-  $('teksFase').textContent = f.nm;
-  $('teksFase').style.color = f.w;
-}
-function renderSemua() { renderSumber(); renderBukti(); renderAudit(); renderGenom(); renderIK(); }
+$('tombolPanel').addEventListener('click',()=>{
+ const p=$('panel');
+ const terbuka=dsk()?(!p.classList.contains('sembunyi')):p.classList.contains('buka');
+ setPanel(!terbuka);
+});
+document.querySelectorAll('#tab button').forEach(b=>{
+ b.addEventListener('click',()=>{
+  document.querySelectorAll('#tab button').forEach(x=>x.classList.remove('aktif'));
+  document.querySelectorAll('.lemar').forEach(x=>x.classList.remove('aktif'));
+  b.classList.add('aktif');
+  $('l'+b.dataset.t.charAt(0).toUpperCase()+b.dataset.t.slice(1)).classList.add('aktif');
+  if(!dsk())setPanel(true);
+  renderUI();
+ });
+});
 
-/* ---------- BIBIT ARSIP — lilin NYATA dibangkitkan saat forge ---------- */
-const BIBIT_ARSIP = {"BTCUSDT":{"tsA":1790643600000,"c":[83068.0,82967.4,83069.99,83212.98,83431.02,84007.06,83980.97,83874.01,84258.01,84030.49,84358.01,84332.85,84200.01,83752.01,83068.0,83061.27,83078.01,83640.0,83594.01,83616.39,83503.99,83612.01,83663.66,83453.36,83448.01,83384.68,83300.65,83210.01,83384.0,83043.14,83304.92,83062.41,83632.01,83918.01,83915.16,85290.32,84637.74,83800.01,84134.43,84349.44,84031.46,83950.0,83603.16,83673.99,83757.72,83685.85,83623.6,83509.03,83518.07,83490.78,83754.01,84110.01,84291.48,84121.45,83429.93,83566.97,83782.01,83966.28,83905.76,83736.02,83939.67,84050.65,84162.65,84202.01,84908.01,84802.02,84675.36,84634.0,84544.99,84749.73,84880.05,84784.89,84910.0,85188.0,85512.9,86652.12,86002.01,85992.95,86089.65,86236.0,86364.02,86297.6,86424.85,86810.0,86565.05,85686.93,85326.0,85160.01,84774.75,84262.01,84315.28,84459.04,84531.69,84560.0,84518.01,84660.11,84640.0,84600.0,84699.56,84577.23,84652.09,84586.0,84560.0,84616.01,84600.01,84636.13,84672.01,84888.02,84870.04,84856.01,84867.28,84868.03,85012.0,84949.99,84842.5,84749.75,84715.15,84776.01,84753.56,84790.0,84802.59,84802.17,84840.87,84811.94,84912.01,85031.74,85106.0,85106.48,85233.84,85264.01,85309.46,85127.94,85241.14,85278.44,85256.01,85374.0,85319.53,85338.84,85428.0,85824.44,85865.42,86428.01,86530.0,86652.46,86615.31,86522.0,86085.03,85538.02,85767.57,86260.0,86252.76,86211.0,85970.99,86117.14,86216.0,85904.01,86432.01,85645.26,85269.78,85300.0,85429.24,85649.14,85724.0,85783.94,85948.99,85928.01,85766.87,85812.0],"v":[755.141,450.36,308.832,350.373,359.158,657.449,614.403,650.679,883.398,509.507,492.054,590.428,856.915,1050.623,1492.111,684.07,383.297,394.02,320.218,204.262,344.16,274.893,291.846,410.862,408.466,342.339,264.756,286.484,440.834,530.3,688.166,628.267,644.754,758.462,449.169,3850.102,2383.561,1897.966,810.991,571.824,592.676,432.13,502.369,420.089,302.089,214.894,691.271,451.695,343.447,362.147,325.016,514.628,420.045,398.595,1433.534,1428.797,721.115,465.686,424.019,410.881,998.333,1143.435,2235.932,751.738,1161.142,823.155,467.447,394.364,302.671,453.968,334.267,801.383,372.716,641.828,779.562,2677.545,880.04,827.155,1220.74,736.958,1441.302,452.525,469.714,1981.721,1254.083,2161.008,1180.778,674.749,3627.536,1168.561,1115.365,602.589,339.927,664.664,425.468,312.846,238.753,223.238,210.83,152.175,147.941,272.311,376.021,244.08,171.707,340.605,188.038,386.403,249.999,225.569,366.203,215.141,331.842,214.783,235.323,195.355,288.714,382.279,919.478,385.033,191.415,278.14,226.785,75.913,226.774,295.72,244.474,321.076,335.313,336.019,251.804,359.29,218.781,259.511,287.834,195.75,159.087,134.176,258.951,378.126,538.277,1218.877,815.988,686.055,1157.279,747.287,494.758,896.916,673.051,619.085,700.925,575.999,903.502,427.18,388.859,358.759,964.007,2137.965,1061.354,823.595,373.322,452.683,342.498,259.186,311.446,467.323,363.745,453.076]},"ETHUSDT":{"tsA":1790643600000,"c":[2665.61,2657.63,2665.2,2668.07,2676.54,2706.73,2712.36,2708.84,2717.63,2714.8,2732.47,2736.83,2726.83,2710.99,2674.17,2675.99,2673.76,2695.86,2690.01,2689.26,2679.44,2681.83,2677.98,2672.62,2672.57,2674.49,2671.55,2670.0,2675.09,2662.07,2674.87,2671.11,2688.67,2695.61,2697.8,2731.01,2710.0,2678.2,2683.72,2695.83,2682.72,2679.15,2669.61,2682.52,2684.31,2687.0,2686.01,2684.96,2690.01,2687.02,2696.07,2707.57,2717.96,2715.21,2677.48,2687.19,2691.18,2701.92,2706.56,2692.75,2697.67,2690.16,2682.69,2680.27,2701.05,2700.38,2700.7,2698.82,2693.45,2703.23,2706.42,2708.38,2716.03,2721.04,2719.65,2742.76,2720.65,2729.42,2737.29,2753.74,2747.19,2743.48,2746.63,2755.18,2744.53,2709.77,2697.36,2690.08,2684.49,2664.98,2668.04,2661.74,2665.45,2668.01,2668.59,2676.75,2679.76,2677.14,2682.04,2676.01,2677.74,2680.09,2681.51,2683.01,2680.73,2683.46,2684.55,2682.67,2681.99,2683.56,2681.69,2681.68,2689.01,2685.14,2685.47,2686.74,2685.18,2686.58,2687.23,2693.49,2694.79,2692.62,2694.44,2692.4,2694.74,2696.19,2705.56,2700.38,2701.52,2701.48,2699.99,2695.23,2699.05,2697.47,2698.99,2703.22,2702.14,2701.03,2701.64,2705.74,2702.47,2730.9,2726.94,2729.29,2724.7,2731.12,2716.16,2702.87,2706.48,2725.9,2726.49,2721.32,2717.14,2717.5,2718.39,2711.06,2722.86,2704.57,2697.23,2696.21,2705.63,2710.56,2709.25,2712.58,2718.0,2716.0,2709.98,2713.32],"v":[11559.35,7544.307,4717.908,4000.918,6429.909,19073.474,29708.258,29023.69,17500.869,5002.325,15954.045,30201.375,18022.956,19399.617,32271.847,9982.324,5889.861,7470.458,7122.252,3271.885,15446.826,5305.788,5170.251,6346.533,7874.655,5707.071,6349.985,4264.294,6421.109,12363.057,7787.708,7031.855,11901.99,7917.103,8295.853,46661.061,36900.221,34897.176,12780.348,7156.501,12476.533,5737.351,7313.563,4612.499,2830.603,4092.585,4215.296,6123.164,5249.066,8460.72,5841.696,8537.053,7228.782,10046.874,24071.169,27349.621,8064.325,9316.378,6979.301,12190.915,13557.237,17869.61,25206.329,15940.306,17092.805,10187.299,5958.733,5198.297,5216.945,5056.83,2648.617,3868.753,5890.762,10481.987,16633.805,28262.091,19724.565,11567.676,16811.101,34020.619,21045.67,8707.837,6292.436,22352.6,14614.016,55857.641,57756.672,13305.762,15390.826,30173.599,10835.112,5700.739,5675.214,4887.206,3807.276,6619.456,4588.289,2822.611,2263.387,2993.477,3159.106,3009.671,4779.741,4283.841,3254.753,3455.844,2694.971,3084.524,2754.18,2465.537,4209.886,3907.378,5796.858,2637.35,2725.656,2487.876,2055.971,1813.669,1296.78,3489.218,2281.077,2523.627,1848.431,821.477,2148.443,3410.224,5073.975,4482.8,3316.513,3884.013,2296.722,4567.326,3905.4,4028.712,4495.878,2846.929,2045.082,1374.689,3088.088,4048.889,3458.914,20504.268,7963.169,9187.678,8667.459,12134.395,10695.61,11183.111,8171.295,8876.587,18621.539,9832.642,5405.82,4740.855,5057.166,3994.621,7911.644,16101.634,7570.471,98603.722,4549.795,3807.855,3427.668,3151.385,2523.801,3384.489,2866.636,2585.227]},"SOLUSDT":{"tsA":1790643600000,"c":[117.14,116.95,117.86,117.7,118.27,119.26,119.54,119.18,119.92,119.44,120.14,120.87,121.02,120.21,118.22,118.06,117.71,119.17,118.8,119.05,118.94,119.12,119.15,118.95,119.46,119.7,119.14,118.78,119.09,118.12,118.48,118.22,119.34,119.88,119.5,121.9,121.04,118.82,119.32,120.34,119.18,118.72,117.24,118.05,118.04,118.15,118.12,118.0,118.12,118.2,118.7,119.12,119.42,119.24,117.49,117.91,117.7,118.01,117.96,117.36,117.97,117.38,117.38,117.14,118.36,118.39,118.31,118.14,117.66,118.32,118.41,118.9,119.51,120.07,121.24,123.49,121.9,121.76,121.72,122.05,121.77,121.92,121.82,122.56,122.06,120.64,119.98,119.96,119.69,118.14,118.0,117.77,118.22,118.52,118.65,119.03,119.1,118.9,119.4,119.18,119.63,119.45,119.34,119.24,119.34,119.5,119.31,119.48,119.43,119.78,119.71,119.71,119.98,119.97,119.78,119.81,119.63,119.72,119.62,120.19,120.15,120.4,120.77,120.64,120.81,120.96,121.14,120.95,121.3,121.27,121.23,121.31,121.71,121.85,121.56,121.75,121.5,121.47,121.1,121.28,121.21,121.73,121.6,121.32,121.16,121.18,120.44,120.51,120.45,121.6,121.69,121.08,120.63,120.68,120.82,120.35,120.78,119.51,119.34,119.62,120.02,120.1,120.28,120.64,120.79,121.01,120.78,120.89],"v":[158033.958,60555.543,56765.432,43085.522,63507.407,99799.783,89718.935,79489.158,76950.382,67202.71,81077.991,260501.913,177074.79,193755.476,328047.116,136869.199,80274.793,79220.1,57135.062,31062.486,49230.517,65347.843,37654.75,39779.176,63988.741,63337.368,52931.071,61205.877,82525.463,76747.808,108258.597,79608.278,100823.581,110887.551,174500.906,386580.102,299969.034,304190.643,119352.204,95122.149,110291.113,87196.45,196259.966,101825.693,63715.393,72554.946,60938.572,56810.073,59774.013,44969.322,60006.383,79222.101,55630.943,54689.777,138218.657,90623.849,67002.81,93266.021,62102.423,94893.913,173889.922,159464.256,129285.398,116760.347,198978.954,84284.94,101936.765,49565.33,68805.974,67108.493,37509.561,62845.566,66462.444,113710.0,169647.193,452709.642,243711.526,127857.458,85966.414,126854.1,71607.7,61968.247,77142.906,201548.309,149445.324,196083.62,169406.661,119936.007,106672.927,241877.554,142771.573,67403.233,55510.182,55201.108,46425.844,54827.081,59434.205,29909.978,23795.578,26675.01,32306.908,38188.294,27122.77,25405.162,29727.926,23454.598,26600.968,41628.774,33081.741,45067.646,46164.118,45298.84,53008.554,39519.883,31195.056,38888.305,38994.552,46877.053,23226.615,47920.518,43874.406,45379.447,79112.727,23825.81,28934.451,37533.707,49484.926,46045.05,45694.152,44431.067,21256.805,62273.296,61209.201,83362.679,73839.394,40215.657,30805.07,35720.593,62342.987,61022.369,48935.691,108831.277,62896.52,74125.157,62764.744,48989.324,107227.168,101277.598,57559.86,86407.493,79122.292,75450.165,74194.387,45549.311,49296.242,46286.446,66740.919,183239.825,65150.659,92149.212,44225.207,40310.002,30052.353,20850.4,33986.061,69759.029,51224.858,28504.589]},"BNBUSDT":{"tsA":1790643600000,"c":[757.52,756.43,758.79,757.1,759.51,766.45,765.69,763.9,764.95,764.3,766.78,765.69,764.91,763.79,753.59,753.62,751.62,755.75,755.3,758.04,757.15,758.92,758.66,759.75,760.16,762.74,760.74,762.24,764.19,757.32,759.51,759.84,764.71,770.63,769.99,776.72,771.38,766.39,769.67,770.27,769.38,768.61,765.36,767.63,766.87,769.36,769.27,770.23,769.01,768.52,769.53,769.62,771.97,770.7,763.72,766.34,769.09,770.35,770.43,768.36,770.36,766.94,766.13,766.83,772.76,770.38,769.57,769.98,770.32,771.01,771.75,771.68,771.78,774.35,775.91,781.95,777.24,777.44,776.31,777.38,776.61,776.15,778.0,781.34,780.73,775.47,773.46,773.88,773.74,764.13,766.28,764.1,766.25,766.75,768.25,769.33,769.09,768.34,768.36,767.02,767.05,766.15,765.35,766.32,767.61,768.78,770.25,771.65,774.5,778.52,778.66,780.0,788.08,789.53,789.71,786.4,785.09,789.24,786.88,785.32,784.27,783.51,784.56,784.76,786.69,788.53,787.87,789.68,791.98,788.76,788.67,788.75,789.44,787.15,787.14,788.67,788.34,789.27,789.52,791.77,792.65,795.43,795.43,796.7,799.72,801.0,792.15,789.59,792.22,794.29,791.82,788.68,787.57,790.0,791.08,788.56,791.85,788.33,787.15,787.34,786.73,787.47,787.44,787.83,786.72,788.05,786.43,786.55],"v":[11275.824,4749.865,2573.579,4055.251,4093.364,5919.788,15556.604,4885.952,5639.217,3084.864,3531.374,5241.524,5262.17,5388.215,12805.637,5968.179,7627.709,3956.24,3153.044,2813.64,2380.291,2545.888,4853.83,3506.643,5125.55,2364.627,2989.031,3290.1,5433.21,5936.023,4574.56,3249.692,8580.836,11170.583,4911.23,11502.32,15806.372,8383.433,4509.871,3735.715,3766.495,1842.94,2075.663,1545.328,1492.213,1667.997,2701.739,3155.207,2813.974,2699.545,2109.918,2514.583,2264.32,2875.372,6583.931,3917.832,2878.523,4744.359,3642.546,4173.257,5629.597,8127.236,6735.646,3013.431,8891.46,4035.613,3272.349,1930.972,3354.481,1695.742,1380.107,2427.841,2516.933,3435.173,4566.019,12167.246,6401.955,4940.444,6368.172,8078.956,9488.147,4847.18,4751.47,11911.521,10332.532,8321.711,5307.352,3597.114,4134.318,13652.909,6779.664,3830.763,2151.024,2446.419,1404.867,3311.485,2280.685,1843.401,1374.837,5676.456,1473.698,2357.451,2676.391,2249.781,3469.085,2228.655,2086.557,2763.933,2935.258,5988.797,5797.987,5549.322,27544.094,4168.903,5713.435,2227.362,1738.627,1955.18,1997.313,3281.861,1943.091,2225.486,2157.011,1239.325,2054.656,3771.152,2319.579,3619.184,8411.608,5075.665,2658.996,3612.776,2978.321,3013.632,2253.379,1973.002,1420.753,790.304,1121.438,2765.713,2951.717,12116.359,2935.446,3012.339,11058.219,24230.878,15414.368,7348.448,4143.921,8211.292,8131.862,9170.386,4796.035,2729.167,2698.802,2694.251,3910.9,10520.362,4318.649,4962.169,2522.665,2649.873,2434.358,2076.391,1228.421,2473.406,1766.625,1798.287]},"XRPUSDT":{"tsA":1790643600000,"c":[1.4774,1.4762,1.489,1.4856,1.494,1.5059,1.5079,1.5008,1.511,1.5081,1.5172,1.5474,1.5483,1.5456,1.5179,1.4859,1.4822,1.5,1.4938,1.4968,1.4958,1.4936,1.4906,1.4924,1.4973,1.5013,1.4934,1.4935,1.5036,1.4931,1.5005,1.4974,1.5103,1.5127,1.5159,1.5344,1.5199,1.4974,1.5054,1.5118,1.4996,1.4955,1.4892,1.4917,1.4891,1.4893,1.49,1.4908,1.4896,1.493,1.501,1.5046,1.5086,1.5057,1.487,1.4878,1.49,1.4934,1.4929,1.4875,1.49,1.4826,1.4871,1.4814,1.5002,1.5013,1.5012,1.4985,1.4904,1.4941,1.4939,1.495,1.4966,1.5024,1.5087,1.5304,1.5169,1.5231,1.5319,1.5368,1.539,1.539,1.5319,1.5421,1.5318,1.5132,1.5069,1.5034,1.4979,1.4643,1.47,1.4723,1.4765,1.4805,1.4847,1.4891,1.4897,1.4856,1.4895,1.4857,1.4859,1.486,1.4824,1.4817,1.4832,1.4841,1.4863,1.4855,1.4867,1.4901,1.49,1.4903,1.4936,1.4901,1.4885,1.4902,1.4868,1.4865,1.4864,1.4883,1.4881,1.4893,1.49,1.4914,1.4917,1.4971,1.4992,1.4954,1.4996,1.5015,1.4987,1.4978,1.5012,1.5023,1.5048,1.5034,1.5013,1.5023,1.5065,1.5059,1.5083,1.5186,1.5206,1.523,1.5205,1.5188,1.5112,1.504,1.5069,1.5188,1.5222,1.5151,1.5116,1.52,1.5185,1.5091,1.5156,1.499,1.4927,1.4917,1.4963,1.4995,1.5034,1.5051,1.5081,1.5106,1.5077,1.507],"v":[11423768.1,4063877.2,4208726.4,3017887.8,3905537.3,5302493.0,4310707.8,4508128.8,2879386.6,2894226.8,4647209.5,31525163.0,14627903.5,14057526.7,15710624.7,17488831.2,9671189.1,6528370.9,4615633.6,2377984.9,4246150.9,9661489.0,4341604.3,4629820.0,5058400.2,4577157.3,3068623.3,3115232.7,5566289.5,5973505.4,5895317.6,5054550.2,8054019.8,4915616.6,5235982.0,16717482.3,21216330.0,14114065.8,6134615.8,4671306.7,3570074.6,3777692.0,5855854.5,3630864.0,3646813.9,2427453.4,3703110.3,3122904.3,3047588.1,3277052.2,2349016.4,3047208.2,3022358.4,3635934.8,9329244.6,5967594.4,4118852.1,6362055.0,3719445.4,3646135.0,8306385.8,7384664.4,7091964.3,5777230.3,9985625.7,6186122.5,2913944.8,3023075.3,4358633.2,2859857.0,1356152.4,2933744.5,6606762.5,4702966.5,5199581.8,15985549.5,7071141.8,5859883.9,5677603.7,8575360.4,6687469.6,7767885.2,8146514.2,11735650.5,10556149.2,12624859.0,8441599.8,5938087.5,6698934.4,36850249.4,11462390.9,6939067.3,3659836.1,3854006.9,2546146.4,2681483.2,2659287.9,1361140.8,1453611.8,1279474.4,1435522.3,2851221.5,1765411.8,2568950.7,1003973.4,917784.9,1933891.0,1805534.3,3599657.2,2541169.8,2126018.2,1478726.8,3515844.8,2087875.3,1474367.1,1298777.6,1918195.3,2057237.4,1235020.7,1809394.6,1200742.2,1910641.0,1354194.4,608194.5,906493.7,2403178.4,2831048.7,1963603.1,2794865.3,1571541.0,1051662.1,1749468.5,1917090.9,1979222.4,3185795.1,1847579.2,1099468.9,1275357.0,3338164.5,5955641.4,3374555.0,7249980.9,4853363.8,4639094.9,5709665.0,5640535.3,5357772.6,5721081.0,3041517.8,4094126.2,5925306.8,3643123.7,3505450.0,3384833.2,3212224.4,3161806.2,4471646.3,9917550.9,6786967.7,5625566.4,2414030.6,2856660.4,2508028.2,1566236.4,1565857.2,2888186.3,1542884.8,936007.9]},"DOGEUSDT":{"tsA":1790643600000,"c":[0.09267,0.09228,0.09312,0.09309,0.09386,0.09476,0.09506,0.09501,0.09556,0.09502,0.09575,0.09591,0.09584,0.09554,0.09373,0.09333,0.09326,0.09418,0.09368,0.09406,0.09413,0.09402,0.09389,0.09363,0.09398,0.0939,0.09339,0.09339,0.09396,0.09303,0.09378,0.09362,0.09426,0.0954,0.09583,0.09733,0.09628,0.09478,0.09539,0.09526,0.09442,0.09417,0.09404,0.09441,0.09428,0.09451,0.09456,0.09456,0.09474,0.09525,0.09578,0.09577,0.09588,0.0958,0.0943,0.09447,0.09442,0.0948,0.09497,0.09453,0.09471,0.09417,0.09432,0.09379,0.09494,0.095,0.09485,0.09457,0.09399,0.09419,0.09437,0.09407,0.09386,0.09431,0.09481,0.09677,0.09584,0.0959,0.09647,0.09713,0.09697,0.09663,0.09652,0.09716,0.09662,0.09542,0.09512,0.095,0.09451,0.09109,0.09149,0.09129,0.09214,0.09244,0.09293,0.09331,0.09316,0.09304,0.09331,0.09295,0.093,0.09297,0.09267,0.09252,0.09276,0.0929,0.09278,0.09274,0.09292,0.09335,0.09312,0.09309,0.09326,0.09319,0.09315,0.09316,0.09294,0.09293,0.09282,0.09291,0.0928,0.09277,0.09265,0.09274,0.09281,0.09306,0.09347,0.09315,0.09342,0.09337,0.09349,0.0934,0.09359,0.09398,0.09419,0.09455,0.09545,0.09511,0.09543,0.09586,0.09636,0.09636,0.09591,0.09638,0.09616,0.09622,0.09589,0.09522,0.0953,0.09607,0.09661,0.09673,0.0962,0.09628,0.0963,0.09562,0.09612,0.09461,0.09457,0.09451,0.09469,0.09487,0.09548,0.09564,0.09576,0.09567,0.09542,0.09525],"v":[48250085.0,45477702.0,26556936.0,17982436.0,25449680.0,27960844.0,31059769.0,41145101.0,41328371.0,18529370.0,22671280.0,35812800.0,25985292.0,33089809.0,59274719.0,37027471.0,30062170.0,27363241.0,20405253.0,10370391.0,15077796.0,16090518.0,9606673.0,14473517.0,15615019.0,13555081.0,23130406.0,21152590.0,22367740.0,22261898.0,22010412.0,19221909.0,31760432.0,46963793.0,93476729.0,101946860.0,129718191.0,97826805.0,49550768.0,27724303.0,22796243.0,21447465.0,19345098.0,12378732.0,12430425.0,10885745.0,12287319.0,12783521.0,23238699.0,12362813.0,25137015.0,17312167.0,10393063.0,15250938.0,54110571.0,34775890.0,12958806.0,35362563.0,18206617.0,19665386.0,31062747.0,41691859.0,43506936.0,23469920.0,35530508.0,17817272.0,13821580.0,9454752.0,19789446.0,10723831.0,4923450.0,9257882.0,50318973.0,20044292.0,26391626.0,92281605.0,47715502.0,25751131.0,30655129.0,73010015.0,41831914.0,27843402.0,15161292.0,70871229.0,39823630.0,91231037.0,34184180.0,27973102.0,24170132.0,195827122.0,61097502.0,51475751.0,23377386.0,26194945.0,20518444.0,31073900.0,14620297.0,9264544.0,9519826.0,14956270.0,8373869.0,9984248.0,7708448.0,20855502.0,12610172.0,11627163.0,7355472.0,13755066.0,8825118.0,27168107.0,14951796.0,9870299.0,13190217.0,7871102.0,6250519.0,11610543.0,11902763.0,9961821.0,6793918.0,11310944.0,10855360.0,19003857.0,13979103.0,6524718.0,8519635.0,15935867.0,10140394.0,12941134.0,9072434.0,20115184.0,14905423.0,15051044.0,9915712.0,20480763.0,30367336.0,24966845.0,84972738.0,26494488.0,27303564.0,30202241.0,81754754.0,43705478.0,43891082.0,25392613.0,26769594.0,21152118.0,42919788.0,35766847.0,12559988.0,16710458.0,29929153.0,46868585.0,25573317.0,19099736.0,14448225.0,30648423.0,23461015.0,63722046.0,17955178.0,24465427.0,10486236.0,17700697.0,16082798.0,9236159.0,8651850.0,10431481.0,12533643.0,7796905.0]},"ADAUSDT":{"tsA":1790643600000,"c":[0.2425,0.2407,0.2427,0.2431,0.2452,0.2491,0.252,0.2529,0.2536,0.2516,0.2539,0.2526,0.2519,0.252,0.2443,0.242,0.2416,0.2451,0.2432,0.2448,0.2441,0.2447,0.2445,0.2445,0.2453,0.2456,0.2438,0.2441,0.2459,0.2427,0.2446,0.2449,0.2475,0.2484,0.2485,0.2537,0.2516,0.2449,0.2471,0.2495,0.2463,0.2441,0.2427,0.2447,0.2445,0.2478,0.2466,0.2464,0.2474,0.2491,0.2511,0.2527,0.2535,0.2535,0.2485,0.2467,0.2466,0.2478,0.2489,0.2476,0.2477,0.245,0.2465,0.245,0.2505,0.2487,0.2482,0.2474,0.2451,0.2461,0.2464,0.2461,0.2462,0.2493,0.2499,0.2564,0.2535,0.2545,0.2555,0.2546,0.2571,0.2561,0.2552,0.257,0.2555,0.2523,0.252,0.2523,0.2502,0.2395,0.2396,0.239,0.2411,0.2421,0.2444,0.2466,0.2474,0.2468,0.2477,0.2455,0.2462,0.2455,0.2439,0.2431,0.2442,0.2455,0.2451,0.2448,0.2453,0.2458,0.2449,0.2448,0.2459,0.2453,0.2454,0.2454,0.2449,0.2445,0.2438,0.2436,0.2437,0.2432,0.2432,0.2434,0.244,0.2446,0.2459,0.2449,0.2452,0.245,0.2452,0.2449,0.2446,0.2457,0.2479,0.2476,0.2478,0.2497,0.2528,0.2515,0.2533,0.2621,0.2597,0.2635,0.2637,0.2683,0.2688,0.2665,0.2697,0.2712,0.2729,0.2709,0.2718,0.275,0.2723,0.2719,0.2743,0.2684,0.2639,0.2649,0.2644,0.2653,0.2661,0.2692,0.2699,0.2718,0.2704,0.2696],"v":[9348841.3,9867930.9,5858614.5,5766873.9,4467033.4,7010098.6,14303995.9,10558624.2,7174270.8,5402086.7,5979663.4,6762668.3,5954417.0,7095418.2,15161558.9,8505172.3,8824058.2,9381422.9,4960647.6,3159970.4,4729334.9,2513650.6,2798055.1,4214520.8,4136830.3,4168359.0,2637742.4,2675618.0,3541251.5,4127028.5,4108876.9,3489062.0,9149782.6,4474098.3,2895887.7,17056794.6,18256661.4,15080680.5,6139584.1,5311362.2,3655195.1,5552101.7,6937254.7,4631707.8,2516062.6,2979730.3,5181102.8,2970409.8,3072394.8,2479830.3,3791057.4,8764339.9,5051912.5,5767903.8,11120649.9,6946709.9,8666966.9,7966457.1,5638461.3,5121640.9,6604701.8,10152558.5,9297451.1,6344388.0,11852492.5,5685189.9,4516985.7,2041152.4,4578502.2,3246481.7,1918515.4,3407676.9,4470600.8,5378301.9,6793208.7,18677982.0,12876425.8,9226545.0,8071583.0,11124019.4,9964636.4,6789213.8,4048932.0,16839297.5,11068780.1,12487192.8,9043001.6,3875142.5,9236705.8,38701370.9,13280830.4,10754448.4,4396635.1,4960299.1,5454820.5,6549122.8,4803377.2,4302237.4,3510387.6,3238045.7,1940447.6,2621168.3,2238272.0,3551313.8,4013698.8,3761343.5,2101732.4,3426056.0,2287107.5,2557728.7,2571585.6,2192294.9,2829128.1,2672132.6,2267944.4,1924567.9,1050973.1,2362120.3,1975325.2,2444852.7,3865718.5,4019314.6,2941163.1,2694531.4,2697468.2,3108760.6,4058591.7,2352666.8,4695847.8,2699825.2,1569436.7,1661093.9,3909638.5,6235139.3,17997807.6,5667488.3,3799483.5,4373594.6,35945084.3,9397224.6,5031224.7,55069431.5,19625490.4,15849435.1,21132808.6,25287047.6,23249563.5,18390382.1,11529853.2,23744508.8,12189292.8,10918916.3,6953215.7,14197643.5,9748534.8,7327711.8,19306476.0,24474689.9,23639329.4,14865638.4,5160832.7,5568839.8,3287278.3,8751953.2,4364900.3,10017541.1,6119380.1,4993142.2]},"GTCUSDT":{"tsA":1790643600000,"c":[0.08386,0.08347,0.08423,0.08448,0.08454,0.08605,0.08662,0.08667,0.08695,0.08759,0.08811,0.08758,0.08812,0.08806,0.08551,0.08521,0.08493,0.08807,0.08658,0.08661,0.08655,0.08681,0.08646,0.08631,0.08683,0.08673,0.08629,0.08684,0.08897,0.09045,0.11603,0.12022,0.11372,0.11404,0.10282,0.10061,0.0983,0.0977,0.09593,0.09604,0.09498,0.0936,0.09354,0.094,0.09363,0.09491,0.09414,0.0955,0.09315,0.09472,0.09537,0.09506,0.09495,0.09622,0.09717,0.09996,0.10035,0.09965,0.10195,0.1008,0.1003,0.1004,0.1047,0.10383,0.10827,0.11262,0.1191,0.12559,0.14549,0.14249,0.14445,0.14702,0.17162,0.17139,0.15696,0.1464,0.14556,0.14503,0.12959,0.12805,0.13167,0.13266,0.1254,0.12367,0.12534,0.12725,0.12819,0.14571,0.16102,0.14652,0.15282,0.15163,0.13862,0.13439,0.13409,0.13175,0.12854,0.12678,0.1265,0.12725,0.12724,0.12504,0.12129,0.1254,0.12366,0.12415,0.12273,0.12303,0.12812,0.12575,0.12218,0.11631,0.11509,0.11263,0.11182,0.11317,0.11337,0.11557,0.11481,0.11488,0.11575,0.11473,0.11515,0.11527,0.11575,0.11429,0.119,0.11746,0.12318,0.12712,0.12247,0.12537,0.12514,0.12128,0.12144,0.1408,0.1482,0.15851,0.16162,0.15591,0.1627,0.17582,0.17524,0.21071,0.2364,0.19453,0.1903,0.18433,0.18249,0.18967,0.20963,0.20846,0.22139,0.21744,0.21259,0.23476,0.20503,0.20816,0.2177,0.19914,0.19688,0.19364,0.1876,0.18629,0.18947,0.18643,0.18772,0.19314],"v":[79331.5,32037.7,153046.9,43987.5,32460.1,451460.6,34923.3,109227.3,25953.4,49999.5,72538.7,50158.2,77963.4,65419.1,438205.9,135677.3,45386.2,482271.1,84436.3,29118.8,52149.2,30320.2,54795.0,48140.9,27271.5,14502.2,20177.5,17925.8,228301.3,346612.0,13903274.8,8267241.2,7105348.7,3183098.8,4932659.2,2965651.3,1418162.2,1193574.1,877834.5,640308.0,841844.7,901769.4,364411.4,863439.6,592934.8,983502.9,763094.3,674731.2,960498.5,613702.1,481676.0,588772.2,632390.4,332626.6,1012943.5,1178714.9,1209772.9,1465932.4,620843.7,474164.2,862307.6,473909.5,1760758.2,1050039.4,1908245.9,2123365.1,3190333.0,7675788.8,19417931.4,10502391.9,6006419.7,7710411.5,19425612.2,8788734.4,9426393.2,8018315.2,8077192.4,4908670.5,7165488.5,4634395.9,2729341.5,5355173.1,4277364.4,3499854.6,2544350.6,2250205.4,3779137.6,11485653.4,11975229.7,13352577.3,6858949.0,3041501.2,4362773.5,1907414.8,1390981.2,1622599.4,1234922.7,2080554.5,1429263.4,966672.7,1613397.5,1481321.8,1186859.1,2532138.3,1301216.0,789202.9,975274.8,739038.6,1964690.0,1266480.4,693299.3,2549011.1,972606.3,1147509.2,1041281.8,886784.6,521245.0,340031.6,321839.1,647675.0,1660417.1,637892.1,503079.5,799614.3,483128.0,277555.5,759927.6,1002186.1,2124935.5,1633982.0,1282151.5,1458573.7,635311.6,527032.8,796000.1,13081615.2,7556201.1,8620704.0,7146957.2,6020745.7,5218737.7,9410662.1,5171946.3,20553614.6,12900041.9,12015924.5,12903513.9,4900400.1,4568139.9,3055353.9,10263314.9,11204581.0,9618747.9,6204093.8,5039970.6,9860572.1,11123927.1,5802743.7,5483406.7,6807200.1,3083237.7,2641195.2,3391463.1,1281957.9,1948693.9,1620052.0,1596378.4,1626039.6]}};
-function bangkitArsip() {
-  if (!BIBIT_ARSIP) return;
-  for (const sim in BIBIT_ARSIP) {
-    const b = BIBIT_ARSIP[sim];
-    G.pasir[sim] = { t: b.tsA + b.c.length * 3600000, tsA: b.tsA, c: b.c, v: b.v, sumber: 'arsip' };
-  }
-  G.sumber = 'arsip';
-  TRACE.push('inti.bangkit', Object.keys(BIBIT_ARSIP).length + ' simbol dibangkitkan dari arsip lilin nyata (forge ' + jamWIB(BIBIT_ARSIP.BTCUSDT.tsA + 168 * 3600000) + ' WIB) — jujur: ini arsip, bukan hidup; sensor akan menggantikannya begitu gerbang terbuka');
+/* ================= KEBANGKITAN ================= */
+function awal(){
+ muat();
+ catchUp();
+ bacaOtak();
+ jurnal('SISTEM','kesadaran '+V+' dibangunkan — '+nTahu()+'/'+KONSEP.length+' konsep dikuasai · pengetahuan '+poinTahu()+' poin · usia dunia '+fmtUsia(Date.now()-K.lahir));
+ tata();
+ if(!K.data)muatArena();
+ setInterval(simpan,10000);
+ setInterval(muatArena,300000);
+ setInterval(bacaOtak,120000);
+ setInterval(renderUI,1200);
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)simpan()});
+ window.addEventListener('beforeunload',simpan);
+ keputusan();       // keputusan pertama lahir dari utilitas — bukan skrip
+ renderUI();
+ if(dsk())setPanel(true);
+ requestAnimationFrame(bingkai);
 }
-
-/* ---------- KEBANGKITAN ---------- */
-function boot() {
-  renderSemua();
-  TRACE.push('inti.bangkit', 'V282-MESIN-HIDUP menyala — tubuh hanyalah pelihat; yang bekerja adalah mesin');
-  TRACE.push('inti.bangkit', 'hukum rumah ini: TIADA ANIMASI TANPA PEKERJAAN NYATA DI BALIKNYA');
-  if (!Object.keys(G.pasir).length) bangkitArsip();
-  putaran();
-  requestAnimationFrame(loop);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) { renderSemua(); } });
-}
-boot();
-
+awal();
 </script>
 </body>
 </html>
