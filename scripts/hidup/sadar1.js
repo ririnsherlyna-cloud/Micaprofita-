@@ -575,7 +575,7 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
     ING.fokus = fokusKini;
     let hasil = 'ingatan tertulis ke disk';
     if (!DRY) {
-      const pesanKomit = `sadar1: bangun ke-${bangunKe} — tubuh ${TUBUH.ruas}ruas/${TUBUH.mata}mata, habitat ${HABITAT.vena} vena ${HABITAT.altar} altar [skip ci]`;
+      const pesanKomit = `sadar1: bangun ke-${bangunKe} — tubuh ${TUBUH.ruas}ruas/${TUBUH.mata}mata, habitat ${HABITAT.vena.length} vena ${HABITAT.altar.length} altar [skip ci]`;
       const r2 = await dorongFile(DIR + '/ingatan.json', Buffer.from(JSON.stringify(ING, null, 1)), pesanKomit);
       const r3 = await dorongFile(DIR + '/habitat.json', Buffer.from(JSON.stringify(HABITAT, null, 1)), pesanKomit);
       const r4 = await dorongFile(DIR + '/buku_harian.jsonl', Buffer.from(baris.join('\n') + '\n'), pesanKomit);
