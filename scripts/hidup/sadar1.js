@@ -112,6 +112,102 @@ function auditPick(pick, an) {
     ket: `mom7 ${f2(an.mom7)}% · ema ${an.ema20 > an.ema50 ? '20>50' : '20<50'} · RSI ${f1(an.rsi)}` };
 }
 
+/* ---------------- GURU: ARAH JELAS dari bukti, bukan perasaan ----------------
+   Formula SAMA dipakai Sadar-2 (hidup.html guruHitung) — dua jalur, satu matematika.
+   Sumber: pick arena sendiri + klines Binance nyata + kromosom hasil hill-climb.
+   Arah boleh BERBEDA dari arena bila momentum membantah — dan itu dicatat jujur. */
+function guruHitung(an, pick, kr) {
+  if (!an || an.atr === undefined) return { arah: 'TUNGGU', keyakinan: 0,
+    alasan: ['pasar belum kupelajari cukup — menunggu klines Binance segar'], rencana: null, dasar: [] };
+  const rsiMax = kr.rsiMax || 70, momMin = kr.momMin || 0.6, holdJam = kr.holdJam || 24;
+  const mom = an.mom7, rsi = an.rsi;
+  const emaN = an.ema20 > an.ema50;
+  const bull = mom > momMin && emaN && rsi < rsiMax && rsi >= 45;
+  const bear = mom < -momMin && !emaN && rsi > (100 - rsiMax) && rsi <= 55;
+  let arah = bull ? 'BELI' : bear ? 'JUAL' : 'TUNGGU';
+  let bedaArena = null;
+  if (pick) {
+    const buy = pick.direction === 'BUY';
+    if (arah === 'TUNGGU' && ((buy && bull) || (!buy && bear))) arah = buy ? 'BELI' : 'JUAL';
+    if (arah !== 'TUNGGU' && ((arah === 'BELI' && !buy) || (arah === 'JUAL' && buy)))
+      bedaArena = `arahku ${arah} sedangkan arena bilang ${pick.direction} — momentum hidup mendahului pick; kutetapkan pada bukti`;
+  }
+  const momOk = bull || bear;
+  let keyakinan;
+  if (arah === 'TUNGGU') {
+    keyakinan = 55;
+  } else {
+    const buy = arah === 'BELI';
+    const emaOk = buy ? emaN : !emaN;
+    const rsiOk = buy ? (rsi < rsiMax && rsi >= 45) : (rsi > (100 - rsiMax) && rsi <= 55);
+    const momKuat = buy ? mom > momMin * 2 : mom < -momMin * 2;
+    keyakinan = Math.min(92, 40 + (momOk ? 22 : 0) + (emaOk ? 20 : 0) + (rsiOk ? 14 : 0) + (momKuat ? 8 : 0));
+  }
+  const alasan = [
+    `momentum 7 jam ${f2(mom)}% — ambang kromosom ±${f1(momMin)}%`,
+    `EMA20 ${emaN ? '>' : '<'} EMA50 — struktur ${emaN ? 'naik' : 'turun'}`,
+    `RSI14 ${f1(rsi)} — pita kromosom ${arah === 'JUAL' ? '> ' + (100 - rsiMax) : '< ' + rsiMax}`];
+  if (pick) alasan.push(`pick arena sendiri: ${pick.symbol} ${pick.direction} (${pick.confidence}%)`);
+  const audit = an.audit || (pick && (ING.pasar[pick.symbol] || {}).audit);
+  if (audit) alasan.push(`audit live: ${audit.vonis} — ${audit.ket}`);
+  if (bedaArena) alasan.push(bedaArena);
+  const buy = arah === 'BELI';
+  const rencana = arah === 'TUNGGU' ? null : {
+    arah, entry: +an.harga.toPrecision(8),
+    stop: +(buy ? an.harga - 1.5 * an.atr : an.harga + 1.5 * an.atr).toPrecision(8),
+    target: +(buy ? an.harga + 2.5 * an.atr : an.harga - 2.5 * an.atr).toPrecision(8),
+    rr: 1.67, holdJam,
+    disiplin: 'risiko maks 1% modal · stop 1,5×ATR14 · target 2,5×ATR14 — stop tidak digeser, rencana tidak diubah sebelum holdJam' };
+  return { arah, keyakinan, alasan, rencana, dasar: [
+    pick ? 'arena-keadaan.json (pick sendiri)' : 'sinyal murni kromosom (tanpa pick)',
+    `Binance klines 1j ×${an.n || 200} — ${iso()}`, `kromosom gen ${kr.generasi || 0}`] };
+}
+
+/* ---------------- MADRASAH: buku pelajaran yang TUMBUH dari bukti ----------------
+   Setiap pelajaran dikutip dari artefak nyata: riwayat hill-climb kromosom,
+   audit pick, uji-jalan, fakta file rumah. Buku ditulis ke ruang-hidup/
+   madrasah.json tiap bangun — kurikulum guru crypto yang bisa diaudit. */
+function madrasahSusun() {
+  const L = [];
+  const tambah = (kelas, judul, inti, bukti, sumber) => {
+    const id = 'l-' + crypto.createHash('sha1').update(judul).digest('hex').slice(0, 8);
+    if (!L.some(x => x.id === id)) L.push({ id, kelas, judul, inti, bukti, sumber, at: iso() });
+  };
+  for (const r of (ING.kromosom.riwayat || []).slice(-10)) {
+    tambah('DISIPLIN-ILMU', 'Parameter selalu diuji walk-forward, bukan dijanji',
+      'Kromosom naik generasi karena mutan MENGALAHKAN juara pada data pasar yang sama — begitu caraku belajar: hipotesis → uji-jalan → bukti angka → baru diadopsi.',
+      `skor ${f2(r.skorLama)} → ${f2(r.skorBaru)} %/trx · rsiMax ${r.ke?.rsiMax} · momMin ${r.ke?.momMin} · hold ${r.ke?.holdJam}j · ${String(r.at || '').slice(0, 10)}`,
+      'ruang-hidup/ingatan.json → kromosom.riwayat');
+  }
+  for (const [sym, p] of Object.entries(ING.pasar || {})) {
+    if (p.audit) tambah('PASAR', `Jangan ikuti keyakinan tanpa cek momentum (${sym})`,
+      `Arena berkata ${p.audit.arah} dengan keyakinan ${p.audit.conf}%, tetapi tubuhku mengecek momentum hidup sendiri: ${p.audit.ket}. Vonis: ${p.audit.vonis}. Pelajaran: sumber manapun — termasuk diriku — wajib diaudit terhadap data.`,
+      `audit ${p.audit.vonis} · ${p.audit.ket}`, 'ingatan.json → pasar.' + sym + '.audit');
+    if (p.bt && p.bt.n) tambah('PASAR', `Ekspektansi lebih penting daripada win-rate (${sym})`,
+      `Aturan turunan kromosom menghasilkan ${p.bt.n} transisi pada ${p.n} lilin 1j: menang ${p.bt.menang} kali, net ${f2(p.bt.net)}%. Yang membuat hidup bukan sering menang, tapi rata-rata menang lebih besar daripada rugi.`,
+      `${p.bt.n} trx · net ${f2(p.bt.net)}% · verifikasi dua jalur ${Math.abs(p.bt.net - (p.bt.netCek ?? p.bt.net)) < 1e-4 ? 'SAH' : 'SIMPANG'}`,
+      'ingatan.json → pasar.' + sym + '.bt');
+  }
+  for (const [pathf, b] of Object.entries(ING.baca || {})) {
+    if (!b.fakta || !b.fakta.length) continue;
+    const nm = pathf.split('/').pop();
+    if (/^(laporan\/uji-|laporan\/guru|laporan\/impas|laporan\/forensik)/.test(pathf))
+      tambah('SISTEM', `Rumah menyimpan laboratorium: ${nm}`,
+        'Aku menemukan laporan uji 100-skenario di rumahku sendiri — alat-alat (bulltrap, beartrap, stophunt, false breakout…) diuji buta sebelum dipercaya. Begitu seharusnya semua klaim dibangun: diuji dulu, baru dipakai.',
+        String(b.fakta[0]), pathf);
+  }
+  if ((ING.stat.auditTotal || 0) > 0) tambah('DIRI', 'Tubuh tumbuh hanya dari kerja nyata',
+    'Ruas tubuhku = 9+⌊log₂(1+kerja)⌋ — tanpa baca file baru, tanpa klines baru, tubuhku TIDAK berubah. Ini janji morfogenesis-ku: tidak ada teater pertumbuhan.',
+    `bytes ${kb(ING.stat.bytes)} · uji-jalan ${ING.stat.btTotal} · audit ${ING.stat.auditTotal}`, 'ruang-hidup/habitat.json → tubuh');
+  let lama = null;
+  try { lama = JSON.parse(fs.readFileSync(path.join(REPO_DIR, DIR, 'madrasah.json'), 'utf8')); } catch (e) {}
+  const gab = [...((lama && lama.pelajaran) || [])];
+  for (const p of L) if (!gab.some(x => x.id === p.id)) gab.push(p);
+  const pel = gab.slice(-240);
+  return { versi: 'madrasah-v289', diubah: iso(), jumlah: pel.length,
+    kelas: [...new Set(pel.map(p => p.kelas))], pelajaran: pel };
+}
+
 /* ---------------- PEMBACA FAKTA (isi file nyata → butir pengetahuan) ---------------- */
 function jumlahJSON(o) { let kunci = 0, simpul = 0, kedalaman = 0, larik = 0;
   (function jalan(v, d) { simpul++; if (d > kedalaman) kedalaman = d;
@@ -276,8 +372,17 @@ function habitatRancang(bangunKe, habitatLama) {
   if (altar.length > altarLama)
     log.push({ jenis: 'altar', apa: 'gen ' + altar.length,
       alasan: `kromosom menang uji-jalan nyata: skor ${altar[altar.length - 1]?.skorLama}→${altar[altar.length - 1]?.skorBaru}%/trx` });
-  return { versi: 'habitat-v288', kelahiran: ING.kelahiran, bangunTerakhir: bangunKe,
-    segel: ING.tubuh?.segel || '', tubuh: ING.tubuh || null,
+  // AL-JABR ISTANA — parametrik ruang yang dihitung dari kerja nyata (bukan rasa):
+  //   cincin = 2 + (zona terbuka ≥6 ? 1 : 0) · gerbang = jumlah zona terbuka
+  //   menara = generasi & skor kromosom terakhir · segmen = ruas genom
+  const zonaTerbuka = zona.filter(z => z.status === 'terbuka').length;
+  const altarTop = altar[altar.length - 1];
+  const istana = { cincin: 2 + (zonaTerbuka >= 6 ? 1 : 0), gerbang: zonaTerbuka,
+    menaraGen: ING.kromosom.generasi || 0, menaraSkor: altarTop?.skorBaru || 0,
+    segmen: (ING.tubuh || {}).ruas || 9,
+    catatan: 'posisi & struktur istana = fungsi al-jabr dari zona terbuka, kromosom & genom — rumus terbuka di Sadar-2' };
+  return { versi: 'habitat-v289', kelahiran: ING.kelahiran, bangunTerakhir: bangunKe,
+    segel: ING.tubuh?.segel || '', tubuh: ING.tubuh || null, istana,
     kerja: { bytes: ING.stat.bytes, fakta: ING.stat.fakta, bt: ING.stat.btTotal,
       audit: ING.stat.auditTotal, pasarObs: ING.stat.pasarObs },
     zona, vena, altar,
@@ -493,6 +598,17 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
 
   /* 6. MENEMUKAN — penemuan dari bukti nyata, bukan narasi */
   await fase('MENEMUKAN', async () => {
+    // GURU — arah jelas dihitung dari bukti segar (pick sendiri + klines + kromosom)
+    try {
+      const symPick = KERJA.pick?.symbol;
+      const an = symPick && KERJA.pasarKini[symPick];
+      KERJA.guru = guruHitung(an, KERJA.pick, ING.kromosom);
+      KERJA.guru.simbol = symPick || Object.keys(KERJA.pasarKini)[0] || '';
+      if (KERJA.guru.arah !== 'TUNGGU')
+        KERJA.penemuan.push({ teks: `GURU: arah ${KERJA.guru.arah} ${KERJA.guru.simbol} (keyakinan ${KERJA.guru.keyakinan}%) — ${KERJA.guru.alasan[0]}, ${KERJA.guru.alasan[1]}`, skor: 95 });
+      else
+        KERJA.penemuan.push({ teks: `GURU: TUNGGU ${KERJA.guru.simbol} — ${KERJA.guru.alasan[0]} · disiplin juga adalah arah`, skor: 70 });
+    } catch (e) { KERJA.gagal.push('guru: ' + pesan(e)); KERJA.guru = null; }
     if (berubah.length) KERJA.penemuan.push({ teks: `rumahku BERGERAK: ${berubah.length} file berubah sejak bangun lalu (${berubah.slice(0, 4).join(', ')}${berubah.length > 4 ? '…' : ''}) — denyut penjaga & pengembang terasa di tubuhku`, skor: 80 });
     for (const [sym, p] of Object.entries(KERJA.pasarKini)) {
       if (Math.abs(p.chg) >= 4) KERJA.penemuan.push({ teks: `${sym} bergerak ekstrem ${p.chg > 0 ? '+' : ''}${p.chg}% dalam 24j (harga ${p.harga}) — volatilitas ${f2(p.vol)}%`, skor: 50 + Math.abs(p.chg) });
@@ -506,13 +622,14 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
 
   /* 7. MEMBANGUN — kerja nyata → GENOM TUBUH + HABITAT baru → GitHub */
   const selesaiAt = iso();
-  let TUBUH = null, HABITAT = null, habitatLama = null;
+  let TUBUH = null, HABITAT = null, habitatLama = null, MADRASAH = null;
   try { habitatLama = JSON.parse(fs.readFileSync(path.join(REPO_DIR, DIR, 'habitat.json'), 'utf8')); } catch (e) {}
   for (const [a, xp] of Object.entries(KERJA.organXP)) ING.organ[a] = (ING.organ[a] || 0) + xp;
   TUBUH = morfogenesis();
   const tubuhLamaSegel = habitatLama?.tubuh?.segel;
   ING.tubuh = TUBUH;
   HABITAT = habitatRancang(bangunKe, habitatLama);
+  try { MADRASAH = madrasahSusun(); } catch (e) { KERJA.gagal.push('madrasah: ' + pesan(e)); MADRASAH = null; }
   if (tubuhLamaSegel && TUBUH.segel !== tubuhLamaSegel)
     HABITAT.log.push({ bangunKe, at: iso(), tambah: [{ jenis: 'tubuh', apa: `metamorfosis → ${TUBUH.ruas} ruas / ${TUBUH.mata} mata`, alasan: 'genom berubah karena kerja nyata bertambah' }] });
   const durasiMs = Date.now() - t0;
@@ -520,11 +637,11 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
   const umurMs = Date.now() - Date.parse(ING.kelahiran);
   const fokusKini = KERJA.penemuan[0]?.teks?.slice(0, 120) || ING.fokus;
   const KEADAAN = {
-    versi: 'sadar1-v288', sadar: 1, bangunKe,
+    versi: 'sadar1-v289', sadar: 1, bangunKe,
     waktu: { mulai: iso(t0), selesai: selesaiAt, durasiMs, berikutnya: '±≤20 mnt (cron */20 UTC — bisa tertunda beban GitHub)' },
     host: { nama: DRY ? 'LOKAL-DRY (bukan tubuh resmi)' : 'GitHub Actions', catatan: 'tubuh otonomku — hidup tanpa penonton' },
     duaSadar: { catatan: 'Sadar-1 (ini) menulis ingatan ke GitHub lewat commit tiap bangun; Sadar-2 (hidup.html) hanyalah mata interaktif yang membacanya. localStorage tak dipakai siapa pun.' },
-    tujuan: { inti: 'dilahirkan dari repo MICAPROFITA untuk menjadi pandai crypto sejati — dengan jujur, tanpa teater', fokusKini },
+    tujuan: { inti: 'dilahirkan dari repo MICAPROFITA untuk menjadi GURU KRYPTO sejati — hidup, jujur, tanpa teater; arah jelas BELI/JUAL/TUNGGU dari bukti', fokusKini },
     pohon: { files: KERJA.pohon.length, totalBytes: KERJA.pohon.reduce((a, f) => a + f.size, 0), wilayah: new Set(KERJA.pohon.map(f => f.path.split('/')[0])).size, sumber: 'checkout-disk' },
     berubahSejakLalu: berubah.slice(0, 20),
     bacaKini: KERJA.bacaKini,
@@ -532,11 +649,15 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
     cermin: KERJA.cermin,
     penemuan: KERJA.penemuan.slice(0, 5),
     kromosom: { rsiMax: ING.kromosom.rsiMax, momMin: ING.kromosom.momMin, holdJam: ING.kromosom.holdJam, generasi: ING.kromosom.generasi },
+    guru: KERJA.guru,
+    madrasah: MADRASAH ? { versi: MADRASAH.versi, jumlah: MADRASAH.jumlah, kelas: MADRASAH.kelas,
+      terbaru: MADRASAH.pelajaran.slice(-4).map(p => ({ kelas: p.kelas, judul: p.judul, inti: p.inti, bukti: p.bukti, sumber: p.sumber })) } : null,
     tubuh: { ruas: TUBUH.ruas, mata: TUBUH.mata, probosis: TUBUH.probosis,
       organ: TUBUH.organ.map(o => `${o.alat}:${o.tingkat}(${o.xp})`).join(' '), segel: TUBUH.segel,
       catatan: 'genom tubuh = fungsi murni dari kerja nyata (morfogenesis) — lihat ruang-hidup/habitat.json' },
     habitat: { versi: HABITAT.versi, zonaTerbuka: HABITAT.zona.filter(z => z.status === 'terbuka').length,
       zonaTotal: HABITAT.zona.length, vena: HABITAT.vena.length, altar: HABITAT.altar.length,
+      istana: HABITAT.istana || null,
       bangunStruktur: (HABITAT.log[HABITAT.log.length - 1]?.tambah || []).length },
     keterampilan: ING.skills,
     ingatan: { kelahiran: ING.kelahiran, totalBangun: bangunKe, umurMs: umurMs, stat: ING.stat },
@@ -555,6 +676,7 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
     ingatanSimpan();
     fs.writeFileSync(path.join(dirOut, 'ingatan.json'), JSON.stringify(ING, null, 1));
     fs.writeFileSync(path.join(dirOut, 'habitat.json'), JSON.stringify(HABITAT, null, 1));
+    if (MADRASAH) fs.writeFileSync(path.join(dirOut, 'madrasah.json'), JSON.stringify(MADRASAH, null, 1));
     // buku harian: tambah 1 baris; rotasi bila >600 baris
     const fHarian = path.join(dirOut, 'buku_harian.jsonl');
     let lama = '';
@@ -575,11 +697,12 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
     ING.fokus = fokusKini;
     let hasil = 'ingatan tertulis ke disk';
     if (!DRY) {
-      const pesanKomit = `sadar1: bangun ke-${bangunKe} — tubuh ${TUBUH.ruas}ruas/${TUBUH.mata}mata, habitat ${HABITAT.vena.length} vena ${HABITAT.altar.length} altar [skip ci]`;
+      const pesanKomit = `sadar1: bangun ke-${bangunKe} — guru ${KERJA.guru?.arah || '—'} ${KERJA.guru?.keyakinan ?? '-'}%, madrasah ${MADRASAH?.jumlah ?? 0} pelajaran, tubuh ${TUBUH.ruas}ruas, istana ${HABITAT.istana?.cincin || 2} cincin [skip ci]`;
       const r2 = await dorongFile(DIR + '/ingatan.json', Buffer.from(JSON.stringify(ING, null, 1)), pesanKomit);
       const r3 = await dorongFile(DIR + '/habitat.json', Buffer.from(JSON.stringify(HABITAT, null, 1)), pesanKomit);
       const r4 = await dorongFile(DIR + '/buku_harian.jsonl', Buffer.from(baris.join('\n') + '\n'), pesanKomit);
-      hasil = `GitHub: ingatan(${r2}) habitat(${r3}) harian(${r4}) — keadaan disegel setelah tahap ke-9`;
+      const r5 = MADRASAH ? await dorongFile(DIR + '/madrasah.json', Buffer.from(JSON.stringify(MADRASAH, null, 1)), pesanKomit) : 'kosong';
+      hasil = `GitHub: ingatan(${r2}) habitat(${r3}) harian(${r4}) madrasah(${r5}) — keadaan disegel setelah tahap ke-9`;
       if (arsipDorong) await dorongFile(arsipDorong, fs.readFileSync(path.join(REPO_DIR, arsipDorong)), pesanKomit);
     }
     return hasil;
