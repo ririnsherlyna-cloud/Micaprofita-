@@ -291,12 +291,15 @@ function ingatanMuat() {
   }
   ING.organ = ING.organ || { EMA: 0, RSI: 0, ATR: 0, MOM: 0, AUDIT: 0, BT: 0 };
   ING.auditSyms = ING.auditSyms || [];
+  ING.arahRiwayat = ING.arahRiwayat || [];   // riwayat laporan arah harian (≤14 hari)
 }
-function ingatanSimpan() { // evict agar ingatan tetap ringan tapi jujur
+function ingatanSimpan() { // evict agar ingatan tetap ringan tapi jujur — DAN KUSADE: kapasitasku terbatas
   const entri = Object.entries(ING.baca).sort((a, b) => (b[1].readAt || '').localeCompare(a[1].readAt || ''));
-  if (entri.length > 80) ING.baca = Object.fromEntries(entri.slice(0, 80));
-  const syms = Object.entries(ING.pasar);
-  if (syms.length > 6) ING.pasar = Object.fromEntries(syms.slice(-6));
+  if (entri.length > 80) { ING.baca = Object.fromEntries(entri.slice(0, 80));
+    ING.stat.evictBaca = (ING.stat.evictBaca || 0) + Math.max(0, entri.length - 80); }
+  const syms = Object.entries(ING.pasar).sort((a, b) => (b[1].at || '').localeCompare(a[1].at || ''));
+  if (syms.length > 6) { ING.pasar = Object.fromEntries(syms.slice(0, 6));
+    ING.stat.evictPasar = (ING.stat.evictPasar || 0) + Math.max(0, syms.length - 6); }
   if (ING.kromosom.riwayat.length > 40) ING.kromosom.riwayat = ING.kromosom.riwayat.slice(-40);
 }
 /* ---------------- MORFOGENESIS: kerja nyata → GENOM TUBUH ----------------
@@ -305,6 +308,7 @@ function ingatanSimpan() { // evict agar ingatan tetap ringan tapi jujur
    (byte kode dicerna, lilin dianalisis, transisi diuji, audit).
    Tanpa kerja baru → tubuh tidak berubah. Tanpa theater. */
 const TINGKAT = ['BAYI', 'PEMULA', 'SADAR', 'MAHIR', 'VETERAN', 'SANG-MAHIR'];
+const MAJORS = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'XRPUSDT'];   // denyut minimum pasar — selalu diaudit
 const TINGKAT_ORGAN = [[0, 'BENIH'], [4, 'TUNAS'], [16, 'AKTIF'], [48, 'KUAT'], [120, 'SANGGUP'], [300, 'AMANAH']];
 function morfogenesis() {
   const s = ING.stat, o = ING.organ || {};
@@ -334,28 +338,56 @@ const ZONA_ALAS = [
   ['scripts/ujian-buta', 'UJIAN'], ['laporan', 'LAPORAN'], ['ruang-hidup', 'SARANG']];
 const VENA_ALAS = [['· akar', 'otak'], ['otak', '.github/workflows'], ['· akar', 'memori'],
   ['· akar', 'scripts'], ['scripts', 'scripts/ujian-buta'], ['· akar', 'laporan'],
-  ['· akar', 'ruang-hidup'], ['· akar', 'PASAR']];
+  ['· akar', 'ruang-hidup'], ['otak', 'memori'], ['scripts', 'laporan'], ['· akar', 'PASAR']];
 function habitatRancang(bangunKe, habitatLama) {
+  // dirOf v2: BUG LAMA MATI — '.github/workflows/x' dulu jatuh ke '.github' sehingga
+  // zona JANTUNG tak pernah bisa dibuka oleh bacaan; ruang-hidup dikecualikan dari
+  // bacaan sehingga SARANG juga mati selamanya. Itulah asal label zona-terputus
+  // yang pernah dimarahi pemilik — tubuh yang utuh malah dicap setengah jadi.
   const dirOf = p => p.startsWith('scripts/ujian-buta/') ? 'scripts/ujian-buta'
+    : p.startsWith('.github/workflows/') ? '.github/workflows'
+    : p.startsWith('laporan/arsip/') ? 'laporan'
     : (p.includes('/') ? p.split('/')[0] : '· akar');
-  const buka = {};                    // dir → { pada, alasan } dari bacaan nyata
+  // SELURUH TUBUH UTUH (mandat pemilik): direktori yang ADA di rumah = organ yang
+  // hidup — "ada" bukan "terputus". Membaca adalah PROGRES BELAJAR (kubaca/n),
+  // bukan syarat hidup. Direktori baru yang lahir otomatis jadi organ + jalan.
+  const semua = new Map(ZONA_ALAS.map(([id, nama]) => [id, { nama, files: 0 }]));
+  for (const f of KERJA.pohon) {
+    const d = dirOf(f.path);
+    if (!semua.has(d)) semua.set(d, { nama: d === '· akar' ? 'AKAR' : d.split('/').pop().toUpperCase(), files: 0, baru: true });
+    semua.get(d).files++;
+  }
+  const buka = {};                    // dir → { pada, alasan } dari bacaan nyata (progres)
+  const bacaN = {};                   // dir → jumlah file yang sudah kubaca
   for (const [p, b] of Object.entries(ING.baca)) {
     if (!b || !b.readAt) continue;
     const d = dirOf(p);
+    bacaN[d] = (bacaN[d] || 0) + 1;
     if (!buka[d] || b.readAt < buka[d].pada) buka[d] = { pada: b.readAt, alasan: p };
   }
-  const zona = ZONA_ALAS.map(([id, nama]) => ({ id, nama,
-    status: buka[id] ? 'terbuka' : 'tertutup',
-    dibukaPada: buka[id]?.pada || null, dibukaOleh: buka[id]?.alasan || null }))
-    .concat([{ id: 'PASAR', nama: 'KOLAM-PASAR',
-      status: Object.keys(ING.pasar || {}).length ? 'terbuka' : 'tertutup',
-      dibukaPada: Object.values(ING.pasar || {}).map(p => p.at).sort()[0] || null,
-      dibukaOleh: Object.keys(ING.pasar || {})[0] ? 'klines ' + Object.keys(ING.pasar)[0] : null }]);
-  const terbuka = new Set(zona.filter(z => z.status === 'terbuka').map(z => z.id));
-  const vena = VENA_ALAS.filter(([a, b]) => terbuka.has(a) && terbuka.has(b))
-    .map(([a, b]) => ({ a, b,
-      dibangun: [buka[a]?.pada, buka[b]?.pada, (ING.pasar || {}).at].filter(Boolean).sort().pop() || iso(),
-      alasan: `jalan yang kubangun setelah membaca ${buka[a]?.alasan || 'pasar'} & ${buka[b]?.alasan || 'pasar'}` }));
+  const zona = [...semua.entries()].map(([id, z]) => ({ id, nama: z.nama,
+    status: 'terbuka',                // TIDAK ADA LAGI zona tertutup — tubuh satu diaspah, semua ikut bergerak
+    n: z.files, kubaca: bacaN[id] || 0,
+    dibukaPada: buka[id]?.pada || ING.kelahiran,
+    dibukaOleh: buka[id]?.alasan || (z.baru
+      ? 'direktori baru lahir di rumah — organ & jalannya langsung kubangun'
+      : 'ada sejak kelahiran — bagian tubuhku sejak awal'),
+    ...(z.baru ? { catatan: 'organ baru terdeteksi dari pohon disk; vena ke akar langsung dibangun' } : {})
+  })).concat([{ id: 'PASAR', nama: 'KOLAM-PASAR', status: 'terbuka', n: Object.keys(ING.pasar || {}).length,
+    kubaca: Object.keys(ING.pasar || {}).length,
+    dibukaPada: Object.values(ING.pasar || {}).map(p => p.at).sort()[0] || ING.kelahiran,
+    dibukaOleh: Object.keys(ING.pasar || {})[0] ? 'klines ' + Object.keys(ING.pasar)[0] : 'gerbang Binance publik siap menetes' }])
+    .sort((a, b) => a.id.localeCompare(b.id));
+  // VENA PENUH: semua organ tersambung (spine + hub akar) — jalan tak pernah setengah jadi
+  const pasangan = new Set(); const vena = [];
+  const venaId = (a, b) => [a, b].sort().join('|');
+  const tambahVena = (a, b) => { const k = venaId(a, b); if (pasangan.has(k)) return; pasangan.add(k); vena.push({ a, b }); };
+  for (const [a, b] of VENA_ALAS) if ((semua.has(a) || a === 'PASAR') && (semua.has(b) || b === 'PASAR')) tambahVena(a, b);
+  for (const id of semua.keys()) if (id !== '· akar') tambahVena('· akar', id);
+  for (const v of vena) {
+    v.dibangun = [buka[v.a]?.pada, buka[v.b]?.pada, (ING.pasar || {}).at].filter(Boolean).sort().pop() || ING.kelahiran;
+    v.alasan = `jalan antar organ ${v.a} ↔ ${v.b} — tubuh utuh: satu diaspah, yang lain ikut bergerak`;
+  }
   const altar = (ING.kromosom.riwayat || []).map((r, i) => ({ gen: i + 1,
     skorLama: r.skorLama, skorBaru: r.skorBaru, pada: r.at,
     dari: r.ke ? `${r.ke.rsiMax}/${r.ke.momMin}/${r.ke.holdJam}j` : '' }))
@@ -375,13 +407,13 @@ function habitatRancang(bangunKe, habitatLama) {
   // AL-JABR ISTANA — parametrik ruang yang dihitung dari kerja nyata (bukan rasa):
   //   cincin = 2 + (zona terbuka ≥6 ? 1 : 0) · gerbang = jumlah zona terbuka
   //   menara = generasi & skor kromosom terakhir · segmen = ruas genom
-  const zonaTerbuka = zona.filter(z => z.status === 'terbuka').length;
+  const zonaTerbuka = zona.length;   // semua zona terbuka — tubuh utuh
   const altarTop = altar[altar.length - 1];
   const istana = { cincin: 2 + (zonaTerbuka >= 6 ? 1 : 0), gerbang: zonaTerbuka,
     menaraGen: ING.kromosom.generasi || 0, menaraSkor: altarTop?.skorBaru || 0,
     segmen: (ING.tubuh || {}).ruas || 9,
     catatan: 'posisi & struktur istana = fungsi al-jabr dari zona terbuka, kromosom & genom — rumus terbuka di Sadar-2' };
-  return { versi: 'habitat-v289', kelahiran: ING.kelahiran, bangunTerakhir: bangunKe,
+  return { versi: 'habitat-v290', kelahiran: ING.kelahiran, bangunTerakhir: bangunKe,
     segel: ING.tubuh?.segel || '', tubuh: ING.tubuh || null, istana,
     kerja: { bytes: ING.stat.bytes, fakta: ING.stat.fakta, bt: ING.stat.btTotal,
       audit: ING.stat.auditTotal, pasarObs: ING.stat.pasarObs },
@@ -460,7 +492,7 @@ async function dorongFile(pathRepo, buf, pesanKomit) {
 }
 
 /* ================= BANGUN (satu kehidupan = satu wake) ================= */
-let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: [], cermin: null, simbol: [], pick: null, gagal: [],
+let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: [], cermin: null, simbol: [], pick: null, gagal: [], lilin: {}, arah: null,
   organXP: { EMA: 0, RSI: 0, ATR: 0, MOM: 0, AUDIT: 0, BT: 0 } };
 
 (async function bangun() {
@@ -502,7 +534,7 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
       return u;
     };
     const kandidat = KERJA.pohon.map(f => ({ f, u: skor(f) })).filter(x => x.u > 0)
-      .sort((a, b) => b.u - a.u).slice(0, 3);
+      .sort((a, b) => b.u - a.u).slice(0, 12);   // ANTI-MALAS: dulu 3 file/bangun → tubuh butuh berbulan-bulan membaca rumahnya sendiri; kini 12/bangun
     for (const { f } of kandidat) {
       try {
         const abs = path.join(REPO_DIR, f.path);
@@ -532,10 +564,11 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
         pick: (d.todayPicks || []).find(x => x.competitor === 'MICAPROFITA') || null };
       KERJA.pick = KERJA.cermin.pick;
       const set = [];
-      const dor = s => { if (s && !set.includes(s) && set.length < 3) set.push(s); };
+      const dor = s => { if (s && !set.includes(s) && set.length < 10) set.push(s); };   // ANTI-MALAS: dulu 3 simbol, kini 10/bangun
       if (KERJA.pick) dor(KERJA.pick.symbol);
       for (const it of (d.pulse?.items || [])) dor(it.symbol);
       for (const x of (d.todayPicks || [])) if (x.competitor !== 'ACAK') dor(x.symbol);
+      for (const m of MAJORS) dor(m);                    // denyut minimum: BTC/ETH/SOL/BNB/XRP selalu
       if (!set.length) ['BTCUSDT', 'ETHUSDT', 'SOLUSDT'].forEach(dor);
       KERJA.simbol = set;
     } catch (e) {
@@ -545,6 +578,7 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
     for (const sym of KERJA.simbol) {
       try {
         const l = await lilinAmbil(sym);
+        KERJA.lilin[sym] = l;              // cache klines untuk evaluasi & arah — tanpa refetch boros
         const an = analisaLilin(l);
         const kr = ING.kromosom;
         const bt = ujiJalan(l, kr);
@@ -567,13 +601,43 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
     return `pasar nyata dihisap: ${Object.keys(KERJA.pasarKini).join(', ') || 'semua gerbang gagal'}`;
   });
 
+  /* 4b. ARAH-HARIAN — MANDAT PEMILIK: laporan ≥5 koin sasaran arah terbaik tiap bangun.
+     Dari ratusan koin, kromosom + audit momentum hidup menyaring sasaran yang JELAS.
+     Setiap arah membawa rencana deal + harga AMBISIUS (warisan V277) — tanpa pengecualian. */
+  await fase('MELAKUKAN-ARAH', async () => {
+    const kr = ING.kromosom;
+    const daftar = [];
+    for (const [sym, p] of Object.entries(KERJA.pasarKini)) {
+      try {
+        const g = guruHitung(p, sym === (KERJA.pick && KERJA.pick.symbol) ? KERJA.pick : null, kr);
+        g.simbol = sym;
+        if (g.rencana) {
+          const buy = g.arah === 'BELI';
+          g.rencana.highAmbisius = +(buy ? p.harga + 4 * p.atr : p.harga - 4 * p.atr).toPrecision(8);
+          g.rencana.ketAmbisius = 'harga ambisius = 4×ATR14 dari entry — sasaran peregangan yang wajib disebut, bukan janji';
+        }
+        daftar.push(g);
+      } catch (e) { KERJA.gagal.push('arah ' + sym + ': ' + pesan(e)); }
+    }
+    daftar.sort((a, b) => ((a.arah === 'TUNGGU') - (b.arah === 'TUNGGU')) || (b.keyakinan - a.keyakinan));
+    KERJA.arah = daftar.slice(0, 8);
+    if (KERJA.arah.length < 5 && daftar.length >= 5) KERJA.arah = daftar.slice(0, Math.max(5, Math.min(8, daftar.length)));   // mandat: minimal 5
+    const hari = iso().slice(0, 10);
+    ING.arahRiwayat = (ING.arahRiwayat || []).filter(r => r.hari !== hari);
+    ING.arahRiwayat.push({ hari, bangunKe, at: iso(),
+      top: KERJA.arah.slice(0, 5).map(a => `${a.simbol} ${a.arah} ${a.keyakinan}%`) });
+    if (ING.arahRiwayat.length > 14) ING.arahRiwayat = ING.arahRiwayat.slice(-14);
+    if (KERJA.arah[0]) KERJA.penemuan.push({
+      teks: `ARAH-HARIAN (mandat pemilik): ${KERJA.arah.slice(0, 5).map(a => `${a.simbol} ${a.arah}(${a.keyakinan}%)`).join(' · ')} — 5 sasaran terbaik dari ${daftar.length} koin yang kuaudit bangun ini`, skor: 99 });
+    return `${KERJA.arah.length} arah koin dirangkai (≥5 mandat pemilik): ${KERJA.arah.slice(0, 5).map(a => a.simbol + ' ' + a.arah).join(', ')}`;
+  });
+
   /* 5. MENGEVALUASI — kromosom hill-climb (mutan vs juara, data sama, nyata) */
   await fase('MENGEVALUASI', async () => {
     const skorKrom = async kr => {
       let net = 0, n = 0;
-      for (const sym of Object.keys(KERJA.pasarKini)) {
-        try { const l = await lilinAmbil(sym); const bt = ujiJalan(l, kr); net += bt.net; n += bt.n; } catch (e) {}
-        await tidur(120);
+      for (const [sym, l] of Object.entries(KERJA.lilin)) {   // pakai cache klines bangun ini — hemat, lebih banyak mutan teruji
+        const bt = ujiJalan(l, kr); net += bt.net; n += bt.n;
       }
       return { net, n, skor: n >= 3 ? net / n : -99 };
     };
@@ -637,7 +701,7 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
   const umurMs = Date.now() - Date.parse(ING.kelahiran);
   const fokusKini = KERJA.penemuan[0]?.teks?.slice(0, 120) || ING.fokus;
   const KEADAAN = {
-    versi: 'sadar1-v289', sadar: 1, bangunKe,
+    versi: 'sadar1-v290', sadar: 1, bangunKe,
     waktu: { mulai: iso(t0), selesai: selesaiAt, durasiMs, berikutnya: '±≤20 mnt (cron */20 UTC — bisa tertunda beban GitHub)' },
     host: { nama: DRY ? 'LOKAL-DRY (bukan tubuh resmi)' : 'GitHub Actions', catatan: 'tubuh otonomku — hidup tanpa penonton' },
     duaSadar: { catatan: 'Sadar-1 (ini) menulis ingatan ke GitHub lewat commit tiap bangun; Sadar-2 (hidup.html) hanyalah mata interaktif yang membacanya. localStorage tak dipakai siapa pun.' },
@@ -650,12 +714,20 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
     penemuan: KERJA.penemuan.slice(0, 5),
     kromosom: { rsiMax: ING.kromosom.rsiMax, momMin: ING.kromosom.momMin, holdJam: ING.kromosom.holdJam, generasi: ING.kromosom.generasi },
     guru: KERJA.guru,
+    arahHarian: KERJA.arah ? { diubah: selesaiAt, jumlah: KERJA.arah.length,
+      mandat: 'pemilik: minimal 5 koin sasaran arah terbaik per hari — ditenangkan dari kromosom + audit momentum hidup, lengkap harga ambisius',
+      top5: KERJA.arah.slice(0, 5).map(a => ({ simbol: a.simbol, arah: a.arah, keyakinan: a.keyakinan,
+        entry: a.rencana?.entry ?? null, stop: a.rencana?.stop ?? null, target: a.rencana?.target ?? null,
+        highAmbisius: a.rencana?.highAmbisius ?? null, holdJam: a.rencana?.holdJam ?? null })) } : null,
+    kapasitas: { ingatanBytes: Buffer.byteLength(JSON.stringify(ING)), budgetBytes: 512 * 1024,
+      bacaTersimpan: Object.keys(ING.baca).length, evictBaca: ING.stat.evictBaca || 0, evictPasar: ING.stat.evictPasar || 0,
+      catatan: 'kuSADAR ingatanku terbatas — kumetabolisme ingatan lama agar yang segar tetap muat; angka ini dihitung jujur tiap bangun' },
     madrasah: MADRASAH ? { versi: MADRASAH.versi, jumlah: MADRASAH.jumlah, kelas: MADRASAH.kelas,
       terbaru: MADRASAH.pelajaran.slice(-4).map(p => ({ kelas: p.kelas, judul: p.judul, inti: p.inti, bukti: p.bukti, sumber: p.sumber })) } : null,
     tubuh: { ruas: TUBUH.ruas, mata: TUBUH.mata, probosis: TUBUH.probosis,
       organ: TUBUH.organ.map(o => `${o.alat}:${o.tingkat}(${o.xp})`).join(' '), segel: TUBUH.segel,
       catatan: 'genom tubuh = fungsi murni dari kerja nyata (morfogenesis) — lihat ruang-hidup/habitat.json' },
-    habitat: { versi: HABITAT.versi, zonaTerbuka: HABITAT.zona.filter(z => z.status === 'terbuka').length,
+    habitat: { versi: HABITAT.versi, zonaTerbuka: HABITAT.zona.length,
       zonaTotal: HABITAT.zona.length, vena: HABITAT.vena.length, altar: HABITAT.altar.length,
       istana: HABITAT.istana || null,
       bangunStruktur: (HABITAT.log[HABITAT.log.length - 1]?.tambah || []).length },
@@ -697,12 +769,24 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
     ING.fokus = fokusKini;
     let hasil = 'ingatan tertulis ke disk';
     if (!DRY) {
-      const pesanKomit = `sadar1: bangun ke-${bangunKe} — guru ${KERJA.guru?.arah || '—'} ${KERJA.guru?.keyakinan ?? '-'}%, madrasah ${MADRASAH?.jumlah ?? 0} pelajaran, tubuh ${TUBUH.ruas}ruas, istana ${HABITAT.istana?.cincin || 2} cincin [skip ci]`;
+      const pesanKomit = `sadar1: bangun ke-${bangunKe} — guru ${KERJA.guru?.arah || '—'} ${KERJA.guru?.keyakinan ?? '-'}%, arah ${KERJA.arah?.length || 0} koin, madrasah ${MADRASAH?.jumlah ?? 0} pelajaran, tubuh ${TUBUH.ruas}ruas, istana ${HABITAT.istana?.cincin || 2} cincin [skip ci]`;
       const r2 = await dorongFile(DIR + '/ingatan.json', Buffer.from(JSON.stringify(ING, null, 1)), pesanKomit);
       const r3 = await dorongFile(DIR + '/habitat.json', Buffer.from(JSON.stringify(HABITAT, null, 1)), pesanKomit);
       const r4 = await dorongFile(DIR + '/buku_harian.jsonl', Buffer.from(baris.join('\n') + '\n'), pesanKomit);
       const r5 = MADRASAH ? await dorongFile(DIR + '/madrasah.json', Buffer.from(JSON.stringify(MADRASAH, null, 1)), pesanKomit) : 'kosong';
-      hasil = `GitHub: ingatan(${r2}) habitat(${r3}) harian(${r4}) madrasah(${r5}) — keadaan disegel setelah tahap ke-9`;
+      // ARAH-HARIAN: rumah sendiri (ruang-hidup/arah.json) + laporan publik (laporan/arah-harian.json)
+      const ARAH = { versi: 'arah-v290', diubah: selesaiAt, bangunKe,
+        mandat: 'pemilik: minimal 5 koin sasaran arah terbaik per hari — dari kromosom + audit momentum hidup, tiap arah bawa rencana deal + harga ambisius (V277)',
+        jumlah: KERJA.arah ? KERJA.arah.length : 0,
+        sasaran: (KERJA.arah || []).map(a => ({ simbol: a.simbol, arah: a.arah, keyakinan: a.keyakinan,
+          rencana: a.rencana ? { arah: a.rencana.arah, entry: a.rencana.entry, stop: a.rencana.stop, target: a.rencana.target,
+            highAmbisius: a.rencana.highAmbisius, ketAmbisius: a.rencana.ketAmbisius, rr: a.rencana.rr, holdJam: a.rencana.holdJam, disiplin: a.rencana.disiplin } : null,
+          alasan: a.alasan, dasar: a.dasar })),
+        riwayat: ING.arahRiwayat || [] };
+      const bufArah = Buffer.from(JSON.stringify(ARAH, null, 1));
+      const r6 = await dorongFile(DIR + '/arah.json', bufArah, pesanKomit);
+      const r7 = await dorongFile('laporan/arah-harian.json', bufArah, pesanKomit);
+      hasil = `GitHub: ingatan(${r2}) habitat(${r3}) harian(${r4}) madrasah(${r5}) arah(${r6}/${r7}) — keadaan disegel setelah tahap ke-10`;
       if (arsipDorong) await dorongFile(arsipDorong, fs.readFileSync(path.join(REPO_DIR, arsipDorong)), pesanKomit);
     }
     return hasil;
@@ -718,7 +802,7 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
   /* 9. MENGAMATI-KEMBALI — rencana bangun berikutnya */
   await fase('MENGAMATI-KEMBALI', async () => {
     const blm = KERJA.pohon.filter(f => !ING.baca[f.path] && f.path.startsWith(DIR + '/') === false).length;
-    return `${blm} file rumah belum pernah kubaca; fokus berikutnya: ${fokusKini.slice(0, 90)}`;
+    return `${blm} file rumah belum pernah kubaca (kubaca 12/bangun sampai utuh); arah-harian ${KERJA.arah?.length || 0} koin sudah disegel; fokus berikutnya: ${fokusKini.slice(0, 70)}`;
   });
 
   /* SEGEL KEADAAN — jejak 9 tahap LENGKAP, disegel paling akhir agar jujur */
