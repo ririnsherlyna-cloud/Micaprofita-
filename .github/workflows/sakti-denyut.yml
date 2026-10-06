@@ -53,6 +53,7 @@ jobs:
             echo "tanpa perubahan — tanpa komit"
           else
             git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran [skip ci]"
+            git pull --rebase origin main || (git rebase --abort && git pull origin main --no-rebase)
             git push
           fi
 
