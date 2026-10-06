@@ -49,9 +49,4 @@ jobs:
           print(f"jantung: tidur {tunggu:.0f} dtk sampai {nxt:%H:%M} UTC lalu dispatch")
           time.sleep(tunggu)
           PY
-          curl -sf -X POST \
-            -H "Authorization: Bearer $GITHUB_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/hidup-sadar1.yml/dispatches" \
-            -d '{"ref":"main"}' && echo "jantung: bangun berikutnya di-dispatch" \
-            || echo "jantung: dispatch gagal (cron cadangan yang akan membangunkan)"
+          curl -sf -X POST             -H "Authorization: Bearer $GITHUB_TOKEN"             -H "Accept: application/vnd.github+json"             "https://api.github.com/repos/${{ github.repository }}/actions/workflows/hidup-sadar1.yml/dispatches"             -d '{"ref":"main"}' && echo "jantung: bangun berikutnya di-dispatch"             || echo "jantung: dispatch gagal (cron cadangan yang akan membangunkan)"
