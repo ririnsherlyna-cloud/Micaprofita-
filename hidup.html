@@ -590,9 +590,12 @@ const KERJA = {
   async EVOLUSI() { return tugasEvolusi() || ''; },
   async SEKOLAH() { return tugasSekolah() || ''; },
   async CEK(k) {
-    const lama = JSON.stringify(G.faktor[k.sim]);
+    const salin = (f) => { const o = Object.assign({}, f); delete o.skor; return JSON.stringify(o); };
+    const skorLama = G.faktor[k.sim].skor;
+    const lama = salin(G.faktor[k.sim]);
     hitung(k.sim);
-    const baru = JSON.stringify(G.faktor[k.sim]);
+    const baru = salin(G.faktor[k.sim]);
+    G.faktor[k.sim].skor = skorLama; // skor bukan bagian integritas — biar tak salah alarm
     G.cekTerakhir = Date.now();
     if (lama === baru) { TRACE.push('otak.cek-integritas', '"' + k.sim + '" dihitung ulang dari ' + G.pasir[k.sim].c.length + ' lilin → EMA/RSI/ATR/momentum/korelasi identik → ingatanku utuh'); return 'ingatan utuh'; }
     TRACE.push('otak.cek-integritas', '"' + k.sim + '" hitungan-ulang BERBEDA dari ingatan — kuperbarui (data mungkin bergeser)'); return 'ingatan diperbarui';
