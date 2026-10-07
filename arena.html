@@ -2024,11 +2024,20 @@ function renderBarisan() {
   const venaStrip = (() => {
     const v = st.venaSatuRumah;
     if (!v) return '';
+    // V293 OTAK-BINER — nalar utama matematika-murni lahir lokal tanpa kunci luar
+    // ("LLM ciptakan sendiri dari biner, modal matematika murni"); otak-LLM = suara kedua opsional.
+    const ob = st.narasiBiner;
+    const obHtml = (ob && ob.aktif && ob.narasi)
+      ? `<br><span style="color:var(--tx);font-weight:500">otak-biner (matematika murni, lahir lokal tanpa kunci): ${esc(String(ob.narasi).slice(0, 320))}</span>`
+      : (ob && !ob.aktif && ob.gagal ? `<br><span style="color:var(--dim2);font-weight:400">otak-biner: penyusun gagal (${esc(String(ob.gagal).slice(0, 60))}) — nalar angka denyut tetap jalan, diakuin jujur</span>` : '');
+    const langkahHtml = (ob && ob.aktif && Array.isArray(ob.langkah) && ob.langkah.length)
+      ? `<br><span style="color:var(--tx2);font-weight:400;font-size:11px">${ob.langkah.map((L) => esc(String(L.tahap)) + ': ' + esc(String(L.hasil))).join('<br>')}</span>`
+      : '';
     const llm = st.narasiLLM;
     const llmHtml = (llm && llm.aktif && llm.narasi)
-      ? `<br><span style="color:var(--tx2);font-weight:400">otak-LLM (${esc(String(llm.model || ''))}): ${esc(String(llm.narasi).slice(0, 260))}</span>`
-      : (llm && !llm.aktif ? '<br><span style="color:var(--dim2);font-weight:400">otak-LLM: kunci belum terpasang — nalar mesin lokal penuh (jujur, tanpa pura-pura)</span>' : '');
-    return `<div class="pickwrap"><div class="picklevel" style="color:var(--em2);font-weight:600">VENA SATU RUMAH \u2014 sasaran resmi SAKTI denyut #${esc(String(v.siklus ?? '?'))} (${esc(String(v.dihasilkan || '')).slice(0, 16)} UTC) \u00b7 sumber tunggal: laporan/sasaran-terkini.json \u00b7 arena = laporan = ruang-hidup${llmHtml}</div></div>`;
+      ? `<br><span style="color:var(--tx2);font-weight:400">suara kedua otak-LLM (${esc(String(llm.model || ''))}): ${esc(String(llm.narasi).slice(0, 220))}</span>`
+      : (llm && !llm.aktif ? '<br><span style="color:var(--dim2);font-weight:400">suara kedua otak-LLM: kunci belum terpasang — nalar utama matematika-murni lokal tetap penuh (jujur, tanpa pura-pura)</span>' : '');
+    return `<div class="pickwrap"><div class="picklevel" style="color:var(--em2);font-weight:600">VENA SATU RUMAH \u2014 sasaran resmi SAKTI denyut #${esc(String(v.siklus ?? '?'))} (${esc(String(v.dihasilkan || '')).slice(0, 16)} UTC) \u00b7 sumber tunggal: laporan/sasaran-terkini.json \u00b7 arena = laporan = ruang-hidup${obHtml}${langkahHtml}${llmHtml}</div></div>`;
   })();
   // V274-SLOT-JUJUR: arena tak boleh bisu soal slot — "kok cuma satu?" dijawab
   // langsung di permukaan: slot dirancang K, yang lahir, dan siapa yang ditolak
