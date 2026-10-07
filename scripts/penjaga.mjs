@@ -80,6 +80,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import path from 'node:path'
+import { nalarLLM } from './hidup/otak-llm.mjs'   // V292 OTAK-LLM — suara kedua jujur; menyala bila kunci pemilik terpasang
 
 const ROOT = process.cwd()
 const FEE = 0.002            // 0.1% buy + 0.1% sell — wajib
@@ -3044,7 +3045,21 @@ const _baroKoin = [...Object.values(hasil)].filter((cB) => Array.isArray(cB) && 
 const baroBreadth = _baroKoin.length ? +(_baroKoin.filter((cB) => cB[cB.length - 1].c > cB[cB.length - 25].c).length / _baroKoin.length * 100).toFixed(0) : null
 const bearHarian = (baroRet24Btc != null && baroRet24Btc <= BUTA.BEAR_BTC_PCT) || (baroBreadth != null && baroBreadth <= BUTA.BEAR_BREADTH_PCT)
 log(`barometer-v267: ret24 BTC ${baroRet24Btc}% · ret1h ${baroRet1hBtc}% · breadth ${baroBreadth}% naik → ${bearHarian ? 'BEAR-HARIAN (organ barometer+anti-arus mengikat)' : 'normal'}`)
-for (const s of KANDANG) {
+// ---- V292 KANDANG HIDUP — mandat pemilik: "harusnya setiap waktu menganalisa setiap koin, bukan sekali saja" ----
+// Dulu bedah ARAH hanya 10 koin beku (KANDANG) sementara ratusan pasangan cuma lewat radar —
+// itulah akar "sasaran koin itu lagi itu lagi". Kini SEMUA koin yang lilinnya berhasil ditelusur
+// (shortlist 60 likuid dinamis + inti + posisi terbuka) masuk bedah ARAH penuh TIAP denyut.
+const V292_MAKS_KANDANG = 60
+const KANDANG_DINAMIS = (() => {
+  const qv = new Map((tickGlobal || []).filter((t) => typeof t.symbol === 'string' && t.symbol.endsWith('USDT')).map((t) => [t.symbol.slice(0, -4), +t.quoteVolume]))
+  const inti = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP']
+  const layak = Object.keys(hasil).filter((s) => !STABIL.has(s) && !/(UP|DOWN|BULL|BEAR)$/.test(s) && ((qv.get(s) ?? 0) >= 3e6 || inti.includes(s) || terbukaLama.includes(s)))
+    .sort((a, b) => (qv.get(b) ?? 0) - (qv.get(a) ?? 0))
+  const daftar = [...new Set([...inti, ...layak])].slice(0, V292_MAKS_KANDANG)
+  log(`kandang-hidup-v292: bedah ARAH ${daftar.length} koin denyut ini (dulu 10 beku) — ${daftar.slice(0, 14).join(', ')}${daftar.length > 14 ? '…' : ''}`)
+  return daftar
+})()
+for (const s of KANDANG_DINAMIS) {
   const c = hasil[s]; if (!c) continue
   const id = `${s}-${TGL}`
   if (ledger.some((e) => e.id === id)) continue                    // satu per simbol per hari UTC
@@ -4797,11 +4812,30 @@ const pilihDasar = (jalurPhx) => {
 }
 const phxDasar = pilihDasar(true)
 const komDasar = pilihDasar(false)
+// V292 KESEGARAN-SASARAN — anti "koin itu lagi itu lagi" LINTAS HARI (akar keluhan pemilik):
+// simbol yang jadi sasaran TERBUKA sebelum hari ini kena penalti ranking ringan (−4 key),
+// dan bila seluruh kursi komite mau diisi koin yang sama, kursi terakhir diserahkan pada
+// kandidat segar layak (key ≥ 45). Koin paling kuat tetap boleh bertahan — jujur ber-label BERTAHAN.
+const sasaranKemarin = new Set(ledger.filter((e) => e.status === 'TERBUKA' && e.id !== `${e.simbol}-${TGL}`).map((e) => e.simbol))
+const penaltiKemarin = (e) => (sasaranKemarin.has(e.simbol) ? 4 : 0)
 const phxRows = [...phxDasar]
   .sort((a, b) => b.skorPhoenix * b.untungBersih - a.skorPhoenix * a.untungBersih).slice(0, PHX.SASARAN_PHX)
 const komRows = [...komDasar].filter((e) => !phxRows.some((p) => p.simbol === e.simbol))
   .filter((e, i, arr) => arr.findIndex((x) => x.simbol === e.simbol) === i)   // V291 ANTI-DOBEL: satu simbol satu kursi dalam lane sendiri
-  .sort((a, b) => b.keyakinan - a.keyakinan).slice(0, PHX.SASARAN_ARAH)
+  .sort((a, b) => (b.keyakinan - penaltiKemarin(b)) - (a.keyakinan - penaltiKemarin(a))).slice(0, PHX.SASARAN_ARAH)
+let kursiSegarCatatan = 'tidak perlu — kursi komite belum semuanya pengulangan kemarin'
+if (komRows.length && komRows.every((e) => sasaranKemarin.has(e.simbol))) {
+  const segar = [...komDasar].filter((e) => !komRows.some((k) => k.simbol === e.simbol) && !sasaranKemarin.has(e.simbol) && (e.keyakinan ?? 0) >= 45)
+    .sort((a, b) => b.keyakinan - a.keyakinan)[0]
+  if (segar) {
+    komRows[komRows.length - 1] = segar
+    kursiSegarCatatan = `${segar.simbol} (key ${segar.keyakinan}) masuk kursi terakhir — seluruh kursi nyaris koin yang sama lagi`
+    log(`kursi-segar-v292: ${kursiSegarCatatan}`)
+  } else {
+    kursiSegarCatatan = 'semua kursi koin kemarin & tak ada kandidat segar layak — jujur: tidak dipaksakan ganti'
+    log(`kursi-segar-v292: ${kursiSegarCatatan}`)
+  }
+}
 const sasaranUtama = [...phxRows, ...komRows]
   .filter((e, i, arr) => arr.findIndex((x) => x.simbol === e.simbol) === i)   // V291 ANTI-DOBEL lintas lane — satu simbol tidak pernah dua baris
   .map(barisDari)
@@ -5702,6 +5736,16 @@ const laporan = {
     catatan: radar.catatan || `menelaah ${radar.telaah} pasangan USDT — ${radar.zonaPhoenix} di zona ujung-bawah — ${radar.telusurDalam} ditelusuri dalam dengan lilin 1 jam`,
   },
   sasaranHariIni: sasaranUtama,
+  // V292 KESEGARAN-SASARAN — angka jujur anti-repetisi lintas hari, disegel tiap denyut
+  kesegaran: {
+    kandangDibedah: KANDANG_DINAMIS.length,
+    telaahRadar: radar.telaah,
+    sasaranKemarin: [...sasaranKemarin],
+    pengulanganHariIni: sasaranUtama.filter((e) => sasaranKemarin.has(e.simbol)).length,
+    baruHariIni: sasaranUtama.filter((e) => e.sasaranBaruHariIni).length,
+    kursiSegar: kursiSegarCatatan,
+    ket: 'V292: koin sasaran kemarin kena penalti ranking ringan; bila semua kursi mau diisi koin yang sama & ada kandidat segar layak, kursi terakhir diserahkan ke yang segar — koin paling kuat tetap boleh bertahan, di-label jujur (sasaranBertahan), bukan disamar jadi kunci baru',
+  },
   kandidatLain,
   akurasi,
   forensik: {
@@ -5940,12 +5984,49 @@ const laporan = {
 }
 tulis(path.join(ROOT, 'laporan/sasaran-terkini.json'), laporan)
 
+// ---- 5b. V292 SATU RUMAH + OTAK-LLM — arena & laporan & ruang hidup satu kebenaran ----
+// (1) OTAK-LLM: suara kedua dari otak bahasa bila kunci terpasang (jujur bila belum).
+// (2) arena-keadaan.json ditulis denyut yang sama dengan sasaran resmi — arena.html kini
+//     menampilkan SASARAN YANG SAMA dengan laporan & ruang-hidup; dulu file ini beku karena
+//     TIDAK ADA penulisnya di repo (bukti: todayPicks basi sejak 2026-10-05).
+const nalar = await nalarLLM({ siklus: SIKLUS, ringkas: {
+  rezim: rezimGlobal, ret24Btc: baroRet24Btc, breadth: baroBreadth,
+  sasaran: sasaranUtama.map((e) => ({ simbol: e.simbol, arah: e.arah, keyakinan: e.keyakinan, jalur: e.jalur || 'ARAH' })),
+  kandangDibedah: KANDANG_DINAMIS.length, telaah: radar.telaah, telusur: radar.telusurDalam,
+  akurasiPct: akurasi.akurasiPct, pengulanganKemarin: sasaranUtama.filter((e) => sasaranKemarin.has(e.simbol)).length,
+} })
+tulis(path.join(ROOT, 'laporan/nalar-llm.json'), { diperbarui: ISO, siklus: SIKLUS, ...nalar })
+log(`otak-llm: ${nalar.aktif ? (nalar.gagal ? 'terpasang-tak-terjangkau — nalar lokal tetap penuh' : 'narasi diterima (' + nalar.model + ')') : 'kunci belum terpasang (jujur) — nalar lokal penuh'}`)
+try {
+  const akPath = path.join(process.cwd(), 'arena-keadaan.json')
+  const ak = bacaJson(akPath, {})
+  ak.today = TGL
+  ak.todayPicks = sasaranUtama.filter((e) => e.jalur !== 'KOMPAS').map((e) => ({
+    competitor: 'MICAPROFITA', symbol: e.simbol + 'USDT', direction: e.arah,
+    confidence: e.keyakinan, entryClose: e.entry,
+    evidence: {
+      reason: String(e.narasi || e.ketBukti || 'sasaran resmi pra-registrasi denyut #' + SIKLUS).slice(0, 130),
+      sumber: 'SAKTI denyut #' + SIKLUS, jalur: e.jalur || 'ARAH',
+    },
+  }))
+  ak.slotHariIni = { day: TGL, k: sasaranUtama.length, lahir: sasaranUtama.filter((e) => e.sasaranBaruHariIni).length, ditolak: [] }
+  ak.venaSatuRumah = {
+    sumber: 'laporan/sasaran-terkini.json', siklus: SIKLUS, dihasilkan: ISO,
+    sasaran: sasaranUtama.map((e) => e.simbol),
+    ket: 'arena, laporan sasaran, dan ruang-hidup kini ditulis denyut SAKTI yang sama — satu kebenaran, bukan tiga pulau',
+  }
+  ak.narasiLLM = { aktif: !!nalar.aktif, model: nalar.model || null, narasi: nalar.narasi || null, kritik: nalar.kritik || null, ket: nalar.ket || null }
+  ak._eksporAt = ISO
+  tulis(akPath, ak)
+  log(`satu-rumah: arena-keadaan.json disegarkan denyut #${SIKLUS} — ${ak.todayPicks.length} pick MICAPROFITA resmi + venaSatuRumah + otak-llm`)
+} catch (err) { log('satu-rumah GAGAL (tak fatal): ' + String(err.message || err).slice(0, 80)) }
+
 // ---- 6. ledger + denyut (berkapasitas) ----
 tulisJsonl(path.join(ROOT, 'laporan/prakira-server.jsonl'), ledger.slice(-1000))
 const denyut = bacaJsonl(path.join(ROOT, 'laporan/denyut-server.jsonl'))
 denyut.push({
   waktu: ISO, siklus: SIKLUS, sumber: host, telaah: radar.telaah, telusur: radar.telusurDalam,
-  simbolOK: Object.keys(hasil).length,
+  simbolOK: Object.keys(hasil).length, kandangHidup: KANDANG_DINAMIS.length,
   terkunciBaru: terkunciBaru.length, phoenixKunci: terkunciBaru.filter((e) => e.jalur === 'PHOENIX').length,
   dinilaiBaru: dinilaiBaru.length,
   benar: dinilaiBaru.filter((e) => e.status === 'BENAR').length,
@@ -6016,7 +6097,7 @@ tulis(path.join(ROOT, 'laporan/jurnal-ilmu.json'), {
 
 log(`denyut #${SIKLUS} selesai — kunci ${terkunciBaru.length} (phoenix ${terkunciBaru.filter((e) => e.jalur === 'PHOENIX').length}), nilai ${dinilaiBaru.length}, akurasi ${akurasi.akurasiPct ?? 'belum ada'}%`)
 console.log('RINGKASAN:' + JSON.stringify({
-  siklus: SIKLUS, telaah: radar.telaah, zona: radar.zonaPhoenix, telusur: radar.telusurDalam,
+  siklus: SIKLUS, telaah: radar.telaah, zona: radar.zonaPhoenix, telusur: radar.telusurDalam, kandangHidup: KANDANG_DINAMIS.length,
   terkunci: terkunciBaru.length, phoenix: terkunciBaru.filter((e) => e.jalur === 'PHOENIX').length,
   dinilai: dinilaiBaru.length, akurasi: akurasi.akurasiPct,
 }))
