@@ -4919,12 +4919,16 @@ if (sasaranLuas.length < SASARAN10_MIN) {
     // nyata 250+ koin; ambil momentum 24j terkeras, selang-seling naik/turun
     // agar mata jujur melihat dua sisi kolam, bukan satu arah
     const suaraNaik = [], suaraTurun = []
+    // KUNCI hasil = simbol TANPA akhiran USDT (host menambahkan USDT di URL,
+    // lihat hasil.BTC) — normalisasi ke simbol penuh agar laporan & mata tubuh
+    // (penyaring USDT) mengenali kursi PENGAMATAN
     for (const [s, c] of Object.entries(hasil)) {
-      if (!/^[A-Z0-9]+USDT$/.test(s) || !Array.isArray(c) || c.length < 25) continue
-      if (sasaranLuas.some((r) => r.simbol === s)) continue
+      const sim = /^[A-Z0-9]+USDT$/.test(s) ? s : (/^[A-Z0-9]+$/.test(s) ? s + 'USDT' : null)
+      if (!sim || !Array.isArray(c) || c.length < 25) continue
+      if (sasaranLuas.some((r) => r.simbol === sim)) continue
       const cl = c.map((x) => x.c)
       const ret24 = (cl[cl.length - 1] / cl[cl.length - 25] - 1) * 100
-      const x = { s, ret24, harga: cl[cl.length - 1] }
+      const x = { s: sim, ret24, harga: cl[cl.length - 1] }
       ;(ret24 > 0 ? suaraNaik : suaraTurun).push(x)
     }
     suaraNaik.sort((a, b) => b.ret24 - a.ret24)
