@@ -3838,6 +3838,15 @@ const phxCadangan = []
 // V252: pembangun entri phoenix — satu sumber untuk jalur kuota & slot eksplorasi
 const bangunEntriPhx = (p, eksplor) => {
   const { tgt, rad, b, war, mc, pT, wawPhx, wpPhx, peri, deal, odds } = p
+  // PENJAGA-DENYUT (insiden 2026-10-07T00:38Z, denyut #gagal): slot eksplorasi phoenix
+  // melepas kandidat yang tgt.target-nya belum terbentuk → TypeError di template coda
+  // → SELURUH denyut SAKTI mati + komit pertumbuhan terlewat. Hukum baru: satu kandidat
+  // cacat TIDAK BOLEH membunuh jantung — dilewati JUJUR dengan log, denyut diteruskan.
+  if (!tgt || tgt.target == null || !isFinite(tgt.target) || tgt.untung == null ||
+      !b || !b.harga || p.stv == null || !isFinite(p.stv) || pT == null) {
+    log(`entri-phx-dilewati: ${p?.simbol || '?'} — target/stop/belinya belum terbentuk (eksplor=${!!eksplor}); dilewati tanpa klaim, denyut diteruskan`)
+    return null
+  }
   const pA = tgt.highAmbisius ? mc.pLevel(tgt.highAmbisius / b.harga - 1) : null
   const kalP = kunciKeyakinan(p.keyakinan, ilmu.kalibrasi, p.kenaPhx)   // V252: kepastian zona medan
   const pita = pitaKonformal(ilmu.konformal)                       // V247: pita 75% ujung atas
@@ -3992,9 +4001,14 @@ for (const [i, p] of lulusPhx.entries()) {
 const terpakaiQuota = Math.min(lulusPhx.length, kunciEfektif)
 const eksplorPhx = tercemarPhx.filter((k) => k.evK >= 0).sort((a, b) => b.evK - a.evK)[0] || null
 if (eksplorPhx && kunciEfektif - terpakaiQuota > 0) {
-  bangunEntriPhx(eksplorPhx, true)
-  forensikTindakan.push(`slot eksplorasi phoenix: ${eksplorPhx.simbol} dilepas lewat gerbang (EV +${(eksplorPhx.evK * 100).toFixed(2)}% >= 0) — zona racun radar diuji agar bisa menyembuh dengan bukti baru`)
-  log(`forensik-eksplorasi-phx: ${eksplorPhx.simbol} EV +${(eksplorPhx.evK * 100).toFixed(2)}%`)
+  const entriEksplor = bangunEntriPhx(eksplorPhx, true)
+  if (entriEksplor) {
+    forensikTindakan.push(`slot eksplorasi phoenix: ${eksplorPhx.simbol} dilepas lewat gerbang (EV +${(eksplorPhx.evK * 100).toFixed(2)}% >= 0) — zona racun radar diuji agar bisa menyembuh dengan bukti baru`)
+    log(`forensik-eksplorasi-phx: ${eksplorPhx.simbol} EV +${(eksplorPhx.evK * 100).toFixed(2)}%`)
+  } else {
+    forensikTindakan.push(`slot eksplorasi phoenix: ${eksplorPhx.simbol} dihitung (EV +${(eksplorPhx.evK * 100).toFixed(2)}%) namun target belum terbentuk — TIDAK dilepas, tanpa klaim (penjaga-denyut)`)
+    log(`forensik-eksplorasi-phx: ${eksplorPhx.simbol} target belum terbentuk — tidak dilepas, denyut aman`)
+  }
 }
 for (const k of tercemarPhx) {
   if (k === eksplorPhx) continue
