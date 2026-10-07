@@ -22,6 +22,7 @@ on:
 
 permissions:
   contents: write
+  actions: write   # V294 JANTUNG-MANDIRI: jantung mengdispatch denyut berikutnya sendiri
 
 concurrency:
   group: sarang-penjaga
@@ -81,3 +82,29 @@ jobs:
             git push origin "$TAG"
             echo "epoch ditandai: $TAG"
           fi
+
+      # ---- V294 JANTUNG-MANDIRI SAKTI (insiden 2026-10-07: denyut berhenti 06:37→130+ mnt) ----
+      # Bukti forensik: antaran cron GitHub KELAPARAN massal hari ini — SAKTI (7/15) berhenti
+      # 06:37, PENJAGA-WAKTU (*/10) berhenti 07:02 — sementara rantai dispatch mandiri SADAR-1
+      # 8/8 sukses tiap 20 mnt. Maka jantung utama kini memakai mekanisme yang terbukti hidup:
+      # setelah tiap denyut, tidur ke slot berikutnya lalu dispatch denyut berikutnya SENDIRI.
+      # Cron 7/15 & PENJAGA-WAKTU tetap sebagai pengaman berlapis, bukan penopang utama.
+      - name: JANTUNG MANDIRI — tidur ke slot berikutnya, dispatch denyut berikutnya sendiri
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import time, datetime
+          now = datetime.datetime.utcnow()
+          slot = (now.minute // 15 + 1) * 15
+          nxt = now.replace(minute=0, second=0, microsecond=0) + datetime.timedelta(minutes=slot)
+          tunggu = max(5, (nxt - now).total_seconds())
+          print(f"jantung-sakti: tidur {tunggu:.0f} dtk sampai {nxt:%H:%M} UTC lalu dispatch denyut berikutnya")
+          time.sleep(tunggu)
+          PY
+          curl -sf -X POST \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/sakti-denyut.yml/dispatches" \
+            -d '{"ref":"main"}' && echo "jantung-sakti: denyut berikutnya di-dispatch — rantai mandiri menyala" \
+            || echo "jantung-sakti: dispatch gagal — cron 7/15 + PENJAGA-WAKTU + SADAR-1 yang menjaga"
