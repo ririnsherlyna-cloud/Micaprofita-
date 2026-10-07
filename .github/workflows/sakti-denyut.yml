@@ -53,8 +53,17 @@ jobs:
             echo "tanpa perubahan — tanpa komit"
           else
             git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran [skip ci]"
-            git pull --rebase origin main || (git rebase --abort && git pull origin main --no-rebase)
-            git push
+            # V291 ANTI-BALAPAN: SADAR-1 bisa menyegel bangun bersamaan — push di-RETRY
+            # dgn rebase ulang tiap percobaan (insiden 2026-10-07T00:55Z: remote rejected,
+            # denyut #77 sudah terbentuk tapi terdorong gagal).
+            OK=0
+            for i in 1 2 3 4; do
+              git pull --rebase origin main || (git rebase --abort && git pull origin main --no-rebase) || true
+              if git push; then echo "push lulus (percobaan $i)"; OK=1; break; fi
+              echo "push ditolak (percobaan $i) — remote bergerak; rebase ulang & coba lagi"
+              sleep $((RANDOM % 8 + 4))
+            done
+            if [ "$OK" != "1" ]; then echo "::warning::push gagal 4x — denyut #${SIKLUS} tersimpan lokal saja (cron berikutnya menyusul)"; fi
           fi
 
       - name: Tag metamorfosis harian — evolusi 24 jam (piagam pilar-5)
