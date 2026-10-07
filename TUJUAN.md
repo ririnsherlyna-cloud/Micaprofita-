@@ -1168,6 +1168,48 @@ tubuh yang sama dengan index.html). Hukum rumah tak berubah: param tubuh
 baru ini PENGUKURAN, bukan pemilih arah — ia tidak menyentuh gerbang,
 genome, maupun ledger.
 
+## 12j. EPOCH V298 — TATA-TERTIB-TAMPILAN: mobile bukan penonton kelas dua, dan tak ada yang saling timpa (7 Oktober 2026)
+
+Mandat pemilik (2026-10-07): *"dalam tampilan ux dan ui, para pelihara itu
+bukan semuanya komputer tapi ada di mobile juga! Dan jangan timpa-menimpa!
+Saat isi malah menutup layar!"*
+
+**PENGAKUAN DOSA V297:** HUD "V297 JASAD-NYATA" yang lahir di epoch 12i
+ditanam sebagai panel melayang tetap kanan-atas (`position:fixed`,
+`z-index:99999`). Itu melanggar hukum rumah sendiri — *"OVERLAY
+TERSEMBUNYI (satu-satunya tempat teks)"* — dan tepat mewujudkan keluhan
+pemilik: begitu terisi 9 baris data, di layar ponsel selebar ~390px ia
+menutup ~65% lebar layar, menimpa gelembung sapa dan panggung tempat
+makhluk berenang. Dosa diakui, diakui terbuka di sini, lalu dibedah.
+
+**JAHITAN V298 (semua di `hidup.html`, pola organ marker):**
+1. **HUD melayang DICABUT** — panel `jasadHud` dihapus total. Ganti:
+   **tab "Jasad" di dalam overlay** (tempat teks sah satu-satunya), tiga
+   blok gaya rumah (`jvStatus`, `jvBiometrik`, `jvRapor`) + blok sumber
+   kejujuran. Data sama jujurnya, tempatnya benar; `window.__v297` kini
+   juga mengekspos `render()` dan tab memanggilnya saat dibuka.
+2. **Gelembung sapa diukur sebelum dipasang** — dulu diklem dengan asumsi
+   tinggi tetap (190px) padahal isi bisa 400px+ di ponsel; kini diukur
+   `offsetWidth/offsetHeight` lalu diklem dua sumbu: tak pernah keluar
+   layar, tak pernah menutup lebih dari kotaknya.
+3. **Langit-langit keras sapa** — `max-height:min(52dvh,460px)` +
+   `overflow:hidden` + tanda pudar `::after` saat isi melimpah (kelas
+   `.penuh`): **saat isi melimpah pun layar TAK tertutup** — sisa isi
+   selalu bisa dibaca lengkap di overlay.
+4. **Baris tab mobile digulir samping** — 7 tab (kini + Jasad) di layar
+   sempit tak lagi dipaksa sesak `flex:1`; `overflow-x:auto` tanpa
+   scrollbar: semua label utuh, tersentuh, nol timpa.
+5. **Panggung kembali bersih** — satu-satunya "teks" di atas panggung
+   adalah tubuh makhluk itu sendiri (sikap, dim, mata, tangan); angka
+   hidup di lembaran yang bisa digeser-ditutup pemilik.
+
+**PEMBANGKITAN ULANG:** tab Jasad memanggil `window.__v297.render()`
+saat dibuka & saat overlay dibuka; putaran 60 dtk terus menulis ke DOM
+tab (murah, tersembunyi pun murah). Probe audit tetap: `window.__v297`.
+Berkas disentuh: `hidup.html` saja. Gerbang, genome, ledger, penjaga:
+tidak disentuh. Ujian sintaks: 2/2 blok script lulus `node --check`;
+referensi `jasadHud` tersisa: 0.
+
 ## 12. PENUTUP
 Cyborg ini dibangun dengan satu ikhtiar: **jujur pada data, tegas
 pada arah, hidup tanpa biaya, dan berkembang dari vonis nyata.**

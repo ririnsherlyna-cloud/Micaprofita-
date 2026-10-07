@@ -24,12 +24,17 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
 #pintu.on{opacity:1;transform:rotate(45deg)}
 #pintu svg{display:block}
 
-/* ===== SAPA (gelembung sesaat saat makhluk disentuh) ===== */
-#sapa{position:fixed;z-index:70;max-width:min(330px,78vw);background:rgba(7,11,20,.8);
+/* ===== SAPA (gelembung sesaat saat makhluk disentuh) =====
+   V298 TATA-TERTIB-TAMPILAN: kotak berlangit-langit keras (≤52dvh) —
+   isi melimpah pun TAK PERNAH menutup layar; sisa isi ditandai pudar. */
+#sapa{position:fixed;z-index:70;max-width:min(330px,78vw);max-height:min(52dvh,460px);overflow:hidden;
+  background:rgba(7,11,20,.8);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   border:1px solid var(--aksen-l);border-radius:14px;padding:11px 13px;
   font-size:12px;line-height:1.55;color:var(--tinta);pointer-events:none;
   opacity:0;transform:translateY(8px);transition:opacity .35s ease,transform .35s ease}
+#sapa.penuh::after{content:'';position:absolute;left:10px;right:10px;bottom:5px;height:22px;
+  background:linear-gradient(180deg,transparent,rgba(7,11,20,.96));border-radius:0 0 12px 12px}
 #sapa.tampak{opacity:1;transform:none}
 #sapa b{color:var(--aksen);font-weight:600}
 #sapa .lab{margin-top:6px}
@@ -126,7 +131,9 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
 /* HANDLE MOBILE (geser ke bawah utk menutup) */
 #ovHandle{display:none}
 
-/* ===== MOBILE: overlay jadi lembaran bawah ===== */
+/* ===== MOBILE: overlay jadi lembaran bawah =====
+   V298: baris tab boleh digulir samping — 7 tab pun tak sempit,
+   tak terpotong, dan tak saling timpa di layar handphone. */
 @media (max-width:760px){
   #overlay{top:auto;left:0;right:0;width:auto;height:64dvh;border-left:none;
     border-top:1px solid var(--garis);border-radius:18px 18px 0 0;transform:translateY(108%)}
@@ -135,6 +142,9 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
   #ovHandle .genggam{width:44px;height:4px;border-radius:2px;background:rgba(255,255,255,.22)}
   #ovKepala{padding-top:6px}
   #pintu{right:14px;bottom:14px}
+  #pTabs{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  #pTabs::-webkit-scrollbar{display:none}
+  #pTabs button{flex:0 0 auto;padding:12px 11px}
 }
 @media (prefers-reduced-motion:reduce){
   #overlay,#pintu,#sapa{transition:none}
@@ -172,6 +182,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
     <button data-tab="pasar">Pasar</button>
     <button data-tab="jurnal">Jurnal</button>
     <button data-tab="ujian">Ujian</button>
+    <button data-tab="jasad">Jasad</button>
   </div>
   <div id="pIsi">
     <div id="tab-guru">
@@ -233,6 +244,24 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
         <div id="uvList"><div class="kecil">menjalankan ujian…</div></div>
         <button id="uvUlang" class="uvBtn">Uji ulang sekarang — bukti langsung</button>
         <button id="lsBersih" class="uvBtn" hidden>BERSIHKAN sisa localStorage di perangkat — sekali saja, lalu 0 selamanya</button>
+      </div>
+    </div>
+    <div id="tab-jasad" hidden>
+      <div class="blok">
+        <h4>Jasad-nyata <em>· V297 — status kopling tubuh↔realitas</em></h4>
+        <div id="jvStatus"><div class="kecil">mengambil keadaan…</div></div>
+      </div>
+      <div class="blok">
+        <h4>Biometrik hidup <em>· denyut, napas, mata — dari pasar & berkas nyata</em></h4>
+        <div id="jvBiometrik"><div class="kecil">—</div></div>
+      </div>
+      <div class="blok">
+        <h4>Tangan & rapor <em>· sasaran terkunci, kejujuran ledger</em></h4>
+        <div id="jvRapor"><div class="kecil">—</div></div>
+      </div>
+      <div class="blok">
+        <h4>Sumber kejujuran <em>· nol karangan</em></h4>
+        <div class="kecil">Lilin 1m BTC (gerbang Binance publik) · laporan/sasaran-terkini.json · otak/penjaga-keadaan.json · ruang-hidup/keadaan.json. Bila sumber gagal diambil: jasad MATI-PENUH-NALAR — tubuh kembali ke perilaku dasar dan alasannya ditulis terbuka di sini. Audit langsung: <code>window.__v297</code> di konsol.</div>
       </div>
     </div>
   </div>
@@ -2080,8 +2109,12 @@ function sapa(){
     <div class="lab">sentuh tombol pojok untuk membuka maklumatku</div>`;
   el.hidden=false;
   requestAnimationFrame(()=>el.classList.add('tampak'));
-  el.style.left=Math.min(innerWidth-350, Math.max(12, NADI.x+30))+'px';
-  el.style.top=Math.max(14, Math.min(innerHeight-190, NADI.y-70))+'px';
+  /* V298 TATA-TERTIB-TAMPILAN: ukur DULU baru pas-kan — gelembung tak
+     pernah keluar layar & tak menutup layar, di ponsel sekalipun */
+  const w=el.offsetWidth||320, h=el.offsetHeight||240;
+  el.style.left=Math.max(12, Math.min(NADI.x+30, innerWidth-w-12))+'px';
+  el.style.top=Math.max(12, Math.min(NADI.y-70, innerHeight-h-12))+'px';
+  el.classList.toggle('penuh', el.scrollHeight>el.clientHeight+4);
   clearTimeout(el._t); el._t=setTimeout(()=>{ el.classList.remove('tampak'); setTimeout(()=>el.hidden=true, 380); }, 6500);
   jurnal('SAPA', `kupandukkan diri ke pemilik: ${baca}/${n} file, ${S.stat.fakta} fakta, ${Object.keys(S.pasar).length} simbol pasar`);
 }
@@ -2089,7 +2122,8 @@ function sapa(){
 const ovEl=document.getElementById('overlay'), pintuEl=document.getElementById('pintu');
 function bukaOverlay(){ ovEl.classList.add('buka'); pintuEl.classList.add('on');
   if(S.tabAktif==='peta') petaRender(); if(S.tabAktif==='pasar') pasarRender(); if(S.tabAktif==='jurnal') jurnalRender();
-  if(S.tabAktif==='guru') guruRender(); if(S.tabAktif==='ujian') ujianRender(); }
+  if(S.tabAktif==='guru') guruRender(); if(S.tabAktif==='ujian') ujianRender();
+  if(S.tabAktif==='jasad'&&window.__v297&&window.__v297.render) window.__v297.render(); }
 function tutupOverlay(){ ovEl.classList.remove('buka'); pintuEl.classList.remove('on'); }
 pintuEl.addEventListener('click', ()=> ovEl.classList.contains('buka') ? tutupOverlay() : bukaOverlay());
 (function geserTutup(){
@@ -2491,12 +2525,13 @@ function jurnalRender(){
 }
 function tabKe(nama){ S.tabAktif=nama;
   document.querySelectorAll('#pTabs button').forEach(b=>b.classList.toggle('akt', b.dataset.tab===nama));
-  for(const t of ['guru','pikir','peta','pasar','jurnal','ujian']) document.getElementById('tab-'+t).hidden = t!==nama;
+  for(const t of ['guru','pikir','peta','pasar','jurnal','ujian','jasad']) document.getElementById('tab-'+t).hidden = t!==nama;
   if(nama==='guru'){ const tg=document.getElementById('tab-guru'); if(tg.dataset.kotor||!tg.innerHTML.trim()) guruRender(); }
   if(nama==='peta'){ if(document.getElementById('tab-peta').dataset.kotor||!document.getElementById('tab-peta').innerHTML.trim()) petaRender(); }
   if(nama==='pasar') pasarRender();
   if(nama==='jurnal') jurnalRender();
   if(nama==='ujian') ujianRender();
+  if(nama==='jasad'&&window.__v297&&window.__v297.render) window.__v297.render();
 }
 document.querySelectorAll('#pTabs button').forEach(b=>b.onclick=()=>tabKe(b.dataset.tab));
 document.getElementById('tab-peta').addEventListener('click', (ev)=>{
@@ -2714,27 +2749,31 @@ function terapkan(dt){
     kaget(0.7,`pasar bergetar nyata: BTC ${(b.btc1m*100).toFixed(2)}% dalam 1 menit (>${(3*b.sigma1m*100).toFixed(2)}%) — tubuhku tersentak`);
 }
 
-/* ---- HUD kejujuran: semua angka live & bisa dilacak ---- */
+/* ---- V298 TATA-TERTIB-TAMPILAN: HUD melayang DICABUT ----
+   Panel tetap kanan-atas melanggar hukum rumah ("overlay satu-satunya
+   tempat teks") dan saat terisi data ia menimpa panggung serta menutup
+   layar ponsel. Kini semua angka hidup di tab JASAD di dalam overlay
+   (ponsel = lembaran bawah dengan handle); panggung bersih — satu-satunya
+   "teks" di atas panggung adalah tubuh makhluk itu sendiri. ---- */
 function hud(){
-  let el=document.getElementById('jasadHud');
-  if(!el){
-    el=document.createElement('div'); el.id='jasadHud';
-    el.style.cssText='position:fixed;top:8px;right:8px;z-index:99999;font:10px/1.45 ui-monospace,monospace;padding:7px 9px;border-radius:10px;background:rgba(8,12,14,.82);color:#9fe8dc;border:1px solid rgba(79,224,194,.35);max-width:250px;pointer-events:none';
-    document.body.appendChild(el);
-  }
   const b=JASAD.b;
-  const row=(k,v)=>`<div><span style="opacity:.6">${k}</span> <b>${v}</b></div>`;
-  el.innerHTML='<b style="color:#4fe0c2">V297 JASAD-NYATA</b>'
-    +(!JASAD.hidup?`<div style="opacity:.75">status: MATI-PENUH-NALAR — ${JASAD.alasan}</div>`
-    :row('denyut', b.denyutNo!=null?('#'+b.denyutNo+(b.denyutUmurMnt!=null?` · umur ${b.denyutUmurMnt.toFixed(0)}m`:'')):'?')
-    +row('kebugaran', b.kebugaran!=null?(b.kebugaran*100).toFixed(0)+'%':'?')
-    +row('napas', '×'+b.napasLaju.toFixed(2)+(b.sigma1m!=null?` · σ1m ${(b.sigma1m*100).toFixed(3)}%`:''))
-    +row('BTC', b.btc!=null?('$'+b.btc.toLocaleString('en-US')+' · 1m '+(b.btc1m*100).toFixed(2)+'%'):'?')
-    +row('sikap', b.sikap)
-    +row('rapor', (b.akurasiPct!=null?`ak ${b.akurasiPct}%`:'ak ?')+(b.netKum!=null?` · net ${b.netKum.toFixed(1)}%`:''))
-    +row('tangan', b.top?`${b.top.simbol} ${b.top.arah||''} (${typeof b.top.skor==='number'?b.top.skor.toFixed(0):b.top.skor})`:'menunggu sasaran')
-    +row('sadar-1', b.bangunKe?('bangun #'+b.bangunKe+(b.guruMode?(' · '+b.guruMode):'')):'?'))
-    +`<div style="opacity:.5;margin-top:3px">semua angka dari berkas & pasar nyata — nol karangan</div>`;
+  const baris=(k,v)=>`<div class="baris"><span class="k">${k}</span><span class="v">${v}</span></div>`;
+  const st=document.getElementById('jvStatus');
+  if(st) st.innerHTML=(!JASAD.hidup)
+    ?`<div class="baris"><span class="k">status</span><span class="v r">MATI-PENUH-NALAR</span></div><div class="kecil">${JASAD.alasan}</div>`
+    :`<div class="baris"><span class="k">status</span><span class="v h">HIDUP — terkopling realitas</span></div>`;
+  const bi=document.getElementById('jvBiometrik');
+  if(bi) bi.innerHTML=(!JASAD.hidup)?'<div class="kecil">tubuh kembali ke perilaku dasar — menunggu data nyata, nol angka karangan.</div>'
+    :baris('denyut', b.denyutNo!=null?('#'+b.denyutNo+(b.denyutUmurMnt!=null?` · umur ${b.denyutUmurMnt.toFixed(0)} mnt`:'')):'?')
+    +baris('kebugaran', b.kebugaran!=null?(b.kebugaran*100).toFixed(0)+'%':'?')
+    +baris('napas', '×'+b.napasLaju.toFixed(2)+(b.sigma1m!=null?` · σ1m ${(b.sigma1m*100).toFixed(3)}%`:''))
+    +baris('mata', 'BTC $'+(b.btc!=null?b.btc.toLocaleString('en-US'):'?')+(b.btc1m!=null?` · 1m ${(b.btc1m*100).toFixed(2)}%`:''))
+    +baris('sikap tubuh', b.sikap);
+  const rp=document.getElementById('jvRapor');
+  if(rp) rp.innerHTML=(!JASAD.hidup)?'<div class="kecil">—</div>'
+    :baris('rapor ledger', (b.akurasiPct!=null?`akurasi ${b.akurasiPct}%`:'akurasi ?')+(b.netKum!=null?` · net ${b.netKum.toFixed(1)}%`:''))
+    +baris('tangan menjangkau', b.top?`${b.top.simbol} ${b.top.arah||''} (${typeof b.top.skor==='number'?b.top.skor.toFixed(0):b.top.skor})`:'menunggu sasaran')
+    +baris('sadar-1', b.bangunKe?('bangun #'+b.bangunKe+(b.guruMode?(' · '+b.guruMode):'')):'?');
 }
 
 /* ---- denyut jantung: siklus PENJAGA naik = degup nyata ---- */
@@ -2793,7 +2832,7 @@ function pasang(){
 pasang();
 putaranState().then(()=>{ /* putaran abadi di dalam */ });
 
-window.__v297={JASAD, sumber:()=>({hidup:JASAD.hidup, alasan:JASAD.alasan, biometrik:JASAD.b}),
+window.__v297={JASAD, render:hud, sumber:()=>({hidup:JASAD.hidup, alasan:JASAD.alasan, biometrik:JASAD.b}),
   paksa:putaranState};
 })();
 </script>
