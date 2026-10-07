@@ -598,7 +598,37 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
       } catch (e) { KERJA.gagal.push('pasar ' + sym + ': ' + pesan(e)); }
       await tidur(150);
     }
-    return `pasar nyata dihisap: ${Object.keys(KERJA.pasarKini).join(', ') || 'semua gerbang gagal'}`;
+    // V292 SAPU-LIKUID — mandat pemilik: "harusnya setiap waktu menganalisa setiap koin,
+    // bukan sekali saja". Satu panggilan ticker: SEMUA koin likuid dipindai TIAP bangun;
+    // koin yang belum terhisap bangun ini ikut dibedah (lilin + analisa + uji-jalan) —
+    // tak ada lagi koin yang hanya boleh lewat di radar tanpa pernah disentuh.
+    try {
+      const tr = await jF(BINANCE[0] + '/api/v3/ticker/24hr', 15000);
+      const STABIL = new Set(['USDC', 'TUSD', 'FDUSD', 'DAI', 'EUR', 'BUSD', 'USDP', 'AEUR']);
+      const likuid = (Array.isArray(tr) ? tr : [])
+        .filter(t => typeof t.symbol === 'string' && t.symbol.endsWith('USDT') && +t.lastPrice > 0)
+        .map(t => ({ sym: t.symbol, base: t.symbol.slice(0, -4), qv: +t.quoteVolume }))
+        .filter(t => !STABIL.has(t.base) && !/(UP|DOWN|BULL|BEAR)$/.test(t.base) && t.qv >= 1e6)
+        .sort((a, b) => b.qv - a.qv).slice(0, 44);
+      let sapu = 0, gagalSapu = 0;
+      for (const { sym } of likuid) {
+        if (KERJA.lilin[sym]) continue;
+        try {
+          const l = await lilinAmbil(sym);
+          KERJA.lilin[sym] = l;
+          const an = analisaLilin(l);
+          KERJA.pasarKini[sym] = { harga: an.harga, chg: +f2(an.chg), ema20: +an.ema20.toPrecision(8),
+            ema50: +an.ema50.toPrecision(8), rsi: +f1(an.rsi), atr: +an.atr.toPrecision(6),
+            mom7: +f2(an.mom7), mom48: +f2(an.mom48), vol: +f2(an.vol), n: l.length,
+            bt: ujiJalan(l, ING.kromosom), sapu: true };
+          KERJA.organXP.ATR++; KERJA.organXP.MOM++; ING.stat.pasarObs++;
+          sapu++;
+        } catch (e) { gagalSapu++; }
+        await tidur(90);
+      }
+      if (sapu) KERJA.penemuan.push({ teks: `SAPU-LIKUID: ${sapu} koin likuid tambahan dibedah bangun ini (total ${Object.keys(KERJA.pasarKini).length} koin, gagal ${gagalSapu}) — tak ada koin yang tak kulihat`, skor: 92 });
+    } catch (e) { KERJA.gagal.push('sapu-likuid: ' + pesan(e)); }
+    return `pasar nyata dihisap: ${Object.keys(KERJA.pasarKini).length} koin (cermin + sapu-likuid V292)`;
   });
 
   /* 4b. ARAH-HARIAN — MANDAT PEMILIK: laporan ≥5 koin sasaran arah terbaik tiap bangun.
@@ -620,7 +650,7 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
       } catch (e) { KERJA.gagal.push('arah ' + sym + ': ' + pesan(e)); }
     }
     daftar.sort((a, b) => ((a.arah === 'TUNGGU') - (b.arah === 'TUNGGU')) || (b.keyakinan - a.keyakinan));
-    KERJA.arah = daftar.slice(0, 8);
+    KERJA.arah = daftar.slice(0, 10);   // V292: dulu 8 — kini ~50 koin dibedah/bangun, laporan arah ikut melebar
     if (KERJA.arah.length < 5 && daftar.length >= 5) KERJA.arah = daftar.slice(0, Math.max(5, Math.min(8, daftar.length)));   // mandat: minimal 5
     const hari = iso().slice(0, 10);
     ING.arahRiwayat = (ING.arahRiwayat || []).filter(r => r.hari !== hari);
