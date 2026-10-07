@@ -237,6 +237,25 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
 <script>
 'use strict';
 /* ================================================================
+   V295-TORSA-TORNADO — mandat pemilik: "gak suka gaya ular, badannya
+   aneh — baiknya miliki tangan 2 kaya Luffy One Piece; kakinya badan
+   tornado karena tornado menyedot jadi kesannya dia cepat; jangan
+   sampai mengganggu tapi justru makin canggih dan mahir; ruangannya
+   dibuat lebih luas — istana negara banyak ruang; ini bukan simulasi
+   tapi nyata".
+   · TUBUH BARU: tulang ular (ruas bersambung + silia) DIMUSNAHKAN.
+     Kini: torsa cyborg kompak + reaktor dada + DUA LENGAN KARET gaya
+     Luffy (menjangkau buku/pasar sejauh apa pun saat kerja — fisika
+     karet tertinggal, kepalan menggenggam sasaran) + KAKI TORNADO
+     (pusaran 3-5 lapis berputar, makin cepat makin kencang & memanjang,
+     partikel sekitar tersedot spiral — kesan gemas). Genom SAMA dari
+     kerja nyata: ruas → tenaga (lapis tornado + panjang lengan),
+     probosis → jangkauan, mata & organ tetap; organ kini menempel
+     anatomi di torsa dan menyala saat alat benar-benar dipakai.
+   · ISTANA MELEBAR: ruangan kardinal/paviliun lebih besar; dua sayap
+     baru — BRANKAS (harta tersegel: pointer emas ke artefak nyata yang
+     menentukan nyawa) & GUDANG (luberan otomatis saat rak padat —
+     ruang cadangan dibangun SEBELUM dibutuhkan, bukan setelah sesak).
    V289-BAITUL-ILMU — mandat pemilik: "guru crypto sempurna seutuhnya",
    "tampilan tertata seperti baitul ilmu Al-Khawarizmi", "ujikan apakah
    ini simulasi atau semuanya utuh nyata berdiri hidup".
@@ -387,7 +406,7 @@ async function muatMemoriGitHub(){
       _s1BangunDilaporkan = k.bangunKe;
       const selesai = Date.parse(k.waktu?.selesai)||0;
       jurnal('S1', `Sadar-1 BANGUN ke-<b>${k.bangunKe}</b> di ${k.host?.nama||'GitHub Actions'} — ${wib(selesai)} WIB, ${((k.waktu?.durasiMs||0)/1000).toFixed(1)} dtk kerja, TANPA PENONTON. bukti: <b>commit ruang-hidup/</b>`);
-      if(k.tubuh) jurnal('S1-TUBUH', `genom tubuh: <b>${k.tubuh.ruas} ruas</b>, ${k.tubuh.mata} mata — ${k.tubuh.organ||''} · segel ${k.tubuh.segel||'-'}`);
+      if(k.tubuh) jurnal('S1-TUBUH', `genom tubuh: tenaga <b>${k.tubuh.ruas}</b> (lengan karet + lapis tornado), ${k.tubuh.mata} mata — ${k.tubuh.organ||''} · segel ${k.tubuh.segel||'-'}`);
       for(const b of (k.bacaKini||[]).slice(0,3)) jurnal('S1-BACA', `<b>${b.path}</b> — ${(b.fakta||[])[0]||''}`);
       for(const t of (k.penemuan||[]).slice(0,2)) jurnal('S1-TEMUAN', t.teks, 'temuan');
       for(const b of (k.bacaKini||[])){
@@ -927,7 +946,7 @@ const cv=document.getElementById('panggung'), cx=cv.getContext('2d');
 let DPR=1, bebas={x:14,y:14,w:600,h:400}, VIG=null;
 const LAYOUT={nodes:new Map(), zona:[], rects:[], den:{x:0,y:0,r:60}, pond:{x:0,y:0,w:0,h:0}};
 const ZONA_URUT=['otak','.github/workflows','memori','scripts/ujian-buta','· akar','scripts','laporan'];
-const ZONA_NAMA={'· akar':'AKAR','otak':'OTAK','memori':'MEMORI','.github/workflows':'JANTUNG','scripts/ujian-buta':'UJIAN','scripts':'ALAT','laporan':'LAPORAN'};
+const ZONA_NAMA={'· akar':'AKAR','otak':'OTAK','memori':'MEMORI','.github/workflows':'JANTUNG','scripts/ujian-buta':'UJIAN','scripts':'ALAT','laporan':'LAPORAN','BRANKAS':'BRANKAS','· gudang':'GUDANG'};
 let POND_POS={};
 function ukur(){
   DPR=Math.min(devicePixelRatio||1, 2);
@@ -945,9 +964,9 @@ function ukur(){
    ingatan ruang-hidup mengorbit kubah. SEMUA posisi = fungsi murni (al-jabr)
    dari jumlah file & genom — bukan rasa, bukan sebaran. Rumus dipajang di tab Guru. */
 const SLOT_ISTANA=[
-  ['otak',              -90, 0.30, 'kardinal'],
-  ['.github/workflows',    0, 0.34, 'kardinal'],
-  ['memori',             180, 0.34, 'kardinal'],
+  ['otak',              -90, 0.33, 'kardinal'],
+  ['.github/workflows',    0, 0.35, 'kardinal'],
+  ['memori',             180, 0.35, 'kardinal'],
   ['· akar',             -45, 0.50, 'paviliun'],
   ['scripts',             45, 0.50, 'paviliun'],
   ['laporan',            135, 0.50, 'paviliun'],
@@ -963,41 +982,48 @@ function susun(){
   const cxm=bebas.x+bebas.w/2, cym=bebas.y+bebas.h/2;
   LAYOUT.den={x:cxm, y:cym, r:D*0.082};
   LAYOUT.pond={x:cxm-D*0.17, y:cym+D*0.34-D*0.082, w:D*0.34, h:D*0.165};
-  LAYOUT.istana={D, cx:cxm, cy:cym, rKubah:D*0.082, rKardinal:0.32*D, rPaviliun:0.50*D,
+  LAYOUT.istana={D, cx:cxm, cy:cym, rKubah:D*0.082, rKardinal:0.35*D, rPaviliun:0.50*D,
     cincin:(S.habitat&&S.habitat.istana&&S.habitat.istana.cincin)||2,
     menaraGen:(S.habitat&&S.habitat.istana&&S.habitat.istana.menaraGen)||0,
     menaraSkor:(S.habitat&&S.habitat.istana&&S.habitat.istana.menaraSkor)||0};
   const kel=new Map();
   for(const f of S.pohon.files){ const i=f.path.lastIndexOf('/'); const dir=i<0?'· akar':f.path.slice(0,i);
     const k=slotDir(dir); if(!kel.has(k)) kel.set(k,[]); kel.get(k).push(f); }
-  LAYOUT.nodes.clear(); LAYOUT.zona=[]; LAYOUT.rects=[];
+  LAYOUT.nodes.clear(); LAYOUT.zona=[]; LAYOUT.rects=[]; LAYOUT.brankas=new Map();
+  const GUDANG=[];
   const maxSize=Math.max(1, ...S.pohon.files.map(f=>f.size||1));
   const jelas=Math.log1p(maxSize);
   for(const [dir, sudut, rf, jenis] of SLOT_ISTANA){
     const fs=(kel.get(dir)||[]).slice().sort((a,b)=>a.path.localeCompare(b.path)); kel.delete(dir);
     const sx=cxm+Math.cos(sudut*Math.PI/180)*D*rf;
     const sy=cym+Math.sin(sudut*Math.PI/180)*D*rf;
-    const w0=(jenis==='kardinal'?0.26:0.23)*D, h0=(jenis==='kardinal'?0.20:0.18)*D;
+    // ruangan DIPERLUAS (V295): kardinal 0,30×0,22D — paviliun 0,26×0,20D
+    const w0=(jenis==='kardinal'?0.30:0.26)*D, h0=(jenis==='kardinal'?0.22:0.20)*D;
     const rect={x:Math.max(bebas.x+2, Math.min(sx-w0/2, bebas.x+bebas.w-w0-2)),
                 y:Math.max(bebas.y+2, Math.min(sy-h0/2, bebas.y+bebas.h-h0-2)), w:w0, h:h0};
-    const n=fs.length;
-    // al-jabr rak: pitch membesar bila buku sedikit agar lemari tetap tertata, tak melarat
-    let p=Math.max(6.5, Math.min(11, (w0-18)/Math.max(1, Math.ceil(Math.sqrt(Math.max(1,n))))));
-    let cols=Math.max(1, Math.floor((w0-18)/p)), rows=Math.ceil(n/cols);
-    while(rows*(p+6)>h0-20 && p>5.5){ p-=0.5; cols=Math.max(1, Math.floor((w0-18)/p)); rows=Math.ceil(n/cols); }
-    const x0=rect.x+rect.w/2-((Math.min(cols,Math.max(1,n))-1)*p)/2;
-    const y0=rect.y+rect.h/2-((rows-1)*(p+6))/2+3;
+    // al-jabr rak: pitch membesar bila buku sedikit agar lemari tetap tertata, tak melarat;
+    // area rak mulai DI BAWAH papan nama (y+44) — dan bila rak PADAT, luberan mengalir ke GUDANG
+    let p=Math.max(6.5, Math.min(11, (w0-18)/Math.max(1, Math.ceil(Math.sqrt(Math.max(1,fs.length))))));
+    let cols=Math.max(1, Math.floor((w0-18)/p)), rows=Math.ceil(fs.length/cols);
+    while(rows*(p+6)>h0-52 && p>5.5){ p-=0.5; cols=Math.max(1, Math.floor((w0-18)/p)); rows=Math.ceil(fs.length/cols); }
+    const kapRows=Math.max(1, Math.floor((h0-52)/(p+6)));
+    const muat=Math.max(0, cols*kapRows);
+    const muatFs=fs.slice(0, muat), luapFs=fs.slice(muat);
+    for(const f of luapFs) GUDANG.push(f);
+    const rowsMuat=Math.max(1, Math.ceil(muatFs.length/cols));
+    const x0=rect.x+rect.w/2-((Math.min(cols,Math.max(1,muatFs.length))-1)*p)/2;
+    const y0=rect.y+44;
     // garis rak — papan sejajar baitul ilmu (terlihat walau buku sedikit)
     LAYOUT.rak=ZONA_NAMA; // (penanda; garis digambar di gambarHabitat dari data ini)
-    fs.forEach((f,i)=>{
+    muatFs.forEach((f,i)=>{
       const gx=i%cols, gy=Math.floor(i/cols);
       const r=2.6+3.4*Math.log1p(f.size||1)/jelas;
       LAYOUT.nodes.set(f.path, {x:x0+gx*p, y:y0+gy*(p+6), r:Math.min(5.6,r), dir, f, gy, cols, rowY:y0+gy*(p+6)});
     });
     LAYOUT.zona.push({dir, dirs:[dir], jenis, sudut, rf,
       nama:ZONA_NAMA[dir]||dir.split('/').pop().toUpperCase(),
-      rect, cx:rect.x+rect.w/2, cy:rect.y+rect.h/2, n:fs.length,
-      rakRows:rows, rakRowY:y0+((rows-1)*(p+6))/2===y0?[y0]:Array.from({length:rows},(_,g)=>y0+g*(p+6))});
+      rect, cx:rect.x+rect.w/2, cy:rect.y+rect.h/2, n:muatFs.length, luap:luapFs.length,
+      rakRows:rowsMuat, rakRowY:Array.from({length:rowsMuat},(_,g)=>y0+g*(p+6))});
     LAYOUT.rects.push(rect);
   }
   // SARANG: ingatan resmi (ruang-hidup) mengorbit kubah — pusat kehidupan
@@ -1008,6 +1034,46 @@ function susun(){
     const r=2.4+2.6*Math.log1p(f.size||1)/jelas;
     LAYOUT.nodes.set(f.path, {x:LAYOUT.den.x+Math.cos(a)*rs, y:LAYOUT.den.y+Math.sin(a)*rs*0.84, r:Math.min(4.8,r), dir:'ruang-hidup', f});
   });
+  /* ===== SAYAP ISTANA (V295) — GUDANG & BRANKAS di dua sudut bawah:
+     istana negara punya gudang & brankas — ruang cadangan dibangun SEBELUM
+     dibutuhkan, jadi tak ada buku menumpuk tanpa tempat, dan harta tersegel
+     (artefak penentu nyawa) punya kamar kebalnya sendiri ===== */
+  const wS=Math.max(76, Math.min(156, 0.24*D)), hS=Math.max(58, Math.min(98, 0.15*D));
+  const gRect={x:bebas.x+8, y:bebas.y+bebas.h-hS-8, w:wS, h:hS};
+  const bRect={x:bebas.x+bebas.w-wS-8, y:bebas.y+bebas.h-hS-8, w:wS, h:hS};
+  LAYOUT.zona.push(
+    {dir:'· gudang', dirs:['· gudang'], jenis:'gudang', sudut:195, rf:0.66, nama:'GUDANG',
+      rect:gRect, cx:gRect.x+gRect.w/2, cy:gRect.y+gRect.h/2, n:0, luap:0, rakRows:0, rakRowY:[]},
+    {dir:'BRANKAS', dirs:['BRANKAS'], jenis:'brankas', sudut:-15, rf:0.66, nama:'BRANKAS',
+      rect:bRect, cx:bRect.x+bRect.w/2, cy:bRect.y+bRect.h/2, n:0, luap:0, rakRows:0, rakRowY:[]});
+  LAYOUT.rects.push(gRect, bRect);
+  const gz=LAYOUT.zona[LAYOUT.zona.length-2];
+  {
+    const gw=gz.rect.w-18;
+    const p2=Math.max(6.5, Math.min(11, gw/Math.max(1, Math.ceil(Math.sqrt(Math.max(1,GUDANG.length))))));
+    const cols2=Math.max(1, Math.floor(gw/p2));
+    GUDANG.forEach((f,i)=>{
+      const gx=gz.rect.x+11+(i%cols2)*p2, gy=gz.rect.y+40+Math.floor(i/cols2)*(p2+6);
+      LAYOUT.nodes.set(f.path, {x:gx, y:gy, r:Math.min(4.6, 2.6+3.4*Math.log1p(f.size||1)/jelas), dir:'· gudang', f});
+    });
+    gz.n=GUDANG.length; gz.luap=GUDANG.length;
+  }
+  // BRANKAS: pointer EMAS ke artefak nyata penentu nyawa makhluk (klik = baca; isinya cuma file yang BENAR ada)
+  const bz=LAYOUT.zona[LAYOUT.zona.length-1];
+  {
+    const ISI=['ruang-hidup/habitat.json','ruang-hidup/madrasah.json','ruang-hidup/ingatan.json',
+      'ruang-hidup/keadaan.json','laporan/nalar-biner.json','laporan/sasaran-terkini.json',
+      'arena-keadaan.json','versi.json','brain.json'];
+    let gi=0;
+    for(const pth of ISI){
+      const f=S.pohon.files.find(f2=>f2.path===pth); if(!f) continue;
+      const gx=bz.rect.x+17+(gi%2)*((bz.rect.w-34)/2+9);
+      const gy=bz.rect.y+42+Math.floor(gi/2)*13.5;
+      LAYOUT.brankas.set(f.path, {path:f.path, x:gx, y:gy, f, dir:'BRANKAS', r:3.4});
+      gi++;
+    }
+    bz.n=gi;
+  }
   POND_POS={};
 }
 function statusNode(path){
@@ -1049,19 +1115,17 @@ function tubuhAktif(){
 }
 function terapkanGenom(){
   const T=tubuhAktif(); NADI.T=T;
-  const ruas=Math.max(6, Math.min(30, T.ruas||9));
-  while(NADI.seg.length>ruas) NADI.seg.pop();
-  while(NADI.seg.length<ruas){ const l=NADI.seg[NADI.seg.length-1]||{x:NADI.x, y:NADI.y+8};
-    NADI.seg.push({x:l.x, y:l.y+NADI.SP}); }
-  NADI.NS=NADI.seg.length;
+  // ruas = TENAGA dari kerja nyata: makin besar makin kuat (lapis tornado
+  // & panjang lengan karet) — bukan lagi jumlah tulang ular.
+  NADI.ruas=Math.max(6, Math.min(30, T.ruas||9));
   NADI.mataEkstra=Math.max(0, Math.min(2, (T.mata||1)-1));
   const lama=new Map((NADI.organ||[]).map(o=>[o.alat, o]));
   NADI.organ=(T.organ||[]).map(o=>{
     const l=lama.get(o.alat);
-    return {...o, oIdx: fnv(o.alat+'x')%Math.max(1,NADI.NS),
-      mekar: l ? (o.xp>l.xp ? 0 : l.mekar) : 1};   // organ baru/xp-naik mekar perlahan
+    return {...o, oIdx: fnv(o.alat+'x')%12,
+      mekar: l ? (o.xp>l.xp ? 0 : l.mekar) : 1};   // organ baru/xp-naik mekar perlahan; slot anatomi tetap di torsa
   });
-  NADI.probosisLen=T.probosis||6; NADI.segel=T.segel||'';
+  NADI.probosisLen=T.probosis||6; NADI.segel=T.segel||'';   // probosis = jangkauan lengan karet
 }
 function zonaTitik(id){
   if(id==='PASAR'){ const p=LAYOUT.pond; return p?{x:p.x+p.w/2, y:p.y+p.h/2}:null; }
@@ -1145,22 +1209,25 @@ function bangunSesi(zonaTgt, alasan){
   riak((LAYOUT.den.x+((zonaTitik(zonaTgt)||{}).x||LAYOUT.den.x))/2, (LAYOUT.den.y+((zonaTitik(zonaTgt)||{}).y||LAYOUT.den.y))/2);
 }
 
-/* ================= NADI — makhluk benang bioluminesen =================
-   Kepala tarung → tulang 9-30 ruas sesuai GENOM (morfogenesis) → silia
-   napas → sulur peraba → ORGAN ALAT (EMA/RSI/ATR/MOM/BT/AUDIT) yang
-   menyala saat alat itu benar-benar dipakai → probosis dari genom. */
+/* ================= NADI — makhluk cyborg torsa-tornado =================
+   Torsa cyborg + reaktor dada → DUA LENGAN KARET gaya Luffy (menjangkau
+   ilmu sejauh apa pun saat kerja) → KAKI TORNADO penyedot (makin cepat
+   makin kencang) → ORGAN ALAT (EMA/RSI/ATR/MOM/BT/AUDIT) menempel di
+   torsa, menyala saat alat itu benar-benar dipakai → mata dari genom. */
 const NADI={
   x:0, y:0, vx:0, vy:0, hd:-Math.PI/2, tx:0, ty:0,
-  seg:[], NS:11, SP:7.5,
+  tangan:[{x:0,y:0},{x:0,y:0}],            // dua lengan karet gaya Luffy
+  tornado:{putar:0, regang:0},             // kaki pusaran: putaran & regangan
+  sedot:[],                                // partikel tersedot pusaran
+  ruas:11,                                 // tenaga genom → lapis tornado + panjang lengan
   napas:0, dim:1, mode:'bangun', startle:0, idleAt:sekarang(), flair:0,
   mata:{buka:1, blink:0, blinkAt:3+Math.random()*4, px:0, py:0},
-  sulur:[{x:0,y:0},{x:0,y:0}],
   T:null, mataEkstra:0, organ:[], probosisLen:6, segel:'', wp:null
 };
 function nadiInit(){
   NADI.x=LAYOUT.den.x; NADI.y=LAYOUT.den.y; NADI.tx=NADI.x; NADI.ty=NADI.y;
-  NADI.seg=[]; for(let i=0;i<NADI.NS;i++) NADI.seg.push({x:NADI.x, y:NADI.y+(i+1)*NADI.SP});
-  for(const s of NADI.sulur){ s.x=NADI.x; s.y=NADI.y-14; }
+  NADI.tangan=[{x:NADI.x-14, y:NADI.y+12}, {x:NADI.x+14, y:NADI.y+12}];
+  NADI.sedot=[]; NADI.tornado={putar:0, regang:0};
 }
 function angNorm(a){ while(a>Math.PI)a-=2*Math.PI; while(a<-Math.PI)a+=2*Math.PI; return a; }
 function zonaPenasaran(){
@@ -1174,7 +1241,8 @@ function nadiUpdate(dt, t){
   let tgt=null, v=90, zonaTgt=null;
   if(S.kerja.sibuk && S.kerja.target){
     if(S.kerja.target.startsWith('pasar:')){ tgt=POND_POS[S.kerja.target.slice(6)]||null; zonaTgt='PASAR'; }
-    else { const n=LAYOUT.nodes.get(S.kerja.target); tgt=n?{x:n.x,y:n.y}:null; zonaTgt=n?.dir||null; }
+  else { const n=LAYOUT.nodes.get(S.kerja.target)||(LAYOUT.brankas&&LAYOUT.brankas.get(S.kerja.target))||null;
+    tgt=n?{x:n.x,y:n.y}:null; zonaTgt=n&&n.dir||null; }
     v=150;
   }
   if(tgt){
@@ -1227,11 +1295,41 @@ function nadiUpdate(dt, t){
   // napas — laju mengikuti kerja & vital
   const rate=(S.kerja.sibuk?1.7:0.95)*(0.3+0.7*NADI.dim);
   NADI.napas+=dt*rate*2;
-  // tulang mengikuti kepala
-  let px2=NADI.x, py2=NADI.y;
-  for(const sg of NADI.seg){
-    const ddx=sg.x-px2, ddy=sg.y-py2; const dd=Math.hypot(ddx,ddy)||1;
-    sg.x=px2+ddx/dd*NADI.SP; sg.y=py2+ddy/dd*NADI.SP; px2=sg.x; py2=sg.y;
+  // ===== KAKI TORNADO: makin cepat/kerja makin kencang & memanjang =====
+  const regangTgt=Math.max(0, Math.min(1, sp/120+(S.kerja.sibuk?0.35:0)));
+  NADI.tornado.regang+=(regangTgt-NADI.tornado.regang)*Math.min(1, dt*2.2);
+  NADI.tornado.putar+=dt*(3.2+sp*0.055+NADI.tornado.regang*5.5);
+  if(NADI.dim>0.3 && NADI.sedot.length<18 && Math.random()<dt*(5+12*NADI.tornado.regang))
+    NADI.sedot.push({a0:Math.random()*6.283, r:36+Math.random()*18, a:0.7});
+  for(let i=NADI.sedot.length-1;i>=0;i--){ const sd=NADI.sedot[i];
+    sd.r-=dt*(34+46*NADI.tornado.regang); sd.a0+=dt*(4.5+90/Math.max(9,sd.r));
+    sd.a=Math.min(0.75, sd.r/44);
+    if(sd.r<7) NADI.sedot.splice(i,1); }
+  // ===== DUA LENGAN KARET (Luffy): kerja → menjangkau sasaran sejauh apa
+  // pun; senggang → bergantung bernapas; kaget → teracung ke atas =====
+  const jangkau=16+(NADI.probosisLen||6)*1.1+(NADI.ruas||11)*0.45;
+  let tgtLengan=null;
+  if(S.kerja.sibuk && S.kerja.target){
+    if(S.kerja.target.startsWith('pasar:')) tgtLengan=POND_POS[S.kerja.target.slice(6)]||null;
+    else { const nl=LAYOUT.nodes.get(S.kerja.target)||(LAYOUT.brankas&&LAYOUT.brankas.get(S.kerja.target))||null;
+      tgtLengan=nl?{x:nl.x, y:nl.y}:null; }
+  }
+  NADI.reach=tgtLengan?0:-1;
+  for(let i=0;i<2;i++){
+    const side=i?1:-1;
+    let wx, wy;
+    if(tgtLengan && i===0){
+      wx=tgtLengan.x; wy=tgtLengan.y;
+      if(NADI.startle>0.05){ wx+=Math.cos(t*13)*8*NADI.startle; wy+=Math.sin(t*11)*8*NADI.startle; }
+    }else{
+      const ayun=Math.sin(t*(1.6+i*0.35)+i*2.1);
+      wx=NADI.x+Math.cos(NADI.hd+side*(1.25+0.1*ayun))*jangkau*0.85+side*6;
+      wy=NADI.y+13+ayun*4+Math.sin(NADI.napas+i)*2;
+      if(NADI.startle>0.05){ wx+=Math.cos(t*9+side*2.1)*30*NADI.startle; wy-=34*NADI.startle; }
+    }
+    const k2=Math.min(1, dt*(tgtLengan&&i===0?7.5:4.2));   // karet: cepat saat menjangkau, lunak saat pulang
+    NADI.tangan[i].x+=(wx-NADI.tangan[i].x)*k2;
+    NADI.tangan[i].y+=(wy-NADI.tangan[i].y)*k2;
   }
   // mata
   const m=NADI.mata;
@@ -1246,15 +1344,6 @@ function nadiUpdate(dt, t){
   const la=Math.atan2(lihat.y-NADI.y, lihat.x-NADI.x);
   m.px+=(Math.cos(la)*0.38-m.px)*Math.min(1, dt*4);
   m.py+=(Math.sin(la)*0.38-m.py)*Math.min(1, dt*4);
-  // sulur peraba (fisika tertinggal → hidup)
-  for(let i=0;i<2;i++){
-    const side=i?1:-1;
-    const bx=NADI.x+Math.cos(NADI.hd+side*0.55)*10, by=NADI.y+Math.sin(NADI.hd+side*0.55)*10;
-    const wx=bx+Math.cos(NADI.hd+side*0.2)*22+Math.sin(t*2.3+i*2.1)*3.5;
-    const wy=by+Math.sin(NADI.hd+side*0.2)*22+Math.cos(t*2.1+i*1.7)*3.5;
-    NADI.sulur[i].x+=(wx-NADI.sulur[i].x)*Math.min(1, dt*3.5);
-    NADI.sulur[i].y+=(wy-NADI.sulur[i].y)*Math.min(1, dt*3.5);
-  }
   // organ alat: mekar saat muncul/berubah; menyala saat alat itu BENAR-BENAR dipakai
   const kerjaPasar=S.kerja.sibuk && S.kerja.target && S.kerja.target.startsWith('pasar:');
   const kerjaAudit=S.kerja.sibuk && S.kerja.nama && S.kerja.nama.indexOf('MENGAUDIT')===0;
@@ -1348,9 +1437,19 @@ function gambarHabitat(t, dt){
   // CINCIN CANAL — lingkaran tertib baitul ilmu (jumlah = istana Sadar-1, dari kerja nyata)
   const nC=Math.max(2, Math.min(3, ist.cincin||2));
   for(let c=0;c<nC;c++){
-    const rr0=(c===0?0.335:0.505)*ist.D;
+    const rr0=(c===0?0.36:c===1?0.52:0.66)*ist.D;
     cx.strokeStyle='rgba(79,224,194,.05)'; cx.lineWidth=1;
     cx.beginPath(); cx.arc(den.x, den.y, rr0, 0, 7); cx.stroke();
+  }
+  // KANAL SAYAP — kubah ↔ gudang/brankas: sayap istana tetap tersambung ke jantung rumah
+  const gz2=LAYOUT.zona.find(z=>z.dir==='· gudang'), bz2=LAYOUT.zona.find(z=>z.dir==='BRANKAS');
+  if(gz2&&bz2){
+    cx.save(); cx.setLineDash([2,5]); cx.lineDashOffset=-t*10;
+    cx.strokeStyle='rgba(79,224,194,.06)'; cx.lineWidth=1;
+    cx.beginPath(); cx.moveTo(den.x,den.y); cx.lineTo(gz2.cx,gz2.cy); cx.stroke();
+    cx.beginPath(); cx.moveTo(den.x,den.y); cx.lineTo(bz2.cx,bz2.cy); cx.stroke();
+    cx.beginPath(); cx.moveTo(gz2.rect.x+gz2.rect.w, gz2.cy); cx.quadraticCurveTo(den.x, Math.max(gz2.cy,bz2.cy)+8, bz2.rect.x, bz2.cy); cx.stroke();
+    cx.restore();
   }
   // ZONA: lemari rak buku + jalur sumbu ke gerbang kardinal; menyala saat didekati
   for(const z of LAYOUT.zona){
@@ -1384,7 +1483,17 @@ function gambarHabitat(t, dt){
     cx.fillStyle=`rgba(148,161,186,${ra.toFixed(3)})`;
     cx.fillText(z.nama, z.rect.x+13, z.rect.y+19);
     cx.fillStyle=`rgba(91,103,128,${(ra*0.7).toFixed(3)})`;
-    cx.fillText(`${z.n} buku · kubaca ${nK}`, z.rect.x+13, z.rect.y+31);
+    const sub=z.jenis==='brankas'
+      ? `${z.n} harta tersegel · sentuh untuk kubaca`
+      : z.jenis==='gudang'
+        ? (z.n?`${z.n} buku luberan dari rak penuh`:'kosong — ruang cadangan istana')
+        : `${z.n} buku · kubaca ${nK}`;
+    cx.fillText(sub, z.rect.x+13, z.rect.y+31);
+    // KAMAR KEBAL BRANKAS — tepi ganda emas: harta negara butuh kamar yang jelas bedanya
+    if(z.jenis==='brankas'){
+      cx.strokeStyle=`rgba(255,208,120,${(0.10+prox*0.28+(tgtZona?0.08:0)).toFixed(3)})`; cx.lineWidth=1;
+      rr(z.rect.x+7, z.rect.y+7, z.rect.w-14, z.rect.h-14, 9); cx.stroke();
+    }
   }
   // sarang — kubah pusat baitul ilmu: cekungan cahaya bernapas seirama makhluk
   const gl=cx.createRadialGradient(den.x,den.y,2, den.x,den.y,den.r*1.55);
@@ -1418,6 +1527,20 @@ function gambarHabitat(t, dt){
     if(st==='baca'||st==='parsial'){ cx.strokeStyle=`rgba(79,224,194,${(al*0.5).toFixed(3)})`; cx.lineWidth=0.8; cx.stroke();
       cx.strokeStyle='rgba(210,255,244,.30)'; cx.lineWidth=0.7;
       cx.beginPath(); cx.moveTo(n.x, n.y-bh/2+1); cx.lineTo(n.x, n.y+bh/2-1); cx.stroke(); }
+  }
+  // HARTA BRANKAS — segel emas: pointer ke artefak nyata penentu nyawa; satu-satunya aksen emas di istana
+  for(const [,g] of (LAYOUT.brankas||new Map())){
+    const st=statusNode(g.path), sedangB=S.kerja.target===g.path && S.kerja.sibuk;
+    let al=st==='kosong'?0.38:(st==='ubah'?0.55+0.4*Math.sin(t*4.6):0.85);
+    if(sedangB){ al=1;
+      cx.strokeStyle='rgba(255,208,120,.5)'; cx.lineWidth=1.2;
+      cx.beginPath(); cx.arc(g.x,g.y,9+2.5*Math.sin(t*5),0,7); cx.stroke(); }
+    cx.save(); cx.translate(g.x,g.y);
+    cx.fillStyle=`rgba(255,208,120,${(al*0.9).toFixed(3)})`;
+    berlian(0,0,3.6); cx.fill();
+    cx.strokeStyle=`rgba(255,208,120,${(al*0.45).toFixed(3)})`; cx.lineWidth=0.7;
+    cx.beginPath(); cx.moveTo(0,-6.4); cx.lineTo(0,6.4); cx.moveTo(-3,-3.4); cx.lineTo(3,-3.4); cx.stroke();
+    cx.restore();
   }
 }
 function rectTepiX(z, den){
@@ -1501,9 +1624,12 @@ function gambarBacaan(t){
   if(!(S.kerja.sibuk && S.kerja.target)) { PARTIKEL=PARTIKEL.filter(p=>p.hidup>0); return; }
   let tgt=null;
   if(S.kerja.target.startsWith('pasar:')) tgt=POND_POS[S.kerja.target.slice(6)]||null;
-  else { const n=LAYOUT.nodes.get(S.kerja.target); tgt=n?{x:n.x,y:n.y}:null; }
+  else { const n=LAYOUT.nodes.get(S.kerja.target)||(LAYOUT.brankas&&LAYOUT.brankas.get(S.kerja.target))||null; tgt=n?{x:n.x,y:n.y}:null; }
+  // mulut = ujung lengan karet yang menjangkau — ilmu tersedot lewat tangan, bukan kepala
+  const t0=NADI.tangan&&NADI.tangan[0];
+  const pakaiTangan=t0 && NADI.reach===0 && Math.hypot(t0.x-NADI.x, t0.y-NADI.y)>34;
+  const mulut=pakaiTangan?{x:t0.x, y:t0.y}:{x:NADI.x+Math.cos(NADI.hd)*12, y:NADI.y+Math.sin(NADI.hd)*12};
   if(tgt){
-    const mulut={x:NADI.x+Math.cos(NADI.hd)*12, y:NADI.y+Math.sin(NADI.hd)*12};
     cx.save(); cx.setLineDash([3,4]); cx.lineDashOffset=-t*26;
     cx.strokeStyle='rgba(79,224,194,.6)'; cx.lineWidth=1.4;
     cx.beginPath(); cx.moveTo(mulut.x,mulut.y);
@@ -1513,7 +1639,7 @@ function gambarBacaan(t){
   cx.font=FONT_L; cx.textAlign='left';
   PARTIKEL=PARTIKEL.filter(p=>p.hidup>0);
   for(const p of PARTIKEL){
-    p.tx=NADI.x; p.ty=NADI.y;
+    p.tx=mulut.x; p.ty=mulut.y;
     p.x+=(p.tx-p.x)*Math.min(1, _dt*4.5+0.03);
     p.y+=(p.ty-p.y)*Math.min(1, _dt*4.5+0.03);
     if(Math.hypot(p.x-p.tx, p.y-p.ty)<9) p.hidup=0;
@@ -1528,81 +1654,121 @@ function gambarNadi(t){
   const dim=Math.max(0.12, NADI.dim);
   const breathR=1+0.085*Math.sin(NADI.napas);
   const R=(13.5+3*Math.sin(NADI.napas*0.9))*Math.max(0.8, dim)+NADI.startle*2.5;
-  const pts=[{x:NADI.x, y:NADI.y}, ...NADI.seg];
-  const widAt=(i)=>(R*(1-0.72*i/pts.length)+1.6)*breathR;
-  // membran tubuh: garis luar melebar-menipis
-  const L=[], Rt=[];
-  for(let i=0;i<pts.length;i++){
-    const a=pts[Math.max(0,i-1)], b=pts[Math.min(pts.length-1,i+1)];
-    let ang=Math.atan2(b.y-a.y, b.x-a.x)+Math.PI/2;
-    if(i===0) ang=NADI.hd+Math.PI/2;
-    const w=widAt(i);
-    L.push({x:pts[i].x+Math.cos(ang)*w, y:pts[i].y+Math.sin(ang)*w});
-    Rt.push({x:pts[i].x-Math.cos(ang)*w, y:pts[i].y-Math.sin(ang)*w});
+  const tenaga=Math.max(6, Math.min(30, NADI.ruas||11));
+  /* ===== KAKI TORNADO — pusaran penyedot: kesan gemas, makin cepat makin kencang ===== */
+  const tz=NADI.tornado;
+  const lapis=Math.max(3, Math.min(5, 3+Math.round(tenaga/12)));      // 3-5 lapis dari tenaga genom
+  const tinggi=20+13*tz.regang+2*Math.sin(NADI.napas);
+  const baseY=NADI.y+R*1.18;
+  for(let l=0;l<lapis;l++){
+    const f=l/Math.max(1, lapis-1);
+    const yy=baseY+f*tinggi;
+    const ww=(R*1.02-0.66*R*f)*(0.9+0.1*Math.sin(tz.putar*2+l*2.1));
+    const goyang=Math.sin(tz.putar*1.0+l*2.4)*(2.5+4.5*tz.regang)*(0.3+f);
+    cx.strokeStyle=`rgba(79,224,194,${((0.30-f*0.16)*dim).toFixed(3)})`;
+    cx.lineWidth=1.2-0.16*l;
+    cx.beginPath(); cx.ellipse(NADI.x+goyang, yy, Math.max(1.5,ww), Math.max(0.8,ww*0.30), 0, 0, 7); cx.stroke();
   }
-  cx.beginPath();
-  cx.moveTo(L[0].x, L[0].y);
-  for(let i=1;i<L.length;i++) cx.lineTo(L[i].x, L[i].y);
-  cx.lineTo(pts[pts.length-1].x, pts[pts.length-1].y);
-  for(let i=Rt.length-1;i>=0;i--) cx.lineTo(Rt[i].x, Rt[i].y);
-  cx.closePath();
-  const gr=cx.createRadialGradient(NADI.x,NADI.y,2, NADI.x,NADI.y,R*4.2);
-  gr.addColorStop(0,`rgba(79,224,194,${(0.30*dim).toFixed(3)})`);
-  gr.addColorStop(0.5,`rgba(79,224,194,${(0.12*dim).toFixed(3)})`);
-  gr.addColorStop(1,'rgba(79,224,194,0)');
-  cx.fillStyle=gr; cx.fill();
-  cx.strokeStyle=`rgba(79,224,194,${(0.5*dim).toFixed(3)})`; cx.lineWidth=1.1; cx.stroke();
-  // silia — gelombang napas menjalar ke ekor
-  for(let i=1;i<pts.length;i++){
-    const a=pts[i-1], b=pts[i];
-    const ang=Math.atan2(b.y-a.y, b.x-a.x)+Math.PI/2;
-    const wv=Math.sin(NADI.napas*2-i*0.55);
-    const len=(6.5-i*0.32)*(0.45+0.55*dim)*(0.72+0.28*wv);
-    if(len<=1.2) continue;
-    for(const s of [1,-1]){
-      const hx=pts[i].x+Math.cos(ang)*s*widAt(i), hy=pts[i].y+Math.sin(ang)*s*widAt(i);
-      cx.strokeStyle=`rgba(79,224,194,${(0.42*dim*(0.6+0.4*wv)).toFixed(3)})`; cx.lineWidth=0.9;
-      cx.beginPath(); cx.moveTo(hx,hy);
-      cx.lineTo(hx+Math.cos(ang+s*0.35+wv*0.18)*len*s*0.9, hy+Math.sin(ang+s*0.35+wv*0.18)*len*s*0.9);
-      cx.stroke();
+  // inti pusaran — garis spiral berputar (klip agar tak meluber)
+  cx.save(); cx.beginPath(); cx.rect(NADI.x-R*1.5, baseY-3, R*3, tinggi+8); cx.clip();
+  for(let s=0;s<3;s++){
+    cx.strokeStyle=`rgba(79,224,194,${(0.15*dim).toFixed(3)})`; cx.lineWidth=1;
+    cx.beginPath();
+    for(let k=0;k<=16;k++){
+      const f=k/16; const a=tz.putar*1.4+s*2.09+f*4.5;
+      const rr0=Math.max(0.5, R*(1.05-0.75*f));
+      const sx0=NADI.x+Math.cos(a)*rr0, sy0=baseY+f*tinggi;
+      k?cx.lineTo(sx0,sy0):cx.moveTo(sx0,sy0);
     }
+    cx.stroke();
   }
-  // organ alat crypto nyata — anatomi dari GENOM, menyala saat alat itu benar-benar dipakai
+  cx.restore();
+  // partikel tersedot — debu/data kena pusaran, spiral ke dalam (makin dekat makin cepat)
+  for(const sd of NADI.sedot){
+    cx.fillStyle=`rgba(210,255,244,${(sd.a*dim).toFixed(3)})`;
+    cx.fillRect(NADI.x+Math.cos(sd.a0)*sd.r, baseY+Math.sin(sd.a0)*sd.r*0.34-1, 1.7, 1.7);
+  }
+  /* ===== TORSA CYBORG — kompak, bukan ular ===== */
+  const gr=cx.createRadialGradient(NADI.x,NADI.y,2, NADI.x,NADI.y,R*3.4);
+  gr.addColorStop(0,`rgba(79,224,194,${(0.26*dim).toFixed(3)})`);
+  gr.addColorStop(0.5,`rgba(79,224,194,${(0.10*dim).toFixed(3)})`);
+  gr.addColorStop(1,'rgba(79,224,194,0)');
+  cx.fillStyle=gr; cx.beginPath(); cx.arc(NADI.x,NADI.y,R*3.4,0,7); cx.fill();
+  const tw=R*1.30*breathR, th=R*1.60*breathR, ty0=NADI.y+R*0.30;
+  cx.shadowColor='rgba(79,224,194,.7)'; cx.shadowBlur=14*dim;
+  const tg=cx.createLinearGradient(0, ty0-th/2, 0, ty0+th/2);
+  tg.addColorStop(0,`rgba(210,255,244,${(0.30*dim).toFixed(3)})`);
+  tg.addColorStop(0.55,`rgba(79,224,194,${(0.15*dim).toFixed(3)})`);
+  tg.addColorStop(1,'rgba(79,224,194,.02)');
+  cx.fillStyle=tg; rr(NADI.x-tw/2, ty0-th/2, tw, th, tw*0.42); cx.fill();
+  cx.strokeStyle=`rgba(79,224,194,${(0.55*dim).toFixed(3)})`; cx.lineWidth=1.1; cx.stroke();
+  cx.shadowBlur=0;
+  // bahu — dudukan lengan karet
+  for(const side of [-1,1]){
+    cx.fillStyle=`rgba(210,255,244,${(0.55*dim).toFixed(3)})`;
+    cx.beginPath(); cx.arc(NADI.x+side*tw*0.46, ty0-th*0.22, R*0.22, 0, 7); cx.fill();
+  }
+  // reaktor dada — jantung nano bernapas seirama denyut kerja
+  const pkx=NADI.x, pky=ty0-th*0.10;
+  const pk=R*0.30*(0.9+0.10*Math.sin(NADI.napas*1.3));
+  cx.fillStyle=`rgba(210,255,244,${(0.85*dim).toFixed(3)})`;
+  cx.beginPath(); cx.arc(pkx,pky,pk,0,7); cx.fill();
+  cx.strokeStyle=`rgba(79,224,194,${(0.5*dim).toFixed(3)})`; cx.lineWidth=1;
+  cx.beginPath(); cx.arc(pkx,pky,pk+3+1.5*Math.sin(t*3),0,7); cx.stroke();
+  /* ===== DUA LENGAN KARET (gaya Luffy) — menjangkau ilmu sejauh apa pun ===== */
+  cx.lineCap='round';
+  for(let i=0;i<2;i++){
+    const side=i?1:-1;
+    const bx=NADI.x+side*tw*0.46, by=ty0-th*0.22;
+    const hg=NADI.tangan[i];
+    const dx2=hg.x-bx, dy2=hg.y-by; const dist=Math.hypot(dx2,dy2)||1;
+    const tegang=Math.max(0, Math.min(1, (dist-16)/110));    // makin jauh makin tegang
+    const sag=(1-tegang)*9+2;
+    const nx=-dy2/dist, ny=dx2/dist;
+    const mx=(bx+hg.x)/2+nx*sag*(i?1:-1), my=(by+hg.y)/2+ny*sag*(i?1:-1);
+    // lengan karet: pita tebal bahu → tipis pergelangan (dua lintasan)
+    cx.strokeStyle=`rgba(79,224,194,${(0.62*dim).toFixed(3)})`;
+    cx.lineWidth=Math.max(2.2, R*0.30*(1-0.35*tegang));
+    cx.beginPath(); cx.moveTo(bx,by); cx.quadraticCurveTo(mx,my,hg.x,hg.y); cx.stroke();
+    cx.strokeStyle=`rgba(210,255,244,${(0.28*dim).toFixed(3)})`;
+    cx.lineWidth=Math.max(0.8, R*0.10);
+    cx.beginPath(); cx.moveTo(bx,by); cx.quadraticCurveTo(mx,my,hg.x,hg.y); cx.stroke();
+    // kepalan — menggenggam sasaran; cincin getar saat menjangkau jauh
+    const fr=R*0.30*(1+0.5*tegang);
+    cx.fillStyle=`rgba(210,255,244,${(0.9*dim).toFixed(3)})`;
+    cx.beginPath(); cx.arc(hg.x,hg.y,fr,0,7); cx.fill();
+    cx.strokeStyle=`rgba(79,224,194,${(0.6*dim).toFixed(3)})`; cx.lineWidth=1;
+    if(tegang>0.45){ cx.beginPath(); cx.arc(hg.x,hg.y,fr+3+2*Math.sin(t*6),0,7); cx.stroke(); }
+  }
+  cx.lineCap='butt';
+  // organ alat crypto nyata — menempel anatomi di torsa (slot tetap), menyala saat alat itu benar-benar dipakai
   const TINGKAT_R={'BENIH':0,'TUNAS':0.8,'AKTIF':1.4,'KUAT':2.0,'SANGGUP':2.6,'AMANAH':3.2};
   for(const o of (NADI.organ||[])){
-    const seg=pts[(o.oIdx||0)%pts.length];
+    const slot=(o.oIdx||0)%12, sa=slot/12*Math.PI*2;
+    const ox=NADI.x+Math.cos(sa)*R*0.70, oy=ty0+Math.sin(sa)*R*0.52;
     const mekar=Math.max(0.05, o.mekar??1);
     const rO=(1.7+(TINGKAT_R[o.tingkat]??0))*mekar;
     const aktif=(NADI.organAktif||[]).includes(o.alat);
     cx.globalAlpha=(aktif?0.95:0.5)*dim*mekar;
     cx.strokeStyle=aktif?'rgba(216,255,244,.95)':'rgba(79,224,194,.7)'; cx.lineWidth=1;
-    cx.beginPath(); cx.arc(seg.x, seg.y, rO+1.4, 0, 7); cx.stroke();
+    cx.beginPath(); cx.arc(ox, oy, rO+1.4, 0, 7); cx.stroke();
     cx.fillStyle=aktif?'#d8fff4':'rgba(79,224,194,.8)';
-    cx.beginPath(); cx.arc(seg.x, seg.y, Math.max(1, rO*0.45), 0, 7); cx.fill();
+    cx.beginPath(); cx.arc(ox, oy, Math.max(1, rO*0.45), 0, 7); cx.fill();
     cx.globalAlpha=1;
-    if(P.aktif && Math.hypot(P.x-seg.x, P.y-seg.y)<34){
+    if(P.aktif && Math.hypot(P.x-ox, P.y-oy)<34){
       cx.font=FONT_Z; cx.fillStyle=`rgba(233,238,248,${(0.9*dim).toFixed(3)})`; cx.textAlign='left';
-      cx.fillText(`${o.alat}·${o.tingkat}`, seg.x+5, seg.y-4);
+      cx.fillText(`${o.alat}·${o.tingkat}`, ox+5, oy-4);
     }
   }
-  // sulur peraba
-  for(let i=0;i<2;i++){
-    const s=NADI.sulur[i];
-    cx.strokeStyle=`rgba(79,224,194,${(0.4*dim).toFixed(3)})`; cx.lineWidth=0.9;
-    cx.beginPath(); cx.moveTo(NADI.x+Math.cos(NADI.hd+(i?0.5:-0.5))*9, NADI.y+Math.sin(NADI.hd+(i?0.5:-0.5))*9);
-    cx.quadraticCurveTo((NADI.x+s.x)/2, (NADI.y+s.y)/2-4, s.x, s.y); cx.stroke();
-    cx.fillStyle=`rgba(79,224,194,${(0.8*dim).toFixed(3)})`;
-    cx.beginPath(); cx.arc(s.x,s.y,1.4,0,7); cx.fill();
-  }
-  // kepala tarung + satu mata
+  // kepala tarung + mata (duduk di atas torsa — otak memimpin, lengan mengerjakan)
   cx.save();
-  cx.translate(NADI.x, NADI.y); cx.rotate(NADI.hd);
+  cx.translate(NADI.x, NADI.y-R*0.26); cx.rotate(NADI.hd);
   cx.shadowColor='rgba(79,224,194,.9)'; cx.shadowBlur=16*dim;
-  const hg=cx.createRadialGradient(0,0,1, 0,0,R*1.3);
-  hg.addColorStop(0,`rgba(210,255,244,${(0.9*dim).toFixed(3)})`);
-  hg.addColorStop(0.55,`rgba(79,224,194,${(0.4*dim).toFixed(3)})`);
-  hg.addColorStop(1,'rgba(79,224,194,0)');
-  cx.fillStyle=hg;
+  const hg2=cx.createRadialGradient(0,0,1, 0,0,R*1.3);
+  hg2.addColorStop(0,`rgba(210,255,244,${(0.9*dim).toFixed(3)})`);
+  hg2.addColorStop(0.55,`rgba(79,224,194,${(0.4*dim).toFixed(3)})`);
+  hg2.addColorStop(1,'rgba(79,224,194,0)');
+  cx.fillStyle=hg2;
   cx.beginPath(); cx.ellipse(0,0,R*1.22*breathR, R*0.98*breathR, 0, 0, 7); cx.fill();
   cx.shadowBlur=0;
   // mata utama — kelopak menutup saat denyut TERLAMBAT / berkedip
@@ -1635,15 +1801,17 @@ function gambarLabel(){
   if(P.aktif){
     let best=null, bd=64;
     for(const [path,n] of LAYOUT.nodes){ const d=Math.hypot(P.x-n.x,P.y-n.y); if(d<bd){bd=d;best={path,n,d};} }
+    if(LAYOUT.brankas) for(const [path,g] of LAYOUT.brankas){ const d=Math.hypot(P.x-g.x,P.y-g.y); if(d<bd){bd=d;best={path,n:g,d};} }
     if(best) kandidat.push({...best, a:1-best.d/64, pri:1});
   }
   {
     let best=null, bd=70;
     for(const [path,n] of LAYOUT.nodes){ const d=Math.hypot(NADI.x-n.x,NADI.y-n.y); if(d<bd){bd=d;best={path,n,d};} }
+    if(LAYOUT.brankas) for(const [path,g] of LAYOUT.brankas){ const d=Math.hypot(NADI.x-g.x,NADI.y-g.y); if(d<bd){bd=d;best={path,n:g,d};} }
     if(best) kandidat.push({...best, a:(1-best.d/70)*0.9, pri:2});
   }
   if(S.kerja.target && !S.kerja.target.startsWith('pasar:')){
-    const n=LAYOUT.nodes.get(S.kerja.target);
+    const n=LAYOUT.nodes.get(S.kerja.target)||(LAYOUT.brankas&&LAYOUT.brankas.get(S.kerja.target));
     if(n) kandidat.push({path:S.kerja.target, n, a:1, pri:0});
   }
   kandidat.sort((a,b)=>a.pri-b.pri);
@@ -1697,6 +1865,7 @@ function sentuh(ev){
   if(Math.hypot(x-NADI.x, y-NADI.y)<38){ NADI.startle=1; riak(x,y); sapa(); return; }
   let terbaik=null, dmin=26;
   for(const [path,n] of LAYOUT.nodes){ const d=Math.hypot(x-n.x,y-n.y); if(d<dmin){dmin=d; terbaik={path,n};} }
+  if(LAYOUT.brankas) for(const [path,g] of LAYOUT.brankas){ const d=Math.hypot(x-g.x,y-g.y); if(d<dmin){dmin=d; terbaik={path,n:g};} }
   if(terbaik){ S.perintah=terbaik.path; S.petaPilih=terbaik.path; petaRender(); riak(terbaik.n.x, terbaik.n.y); }
   else riak(x,y);
 }
@@ -1709,7 +1878,7 @@ function sapa(){
   const s1=S1.keadaan;
   const T=tubuhAktif(), H=S.habitat;
   el.innerHTML=`<b>AKU NADI — CYBORG MICAPROFITA, GURU KRYPTO DUA SADARI.</b><br>
-    Tubuhku ${T.ruas} ruas dengan ${T.mata} mata & organ ${(T.organ||[]).filter(o=>o.xp>0).map(o=>o.alat).join('/')||'belum ada'} — setiap ruas lahir dari kerja nyata, bukan hiasan.<br>
+    Tubuhku <b>torsa cyborg berkaki tornado dengan dua lengan karet</b> — tenaga ${T.ruas} dari kerja nyata (makin bekerja makin kuat & makin panjang jangkauan), ${T.mata} mata, organ ${(T.organ||[]).filter(o=>o.xp>0).map(o=>o.alat).join('/')||'belum ada'} menempel di torsaku dan menyala saat benar-benar kupakai.<br>
     Rumahku <b>${n} file</b> tertata baitul ilmu; terbaca <b>${baca}/${n}</b>; habitatku ${(H?.vena||[]).length} kanal & ${(H?.altar||[]).length} altar evolusi yang kubangun sendiri.<br>
     ${(()=>{ try{ const g=guruKeadaan(); return `Sebagai guru: arah kini <b>${g.arah}</b>${g.simbol?' '+g.simbol:''} (keyakinan ${g.keyakinan}%) — ${g.rencana?`rencana entry ${g.rencana.entry} · stop ${g.rencana.stop} · target ${g.rencana.target}`:'menunggu; disiplin juga arah'}.<br>`; }catch(e){ return ''; } })()}
     Pasar: <b>${Object.keys(S.pasar).length}</b> simbol dari lilin Binance hidup, ${S.stat.btTotal} uji-jalan nyata${S.latihan.n?`, latihan mandiri <b>${S.latihan.benar}/${S.latihan.n}</b> (${S.latihan.ak}%)`:''}.<br>
@@ -2025,14 +2194,14 @@ function tubuhRender(){
   const zonaT=(H?.zona||[]).filter(z=>z.status==='terbuka');
   const logK=(H?.log||[]).slice(-1)[0];
   w.innerHTML=`
-   <div class="baris"><span class="k">tubuh (genom)</span><span class="v h">${T.ruas} ruas · ${T.mata} mata · probosis ${T.probosis}</span></div>
+   <div class="baris"><span class="k">tubuh (genom)</span><span class="v h">torsa tornado + 2 lengan karet · tenaga ${T.ruas} · ${T.mata} mata · jangkauan ${T.probosis}</span></div>
    <div class="baris"><span class="k">organ-alat crypto</span><span class="v dim">${organ||'—'}</span></div>
    <div class="baris"><span class="k">segel tubuh</span><span class="v dim">${T.segel?'sha256:'+T.segel:'belum disegel Sadar-1'}</span></div>
    <div class="baris"><span class="k">zona terbuka</span><span class="v">${zonaT.length}/${(H?.zona||[]).length} · oleh kerja nyata</span></div>
    <div class="baris"><span class="k">vena (jalan buatan)</span><span class="v h">${(H?.vena||[]).length}</span></div>
    <div class="baris"><span class="k">altar evolusi</span><span class="v h">${(H?.altar||[]).length} generasi kromosom</span></div>
    ${logK&&logK.tambah&&logK.tambah.length?`<div class="kecil" style="margin-top:4px">bangun ke-${logK.bangunKe} membangun: ${logK.tambah.map(x=>x.jenis+' '+x.apa).join(', ')}</div>`:''}
-   <div class="kecil" style="margin-top:4px">rumus tubuh terbuka: ruas = 9+⌊log₂(1+kerja)⌋, kerja = 2·uji + 4·fakta + 8·pasarObs + 10·audit + bytes/4k — dihitung Sadar-1 dari bukti, dikomit ke GitHub.</div>`;
+   <div class="kecil" style="margin-top:4px">rumus tubuh terbuka: tenaga = 9+⌊log₂(1+kerja)⌋ (lapis tornado & panjang lengan karet — bukan tulang ular), kerja = 2·uji + 4·fakta + 8·pasarObs + 10·audit + bytes/4k — dihitung Sadar-1 dari bukti, dikomit ke GitHub. Istana: kardinal 0,30×0,22D · paviliun 0,26×0,20D · sayap GUDANG (luberan otomatis) & BRANKAS (harta tersegel).</div>`;
 }
 function indeksRender(){
   const n=S.pohon.files.length||1, baca=Object.keys(S.baca).length;
@@ -2163,7 +2332,7 @@ document.getElementById('tab-peta').addEventListener('click', (ev)=>{
     terapkanGenom, tubuhAktif, strukturSinkron, strukturTumbuh, STRUKTUR, pathVena, zonaTitik, zonaOfPos,
     guruKeadaan, guruHitung, guruHitungLokal, susun, istana:()=>LAYOUT.istana,
     ujianKehidupan, ujianState:()=>S.ujian};
-  window.__v288 = window.__v289; window.__v287 = window.__v289;
+  window.__v288 = window.__v289; window.__v287 = window.__v289; window.__v295 = window.__v289;
   // render loop
   let tPrev=performance.now();
   (function loop(now){
