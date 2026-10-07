@@ -2949,10 +2949,12 @@ async function putaran(){
       let t=null;
       try{ t=await jsonG('/api/v3/ticker/24hr?symbols='+encodeURIComponent(JSON.stringify(koin))); }
       catch(e){
+        M.gagal='ticker-daftar: '+(e&&e.message||e)+' — jatuh ke per-simbol';
         t=[];
         for(const s of koin){ try{ t.push(await jsonG('/api/v3/ticker/24hr?symbol='+s)); }catch(e2){} }
       }
       t=t.filter(Boolean);
+      if(!t.length) throw new Error('ticker kosong — semua gerbang buta saat ini');
       M.naik=0; M.turun=0; M.datar=0; M.koin=t.length; M.btcChg24=null;
       let terlantang=null;
       for(const x of t){
@@ -2966,10 +2968,13 @@ async function putaran(){
         lantang={sym:'BTCUSDT', chg:M.btcChg24||0};
       M.pemimpin=lantang;
 
-      /* lilin 1m: BTC + 2 koin terlantang (hemat & jujur) */
+      /* lilin 1m: BTC + 2 koin terlantang — SEMUA opsional & berlabel;
+         lebar pasar (ticker) adalah wajib, lilin hanya memperkaya napas */
       const lantang2=t.filter(x=>x.symbol!=='BTCUSDT').map(x=>({s:x.symbol, c:parseFloat(x.priceChangePercent)}))
         .sort((a,b)=>Math.abs(b.c)-Math.abs(a.c)).slice(0,2).map(x=>x.s);
-      const lis=(await Promise.all([lilin1m('BTCUSDT'), ...lantang2.map(s=>lilin1m(s).catch(()=>null))])).filter(Boolean);
+      const lis=[];
+      try{ lis.push(await lilin1m('BTCUSDT')); }catch(e){ M.gagal='lilin-BTC: '+(e&&e.message||e); }
+      for(const s of lantang2){ try{ const l=await lilin1m(s); if(l) lis.push(l); }catch(e){} }
       const sig=lis.map(l=>l.sigma).sort((a,b)=>a-b);
       M.sigmaMed=sig.length?sig[Math.floor(sig.length/2)]:null;
 
@@ -2989,7 +2994,7 @@ async function putaran(){
       }
 
       /* kebugaran multi-organ + napas kolam: tulis-ulang kimi V297 dari data lebar */
-      M.segar=true; M.gagal=null;
+      M.segar=true; M.gagal=null;   /* sukses penuh: bersihkan catatan gagal langkah */
       if(window.__v297&&window.__v297.JASAD){
         const b=window.__v297.JASAD.b;
         const kbPasar=Math.exp(-(M.umurSasaranMnt==null?0.5:M.umurSasaranMnt)/60);
