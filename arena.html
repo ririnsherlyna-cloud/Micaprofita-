@@ -2018,6 +2018,18 @@ function renderBarisan() {
     return `<div class="picklevel">${eRival}tanpa rencana keluar (rival kuant)</div>`;
   };
   const picks = st.todayPicks || [];
+  // V292 VENA-SATU-RUMAH — arena bukan pulau: denyut SAKTI kini menulis file ini sendiri,
+  // jadi sasaran di sini = sasaran resmi laporan/sasaran-terkini.json = yang dilihat Ruang Hidup.
+  // Segelnya dipajang di kursi MICAPROFITA + narasi otak-LLM bila kunci sudah terpasang.
+  const venaStrip = (() => {
+    const v = st.venaSatuRumah;
+    if (!v) return '';
+    const llm = st.narasiLLM;
+    const llmHtml = (llm && llm.aktif && llm.narasi)
+      ? `<br><span style="color:var(--tx2);font-weight:400">otak-LLM (${esc(String(llm.model || ''))}): ${esc(String(llm.narasi).slice(0, 260))}</span>`
+      : (llm && !llm.aktif ? '<br><span style="color:var(--dim2);font-weight:400">otak-LLM: kunci belum terpasang — nalar mesin lokal penuh (jujur, tanpa pura-pura)</span>' : '');
+    return `<div class="pickwrap"><div class="picklevel" style="color:var(--em2);font-weight:600">VENA SATU RUMAH \u2014 sasaran resmi SAKTI denyut #${esc(String(v.siklus ?? '?'))} (${esc(String(v.dihasilkan || '')).slice(0, 16)} UTC) \u00b7 sumber tunggal: laporan/sasaran-terkini.json \u00b7 arena = laporan = ruang-hidup${llmHtml}</div></div>`;
+  })();
   // V274-SLOT-JUJUR: arena tak boleh bisu soal slot — "kok cuma satu?" dijawab
   // langsung di permukaan: slot dirancang K, yang lahir, dan siapa yang ditolak
   // guard beserta alasannya. Sumber: st.slotHariIni (denyut) atau bukti pick.
@@ -2040,7 +2052,7 @@ function renderBarisan() {
       return `<div class="pickwrap"><div class="pickrow"><span class="dir ${esc(p.direction)}">${esc(p.direction)}</span><span class="mono" style="font-weight:600;color:var(--tx2)">${esc(p.symbol.replace('USDT',''))}</span><span class="tiny">keyakinan ${Math.round(p.confidence)}%</span>${why ? `<span class="why" title="${esc(why)}">${esc(why)}</span>` : ''}</div>${levelLine(p)}</div>`;
     }).join('') : '<p class="tiny" style="padding:4px 0">Menunggu keputusan\u2026</p>';
     const note = ps[0] && ps[0].evidence && typeof ps[0].evidence.note === 'string' ? `<span class="tiny" style="font-weight:400">\u00b7 ${esc(ps[0].evidence.note)}</span>` : '';
-    const ekstra = comp === 'MICAPROFITA' ? slotInfo : '';
+    const ekstra = comp === 'MICAPROFITA' ? (venaStrip + slotInfo) : '';
     return `<div class="side ${cls}"><p class="nm" style="color:${meta.color}"><i style="background:${meta.color}"></i>${meta.label}${note}</p>${rows}${ekstra}</div>`;
   };
   $('#duelGrid').innerHTML = side('MICAPROFITA', 'mica') + side('AI_ANALIS', 'ai');
