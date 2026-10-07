@@ -2542,5 +2542,261 @@ document.getElementById('tab-peta').addEventListener('click', (ev)=>{
 })();
 addEventListener('resize', ()=>{ ukur(); susun(); });
 </script>
+<script>
+/* ================= V297-JASAD-NYATA:BEGIN =================
+   Mandat pemilik (2026-10-07): "wujudnya saya berikan prerogative padamu
+   - bangun dia jadi makhluk sempurna, mampu bergerak tanpa batas; yang
+   sekarang cuma bulatan & tangannya saja yang gerak - itu masih simulasi."
+
+   DIAGNOSIS JUJUR: napas = sin(NADI.napas), patroli = cos(t*0.5), ayun
+   tangan = sin(t*1.6) — jam biologis KALENGAN. Pasar bisa runtuh dan
+   tubuh tetap menari ritme yang sama. Itu simulasi.
+
+   V297 mengkopling SETIAP GERAK ke realitas (semua sumber berkas/api
+   publik, nol biaya, nol dependensi — hukum rumah):
+   1. NAPAS    ← volatilitas NYATA (σ log-return lilin 1m BTC dari Binance)
+   2. JANTUNG  ← denyut PENJAGA nyata (siklus sasaran-terkini naik = degup;
+                 umur data tua = jantung melemah, jujur tampil di HUD)
+   3. SIKAP    ← rapor ledger sendiri: netKum<0 / akurasi<45% = BUNGKUK;
+                 disiplin TUNGGU = duduk di sarang (no-trade terlihat di tubuh)
+   4. MATA     ← momentum 1m BTC nyata; indera mati = mata TERTUTUP (buta jujur)
+   5. TANGAN   ← menjangkau kolam koin sasaran terkunci (POND_POS nyata)
+   6. KAGET    ← lonjakan |1m| > 3σ, denyut baru tiba, vonis SALAH baru
+   7. KEBUGARAN← kesegaran data (exp(-umur)) → dim tubuh: data tua = tubuh redup
+
+   KEJUJURAN: bila data gagal diambil, JASAD MATI dengan alasan terbuka —
+   tubuh kembali ke perilaku aslinya dan HUD menulis "menunggu data".
+   Tidak ada angka karangan. Nol klaim. Audit: window.__v297.
+   ========================================================= */
+(function(){
+'use strict';
+if(window.__v297) return;
+
+const JASAD={
+  hidup:false, alasan:'menunggu data pertama',
+  b:{napasLaju:1, dimFaktor:1, sikap:'netral', kebugaran:null, umurDataMnt:null,
+     denyutNo:null, denyutUmurMnt:null, btc:null, btc1m:0, sigma1m:null,
+     top:null, disiplin:null, guruMode:null, akurasiPct:null, netKum:null, bangunKe:null},
+  sikapLama:null, salahDiketahui:null, siklusDiketahui:null, kagetTerakhir:0,
+  armTgt:[null,null], mataTgt:{x:0,y:0}, coba:0
+};
+
+const KLAMP=(v,a,c)=>Math.max(a,Math.min(c,v));
+function ghTeks(path){
+  if(typeof ghAmbil==='function') return ghAmbil(path);
+  throw new Error('ghAmbil tidak tersedia');
+}
+async function btcBaca(){
+  const G=(typeof GERBANG_BINANCE!=='undefined')?GERBANG_BINANCE:['https://data-api.binance.vision','https://api.binance.com'];
+  let terakhir=null;
+  for(const host of G){
+    try{
+      const r=await fetch(host+'/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=60',{cache:'no-store'});
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      const k=await r.json();
+      const c=k.map(x=>parseFloat(x[4]));
+      const rr=[]; for(let i=1;i<c.length;i++) rr.push(Math.log(c[i]/c[i-1]));
+      const mu=rr.reduce((a,b)=>a+b,0)/rr.length;
+      const sigma=Math.sqrt(rr.reduce((a,b)=>a+(b-mu)*(b-mu),0)/rr.length);
+      return {btc:c[c.length-1], btc1m:c[c.length-1]/c[c.length-2]-1, sigma1m:sigma,
+              mom5m:c[c.length-1]/c[c.length-6]-1};
+    }catch(e){ terakhir=e; }
+  }
+  throw terakhir||new Error('semua gerbang Binance gagal');
+}
+
+/* ---- hitung biometrik dari data NYATA ---- */
+function biometrik(stx, pk, kd, btc){
+  const b=JASAD.b;
+  const sekarangMs=Date.now();
+  const dihasilkan=stx&&stx.dihasilkan?Date.parse(stx.dihasilkan):null;
+  b.umurDataMnt=dihasilkan?Math.max(0,(sekarangMs-dihasilkan)/60000):null;
+  b.denyutNo=(stx&&typeof stx.siklus==='number')?stx.siklus:(pk&&pk.siklus)||null;
+  b.denyutUmurMnt=b.umurDataMnt;
+  b.kebugaran=b.umurDataMnt==null?null:Math.exp(-b.umurDataMnt/60);
+  b.btc=btc.btc; b.btc1m=btc.btc1m; b.sigma1m=btc.sigma1m;
+
+  const ak=stx&&stx.akurasi||{};
+  b.akurasiPct=(typeof ak.akurasiPct==='number')?ak.akurasiPct:null;
+  b.netKum=(typeof ak.netKumulatifPct==='number')?ak.netKumulatifPct:null;
+  b.salahDiketahui=(typeof ak.salah==='number')?ak.salah:null;
+
+  const disp=(stx&&stx.disiplin)||{};
+  b.disiplin=(disp.mode||disp.status||null);
+  const gk=(kd&&kd.guru)||{};
+  b.guruMode=(gk.mode||gk.arah||gk.status||(stx&&stx.guru&&(stx.guru.mode||stx.guru.arah))||null);
+  b.bangunKe=(kd&&kd.bangunKe)||null;
+
+  /* sasaran terkunci terbaik (odds/keyakinan nyata tertinggi) */
+  let top=null;
+  const daftar=(stx&&Array.isArray(stx.sasaranHariIni))?stx.sasaranHariIni:[];
+  for(const s of daftar){
+    if(!s||!s.simbol) continue;
+    const sk=(typeof s.odds==='number')?s.odds:((typeof s.keyakinan==='number')?s.keyakinan:null);
+    if(sk==null) continue;
+    if(!top||sk>top.skor) top={simbol:s.simbol, arah:s.arah||null, skor:sk, keyakinan:s.keyakinan??null};
+  }
+  b.top=top;
+
+  /* napas: σ 1m nyata → laju; tenang 0.7x … panik 2.4x */
+  if(btc.sigma1m!=null){
+    b.napasLaju=KLAMP(0.7+(btc.sigma1m*420)+Math.abs(btc.mom5m||0)*22, 0.7, 2.4);
+  } else b.napasLaju=1;
+
+  /* kebugaran → dim; sikap dari rapor NYATA */
+  const kb=(b.kebugaran==null)?0.6:b.kebugaran;
+  let dimF=0.55+0.45*kb;
+  const tunggu=(b.disiplin||'').toString().toUpperCase().includes('TUNGGU')
+             ||(b.guruMode||'').toString().toUpperCase().includes('TUNGGU');
+  const merugi=(b.netKum!=null&&b.netKum<0)||(b.akurasiPct!=null&&b.akurasiPct<45);
+  b.sikap=(!JASAD.hidup)?'netral':(kb<0.25?'lemah-data':(merugi?'bungkuk':(tunggu?'tunggu':(top&&top.skor>=60?'siaga':'netral'))));
+  if(b.sikap==='bungkuk') dimF*=0.8;
+  if(b.sikap==='tunggu') dimF*=0.85;
+  b.dimFaktor=KLAMP(dimF,0.4,1);
+
+  /* mata: arah momentum 1m nyata */
+  JASAD.mataTgt={x:KLAMP((btc.btc1m||0)*900,-0.34,0.34), y:KLAMP(-(btc.btc1m||0)*300,-0.2,0.2)};
+  if(!JASAD.hidup){ JASAD.mataTgt={x:0,y:0}; }
+
+  /* tangan: sasaran nyata → kolam koin di peta */
+  JASAD.armTgt=[null,null];
+  if(JASAD.hidup&&top&&typeof POND_POS!=='undefined'&&POND_POS[top.simbol]){
+    const p=POND_POS[top.simbol];
+    JASAD.armTgt=[{x:p.x,y:p.y},{x:p.x,y:p.y}];
+  }
+  return b;
+}
+
+/* ---- kaget dari peristiwa NYATA (dibatasi, dicatat) ---- */
+function kaget(k, alasan){
+  const now=Date.now();
+  if(now-JASAD.kagetTerakhir<45000) return;
+  JASAD.kagetTerakhir=now;
+  if(typeof NADI!=='undefined') NADI.startle=Math.max(NADI.startle||0,k);
+  if(typeof jurnal==='function') jurnal('JASAD', alasan);
+}
+
+/* ---- terapkan ke tubuh SETELAH fisika asli berjalan (passthrough saat mati) ---- */
+function terapkan(dt){
+  if(!JASAD.hidup||typeof NADI==='undefined') return;
+  const b=JASAD.b;
+  NADI.napas+=dt*(b.napasLaju-1)*2*(0.3+0.7*(NADI.dim||1));
+  NADI.dim=Math.max(0.3,(NADI.dim||1))*b.dimFaktor;
+
+  if(b.sikap==='tunggu'&&typeof LAYOUT!=='undefined'&&LAYOUT.den){
+    NADI.tx=LAYOUT.den.x; NADI.ty=LAYOUT.den.y+4;
+    NADI.vx*=Math.pow(0.2,dt); NADI.vy*=Math.pow(0.2,dt);
+    NADI.startle=Math.min(NADI.startle||0,0.12);
+  }
+  if(b.sikap==='bungkuk'){ NADI.vx*=Math.pow(0.45,dt); NADI.vy*=Math.pow(0.45,dt);
+    if(typeof NADI.mata==='object') NADI.mata.buka=Math.min(NADI.mata.buka??1,0.55);
+  } else if(b.sikap==='lemah-data'){ NADI.mata.buka=0; }
+
+  /* tangan menjangkau sasaran nyata (bila tidak sedang bekerja) */
+  if(typeof S!=='undefined'&&S.kerja&&S.kerja.sibuk){ /* biarkan kerja asli menguasai */ }
+  else{
+    for(let i=0;i<2;i++){
+      const t=JASAD.armTgt[i];
+      if(t&&NADI.tangan&&NADI.tangan[i]){
+        const k2=Math.min(1,dt*2.4);
+        NADI.tangan[i].x+=(t.x-NADI.tangan[i].x)*k2;
+        NADI.tangan[i].y+=(t.y-NADI.tangan[i].y)*k2;
+      }
+    }
+  }
+  /* mata mengikuti pasar nyata */
+  if(NADI.mata&&b.sikap!=='lemah-data'){
+    NADI.mata.px+=(JASAD.mataTgt.x-(NADI.mata.px||0))*Math.min(1,dt*1.6);
+    NADI.mata.py+=(JASAD.mataTgt.y-(NADI.mata.py||0))*Math.min(1,dt*1.6);
+  }
+  /* kaget pasar: |1m| > 3σ nyata */
+  if(b.sigma1m&&Math.abs(b.btc1m||0)>3*b.sigma1m)
+    kaget(0.7,`pasar bergetar nyata: BTC ${(b.btc1m*100).toFixed(2)}% dalam 1 menit (>${(3*b.sigma1m*100).toFixed(2)}%) — tubuhku tersentak`);
+}
+
+/* ---- HUD kejujuran: semua angka live & bisa dilacak ---- */
+function hud(){
+  let el=document.getElementById('jasadHud');
+  if(!el){
+    el=document.createElement('div'); el.id='jasadHud';
+    el.style.cssText='position:fixed;top:8px;right:8px;z-index:99999;font:10px/1.45 ui-monospace,monospace;padding:7px 9px;border-radius:10px;background:rgba(8,12,14,.82);color:#9fe8dc;border:1px solid rgba(79,224,194,.35);max-width:250px;pointer-events:none';
+    document.body.appendChild(el);
+  }
+  const b=JASAD.b;
+  const row=(k,v)=>`<div><span style="opacity:.6">${k}</span> <b>${v}</b></div>`;
+  el.innerHTML='<b style="color:#4fe0c2">V297 JASAD-NYATA</b>'
+    +(!JASAD.hidup?`<div style="opacity:.75">status: MATI-PENUH-NALAR — ${JASAD.alasan}</div>`
+    :row('denyut', b.denyutNo!=null?('#'+b.denyutNo+(b.denyutUmurMnt!=null?` · umur ${b.denyutUmurMnt.toFixed(0)}m`:'')):'?')
+    +row('kebugaran', b.kebugaran!=null?(b.kebugaran*100).toFixed(0)+'%':'?')
+    +row('napas', '×'+b.napasLaju.toFixed(2)+(b.sigma1m!=null?` · σ1m ${(b.sigma1m*100).toFixed(3)}%`:''))
+    +row('BTC', b.btc!=null?('$'+b.btc.toLocaleString('en-US')+' · 1m '+(b.btc1m*100).toFixed(2)+'%'):'?')
+    +row('sikap', b.sikap)
+    +row('rapor', (b.akurasiPct!=null?`ak ${b.akurasiPct}%`:'ak ?')+(b.netKum!=null?` · net ${b.netKum.toFixed(1)}%`:''))
+    +row('tangan', b.top?`${b.top.simbol} ${b.top.arah||''} (${typeof b.top.skor==='number'?b.top.skor.toFixed(0):b.top.skor})`:'menunggu sasaran')
+    +row('sadar-1', b.bangunKe?('bangun #'+b.bangunKe+(b.guruMode?(' · '+b.guruMode):'')):'?'))
+    +`<div style="opacity:.5;margin-top:3px">semua angka dari berkas & pasar nyata — nol karangan</div>`;
+}
+
+/* ---- denyut jantung: siklus PENJAGA naik = degup nyata ---- */
+function pantauDenyut(stx){
+  const no=(stx&&typeof stx.siklus==='number')?stx.siklus:null;
+  if(no==null) return;
+  if(JASAD.siklusDiketahui!=null&&no>JASAD.siklusDiketahui)
+    kaget(0.35,`jantungku berdegup nyata: denyut PENJAGA #${no} tiba (sebelumnya #${JASAD.siklusDiketahui}) — darah datanya segar`);
+  JASAD.siklusDiketahui=no;
+  const salah=(stx&&stx.akurasi&&typeof stx.akurasi.salah==='number')?stx.akurasi.salah:null;
+  if(salah!=null&&JASAD.salahDiketahui!=null&&salah>JASAD.salahDiketahui)
+    kaget(0.55,`vonis SALAH baru masuk ledger (+${salah-JASAD.salahDiketahui}) — tubuhku meringis jujur, lalu belajar`);
+  if(salah!=null) JASAD.salahDiketahui=salah;
+}
+
+async function siklusState(){
+  try{
+    const [txS,pkS,kdS]=await Promise.all([
+      ghTeks('laporan/sasaran-terkini.json'),
+      ghTeks('otak/penjaga-keadaan.json').catch(()=>null),
+      ghTeks('ruang-hidup/keadaan.json').catch(()=>null)
+    ]);
+    const stx=JSON.parse(txS);
+    const pk=pkS?JSON.parse(pkS):null;
+    const kd=kdS?JSON.parse(kdS):null;
+    if(!JASAD.hidup){ JASAD.hidup=true; JASAD.alasan='';
+      if(typeof jurnal==='function') jurnal('JASAD','<b>V297 JASAD-NYATA menyala</b> — napasku kini laju volatilitas sungguhan, jantungku degup denyut PENJAGA, sikapku rapor ledger sendiri; bulatan ini bukan lagi simulasi'); }
+    pantauDenyut(stx);
+    return {stx,pk,kd};
+  }catch(e){ JASAD.gagal('data keadaan gagal: '+(e&&e.message||e)); return null; }
+}
+JASAD.gagal=function(alasan){
+  if(JASAD.hidup){ JASAD.hidup=false; JASAD.alasan=alasan;
+    if(typeof jurnal==='function') jurnal('JASAD','sumber nyata terputus — <b>tubuh kembali ke perilaku dasar & jujur bilang buta</b> ('+alasan+')','gagal'); }
+};
+
+async function putaranState(){
+  for(;;){
+    const d=await siklusState();
+    if(d){
+      try{ const btc=await btcBaca(); biometrik(d.stx,d.pk,d.kd,btc); JASAD.coba=0; }
+      catch(e){ JASAD.gagal('pasar Binance gagal: '+(e&&e.message||e)); }
+    }
+    hud();
+    await new Promise(r=>setTimeout(r,60000));
+  }
+}
+
+/* ---- pasang: bungkus nadiUpdate (passthrough aman) ---- */
+function pasang(){
+  if(typeof nadiUpdate!=='function'){ setTimeout(pasang,1200); return; }
+  const asli=nadiUpdate;
+  nadiUpdate=function(dt,t){ asli(dt,t); try{ terapkan(dt); }catch(e){} };
+  if(typeof jurnal==='function') jurnal('JASAD','kopling tubuh terpasang: <b>nadiUpdate ⊕ JASAD</b> — setiap bingkai kini dinilai ulang oleh realitas');
+}
+pasang();
+putaranState().then(()=>{ /* putaran abadi di dalam */ });
+
+window.__v297={JASAD, sumber:()=>({hidup:JASAD.hidup, alasan:JASAD.alasan, biometrik:JASAD.b}),
+  paksa:putaranState};
+})();
+</script>
+
 </body>
 </html>

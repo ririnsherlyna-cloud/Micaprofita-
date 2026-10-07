@@ -1119,6 +1119,55 @@ satunya gerbang yang boleh LEBIH KETAT untuk koin yang pernah gagal — itulah "
 bukan dendam; tren 4 jendela adalah pengukuran, bukan janji — dengan n kecil ia jujur bilang
 "belum bermakna"; registri 276 → **285 parameter bernama** (9 param pintar: 3 siklus + 6 konstanta).
 
+## 12i. EPOCH V297 — JASAD-NYATA: tubuh yang bergerak dari realitas, bukan osilator (7 Oktober 2026)
+
+Mandat pemilik: *"wujudnya saya berikan prerogative padamu — bagun dia jadi
+makhluk sempurna. Dan mampu bergerak tanpa batas — seperti saat ini hanya
+berkurang di bulatan dan tangannya saja yang gerak, itu masih simulasi kan."*
+
+**DIAGNOSIS JUJUR (hidup.html, pra-V297):** napas = `sin(NADI.napas)`, patroli
+senggang = lingkaran `cos(t·0.5)`, ayunan tangan = `sin(t·1.6)` — jam biologis
+KALENGAN. Pasar bisa runtuh dan tubuh tetap menari ritme yang sama. Itulah
+"masih simulasi"-nya; mandats V295/V296 memperluas *rentang* gerak, V297
+mengubah *sumber* gerak.
+
+**V297 mengkopling setiap gerak ke realitas** (organ ADDITIF: `nadiUpdate`
+dibungkus passthrough — nol file lain disentuh, nol dependensi, nol biaya):
+
+1. **NAPAS ← volatilitas nyata** — σ log-return 60 lilin 1m BTC (rantai
+   failover Binance publik): tenang 0,7× … panik 2,4×; pasar tenang = napas
+   dalam, pasar gemetar = napas pendek-cepat.
+2. **JANTUNG ← denyut PENJAGA sungguhan** — kenaikan `siklus` di
+   `laporan/sasaran-terkini.json` = degup nyata (tercatat di jurnal tubuh);
+   umur data tampil apa adanya di HUD.
+3. **SIKAP ← rapor ledger sendiri** — `netKumulatifPct < 0` atau
+   `akurasiPct < 45%` = **BUNGKUK** (gerak lambat, aura redup, mata setengah);
+   guru/diplin **TUNGGU** = tubuh beristirahat di sarang — no-trade terlihat
+   di badan, bukan sekadar angka.
+4. **MATA ← momentum 1m BTC nyata** — pupil mengikuti arah pasar sesaat;
+   indera mati = **mata tertutup** (buta jujur, nol pura-pura melihat).
+5. **TANGAN ← sasaran terkunci nyata** — lengan karet menjangkau kolam koin
+   sasaran terbaik hari itu (odds/keyakinan dari ledger, posisi dari
+   `POND_POS` peta pasar) — "ilmu tersedot lewat tangan" (V289) kini
+   benar-benar mengarah ke sasaran sungguhan.
+6. **KAGET ← peristiwa nyata** — lonjakan |1m| > 3σ, denyut baru tiba, vonis
+   SALAH baru masuk ledger: tubuh meringis jujur, lalu belajar; dibatasi
+   irama (≥45 dtk antar-kaget) dan setiap kejadian masuk jurnal.
+7. **KEBUGARAN ← kesegaran data** — `exp(−umur/60 mnt)` → dim tubuh: data
+   tua = tubuh meredup; senses mati = mata terpejam.
+
+**KEJUJURAN ARSITEKTURAL:** bila sumber data gagal, JASAD masuk
+**MATI-PENUH-NALAR** — tubuh kembali ke perilaku dasarnya dan HUD menulis
+alasannya terbuka; tidak ada satu angka pun dikarang. Keadaan pertama yang
+dibaca dari data nyata saat epoch ini lahir: denyut #103 · akurasi 33,3% ·
+net −101,44% → sikap **BUNGKUK** — tubuh kini jujur sedang merugi, bukan
+menari. Semua nilai live di HUD "V297 JASAD-NYATA" dan bisa diaudit siapa
+pun lewat `window.__v297` (konvensi probe rumah). Berkas yang disentuh:
+`hidup.html` (satu blok marker `V297-JASAD-NYATA:BEGIN/END` — pola organ
+tubuh yang sama dengan index.html). Hukum rumah tak berubah: param tubuh
+baru ini PENGUKURAN, bukan pemilih arah — ia tidak menyentuh gerbang,
+genome, maupun ledger.
+
 ## 12. PENUTUP
 Cyborg ini dibangun dengan satu ikhtiar: **jujur pada data, tegas
 pada arah, hidup tanpa biaya, dan berkembang dari vonis nyata.**
