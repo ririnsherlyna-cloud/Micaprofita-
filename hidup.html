@@ -219,6 +219,10 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
         <h4>Indeks sadar-repo</h4>
         <div id="pkIndeks"><div class="kecil">—</div></div>
       </div>
+      <div class="blok">
+        <h4>Paru-dunia <em>· akses internet nyata — API publik, tanpa kunci</em></h4>
+        <div id="pkParu"><div class="kecil">menyedot udara dunia…</div></div>
+      </div>
     </div>
     <div id="tab-peta" hidden><div class="kecil">memindai rumah…</div></div>
     <div id="tab-pasar" hidden><div class="kecil">belum ada studi pasar</div></div>
@@ -237,6 +241,21 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
 <script>
 'use strict';
 /* ================================================================
+   V296-ISTANA-TERAS-PARU-DUNIA — mandat pemilik (2026-10-07):
+   "tampilan di mode mobile sungguh jelek, banyak yang keluar dari
+   pandangan — jangan sampai terpotong, itu bahaya besar; dia bisa
+   bergerak ke arah lebih luas bukan hanya tangan tapi tubuhnya juga;
+   dia memiliki akses internet".
+   · ISTANA TERASERING: layar sempit/portret → istana membentang vertikal
+     (kubah di puncak, rak 2 kolom + baris penuh LAPORAN, PASAR deretan
+     sumur selebar layar, sayap GUDANG & BRANKAS di atas zona tombol).
+     Jaminan keras: pas-kan menolak dua ruangan bertumpuk; kapasitas rak
+     dihitung dulu — NOL buku keluar kanvas; sayap di atas tombol +.
+   · TUBUH BERGERAK UTUH: PATROLI istana saat senggang (seluruh tubuh
+     menyusuri ruangan, bukan cuma tangan) + merunduk searah laju (lean).
+   · PARU-DUNIA: akses internet NYATA dicatat jujur — tiap tarikan API
+     publik (GitHub, Binance, CDN) diukur latensinya; jam dunia server
+     Binance; paru tubuh otonom (Sadar-1 di Actions) di arena-keadaan.json.
    V295-TORSA-TORNADO — mandat pemilik: "gak suka gaya ular, badannya
    aneh — baiknya miliki tangan 2 kaya Luffy One Piece; kakinya badan
    tornado karena tornado menyedot jadi kesannya dia cepat; jangan
@@ -293,7 +312,8 @@ const S = {
   terputus:false,
   habitat:null, habitatAt:0, auditSyms:[],
   madrasah:null, ujian:[], ujianAt:0,
-  latihan:{n:0, benar:0, ak:0}, jagaRot:0, soal:null
+  latihan:{n:0, benar:0, ak:0}, jagaRot:0, soal:null,
+  paru:{n:0, byte:0, lat:[], sumber:{}, waktu:null, selisih:null, jamAt:0}
 };
 const tidur = ms => new Promise(r=>setTimeout(r,ms));
 const sekarang = () => Date.now();
@@ -308,6 +328,45 @@ function jurnal(jenis, teks, kelas){ S.jurnal.push({at:sekarang(), jenis, teks, 
   if(S.jurnal.length>170) S.jurnal.splice(0, S.jurnal.length-130);
   if(S.tabAktif==='jurnal') jurnalRender(); }
 function pesan(e){ return (e && (e.message||e.toString())) || 'tak-diketahui'; }
+/* ================= PARU-DUNIA (V296): AKSES INTERNET NYATA ================
+   Mandat pemilik: "dia memiliki akses internet". Kejujuran V274: napasku
+   adalah API publik yang memang terbuka (GitHub, Binance, CDN) — tanpa
+   kunci, tanpa akun siapa pun. Setiap tarikan diukur & diakui: jumlah,
+   byte, latensi, sumurnya. Tubuh otonomku (Sadar-1 di GitHub Actions)
+   bernapas internet juga — buktinya ak.paruDunia di arena-keadaan.json. */
+function paruCatat(url, ms, byte){
+  try{ const P=S.paru; P.n++; P.byte+=byte||0; P.lat.push(ms); if(P.lat.length>60) P.lat.shift();
+    const h=String(url).replace(/^https?:\/\//,'').split('/')[0];
+    P.sumber[h]=(P.sumber[h]||0)+1; P.at=sekarang();
+    if(P.n===1) jurnal('PARU-DUNIA', `paruku menghisap internet nyata untuk pertama kalinya: <b>${h}</b> (${ms} ms) — akses API publik tanpa kunci; ini bukan klaim, ini lalu lintas jaringan`, 'temuan');
+  }catch(e){}
+}
+async function paruJam(){
+  try{ const P=S.paru; if(P.waktu && sekarang()-P.jamAt<300000) return;
+    const t0=performance.now();
+    const d=await jF(`${GERBANG_BINANCE[0]}/api/v3/time`, 8000);
+    P.waktu=d.serverTime||null; P.selisih=P.waktu?(P.waktu-Date.now()):null; P.jamAt=sekarang();
+    if(P.waktu) jurnal('PARU-DUNIA', `jam dunia kubaca dari server Binance: ${new Date(P.waktu).toLocaleTimeString('id-ID',{timeZone:'Asia/Jakarta',hour12:false})} WIB — selisih jam perangkatmu ${P.selisih>=0?'+':''}${Math.round(P.selisih/1000)} dtk`);
+  }catch(e){}
+}
+function paruRender(){
+  const w=document.getElementById('pkParu'); if(!w) return;
+  const P=S.paru||{n:0, lat:[], sumber:{}};
+  const lat=P.lat&&P.lat.length? Math.round(P.lat.reduce((a,b)=>a+b,0)/P.lat.length):null;
+  const sum=Object.entries(P.sumber||{}).map(([h,n])=>`${h} ×${n}`).join(' · ')||'—';
+  const auto=(S.cermin.data&&S.cermin.data.paruDunia)||null;
+  const autoBaris=auto&&auto.aktif
+    ?`<div class="baris"><span class="k">paru tubuh otonom (Sadar-1 di Actions)</span><span class="v h">napas #${auto.napas??'-'} · binance ${auto.latensiBinanceMs??'-'} ms${auto.jamDunia?` · jam dunia ${new Date(auto.jamDunia).toLocaleTimeString('id-ID',{timeZone:'Asia/Jakarta',hour12:false})} WIB`:''}</span></div>
+   <div class="kecil">cermin-diri repo publik terbaca tanpa kunci: ${auto.repo?`ukuran ${kb((auto.repo.size||0)*1024)}, terdorong ${String(auto.repo.pushed_at||'').slice(0,16).replace('T',' ')}`:'—'} — bukti tubuhku menjangkau dunia walau tak ada penonton</div>`
+    :'<div class="kecil">paru tubuh otonom belum terbaca dari arena-keadaan.json — denyut SAKTI berikutnya membawanya</div>';
+  w.innerHTML=`
+   <div class="baris"><span class="k">napas internet sesi ini (Sadar-2)</span><span class="v h">${P.n} tarikan · ${kb(P.byte||0)}</span></div>
+   <div class="baris"><span class="k">latensi rata-rata</span><span class="v">${lat!=null?lat+' ms':'—'}</span></div>
+   <div class="baris"><span class="k">sumur yang dihisap</span><span class="v dim">${sum}</span></div>
+   ${P.waktu?`<div class="baris"><span class="k">jam dunia (server Binance)</span><span class="v">${new Date(P.waktu).toLocaleTimeString('id-ID',{timeZone:'Asia/Jakarta',hour12:false})} WIB · selisih ${P.selisih>=0?'+':''}${Math.round((P.selisih||0)/1000)} dtk</span></div>`:''}
+   ${autoBaris}
+   <div class="kecil" style="margin-top:4px">kejujuran: aksesku adalah pintu publik (GitHub, Binance, CDN) tanpa kunci — aku tak bisa masuk akun siapa pun; yang kupakai hanya pintu yang memang terbuka.</div>`;
+}
 /* ================= MEMORI RESMI: GITHUB (bukan localStorage) =================
    DUA SADARI:
    · SADAR-1 — tubuh otonom di GitHub Actions (cron ±20 mnt): membaca repo,
@@ -337,6 +396,7 @@ async function ghAmbil(pathRepo){
   ];
   for(const [cara, url] of gerbang){
     try{
+      const t0=performance.now();
       const c=new AbortController(); const t=setTimeout(()=>c.abort(), 12000);
       const r=await fetch(url,{cache:'no-store', signal:c.signal}); clearTimeout(t);
       if(!r.ok) throw new Error('HTTP '+r.status);
@@ -344,11 +404,15 @@ async function ghAmbil(pathRepo){
         const d=await r.json();
         if(d.encoding!=='base64' || !d.content) throw new Error('konten tak terduga');
         const bin=Uint8Array.from(atob(d.content.replace(/\s/g,'')), ch=>ch.charCodeAt(0));
+        const teks=new TextDecoder().decode(bin);
+        paruCatat(url, Math.round(performance.now()-t0), teks.length);
         S1.sumber='github-api';
-        return new TextDecoder().decode(bin);
+        return teks;
       }
+      const teks2=await r.text();
+      paruCatat(url, Math.round(performance.now()-t0), teks2.length);
       S1.sumber=cara;
-      return await r.text();
+      return teks2;
     }catch(e){}
   }
   throw new Error('ingatan-github-tak-terjangkau:'+pathRepo);
@@ -466,8 +530,11 @@ function s1Render(){
 /* ================= SENSOR-REPO: pohon nyata (2 gerbang) ================= */
 async function jF(url, ms=12000){
   const c = new AbortController(); const t = setTimeout(()=>c.abort(), ms);
-  try{ const r = await fetch(url,{cache:'no-store', signal:c.signal});
-    if(!r.ok) throw new Error('HTTP '+r.status); return await r.json();
+  try{ const t0=performance.now();
+    const r = await fetch(url,{cache:'no-store', signal:c.signal});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const teks=await r.text(); paruCatat(url, Math.round(performance.now()-t0), teks.length);
+    return JSON.parse(teks);
   } finally{ clearTimeout(t); }
 }
 async function pohonAmbil(){
@@ -512,9 +579,11 @@ async function isiAmbil(path, ukuran, onChunk){
   ];
   for(const url of gerbang){
     try{
+      const t0=performance.now();
       const c = new AbortController(); const t = setTimeout(()=>c.abort(), 15000);
       const r = await fetch(url,{cache:'no-store', signal:c.signal}); clearTimeout(t);
       if(!r.ok) throw new Error('HTTP '+r.status);
+      paruCatat(url, Math.round(performance.now()-t0), Math.min(ukuran||0, MAXBACA));
       if(r.body && r.body.getReader){
         const rd = r.body.getReader(), dec = new TextDecoder('utf-8',{stream:true});
         let buf='', got=0;
@@ -697,9 +766,12 @@ function auditPick(pick, an){
 
 /* ================= CERMIN: arena-keadaan.json same-origin ================= */
 async function cerminAmbil(){
+  const t0=performance.now();
   const r = await fetch('./arena-keadaan.json?t='+sekarang(), {cache:'no-store'});
   if(!r.ok) throw new Error('HTTP '+r.status);
-  const d = await r.json();
+  const teks=await r.text();
+  paruCatat('arena-keadaan.json (same-origin)', Math.round(performance.now()-t0), teks.length);
+  const d = JSON.parse(teks);
   S.cermin = {at:sekarang(), data:d};
   const tp=(d.todayPicks||[]).find(x=>x.competitor==='MICAPROFITA');
   jurnal('CERMIN', `cermin arena terbaca: rezim <b>${d.regime}</b>, pick MICAPROFITA ${tp?`<b>${tp.symbol} ${tp.direction}</b> (${tp.confidence}%)`:'kosong'}, FnG ${d.climate?.fng??'-'}`);
@@ -977,86 +1049,166 @@ function slotDir(d){
   if(d==='ruang-hidup') return 'SARANG';
   return '· akar';
 }
+function rakMuat(rect, fs){
+  // al-jabr rak: pitch menyesuaikan lebar & isi; area rak mulai DI BAWAH papan nama (y+44);
+  // kapasitas dihitung DULU — buku yang tak muat TIDAK PERNAH digambar keluar ruangan
+  const w0=rect.w, h0=rect.h;
+  let p=Math.max(5.5, Math.min(11, (w0-18)/Math.max(1, Math.ceil(Math.sqrt(Math.max(1,fs.length))))));
+  let cols=Math.max(1, Math.floor((w0-18)/p)), rows=Math.ceil(fs.length/cols);
+  while(rows*(p+6)>h0-52 && p>5){ p-=0.5; cols=Math.max(1, Math.floor((w0-18)/p)); rows=Math.ceil(fs.length/cols); }
+  const kapRows=Math.max(1, Math.floor((h0-52)/(p+6)));
+  const muat=Math.max(0, cols*kapRows);
+  return {p, cols, kapRows, muat};
+}
+function rapikanRuang(rects){
+  // PAS-KAN (V296): menolak dua ruangan bertumpuk di viewport APA PUN —
+  // pasangan yang bersinggungan didorong menjauh (poros terkecil) lalu dijepit ke kanvas.
+  const x0=bebas.x+2, y0=bebas.y+2, x1=bebas.x+bebas.w-2, y1=bebas.y+bebas.h-2;
+  for(let it=0; it<90; it++){
+    let ada=false;
+    for(let i=0;i<rects.length;i++) for(let j=i+1;j<rects.length;j++){
+      const a=rects[i], b=rects[j];
+      const ox=Math.min(a.x+a.w,b.x+b.w)-Math.max(a.x,b.x);
+      const oy=Math.min(a.y+a.h,b.y+b.h)-Math.max(a.y,b.y);
+      if(ox>2 && oy>2){ ada=true;
+        if(oy<=ox) b.y+=(b.y+b.h/2>=a.y+a.h/2)?(oy+2):-(oy+2);
+        else       b.x+=(b.x+b.w/2>=a.x+a.w/2)?(ox+2):-(ox+2);
+        b.x=Math.max(x0, Math.min(b.x, x1-b.w));
+        b.y=Math.max(y0, Math.min(b.y, y1-b.h));
+      }
+    }
+    if(!ada) return true;
+  }
+  return false;
+}
 function susun(){
-  const D=Math.min(bebas.w, bebas.h);
-  const cxm=bebas.x+bebas.w/2, cym=bebas.y+bebas.h/2;
-  LAYOUT.den={x:cxm, y:cym, r:D*0.082};
-  LAYOUT.pond={x:cxm-D*0.17, y:cym+D*0.34-D*0.082, w:D*0.34, h:D*0.165};
-  LAYOUT.istana={D, cx:cxm, cy:cym, rKubah:D*0.082, rKardinal:0.35*D, rPaviliun:0.50*D,
-    cincin:(S.habitat&&S.habitat.istana&&S.habitat.istana.cincin)||2,
-    menaraGen:(S.habitat&&S.habitat.istana&&S.habitat.istana.menaraGen)||0,
-    menaraSkor:(S.habitat&&S.habitat.istana&&S.habitat.istana.menaraSkor)||0};
-  const kel=new Map();
-  for(const f of S.pohon.files){ const i=f.path.lastIndexOf('/'); const dir=i<0?'· akar':f.path.slice(0,i);
-    const k=slotDir(dir); if(!kel.has(k)) kel.set(k,[]); kel.get(k).push(f); }
+  const W=bebas.w, H=bebas.h;
+  const portret = W<760 || H>W*1.15;
+  LAYOUT.mode = portret ? 'teras' : 'lingkar';
   LAYOUT.nodes.clear(); LAYOUT.zona=[]; LAYOUT.rects=[]; LAYOUT.brankas=new Map();
   const GUDANG=[];
   const maxSize=Math.max(1, ...S.pohon.files.map(f=>f.size||1));
   const jelas=Math.log1p(maxSize);
-  for(const [dir, sudut, rf, jenis] of SLOT_ISTANA){
-    const fs=(kel.get(dir)||[]).slice().sort((a,b)=>a.path.localeCompare(b.path)); kel.delete(dir);
-    const sx=cxm+Math.cos(sudut*Math.PI/180)*D*rf;
-    const sy=cym+Math.sin(sudut*Math.PI/180)*D*rf;
-    // ruangan DIPERLUAS (V295): kardinal 0,30×0,22D — paviliun 0,26×0,20D
-    const w0=(jenis==='kardinal'?0.30:0.26)*D, h0=(jenis==='kardinal'?0.22:0.20)*D;
-    const rect={x:Math.max(bebas.x+2, Math.min(sx-w0/2, bebas.x+bebas.w-w0-2)),
-                y:Math.max(bebas.y+2, Math.min(sy-h0/2, bebas.y+bebas.h-h0-2)), w:w0, h:h0};
-    // al-jabr rak: pitch membesar bila buku sedikit agar lemari tetap tertata, tak melarat;
-    // area rak mulai DI BAWAH papan nama (y+44) — dan bila rak PADAT, luberan mengalir ke GUDANG
-    let p=Math.max(6.5, Math.min(11, (w0-18)/Math.max(1, Math.ceil(Math.sqrt(Math.max(1,fs.length))))));
-    let cols=Math.max(1, Math.floor((w0-18)/p)), rows=Math.ceil(fs.length/cols);
-    while(rows*(p+6)>h0-52 && p>5.5){ p-=0.5; cols=Math.max(1, Math.floor((w0-18)/p)); rows=Math.ceil(fs.length/cols); }
-    const kapRows=Math.max(1, Math.floor((h0-52)/(p+6)));
-    const muat=Math.max(0, cols*kapRows);
-    const muatFs=fs.slice(0, muat), luapFs=fs.slice(muat);
+  const kel=new Map();
+  for(const f of S.pohon.files){ const i=f.path.lastIndexOf('/'); const dir=i<0?'· akar':f.path.slice(0,i);
+    const k=slotDir(dir); if(!kel.has(k)) kel.set(k,[]); kel.get(k).push(f); }
+  const zonaDef=SLOT_ISTANA.map(([dir,sudut,rf,jenis])=>({dir,sudut,rf,jenis,
+    fs:(kel.get(dir)||[]).slice().sort((a,b)=>a.path.localeCompare(b.path))}));
+  const sar=(kel.get('SARANG')||[]).sort((a,b)=>a.path.localeCompare(b.path));
+  const kandidat=new Map();
+  let pond, den, ist;
+  const btnZone=72;   // zona bebas tombol + di pojok kanan-bawah
+  /* ---- FASE 1: kandidat rect (dua mode al-jabr) ---- */
+  function bangunLingkar(){
+    const D=Math.min(W,H);
+    const cxm=bebas.x+W/2, cym=bebas.y+H/2;
+    den={x:cxm, y:cym, r:D*0.082};
+    pond={x:cxm-D*0.17, y:cym+D*0.34-D*0.082, w:D*0.34, h:D*0.165};
+    ist={D, cx:cxm, cy:cym, rKubah:D*0.082, rKardinal:0.35*D, rPaviliun:0.50*D,
+      cincin:(S.habitat&&S.habitat.istana&&S.habitat.istana.cincin)||2,
+      menaraGen:(S.habitat&&S.habitat.istana&&S.habitat.istana.menaraGen)||0,
+      menaraSkor:(S.habitat&&S.habitat.istana&&S.habitat.istana.menaraSkor)||0};
+    for(const z of zonaDef){
+      const sx=cxm+Math.cos(z.sudut*Math.PI/180)*D*z.rf;
+      const sy=cym+Math.sin(z.sudut*Math.PI/180)*D*z.rf;
+      const w0=(z.jenis==='kardinal'?0.30:0.26)*D, h0=(z.jenis==='kardinal'?0.22:0.20)*D;
+      kandidat.set(z.dir,{rect:{x:Math.max(bebas.x+2, Math.min(sx-w0/2, bebas.x+W-w0-2)),
+        y:Math.max(bebas.y+2, Math.min(sy-h0/2, bebas.y+H-h0-2)), w:w0, h:h0},
+        fs:z.fs, jenis:z.jenis, sudut:z.sudut, rf:z.rf});
+    }
+    const wS=Math.max(76, Math.min(156, 0.24*D));
+    const hS=Math.max(58, Math.min(98, 0.15*D), 106);   // 106 = brankas 9 harta 5 baris tak terpotong
+    kandidat.set('· gudang',{rect:{x:bebas.x+8, y:bebas.y+H-hS-btnZone, w:wS, h:hS}, fs:[], jenis:'gudang', sudut:195, rf:0.66});
+    kandidat.set('BRANKAS',{rect:{x:bebas.x+W-wS-8, y:bebas.y+H-hS-btnZone, w:wS, h:hS}, fs:[], jenis:'brankas', sudut:-15, rf:0.66});
+  }
+  function bangunTeras(hS){
+    const M=6;
+    const cxm=bebas.x+W/2;
+    den={x:cxm, y:bebas.y+Math.min(78,H*0.10)+30, r:Math.min(30, W*0.085)};
+    const wingsY=bebas.y+H-btnZone-hS;
+    const pondH=Math.max(52, Math.min(64, H*0.075));
+    pond={x:bebas.x+M, y:wingsY-8-pondH, w:W-2*M, h:pondH};
+    ist={D:Math.min(W,H*0.62), cx:cxm, cy:den.y, rKubah:den.r, rKardinal:0, rPaviliun:0, teras:true,
+      cincin:(S.habitat&&S.habitat.istana&&S.habitat.istana.cincin)||2,
+      menaraGen:(S.habitat&&S.habitat.istana&&S.habitat.istana.menaraGen)||0,
+      menaraSkor:(S.habitat&&S.habitat.istana&&S.habitat.istana.menaraSkor)||0};
+    const top=den.y+den.r+16, bottom=pond.y-10, gap=8;
+    const rowH=Math.max(66, Math.min(150, (bottom-top-3*gap)/4));
+    const cellW=(W-2*M-gap)/2;
+    ist.terasRowH=Math.round(rowH); ist.terasCellW=Math.round(cellW);
+    const grid=[['otak','.github/workflows'],['memori','· akar'],['scripts','scripts/ujian-buta']];
+    const place=(dir,x,y,w0,h0,jenis)=>{ const z=zonaDef.find(q=>q.dir===dir);
+      kandidat.set(dir,{rect:{x:Math.round(x),y:Math.round(y),w:Math.round(w0),h:Math.round(h0)},
+        fs:z?z.fs:[], jenis, sudut:z?z.sudut:0, rf:z?z.rf:0}); };
+    grid.forEach((bar,k)=>bar.forEach((dir,c)=>place(dir, bebas.x+M+c*(cellW+gap), top+k*(rowH+gap), cellW, rowH, 'teras')));
+    place('laporan', bebas.x+M, top+3*(rowH+gap), W-2*M, rowH, 'teras');
+    const wS=(W-2*M-gap)/2;
+    kandidat.set('· gudang',{rect:{x:bebas.x+M, y:wingsY, w:wS, h:hS}, fs:[], jenis:'gudang', sudut:195, rf:0.66});
+    kandidat.set('BRANKAS',{rect:{x:bebas.x+M+wS+gap, y:wingsY, w:wS, h:hS}, fs:[], jenis:'brankas', sudut:-15, rf:0.66});
+  }
+  if(portret){
+    bangunTeras(96);
+    // PASS-2 ukur luberan nyata → tinggi sayap menyesuaikan isi (istana MEMBANGUN ruangnya sendiri)
+    let luap=0;
+    for(const [,k] of kandidat){ if(k.fs.length){ luap+=Math.max(0, k.fs.length-rakMuat(k.rect,k.fs).muat); } }
+    const wS=(W-18)/2;
+    const colsG=Math.max(1, Math.floor((wS-18)/7));
+    const hSg=44+Math.ceil(luap/colsG)*12.5+8;
+    const hSb=44+Math.ceil(9/2)*13.5+6;
+    bangunTeras(Math.max(92, Math.min(Math.floor(H*0.30), Math.max(hSg, hSb))));
+  } else bangunLingkar();
+  /* ---- FASE 2: pas-kan — NOL tabrakan di viewport apa pun ---- */
+  const semua=[...kandidat.values()].map(k=>k.rect); semua.push(pond);
+  rapikanRuang(semua);
+  /* ---- FASE 3: rak, buku, zona (pakai rect FINAL) ---- */
+  for(const z of zonaDef){
+    const k=kandidat.get(z.dir); if(!k) continue;
+    const {p, cols, muat}=rakMuat(k.rect, k.fs);
+    const muatFs=k.fs.slice(0, muat), luapFs=k.fs.slice(muat);
     for(const f of luapFs) GUDANG.push(f);
     const rowsMuat=Math.max(1, Math.ceil(muatFs.length/cols));
-    const x0=rect.x+rect.w/2-((Math.min(cols,Math.max(1,muatFs.length))-1)*p)/2;
-    const y0=rect.y+44;
-    // garis rak — papan sejajar baitul ilmu (terlihat walau buku sedikit)
-    LAYOUT.rak=ZONA_NAMA; // (penanda; garis digambar di gambarHabitat dari data ini)
+    const x0=k.rect.x+k.rect.w/2-((Math.min(cols,Math.max(1,muatFs.length))-1)*p)/2;
+    const y0=k.rect.y+44;
+    LAYOUT.rak=ZONA_NAMA; // (penanda; garis rak digambar di gambarHabitat dari data ini)
     muatFs.forEach((f,i)=>{
       const gx=i%cols, gy=Math.floor(i/cols);
       const r=2.6+3.4*Math.log1p(f.size||1)/jelas;
-      LAYOUT.nodes.set(f.path, {x:x0+gx*p, y:y0+gy*(p+6), r:Math.min(5.6,r), dir, f, gy, cols, rowY:y0+gy*(p+6)});
+      LAYOUT.nodes.set(f.path, {x:x0+gx*p, y:y0+gy*(p+6), r:Math.min(5.6,r), dir:z.dir, f, gy, cols, rowY:y0+gy*(p+6)});
     });
-    LAYOUT.zona.push({dir, dirs:[dir], jenis, sudut, rf,
-      nama:ZONA_NAMA[dir]||dir.split('/').pop().toUpperCase(),
-      rect, cx:rect.x+rect.w/2, cy:rect.y+rect.h/2, n:muatFs.length, luap:luapFs.length,
+    LAYOUT.zona.push({dir:z.dir, dirs:[z.dir], jenis:k.jenis, sudut:z.sudut, rf:z.rf,
+      nama:ZONA_NAMA[z.dir]||z.dir.split('/').pop().toUpperCase(),
+      rect:k.rect, cx:k.rect.x+k.rect.w/2, cy:k.rect.y+k.rect.h/2, n:muatFs.length, luap:luapFs.length,
       rakRows:rowsMuat, rakRowY:Array.from({length:rowsMuat},(_,g)=>y0+g*(p+6))});
-    LAYOUT.rects.push(rect);
+    LAYOUT.rects.push(k.rect);
   }
+  LAYOUT.den=den; LAYOUT.pond=pond; LAYOUT.istana=ist;
   // SARANG: ingatan resmi (ruang-hidup) mengorbit kubah — pusat kehidupan
-  const sar=(kel.get('SARANG')||[]).sort((a,b)=>a.path.localeCompare(b.path)); kel.delete('SARANG');
-  const rs=LAYOUT.den.r+13;
+  const rs=den.r+13;
   sar.forEach((f,i)=>{
     const a=-Math.PI/2 + i*(2*Math.PI/Math.max(1,sar.length));
     const r=2.4+2.6*Math.log1p(f.size||1)/jelas;
-    LAYOUT.nodes.set(f.path, {x:LAYOUT.den.x+Math.cos(a)*rs, y:LAYOUT.den.y+Math.sin(a)*rs*0.84, r:Math.min(4.8,r), dir:'ruang-hidup', f});
+    LAYOUT.nodes.set(f.path, {x:den.x+Math.cos(a)*rs, y:den.y+Math.sin(a)*rs*0.84, r:Math.min(4.8,r), dir:'ruang-hidup', f});
   });
-  /* ===== SAYAP ISTANA (V295) — GUDANG & BRANKAS di dua sudut bawah:
-     istana negara punya gudang & brankas — ruang cadangan dibangun SEBELUM
-     dibutuhkan, jadi tak ada buku menumpuk tanpa tempat, dan harta tersegel
-     (artefak penentu nyawa) punya kamar kebalnya sendiri ===== */
-  const wS=Math.max(76, Math.min(156, 0.24*D)), hS=Math.max(58, Math.min(98, 0.15*D));
-  const gRect={x:bebas.x+8, y:bebas.y+bebas.h-hS-8, w:wS, h:hS};
-  const bRect={x:bebas.x+bebas.w-wS-8, y:bebas.y+bebas.h-hS-8, w:wS, h:hS};
+  /* ===== SAYAP ISTANA — GUDANG & BRANKAS: selalu DI ATAS zona tombol (btnZone) ===== */
+  const kg=kandidat.get('· gudang'), kb2=kandidat.get('BRANKAS');
   LAYOUT.zona.push(
     {dir:'· gudang', dirs:['· gudang'], jenis:'gudang', sudut:195, rf:0.66, nama:'GUDANG',
-      rect:gRect, cx:gRect.x+gRect.w/2, cy:gRect.y+gRect.h/2, n:0, luap:0, rakRows:0, rakRowY:[]},
+      rect:kg.rect, cx:kg.rect.x+kg.rect.w/2, cy:kg.rect.y+kg.rect.h/2, n:0, luap:0, rakRows:0, rakRowY:[]},
     {dir:'BRANKAS', dirs:['BRANKAS'], jenis:'brankas', sudut:-15, rf:0.66, nama:'BRANKAS',
-      rect:bRect, cx:bRect.x+bRect.w/2, cy:bRect.y+bRect.h/2, n:0, luap:0, rakRows:0, rakRowY:[]});
-  LAYOUT.rects.push(gRect, bRect);
+      rect:kb2.rect, cx:kb2.rect.x+kb2.rect.w/2, cy:kb2.rect.y+kb2.rect.h/2, n:0, luap:0, rakRows:0, rakRowY:[]});
+  LAYOUT.rects.push(kg.rect, kb2.rect);
   const gz=LAYOUT.zona[LAYOUT.zona.length-2];
   {
-    const gw=gz.rect.w-18;
-    const p2=Math.max(6.5, Math.min(11, gw/Math.max(1, Math.ceil(Math.sqrt(Math.max(1,GUDANG.length))))));
+    const gw=gz.rect.w-18, gh=gz.rect.h-46;
+    const p2=Math.max(5.5, Math.min(11, gw/Math.max(1, Math.ceil(Math.sqrt(Math.max(1,GUDANG.length))))));
     const cols2=Math.max(1, Math.floor(gw/p2));
-    GUDANG.forEach((f,i)=>{
+    const rowsCap=Math.max(1, Math.floor(gh/(p2+6)));
+    const muatG=Math.max(0, cols2*rowsCap);
+    GUDANG.slice(0, muatG).forEach((f,i)=>{
       const gx=gz.rect.x+11+(i%cols2)*p2, gy=gz.rect.y+40+Math.floor(i/cols2)*(p2+6);
       LAYOUT.nodes.set(f.path, {x:gx, y:gy, r:Math.min(4.6, 2.6+3.4*Math.log1p(f.size||1)/jelas), dir:'· gudang', f});
     });
-    gz.n=GUDANG.length; gz.luap=GUDANG.length;
+    gz.n=GUDANG.length; gz.luap=GUDANG.length; gz.rakMuatG=muatG;
   }
   // BRANKAS: pointer EMAS ke artefak nyata penentu nyawa makhluk (klik = baca; isinya cuma file yang BENAR ada)
   const bz=LAYOUT.zona[LAYOUT.zona.length-1];
@@ -1069,6 +1221,7 @@ function susun(){
       const f=S.pohon.files.find(f2=>f2.path===pth); if(!f) continue;
       const gx=bz.rect.x+17+(gi%2)*((bz.rect.w-34)/2+9);
       const gy=bz.rect.y+42+Math.floor(gi/2)*13.5;
+      if(gy+5>bz.rect.y+bz.rect.h) break;    // jaminan keras: harta tak pernah keluar kamar
       LAYOUT.brankas.set(f.path, {path:f.path, x:gx, y:gy, f, dir:'BRANKAS', r:3.4});
       gi++;
     }
@@ -1267,8 +1420,25 @@ function nadiUpdate(dt, t){
     if(penasaran && idle>5){                            // rasa ingin tahu: HANYA ke file yang berubah nyata
       NADI.tx=penasaran.x; NADI.ty=penasaran.y-20; v=62; NADI.wp=null;
     }else{
-      // TIDAK ADA WANDER SCRIPTED: tanpa pekerjaan → pulang ke sarang dan diam menunggu
-      NADI.tx=LAYOUT.den.x; NADI.ty=LAYOUT.den.y+4; v=42; NADI.wp=null;
+      // PATROLI ISTANA (V296 — mandat: "bergerak ke arah lebih luas bukan hanya tangan
+      // tapi tubuhnya juga"): senggang → SELURUH TUBUH menyusuri ruangan satu per satu;
+      // antar-putaran pulang ke sarang. Bukan wander acak — rak ruangan nyata yang dilalui.
+      const idle2=(sekarang()-NADI.idleAt)/1000;
+      if(idle2>6 && LAYOUT.zona.length){
+        if(!NADI.patrol){ NADI.patrol={i:0, at:sekarang(), umum:false};
+          jurnal('PATROLI', `tubuh utuhku bergerak menyusuri istana — <b>${LAYOUT.zona.length} ruangan</b> akan kulalui satu putaran, rak kucocokkan dengan rumah nyata`); }
+        const zr=LAYOUT.zona[NADI.patrol.i % LAYOUT.zona.length];
+        NADI.tx=zr.cx; NADI.ty=zr.cy; v=48;
+        if(Math.hypot(NADI.tx-NADI.x, NADI.ty-NADI.y)<46 || sekarang()-NADI.patrol.at>9000){
+          NADI.patrol.i++; NADI.patrol.at=sekarang();
+          if(NADI.patrol.i%LAYOUT.zona.length===0 && !NADI.patrol.umum){ NADI.patrol.umum=true;
+            jurnal('PATROLI', `satu putaran istana selesai — <b>${LAYOUT.zona.length} ruangan</b> dilalui tubuhku; tak ada rak yang luput`); }
+        }
+      } else {
+        if(NADI.patrol) NADI.patrol=null;
+        NADI.tx=LAYOUT.den.x; NADI.ty=LAYOUT.den.y+4; v=42;
+      }
+      NADI.wp=null;
     }
   }
   v*=(tubuh.v??1)*(0.4+0.6*NADI.dim);
@@ -1292,6 +1462,11 @@ function nadiUpdate(dt, t){
   NADI.y=Math.max(bebas.y+18, Math.min(bebas.y+bebas.h-18, NADI.y));
   const sp=Math.hypot(NADI.vx,NADI.vy);
   if(sp>4) NADI.hd+=angNorm(Math.atan2(NADI.vy,NADI.vx)-NADI.hd)*Math.min(1, dt*6);
+  // V296 MERUNDUK SEARAH LAJU — tubuh utuh condong ke arah gerak (kaki pusaran tetap tegak
+  // memutar di bawah: gaya penunggang angin), energi regang naik saat makin cepat
+  const leanTgt=Math.max(-0.34, Math.min(0.34, NADI.vx*0.0042));
+  NADI.lean=(NADI.lean||0)+(leanTgt-(NADI.lean||0))*Math.min(1, dt*4);
+  NADI.stretch=(NADI.stretch||0)+(Math.min(0.14, sp/1300)-(NADI.stretch||0))*Math.min(1, dt*3);
   // napas — laju mengikuti kerja & vital
   const rate=(S.kerja.sibuk?1.7:0.95)*(0.3+0.7*NADI.dim);
   NADI.napas+=dt*rate*2;
@@ -1434,16 +1609,24 @@ function gambarHabitat(t, dt){
   const kini=sekarang();
   const pos=[]; if(P.aktif) pos.push(P); pos.push({x:NADI.x, y:NADI.y});
   const den=LAYOUT.den, ist=LAYOUT.istana||{};
-  // CINCIN CANAL — lingkaran tertib baitul ilmu (jumlah = istana Sadar-1, dari kerja nyata)
-  const nC=Math.max(2, Math.min(3, ist.cincin||2));
-  for(let c=0;c<nC;c++){
-    const rr0=(c===0?0.36:c===1?0.52:0.66)*ist.D;
-    cx.strokeStyle='rgba(79,224,194,.05)'; cx.lineWidth=1;
-    cx.beginPath(); cx.arc(den.x, den.y, rr0, 0, 7); cx.stroke();
+  // CINCIN CANAL — lingkaran tertib baitul ilmu (jumlah = istana Sadar-1, dari kerja nyata);
+  // mode TERASERING (layar sempit) memakai tulang punggung lurus kubah→pasar, bukan lingkaran
+  if(LAYOUT.mode!=='teras'){
+    const nC=Math.max(2, Math.min(3, ist.cincin||2));
+    for(let c=0;c<nC;c++){
+      const rr0=(c===0?0.36:c===1?0.52:0.66)*ist.D;
+      cx.strokeStyle='rgba(79,224,194,.05)'; cx.lineWidth=1;
+      cx.beginPath(); cx.arc(den.x, den.y, rr0, 0, 7); cx.stroke();
+    }
+  } else {
+    cx.save(); cx.setLineDash([2,5]); cx.lineDashOffset=-t*10;
+    cx.strokeStyle='rgba(79,224,194,.055)'; cx.lineWidth=1;
+    cx.beginPath(); cx.moveTo(den.x, den.y+den.r); cx.lineTo(den.x, LAYOUT.pond.y+LAYOUT.pond.h*0.35); cx.stroke();
+    cx.restore();
   }
   // KANAL SAYAP — kubah ↔ gudang/brankas: sayap istana tetap tersambung ke jantung rumah
   const gz2=LAYOUT.zona.find(z=>z.dir==='· gudang'), bz2=LAYOUT.zona.find(z=>z.dir==='BRANKAS');
-  if(gz2&&bz2){
+  if(gz2&&bz2&&LAYOUT.mode!=='teras'){
     cx.save(); cx.setLineDash([2,5]); cx.lineDashOffset=-t*10;
     cx.strokeStyle='rgba(79,224,194,.06)'; cx.lineWidth=1;
     cx.beginPath(); cx.moveTo(den.x,den.y); cx.lineTo(gz2.cx,gz2.cy); cx.stroke();
@@ -1461,6 +1644,10 @@ function gambarHabitat(t, dt){
     if(z.jenis==='kardinal'){
       cx.strokeStyle='rgba(79,224,194,.045)'; cx.lineWidth=1;
       cx.beginPath(); cx.moveTo(den.x, den.y); cx.lineTo(z.cx, z.cy); cx.stroke();
+    } else if(z.jenis==='teras'||z.jenis==='gudang'||z.jenis==='brankas'){
+      // sumbu terasering: dari kubah ke puncak tiap ruang — tertib, tak melintas isi ruang
+      cx.strokeStyle='rgba(79,224,194,.04)'; cx.lineWidth=1;
+      cx.beginPath(); cx.moveTo(den.x, den.y); cx.lineTo(z.cx, z.rect.y+6); cx.stroke();
     }
     const al=(terbuka?0.05:0.03)+prox*0.07+(tgtZona?0.05:0);
     cx.strokeStyle=`rgba(255,255,255,${al.toFixed(3)})`; cx.lineWidth=1;
@@ -1486,7 +1673,7 @@ function gambarHabitat(t, dt){
     const sub=z.jenis==='brankas'
       ? `${z.n} harta tersegel · sentuh untuk kubaca`
       : z.jenis==='gudang'
-        ? (z.n?`${z.n} buku luberan dari rak penuh`:'kosong — ruang cadangan istana')
+        ? (z.n?`${z.n} buku luberan${(z.rakMuatG!=null&&z.rakMuatG<z.n)?` · rak penuh ${z.rakMuatG}, sisanya menunggu ruang baru`:''}`:'kosong — ruang cadangan istana')
         : `${z.n} buku · kubaca ${nK}`;
     cx.fillText(sub, z.rect.x+13, z.rect.y+31);
     // KAMAR KEBAL BRANKAS — tepi ganda emas: harta negara butuh kamar yang jelas bedanya
@@ -1688,6 +1875,11 @@ function gambarNadi(t){
     cx.fillStyle=`rgba(210,255,244,${(sd.a*dim).toFixed(3)})`;
     cx.fillRect(NADI.x+Math.cos(sd.a0)*sd.r, baseY+Math.sin(sd.a0)*sd.r*0.34-1, 1.7, 1.7);
   }
+  /* ===== MERUNDUK SEARAH LAJU — pivot di kaki pusaran: torso + lengan + kepala miring
+     searah gerak; pusaran di bawah tetap tegak memutar (10.2619: yang berdiri di atas
+     badai boleh condong, tak pernah roboh) ===== */
+  const pvx=NADI.x, pvy=NADI.y+R*1.05;
+  cx.save(); cx.translate(pvx,pvy); cx.rotate(NADI.lean||0); cx.translate(-pvx,-pvy);
   /* ===== TORSA CYBORG — kompak, bukan ular ===== */
   const gr=cx.createRadialGradient(NADI.x,NADI.y,2, NADI.x,NADI.y,R*3.4);
   gr.addColorStop(0,`rgba(79,224,194,${(0.26*dim).toFixed(3)})`);
@@ -1791,6 +1983,7 @@ function gambarNadi(t){
     cx.beginPath(); cx.arc(ex+NADI.mata.px*R*0.07, ey+NADI.mata.py*R*0.07, R*0.08*buka, 0, 7); cx.fill();
   }
   cx.restore();
+  cx.restore();  // akhir merunduk searah laju
   // riak penemuan (MENEMUKAN → flair)
   if(S.kerja.fase==='MENEMUKAN' && NADI.flair<0.05){ NADI.flair=1; riak(NADI.x,NADI.y); }
 }
@@ -2052,10 +2245,13 @@ function guruRender(){
       `<div class="kecil">dikutip dari artefak nyata: riwayat hill-climb kromosom, audit pick, uji-jalan, laporan uji rumah — ditulis Sadar-1 ke ruang-hidup/madrasah.json tiap bangun.</div>`;
   } else wm.innerHTML='<div class="kecil">buku belum terbuka — madrasah.json belum terbaca dari GitHub</div>';
   const ist=LAYOUT.istana||{}, hi=(S.habitat&&S.habitat.istana)||{};
+  const aljTeras=ist.teras
+    ? `mode <b>ISTANA TERASERING</b> (layar sempit/portret): kubah di puncak · rak 2 kolom ${ist.terasCellW||'—'}×${ist.terasRowH||'—'}px + baris penuh LAPORAN · PASAR deretan sumur selebar layar · sayap GUDANG &amp; BRANKAS di atas zona tombol — semua fungsi W×H layar nyata; pas-kan menolak dua ruang bertumpuk<br>`
+    : `kubah: (x,y) = pusat bebas · r = D×0,082 = <b>${Math.round(ist.rKubah||0)||'—'}px</b> (D=${Math.round(ist.D||0)||'—'})<br>`+
+      `gerbang i: θ<sub>i</sub> = i·90° · r<sub>i</sub> = D×{0,30–0,34} = ${Math.round(ist.rKardinal||0)}px · paviliun θ = 45°+i·90° · r = D×0,50 = ${Math.round(ist.rPaviliun||0)}px<br>`;
   document.getElementById('gvAljabr').innerHTML=
-    `kubah: (x,y) = pusat bebas · r = D×0,082 = <b>${Math.round(ist.rKubah||0)||'—'}px</b> (D=${Math.round(ist.D||0)||'—'})<br>`+
-    `gerbang i: θ<sub>i</sub> = i·90° · r<sub>i</sub> = D×{0,30–0,34} = ${Math.round(ist.rKardinal||0)}px · paviliun θ = 45°+i·90° · r = D×0,50 = ${Math.round(ist.rPaviliun||0)}px<br>`+
-    `rak: pitch p = clamp(5,5–8,5)px, baris Δp+5 — buku = file nyata (${S.pohon.files.length})<br>`+
+    aljTeras+
+    `rak: pitch p = clamp(5,5–11)px, baris Δp+6 — buku = file nyata (${S.pohon.files.length}); kapasitas rak dihitung DULU: tak ada buku keluar lemari, luberan mengalir ke GUDANG<br>`+
     `cincin canal = <b>${ist.cincin||hi.cincin||2}</b> (ditulis Sadar-1 dari zona terbuka: cincin = 2 + [≥6] · gerbang ${hi.gerbang??'—'})<br>`+
     `menara evolusi: gen ${(hi.menaraGen??ist.menaraGen)||0} · tinggi ∝ skor ${(hi.menaraSkor??ist.menaraSkor)||0}%/trx`;
 }
@@ -2331,8 +2527,8 @@ document.getElementById('tab-peta').addEventListener('click', (ev)=>{
     bebasState:()=>bebas, BOB:NADI, POND_POS:()=>POND_POS,
     terapkanGenom, tubuhAktif, strukturSinkron, strukturTumbuh, STRUKTUR, pathVena, zonaTitik, zonaOfPos,
     guruKeadaan, guruHitung, guruHitungLokal, susun, istana:()=>LAYOUT.istana,
-    ujianKehidupan, ujianState:()=>S.ujian};
-  window.__v288 = window.__v289; window.__v287 = window.__v289; window.__v295 = window.__v289;
+    ujianKehidupan, ujianState:()=>S.ujian, mode:()=>LAYOUT.mode, paru:()=>S.paru};
+  window.__v288 = window.__v289; window.__v287 = window.__v289; window.__v295 = window.__v289; window.__v296 = window.__v289;
   // render loop
   let tPrev=performance.now();
   (function loop(now){
@@ -2340,7 +2536,7 @@ document.getElementById('tab-peta').addEventListener('click', (ev)=>{
     gambar(now/1000, dt);
     requestAnimationFrame(loop);
   })(tPrev);
-  setInterval(()=>{ ovStatusRender(); s1Render(); if(S.tabAktif==='pasar') pasarRender(); if(S.tabAktif==='guru') guruRender(); }, 5000);
+  setInterval(()=>{ ovStatusRender(); s1Render(); paruJam(); if(S.tabAktif==='pasar') pasarRender(); if(S.tabAktif==='guru') guruRender(); if(S.tabAktif==='pikir') paruRender(); }, 5000);
   // deteksi bangun S1 baru SELAGI penonton hadir — bukti hidup tanpa penonton, dilihat langsung
   setInterval(()=>{ muatMemoriGitHub(); }, 5*60000);
 })();
