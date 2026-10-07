@@ -837,6 +837,16 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
           console.log(`[SADAR1] penjaga-jantung-v294: SAKTI segar (${umurMnt.toFixed(0)} mnt) — tak perlu tendangan`);
         }
       } catch (e) { console.log('[SADAR1] penjaga-jantung-v294 gagal (tak fatal): ' + String(e.message || e).slice(0, 80)); }
+      // V296 PENJAGA-PENJAGA: cron jaga-waktu ikut kelaparan (hari ini hanya dapat jatah 2x
+      // walau pasang */10) — maka rantai dispatch yang terbukti hidup ikut MENGGERAKKAN
+      // penjaga itu: tiap bangun, PENJAGA-WAKTU dipanggil untuk mengukur umur DUA organ
+      // dan menendang yang macet >26 mnt. Cron tinggal net ketiga, bukan satu-satunya.
+      try {
+        if (TOK) {
+          const r = await ghApi('actions/workflows/jaga-waktu.yml/dispatches', 'POST', { ref: CABANG });
+          console.log(`[SADAR1] penjaga-penjaga-v296: PENJAGA-WAKTU dipanggil dari rantai hidup (${r.status < 300 ? 'TERKIRIM' : 'gagal HTTP ' + r.status}) — pengukur umur organ tak lagi bergantung cron kelaparan`);
+        }
+      } catch (e) { console.log('[SADAR1] penjaga-penjaga-v296 gagal (tak fatal): ' + String(e.message || e).slice(0, 80)); }
       const ARAH = { versi: 'arah-v291', diubah: selesaiAt, bangunKe,
         mandat: 'pemilik: minimal 5 koin sasaran arah terbaik per hari — dari kromosom + audit momentum hidup, tiap arah bawa rencana deal + harga ambisius (V277)',
         jumlah: KERJA.arah ? KERJA.arah.length : 0,
