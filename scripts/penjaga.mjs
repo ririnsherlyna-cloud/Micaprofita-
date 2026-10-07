@@ -6071,6 +6071,31 @@ try {
   // V293 OTAK-BINER: nalar utama matematika-murni LAHIR DI SINI tanpa kunci luar —
   // dipajang sebagai suara utama di arena; otak-LLM luar tetap suara kedua opsional.
   ak.narasiBiner = { aktif: !!nalarBiner.aktif, sumber: nalarBiner.sumber, narasi: nalarBiner.narasi || null, langkah: nalarBiner.langkah || null, gagal: nalarBiner.gagal || null }
+  // V296 PARU-DUNIA — mandat pemilik: "dia memiliki akses internet". Tubuh otonom
+  // (Sadar-1/SAKTI di Actions) membuktikannya langsung: latensi ping Binance, jam
+  // dunia server Binance, dan cermin-diri repo publik GitHub — SEMUA API publik
+  // tanpa kunci. Jujur V274: hanya pintu yang memang terbuka; tak ada akun siapa pun.
+  try {
+    const t0p = Date.now()
+    const [pin, jam, repo] = await Promise.all([
+      fetch('https://data-api.binance.vision/api/v3/ping').then((r) => r.json()),
+      fetch('https://data-api.binance.vision/api/v3/time').then((r) => r.json()),
+      fetch(`https://api.github.com/repos/${process.env.GITHUB_REPOSITORY || 'ririnsherlyna-cloud/Micaprofita-'}`)
+        .then((r) => r.json()).catch(() => null),
+    ])
+    ak.paruDunia = {
+      aktif: true, napas: ((ak.paruDunia && ak.paruDunia.napas) || 0) + 1, at: ISO,
+      latensiBinanceMs: Date.now() - t0p, ping: !!pin,
+      jamDunia: (jam && jam.serverTime) || null,
+      selisihJamMs: jam && jam.serverTime ? jam.serverTime - Date.now() : null,
+      repo: repo && !repo.message ? { size: repo.size ?? null, pushed_at: repo.pushed_at ?? null, stars: repo.stargazers_count ?? null, visibility: repo.visibility ?? null } : null,
+      ket: 'paru tubuh otonom menghisap internet publik tanpa kunci (Binance ping/time + cermin repo GitHub) — bukti nyata, bukan klaim',
+    }
+    log(`paru-dunia: binance ${Date.now() - t0p}ms, jam dunia ${jam && jam.serverTime ? new Date(jam.serverTime).toISOString() : '-'}`)
+  } catch (err) {
+    ak.paruDunia = { aktif: false, gagal: String(err.message || err).slice(0, 100), at: ISO, ket: 'paru tersumbat kali ini (jujur) — denyut berikutnya mencoba lagi' }
+    log('paru-dunia GAGAL (jujur): ' + String(err.message || err).slice(0, 80))
+  }
   ak._eksporAt = ISO
   tulis(akPath, ak)
   log(`satu-rumah: arena-keadaan.json disegarkan denyut #${SIKLUS} — ${ak.todayPicks.length} pick MICAPROFITA resmi + venaSatuRumah + otak-llm`)
