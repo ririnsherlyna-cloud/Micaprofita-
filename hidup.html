@@ -2944,7 +2944,10 @@ async function putaran(){
          simbol cacat (tanpa akhiran USDT) disaring — data warisan tak boleh
          membutakan seluruh mata */
       const koin=['BTCUSDT'];
-      const dor=s=>{ if(s&&typeof s==='string'){ const S=s.toUpperCase();
+      /* V301: simbol di laporan kadang TANPA akhiran USDT (CAKE, ESP…) —
+         tubuh menormalkan dulu, jangan sampai sasaran resmi ditolak mata */
+      const dor=s=>{ if(s&&typeof s==='string'){ let S=s.toUpperCase();
+        if(/^[A-Z0-9]+$/.test(S)&&!/USDT$/.test(S)) S+='USDT';
         if(/^[A-Z0-9]+USDT$/.test(S)&&!koin.includes(S)&&koin.length<16) koin.push(S); } };
       try{
         const stx=JSON.parse(await ghT('laporan/sasaran-terkini.json'));
