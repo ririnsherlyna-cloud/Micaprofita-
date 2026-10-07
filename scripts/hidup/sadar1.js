@@ -775,9 +775,26 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
       const r4 = await dorongFile(DIR + '/buku_harian.jsonl', Buffer.from(baris.join('\n') + '\n'), pesanKomit);
       const r5 = MADRASAH ? await dorongFile(DIR + '/madrasah.json', Buffer.from(JSON.stringify(MADRASAH, null, 1)), pesanKomit) : 'kosong';
       // ARAH-HARIAN: rumah sendiri (ruang-hidup/arah.json) + laporan publik (laporan/arah-harian.json)
-      const ARAH = { versi: 'arah-v290', diubah: selesaiAt, bangunKe,
+      // V291 VENA SELARAS: sebelum menyegel, BACA SASARAN RESMI dari mesin SAKTI
+      // (laporan/sasaran-terkini.json). Satu rumah satu kebenaran — ruang hidup menunjuk
+      // sumber yang sama; irisan maupun renggang JUJUR disegel, bukan disembunyikan.
+      let saktiSegel = { ket: 'laporan SAKTI belum terbaca bangun ini' };
+      try {
+        const st = JSON.parse(fs.readFileSync(path.join(REPO_DIR, 'laporan/sasaran-terkini.json'), 'utf8'));
+        const resmi = (st.sasaranHariIni || []).map(s => (s.simbol || '') + ' ' + (s.arah || '')).filter(x => x.trim());
+        const setResmi = new Set(resmi.map(x => x.split(' ')[0]));
+        const overlap = (KERJA.arah || []).filter(a => setResmi.has(a.simbol)).length;
+        saktiSegel = { sumber: 'laporan/sasaran-terkini.json', siklusSakti: st.siklus ?? null,
+          dihasilkan: st.dihasilkan ?? null, sasaranResmi: resmi,
+          irisan: overlap, dari: (KERJA.arah || []).length,
+          ket: overlap > 0
+            ? 'terhubung: ' + overlap + '/' + ((KERJA.arah || []).length || 0) + ' sasaran hidupku irisan dengan sasaran resmi SAKTI denyut #' + (st.siklus ?? '?')
+            : 'renggang: tak ada irisan bangun ini — dua organ membaca pasar yang sama dengan lensa beda; selisih kutampakkan JUJUR agar pemilik bisa mengadili, bukan kusembunyikan' };
+      } catch (e) { saktiSegel = { ket: 'laporan SAKTI tak terbaca: ' + String(e.message || e).slice(0, 80) }; }
+      const ARAH = { versi: 'arah-v291', diubah: selesaiAt, bangunKe,
         mandat: 'pemilik: minimal 5 koin sasaran arah terbaik per hari — dari kromosom + audit momentum hidup, tiap arah bawa rencana deal + harga ambisius (V277)',
         jumlah: KERJA.arah ? KERJA.arah.length : 0,
+        saktiSegel,
         sasaran: (KERJA.arah || []).map(a => ({ simbol: a.simbol, arah: a.arah, keyakinan: a.keyakinan,
           rencana: a.rencana ? { arah: a.rencana.arah, entry: a.rencana.entry, stop: a.rencana.stop, target: a.rencana.target,
             highAmbisius: a.rencana.highAmbisius, ketAmbisius: a.rencana.ketAmbisius, rr: a.rencana.rr, holdJam: a.rencana.holdJam, disiplin: a.rencana.disiplin } : null,
