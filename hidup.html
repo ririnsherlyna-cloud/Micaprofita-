@@ -142,6 +142,8 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
   #ovHandle .genggam{width:44px;height:4px;border-radius:2px;background:rgba(255,255,255,.22)}
   #ovKepala{padding-top:6px}
   #pintu{right:14px;bottom:14px}
+  /* V298: isi lembaran beristirahat DI ATAS tombol pintu — nol timpa */
+  #pIsi{padding-bottom:70px}
   #pTabs{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
   #pTabs::-webkit-scrollbar{display:none}
   #pTabs button{flex:0 0 auto;padding:12px 11px}
@@ -2532,6 +2534,9 @@ function tabKe(nama){ S.tabAktif=nama;
   if(nama==='jurnal') jurnalRender();
   if(nama==='ujian') ujianRender();
   if(nama==='jasad'&&window.__v297&&window.__v297.render) window.__v297.render();
+  /* V298: tab aktif selalu digulir ke tengah — label tak terpotong */
+  const tb=document.querySelector('#pTabs button.akt');
+  if(tb&&tb.scrollIntoView) try{ tb.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'}); }catch(e){}
 }
 document.querySelectorAll('#pTabs button').forEach(b=>b.onclick=()=>tabKe(b.dataset.tab));
 document.getElementById('tab-peta').addEventListener('click', (ev)=>{
