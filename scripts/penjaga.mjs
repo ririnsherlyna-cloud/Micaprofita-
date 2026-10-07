@@ -2538,7 +2538,23 @@ try {
 // ---- 0b. ledger dibaca awal — simbol terbuka ikut ditelusuri agar bisa dinilai ----
 const ledger = bacaJsonl(path.join(ROOT, 'laporan/prakira-server.jsonl'))
 const terbukaLama = [...new Set(ledger.filter((e) => e.status === 'TERBUKA').map((e) => e.simbol))]
-const daftarTelusur = [...new Set([...shortlist, ...KANDANG, ...terbukaLama])]
+// V293 SAPU-PENUH — mandat pemilik: "harusnya setiap waktu menganalisa setiap koin" +
+// "jangan ada koin yang diblokir". Dulu daftarTelusur = shortlist 60 + kandang 10 + terbuka —
+// sisanya (ratusan koin) cuma lewat radar tanpa lilin, mustahil dibedah. Kini SEMUA koin
+// likuid (qv ≥ 1jt USDT, non-stabil/non-leverage, maks 500 demi anggaran denyut) ikut
+// ditelusur lilinnya TIAP denyut — tiap koin layak berhak dapat bedah penuh setiap siklus.
+const SAPU_MAKS = 500
+const sapuLikuid = (() => {
+  try {
+    const _qvSapu = new Map((tickGlobal || []).filter((t) => typeof t.symbol === 'string' && t.symbol.endsWith('USDT')).map((t) => [t.symbol.slice(0, -4), +t.quoteVolume]))
+    const daftar = [..._qvSapu.entries()]
+      .filter(([s, v]) => v >= 1e6 && !STABIL.has(s) && !/(UP|DOWN|BULL|BEAR)$/.test(s))
+      .sort((a, b) => b[1] - a[1]).slice(0, SAPU_MAKS).map(([s]) => s)
+    log(`sapu-penuh-v293: ${daftar.length} koin likuid masuk antrean lilin denyut ini (qv ≥ 1jt USDT) — tanpa blokir`)
+    return daftar
+  } catch (e) { log(`sapu-penuh-v293: ticker layu (${String(e.message).slice(0, 40)}) — jatuh ke daftar lama`); return [] }
+})()
+const daftarTelusur = [...new Set([...sapuLikuid, ...shortlist, ...KANDANG, ...terbukaLama])]
 
 // ---- 0c. telusur dalam — lilin 1 jam per koin, rantai host per simbol ----
 async function ambilKoin(simbol) {
@@ -3045,18 +3061,20 @@ const _baroKoin = [...Object.values(hasil)].filter((cB) => Array.isArray(cB) && 
 const baroBreadth = _baroKoin.length ? +(_baroKoin.filter((cB) => cB[cB.length - 1].c > cB[cB.length - 25].c).length / _baroKoin.length * 100).toFixed(0) : null
 const bearHarian = (baroRet24Btc != null && baroRet24Btc <= BUTA.BEAR_BTC_PCT) || (baroBreadth != null && baroBreadth <= BUTA.BEAR_BREADTH_PCT)
 log(`barometer-v267: ret24 BTC ${baroRet24Btc}% · ret1h ${baroRet1hBtc}% · breadth ${baroBreadth}% naik → ${bearHarian ? 'BEAR-HARIAN (organ barometer+anti-arus mengikat)' : 'normal'}`)
-// ---- V292 KANDANG HIDUP — mandat pemilik: "harusnya setiap waktu menganalisa setiap koin, bukan sekali saja" ----
-// Dulu bedah ARAH hanya 10 koin beku (KANDANG) sementara ratusan pasangan cuma lewat radar —
-// itulah akar "sasaran koin itu lagi itu lagi". Kini SEMUA koin yang lilinnya berhasil ditelusur
-// (shortlist 60 likuid dinamis + inti + posisi terbuka) masuk bedah ARAH penuh TIAP denyut.
-const V292_MAKS_KANDANG = 60
+// ---- V292 KANDANG HIDUP → V293 KANDANG TANPA-BLOKIR — mandat pemilik: ----
+// "harusnya setiap waktu menganalisa setiap koin, bukan sekali saja" +
+// "jangan ada koin yang diblokir". Dulu bedah ARAH hanya 10 koin beku, lalu V292
+// diberi batas 60 — batas itu sendiri adalah BLOKIR halus (koin peringkat 61+ tak dibedah).
+// Kini: SEMUA koin yang lilinnya hidup (sapu-penuh ≥1jt USDT + inti + posisi terbuka)
+// dibedah penuh TIAP denyut — TANPA POTONGAN. Yang hanya lewat radar = koin tak likuid
+// (<1jt USDT 24j) yang secara ekonomi tak bisa dieksekusi tanpa slip mati — tetap ditelaah radar.
 const KANDANG_DINAMIS = (() => {
   const qv = new Map((tickGlobal || []).filter((t) => typeof t.symbol === 'string' && t.symbol.endsWith('USDT')).map((t) => [t.symbol.slice(0, -4), +t.quoteVolume]))
   const inti = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP']
-  const layak = Object.keys(hasil).filter((s) => !STABIL.has(s) && !/(UP|DOWN|BULL|BEAR)$/.test(s) && ((qv.get(s) ?? 0) >= 3e6 || inti.includes(s) || terbukaLama.includes(s)))
+  const layak = Object.keys(hasil).filter((s) => !STABIL.has(s) && !/(UP|DOWN|BULL|BEAR)$/.test(s) && ((qv.get(s) ?? 0) >= 1e6 || inti.includes(s) || terbukaLama.includes(s)))
     .sort((a, b) => (qv.get(b) ?? 0) - (qv.get(a) ?? 0))
-  const daftar = [...new Set([...inti, ...layak])].slice(0, V292_MAKS_KANDANG)
-  log(`kandang-hidup-v292: bedah ARAH ${daftar.length} koin denyut ini (dulu 10 beku) — ${daftar.slice(0, 14).join(', ')}${daftar.length > 14 ? '…' : ''}`)
+  const daftar = [...new Set([...inti, ...layak])]   // V293: TANPA slice(0, 60) — tak ada koin diblokir
+  log(`kandang-tanpa-blokir-v293: bedah ARAH ${daftar.length} koin denyut ini (V292: 60 · V291: 10 beku) — ${daftar.slice(0, 14).join(', ')}${daftar.length > 14 ? '…' : ''}`)
   return daftar
 })()
 for (const s of KANDANG_DINAMIS) {
@@ -4812,33 +4830,41 @@ const pilihDasar = (jalurPhx) => {
 }
 const phxDasar = pilihDasar(true)
 const komDasar = pilihDasar(false)
-// V292 KESEGARAN-SASARAN — anti "koin itu lagi itu lagi" LINTAS HARI (akar keluhan pemilik):
-// simbol yang jadi sasaran TERBUKA sebelum hari ini kena penalti ranking ringan (−4 key),
-// dan bila seluruh kursi komite mau diisi koin yang sama, kursi terakhir diserahkan pada
-// kandidat segar layak (key ≥ 45). Koin paling kuat tetap boleh bertahan — jujur ber-label BERTAHAN.
+// V293 PELAJARAN-DALAM — mandat pemilik (2026-10-07): "jikalau koin yang terdeteksi terbaik
+// itu ya lakukan itu, jangan blokir koin itu koin itu lagi, tapi kita benar-benar mempelajari
+// koin, jangan ada koin yang diblokir." Hukum V292 (penalti −4 & kursi-segar) DIBATALKAN —
+// itu pemblokiran terselubung: koin yang menang lagi DIBIARKAN ditarik dari kursinya. Kini
+// koin yang menang lagi menang karena matematikanya masih memilihnya — tanpa penalti, tanpa
+// kursi yang dicuri; yang berubah justru LEBAH DALAM: tiap sasaran berulang membawa bukti
+// pendalaman (arah vs momentum, posisi rentang, kesinambungan) disegel jujur di laporan.
 const sasaranKemarin = new Set(ledger.filter((e) => e.status === 'TERBUKA' && e.id !== `${e.simbol}-${TGL}`).map((e) => e.simbol))
-const penaltiKemarin = (e) => (sasaranKemarin.has(e.simbol) ? 4 : 0)
 const phxRows = [...phxDasar]
   .sort((a, b) => b.skorPhoenix * b.untungBersih - a.skorPhoenix * a.untungBersih).slice(0, PHX.SASARAN_PHX)
 const komRows = [...komDasar].filter((e) => !phxRows.some((p) => p.simbol === e.simbol))
   .filter((e, i, arr) => arr.findIndex((x) => x.simbol === e.simbol) === i)   // V291 ANTI-DOBEL: satu simbol satu kursi dalam lane sendiri
-  .sort((a, b) => (b.keyakinan - penaltiKemarin(b)) - (a.keyakinan - penaltiKemarin(a))).slice(0, PHX.SASARAN_ARAH)
-let kursiSegarCatatan = 'tidak perlu — kursi komite belum semuanya pengulangan kemarin'
-if (komRows.length && komRows.every((e) => sasaranKemarin.has(e.simbol))) {
-  const segar = [...komDasar].filter((e) => !komRows.some((k) => k.simbol === e.simbol) && !sasaranKemarin.has(e.simbol) && (e.keyakinan ?? 0) >= 45)
-    .sort((a, b) => b.keyakinan - a.keyakinan)[0]
-  if (segar) {
-    komRows[komRows.length - 1] = segar
-    kursiSegarCatatan = `${segar.simbol} (key ${segar.keyakinan}) masuk kursi terakhir — seluruh kursi nyaris koin yang sama lagi`
-    log(`kursi-segar-v292: ${kursiSegarCatatan}`)
-  } else {
-    kursiSegarCatatan = 'semua kursi koin kemarin & tak ada kandidat segar layak — jujur: tidak dipaksakan ganti'
-    log(`kursi-segar-v292: ${kursiSegarCatatan}`)
-  }
+  .sort((a, b) => b.keyakinan - a.keyakinan).slice(0, PHX.SASARAN_ARAH)      // V293: murni keyakinan — TANPA penalti, TANPA blokir
+// PELAJARAN-DALAM: untuk sasaran yang berulang, bukti pendalaman disusun dari lilin segar
+// denyut INI (bukan dugaan): momentum 24j/1j vs arah vonis, posisi rentang 20-bar, dan
+// keputusan medannya — koin dipelajari lebih dalam, bukan dijauhi.
+const pelajaranDalam = (e) => {
+  if (!sasaranKemarin.has(e.simbol)) return null
+  try {
+    const c = hasil[e.simbol]
+    if (!c || c.length < 30) return `berulang & DIPERBOLEHKAN — lilin segar denyut ini belum terbaca untuk pendalaman penuh; arah ${e.arah} key ${e.keyakinan} tetap tanpa penalti`
+    const cl = c.map((x) => x.c)
+    const ret24 = +((cl[cl.length - 1] / cl[cl.length - 25] - 1) * 100).toFixed(2)
+    const ret1h = +((cl[cl.length - 1] / cl[cl.length - 2] - 1) * 100).toFixed(2)
+    const hi20 = Math.max(...c.slice(-20).map((x) => x.h))
+    const lo20 = Math.min(...c.slice(-20).map((x) => x.l))
+    const pos20 = Math.round(((cl[cl.length - 1] - lo20) / Math.max(1e-12, hi20 - lo20)) * 100)
+    const searah = (e.arah === 'BUY' && ret24 > 0) || (e.arah === 'SELL' && ret24 < 0)
+    return `BERULANG & DIPERBOLEHKAN (jangan ada koin diblokir): ${e.simbol} menang lagi karena matematikanya masih memilihnya — ret24 ${ret24}% / ret1h ${ret1h}% (${searah ? 'searah vonis, kesinambungan diawasi' : 'melawan vonis — patahan arah jadi bukti belajar utama'}), posisi rentang 20-bar ${pos20}%, arah ${e.arah} key ${e.keyakinan}; tanpa penalti ranking, tanpa kursi dicuri — pendalaman denyut ini: ${searah ? 'konfirmasi tren masih utuh atau mulai mengenjang' : 'mengawasi sinyal pembalikan vs peluang menadah'}`
+  } catch { return 'berulang & DIPERBOLEHKAN — pendalaman gagal dihitung (diakuin jujur)' }
 }
 const sasaranUtama = [...phxRows, ...komRows]
   .filter((e, i, arr) => arr.findIndex((x) => x.simbol === e.simbol) === i)   // V291 ANTI-DOBEL lintas lane — satu simbol tidak pernah dua baris
-  .map(barisDari)
+  .map((e) => { const b = barisDari(e); const pd = pelajaranDalam(e); return pd ? { ...b, sasaranBertahan: true, pelajaranDalam: pd } : b })
+if (sasaranUtama.some((r) => r.sasaranBertahan)) log(`pelajaran-dalam-v293: ${sasaranUtama.filter((r) => r.sasaranBertahan).map((r) => r.simbol).join(', ')} berulang — DIJALANKAN tanpa blokir, pendalaman disegel`)
 // V266 RADAR-JUJUR-BEAR — saat bear-harian sistem tidak mengiklankan jawaban murahan:
 // kandidat tampil hanya bila keyakinan ≥ KANDIDAT_KEY_MIN. Kunci penuh (sasaranUtama)
 // tetap dilaporkan & dinilai apa adanya — seleksi publik radar, bukan karantina belajar.
@@ -5736,15 +5762,17 @@ const laporan = {
     catatan: radar.catatan || `menelaah ${radar.telaah} pasangan USDT — ${radar.zonaPhoenix} di zona ujung-bawah — ${radar.telusurDalam} ditelusuri dalam dengan lilin 1 jam`,
   },
   sasaranHariIni: sasaranUtama,
-  // V292 KESEGARAN-SASARAN — angka jujur anti-repetisi lintas hari, disegel tiap denyut
+  // V293 PELAJARAN-DALAM — angka jujur keterbukaan & pendalaman, disegel tiap denyut.
+  // Hukum pemilik: TIDAK ADA koin diblokir — sasaran berulang DIJALANKAN & DIPERDALAM.
   kesegaran: {
     kandangDibedah: KANDANG_DINAMIS.length,
     telaahRadar: radar.telaah,
     sasaranKemarin: [...sasaranKemarin],
     pengulanganHariIni: sasaranUtama.filter((e) => sasaranKemarin.has(e.simbol)).length,
     baruHariIni: sasaranUtama.filter((e) => e.sasaranBaruHariIni).length,
-    kursiSegar: kursiSegarCatatan,
-    ket: 'V292: koin sasaran kemarin kena penalti ranking ringan; bila semua kursi mau diisi koin yang sama & ada kandidat segar layak, kursi terakhir diserahkan ke yang segar — koin paling kuat tetap boleh bertahan, di-label jujur (sasaranBertahan), bukan disamar jadi kunci baru',
+    sasaranBertahan: sasaranUtama.filter((e) => e.sasaranBertahan).map((e) => e.simbol),
+    pendalaman: sasaranUtama.filter((e) => e.pelajaranDalam).map((e) => ({ simbol: e.simbol, bukti: e.pelajaranDalam })),
+    hukum: 'V293 PELAJARAN-DALAM: tidak ada koin yang diblokir — koin yang terdeteksi terbaik ya dijalankan, meski berulang; yang berubah justru dipelajari LEBIH DALAM (bukti pendalaman disegel per sasaran, dari lilin denyut ini, bukan dugaan). Penalti ranking & kursi-segar V292 dibatalkan — itu blokir terselubung',
   },
   kandidatLain,
   akurasi,
@@ -5982,7 +6010,31 @@ const laporan = {
     'ANTI-DIAM V269 (mandat pemilik 2026-10-04): gerbang menutup ≠ berhenti — bila 0 kunci penuh, kandidat terkuat yang bersih forensik tetap dikunci sebagai POSISI-PENELITI ukuran ×0.25 + stop ×0.8 (rem/zona-racun/kartu-risiko tetap dihormati); tiap denyut WAJIB menerbitkan tanggapan naratif penuh kulihat-kuputuskan-kusiapkan (laporan/tanggapan.json) — kesunyian denyut adalah bug, bukan konservatisme; diam itu rem singkat, bukan identitas — kalau diam, dia tak pernah berkembang',
   ],
 }
+// ---- V293 OTAK-BINER — mandat pemilik: "LLM ciptakan sendiri dari biner, kaya orang
+// terdahulu berangkatkan roket ke bulan modal matematika murni" ----
+// Nalar UTAMA dibangun LOKAL dari angka denyut ini — biner → lilin → statistika → ekonomi →
+// vonis, tiap tahap bernomor & bisa diaudit. Tidak menunggu kunci luar; otak-LLM luar hanya
+// suara kedua opsional. Yang dipajang ke arena = nalar lokal ini, bukan status "menunggu kunci".
+const nalarBiner = (() => {
+  try {
+    const mb = mesinMate(hasil.BTC, frBtc, null)
+    const hurstKet = mb?.hurst != null ? `${mb.hurst} (${mb.hurst > 0.55 ? 'cenderung TREN' : mb.hurst < 0.45 ? 'cenderung pulang-keseimbangan' : 'ragu/deraun'})` : '—'
+    const langkah = [
+      { tahap: 'biner → lilin', hasil: `${Object.keys(hasil).length} koin ditarik lilin 1 jam mentahnya tiap denyut (OHLCV = angka murni dari pasar, bukan opini siapa pun) — dulu hanya 10 koin beku` },
+      { tahap: 'lilin → statistika', hasil: `BTC: Hurst ${hurstKet} · half-life ${mb?.halfLife ?? '—'} jam · drift-OLS 24j ${mb?.drift24jPct ?? '—'}% · ret24 ${baroRet24Btc ?? '—'}% · ret1h ${baroRet1hBtc ?? '—'}% · breadth ${baroBreadth ?? '—'}% koin naik → rezim ${rezimGlobal}` },
+      { tahap: 'statistika → ekonomi', hasil: `funding BTC ${frBtc != null ? (frBtc * 100).toFixed(4) + '%' : '—'} (siapa membayar siapa) · kerucut MC 72j P(naik) ${jauhBTC?.pNaik72 != null ? Math.round(jauhBTC.pNaik72 * 100) + '%' : '—'} · ${bearHarian ? 'barometer bear-harian: organ pengikat menyala' : 'barometer normal — organ tetap menghitung'}` },
+      { tahap: 'statistika → vonis', hasil: sasaranUtama.some((e) => e.jalur !== 'KOMPAS') ? `${sasaranUtama.map((e) => `${e.simbol} ${e.arah} (key ${e.keyakinan}${e.pelajaranDalam ? ', berulang → diperdalam bukan diblokir' : ''})`).join(' · ')} — hasil bedah penuh ${KANDANG_DINAMIS.length} koin denyut ini` : 'tak ada kandidat yang lolos matematika gerbang — TUNGGU adalah keputusan yang dihitung, bukan kehabisan akal' },
+    ]
+    const narasi = `Aku menyusun nalar ini sendiri dari biner — angka mentah pasar, modal matematika murni, seperti perintis roket membaca orbit dari hitungan, bukan dari dongeng: ${Object.keys(hasil).length} koin kuambil lilinnya tiap denyut (dulu 10 beku, kini tanpa blokir), tiap koin kubedah Hurst, half-life, drift, entropi, Monte Carlo — lalu ${sasaranUtama.some((e) => e.jalur !== 'KOMPAS') ? 'yang benar-benar lolos hitungan jadi sasaran: ' + sasaranUtama.filter((e) => e.jalur !== 'KOMPAS').map((e) => `${e.simbol} ${e.arah}`).join(' · ') : 'tak ada yang lolos gerbang dan aku jujur menunggu'}. Kunci luar tidak kutunggu — hitunganku jalan penuh tanpa itu; dan koin yang menang kemarin bila matematikanya masih memilih dia, ya dia dijalankan lagi — kupelajari lebih dalam, tidak kublokir.`
+    return { aktif: true, sumber: 'matematika-murni-lokal (tanpa kunci, tanpa server luar)', siklus: SIKLUS, waktu: ISO, langkah, narasi, catatan: 'otak-LLM luar hanya suara kedua opsional bila pemilik memasang kunci — nalar utama lahir di sini, dari angka' }
+  } catch (err) {
+    return { aktif: false, sumber: 'matematika-murni-lokal', gagal: String(err.message || err).slice(0, 120), ket: 'penyusun narasi gagal — diakuin jujur (hukum V274); nalar angka denyut tetap berjalan' }
+  }
+})()
+laporan.otakBiner = nalarBiner
 tulis(path.join(ROOT, 'laporan/sasaran-terkini.json'), laporan)
+tulis(path.join(ROOT, 'laporan/nalar-biner.json'), { diperbarui: ISO, siklus: SIKLUS, ...nalarBiner })
+log(`otak-biner-v293: nalar matematika-murni disegel — ${nalarBiner.aktif ? 'narasi lahir dari ' + Object.keys(hasil).length + ' koin' : 'penyusun gagal (jujur)'}`)
 
 // ---- 5b. V292 SATU RUMAH + OTAK-LLM — arena & laporan & ruang hidup satu kebenaran ----
 // (1) OTAK-LLM: suara kedua dari otak bahasa bila kunci terpasang (jujur bila belum).
@@ -6016,6 +6068,9 @@ try {
     ket: 'arena, laporan sasaran, dan ruang-hidup kini ditulis denyut SAKTI yang sama — satu kebenaran, bukan tiga pulau',
   }
   ak.narasiLLM = { aktif: !!nalar.aktif, model: nalar.model || null, narasi: nalar.narasi || null, kritik: nalar.kritik || null, ket: nalar.ket || null }
+  // V293 OTAK-BINER: nalar utama matematika-murni LAHIR DI SINI tanpa kunci luar —
+  // dipajang sebagai suara utama di arena; otak-LLM luar tetap suara kedua opsional.
+  ak.narasiBiner = { aktif: !!nalarBiner.aktif, sumber: nalarBiner.sumber, narasi: nalarBiner.narasi || null, langkah: nalarBiner.langkah || null, gagal: nalarBiner.gagal || null }
   ak._eksporAt = ISO
   tulis(akPath, ak)
   log(`satu-rumah: arena-keadaan.json disegarkan denyut #${SIKLUS} — ${ak.todayPicks.length} pick MICAPROFITA resmi + venaSatuRumah + otak-llm`)
