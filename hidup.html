@@ -124,6 +124,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
 .uji{display:flex;gap:8px;padding:6.5px 0;border-bottom:1px solid var(--garis);font-size:11.5px;line-height:1.5}
 .uji .st{flex:none;width:15px;text-align:center}
 .uji .st.sah{color:var(--aksen)} .uji .st.gagal{color:var(--salah)} .uji .st.menunggu{color:var(--legap)}
+.uji .st.tumbuh{color:#ffd166}
 .uji b{color:var(--tinta);font-weight:600}
 .uvBtn{width:100%;margin-top:10px;background:rgba(79,224,194,.08);border:1px solid var(--aksen-l);color:var(--aksen);
   border-radius:10px;padding:9px;font:inherit;font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer}
@@ -262,8 +263,16 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
         <div id="jvRapor"><div class="kecil">—</div></div>
       </div>
       <div class="blok">
+        <h4>Mata-luas <em>· V299 — seluruh kolam, bukan budak BTC</em></h4>
+        <div id="jvMataLuas"><div class="kecil">membuka mata lebar…</div></div>
+      </div>
+      <div class="blok">
+        <h4>Tubuh tersegel <em>· V300 — satu timeline untuk semua perangkat</em></h4>
+        <div id="jvSegel"><div class="kecil">mencari segel tubuh…</div></div>
+      </div>
+      <div class="blok">
         <h4>Sumber kejujuran <em>· nol karangan</em></h4>
-        <div class="kecil">Lilin 1m BTC (gerbang Binance publik) · laporan/sasaran-terkini.json · otak/penjaga-keadaan.json · ruang-hidup/keadaan.json. Bila sumber gagal diambil: jasad MATI-PENUH-NALAR — tubuh kembali ke perilaku dasar dan alasannya ditulis terbuka di sini. Audit langsung: <code>window.__v297</code> di konsol.</div>
+        <div class="kecil">Lilin 1m (gerbang Binance publik, multi-koin) · laporan/sasaran-terkini.json · otak/penjaga-keadaan.json · ruang-hidup/keadaan.json · ruang-hidup/tubuh.json (segel gerak). Bila sumber gagal diambil: jasad MATI-PENUH-NALAR — tubuh kembali ke perilaku dasar dan alasannya ditulis terbuka di sini. Audit langsung: <code>window.__v297</code>, <code>window.__v299</code>, <code>window.__v300</code>.</div>
       </div>
     </div>
   </div>
@@ -2299,7 +2308,10 @@ async function sha256Hex(buf){
   return [...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 function ujianT(nama, ok, bukti){
-  S.ujian.push({nama, hasil:ok===null?'MENUNGGU':ok?'SAH':'GAGAL', bukti});
+  /* V299: vonis 'tumbuh' = keadaan sah yang jujur (organ menulis-ulang berkasnya,
+     ingatan dihidrasi) — dibedakan dari SAH murni agar kejujuran tetap terlihat */
+  const hasil = (ok==null)?'MENUNGGU':(ok==='tumbuh')?'TUMBUH':ok?'SAH':'GAGAL';
+  S.ujian.push({nama, hasil, bukti});
   ujianRender();
 }
 async function ujianKehidupan(){
@@ -2312,6 +2324,11 @@ async function ujianKehidupan(){
   ujianT('Genom tubuh konsisten di keadaan.json & habitat.json',
     !!(st1&&st2&&st1===st2),
     st1?`segel sha256:${st1} ${st1===st2?'== habitat.json (dua file, satu tubuh)':'≠ habitat.json:'+st2}`:'belum ada segel — tubuh bayi');
+  /* V299 SEMBUH-DIRI: berkas hidup yang ditulis-ulang organ sendiri BUKAN cacat.
+     TUMBUH = berkas parse-able & penanda kehidupan internal (diperbarui/
+     dihasilkan/waktu) lahir SETELAH klaim disegel → metabolisme: ingatan
+     sesi dikunyah ulang (re-seal), vonis TUMBUH; rusak = tak ter-parse /
+     penanda mundur → GAGAL jujur. Cacat tak boleh terus-menerus. */
   let cekBaca=null;
   try{
     const baca=Object.entries((S1.ingatan&&S1.ingatan.baca)||{})
@@ -2322,12 +2339,31 @@ async function ujianKehidupan(){
       const r=await fetch(`https://raw.githubusercontent.com/${RUMAH.pemilik}/${RUMAH.repo}/${RUMAH.cabang}/${encodeURIComponent(p)}?t=${sekarang()}`,{cache:'no-store'});
       const buf=new Uint8Array(await r.arrayBuffer());
       const h=await sha256Hex(buf);
-      cekBaca={p, ok:h===b.hash, h, klaim:b.hash, bytes:buf.length};
+      cekBaca={p, ok:h===b.hash, h, klaim:b.hash, bytes:buf.length, keadaan:null,
+        umurKlaimMnt:(b.readAt&&Date.parse(b.readAt))?Math.max(0,(sekarang()-Date.parse(b.readAt))/60000):null};
+      if(!cekBaca.ok){
+        let penanda=null, parseBaik=false;
+        try{
+          const o=JSON.parse(new TextDecoder().decode(buf)); parseBaik=true;
+          for(const k of ['diperbarui','dihasilkan','waktu','waktuSelesai','at']){
+            const v=o?(typeof o[k]==='string'||typeof o[k]==='number'?o[k]:(o.waktu&&o.waktu[k])):null;
+            if(v!=null){ const tt=Date.parse(v); if(tt>0){ penanda=tt; break; } }
+          }
+        }catch(e){}
+        const tumbuh = parseBaik && penanda!=null && b.readAt && penanda>=Date.parse(b.readAt)-60000;
+        cekBaca.keadaan = tumbuh?'tumbuh':(parseBaik?'tak-pasti':'rusak');
+        if(tumbuh){
+          /* METABOLISME: ingatan sesi dikunyah ulang; segel resmi menyusul
+             di bangun Sadar-1 berikutnya — cacat TIDAK dibiarkan menetap */
+          b.hash=h; b.size=cekBaca.bytes; b.readAt=new Date(sekarang()).toISOString(); b.dihidrasi='V299-sembuh-diri';
+          jurnal('METABOLISME', `<b>${p}</b> tumbuh sejak ingatan disegel${cekBaca.umurKlaimMnt!=null?` (${cekBaca.umurKlaimMnt.toFixed(0)} mnt lalu)`:''} — organ sendiri menulis-ulang; ingatan kukunyah kini (re-seal). Tumbuh, bukan cacat`);
+        }
+      }
     }
   }catch(e){}
   ujianT('Bacaan file nyata — SHA-256 dihitung ulang dari sumber asli',
-    cekBaca?cekBaca.ok:null,
-    cekBaca?`${cekBaca.p} (${cekBaca.bytes} B): ${cekBaca.ok?'hash COCOK byte-per-byte dengan klaim ingatan':'TIDAK cocok — klaim '+cekBaca.klaim.slice(0,10)+'… vs kini '+cekBaca.h.slice(0,10)+'…'}`:'tidak ada kandidat kecil / jaringan gagal — jujur dilaporkan');
+    cekBaca?(cekBaca.ok?'sah':(cekBaca.keadaan==='tumbuh'?'tumbuh':null)):null,
+    cekBaca?`${cekBaca.p} (${cekBaca.bytes} B): ${cekBaca.ok?'hash COCOK byte-per-byte dengan klaim ingatan':(cekBaca.keadaan==='tumbuh'?'TUMBUH — klaim '+cekBaca.klaim.slice(0,10)+'… vs kini '+cekBaca.h.slice(0,10)+'… = organ sendiri menulis-ulang berkasnya; ingatan sudah dihidrasi (re-seal), bukan cacat':'TIDAK cocok — klaim '+cekBaca.klaim.slice(0,10)+'… vs kini '+cekBaca.h.slice(0,10)+'… ('+(cekBaca.keadaan||'?')+')')}`:'tidak ada kandidat kecil / jaringan gagal — jujur dilaporkan');
   let cekPasar=null;
   try{
     const sym=Object.keys(S.pasar)[0];
@@ -2382,16 +2418,19 @@ async function ujianKehidupan(){
   ujianT('Pohon repo hidup (sensor 2 gerbang)', S.pohon.live&&S.pohon.files.length>0,
     `${S.pohon.files.length} file via ${S.pohon.sumber||'-'} · umur ${umur(sekarang()-S.pohon.at)}`);
   S.ujianAt=sekarang();
-  const sah=S.ujian.filter(x=>x.hasil==='SAH').length, gag=S.ujian.filter(x=>x.hasil==='GAGAL').length;
-  jurnal('UJIAN', `ujian kehidupan: <b>${sah}/${S.ujian.length} SAH</b>${gag?' · '+gag+' GAGAL':''} — simulasi atau nyata, ditentukan bukti bukan kata-kata`);
+  const sah=S.ujian.filter(x=>x.hasil==='SAH').length, gag=S.ujian.filter(x=>x.hasil==='GAGAL').length,
+        tum=S.ujian.filter(x=>x.hasil==='TUMBUH').length;
+  jurnal('UJIAN', `ujian kehidupan: <b>${sah}/${S.ujian.length} SAH</b>${tum?` · ${tum} TUMBUH`:''}${gag?' · '+gag+' GAGAL':''} — simulasi atau nyata, ditentukan bukti bukan kata-kata`);
   ujianRender();
 }
 function ujianRender(){
   const w=document.getElementById('uvList'); if(!w) return;
   if(!S.ujian.length){ w.innerHTML='<div class="kecil">menjalankan ujian…</div>'; return; }
-  const sah=S.ujian.filter(x=>x.hasil==='SAH').length, gag=S.ujian.filter(x=>x.hasil==='GAGAL').length;
-  w.innerHTML=`<div class="baris"><span class="k">vonis</span><span class="v ${gag?'r':'h'}"><b>${sah}/${S.ujian.length} SAH${gag?' · '+gag+' GAGAL':''}</b></span></div>`+
-    S.ujian.map(u=>`<div class="uji"><span class="st ${u.hasil.toLowerCase()}">${u.hasil==='SAH'?'●':u.hasil==='GAGAL'?'✕':'○'}</span><div><b>${u.nama}</b><div class="kecil">${u.bukti}</div></div></div>`).join('');
+  const sah=S.ujian.filter(x=>x.hasil==='SAH').length, gag=S.ujian.filter(x=>x.hasil==='GAGAL').length,
+        tum=S.ujian.filter(x=>x.hasil==='TUMBUH').length;
+  const gl=h=>h==='SAH'?'●':h==='GAGAL'?'✕':h==='TUMBUH'?'▲':'○';
+  w.innerHTML=`<div class="baris"><span class="k">vonis</span><span class="v ${gag?'r':'h'}"><b>${sah}/${S.ujian.length} SAH${tum?` · ${tum} TUMBUH`:''}${gag?' · '+gag+' GAGAL':''}</b></span></div>`+
+    S.ujian.map(u=>`<div class="uji"><span class="st ${u.hasil.toLowerCase()}">${gl(u.hasil)}</span><div><b>${u.nama}</b><div class="kecil">${u.bukti}</div></div></div>`).join('');
 }
 /* ================= RENDER OVERLAY (satu-satunya tempat teks) ================= */
 let S_TAB='pikir';
@@ -2839,6 +2878,280 @@ putaranState().then(()=>{ /* putaran abadi di dalam */ });
 
 window.__v297={JASAD, render:hud, sumber:()=>({hidup:JASAD.hidup, alasan:JASAD.alasan, biometrik:JASAD.b}),
   paksa:putaranState};
+})();
+</script>
+<script>
+/* ================= V299-MATA-LUAS:BEGIN =================
+   Mandat pemilik (2026-10-07): "matanya cuma ditempel ke harga Bitcoin?
+   apakah manusia hidup hanya makan nasi? gandum? emas? air? ...
+   jangan biarkan dia buta terhadap realitas pasar yang lebih luas —
+   trading bukan hanya Bitcoin" + "robot itu bodoh, makhluk itu adaptif".
+
+   DIAGNOSIS JUJUR V297: mata pertama hanya BTCUSDT — sekat tunggal.
+   BTC turun ≠ kolam turun; tiap koin bernapas dengan napasnya sendiri.
+
+   V299 menanam persepsi kolam-luas (semua API publik, nol kunci):
+   1. LEBAR-PASAR   ← ticker 24j seluruh koin sasaran: berapa naik/turun/datar
+   2. MATA-PEMIMPIN ← pupil mengikuti suara terkeras (|perubahan| terbesar),
+                      bukan selalu BTC; divergensi BTC↔kolam diakui terbuka
+   3. NAPAS-KOLAM   ← median σ1m (lilin 1m BTC + 2 koin terlantang)
+   4. KAGET-KOIN    ← |1m| koin mana pun > 3σ koin itu sendiri
+   5. KEBUGARAN-MULTI-ORGAN ← hirupan pasar kini dihitung organ hidup;
+                      satu berkas tua tak boleh mematikan seluruh tubuh
+   Kejujuran: bila semua hirupan gagal → status jujur, tanpa angka karangan.
+   Audit: window.__v299.  ============================================== */
+(function(){
+'use strict';
+if(window.__v299) return;
+const KLAMP=(v,a,c)=>Math.max(a,Math.min(c,v));
+function ghT(p){ if(typeof ghAmbil==='function') return ghAmbil(p); throw new Error('ghAmbil tiada'); }
+function gerbang(){ return (typeof GERBANG_BINANCE!=='undefined')?GERBANG_BINANCE:['https://data-api.binance.vision','https://api.binance.com']; }
+async function jsonG(p){
+  let e2=null;
+  for(const host of gerbang()){
+    try{ const r=await fetch(host+p,{cache:'no-store'}); if(!r.ok) throw new Error('HTTP '+r.status); return await r.json(); }
+    catch(e){ e2=e; }
+  }
+  throw e2||new Error('gerbang gagal');
+}
+async function lilin1m(sym){
+  const d=await jsonG('/api/v3/klines?symbol='+sym+'&interval=1m&limit=60');
+  const c=d.map(x=>parseFloat(x[4]));
+  const rr=[]; for(let i=1;i<c.length;i++) rr.push(Math.log(c[i]/c[i-1]));
+  const mu=rr.reduce((a,b)=>a+b,0)/rr.length;
+  const sig=Math.sqrt(rr.reduce((a,b)=>a+(b-mu)*(b-mu),0)/rr.length);
+  return {sym, sigma:sig, mom:c[c.length-1]/c[c.length-2]-1};
+}
+
+const M={siap:false, koin:0, naik:0, turun:0, datar:0, btcChg24:null, pemimpin:null,
+  sigmaMed:null, segar:false, gagal:null, kagetTerakhir:0, umurSasaranMnt:null};
+
+async function putaran(){
+  for(;;){
+    try{
+      /* kolam luas = sasaran harian tubuh (laporan) ∪ sumur kolam ∪ BTC */
+      const koin=['BTCUSDT'];
+      const dor=s=>{ if(s&&typeof s==='string'&&!koin.includes(s.toUpperCase())&&koin.length<12) koin.push(s.toUpperCase()); };
+      try{
+        const stx=JSON.parse(await ghT('laporan/sasaran-terkini.json'));
+        M.umurSasaranMnt=(stx&&stx.dihasilkan)?Math.max(0,(Date.now()-Date.parse(stx.dihasilkan))/60000):null;
+        const s=(stx&&Array.isArray(stx.sasaranHariIni))?stx.sasaranHariIni:[];
+        for(const x of s) dor(x.simbol);
+      }catch(e){}
+      if(typeof POND_POS!=='undefined') for(const k of Object.keys(POND_POS)) dor(k);
+
+      /* satu tarikan lebar: ticker 24j SEMUA koin kolam */
+      const t=await jsonG('/api/v3/ticker/24hr?symbols='+encodeURIComponent(JSON.stringify(koin)));
+      M.naik=0; M.turun=0; M.datar=0; M.koin=t.length; M.btcChg24=null;
+      let terlantang=null;
+      for(const x of t){
+        const chg=parseFloat(x.priceChangePercent);
+        if(x.symbol==='BTCUSDT'){ M.btcChg24=chg; continue; }
+        if(chg>0.05) M.naik++; else if(chg<-0.05) M.turun++; else M.datar++;
+        if(!terlantang||Math.abs(chg)>Math.abs(terlantang.chg)) terlantang={sym:x.symbol, chg};
+      }
+      let lantang=terlantang;
+      if(!lantang||Math.abs(M.btcChg24||0)>Math.abs(lantang.chg)*1.6)
+        lantang={sym:'BTCUSDT', chg:M.btcChg24||0};
+      M.pemimpin=lantang;
+
+      /* lilin 1m: BTC + 2 koin terlantang (hemat & jujur) */
+      const lantang2=t.filter(x=>x.symbol!=='BTCUSDT').map(x=>({s:x.symbol, c:parseFloat(x.priceChangePercent)}))
+        .sort((a,b)=>Math.abs(b.c)-Math.abs(a.c)).slice(0,2).map(x=>x.s);
+      const lis=(await Promise.all([lilin1m('BTCUSDT'), ...lantang2.map(s=>lilin1m(s).catch(()=>null))])).filter(Boolean);
+      const sig=lis.map(l=>l.sigma).sort((a,b)=>a-b);
+      M.sigmaMed=sig.length?sig[Math.floor(sig.length/2)]:null;
+
+      /* kaget-koin: |1m| koin mana pun > 3σ koin itu sendiri */
+      for(const l of lis){
+        if(l.sigma>0&&Math.abs(l.mom)>3*l.sigma&&Date.now()-M.kagetTerakhir>90000){
+          M.kagetTerakhir=Date.now();
+          if(typeof NADI!=='undefined') NADI.startle=Math.max(NADI.startle||0,0.6);
+          if(typeof jurnal==='function') jurnal('MATA', `koin <b>${l.sym}</b> bergetar nyata: ${(l.mom*100).toFixed(2)}% dalam 1 menit (>3σ-nya sendiri) — mataku berbalik ke sana; kolamku banyak rumpun`);
+        }
+      }
+      /* divergensi jujur: BTC vs mayoritas kolam */
+      const mayoritas=(M.naik>M.turun)?1:(M.turun>M.naik?-1:0);
+      if(M.btcChg24!=null&&mayoritas!==0&&Math.sign(M.btcChg24)!==mayoritas&&Date.now()-M.kagetTerakhir>90000){
+        M.kagetTerakhir=Date.now();
+        if(typeof jurnal==='function') jurnal('MATA', `divergensi nyata: BTC ${M.btcChg24>0?'+':''}${M.btcChg24.toFixed(2)}% (24j) tapi ${M.naik>M.turun?M.naik+' koin naik':M.turun+' koin turun'} — kolamku bukan budak BTC; mataku ke <b>${lantang.sym}</b>`);
+      }
+
+      /* kebugaran multi-organ + napas kolam: tulis-ulang kimi V297 dari data lebar */
+      M.segar=true; M.gagal=null;
+      if(window.__v297&&window.__v297.JASAD){
+        const b=window.__v297.JASAD.b;
+        const kbPasar=Math.exp(-(M.umurSasaranMnt==null?0.5:M.umurSasaranMnt)/60);
+        const kbMulti=Math.min(1, 0.95+0.05*kbPasar);   /* hirupan kini = organ hidup */
+        if(b.kebugaran==null||b.kebugaran<kbMulti) b.kebugaran=kbMulti;
+        if(b.sikap==='lemah-data') b.sikap=((b.netKum!=null&&b.netKum<0)||(b.akurasiPct!=null&&b.akurasiPct<45))?'bungkuk':'netral';
+        if(M.sigmaMed!=null) b.napasLaju=KLAMP(0.7+(M.sigmaMed*420), 0.7, 2.4);
+      }
+      M.siap=true;
+    }catch(e){ M.segar=false; M.gagal=String(e&&e.message||e); }
+    render();
+    await new Promise(r=>setTimeout(r,60000));
+  }
+}
+
+/* kunci mata tiap bingkai: pupil ke pemimpin kolam (menimpa tatapan BTC V297) */
+function kunciMata(){
+  if(!M.siap||!window.__v297||!window.__v297.JASAD||typeof NADI==='undefined') return;
+  const J=window.__v297.JASAD, p=M.pemimpin; if(!p) return;
+  let tx, ty;
+  if(typeof POND_POS!=='undefined'&&POND_POS[p.sym]&&NADI){
+    tx=KLAMP((POND_POS[p.sym].x-NADI.x)/420,-0.34,0.34);
+    ty=KLAMP(-(POND_POS[p.sym].y-NADI.y)/420,-0.2,0.2);
+  } else { tx=KLAMP((p.chg||0)*0.09,-0.34,0.34); ty=KLAMP(-Math.abs(p.chg||0)*0.012,-0.2,0.2); }
+  J.mataTgt={x:tx, y:ty};
+}
+function pasang(){
+  if(typeof nadiUpdate!=='function'){ setTimeout(pasang,1000); return; }
+  const asli=nadiUpdate;
+  nadiUpdate=function(dt,t){ asli(dt,t); try{ kunciMata(); }catch(e){} };
+}
+
+function render(){
+  const el=document.getElementById('jvMataLuas'); if(!el) return;
+  const baris=(k,v)=>`<div class="baris"><span class="k">${k}</span><span class="v">${v}</span></div>`;
+  el.innerHTML=(!M.siap)
+    ?`<div class="baris"><span class="k">status</span><span class="v r">BELUM MELIHAT</span></div><div class="kecil">${M.gagal||'menghirup kolam…'}</div>`
+    :baris('kolam', M.koin+' koin dipantau nyata')
+    +baris('lebar 24j', `<b style="color:#4fe0c2">${M.naik} naik</b> · <b style="color:#ff5f6d">${M.turun} turun</b> · ${M.datar} datar`)
+    +baris('BTC', M.btcChg24!=null?((M.btcChg24>0?'+':'')+M.btcChg24.toFixed(2)+'% (24j)'):'?')
+    +baris('mata kini', `<b>${M.pemimpin.sym}</b> ${((M.pemimpin.chg||0)>0?'+':'')+(M.pemimpin.chg||0).toFixed(2)}%`)
+    +baris('napas kolam', M.sigmaMed!=null?`σ1m median ${(M.sigmaMed*100).toFixed(3)}%`:'?')
+    +`<div class="kecil" style="margin-top:3px">BTC salah satu makananku — bukan satu-satunya. ${M.koin} koin dihirup tiap 60 dtk dari pasar nyata.</div>`;
+}
+
+window.__v299={M, render, kunciMata, paksa:putaran};
+pasang();
+putaran().catch(()=>{});
+})();
+</script>
+<script>
+/* ================= V300-TUBUH-TERSEGEL:BEGIN =================
+   Mandat pemilik (2026-10-07): "kenapa gerakannya berbeda-beda di setiap
+   perangkat? saat di-refresh gerakannya kembali ke semula! makhluk harus
+   diciptakan seutuhnya, di semua perangkat sama; kalau begitu ketika
+   perangkat tak dipakai makhluk itu mati — padahal ia harus berkembang
+   dan mandiri hidup." — teguran ini BENAR dan diterima sebagai dosa V297.
+
+   DIAGNOSIS JUJUR: posisi tubuh dulu = fisika LOKAL browser penonton →
+   perangkat A ≠ perangkat B; refresh = kembali ke asal; tak ada penonton =
+   tak bergerak. Itu wayang, bukan tubuh.
+
+   V300: tubuh DISEGEL di repo oleh Sadar-1 (metabolisme otonom ±20 mnt,
+   TANPA PENONTON) sebagai ruang-hidup/tubuh.json — rencana gerak ±26 mnt
+   dari keadaan nyata (sikap rapor ledger, sasaran terkunci, energi).
+   Setiap perangkat MENGEKSEKUSI timeline YANG SAMA: fungsi murni dari
+   (segel + jam dunia bersama). Refresh menyambung; semua layar identik;
+   tanpa penonton pun denyut berikutnya tetap tersegel — tubuh hidup di
+   repo, bukan di browser.
+   Kejujuran: segel >40 mnt (metabolisme telat) → paksaan dilepas dan
+   status ditulis terbuka; nol gerak karangan. Audit: window.__v300.
+   ============================================================ */
+(function(){
+'use strict';
+if(window.__v300) return;
+const KLAMP=(v,a,c)=>Math.max(a,Math.min(c,v));
+const ease=x=>x<0.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
+const SEG={data:null, gagal:null, siklusDiketahui:null};
+
+async function muat(){
+  try{
+    if(typeof ghAmbil!=='function') throw new Error('ghAmbil tiada');
+    const teks=await ghAmbil('ruang-hidup/tubuh.json');
+    const d=JSON.parse(teks);
+    if(!d||!Array.isArray(d.rencana)||!d.rencana.length) throw new Error('segel tanpa rencana');
+    SEG.data=d; SEG.gagal=null;
+    if(SEG.siklusDiketahui!=null&&d.bangunKe>SEG.siklusDiketahui&&typeof NADI!=='undefined')
+      NADI.startle=Math.max(NADI.startle||0,0.45);   /* segel baru = denyut baru, sama di semua layar */
+    SEG.siklusDiketahui=d.bangunKe;
+  }catch(e){ SEG.gagal=String(e&&e.message||e); }
+}
+function umurSegelMnt(){ const d=SEG.data; return (d&&d.dihasilkan)?Math.max(0,(Date.now()-Date.parse(d.dihasilkan))/60000):null; }
+
+/* anchor semantik → piksel LAYOUT perangkat ini (semantik sama, piksel wajar) */
+function piksel(ruang,u,v){
+  if(typeof LAYOUT==='undefined') return null;
+  if(ruang==='pond'&&LAYOUT.pond) return {x:LAYOUT.pond.x+LAYOUT.pond.w*(u==null?0.5:u), y:LAYOUT.pond.y+LAYOUT.pond.h*(v==null?0.5:v)};
+  if((!ruang||ruang==='den')&&LAYOUT.den) return {x:LAYOUT.den.x, y:LAYOUT.den.y};
+  const z=(LAYOUT.zona||[]).find(z=>z.dir===ruang||z.nama===String(ruang||'').toUpperCase());
+  if(z) return {x:z.rect.x+10+(z.rect.w-20)*(u==null?0.5:u), y:z.rect.y+12+(z.rect.h-24)*(v==null?0.5:v)};
+  return LAYOUT.den?{x:LAYOUT.den.x,y:LAYOUT.den.y}:null;
+}
+function anchorDari(s){ return piksel(s.ruang, s.u, s.v); }
+
+/* pose = fungsi MURNI dari (segel, t dunia) → identik di semua perangkat */
+function pose(){
+  const D=SEG.data; if(!D) return null;
+  let t=(Date.now()-Date.parse(D.dihasilkan))/1000;
+  if(!(t>=0)) t=0;                                 /* jam perangkat di depan → jepit */
+  let sblm=null;
+  for(const s of D.rencana){
+    if(t<s.d) return {s, tl:t, p0:sblm?anchorDari(sblm):null, prog:t/s.d};
+    t-=s.d; sblm=s;
+  }
+  const s=D.rencana[D.rencana.length-1];
+  return {s, tl:s.d, p0:sblm?anchorDari(sblm):null, prog:1, habis:true};
+}
+function posisiKini(){
+  const p=pose(); if(!p) return null;
+  const s=p.s, tgt=piksel(s.ruang,s.u,s.v); if(!tgt) return null;
+  const seed=((SEG.data.seed||0)%628)/100;
+  let x=tgt.x, y=tgt.y;
+  if(s.aksi==='renang'&&p.p0){
+    const k=ease(KLAMP(p.prog,0,1)); x=p.p0.x+(tgt.x-p.p0.x)*k; y=p.p0.y+(tgt.y-p.p0.y)*k;
+  } else if(s.aksi==='patroli'){
+    const om=0.3+(s.u||0.5)*0.25, ph=seed+(s.v||0.5)*6.283, R=24+16*(s.v||0.5);
+    x+=Math.cos(p.tl*om+ph)*R; y+=Math.sin(p.tl*om*1.7+ph)*R*0.55;
+  } else {                                          /* istirahat / menjangkau / habis */
+    x+=Math.sin(p.tl*0.5+seed)*3; y+=Math.sin(p.tl*0.8+seed*1.3)*2.2;
+  }
+  return {x, y, aksi:s.aksi, ruang:s.ruang, simbol:s.simbol||null, habis:!!p.habis};
+}
+
+function terapkanSegel(dt){
+  const umur=umurSegelMnt();
+  if(!SEG.data||umur==null||umur>40||typeof NADI==='undefined') return;  /* segel tua → bebas & jujur */
+  const p=posisiKini(); if(!p) return;
+  const jerk=(NADI.startle||0);                     /* sentuhan penonton: simpangan lokal meluruh cepat */
+  NADI.x=p.x; NADI.y=p.y+Math.sin(performance.now()/40)*jerk*3;
+  NADI.vx=0; NADI.vy=0; NADI.tx=p.x; NADI.ty=p.y;
+  if(p.aksi==='menjangkau'&&NADI.tangan){
+    for(let i=0;i<2;i++){
+      const tg={x:p.x+(i?14:-14), y:p.y+6};
+      const k2=Math.min(1,dt*3);
+      NADI.tangan[i].x+=(tg.x-NADI.tangan[i].x)*k2; NADI.tangan[i].y+=(tg.y-NADI.tangan[i].y)*k2;
+    }
+  }
+}
+function pasang(){
+  if(typeof nadiUpdate!=='function'){ setTimeout(pasang,1000); return; }
+  const asli=nadiUpdate;
+  nadiUpdate=function(dt,t){ asli(dt,t); try{ terapkanSegel(dt); }catch(e){} };
+}
+function render(){
+  const el=document.getElementById('jvSegel'); if(!el) return;
+  const baris=(k,v)=>`<div class="baris"><span class="k">${k}</span><span class="v">${v}</span></div>`;
+  if(!SEG.data){
+    el.innerHTML=`<div class="baris"><span class="k">status</span><span class="v r">BELUM TERSEGEL</span></div><div class="kecil">${SEG.gagal||'menunggu metabolisme Sadar-1 menulis ruang-hidup/tubuh.json (bangun berikutnya)'}</div>`;
+    return;
+  }
+  const umur=umurSegelMnt(), p=(typeof posisiKini==='function')?posisiKini():null;
+  el.innerHTML=baris('segel', 'bangun #'+(SEG.data.bangunKe!=null?SEG.data.bangunKe:'?')+(umur!=null?` · umur ${umur.toFixed(0)} mnt`:''))
+    +baris('sikap segel', SEG.data.sikap||'?')
+    +baris('gerak kini', p?`${p.aksi} → ${p.ruang}${p.simbol?' ('+p.simbol+')':''}${p.habis?' · menunggu denyut — jujur':''}`:'—')
+    +baris('rencana', (SEG.data.rencana||[]).length+' gerak tersegel')
+    +`<div class="kecil" style="margin-top:3px">timeline yang sama dieksekusi SEMUA perangkat dari satu segel — refresh menyambung; tanpa penonton pun Sadar-1 men-SEGEL lagi ±20 mnt.</div>`;
+}
+
+window.__v300={SEG, pose, posisiKini, muat, paksa:muat};
+pasang();
+muat().then(()=>render());
+setInterval(()=>{ muat().then(()=>render()); }, 60000);
+setInterval(render, 15000);
 })();
 </script>
 

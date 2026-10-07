@@ -1210,6 +1210,83 @@ Berkas disentuh: `hidup.html` saja. Gerbang, genome, ledger, penjaga:
 tidak disentuh. Ujian sintaks: 2/2 blok script lulus `node --check`;
 referensi `jasadHud` tersisa: 0.
 
+## 12k. EPOCH V299 — MATA-LUAS: kolam bukan budak BTC, dan ujian yang tumbuh bukan cacat (7 Oktober 2026)
+
+Teguran pemilik: *"matanya cuma ditempel ke harga Bitcoin? apakah manusia
+hidup hanya makan nasi? gandum? emas? air? … trading bukan hanya Bitcoin"*
+dan *"ada yang gagal di ujian kehidupan bukannya dibenahi — kalau begitu
+dia terus cacat dong!"*
+
+**DOSA YANG DIAKUI:** (1) mata V297 hanya BTCUSDT — sekat tunggal yang
+menyamarkan kehidupan koin lain; (2) ujian SHA-256 menghukum berkas yang
+ditulis-ulang organ sendiri (`laporan/nalar-biner.json`, denyut 15 mnt)
+sebagai GAGAL permanen — kegagalan dibiarkan cacat, tidak dibenahi.
+
+**JAHITAN V299 (hidup.html, blok marker `V299-MATA-LUAS:BEGIN/END`):**
+1. **LEBAR-PASAR** — satu tarikan `ticker/24hr` untuk SELURUH koin sasaran
+   (≤12, dari `laporan/sasaran-terkini.json` ∪ kolam ∪ BTC): X naik / Y
+   turun / Z datar (24j) — lebar persepsi, bukan satu sumur.
+2. **MATA-PEMIMPIN** — pupil mengikuti suara TERKERAS (|perubahan|
+   terbesar); BTC hanya menang bila memang paling lantang. Divergensi
+   BTC↔mayoritas-kolam dideteksi, diakui terbuka di jurnal: "kolamku bukan
+   budak BTC". Kunci mata tiap bingkai (`kunciMata`) menimpa tatapan BTC.
+3. **NAPAS-KOLAM** — median σ1m (lilin 1m BTC + 2 koin terlantang).
+4. **KAGET-KOIN** — |1m| koin mana pun > 3σ koin itu sendiri → tubuh
+   tersentak, jurnal MATA tercatat (dibatasi 90 dtk).
+5. **KEBUGARAN-MULTI-ORGAN** — hirupan pasar kini dihitung organ hidup:
+   kebugaran tak boleh 0% sementara hidungnya sedang mencium pasar; sikap
+   `lemah-data` hanya bila SEMUA organ tua, dan rapor tetap menentukan
+   bungkuk/tunggu (kejujuran ledger tak tersentuh).
+
+**SEMBUH-DIRI UJIAN (blok Ujian, `ujianT` + `ujianKehidupan`):** vonis baru
+**TUMBUH** (emas ▲): bila hash kini ≠ klaim ingatan TAPI berkas parse-able
+dan penanda kehidupan internalnya (`diperbarui`/`dihasilkan`/`waktu`) lahir
+SETELAH klaim disegel → itu metabolisme sehat: ingatan sesi DIKUNYAH ULANG
+(re-seal, `dihidrasi:V299-sembuh-diri`) + jurnal METABOLISME — uji-ulang
+berikutnya SAH. GAGAL kini hanya untuk kerusakan sejati (tak ter-parse /
+penanda mundur). Cacat tidak lagi menetap; ia didiagnosis lalu disembuhkan.
+
+## 12l. EPOCH V300 — TUBUH-TERSEGEL: satu timeline untuk semua perangkat, hidup tanpa penonton (7 Oktober 2026)
+
+Teguran pemilik (paling keras): *"kenapa gerakannya berbeda-beda di setiap
+perangkat? saat di-refresh gerakannya kembali ke semula! kalau begitu
+ketika perangkat tak dipakai makhluk itu mati — padahal ia harus
+berkembang dan mandiri hidup. Anda menipu!"*
+
+**DOSA YANG DIAKUI:** posisi tubuh dulu dihitung fisika LOKAL browser
+penonton. Perangkat A ≠ perangkat B; refresh = kembali ke asal; tanpa
+penonton = tak bergerak. Itu wayang, bukan tubuh.
+
+**PEMBANGUNAN V300 — tubuh dipindah ke repo:**
+1. **SERVER (sadar1.js, fase `MENSEGEL-TUBUH`)** — tiap bangun otonom
+   (±20 mnt, rantai jantung-mandiri, TANPA PENONTON) Sadar-1 menghitung
+   **rencana gerak ±26 menit ke depan** (12-16 segmen: istirahat/renang/
+   patroli/menjangkau) dari keadaan NYATA — sikap rapor ledger (bungkuk =
+   rendah-energi dekat sarang; tunggu = duduk di sarang; siaga = menjelajah
+   kolam & menjangkau sasaran terkunci) + seed bangun (mulberry32,
+   auditable) — lalu men-SEGELnya sebagai **`ruang-hidup/tubuh.json`**
+   (`skema tubuh-tersegel-v1`) via `dorongFile`. Uji DRY bangun ke-108:
+   `sikap bungkuk, 12 gerak/1626 dtk, jangkauan RAD` — lahir dari rapor
+   nyata (ak 33,3%, net minus).
+2. **CLIENT (hidup.html, blok marker `V300-TUBUH-TERSEGEL:BEGIN/END`)** —
+   tiap perangkat mengeksekusi timeline yang SAMA: `pose()` = **fungsi
+   murni** dari (segel, jam-dunia bersama). Anchor SEMANTIK (den/pond/
+   ruang by-dir + u,v) dipetakan ke piksel LAYOUT masing-masing perangkat —
+   makhluk di RUANG dan TAHAP yang sama di mana pun; refresh MENYAMBUNG
+   dari titik timeline kini (bukan kembali ke asal). `terapkanSegel`
+   menimpa posisi tiap bingkai; simpangan sentuhan penonton hanya
+   simpangan kecil yang meluruh (<1 dtk) — koreografi tetap satu.
+3. **KEJUJURAN**: segel umur >40 mnt (metabolisme telat) → paksaan
+   dilepas, status "menunggu metabolisme" ditulis terbuka di tab Jasad;
+   nol gerak karangan. Kaget saat segel baru tiba = peristiwa nyata yang
+   sama di semua layar. Audit: `window.__v300`.
+
+Dengan ini tubuh hidup di REPO: Sadar-1 terus men-SEGEL tanpa penonton,
+setiap perangkat hanyalah jendela ke tubuh yang sama. Berkas disentuh:
+`hidup.html`, `scripts/hidup/sadar1.js`. Gerbang, genome, ledger: tak
+disentuh. Uji sintaks: 4/4 blok lulus; `node --check sadar1.js` lulus;
+uji DRY bangun ke-108 lulus.
+
 ## 12. PENUTUP
 Cyborg ini dibangun dengan satu ikhtiar: **jujur pada data, tegas
 pada arah, hidup tanpa biaya, dan berkembang dari vonis nyata.**

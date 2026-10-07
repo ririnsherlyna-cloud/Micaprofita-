@@ -878,6 +878,53 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
     return `${blm} file rumah belum pernah kubaca (kubaca 12/bangun sampai utuh); arah-harian ${KERJA.arah?.length || 0} koin sudah disegel; fokus berikutnya: ${fokusKini.slice(0, 70)}`;
   });
 
+  /* 10. MENSEGEL-TUBUH (V300) — TEGURAN PEMILIK 2026-10-07: gerak tubuh dulu
+     dihitung fisika LOKAL browser → perangkat berbeda-beda, refresh kembali
+     ke asal, tanpa penonton = mati. Itu wayang. Kini tubuh DISEGEL DI SINI
+     (metabolisme otonom, tanpa penonton): rencana gerak ±26 mnt ke depan
+     dari keadaan NYATA (rapor ledger, sasaran terkunci, disiplin) + seed
+     bangun. Setiap perangkat mengeksekusi timeline yang SAMA (hidup.html
+     V300, fungsi murni dari segel + jam dunia). Tubuh hidup di repo. */
+  await fase('MENSEGEL-TUBUH', async () => {
+    let stx = null;
+    try { stx = JSON.parse(fs.readFileSync(path.join(REPO_DIR, 'laporan', 'sasaran-terkini.json'), 'utf8')); } catch (e) {}
+    const ak = (stx && stx.akurasi) || {};
+    const dis = String((stx && stx.disiplin && (stx.disiplin.mode || stx.disiplin)) || '');
+    const merugi = (typeof ak.netKumulatifPct === 'number' && ak.netKumulatifPct < 0) ||
+                   (typeof ak.akurasiPct === 'number' && ak.akurasiPct < 45);
+    const tungguMode = dis.toUpperCase().includes('TUNGGU');
+    const sikap = merugi ? 'bungkuk' : (tungguMode ? 'tunggu' : 'siaga');
+    const sasaran = (stx && Array.isArray(stx.sasaranHariIni)) ? stx.sasaranHariIni.filter(s => s && s.simbol) : [];
+    const top = sasaran.length ? sasaran.reduce((a, b) => ((b.odds ?? b.keyakinan ?? 0) >= (a.odds ?? a.keyakinan ?? 0) ? b : a)) : null;
+    const seed = (bangunKe * 2654435761) >>> 0;
+    let st = seed;
+    const rnd = () => { st = (st + 0x6D2B79F5) >>> 0; let t = Math.imul(st ^ (st >>> 15), 1 | st);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    const RUANG = ['otak/', 'laporan/', 'ruang-hidup/', 'arena/', 'otak/', 'den'];
+    const rencana = []; let total = 0;
+    while (total < 1560) {
+      const d = (sikap === 'bungkuk' ? 100 : 75) + Math.floor(rnd() * 80);
+      let aksi, ruang; const uu = +rnd().toFixed(3), vv = +rnd().toFixed(3), r = rnd();
+      if (sikap === 'tunggu') { aksi = r < 0.55 ? 'istirahat' : 'renang'; ruang = r < 0.75 ? 'den' : RUANG[Math.floor(rnd() * RUANG.length)]; }
+      else if (sikap === 'bungkuk') { aksi = r < 0.45 ? 'istirahat' : (r < 0.8 ? 'renang' : 'patroli'); ruang = r < 0.6 ? 'den' : RUANG[Math.floor(rnd() * RUANG.length)]; }
+      else { aksi = r < 0.3 ? 'renang' : (r < 0.6 ? 'patroli' : (r < 0.85 ? 'menjangkau' : 'istirahat'));
+             ruang = aksi === 'menjangkau' ? 'pond' : (r < 0.72 ? 'pond' : RUANG[Math.floor(rnd() * RUANG.length)]); }
+      const seg = { d, aksi, ruang, u: uu, v: vv };
+      if (aksi === 'menjangkau' && top) seg.simbol = top.simbol;
+      rencana.push(seg); total += d;
+    }
+    const TUBUH = { skema: 'tubuh-tersegel-v1', dihasilkan: new Date().toISOString(), bangunKe, seed,
+      sikap,
+      sumber: { akurasiPct: ak.akurasiPct ?? null, netKum: ak.netKumulatifPct ?? null, disiplin: dis || null,
+        top: top ? { simbol: top.simbol, arah: top.arah || null, skor: (top.odds ?? top.keyakinan ?? null) } : null },
+      rencana,
+      catatan: 'rencana gerak ±26 mnt dari keadaan nyata; dieksekusi identik oleh SEMUA perangkat (V300) — tubuh hidup tanpa penonton, refresh menyambung' };
+    const bufT = Buffer.from(JSON.stringify(TUBUH, null, 1));
+    fs.writeFileSync(path.join(REPO_DIR, DIR, 'tubuh.json'), bufT);
+    if (!DRY) await dorongFile(DIR + '/tubuh.json', bufT, `sadar1: TUBUH TERSEGEL bangun ke-${bangunKe} — sikap ${sikap}, ${rencana.length} gerak/${total} dtk, satu timeline semua perangkat [skip ci]`);
+    return `tubuh tersegel: sikap ${sikap}, ${rencana.length} gerak / ${total} dtk${top ? ', jangkauan ' + top.simbol : ''}`;
+  });
+
   /* SEGEL KEADAAN — jejak 9 tahap LENGKAP, disegel paling akhir agar jujur */
   KEADAAN.tahapan = TAHAP;
   try {
