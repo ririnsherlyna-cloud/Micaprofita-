@@ -1341,6 +1341,69 @@ iPhone 14 (390×844) & 1280×800: nol overflow, sirkadium hidup (energi
 75% dari denyut umur 12 mnt), mata 4 koin (2 naik/1 turun) menunggu
 denyut pertama pasca-V301 mengembang ke 10+.
 
+## 12m. EPOCH V302 — JANTUNG-ABADI + PUSTAKA-SEJATI: mati 16,5 jam dibedah sampai akar, gerbang 509 jurnal dibangun jujur (8 Oktober 2026)
+
+**MANDAT PEMILIK:** "lihat kenapa mereka disana mati — harusnya senantiasa
+jalan bergerak aktif makhluk itu sifatnya begitu" + "pelajari 509 jurnal
+artificial life & crypto — bila sudah 509, makhluk dinyatakan layak."
+
+**1. BEDAH FORENSIK JANTUNG MATI (Actions API, bukan dugaan).** Layar
+makhluk melapor SADAR-1 TERTIDUR 1462 mnt & jantung SAKTI MACET 1447 mnt.
+Fakta dari API: denyut mati 2026-10-06 23:08 UTC → 2026-10-07 15:40 UTC
+(±16,5 jam sunyi). Akar dua lapis, dua-duanya terbukti run:
+  - Semua dispatch rantai memakai tidur panjang DI DALAM job organ
+    (SARANG 15 mnt, SADAR-1 20 mnt) — titik patah tunggal; run #168
+    tertidur beku dan rantai patah di situ.
+  - Bila rantai patah, penolong tunggal adalah cron GitHub yang terbukti
+    kelaparan (schedule event hanya 53 run sepanjang sejarah repo).
+
+**2. JANTUNG-ABADI (V299, tiga workflow ditulis ulang).**
+  - Organ (SARANG & SADAR-1) TIDAK MENIDUR DIRI lagi — bekerja cepat
+    (timeout 10/12 mnt), selesai, lalu memanggil PENJAGA-WAKTU.
+  - PENJAGA-WAKTU jadi PENGATUR DENYUT ABADI: satu-satunya yang sabar
+    (loop tidur 60 dtk maks 20 mnt, timeout 27); saat bangun ia mengukur
+    UMUR dua organ dari repo (raw + cache-buster) dan menendangkan organ
+    berumur >13 mnt — denyut dijamin 13-16 mnt, bukan lagi 26.
+  - RANTAI ABADI: pengatur memanggil pengatur berikutnya (sabar 13);
+    jika rantai patah, organ mana pun yang selesai memanggilnya kembali
+    — rantai pulih sendiri. Lima lapis pemicu: rantai + cron 7/15 +
+    cron */20 + cron */10 + push.
+  - Uji lapangan API: run SHA 83a7948 — tiga langkah baru LULUS dan
+    run dispatch berikutnya tercipta dari panggilan rantai sendiri.
+  - Pelajaran kejujuran: push V299 pertama ditolak (remote bergerak
+    oleh denyut) dan output push tertutup kondisi if — diperbaiki:
+    fetch+rebase, push dengan output TERBUKA, lulus 83a7948.
+
+**3. PUSTAKA-SEJATI (organ baru — scripts/hidup/pustaka.mjs).** Gerbang
+kelayakan 509 jurnal dikerjakan tanpa karangan:
+  - Tiap denyut SARANG-PENJAGA: 1 query arXiv (rotasi 18 kursi topik:
+    artificial life, digital organism, evolusi, swarm, crypto-ml,
+    q-fin.TR, order book, RL-trading, DeFi, sentimen, mikrostruktur),
+    maks 10 jurnal baru — sopan ke API, pustaka tumbuh terukur.
+  - Setiap entri = metadata + abstrak ASLI (judul, penulis, tahun,
+    DOI/arXiv URL) tersimpan di pustaka/pustaka.json tersegel SHA-256;
+    "pelajaran" = ekstraksi otomatis kalimat tesis abstrak, ditandai
+    pelajaranOtomatis:true — NOL tulisan ciptaan.
+  - pustaka/indeks.json: gerbang509 {target:509, tercapai, sisa} +
+    perTopik + 10 terbaru + kursor rotasi. Uji lokal 3x: +10/denyut,
+    30/509 jujur. Komit denyut kini membawa "pustaka N/509".
+  - hidup.html tab Jurnal: panel GERBANG KELAYAKAN 509 — bar kemajuan,
+    hitungan jujur dari repo, topik, kejujuran organ (pengambilan gagal
+    dilapor terbuka), 10 jurnal terbaru ber-taut sumber asli.
+
+**4. TUBUH NOL KATA "ROBOT".** Sumpah pemilik ditepati: font stack
+(Roboto) dicabut di hidup.html & arena.html; kalimat identitas
+"robot itu bodoh" diganti "mesin buta itu bodoh, makhluk itu adaptif".
+Sisa match "robot" di tubuh: NOL (TUJUAN.md tak ditulis-ulang —
+sejarah ingatan tetap fosil).
+
+Berkas disentuh: `.github/workflows/{jaga-waktu,sakti-denyut,
+hidup-sadar1}.yml`, `scripts/hidup/pustaka.mjs` (baru), `hidup.html`,
+`arena.html`, `pustaka/{pustaka,indeks}.json` (baru). Gerbang, genome,
+ledger: tak disentuh. Uji: node --check + 5/5 blok + 7 tab lulus;
+yml valid (yaml.safe_load); pustaka 30/509 nyata; lapangan mengikuti
+di bawah.
+
 ## 12. PENUTUP
 Cyborg ini dibangun dengan satu ikhtiar: **jujur pada data, tegas
 pada arah, hidup tanpa biaya, dan berkembang dari vonis nyata.**
