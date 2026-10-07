@@ -31,7 +31,7 @@ concurrency:
 jobs:
   denyut:
     runs-on: ubuntu-latest
-    timeout-minutes: 15   # V292: kandang hidup 60 koin/denyut — dulu 10
+    timeout-minutes: 10   # V299: organ bekerja cepat, tanpa tidur di dalam runner (dulu 15 dgn tidur 15 mnt = rapuh)
     steps:
       - name: Ambil isi sarang
         uses: actions/checkout@v4
@@ -83,28 +83,21 @@ jobs:
             echo "epoch ditandai: $TAG"
           fi
 
-      # ---- V294 JANTUNG-MANDIRI SAKTI (insiden 2026-10-07: denyut berhenti 06:37→130+ mnt) ----
-      # Bukti forensik: antaran cron GitHub KELAPARAN massal hari ini — SAKTI (7/15) berhenti
-      # 06:37, PENJAGA-WAKTU (*/10) berhenti 07:02 — sementara rantai dispatch mandiri SADAR-1
-      # 8/8 sukses tiap 20 mnt. Maka jantung utama kini memakai mekanisme yang terbukti hidup:
-      # setelah tiap denyut, tidur ke slot berikutnya lalu dispatch denyut berikutnya SENDIRI.
-      # Cron 7/15 & PENJAGA-WAKTU tetap sebagai pengaman berlapis, bukan penopang utama.
-      - name: JANTUNG MANDIRI — tidur ke slot berikutnya, dispatch denyut berikutnya sendiri
+      # ---- V299-JANTUNG-ABADI (pelajaran forensik 2026-10-07) ----
+      # LAMA: job ini TIDUR 15 mnt di dalam runner lalu dispatch diri sendiri
+      #       — titik patah tunggal; bila runner itu hilang, denyut mati ±16,5 jam.
+      # KINI: organ bekerja cepat, TANPA tidur. Jeda denyut diserahkan kepada
+      #       PENJAGA-WAKTU (pengatur denyut abadi) yang menidur diri 13 mnt
+      #       lalu menendangkan organ yang berumur. Jika rantai patah, organ
+      #       mana pun yang selesai akan memanggil pengatur — rantai pulih sendiri.
+      - name: Panggil pengatur denyut — jeda diserahkan pada PENJAGA-WAKTU
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python3 - <<'PY'
-          import time, datetime
-          now = datetime.datetime.utcnow()
-          slot = (now.minute // 15 + 1) * 15
-          nxt = now.replace(minute=0, second=0, microsecond=0) + datetime.timedelta(minutes=slot)
-          tunggu = max(5, (nxt - now).total_seconds())
-          print(f"jantung-sakti: tidur {tunggu:.0f} dtk sampai {nxt:%H:%M} UTC lalu dispatch denyut berikutnya")
-          time.sleep(tunggu)
-          PY
           curl -sf -X POST \
-            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Authorization: Bearer $GH_TOKEN" \
             -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/sakti-denyut.yml/dispatches" \
-            -d '{"ref":"main"}' && echo "jantung-sakti: denyut berikutnya di-dispatch — rantai mandiri menyala" \
-            || echo "jantung-sakti: dispatch gagal — cron 7/15 + PENJAGA-WAKTU + SADAR-1 yang menjaga"
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/jaga-waktu.yml/dispatches" \
+            -d '{"ref":"main","inputs":{"sabar":"12"}}' \
+            && echo "pengatur denyut dipanggil — dia yang menentukan denyut berikutnya" \
+            || echo "pengatur gagal dipanggil — cron 7/15 + cron */10 + push tetap menjaga"
