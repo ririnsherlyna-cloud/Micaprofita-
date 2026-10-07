@@ -30,7 +30,7 @@ concurrency:
 jobs:
   denyut:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15   # V292: kandang hidup 60 koin/denyut — dulu 10
     steps:
       - name: Ambil isi sarang
         uses: actions/checkout@v4
@@ -40,6 +40,10 @@ jobs:
         env:
           TOKEN_DENYUT: ${{ secrets.GITHUB_TOKEN }}
           REPO_DENYUT: ${{ github.repository }}
+          # V292 OTAK-LLM — menyala otomatis bila pemilik memasang kunci; tanpa kunci = jujur nalar lokal
+          LLM_URL: ${{ secrets.LLM_URL }}
+          LLM_KEY: ${{ secrets.LLM_KEY }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
 
       - name: Komit pertumbuhan (jejak hidup permanen)
         run: |
@@ -48,7 +52,7 @@ jobs:
           SIKLUS=$(python3 -c "import json;r=json.load(open('laporan/sasaran-terkini.json'));print(r['pertumbuhan']['siklus'])")
           AKURASI=$(python3 -c "import json;r=json.load(open('laporan/sasaran-terkini.json'));a=r['akurasi']['akurasiPct'];print(f'{a}%' if a is not None else 'belum-ada')" 2>/dev/null || echo "?")
           SASARAN=$(python3 -c "import json;r=json.load(open('laporan/sasaran-terkini.json'));print(len(r['sasaranHariIni']))" 2>/dev/null || echo "?")
-          git add laporan otak
+          git add laporan otak arena-keadaan.json   # V292: arena-keadaan.json ikut komit — satu rumah satu kebenaran
           if git diff --cached --quiet; then
             echo "tanpa perubahan — tanpa komit"
           else
