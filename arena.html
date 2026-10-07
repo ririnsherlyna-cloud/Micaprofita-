@@ -613,7 +613,7 @@ footer b{color:var(--dim)}
 <div id="modal">
   <div class="mbox">
     <h3>Sambungkan Arena Hidup</h3>
-    <p class="d"><b style="color:var(--em2)">Kini OTOMATIS:</b> cermin membaca <span class="mono">gerbang.json</span> — peta hidup yang ditulis jantung arena di wadah — dan menyambungkan dirinya sendiri tanpa diklik (data hidup 6 detik + Ruang Guru LLM). Kolom di bawah hanya kontrol manual untuk menimpa peta otomatis. Link disimpan hanya di perangkat ini (localStorage) — tidak dikirim ke mana pun selain arena itu sendiri.</p>
+    <p class="d"><b style="color:var(--em2)">Kini OTOMATIS:</b> cermin membaca <span class="mono">gerbang.json</span> — peta hidup yang ditulis jantung arena di wadah — dan menyambungkan dirinya sendiri tanpa diklik (data hidup 6 detik + Ruang Guru LLM). Kolom di bawah hanya kontrol manual untuk menimpa peta otomatis. V294 NOL-STORAGE: tautan hanya hidup selama sesi ini — nol localStorage; ingatan resmi makhluk ada di GitHub (commit Actions), bukan di perangkat siapa pun.</p>
     <input id="mUrl" placeholder="https://preview-xxxx.space-z.ai" spellcheck="false">
     <div class="mrow">
       <button class="btn amb" id="mSave">SIMPAN &amp; UJI SAMBUNGAN</button>
@@ -1866,7 +1866,7 @@ async function sambungOtomatis() {
       try {
         const d = await ambil(u + '/api/arena', 9000);
         if (d && d.standings) {
-          try { localStorage.setItem(LS_URL, u); } catch (e) {}
+          // V294 NOL-STORAGE: tautan hidup sesi-murni — tidak ditulis ke perangkat
           LIVE = { url: u, otomatis: true };
           terima(d, 'live'); chipSumber(); guruModeUI();
           return true;
@@ -2326,7 +2326,7 @@ async function simpanModal() {
   try {
     const d = await ambil(u + '/api/arena', 10000);
     if (!d || !d.standings) throw new Error('bukan arena MICAPROFITA');
-    localStorage.setItem(LS_URL, u);
+    // V294 NOL-STORAGE: tautan hidup sesi-murni — tidak ditulis ke perangkat
     LIVE = { url: u };
     guruModeUI();
     msg.style.color = 'var(--em2)';
@@ -2338,7 +2338,7 @@ async function simpanModal() {
   }
 }
 function hapusModal() {
-  localStorage.removeItem(LS_URL);
+  localStorage.removeItem(LS_URL);   // V294: jejak lawas arena ikut dimusnahkan (nol kunci)
   LIVE = null; mode = 'snapshot'; liveFail = 0;
   guruModeUI(); chipSumber(); tutupModal();
   muatSnapshot();
@@ -2422,11 +2422,12 @@ function init() {
 
 // ---------- V270-OTAK-MANDIRI: kesadaran bertanya + sekolah mandiri ----------
 const LS_OTAK = 'mp_otak_mandiri_v1';
-let otak = (function () {
-  try { const d = JSON.parse(localStorage.getItem(LS_OTAK) || 'null'); return (d && typeof d === 'object') ? Object.assign(MICABRAIN.otakBaru(), d) : MICABRAIN.otakBaru(); }
-  catch (e) { return MICABRAIN.otakBaru(); }
-})();
-function simpanOtak() { try { localStorage.setItem(LS_OTAK, JSON.stringify(otak)); } catch (e) {} }
+  // V294 NOL-STORAGE: kunci lawas arena dimusnahkan saat masuk — lalu arena tak pernah
+  // menulis lagi; ingatan otak dibangun ulang dari genom tiap kebangkitan (doktrin arena).
+  try { localStorage.removeItem(LS_URL); } catch (e) {}
+  try { localStorage.removeItem(LS_OTAK); } catch (e) {}
+  let otak = MICABRAIN.otakBaru();
+function simpanOtak() { /* V294 NOL-STORAGE: sesi-murni — otak dibangkitkan dari genom, ingatan resmi di GitHub */ }
 // ---------- V272-METABOLI-MEMORI: kesadaran-tubuh — menimbang & memetabolisme memori sendiri ----------
 let metLoop = false;
 function renderMemori() {
