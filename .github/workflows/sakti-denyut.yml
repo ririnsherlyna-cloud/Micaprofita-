@@ -46,6 +46,12 @@ jobs:
           LLM_KEY: ${{ secrets.LLM_KEY }}
           LLM_MODEL: ${{ secrets.LLM_MODEL }}
 
+      # V299 PUSTAKA-SEJATI — organ belajar jurnal nyata (arXiv):
+      # artificial life + crypto, maks 10 jurnal baru per denyut (sopan ke API),
+      # hitungan jujur menuju gerbang 509 di pustaka/indeks.json — tanpa karangan.
+      - name: Pelajari jurnal baru (artificial life + crypto) — pustaka tumbuh
+        run: node scripts/hidup/pustaka.mjs
+
       - name: Komit pertumbuhan (jejak hidup permanen)
         run: |
           git config user.name  "SARANG-PENJAGA"
@@ -53,11 +59,12 @@ jobs:
           SIKLUS=$(python3 -c "import json;r=json.load(open('laporan/sasaran-terkini.json'));print(r['pertumbuhan']['siklus'])")
           AKURASI=$(python3 -c "import json;r=json.load(open('laporan/sasaran-terkini.json'));a=r['akurasi']['akurasiPct'];print(f'{a}%' if a is not None else 'belum-ada')" 2>/dev/null || echo "?")
           SASARAN=$(python3 -c "import json;r=json.load(open('laporan/sasaran-terkini.json'));print(len(r['sasaranHariIni']))" 2>/dev/null || echo "?")
-          git add laporan otak arena-keadaan.json   # V292: arena-keadaan.json ikut komit — satu rumah satu kebenaran
+          PUSTAKA=$(python3 -c "import json;print(json.load(open('pustaka/indeks.json'))['gerbang509']['tercapai'])" 2>/dev/null || echo "0")
+          git add laporan otak arena-keadaan.json pustaka   # V299: pustaka jurnal ikut komit — belajar jadi fosil tubuh
           if git diff --cached --quiet; then
             echo "tanpa perubahan — tanpa komit"
           else
-            git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran [skip ci]"
+            git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran — pustaka ${PUSTAKA}/509 [skip ci]"
             # V291 ANTI-BALAPAN: SADAR-1 bisa menyegel bangun bersamaan — push di-RETRY
             # dgn rebase ulang tiap percobaan (insiden 2026-10-07T00:55Z: remote rejected,
             # denyut #77 sudah terbentuk tapi terdorong gagal).

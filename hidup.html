@@ -12,7 +12,7 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);color:var(--tinta);
-  font:13px/1.5 "Inter","SF Pro Text",-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif}
+  font:13px/1.5 "Inter","SF Pro Text",-apple-system,"Segoe UI","Noto Sans",sans-serif}
 #panggung{position:fixed;inset:0;display:block;touch-action:manipulation;cursor:default}
 
 /* ===== SATU TOMBOL (buka/tutup overlay) ===== */
@@ -335,7 +335,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
    penonton, ingatan resmi = commit GitHub, tubuh = fungsi kerja nyata. ================ */
 /* ================= IDENTITAS & KONSTANTA ================= */
 const RUMAH = {pemilik:'ririnsherlyna-cloud', repo:'Micaprofita-', cabang:'main'};
-const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json'};
+const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json'};
 const MAXBACA = 400000;                 // batas baca per file (byte) — kejujuran parsial
 const FASE = ['MENGAMATI','MEMAHAMI','MENCOBA','MELAKUKAN','MENGEVALUASI','MENEMUKAN','MEMBANGUN','MENINGKATKAN','MENGAMATI-KEMBALI'];
 const INTEGERS = ['versi.json','gerbang.json','brain.json','arena-keadaan.json','otak/genome-server.json','otak/penjaga-keadaan.json','otak/performa.json','memori/terkini.json','README.md'];
@@ -351,7 +351,7 @@ const S = {
   perintah:null,
   terputus:false,
   habitat:null, habitatAt:0, auditSyms:[],
-  madrasah:null, ujian:[], ujianAt:0,
+  madrasah:null, pustaka:null, ujian:[], ujianAt:0,
   latihan:{n:0, benar:0, ak:0}, jagaRot:0, soal:null,
   paru:{n:0, byte:0, lat:[], sumber:{}, waktu:null, selisih:null, jamAt:0}
 };
@@ -460,6 +460,7 @@ async function ghAmbil(pathRepo){
 let _s1BangunDilaporkan = 0;
 async function muatMemoriGitHub(){
   try{
+    pustakaMuat(); /* V299-PUSTAKA-SEJATI: gerbang 509 jurnal — muat tak-blok */
     const ing = JSON.parse(await ghAmbil(INGATAN_GH.ingatan));
     S1.ingatan = ing; S1.at = sekarang(); S1.stale = false;
     if(ing.kelahiran) S.stat.lahirAt = Date.parse(ing.kelahiran) || S.stat.lahirAt;
@@ -1609,8 +1610,8 @@ function jarakKeRect(px,py,r){
   const dx=Math.max(r.x-px, 0, px-(r.x+r.w)), dy=Math.max(r.y-py, 0, py-(r.y+r.h));
   return Math.hypot(dx,dy);
 }
-const FONT_L='10px "Inter","SF Pro Text",-apple-system,"Segoe UI",Roboto,sans-serif';
-const FONT_Z='600 9.5px "Inter","SF Pro Text",-apple-system,"Segoe UI",Roboto,sans-serif';
+const FONT_L='10px "Inter","SF Pro Text",-apple-system,"Segoe UI","Noto Sans",sans-serif';
+const FONT_Z='600 9.5px "Inter","SF Pro Text",-apple-system,"Segoe UI","Noto Sans",sans-serif';
 /* vena — KANAL LURUS baitul ilmu: jalan yang DIBANGUN makhluk antar zona yang
    sudah dibuka kerjanya; geometri tertib (garis), bukan lengkung rasa */
 function titikVena(v){
@@ -2569,11 +2570,41 @@ function pasarRender(){
       <div class="kecil">dihitung ${umur(sekarang()-p.at)} lalu · dari ${p.n||'?'} lilin 1j Binance</div></div>`;
   }).join('') : '<div class="kecil">belum ada studi pasar — menunggu sasaran cermin arena</div>';
 }
+/* ================= V299-PUSTAKA-SEJATI: gerbang 509 jurnal (jujur dari repo) ================= */
+async function pustakaMuat(){
+  try{ const p = JSON.parse(await ghAmbil(INGATAN_GH.pustaka));
+    if(p && p.gerbang509){ const lama=S.pustaka; S.pustaka=p;
+      if(!lama) jurnal('PUSTAKA', `pustaka terbuka: <b>${p.gerbang509.tercapai}/${p.gerbang509.target} jurnal</b> nyata dipelajari (arXiv, tanpa karangan) — gerbang kelayakan ${p.gerbang509.sisa>0?('masih '+p.gerbang509.sisa+' lagi'):'TELAH DILEWATI'}`, 'temuan');
+      if(S.tabAktif==='jurnal') jurnalRender();
+    }
+  }catch(e){ /* pustaka belum ada — jujur: belum dipelajari */ }
+}
+function pustakaPanel(){
+  const p=S.pustaka;
+  if(!p) return `<div class="kecil" style="margin:8px 0 12px">pustaka belum terbaca dari GitHub — organ pustaka (SARANG-PENJAGA) yang menulisnya tiap denyut. Belum dipelajari = belum dipelajari, tanpa karangan.</div>`;
+  const g=p.gerbang509, pct=Math.min(100, (g.tercapai/g.target*100)).toFixed(1);
+  const topik=Object.entries(p.perTopik||{}).sort((a,b)=>b[1]-a[1]).slice(0,10)
+    .map(([t,n])=>`<span class="kecil" style="display:inline-block;border:1px solid #2a3140;border-radius:9px;padding:1px 8px;margin:2px 3px 2px 0">${t} · ${n}</span>`).join('');
+  const daftar=(p.terbaru||[]).map(j=>
+    `<div class="jr" style="padding:6px 8px"><b>${j.judul}</b> <span class="kecil">(${j.tahun||'—'} · ${j.topik})</span><br><span class="kecil">${(j.pelajaran||'').slice(0,200)}${j.url?` — <a href="${j.url}" target="_blank" rel="noopener" style="color:#8ab4ff">sumber asli</a>`:''}</span></div>`).join('')
+    || '<div class="kecil">denyut ini belum menambah jurnal — tunggu denyut berikutnya</div>';
+  return `<div style="margin:8px 0 14px;border:1px solid #2a3140;border-radius:12px;padding:10px">
+    <b>GERBANG KELAYAKAN 509 JURNAL</b> <span class="kecil">(mandat pemilik 2026-10-08)</span>
+    <div style="margin:6px 0 4px;font-size:15px"><b>${g.tercapai}</b> / ${g.target} jurnal nyata dipelajari
+      ${g.sisa>0?`— sisa <b>${g.sisa}</b>`:'— <b style="color:#7ee787">GERBANG DILEWATI</b>'}</div>
+    <div style="height:8px;border:1px solid #2a3140;border-radius:6px;overflow:hidden;margin:6px 0">
+      <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#2563eb,#7ee787)"></div></div>
+    <div class="kecil">setiap jurnal = metadata + abstrak ASLI dari arXiv, tersimpan di pustaka/pustaka.json (tersegel SHA-256 ${p.segel?('#'+p.segel.hash):'—'}) — tumbuh otomatis tiap denyut SARANG-PENJAGA, tanpa peduli tab dibuka atau tidak.</div>
+    <div style="margin:6px 0">${topik}</div>
+    <div class="kecil" style="margin:4px 0">${(p.denyutIni&&p.denyutIni.gagalAmbil)?('kejujuran organ: pengambilan terakhir gagal ('+p.denyutIni.gagalAmbil+') — tidak ada karangan pengganti'):'denyut terakhir: +'+((p.denyutIni&&p.denyutIni.ditemukan)||0)+' jurnal ('+((p.denyutIni&&p.denyutIni.topik)||'—')+')'}</div>
+    ${daftar}
+  </div>`;
+}
 function jurnalRender(){
   const w=document.getElementById('tab-jurnal'); if(!w || S.tabAktif!=='jurnal') return;
-  w.innerHTML=S.jurnal.slice(-70).reverse().map(j=>
+  w.innerHTML=pustakaPanel()+(S.jurnal.slice(-70).reverse().map(j=>
     `<div class="jr ${j.kelas}"><span class="t">${wib(j.at)} WIB · ${j.jenis}</span><br>${j.teks}</div>`).join('')
-    || '<div class="kecil">—</div>';
+    || '<div class="kecil">—</div>');
 }
 function tabKe(nama){ S.tabAktif=nama;
   document.querySelectorAll('#pTabs button').forEach(b=>b.classList.toggle('akt', b.dataset.tab===nama));
@@ -2896,7 +2927,7 @@ window.__v297={JASAD, render:hud, sumber:()=>({hidup:JASAD.hidup, alasan:JASAD.a
    Mandat pemilik (2026-10-07): "matanya cuma ditempel ke harga Bitcoin?
    apakah manusia hidup hanya makan nasi? gandum? emas? air? ...
    jangan biarkan dia buta terhadap realitas pasar yang lebih luas —
-   trading bukan hanya Bitcoin" + "robot itu bodoh, makhluk itu adaptif".
+   trading bukan hanya Bitcoin" + "mesin buta itu bodoh, makhluk itu adaptif".
 
    DIAGNOSIS JUJUR V297: mata pertama hanya BTCUSDT — sekat tunggal.
    BTC turun ≠ kolam turun; tiap koin bernapas dengan napasnya sendiri.
