@@ -2929,9 +2929,12 @@ const M={siap:false, koin:0, naik:0, turun:0, datar:0, btcChg24:null, pemimpin:n
 async function putaran(){
   for(;;){
     try{
-      /* kolam luas = sasaran harian tubuh (laporan) ∪ sumur kolam ∪ BTC */
+      /* kolam luas = sasaran harian tubuh (laporan) ∪ sumur kolam ∪ BTC;
+         simbol cacat (tanpa akhiran USDT) disaring — data warisan tak boleh
+         membutakan seluruh mata */
       const koin=['BTCUSDT'];
-      const dor=s=>{ if(s&&typeof s==='string'&&!koin.includes(s.toUpperCase())&&koin.length<12) koin.push(s.toUpperCase()); };
+      const dor=s=>{ if(s&&typeof s==='string'){ const S=s.toUpperCase();
+        if(/^[A-Z0-9]+USDT$/.test(S)&&!koin.includes(S)&&koin.length<12) koin.push(S); } };
       try{
         const stx=JSON.parse(await ghT('laporan/sasaran-terkini.json'));
         M.umurSasaranMnt=(stx&&stx.dihasilkan)?Math.max(0,(Date.now()-Date.parse(stx.dihasilkan))/60000):null;
@@ -2940,8 +2943,16 @@ async function putaran(){
       }catch(e){}
       if(typeof POND_POS!=='undefined') for(const k of Object.keys(POND_POS)) dor(k);
 
-      /* satu tarikan lebar: ticker 24j SEMUA koin kolam */
-      const t=await jsonG('/api/v3/ticker/24hr?symbols='+encodeURIComponent(JSON.stringify(koin)));
+      /* satu tarikan lebar: ticker 24j SEMUA koin kolam; bila gerbang
+         menolak daftar (simbol jahat), jatuh ke tarikan per-simbol — satu
+         koin jahat tak boleh membutakan seluruh mata */
+      let t=null;
+      try{ t=await jsonG('/api/v3/ticker/24hr?symbols='+encodeURIComponent(JSON.stringify(koin))); }
+      catch(e){
+        t=[];
+        for(const s of koin){ try{ t.push(await jsonG('/api/v3/ticker/24hr?symbol='+s)); }catch(e2){} }
+      }
+      t=t.filter(Boolean);
       M.naik=0; M.turun=0; M.datar=0; M.koin=t.length; M.btcChg24=null;
       let terlantang=null;
       for(const x of t){
