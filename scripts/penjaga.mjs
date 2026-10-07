@@ -3601,9 +3601,19 @@ for (const k of gagalOddsArah) {
 }
 if (gagalOddsArah.length) log(`odds-maker: ${gagalOddsArah.length} kandidat ARAH ditolak ranking (kuota ${kuotaArahSuhu} · ambang efektif ${ambangOdds} · suhu ${suhu.temper}), ${pilihArah.length} lolos`)
 if (eksplorasiArah) {
-  kunciEntriArah(eksplorasiArah, true)
-  forensikTindakan.push(`slot eksplorasi: ${eksplorasiArah.s} ${eksplorasiArah.v.arah} dilepas lewat gerbang (EV +${(eksplorasiArah.eksA.evPct * 100).toFixed(2)}% >= 0) — zona racun diuji agar bisa menyembuh dengan bukti baru`)
-  log(`forensik-eksplorasi: ${eksplorasiArah.s} ${eksplorasiArah.v.arah} EV +${(eksplorasiArah.eksA.evPct * 100).toFixed(2)}%`)
+  // V291 ANTI-DOBEL: slot eksplorasi TIDAK BOLEH mengunci simbol yang sudah terkunci
+  // jalur ARAH biasa siklus ini (insiden 2026-10-07: AVAX tersegel 2× dalam satu daftar
+  // sasaran — dua jalur tak saling tahu). Eksplorasi mencari zona RACUN lain, bukan
+  // menggandakan kunci yang sudah ada.
+  const sudahTerkunciArah = terkunciBaru.some((e) => e.simbol === eksplorasiArah.s && (e.jalur || 'ARAH') === 'ARAH')
+  if (sudahTerkunciArah) {
+    forensikTindakan.push(`slot eksplorasi: ${eksplorasiArah.s} ${eksplorasiArah.v.arah} dihitung (EV +${(eksplorasiArah.eksA.evPct * 100).toFixed(2)}%) namun SUDAH terkunci jalur ARAH siklus ini — TIDAK dikunci ulang (anti-dobel, tanpa klaim ganda)`)
+    log(`forensik-eksplorasi: ${eksplorasiArah.s} dilewati — sudah terkunci jalur ARAH siklus ini (anti-dobel); EV tetap tercatat`)
+  } else {
+    kunciEntriArah(eksplorasiArah, true)
+    forensikTindakan.push(`slot eksplorasi: ${eksplorasiArah.s} ${eksplorasiArah.v.arah} dilepas lewat gerbang (EV +${(eksplorasiArah.eksA.evPct * 100).toFixed(2)}% >= 0) — zona racun diuji agar bisa menyembuh dengan bukti baru`)
+    log(`forensik-eksplorasi: ${eksplorasiArah.s} ${eksplorasiArah.v.arah} EV +${(eksplorasiArah.eksA.evPct * 100).toFixed(2)}%`)
+  }
 }
 for (const k of divetoArah) {
   nearMiss.push({
@@ -4749,6 +4759,9 @@ try {
 // ---- 5. laporan sasaran — lane PHOENIX dulu (mandat: beli murah ujung bawah) ----
 const barisDari = (e) => ({
   simbol: e.simbol, jalur: e.jalur || 'ARAH', arah: e.arah, keyakinan: e.keyakinan, entry: e.entry,
+  // V291 JUJUR-UMUR-SASARAN: entri TERBUKA dari siklus lalu di-label terang —
+  // pemilik melihat "koin itu lagi" dan PATUT tahu itu sasaran BERTAHAN, bukan kunci baru.
+  ...(e.sasaranBaru === false ? { sasaranBertahan: true, bertahanSejak: e.waktuKunci, bertahanHari: Math.max(0, Math.floor((WAKTU.getTime() - (Date.parse(e.waktuKunci) || WAKTU.getTime())) / 86400000)), ketSasaran: 'SASARAN BERTAHAN — dikunci ' + e.waktuKunci + ', masih TERBUKA menunggu vonis horizon 24 jam; BUKAN kunci baru hari ini' } : { sasaranBaruHariIni: true }),
   ...(e.ketKeyakinan ? { ketKeyakinan: e.ketKeyakinan } : {}),
   ...(e.jalur === 'PHOENIX' ? { target: e.target, ketTarget: e.ketTarget, untungBersihPct: +(e.untungBersih * 100).toFixed(1), stop: e.stop, skorPhoenix: e.skorPhoenix, highAmbisius: e.highAmbisius ?? null, ketAmbisius: e.ketAmbisius ?? null } : e.sumberStop ? { target: e.target, ketTarget: e.ketTarget, stop: e.stop, sumberStop: e.sumberStop, highAmbisius: e.highAmbisius ?? null, ketAmbisius: e.ketAmbisius ?? null } : {}),   // V277-JUAL-AMBISIUS: ambisius & alasannya wajib dilaporkan di kedua jalur
   ...(e.pitaUjungAtas ? { pitaUjungAtas: e.pitaUjungAtas } : {}),
@@ -4776,15 +4789,22 @@ const barisDari = (e) => ({
 // tiap lane memakai prediksi barunya hari ini; bila kosong (sudah terkunci siklus lalu), pakai yang TERBUKA
 const pilihDasar = (jalurPhx) => {
   const baru = terkunciBaru.filter((e) => (e.jalur === 'PHOENIX') === jalurPhx)
-  return baru.length ? baru : ledger.filter((e) => e.status === 'TERBUKA' && (e.jalur === 'PHOENIX') === jalurPhx)
+  // V291 JUJUR-UMUR-SASARAN: fallback ke entri TERBUKA lama WAJIB di-label — bukan
+  // tampil menyamar sebagai sasaran baru (akar "koin itu lagi itu lagi" dari pemilik).
+  if (baru.length) return baru.map((e) => ({ ...e, sasaranBaru: true }))
+  return ledger.filter((e) => e.status === 'TERBUKA' && (e.jalur === 'PHOENIX') === jalurPhx)
+    .map((e) => ({ ...e, sasaranBaru: false }))
 }
 const phxDasar = pilihDasar(true)
 const komDasar = pilihDasar(false)
 const phxRows = [...phxDasar]
   .sort((a, b) => b.skorPhoenix * b.untungBersih - a.skorPhoenix * a.untungBersih).slice(0, PHX.SASARAN_PHX)
 const komRows = [...komDasar].filter((e) => !phxRows.some((p) => p.simbol === e.simbol))
+  .filter((e, i, arr) => arr.findIndex((x) => x.simbol === e.simbol) === i)   // V291 ANTI-DOBEL: satu simbol satu kursi dalam lane sendiri
   .sort((a, b) => b.keyakinan - a.keyakinan).slice(0, PHX.SASARAN_ARAH)
-const sasaranUtama = [...phxRows, ...komRows].map(barisDari)
+const sasaranUtama = [...phxRows, ...komRows]
+  .filter((e, i, arr) => arr.findIndex((x) => x.simbol === e.simbol) === i)   // V291 ANTI-DOBEL lintas lane — satu simbol tidak pernah dua baris
+  .map(barisDari)
 // V266 RADAR-JUJUR-BEAR — saat bear-harian sistem tidak mengiklankan jawaban murahan:
 // kandidat tampil hanya bila keyakinan ≥ KANDIDAT_KEY_MIN. Kunci penuh (sasaranUtama)
 // tetap dilaporkan & dinilai apa adanya — seleksi publik radar, bukan karantina belajar.
@@ -5662,6 +5682,19 @@ log(`claw: komite-veto ${claw.komiteVetoCt} · kartu-veto ${claw.kartuVetoCt} ·
 const laporan = {
   protokol: 'SASARAN-MICAPROFITA', organ: VERSI, dihasilkan: ISO, siklus: SIKLUS,
   sumber: { host, gagal: gagal.slice(0, 12) },
+  // V291 VENA SELARAS — satu rumah satu kebenaran: laporan MENCERMINAUMUR organ lain
+  // (arena-keadaan.json) agar ketimpangan terlihat di tempat yang sama, bukan tersembunyi.
+  selarasRumah: (() => {
+    try {
+      const ak = JSON.parse(readFileSync(path.join(process.cwd(), 'arena-keadaan.json'), 'utf8'))
+      const at = Date.parse(ak.today ? ak.today + 'T00:00:00Z' : '') || 0
+      const umurHari = at ? Math.floor((WAKTU.getTime() - at) / 86400000) : null
+      return {
+        arena: { today: ak.today ?? null, umurHari, ket: umurHari != null && umurHari > 0 ? 'ARENA TERTINGGAL ' + umurHari + ' HARI — organ ini perlu denyut penyegar; jangan campur pick arena basi dengan sasaran resmi' : 'segar' },
+        ket: 'satu rumah satu kebenaran: sasaran resmi = laporan ini; ruang-hidup/arah.json & arena menyusul merujuk ke sini',
+      }
+    } catch (err) { return { arena: { ket: 'arena-keadaan.json tak terbaca: ' + (err.message || err) }, ket: 'satu rumah satu kebenaran' } }
+  })(),
   rezimBTC: { rezim: rezimGlobal, harga: sembtc.harga, atrPct: +sembtc.atrPct.toFixed(2) },
   radar: {
     telaah: radar.telaah, zonaPhoenix: radar.zonaPhoenix, telusurDalam: radar.telusurDalam,
