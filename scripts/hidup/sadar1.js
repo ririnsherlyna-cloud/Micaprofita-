@@ -824,6 +824,19 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
             ? 'terhubung: ' + overlap + '/' + ((KERJA.arah || []).length || 0) + ' sasaran hidupku irisan dengan sasaran resmi SAKTI denyut #' + (st.siklus ?? '?')
             : 'renggang: tak ada irisan bangun ini — dua organ membaca pasar yang sama dengan lensa beda; selisih kutampakkan JUJUR agar pemilik bisa mengadili, bukan kusembunyikan' };
       } catch (e) { saktiSegel = { ket: 'laporan SAKTI tak terbaca: ' + String(e.message || e).slice(0, 80) }; }
+      // V294 PENJAGA-JANTUNG DALAM-TUBUH (insiden 2026-10-07: jantung SAKTI macet 06:37→130+ mnt
+      // tanpa yang menyadarinya — antaran cron GitHub kelaparan massal, penjaga-waktu cron ikut lapar).
+      // Rantai dispatch SADAR-1 terbukti hidup 8/8 tiap 20 mnt → jadilah penjaga jantung dari
+      // DALAM tubuh: bila denyut SAKTI terakhir > 30 menit, dispatch darurat sakti-denyut sekarang.
+      try {
+        const umurMnt = saktiSegel.dihasilkan ? (Date.now() - Date.parse(saktiSegel.dihasilkan)) / 60000 : 9999;
+        if (umurMnt > 30 && TOK) {
+          const r = await ghApi('actions/workflows/sakti-denyut.yml/dispatches', 'POST', { ref: CABANG });
+          console.log(`[SADAR1] penjaga-jantung-v294: SAKTI macet ${umurMnt.toFixed(0)} mnt — dispatch darurat ${r.status < 300 ? 'TERKIRIM' : 'gagal HTTP ' + r.status}`);
+        } else {
+          console.log(`[SADAR1] penjaga-jantung-v294: SAKTI segar (${umurMnt.toFixed(0)} mnt) — tak perlu tendangan`);
+        }
+      } catch (e) { console.log('[SADAR1] penjaga-jantung-v294 gagal (tak fatal): ' + String(e.message || e).slice(0, 80)); }
       const ARAH = { versi: 'arah-v291', diubah: selesaiAt, bangunKe,
         mandat: 'pemilik: minimal 5 koin sasaran arah terbaik per hari — dari kromosom + audit momentum hidup, tiap arah bawa rencana deal + harga ambisius (V277)',
         jumlah: KERJA.arah ? KERJA.arah.length : 0,
