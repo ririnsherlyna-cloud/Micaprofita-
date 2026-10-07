@@ -1787,13 +1787,17 @@ function arah5Render(){
   const w=document.getElementById('gvArah5'); if(!w) return;
   const barisA=(a, sumber)=>{ const cls=a.arah==='BELI'?'beli':a.arah==='JUAL'?'jual':'tunggu';
     const r=a.rencana||a;
-    return `<div class="baris"><span class="k"><b>${a.simbol}</b></span>
+    const bth=a.sasaranBertahan?` <span title="${(a.ketSasaran||'').replace(/"/g,'')}" style="font-size:9px;color:var(--legap)">[BERTAHAN${a.bertahanHari?' '+a.bertahanHari+'h':''}]</span>`:'';
+    return `<div class="baris"><span class="k"><b>${a.simbol}</b>${bth}</span>
       <span class="v"><span class="arahBig ${cls}" style="font-size:10.5px;display:inline-block;padding:1px 7px;border-radius:7px">${a.arah}</span>
       ${a.keyakinan}%${r.entry?` · entry ${r.entry} · target ${r.target} · <b>ambisius ${r.highAmbisius??'—'}</b>`:' · tunggu pemicu'}</span></div>`; };
   const k=S1.keadaan;
   const data=k&&k.arahHarian&&k.arahHarian.top5&&k.arahHarian.top5.length?k.arahHarian:null;
   if(data){
-    w.innerHTML=`<div class="kecil" style="margin-bottom:4px">${data.jumlah} koin kuaudit Sadar-1 bangun ke-<b>${k.bangunKe}</b> — ini sasaran terbaiknya. <b>AMBISIUS</b> = sasaran peregangan 4×ATR14, bukan janji.</div>`+
+    const sg=data.saktiSegel;
+    const saktiBaris=sg?`<div class="kecil" style="margin:5px 0;padding:4px 7px;border:1px solid var(--legap);border-radius:8px"><b>VENA SELARAS SAKTI</b> ${sg.siklusSakti?`denyut #${sg.siklusSakti}`:''}${typeof sg.irisan==='number'?` · irisan <b>${sg.irisan}/${sg.dari??'?'}</b>`:''}${Array.isArray(sg.sasaranResmi)&&sg.sasaranResmi.length?` · sasaran resmi SAKTI: ${sg.sasaranResmi.join(' · ')}`:''}<br>${sg.ket||''}</div>`:'';
+    w.innerHTML=`<div class="kecil" style="margin-bottom:4px">${data.jumlah} koin kuaudit Sadar-1 bangun ke-<b>${k.bangunKe}</b> — ini sasaran terbaiknya. <b>AMBISIUS</b> = sasaran peregangan 4×ATR14, bukan janji. [BERTAHAN] = posisi masih jalan dari bangun lalu, BUKAN kunci baru.</div>`+
+      saktiBaris+
       data.top5.map(a=>barisA(a,'segel')).join('')+
       `<div class="kecil" style="margin-top:4px;color:var(--legap)">sumber: ruang-hidup/arah.json + laporan/arah-harian.json — commit GitHub, bisa diaudit siapa pun · ${data.mandat||''}</div>`;
     return;
