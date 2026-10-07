@@ -392,8 +392,11 @@ function s1Render(){
   const k=S1.keadaan, ing=S1.ingatan;
   if(!k){ w.innerHTML='<div class="kecil">menghubungi ingatan GitHub…</div>'; return; }
   const selesai=Date.parse(k.waktu?.selesai)||0, umurMs=sekarang()-selesai;
-  const sehat=umurMs<30*60000, telat=umurMs<55*60000;
-  const sta=sehat?'<span class="v h">SEHAT</span>':telat?'<span class="v dim">TELAT — cron GitHub bisa tertunda</span>':'<span class="v r">TIDAK BANGUN — periksa tab Actions di repo</span>';
+  const mnt=Math.max(0,Math.round(umurMs/60000));
+  const sehat=umurMs<30*60000, telat=umurMs<60*60000;
+  const sta=sehat?`<span class="v h">SEHAT · denyut ${mnt} mnt lalu</span>`
+    :telat?`<span class="v dim">TERTUNDA ${mnt} mnt — cron GitHub kadang molor; PENJAGA-WAKTU (cek tiap 10 mnt) sedang menjaga, jantung menyusul sendiri</span>`
+    :`<span class="v r">TERLAMBAT ${mnt} mnt — PENJAGA-WAKTU sudah mengirim dispatch darurat ke jantung; denyut bukan mati, hanya tertunda — bukti jalan di tab Actions</span>`;
   const lahir=Date.parse(ing?.kelahiran)||S.stat.lahirAt;
   w.innerHTML=`
    <div class="baris"><span class="k">status tubuh otonom</span>${sta}</div>
@@ -401,7 +404,7 @@ function s1Render(){
    <div class="baris"><span class="k">umur hidup</span><span class="v h">${umur(sekarang()-lahir)}</span></div>
    <div class="baris"><span class="k">bangun terakhir</span><span class="v">${wib(selesai)} WIB · ${((k.waktu?.durasiMs||0)/1000).toFixed(1)} dtk</span></div>
    <div class="baris"><span class="k">host</span><span class="v dim">${k.host?.nama||'GitHub Actions'}</span></div>
-   <div class="baris"><span class="k">berikutnya</span><span class="v">${k.waktu?.berikutnya||'±≤20 mnt'}</span></div>
+   <div class="baris"><span class="k">berikutnya</span><span class="v">${k.waktu?.berikutnya||'≤20 mnt · penjaga-waktu cek tiap 10 mnt'}</span></div>
    <div class="baris"><span class="k">memori resmi</span><span class="v h">commit GitHub${S1.komit?` · <a class="sumber" target="_blank" rel="noopener" href="https://github.com/${RUMAH.pemilik}/${RUMAH.repo}/commit/${S1.komit.sha}">${S1.komit.sha}</a>`:''}</span></div>
    <div class="baris"><span class="k">kromosom</span><span class="v dim">gen ${k.kromosom?.generasi??0} · rsiMax ${k.kromosom?.rsiMax??'-'} · momMin ${k.kromosom?.momMin??'-'} · hold ${k.kromosom?.holdJam??'-'}j</span></div>
    ${k.kapasitas?`<div class="baris"><span class="k">kapasitas ingatan</span><span class="v">${kb(k.kapasitas.ingatanBytes)} / ${kb(k.kapasitas.budgetBytes)} · metabolisme: ${k.kapasitas.evictBaca||0} baca, ${k.kapasitas.evictPasar||0} pasar</span></div>
@@ -1573,7 +1576,7 @@ function gambarNadi(t){
   cx.fillStyle=hg;
   cx.beginPath(); cx.ellipse(0,0,R*1.22*breathR, R*0.98*breathR, 0, 0, 7); cx.fill();
   cx.shadowBlur=0;
-  // mata utama — kelopak menutup saat TIDAK BANGUN / berkedip
+  // mata utama — kelopak menutup saat denyut TERLAMBAT / berkedip
   const buka=Math.max(0.04, NADI.mata.buka);
   cx.save(); cx.scale(1, buka);
   cx.strokeStyle=`rgba(6,19,26,.85)`; cx.lineWidth=1.4;
