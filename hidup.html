@@ -272,7 +272,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
       </div>
       <div class="blok">
         <h4>Sumber kejujuran <em>· nol karangan</em></h4>
-        <div class="kecil">Lilin 1m (gerbang Binance publik, multi-koin) · laporan/sasaran-terkini.json · otak/penjaga-keadaan.json · ruang-hidup/keadaan.json · ruang-hidup/tubuh.json (segel gerak). Bila sumber gagal diambil: jasad MATI-PENUH-NALAR — tubuh kembali ke perilaku dasar dan alasannya ditulis terbuka di sini. Audit langsung: <code>window.__v297</code>, <code>window.__v299</code>, <code>window.__v300</code>.</div>
+        <div class="kecil">Lilin 1m (gerbang Binance publik, multi-koin) · laporan/sasaran-terkini.json · otak/penjaga-keadaan.json · ruang-hidup/keadaan.json · ruang-hidup/tubuh.json (segel gerak). Bila sumber gagal diambil: jasad MATI-PENUH-NALAR — tubuh kembali ke perilaku dasar dan alasannya ditulis terbuka di sini. Audit langsung: <code>window.__v297</code>, <code>window.__v299</code>, <code>window.__v300</code>, <code>window.__v301</code>.</div>
       </div>
     </div>
   </div>
@@ -921,7 +921,7 @@ function aktBaca(f){
     F('MENGAMATI', async()=>{ S.stream={ch:0};
       try{
         const isi = await isiAmbil(f.path, f.size, (buf, got)=>{
-          S.stream.ch=got; if(Math.random()<0.5) partikelByte(f.path, buf, got);
+          S.stream.ch=got; if(((got*2654435761)>>>0)%100<50) partikelByte(f.path, buf, got); // V301: deterministik dari byte-counter — nol keacakan lintas perangkat
         });
         S.stream.hasil=isi;
       }catch(e){
@@ -1001,12 +1001,12 @@ async function aktPadat(){
    dari 8 jam sesudahnya yang nyata. Akurasi dicatat jujur — benar atau salah. */
 function aktLatihan(){
   const syms=Object.keys(S.pasar); if(!syms.length) return null;
-  const sym=syms[Math.floor(Math.random()*syms.length)];
+  const sym=syms[Math.floor(sekarang()/900000)%syms.length]; // V301: soal dipilih dari bucket 15 mnt jam dunia — semua perangkat mengerjakan soal sama
   return {nama:'LATIHAN SOAL MANDIRI '+sym, target:'pasar:'+sym, langkah:[
     F('MENGAMATI', async()=>{ S.soal={sym, l:await lilinAmbil(sym)}; }, 300),
     F('MENCOBA', async()=>{ const {l}=S.soal;
       if(l.length<120) throw new Error('lilin kurang untuk soal ('+l.length+')');
-      const i=60+Math.floor(Math.random()*(l.length-60-9));
+      const i=60+((Math.floor(sekarang()/900000)*7919)%Math.max(1,l.length-60-9)); // V301: titik potong deterministik dari bucket jam dunia
       const pot=l.slice(0,i); const an=analisaLilin(pot);
       S.soal.i=i; S.soal.an=an;
       S.soal.jawab=(an.ema20>an.ema50&&an.mom7>0)?'NAIK':(an.ema20<an.ema50&&an.mom7<0)?'TURUN':'DATAR';
@@ -1414,7 +1414,7 @@ const NADI={
   sedot:[],                                // partikel tersedot pusaran
   ruas:11,                                 // tenaga genom → lapis tornado + panjang lengan
   napas:0, dim:1, mode:'bangun', startle:0, idleAt:sekarang(), flair:0,
-  mata:{buka:1, blink:0, blinkAt:3+Math.random()*4, px:0, py:0},
+  mata:{buka:1, blink:0, blinkAt:3+((Math.floor(sekarang()/900)%37)/37)*4, px:0, py:0}, // V301: kedip deterministik dari jam dunia — semua perangkat berkedip serupa
   T:null, mataEkstra:0, organ:[], probosisLen:6, segel:'', wp:null
 };
 function nadiInit(){
@@ -1514,8 +1514,8 @@ function nadiUpdate(dt, t){
   const regangTgt=Math.max(0, Math.min(1, sp/120+(S.kerja.sibuk?0.35:0)));
   NADI.tornado.regang+=(regangTgt-NADI.tornado.regang)*Math.min(1, dt*2.2);
   NADI.tornado.putar+=dt*(3.2+sp*0.055+NADI.tornado.regang*5.5);
-  if(NADI.dim>0.3 && NADI.sedot.length<18 && Math.random()<dt*(5+12*NADI.tornado.regang))
-    NADI.sedot.push({a0:Math.random()*6.283, r:36+Math.random()*18, a:0.7});
+  if(NADI.dim>0.3 && NADI.sedot.length<18 && _se()<dt*(5+12*NADI.tornado.regang))
+    NADI.sedot.push({a0:_se()*6.283, r:36+_se()*18, a:0.7}); // V301: PRNG ber-seed jam dunia — tubuh murni fungsi (repo, waktu dunia)
   for(let i=NADI.sedot.length-1;i>=0;i--){ const sd=NADI.sedot[i];
     sd.r-=dt*(34+46*NADI.tornado.regang); sd.a0+=dt*(4.5+90/Math.max(9,sd.r));
     sd.a=Math.min(0.75, sd.r/44);
@@ -1549,7 +1549,7 @@ function nadiUpdate(dt, t){
   // mata
   const m=NADI.mata;
   m.blinkAt-=dt;
-  if(m.blinkAt<0){ m.blink=1; m.blinkAt=3+Math.random()*6; }
+  if(m.blinkAt<0){ m.blink=1; m.blinkAt=(3+((Math.floor(sekarang()/900)%53)/53)*6)*((window.__v301&&window.__v301.kedipFaktor)?window.__v301.kedipFaktor():1); } // V301: laju kedip ikut fase sirkadium — deterministik lintas perangkat
   m.blink*=Math.pow(0.001, dt);
   let bukaT=1-m.blink;
   if(tubuh.mode==='tidak-bangun') bukaT=0;                       // mata terpejam
@@ -1568,13 +1568,24 @@ function nadiUpdate(dt, t){
 }
 /* partikel byte = karakter isi file ASLI mengalir lewat probosis */
 let PARTIKEL=[]; let _dt=0.016;
+// V301 PRNG DETERMINISTIK (mulberry32) — satu-satunya sumber 'keacakan' tubuh.
+// Seed = detik jam dunia (UTC): dua perangkat pada detik yang sama memakai
+// deret angka yang sama; refresh tak mengubah aliran. Nol Math.random di tubuh.
+function _se(){
+  const k=Math.floor(sekarang()/1000);
+  if(_se.k!==k){ _se.k=k; _se.s=(k^0x9E3779B9)>>>0; }
+  _se.s=(_se.s+0x6D2B79F5)|0;
+  let t=Math.imul(_se.s^(_se.s>>>15),1|_se.s);
+  t=(t+Math.imul(t^(t>>>7),61|t))^t;
+  return ((t^(t>>>14))>>>0)/4294967296;
+}
 function partikelByte(path, buf, got){
   const n=LAYOUT.nodes.get(path); if(!n || PARTIKEL.length>60) return;
   const teks=buf.slice(-46).replace(/\s+/g,'');
   if(!teks) return;
   const pot=teks.slice(-4);
-  PARTIKEL.push({x:n.x+(Math.random()-0.5)*10, y:n.y+(Math.random()-0.5)*10,
-    tx:NADI.x, ty:NADI.y, ch:pot.slice(Math.floor(Math.random()*3), Math.floor(Math.random()*3)+2)||'01', hidup:1});
+  PARTIKEL.push({x:n.x+(_se()-0.5)*10, y:n.y+(_se()-0.5)*10,
+    tx:NADI.x, ty:NADI.y, ch:pot.slice(Math.floor(_se()*3), Math.floor(_se()*3)+2)||'01', hidup:1}); // V301: seed jam dunia, nol Math.random
 }
 let RIAK=[];
 function riak(x,y){ RIAK.push({x,y,r:5,a:0.55}); if(RIAK.length>12) RIAK.shift(); }
@@ -2934,7 +2945,7 @@ async function putaran(){
          membutakan seluruh mata */
       const koin=['BTCUSDT'];
       const dor=s=>{ if(s&&typeof s==='string'){ const S=s.toUpperCase();
-        if(/^[A-Z0-9]+USDT$/.test(S)&&!koin.includes(S)&&koin.length<12) koin.push(S); } };
+        if(/^[A-Z0-9]+USDT$/.test(S)&&!koin.includes(S)&&koin.length<16) koin.push(S); } };
       try{
         const stx=JSON.parse(await ghT('laporan/sasaran-terkini.json'));
         M.umurSasaranMnt=(stx&&stx.dihasilkan)?Math.max(0,(Date.now()-Date.parse(stx.dihasilkan))/60000):null;
@@ -3043,6 +3054,81 @@ function render(){
 window.__v299={M, render, kunciMata, paksa:putaran};
 pasang();
 putaran().catch(()=>{});
+})();
+</script>
+<script>
+/* ================= V301-SIRKADIUM-METABOLIK:BEGIN =================
+   Mandat pemilik (2026-10-08): "sasaran harian kini bertambah jadi
+   minimal 10 … Silahkan inovasikan lagi Dan tambah artificial life"
+
+   ORGAN BARU — SIRKADIUM: ritme hidup harian makhluk. Manusia punya
+   ritme dari matahari; makhluk ini punya ritme dari JAM DUNIA (UTC)
+   yang SAMA di semua perangkat + metabolisme dari data repo:
+
+     MEMBURU   00–06 UTC — mencari sasaran segar; kolam 10+ koin dihirup
+     MENCERNA  06–12 UTC — vonis matang dinilai, pelajaran dipanen
+     MENGAMATI 12–18 UTC — mata paling lebar; divergensi dicatat
+     MEMULIH   18–24 UTC — madrasah menyala; belajar dari kesalahan hari
+
+   ENERGI = metabolisme jujur dari repo: denyut SEGAR memberi energi
+   penuh, denyut tua meluruhkannya (organ lapar data). Bila repo gagal
+   dibaca, sirkadium tetap hidup dari jam dunia dan menulis itu terbuka
+   — bukan karangan. Nol Math.random, nol localStorage: fase, energi,
+   dan faktor kedip murni fungsi (repo + jam dunia) → SEMUA PERANGKAT
+   IDENTIK. Efek tubuh nyata: laju kedipan mata mengikuti fase
+   (MEMBURU jarang kedip — fokus; MEMULIH sering — santai).
+   Ditampilkan di tab Jasad. Audit: window.__v301.
+   ============================================================ */
+(function(){
+'use strict';
+if(window.__v301) return;
+const FASE=[
+  {nama:'MEMBURU',  dari:0,  kedip:0.7,  metab:1.05, ket:'mencari sasaran segar — kolam 10+ koin dihirup penuh'},
+  {nama:'MENCERNA', dari:6,  kedip:1.0,  metab:0.95, ket:'vonis matang dinilai — pelajaran dipanen dari ledger'},
+  {nama:'MENGAMATI',dari:12, kedip:1.15, metab:1.0,  ket:'mata paling lebar — 10+ sasaran dipantau, divergensi dicatat'},
+  {nama:'MEMULIH',  dari:18, kedip:1.4,  metab:0.8,  ket:'madrasah menyala — belajar dari kesalahan hari ini'},
+];
+function ghT(p){ if(typeof ghAmbil==='function') return ghAmbil(p); return Promise.reject(new Error('ghAmbil tiada')); }
+const SR={fase:null, ket:'', energi:null, jamUTC:null, umurDenyutMnt:null, sumber:null, kedip:1};
+
+function keadaan(repo){
+  const kini=new Date();
+  const jam=kini.getUTCHours()+kini.getUTCMinutes()/60;
+  let f=FASE[0]; for(const x of FASE){ if(jam>=x.dari) f=x; }
+  SR.fase=f.nama; SR.ket=f.ket; SR.kedip=f.kedip; SR.jamUTC=+jam.toFixed(2);
+  // metabolisme: denyut segar memberi energi penuh; denyut tua meluruh (organ lapar data)
+  let e=null;
+  if(repo&&repo.dihasilkan){
+    const umur=(Date.now()-Date.parse(repo.dihasilkan))/60000;
+    if(isFinite(umur)&&umur>=0){ SR.umurDenyutMnt=umur;
+      e=Math.max(0.4,Math.min(1,1.02-umur/150));
+      SR.sumber='repo — denyut umur '+umur.toFixed(0)+' mnt'; }
+  }
+  if(e==null){ // repo belum terbaca: ritme jujur dari jam dunia, diakui terbuka
+    e=0.62+((Math.floor(Date.now()/300000)%29)/29)*0.18;
+    SR.sumber='jam dunia — repo belum terbaca (jujur, bukan karangan)';
+  }
+  SR.energi=e*f.metab;
+  return SR;
+}
+
+function tampil(){
+  const el=document.getElementById('v301sirkadium'); if(!el) return;
+  el.innerHTML='<div class="baris"><span class="k">sirkadium</span><span class="v">'+SR.fase+' · energi '+(SR.energi!=null?(SR.energi*100).toFixed(0)+'%':'—')+' · '+SR.jamUTC+' UTC</span></div>'
+    +'<div class="kecil">'+SR.ket+' — '+SR.sumber+(SR.umurDenyutMnt!=null?'':'')+'</div>';
+}
+function pasang(){
+  const t=document.getElementById('tab-jasad'); if(!t||document.getElementById('v301sirkadium')) return;
+  const d=document.createElement('div'); d.id='v301sirkadium'; d.style.marginTop='6px'; t.appendChild(d);
+}
+pasang();
+keadaan(null); tampil();
+setInterval(async()=>{
+  try{ const t=await ghT('laporan/sasaran-terkini.json'); keadaan(JSON.parse(t)); }
+  catch(e){ keadaan(null); }
+  tampil();
+},30000);
+window.__v301={SR, keadaan, kedipFaktor:()=>SR.kedip||1, paksa:()=>keadaan(null)};
 })();
 </script>
 <script>

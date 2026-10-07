@@ -97,8 +97,8 @@ const PHX = {
   QV_MIN: 3e6,             // likuiditas minimum $3 juta / hari
   GERBANG_SKOR: 42,        // skor phoenix minimum (0..100)
   UNTUNG_MIN: 0.01,        // untung bersih minimal 1% setelah fee
-  SASARAN_PHX: 3,          // maks baris BUY phoenix di sasaran utama
-  SASARAN_ARAH: 3,         // maks baris komite di sasaran utama
+  SASARAN_PHX: 5,          // V301-SASARAN-10: maks baris BUY phoenix di sasaran utama (3→5)
+  SASARAN_ARAH: 5,         // V301-SASARAN-10: maks baris komite di sasaran utama (3→5)
   KUNCI_MAKS: 6,           // kuota prediksi phoenix terkunci per hari — hanya yang terbaik
   TARGET_CAP: 1.12,        // target dibatasi +12% dari entry agar tetap realistis
   // ---- v2.1: dilahirkan oleh kekalahan nyata (ACE/ARB/XPL/CRCLB, targetKena 0/6) ----
@@ -4887,6 +4887,82 @@ if (!sasaranUtama.length && kompas) {
     warisan: { sigma24jPct: kompas.sigma24jPct, mc: { pNaik: kompas.pNaikMC, lintasan: WARISAN.MC_LINTASAN, ket: 'kerucut MC BTC' } },
   })
 }
+// V301-SASARAN-10 — mandat pemilik (2026-10-08): "sasaran harian kini bertambah
+// jadi minimal 10 — dari ribuan koin, 10 sasaran harian itu hal biasa."
+// Mata luas: bukan 1 koin, bukan 6 kursi — minimal 10 sasaran tiap denyut,
+// dikurasi BERTINGKAT dengan label jujur, nol penyamaran:
+//   KUNCI       → lolos gerbang penuh (posisi nyata, stop/target pra-registrasi)
+//   KOMPAS      → arah rezim makro (jawaban BTC, bukan posisi)
+//   PENELITIAN  → kandidat kuat beralasan yang belum lolos gerbang — diawasi
+//                 mata, dihafal jurnal, hipotesisnya dinilai medan
+//   PENGAMATAN  → suara terkeras kolam telaah (250+ koin lilin nyata denyut
+//                 ini) — mata tetap menghirup kolam meski gerbang menutup
+// Kejujuran: kursi PENGAMATAN menyandang arah NAIK/TURUN (bukan BUY/SELL) dan
+// keyakinan formula terbuka — tak pernah menyamar jadi sinyal kunci.
+const SASARAN10_MIN = 10
+let sasaranLuas = sasaranUtama.map((r) => ({ ...r, kursi: r.jalur === 'KOMPAS' ? 'KOMPAS' : 'KUNCI' }))
+if (sasaranLuas.length < SASARAN10_MIN) {
+  const terpakaiKursi = new Set(sasaranLuas.map((r) => r.simbol))
+  const kursiPenelitian = kandidatLain
+    .filter((k) => k && k.simbol && !terpakaiKursi.has(k.simbol))
+    .sort((a, b) => (b.keyakinan ?? 0) - (a.keyakinan ?? 0))
+    .slice(0, SASARAN10_MIN - sasaranLuas.length)
+  for (const k of kursiPenelitian) {
+    terpakaiKursi.add(k.simbol)
+    sasaranLuas.push({ ...k, kursi: 'PENELITIAN', sasaranBaru: true,
+      alasanKursi: 'kandidat kuat denyut ini (key ' + (k.keyakinan ?? '—') + ') — belum lolos gerbang kunci penuh; mata mengawasi, jurnal menghafal, medan menilai' })
+  }
+}
+if (sasaranLuas.length < SASARAN10_MIN) {
+  try {
+    // tingkat terakhir: pindai kolam telaah denyut INI — hasil[] adalah lilin
+    // nyata 250+ koin; ambil momentum 24j terkeras, selang-seling naik/turun
+    // agar mata jujur melihat dua sisi kolam, bukan satu arah
+    const suaraNaik = [], suaraTurun = []
+    for (const [s, c] of Object.entries(hasil)) {
+      if (!/^[A-Z0-9]+USDT$/.test(s) || !Array.isArray(c) || c.length < 25) continue
+      if (sasaranLuas.some((r) => r.simbol === s)) continue
+      const cl = c.map((x) => x.c)
+      const ret24 = (cl[cl.length - 1] / cl[cl.length - 25] - 1) * 100
+      const x = { s, ret24, harga: cl[cl.length - 1] }
+      ;(ret24 > 0 ? suaraNaik : suaraTurun).push(x)
+    }
+    suaraNaik.sort((a, b) => b.ret24 - a.ret24)
+    suaraTurun.sort((a, b) => a.ret24 - b.ret24)
+    for (let i = 0; sasaranLuas.length < SASARAN10_MIN && (i < suaraNaik.length || i < suaraTurun.length); i++) {
+      const x = i < suaraNaik.length ? suaraNaik[i] : null
+      const y = i < suaraTurun.length ? suaraTurun[i] : null
+      for (const k of [x, y]) {
+        if (!k || sasaranLuas.length >= SASARAN10_MIN) continue
+        const tegap = Math.abs(k.ret24)
+        sasaranLuas.push({
+          simbol: k.s, jalur: 'PENGAMATAN-KOLAM', kursi: 'PENGAMATAN',
+          arah: k.ret24 > 0 ? 'NAIK' : 'TURUN',
+          keyakinan: Math.min(60, Math.round(tegap * 8 + 20)),
+          entry: +k.harga.toPrecision(7), horizon: '24j', fee: '—',
+          alasanKursi: 'suara terkeras kolam telaah: ret24 ' + (k.ret24 > 0 ? '+' : '') + k.ret24.toFixed(2) + '% dari lilin nyata denyut ini — ini hirupan mata, BUKAN sinyal kunci; gerbang penuh tetap menuntut bukti forensik + komite + odds',
+          rezim: rezimGlobal, dikunci: ISO, bukti: {},
+          ketBukti: { pengamatan: 'momentum 24j dari kandang hidup ' + k.s + ' (lilin nyata, nol karangan)' },
+          sasaranBaru: true,
+        })
+      }
+    }
+  } catch (e) {
+    sasaranLuas.push({ simbol: 'KOLAM-BUTA', jalur: 'PENGAMATAN-GAGAL', kursi: 'PENGAMATAN', arah: '—', keyakinan: 0, entry: null, horizon: '—', alasanKursi: 'pemindaian kolam gagal dihitung (' + String(e && e.message || e).slice(0, 60) + ') — diakui jujur, tanpa karangan', dikunci: ISO })
+  }
+}
+sasaranLuas = sasaranLuas.filter((r, i, arr) => arr.findIndex((x) => x.simbol === r.simbol) === i)
+const mandats10 = {
+  minta: SASARAN10_MIN,
+  total: sasaranLuas.length,
+  kunci: sasaranLuas.filter((r) => r.kursi === 'KUNCI').length,
+  kompas: sasaranLuas.filter((r) => r.kursi === 'KOMPAS').length,
+  penelitian: sasaranLuas.filter((r) => r.kursi === 'PENELITIAN').length,
+  pengamatan: sasaranLuas.filter((r) => r.kursi === 'PENGAMATAN').length,
+  hukum: 'V301-SASARAN-10: sasaran harian minimal 10 — kunci nyata tetap dilindungi gerbang forensik; kursi kurang dilengkapi kandidat PENELITIAN lalu PENGAMATAN kolam, semua ber-label jujur, nol penyamaran sinyal',
+}
+log(`sasaran-10: ${mandats10.total} kursi (kunci ${mandats10.kunci} · kompas ${mandats10.kompas} · penelitian ${mandats10.penelitian} · pengamatan ${mandats10.pengamatan}) — mandat pemilik: sasaran harian ≥10 dari ribuan koin itu hal biasa`)
+
 // V252 DISIPLIN — kualitas di atas aktivitas (mandat investor poin 3 & 5):
 // bila tak ada sasaran yang lolos gerbang forensik, sistem menyatakan TUNGGU
 // (tanpa posisi) — kompas tetap memberi arah. Tidak bertindak adalah keputusan.
@@ -5761,7 +5837,8 @@ const laporan = {
     gerbang: { skorMin: PHX.GERBANG_SKOR, untungMinPct: PHX.UNTUNG_MIN * 100, likuiditasMinJuta: PHX.QV_MIN / 1e6 },
     catatan: radar.catatan || `menelaah ${radar.telaah} pasangan USDT — ${radar.zonaPhoenix} di zona ujung-bawah — ${radar.telusurDalam} ditelusuri dalam dengan lilin 1 jam`,
   },
-  sasaranHariIni: sasaranUtama,
+  sasaranHariIni: sasaranLuas,   // V301-SASARAN-10: ≥10 kursi berlabel (kunci/kompas/penelitian/pengamatan)
+  mandatSasaran10: mandats10,
   // V293 PELAJARAN-DALAM — angka jujur keterbukaan & pendalaman, disegel tiap denyut.
   // Hukum pemilik: TIDAK ADA koin diblokir — sasaran berulang DIJALANKAN & DIPERDALAM.
   kesegaran: {
