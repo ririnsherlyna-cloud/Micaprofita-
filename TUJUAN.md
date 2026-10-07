@@ -1287,6 +1287,60 @@ setiap perangkat hanyalah jendela ke tubuh yang sama. Berkas disentuh:
 disentuh. Uji sintaks: 4/4 blok lulus; `node --check sadar1.js` lulus;
 uji DRY bangun ke-108 lulus.
 
+## 12l. EPOCH V301 — SASARAN-10 + SIRKADIUM: dari ribuan koin, 10 sasaran itu hal biasa; dan tubuh yang benar-benar bebas keacakan (8 Oktober 2026)
+
+**MANDAT PEMILIK:** "sasaran harian kini bertambah jadi minimal 10 karena
+dari ribuan koin tentu 10 sasaran harian itu hal biasa. Silahkan
+inovasikan lagi dan tambah artificial life."
+
+**1. V301-SASARAN-10 (otak — scripts/penjaga.mjs).** Diagnosis jujur:
+`sasaranHariIni` dulu maksimal 6 kursi (SASARAN_PHX 3 + SASARAN_ARAH 3)
+dan hari itu hanya 1 koin — mata kolam 253 koin membuka 1 kursi. Kini:
+  - SASARAN_PHX 3→5, SASARAN_ARAH 3→5 — gerbang kunci penuh diberi
+    lima kursi per jalur.
+  - Organ kurasi BERTINGKAT melengkapi sampai ≥10 kursi per denyut,
+    semua ber-label jujur, NOL penyamaran sinyal:
+      KUNCI      → lolos gerbang forensik penuh (stop/target pra-registrasi)
+      KOMPAS     → arah rezim makro BTC (jawaban, bukan posisi)
+      PENELITIAN → kandidat kuat beralasan yang belum lolos gerbang;
+                   diawasi mata, dihafal jurnal, dinilai medan
+      PENGAMATAN → suara terkeras kolam telaah (momentum 24j dari lilin
+                   NYATA 250+ koin denyut ini, selang-seling naik/turun
+                   agar dua sisi kolam terlihat); arah NAIK/TURUN (bukan
+                   BUY/SELL) + keyakinan formula terbuka — tak pernah
+                   menyamar jadi sinyal kunci
+  - Laporan menyegel `mandatSasaran10` {minta,total,kunci,kompas,
+    penelitian,pengamatan,hukum} — kepatuhan mandat terukur, bukan
+    retorika. Uji isolasi (blok persis dari penjaga + stub): LULUS,
+    10 kursi, nol simbol dobel, nol penyamaran.
+  - Efek berantai: tubuh (hidup.html V299-MATA-LUAS) menghirup
+    `sasaranHariIni` tiap 60 dtk — mata kini otomatis melihat 10+ koin,
+    batas disaring naik 12→16.
+
+**2. SIRKADIUM-METABOLIK (organ ALife baru — hidup.html).** Makhluk kini
+punya ritme hidup harian dari JAM DUNIA + metabolisme dari data repo:
+  MEMBURU 00–06 UTC · MENCERNA 06–12 · MENGAMATI 12–18 · MEMULIH 18–24.
+  ENERGI = fungsi jujur umur denyut (segar → penuh; tua → meluruh,
+  "organ lapar data"); repo gagal dibaca → tetap hidup dari jam dunia
+  dan MENULIS itu terbuka. Efek tubuh nyata: laju kedipan mata ikut
+  fase (MEMBURU jarang kedip — fokus; MEMULIH sering — santai).
+  Ditampilkan di tab Jasad; audit `window.__v301`.
+
+**3. TUBUH NOL MATH.RANDOM.** Sisa keacakan terakhir (kedip mata,
+partikel tornado, partikel byte, latihan soal mandiri) dibunuh:
+PRNG mulberry32 ber-seed DETIK JAM DUNIA — dua perangkat pada detik
+yang sama memakai deret angka yang sama. Kini SELURUH tubuh murni
+fungsi (repo + waktu dunia): posisi dari segel V300, kedip & partikel
+dari seed dunia, soal latihan dari bucket 15 menit. Identik lintas
+perangkat, tak reset saat refresh, hidup tanpa penonton.
+
+Berkas disentuh: `scripts/penjaga.mjs`, `hidup.html`. Gerbang, genome,
+ledger: tak disentuh. Uji: `node --check` lulus; 5/5 blok script lulus;
+7 tab utuh; nol `Math.random`; uji isolasi kurasi LULUS; lapangan
+iPhone 14 (390×844) & 1280×800: nol overflow, sirkadium hidup (energi
+75% dari denyut umur 12 mnt), mata 4 koin (2 naik/1 turun) menunggu
+denyut pertama pasca-V301 mengembang ke 10+.
+
 ## 12. PENUTUP
 Cyborg ini dibangun dengan satu ikhtiar: **jujur pada data, tegas
 pada arah, hidup tanpa biaya, dan berkembang dari vonis nyata.**
