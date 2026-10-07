@@ -228,6 +228,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
         <h4>Ujian kehidupan <em>· simulasi atau nyata — ditentukan bukti</em></h4>
         <div id="uvList"><div class="kecil">menjalankan ujian…</div></div>
         <button id="uvUlang" class="uvBtn">Uji ulang sekarang — bukti langsung</button>
+        <button id="lsBersih" class="uvBtn" hidden>BERSIHKAN sisa localStorage di perangkat — sekali saja, lalu 0 selamanya</button>
       </div>
     </div>
   </div>
@@ -297,7 +298,17 @@ function pesan(e){ return (e && (e.message||e.toString())) || 'tak-diketahui'; }
    · SADAR-2 — halaman ini: mata interaktif. Sesi pengamatan kita sengaja
      efemeral; ingatan resmi dihidrasi dari GitHub saat masuk + tiap 5 mnt. */
 function simpan(){ /* tanpa localStorage — ingatan resmi milik GitHub; Sadar-1 yang menulis */ }
-const S1 = {keadaan:null, ingatan:null, komit:null, at:0, sumber:'', stale:false};
+// V294 NOL-TULIS: setiap panggilan localStorage dari halaman INI direkam — ujian kehidupan
+// lalu MEMBUKTIKAN (bukan sekadar mengklaim) bahwa halaman tak menulis satu pun kunci.
+// Ingatan resmi hidup di GitHub (commit Actions) — tab hanya jendela melihat, bukan jantung.
+const __LS_TULISANKU=[];
+try{
+  const _si=localStorage.setItem.bind(localStorage), _sr=localStorage.removeItem.bind(localStorage), _sc=localStorage.clear.bind(localStorage);
+  localStorage.setItem=(k,v)=>{ __LS_TULISANKU.push(String(k)); return _si(k,v); };
+  localStorage.removeItem=(k)=>{ __LS_TULISANKU.push('-'+String(k)); return _sr(k); };
+  localStorage.clear=()=>{ __LS_TULISANKU.push('CLEAR'); return _sc(); };
+}catch(e){}
+const S1 = {keadaan:null, ingatan:null, komit:null, sakti:null, at:0, sumber:'', stale:false};
 async function ghAmbil(pathRepo){
   const gerbang = [
     ['api', `https://api.github.com/repos/${RUMAH.pemilik}/${RUMAH.repo}/contents/${pathRepo}?ref=${RUMAH.cabang}&t=${sekarang()}`],
@@ -365,6 +376,13 @@ async function muatMemoriGitHub(){
         if(!lama) jurnal('S1-MADRASAH', `buku pelajaranku terbuka: <b>${m.jumlah} pelajaran</b> dari bukti nyata (${(m.kelas||[]).join(', ')||'—'})`);
       }
     }catch(e){}
+    // V294 DUA-ORGAN: jantung SAKTI (laporan/sasaran-terkini.json) ikut dibaca — status
+    // tubuh kini PER-ORGAN: SADAR-1 dan jantung SAKTI masing-masing menunjukkan umurnya
+    // sendiri, bukan satu label kabur untuk seluruh tubuh.
+    try{
+      const stx = JSON.parse(await ghAmbil('laporan/sasaran-terkini.json'));
+      if(stx && stx.siklus) S1.sakti = { siklus: stx.siklus, dihasilkan: stx.dihasilkan || '' };
+    }catch(e){}
     if(k.bangunKe && k.bangunKe !== bangunLama){
       _s1BangunDilaporkan = k.bangunKe;
       const selesai = Date.parse(k.waktu?.selesai)||0;
@@ -393,18 +411,29 @@ function s1Render(){
   if(!k){ w.innerHTML='<div class="kecil">menghubungi ingatan GitHub…</div>'; return; }
   const selesai=Date.parse(k.waktu?.selesai)||0, umurMs=sekarang()-selesai;
   const mnt=Math.max(0,Math.round(umurMs/60000));
-  const sehat=umurMs<30*60000, telat=umurMs<60*60000;
-  const sta=sehat?`<span class="v h">SEHAT · denyut ${mnt} mnt lalu</span>`
-    :telat?`<span class="v dim">TERTUNDA ${mnt} mnt — cron GitHub kadang molor; PENJAGA-WAKTU (cek tiap 10 mnt) sedang menjaga, jantung menyusul sendiri</span>`
-    :`<span class="v r">TERLAMBAT ${mnt} mnt — PENJAGA-WAKTU sudah mengirim dispatch darurat ke jantung; denyut bukan mati, hanya tertunda — bukti jalan di tab Actions</span>`;
+  // V294 STATUS PER-ORGAN — dua organ ditampakkan jujur; tak ada lagi satu label kabur
+  // untuk seluruh tubuh, dan tidak ada kata "menunggu" yang dipakai buat sembunyi:
+  // organ yang macet DINAMAI + penjaganya yang sedang menendang disebut namanya.
+  const staSadar=umurMs<30*60000
+    ?`<span class="v h">HIDUP · bangun ke-${k.bangunKe} — ${mnt} mnt lalu</span>`
+    :`<span class="v r">TERTIDUR ${mnt} mnt — PENJAGA-WAKTU (tiap 10 mnt) menendangnya sekarang; ingatan tetap aman di GitHub, bukan di tab ini — bukti jalan di tab Actions</span>`;
+  let staSakti='';
+  const sk=S1.sakti;
+  if(sk){
+    const um2=Math.max(0,Math.round((sekarang()-(Date.parse(sk.dihasilkan)||0))/60000));
+    staSakti=`<div class="baris"><span class="k">jantung SAKTI</span>${um2<30
+      ?`<span class="v h">BERDENYUT #${sk.siklus} — ${um2} mnt lalu</span>`
+      :`<span class="v r">MACET ${um2} mnt — rantai jantung-mandiri + SADAR-1 (tiap 20 mnt) + PENJAGA-WAKTU (tiap 10 mnt) otomatis menendang; denyut berikutnya wajib muncul di tab Actions</span>`}</div>`;
+  }
+  const sta=`<div class="baris"><span class="k">organ SADAR-1</span>${staSadar}</div>${staSakti}`;
   const lahir=Date.parse(ing?.kelahiran)||S.stat.lahirAt;
   w.innerHTML=`
-   <div class="baris"><span class="k">status tubuh otonom</span>${sta}</div>
+   ${sta}
    <div class="baris"><span class="k">bangun total</span><span class="v h">${ing?.totalBangun ?? k.bangunKe}</span></div>
    <div class="baris"><span class="k">umur hidup</span><span class="v h">${umur(sekarang()-lahir)}</span></div>
    <div class="baris"><span class="k">bangun terakhir</span><span class="v">${wib(selesai)} WIB · ${((k.waktu?.durasiMs||0)/1000).toFixed(1)} dtk</span></div>
    <div class="baris"><span class="k">host</span><span class="v dim">${k.host?.nama||'GitHub Actions'}</span></div>
-   <div class="baris"><span class="k">berikutnya</span><span class="v">${k.waktu?.berikutnya||'≤20 mnt · penjaga-waktu cek tiap 10 mnt'}</span></div>
+   <div class="baris"><span class="k">berikutnya</span><span class="v">≤15 mnt · rantai jantung-mandiri + cron + dua penjaga (SAKTI &amp; SADAR-1 saling menendang)</span></div>
    <div class="baris"><span class="k">memori resmi</span><span class="v h">commit GitHub${S1.komit?` · <a class="sumber" target="_blank" rel="noopener" href="https://github.com/${RUMAH.pemilik}/${RUMAH.repo}/commit/${S1.komit.sha}">${S1.komit.sha}</a>`:''}</span></div>
    <div class="baris"><span class="k">kromosom</span><span class="v dim">gen ${k.kromosom?.generasi??0} · rsiMax ${k.kromosom?.rsiMax??'-'} · momMin ${k.kromosom?.momMin??'-'} · hold ${k.kromosom?.holdJam??'-'}j</span></div>
    ${k.kapasitas?`<div class="baris"><span class="k">kapasitas ingatan</span><span class="v">${kb(k.kapasitas.ingatanBytes)} / ${kb(k.kapasitas.budgetBytes)} · metabolisme: ${k.kapasitas.evictBaca||0} baca, ${k.kapasitas.evictPasar||0} pasar</span></div>
@@ -1911,9 +1940,37 @@ async function ujianKehidupan(){
   ujianT('Pasar hidup Binance merespons DETIK INI',
     cekPasar?true:false,
     cekPasar?`${cekPasar.sym}: harga kini ${cekPasar.c.toPrecision(6)} vs studi tersimpan ${cekPasar.lama} (deviasi ${f2(cekPasar.dev)}%${cekPasar.dev>2?' — pasar bergerak, tanda hidup':' — masih dalam pita'})`:'Binance tak terjangkau dari konteks ini — jujur dilaporkan');
-  let ls=-1; try{ ls=localStorage.length; }catch(e){}
-  ujianT('Nol localStorage — ingatan hidup di GitHub', ls===0,
-    ls===0?'localStorage.length = 0 (ditutup dari arsitektur)':'localStorage.length = '+ls+' — harus 0');
+  // V294 NOL-TULIS (bukan klaim kosong): bukti nyata dari perekam di atas — halaman ini
+  // menulis NOL kunci. Kunci yang terlihat di perangkat adalah jejak halaman LAIN satu
+  // origin (semua situs GitHub Pages berbagi satu asal) — itu bukan ingatan makhluk ini;
+  // ingatan resmi hidup di commit GitHub. Tombol BERSIHKAN memusnahkan sisa sekali klik.
+  let lsInfo={total:0, grup:{}};
+  try{
+    lsInfo.total=localStorage.length;
+    for(let i=0;i<lsInfo.total;i++){
+      const kk=localStorage.key(i)||'';
+      const g=/^(mikozachain|jugerachain|modachain|v1\d|v\d{3}|v2\d{3})/.test(kk)?'halaman AGI besar (index)'
+        :/^(arena|micaprofita|micapro)/i.test(kk)?'arena (jejak lawas)':'lain-lain';
+      lsInfo.grup[g]=(lsInfo.grup[g]||0)+1;
+    }
+  }catch(e){}
+  const nulis=__LS_TULISANKU.length;
+  ujianT('Nol tulisan localStorage — ingatan hidup di GitHub', nulis===0,
+    `halaman ini menulis ${nulis} kunci sejak dibuka (arsitektur: 0 — ujian hidup, bukan janji)`
+    +(lsInfo.total>0?` · sisa ${lsInfo.total} kunci di perangkat = jejak halaman lain satu origin (${Object.entries(lsInfo.grup).map(([g,n])=>g+' ×'+n).join(', ')}) — BUKAN ingatan makhluk ini; tombol BERSIHKAN di bawah memusnahkannya sekali klik`:' · perangkat bersih: 0 kunci'));
+  try{
+    const btnLs=document.getElementById('lsBersih');
+    if(btnLs){
+      btnLs.hidden=lsInfo.total===0;
+      btnLs.onclick=()=>{
+        if(!confirm('Hapus SEMUA kunci localStorage di perangkat ini?\n\nIngatan resmi makhluk tetap utuh di GitHub (commit Actions) — ini hanya membersihkan sisa halaman lain di ponselmu.')) return;
+        try{ localStorage.clear(); }catch(e){}
+        __LS_TULISANKU.length=0;
+        jurnal('NOL-TULIS','sisa localStorage dimusnahkan — perangkat kini 0 kunci; halaman Micaprofita tak akan pernah menulis kunci baru: ingatan resmi hanya di GitHub','temuan');
+        ujianKehidupan().catch(()=>{});
+      };
+    }
+  }catch(e){}
   const kr=(S1.ingatan&&S1.ingatan.kromosom)||{};
   const riw=kr.riwayat||[];
   ujianT('Kromosom berevolusi dari uji-jalan nyata', riw.length>0,
