@@ -1795,7 +1795,10 @@ function arah5Render(){
   const data=k&&k.arahHarian&&k.arahHarian.top5&&k.arahHarian.top5.length?k.arahHarian:null;
   if(data){
     const sg=data.saktiSegel;
-    const saktiBaris=sg?`<div class="kecil" style="margin:5px 0;padding:4px 7px;border:1px solid var(--legap);border-radius:8px"><b>VENA SELARAS SAKTI</b> ${sg.siklusSakti?`denyut #${sg.siklusSakti}`:''}${typeof sg.irisan==='number'?` · irisan <b>${sg.irisan}/${sg.dari??'?'}</b>`:''}${Array.isArray(sg.sasaranResmi)&&sg.sasaranResmi.length?` · sasaran resmi SAKTI: ${sg.sasaranResmi.join(' · ')}`:''}<br>${sg.ket||''}</div>`:'';
+    // V293 OTAK-BINER — suara matematika-murni SAKTI tampil juga di ruang hidup:
+    // nalar lahir lokal dari angka (tanpa kunci luar); satu tubuh satu bicara.
+    const obBaris=sg&&sg.otakBiner&&sg.otakBiner.narasi?`<br><span style="color:var(--tx2)"><b>OTAK-BINER</b> (matematika murni, lahir lokal tanpa kunci): ${String(sg.otakBiner.narasi).replace(/</g,'&lt;').slice(0,260)}…</span>`:'';
+    const saktiBaris=sg?`<div class="kecil" style="margin:5px 0;padding:4px 7px;border:1px solid var(--legap);border-radius:8px"><b>VENA SELARAS SAKTI</b> ${sg.siklusSakti?`denyut #${sg.siklusSakti}`:''}${typeof sg.irisan==='number'?` · irisan <b>${sg.irisan}/${sg.dari??'?'}</b>`:''}${Array.isArray(sg.sasaranResmi)&&sg.sasaranResmi.length?` · sasaran resmi SAKTI: ${sg.sasaranResmi.join(' · ')}`:''}<br>${sg.ket||''}${obBaris}</div>`:'';
     w.innerHTML=`<div class="kecil" style="margin-bottom:4px">${data.jumlah} koin kuaudit Sadar-1 bangun ke-<b>${k.bangunKe}</b> — ini sasaran terbaiknya. <b>AMBISIUS</b> = sasaran peregangan 4×ATR14, bukan janji. [BERTAHAN] = posisi masih jalan dari bangun lalu, BUKAN kunci baru.</div>`+
       saktiBaris+
       data.top5.map(a=>barisA(a,'segel')).join('')+
