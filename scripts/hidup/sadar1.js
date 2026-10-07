@@ -817,6 +817,9 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
         saktiSegel = { sumber: 'laporan/sasaran-terkini.json', siklusSakti: st.siklus ?? null,
           dihasilkan: st.dihasilkan ?? null, sasaranResmi: resmi,
           irisan: overlap, dari: (KERJA.arah || []).length,
+          // V293 OTAK-BINER: suara matematika-murni SAKTI diteruskan utuh ke ruang hidup —
+          // satu tubuh satu nalar, bukan tiga organ berbicara beda.
+          otakBiner: st.otakBiner ? { aktif: !!st.otakBiner.aktif, sumber: st.otakBiner.sumber ?? null, narasi: st.otakBiner.narasi ?? null } : null,
           ket: overlap > 0
             ? 'terhubung: ' + overlap + '/' + ((KERJA.arah || []).length || 0) + ' sasaran hidupku irisan dengan sasaran resmi SAKTI denyut #' + (st.siklus ?? '?')
             : 'renggang: tak ada irisan bangun ini — dua organ membaca pasar yang sama dengan lensa beda; selisih kutampakkan JUJUR agar pemilik bisa mengadili, bukan kusembunyikan' };
