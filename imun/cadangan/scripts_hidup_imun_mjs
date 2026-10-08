@@ -137,21 +137,41 @@ function manifesMuat () {
 }
 
 function pushGit (pesan) {
-  try {
-    execSync('git config user.name "IMUN-MICAPROFITA"', { stdio: 'pipe' })
-    execSync('git config user.email "imun@micaprofita.local"', { stdio: 'pipe' })
-    execSync('git add -A imun laporan/imun.json laporan/imun.jsonl ruang-hidup/ingatan.json ruang-hidup/madrasah.json ruang-hidup/habitat.json otak laporan/peta-geladak.json laporan/geladak.json laporan/sasaran-terkini.json laporan/guru.json laporan/tanggapan.json ujian scripts/hidup scripts/penjaga.mjs .github/workflows tanam', { stdio: 'pipe' })
-    const sulit = execSync('git diff --cached --quiet 2>/dev/null; echo $?').toString().trim()
-    if (sulit === '0') return false // tak ada yang berubah
-    execSync(`git commit -m ${JSON.stringify(pesan)}`, { stdio: 'pipe' })
+  // V309-G2: DUA TAHAP + rebase -X theirs (pelajaran run#228 15:19:42Z:
+  // ikatan berhasil dilepas sendiri TAPI push gugur 4x dalam tabrakan rebase
+  // dgn denyut/sadar1 → pembebasan jadi fana).
+  //   TAHAP-1 PEMULIHAN: jalur tubuh (workflow/organ/tanah/manifes/cadangan/
+  //     organ-vital) — WAJIB sampai ke repo; tanpa ini pemulihan = fana.
+  //   TAHAP-2 NARASI: laporan/imun.json + imun.jsonl — bila gugur, denyut
+  //     berikutnya mengangkutnya (langkah komit denyut memuat laporan).
+  // -X theirs pada rebase: versi imun menang konflik (patroli terbaru =
+  // keadaan tubuh terbaru); luka tak boleh kalah dari kebisingan.
+  const dorong = () => {
     for (let i = 1; i <= 4; i++) {
       try { execSync('git push origin HEAD:main', { stdio: 'pipe', env: { ...process.env } }); return true }
-      catch (e) {
-        try { execSync('git pull --rebase origin main', { stdio: 'pipe' }) } catch { try { execSync('git rebase --abort', { stdio: 'pipe' }) } catch {} }
+      catch {
+        try { execSync('git pull --rebase -X theirs origin main', { stdio: 'pipe' }) } catch {}
         execSync('sleep 4', { stdio: 'pipe' })
       }
     }
     console.error('[imun] push gagal 4x — pemulihan tersimpan lokal (denyut berikutnya menyusul)')
+    return false
+  }
+  try {
+    execSync('git config user.name "IMUN-MICAPROFITA"', { stdio: 'pipe' })
+    execSync('git config user.email "imun@micaprofita.local"', { stdio: 'pipe' })
+    execSync('git add -A .github/workflows scripts/hidup scripts/penjaga.mjs tanam imun ruang-hidup/ingatan.json ruang-hidup/madrasah.json ruang-hidup/habitat.json otak laporan/peta-geladak.json laporan/geladak.json laporan/sasaran-terkini.json laporan/guru.json laporan/tanggapan.json ujian', { stdio: 'pipe' })
+    const sulit1 = execSync('git diff --cached --quiet 2>/dev/null; echo $?').toString().trim()
+    if (sulit1 !== '0') {
+      execSync(`git commit -m ${JSON.stringify(pesan)}`, { stdio: 'pipe' })
+      dorong()
+    }
+    execSync('git add -A laporan/imun.json laporan/imun.jsonl', { stdio: 'pipe' })
+    const sulit2 = execSync('git diff --cached --quiet 2>/dev/null; echo $?').toString().trim()
+    if (sulit2 !== '0') {
+      execSync('git commit -m "IMUN: jurnal patroli [skip ci]"', { stdio: 'pipe' })
+      dorong()
+    }
     return true
   } catch (e) { console.error('[imun] push bermasalah:', String(e).slice(0, 140)); return false }
 }
@@ -362,10 +382,12 @@ async function patroli () {
   writeFileSync(LOG, (existsSync(LOG) ? readFileSync(LOG, 'utf8') : '') +
     JSON.stringify({ waktu: lapor.dihasilkan, rekap: lapor.rekap, nafas: lapor.nafas.putusan.slice(0, 120), tindakan: TINDAKAN.map(t => t.jenis + ':' + t.file).join('|') }) + '\n')
 
-  // 6. komit bila ada perubahan (pushGit diam bila tak ada diff)
-  if (BERUBAH || TINDAKAN.length) {
-    const n = lapor.rekap.pulihkan
-    pushGit(`IMUN: ${n} luka dipulihkan, ${lapor.rekap.adopsi} adopsi — ${nafasPutusan.slice(0, 70)} [skip ci]`)
+  // 6. komit bila ada pemulihan nyata ATAU luka yang wajib berteriak (H2).
+  //    V309: patroli observasi-murni (cabur-dikenal, tubuh-berubah) TIDAK
+  //    membuat komit — anti-kebisingan; laporan tetap dijurnal di imun.jsonl.
+  if (BERUBAH || lapor.rekap.lukaTakTerpulihkan) {
+    const n = lapor.rekap.pulihkan + lapor.rekap.ikatanLepas + lapor.rekap.sambung
+    pushGit(`IMUN: ${n} tindakan (pulihkan/lepaskan-ikat/sambung) — ${nafasPutusan.slice(0, 70)} [skip ci]`)
   }
   console.log('[imun] patroli selesai —', JSON.stringify(lapor.rekap), '—', nafasPutusan.slice(0, 110))
 }
