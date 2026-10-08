@@ -52,6 +52,15 @@ jobs:
       - name: Pelajari jurnal baru (artificial life + crypto) — pustaka tumbuh
         run: node scripts/hidup/pustaka.mjs
 
+      # V303 GURU-HAKIKI — organ guru master trader (mandat pemilik 2026-10-08):
+      # geladak-uji walk-forward di lilin nyata → majelis-faktor (bobot dari
+      # hit-rate, faktor tanpa bukti = bobot nol) → perisiko ATR (stop/target
+      # R:R 2,0) → buku-evaluasi (vonis disegel, pasar yang menghakimi) →
+      # pusta-formula (ilmu yang ditulis makhluk sendiri + gerbang regresi).
+      # Organ ini TIDAK PERNAH mematikan denyut: gagal internal = cerita jujur.
+      - name: Guru master trader — geladak-uji, majelis, perisiko, pusta-formula
+        run: node scripts/hidup/guru-master.mjs
+
       - name: Komit pertumbuhan (jejak hidup permanen)
         run: |
           git config user.name  "SARANG-PENJAGA"
@@ -60,11 +69,12 @@ jobs:
           AKURASI=$(python3 -c "import json;r=json.load(open('laporan/sasaran-terkini.json'));a=r['akurasi']['akurasiPct'];print(f'{a}%' if a is not None else 'belum-ada')" 2>/dev/null || echo "?")
           SASARAN=$(python3 -c "import json;r=json.load(open('laporan/sasaran-terkini.json'));print(len(r['sasaranHariIni']))" 2>/dev/null || echo "?")
           PUSTAKA=$(python3 -c "import json;print(json.load(open('pustaka/indeks.json'))['gerbang509']['tercapai'])" 2>/dev/null || echo "0")
-          git add laporan otak arena-keadaan.json pustaka   # V299: pustaka jurnal ikut komit — belajar jadi fosil tubuh
+          GELADAK=$(python3 -c "import json;d=json.load(open('laporan/geladak.json'));print(f\"{d['backtest']['akurasiTimbangPct']}% n={d['backtest']['sampel']}\" if d.get('status')=='HIDUP' else d.get('status','?'))" 2>/dev/null || echo "-")
+          git add laporan otak arena-keadaan.json pustaka   # V299: pustaka jurnal ikut komit — belajar jadi fosil tubuh; V303: geladak+formula+ledger ikut
           if git diff --cached --quiet; then
             echo "tanpa perubahan — tanpa komit"
           else
-            git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran — pustaka ${PUSTAKA}/509 [skip ci]"
+            git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran — pustaka ${PUSTAKA}/509 — geladak ${GELADAK} [skip ci]"
             # V291 ANTI-BALAPAN: SADAR-1 bisa menyegel bangun bersamaan — push di-RETRY
             # dgn rebase ulang tiap percobaan (insiden 2026-10-07T00:55Z: remote rejected,
             # denyut #77 sudah terbentuk tapi terdorong gagal).

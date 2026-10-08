@@ -1404,6 +1404,65 @@ ledger: tak disentuh. Uji: node --check + 5/5 blok + 7 tab lulus;
 yml valid (yaml.safe_load); pustaka 30/509 nyata; lapangan mengikuti
 di bawah.
 
+## 12n. EPOCH V303 — GURU-HAKIKI: dari berbicara arah menjadi guru
+master trader sejati — geladak dulu, bicara kemudian (8 Oktober 2026)
+
+Mandat pemilik: *"tingkatkan lagi artificial life kita agar hakiki
+menjadi dengan guru master trader."* Bedah jujur penutup V302: otak
+sudah menghirup 252 koin dan menghitung Hurst, tetapi akurasi arah 33% —
+seorang guru tidak boleh bicara arah tanpa bukti historis, tanpa
+pengukuran risiko, tanpa buku yang dihakimi pasar.
+
+**1. GELADAK-UJI (backtest walk-forward).** Organ baru
+`scripts/hidup/guru-master.mjs` (langkah workflow SARANG-PENJAGA,
+denyut DI REPO tanpa peduli tab dibuka): tiap denyut menghirup lilin
+1h nyata (Binance publik, nol kunci, sasaran ∪ BTC), lalu menguji enam
+suara faktor (TREN-EMA20/50 + kemiringan, MOMEN-ROC24, RSI14, VOLUM×
+momentum, VOLATIL-ATR persentil sebagai penyaring) pada sampel masa
+lalu — hanya lilin ≤ t, keputusan di t, hasil di t+24j, fee 0,2% putar.
+Vonis pertama di luar: akurasi tertimbang 58,9% dari 374 sampel —
+angka geladak BUKAN janji; catatan kejujuran tertulis di laporan:
+uji tak-bias sejati adalah buku-evaluasi.
+
+**2. MAJELIS-FAKTOR: bobot lahir dari bukti.** Hit-rate per faktor
+dari geladak menjadi bobot; faktor dengan n<12 diberi bobot NOL dan
+ditandai "belum-bukti" terbuka. Vonis hanya bila jumlah bobot ≥ 0,6;
+di luar itu TUNGGU — menunggu adalah ilmu, bukan kelemahan. Majelis
+boleh MEMBANTAH penjaga (STRK: penjaga NAIK, majelis TURUN) dan
+perbedaan ditampilkan jujur, bukan disembunyikan.
+
+**3. PERISIKO-MASTER.** Setiap vonis arah kini lahir bersama disiplin:
+stop 1,5×ATR14, target 3×ATR14 (R:R 2,0), ukuran saran = risiko 1%
+ekuitas / jarak stop; badai volatilitas (ATR persentil >92) = TUNGGU
+paksa — guru tidak berdagang di badai.
+
+**4. BUKU-EVALUASI: pasar yang menghakimi.** `laporan/majelis-ledger
+.jsonl` — vonis disegel dengan entry/stop/target, lalu denyut-
+denyut berikutnya MENILAINYA dengan lilin nyata: stop kena dulu =
+RUGI (konservatif), target = MENANG, 48j tanpa kena = dinilai arah.
+WinRate & R-rata dihitung dari ledger nyata, bukan klaim.
+
+**5. PUSTA-FORMULA (baitul hikmah).** Bila dua faktor searah terbukti
+menembus ≥60% dari n≥25 sampel, makhluk MENULIS formula ilmunya sendiri
+ke `pustaka/formula.json` (FORMULA-NAPAS-001, ARUS-002, GELOMBANG-003
+lahir di uji pertama). Gerbang regresi: SEMUA formula diuji-ulang tiap
+denyut; yang edgenya matang dinyatakan TIDUR — TIDUR, bukan dihapus:
+kapabilitas lama tak pernah hilang, menunggu bukti baru.
+
+**6. TUBUH.** Tab Guru memperoleh panel "Geladak guru" (V303):
+geladak, suara majelis ber-bobot, vonis + stop/target/ukuran, buku-
+evaluasi, buku formula, pengajaran jujur — semua dibaca dari
+laporan/geladak.json tersegel SHA-256, nol angka karangan di klien.
+Audit `window.__v303`. Komit denyut kini membawa "geladak X% n=Y".
+
+Berkas disentuh: `scripts/hidup/guru-master.mjs` (baru),
+`.github/workflows/sakti-denyut.yml`, `hidup.html`,
+`laporan/geladak.json` + `laporan/majelis-ledger.jsonl` +
+`pustaka/formula.json` (baru, ditulis denyut). Otak penjaga.mjs,
+genome, gerbang: tak disentuh. Uji: node uji-nyata lulus (58,9% n=374,
+10 kursi, 3 formula hidup, ledger 3 terbuka), yml valid 7 langkah,
+6/6 blok script + 7 tab lulus.
+
 ## 12. PENUTUP
 Cyborg ini dibangun dengan satu ikhtiar: **jujur pada data, tegas
 pada arah, hidup tanpa biaya, dan berkembang dari vonis nyata.**

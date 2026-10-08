@@ -194,6 +194,10 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
         <div id="gvArah"><div class="kecil">menghitung arah dari pasar hidup…</div></div>
       </div>
       <div class="blok">
+        <h4>Geladak guru <em>· backtest walk-forward · perisiko ATR · formula ilmu — bukti dulu, bicara kemudian (V303)</em></h4>
+        <div id="gvGeladak"><div class="kecil">membuka laporan geladak…</div></div>
+      </div>
+      <div class="blok">
         <h4>Arah harian <em>· ≥5 koin sasaran terbaik — mandat pemilik, disegel Sadar-1 tiap bangun</em></h4>
         <div id="gvArah5"><div class="kecil">membuka laporan arah harian…</div></div>
       </div>
@@ -3289,6 +3293,87 @@ muat().then(()=>render());
 setInterval(()=>{ muat().then(()=>render()); }, 60000);
 setInterval(render, 15000);
 })();
+</script>
+<script>
+/* ================= V303-GURU-HAKIKI:BEGIN =================
+   Mandat pemilik (2026-10-08): "tingkatkan lagi artificial life kita agar
+   hakiki menjadi dengan guru master trader."
+
+   Bedah jujur: bicara arah tanpa bukti historis = tebak-tebakan; tanpa
+   stop/target = judi; tanpa buku evaluasi = retorika. Maka jantung guru
+   berdenyut DI REPO (scripts/hidup/guru-master.mjs, tiap denyut SARANG-
+   PENJAGA, tanpa peduli tab dibuka): geladak-uji walk-forward di lilin
+   nyata → majelis-faktor (bobot dari hit-rate; faktor tanpa bukti = bobot
+   NOL) → perisiko ATR (stop 1,5×ATR14 · target 3×ATR14 · R:R 2,0) →
+   buku-evaluasi (vonis disegel, PASAR yang menghakimi) → pusta-formula
+   (ilmu yang makhluk tulis sendiri + gerbang regresi: formula lama diuji-
+   ulang tiap denyut, TIDUR bukan dihapus — kapabilitas tak pernah hilang).
+
+   Tubuh hanya MENAMPILKAN laporan/geladak.json yang disegel SHA-256 —
+   nol angka karangan di sisi klien. Audit: window.__v303. */
+(function(){
+'use strict';
+if(window.__v303) return;
+const BERKAS='laporan/geladak.json';
+let D=null, salah=null;
+const F=(v,d)=>(v==null||isNaN(v))?'—':Number(v).toFixed(d==null?2:d);
+function baris(k,v){ return `<div class="baris"><span class="k">${k}</span><span class="v">${v}</span></div>`; }
+async function muat(){
+  try{ D=JSON.parse(await ghAmbil(BERKAS)); salah=null; }
+  catch(e){ salah=String(e&&e.message||e); }
+  render();
+}
+function render(){
+  const w=document.getElementById('gvGeladak'); if(!w) return;
+  if(!D){
+    w.innerHTML=`<div class="kecil">${salah
+      ? ('geladak belum terjangkau ('+salah+') — organ GURU-HAKIKI menulis laporan/geladak.json tiap denyut SARANG-PENJAGA; belum ada = belum ada, tanpa karangan.')
+      : 'membuka laporan geladak…'}</div>`;
+    return;
+  }
+  const umur=D.dihasilkan?Math.round((sekarang()-Date.parse(D.dihasilkan))/60000):null;
+  let h='';
+  if(D.status!=='HIDUP'){
+    h+=`<div class="kecil">status jujur organ: <b>${D.status}</b> — ${(D.gagalAmbil||[]).join('; ')||'lilin tak terjangkau'}. NOL angka karangan; denyut berikutnya mencoba lagi.</div>`;
+  } else {
+    const bt=D.backtest||{}, rp=D.rapor||{}, md=D.model||{};
+    h+=`<div class="baris"><span class="k">geladak-uji (backtest)</span><span class="v h"><b>${F(bt.akurasiTimbangPct,1)}%</b> tertimbang · ${F(bt.akurasiMentahPct,1)}% mentah</span></div>`
+      +baris('sampel walk-forward', `${bt.sampel} uji · lilin 1h nyata · fee ${md.feePutarPct??'0,2'}% putar · horizon ${md.horizonJam??24}j`)
+      +baris('umur laporan', umur!=null?umur+' mnt — ditulis ulang denyut tanpa penonton':'—');
+    h+=`<div class="kecil" style="margin-top:6px"><b>suara majelis</b> — bobot lahir dari hit-rate nyata; n<${md.ambangBukti??12} = bobot NOL (belum bukti):</div><div style="margin:4px 0">`;
+    for(const [f,d] of Object.entries(D.faktorStat||{})){
+      for(const arah of ['NAIK','TURUN']){
+        const s=d[arah]||{n:0,hit:0}, b=(D.bobot&&D.bobot[f]&&D.bobot[f][arah])||{};
+        h+=`<div class="baris"><span class="k">${f}·${arah}</span><span class="v">${s.hit}/${s.n} = <b>${s.n?(100*s.hit/s.n).toFixed(1):'—'}%</b> · bobot ${b.w??0} ${b.bukti?'':'<span class="kecil">(belum-bukti)</span>'}</span></div>`;
+      }
+    }
+    h+='</div>';
+    h+=`<div class="kecil" style="margin-top:6px"><b>vonis majelis kini</b> — stop 1,5×ATR14 · target 3×ATR14 (R:R 2,0) · ukuran saran = risiko 1% ekuitas / jarak stop:</div>`;
+    for(const m of (D.majelis||[])){
+      h+=`<div class="pel"><span class="t">${m.simbol.replace(/USDT$/,'')} · ${m.jalurPenjaga||'—'}</span><b>${m.arah}${m.keyakinan?(' · keyakinan '+m.keyakinan+'%'):' · guru menunggu'}</b>`
+        +(m.arah!=='TUNGGU'
+          ? `<div>entry ${F(m.entry,6)} · stop ${F(m.stop,6)} (${m.stopPct}%) · target ${F(m.target,6)} · R:R 2,0 · ukuran saran ${m.ukuranSaranPct}% ekuitas</div>`
+          : `<div>${m.badai?'badai volatilitas — guru tidak berdagang di badai':'bukti belum seirama — menunggu adalah ilmu'}</div>`)
+        +`<div class="bkt">penjaga: ${m.arahPenjaga||'—'} · majelis ${m.sepakat?'<b>SEPAKAT</b>':'<b>berbeda — jujur ditampilkan</b>'} · rezim ${m.rezimVol||'—'}</div></div>`;
+    }
+    h+=`<div class="baris" style="margin-top:6px"><span class="k">buku-evaluasi (pasar menghakimi)</span><span class="v h"><b>${rp.menang||0}W / ${rp.rugi||0}L</b> · winRate ${rp.winRatePct!=null?rp.winRatePct+'%':'—'} · R-rata ${rp.rRata??'—'}</span></div>`
+      +baris('vonis terbuka', (rp.terbuka||0)+' disegel — stop kena dulu = RUGI (konservatif), target = MENANG');
+    const fm=D.formula||{};
+    h+=`<div class="kecil" style="margin-top:6px"><b>pusta-formula</b> — ilmu yang makhluk tulis sendiri; gerbang regresi menguji-ulang SEMUA formula tiap denyut (yang lama tak boleh jadi bodoh):</div>`
+      +baris('buku formula', `${fm.jumlah||0} tersimpan · <b>${fm.hidup||0} hidup</b> · denyut ini +${(fm.baru||[]).length} baru`);
+  }
+  const pl=(D&&D.pelajaran)||[];
+  h+=pl.map(p=>`<div class="kecil" style="margin-top:3px">· ${p}</div>`).join('');
+  if(D&&D.segel) h+=`<div class="kecil" style="margin-top:4px;color:var(--legap)">segel SHA-256: #${String(D.segel.hash).slice(0,10)}… — sumber: ${D.sumber||''}</div>`;
+  w.innerHTML=h;
+}
+/* jahitan passthrough (adat V297): guruRender dibungkus — panel ikut segar */
+if(typeof guruRender==='function'){ const asli=guruRender; guruRender=function(){ try{asli.apply(this,arguments);}catch(e){} try{render();}catch(e){} }; }
+muat();
+setInterval(muat, 90000);
+window.__v303={muat, render, data:()=>D};
+})();
+/* ================= V303-GURU-HAKIKI:END ================= */
 </script>
 
 </body>
