@@ -202,6 +202,10 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
         <div id="gvArah5"><div class="kecil">membuka laporan arah harian…</div></div>
       </div>
       <div class="blok">
+        <h4>IMUN <em>· organ imun &amp; nafas — tubuh menjaga dirinya sendiri (V308, lahir dari Uji Kehidupan)</em></h4>
+        <div id="gvImun"><div class="kecil">membuka laporan imun…</div></div>
+      </div>
+      <div class="blok">
         <h4>Madrasah <em>· buku pelajaran yang tumbuh dari bukti</em></h4>
         <div id="gvMadrasah"><div class="kecil">membuka buku…</div></div>
       </div>
@@ -351,7 +355,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
    penonton, ingatan resmi = commit GitHub, tubuh = fungsi kerja nyata. ================ */
 /* ================= IDENTITAS & KONSTANTA ================= */
 const RUMAH = {pemilik:'ririnsherlyna-cloud', repo:'Micaprofita-', cabang:'main'};
-const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json', tempa:'laporan/tempa100.json', tempa2:'laporan/tempa200.json', tempa3:'laporan/ujian500.json'};
+const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json', tempa:'laporan/tempa100.json', tempa2:'laporan/tempa200.json', tempa3:'laporan/ujian500.json', imun:'laporan/imun.json', ujiHidup:'laporan/uji-kehidupan.json'};
 const MAXBACA = 400000;                 // batas baca per file (byte) — kejujuran parsial
 const FASE = ['MENGAMATI','MEMAHAMI','MENCOBA','MELAKUKAN','MENGEVALUASI','MENEMUKAN','MEMBANGUN','MENINGKATKAN','MENGAMATI-KEMBALI'];
 const INTEGERS = ['versi.json','gerbang.json','brain.json','arena-keadaan.json','otak/genome-server.json','otak/penjaga-keadaan.json','otak/performa.json','memori/terkini.json','README.md'];
@@ -477,6 +481,7 @@ let _s1BangunDilaporkan = 0;
 async function muatMemoriGitHub(){
   try{
     pustakaMuat(); /* V299-PUSTAKA-SEJATI: gerbang 509 jurnal — muat tak-blok */
+    imunMuat(); /* V308-UJI-KEHIDUPAN: laporan organ imun — muat tak-blok */
     tempaMuat(); /* V305-TEMPAN-100: ujian simulasi hidup-mati — muat tak-blok */
     tempa2Muat(); /* V306-TEMPAN-200: 200 soal sampel loss histori nyata — muat tak-blok */
     tempa3Muat(); /* V307-TEMPAN-500: 500 soal sejarah dalam — muat tak-blok */
@@ -2504,6 +2509,37 @@ async function tempa2Muat(){
       if(S.tabAktif==='ujian') ujianRender();
     }
   }catch(e){ /* tempa200 belum ada — jujur: belum ditempa */ }
+}
+/* V308-UJI-KEHIDUPAN — organ imun: muat laporan patroli + cerita uji kehidupan */
+async function imunMuat(){
+  try{ const p = JSON.parse(await ghAmbil(INGATAN_GH.imun)); S.imun = p;
+    gvImunRender();
+  }catch(e){ S.imun = null; gvImunRender(); }
+  try{ const u = JSON.parse(await ghAmbil(INGATAN_GH.ujiHidup)); S.ujiHidup = u;
+    if(S.tabAktif==='guru') gvImunRender(); else gvImunRender();
+  }catch(e){ S.ujiHidup = null; }
+}
+function gvImunRender(){
+  const el = document.getElementById('gvImun'); if(!el) return;
+  const p = S.imun;
+  if(!p){ el.innerHTML = `<div class="kecil">laporan imun belum terbaca — imun (V308) baru dilahirkan dari Uji Kehidupan; patroli pertama menyusul pada denyut berikutnya. Tanpa karangan.</div>`; return; }
+  const r = p.rekap || {};
+  const tindakan = (p.tindakan||[]).slice(0,6).map(t=>`<div class="kecil">• <b>${t.jenis}</b> <code>${(t.file||'').slice(0,42)}</code> — ${(t.alasan||'').slice(0,120)}</div>`).join('') || '<div class="kecil">• patroli tenang — tanpa tindakan</div>';
+  const nafasWarn = String(p.nafas&&p.nafas.putusan||'').includes('TERPUTUS') ? '#f85149' : (String(p.nafas&&p.nafas.putusan||'').includes('TERSENDAT')||String(p.nafas&&p.nafas.putusan||'').includes('RACUN')) ? '#f0b429' : '#7ee787';
+  const u = S.ujiHidup;
+  const ujiHtml = u ? `<div style="margin:8px 0 2px;border-top:1px dashed #2a3140;padding-top:8px">
+    <b>UJI KEHIDUPAN</b> <span class="kecil">(mandat pemilik: rusak ruangnya, putus nafasnya — lihat reaksinya)</span>
+    <div class="kecil" style="margin:4px 0">Gelombang-1 (tanpa imun): <b style="color:#f85149">${u.g1&&u.g1.vonis||'—'}</b></div>
+    <div class="kecil" style="margin:2px 0">Gelombang-2 (dengan imun): <b style="color:#7ee787">${u.g2&&u.g2.vonis||'—'}</b></div>
+    ${u.vonisAkhir?`<div class="kecil" style="margin:4px 0;color:#8ab4ff"><b>Vonis akhir: ${u.vonisAkhir}</b></div>`:''}
+  </div>`:'';
+  el.innerHTML = `<div style="margin:8px 0 14px;border:1px solid #2a3140;border-radius:12px;padding:10px">
+    <div class="kecil" style="margin-bottom:5px">patroli terakhir <b>${(p.dihasilkan||'').slice(0,16).replace('T',' ')}</b> UTC · segel <code>${p.segel&&p.segel.hash||'—'}</code></div>
+    <div class="kecil" style="margin:4px 0">nafas: <b style="color:${nafasWarn}">${(p.nafas&&p.nafas.putusan||'—').slice(0,110)}</b></div>
+    <div class="kecil" style="margin:4px 0">tindakan: <b>${r.pulihkan||0}</b> pulihkan · <b>${r.adopsi||0}</b> adopsi · <b>${r.lukaTakTerpulihkan||0}</b> tak-terpulihkan · <b>${r.tubuhBerubah||0}</b> tubuh-berubah</div>
+    ${tindakan}
+    ${ujiHtml}
+  </div>`;
 }
 function tempa2Panel(){
   const p=S.tempa2;

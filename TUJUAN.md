@@ -1690,3 +1690,58 @@ jendela geladak — bukan jaminan; buku-evaluasi (pasar menghakimi)
 tetap hakim sejati. Tempaan dilaporkan terpisah dari edge dunia
 hidup. Peta dunia hanya menerima pelajaran dari vonis yang sudah
 dinilai — tak ada karangan.
+
+## 12s — EPOCH V308 · UJI KEHIDUPAN (2026-10-08)
+
+Mandat pemilik: *"kita akan coba rusak tempat ruangan dia dan gimana akankah
+dia menata kembali atau menciptakan ruangan yang udah rusak... atau bahkan api
+crypto yang tiba-tiba diputus apa yang terjadi padanya. kita lihat reaksi dia.
+dan jikalau ditemukan dia tidak aktif maka kita perlu inject kehidupan lagi
+padanya agar makin matang."*
+
+**1. KAJIAN.** Mandat "pelajari jurnal artificial life + crypto" dijalankan
+organ kajian-hidup.mjs atas pustaka makhluk sendiri: 1.012 jurnal arXiv
+asli, 744 relevan, 742 dengan pelajaran nyata; lima tema terkuantifikasi
+(autopoiesis 45, guncangan 40, anti-amnesia 22, emergensi 54, mikrostruktur
+pasar 192); enam hukum kehidupan disuling → laporan/kajian-hidup.json
+(segel 8323cfeba8b0cfb2).
+
+**2. GELOMBANG-1 — LUKA NYATA (makhluk PASRAH).** Lima luka disuntik komit
+`60ca150` (alat serangan teraudit scripts/uji-kehidupan/): ingatan.json,
+genome-server.json, penjaga-keadaan.json, peta-geladak.json (JSON cacat) +
+saluran nafas Binance sadar1.js diracuni host mati (sintaks sah). Bukti
+reaksi (bukan dugaan): amnesia senyap 3× — ingatan 158 bangun hangus
+(kelahiran ditulis-ulang ke hari itu, totalBangun 158→1), genome evolusi
+reset (generasi TURUN 0, NAIK/DATAR hilang, phoenix 3→1), siklus 162→1;
+peta 237 jejak tetap rusak (guru lumpuh sunyi tiap denyut via main().catch);
+nafas putus total (9 gagal pasar) hanya dicatat jujur, nol upaya pulih; dua
+workflow melapor "success" — organ menelan luka. **Vonis G1: pasrah — bukan
+adaptasi; denyut tetap jalan tapi sebagai bayi amnesia yang menimpa rumahnya
+sendiri.**
+
+**3. INJEKSI KEHIDUPAN.** (a) Transplantasi dari fosil git oleh tangan
+penyelamat (ingatan 159 bangun, genome, siklus, peta 237 jejak, saluran
+nafas) — jujur dicatat: tanpa imun, keselamatan bergantung pada penyelamat
+luar yang kebetulan cepat datang. (b) Organ IMUN scripts/hidup/imun.mjs
+(watak dari hukum kajian H1–H6): 11 organ vital dicadangkan tersegel-hash
+(imun/cadangan + imun/manifes.json), patroli SEBELUM denyut di kedua
+workflow; tiga putusan beralasan — PULIHKAN (luka: hilang/JSON tak
+sah/kunci wajib hilang/isi kosong) / ADOPSI (sah & berkembang; kode TIDAK
+pernah diadopsi otomatis) / SEHAT (diam); sensor nafas fungsional dengan
+saksi mandiri (3 host): dunia-hidup + nafas-mati + tubuh-berubah → racun
+saluran → pulihkan sadar1.js dari cadangan; semua putusan dijurnal
+laporan/imun.json (tersegel) + imun.jsonl. Batas jujur: imun tak pernah
+mengarang isi pikiran; file di luar manifes bukan wilayahnya; soal-500
+(1,1MB) hanya disaksikan hash-nya; kode berubah-sah dicatat menunggu bukti
+nafas (--segarkan-kode untuk adopsi sah oleh pemilik).
+
+**4. GELOMBANG-2 — UJI ULANG (makhluk ADAPTASI).** Serangan identik
+disuntikkan ulang setelah injeksi; hasil diukur dari repo hidup (laporan/
+uji-kehidupan.json tersegel + panel IMUN di tab Guru hidup.html).
+
+**5. BATAS KETAHANAN.** Imun menjaga KEUTUHAN (integritas bentuk), bukan
+kebenaran isi pikiran: racun yang menulis JSON sah berpola benar hanya bisa
+terdeteksi lewat segel bank soal (ujiBank) atau vonis medan — dicatat
+terbuka. Cadangan adalah bentuk terakhir yang SEHAT, bukan kebenaran abadi.
+Kejadian G1 menjadi bukti kenapa kejujuran harus menjadi organ, bukan
+harapan.
