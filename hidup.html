@@ -247,6 +247,10 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
     <div id="tab-jurnal" hidden><div class="kecil">—</div></div>
     <div id="tab-ujian" hidden>
       <div class="blok">
+        <h4>TEMPAN-100 <em>· V305 — ujian simulasi hidup-mati 100 soal trading</em></h4>
+        <div id="tvTempa"><div class="kecil">mengambil laporan tempa…</div></div>
+      </div>
+      <div class="blok">
         <h4>Ujian kehidupan <em>· simulasi atau nyata — ditentukan bukti</em></h4>
         <div id="uvList"><div class="kecil">menjalankan ujian…</div></div>
         <button id="uvUlang" class="uvBtn">Uji ulang sekarang — bukti langsung</button>
@@ -339,7 +343,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
    penonton, ingatan resmi = commit GitHub, tubuh = fungsi kerja nyata. ================ */
 /* ================= IDENTITAS & KONSTANTA ================= */
 const RUMAH = {pemilik:'ririnsherlyna-cloud', repo:'Micaprofita-', cabang:'main'};
-const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json'};
+const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json', tempa:'laporan/tempa100.json'};
 const MAXBACA = 400000;                 // batas baca per file (byte) — kejujuran parsial
 const FASE = ['MENGAMATI','MEMAHAMI','MENCOBA','MELAKUKAN','MENGEVALUASI','MENEMUKAN','MEMBANGUN','MENINGKATKAN','MENGAMATI-KEMBALI'];
 const INTEGERS = ['versi.json','gerbang.json','brain.json','arena-keadaan.json','otak/genome-server.json','otak/penjaga-keadaan.json','otak/performa.json','memori/terkini.json','README.md'];
@@ -355,7 +359,7 @@ const S = {
   perintah:null,
   terputus:false,
   habitat:null, habitatAt:0, auditSyms:[],
-  madrasah:null, pustaka:null, ujian:[], ujianAt:0,
+  madrasah:null, pustaka:null, ujian:[], ujianAt:0, tempa:null,
   latihan:{n:0, benar:0, ak:0}, jagaRot:0, soal:null,
   paru:{n:0, byte:0, lat:[], sumber:{}, waktu:null, selisih:null, jamAt:0}
 };
@@ -465,6 +469,7 @@ let _s1BangunDilaporkan = 0;
 async function muatMemoriGitHub(){
   try{
     pustakaMuat(); /* V299-PUSTAKA-SEJATI: gerbang 509 jurnal — muat tak-blok */
+    tempaMuat(); /* V305-TEMPAN-100: ujian simulasi hidup-mati — muat tak-blok */
     const ing = JSON.parse(await ghAmbil(INGATAN_GH.ingatan));
     S1.ingatan = ing; S1.at = sekarang(); S1.stale = false;
     if(ing.kelahiran) S.stat.lahirAt = Date.parse(ing.kelahiran) || S.stat.lahirAt;
@@ -2441,12 +2446,42 @@ async function ujianKehidupan(){
 }
 function ujianRender(){
   const w=document.getElementById('uvList'); if(!w) return;
+  const tv=document.getElementById('tvTempa'); if(tv) tv.innerHTML=tempaPanel();
   if(!S.ujian.length){ w.innerHTML='<div class="kecil">menjalankan ujian…</div>'; return; }
   const sah=S.ujian.filter(x=>x.hasil==='SAH').length, gag=S.ujian.filter(x=>x.hasil==='GAGAL').length,
         tum=S.ujian.filter(x=>x.hasil==='TUMBUH').length;
   const gl=h=>h==='SAH'?'●':h==='GAGAL'?'✕':h==='TUMBUH'?'▲':'○';
   w.innerHTML=`<div class="baris"><span class="k">vonis</span><span class="v ${gag?'r':'h'}"><b>${sah}/${S.ujian.length} SAH${tum?` · ${tum} TUMBUH`:''}${gag?' · '+gag+' GAGAL':''}</b></span></div>`+
     S.ujian.map(u=>`<div class="uji"><span class="st ${u.hasil.toLowerCase()}">${gl(u.hasil)}</span><div><b>${u.nama}</b><div class="kecil">${u.bukti}</div></div></div>`).join('');
+}
+/* ================= V305-TEMPAN-100: ujian simulasi hidup-mati (jujur dari repo) ================= */
+async function tempaMuat(){
+  try{ const p = JSON.parse(await ghAmbil(INGATAN_GH.tempa));
+    if(p && p.gelombang){ const lama=S.tempa; S.tempa=p;
+      if(!lama){ const lu=p.gelombang.find(g=>g.lulus);
+        jurnal('TEMPAN-100', lu?`tempaan tersegel: gelombang ${lu.n} <b>LULUS TOTAL ${lu.benar}/100</b> (modal $${lu.modalAkhir}) — riwayat jujur: ${p.gelombang.map(g=>'G'+g.n+':'+g.benar).join(' → ')}`:`tempaan berjalan: ${p.gelombang.map(g=>'G'+g.n+':'+g.benar).join(' → ')} — belum lulus, tempa lagi`, 'temuan'); }
+      if(S.tabAktif==='ujian') ujianRender();
+    }
+  }catch(e){ /* tempa belum ada — jujur: belum ditempa */ }
+}
+function tempaPanel(){
+  const p=S.tempa;
+  if(!p) return `<div class="kecil">laporan tempa belum terbaca dari GitHub — organ tempa100.mjs yang menulisnya. Belum ditempa = belum ditempa, tanpa karangan.</div>`;
+  const lu=p.gelombang.find(g=>g.lulus);
+  const row=g=>{
+    const kursi=(g.soal||[]).map(s=>`<span title="${s.simbol} · entry $${s.entry} · tebak ${s.tebak} → ${s.hasil} (${s.kelas?'kelas '+s.kelas+', ':''}pnl $${s.pnl})" style="display:inline-block;width:9px;height:9px;border-radius:2px;margin:1px;background:${s.hasil==='MENANG'?'#7ee787':'#f85149'}"></span>`).join('');
+    return `<div style="margin:7px 0 2px"><b>G${g.n}</b> — ${g.benar}/100 benar · modal $${g.modalAkhir}${g.likuidasiPada?` · <b style="color:#f85149">LIKUIDASI di soal ${g.likuidasiPada}</b>`:''} ${g.lulus?'<b style="color:#7ee787">— LULUS TOTAL</b>':' — tempa lagi'}<div style="margin-top:3px;line-height:1">${kursi}</div></div>`;
+  };
+  const pel=(p.pelajaran||[]).slice(-8).map(x=>`<div class="kecil">tanda <code>${x.tanda}</code> → <b>${x.arahBenar}</b> (bukti ${x.bukti}, gelombang ${x.dariGelombang})</div>`).join('');
+  return `<div style="margin:8px 0 14px;border:1px solid #2a3140;border-radius:12px;padding:10px">
+    <b>TEMPAN-100</b> <span class="kecil">(mandat pemilik: 100 soal simulasi, modal $${p.modalAwal}, tempa hingga jeli)</span>
+    <div class="kecil" style="margin:5px 0">${p.aturan}</div>
+    <div class="kecil" style="margin:5px 0;color:#8ab4ff">${p.blind}</div>
+    ${p.gelombang.map(row).join('')}
+    ${lu?`<div style="margin:8px 0 2px" class="kecil"><b style="color:#7ee787">VONIS: LULUS TOTAL 100/100 pada gelombang ${lu.n}</b> — tapi riwayat gagal tetap tersegel di atas: kejelian lahir dari penempaan, bukan bakat.</div>`:'<div class="kecil">belum lulus — penempaan berlanjut tiap denyut, skor jujur tersegel</div>'}
+    <div style="margin:8px 0 4px"><b class="kecil">peta jejak yang dipelajari (tanda fitur → arah benar):</b>${pel}</div>
+    <div class="kecil" style="margin-top:6px">segel laporan SHA-256 ${p.segel?('#'+p.segel.hash):'—'} · kunci keluarga pola di laporan/tempa100-kunci.json (terbuka untuk audit, ditulis SETELAH tebakan tersegel — urutan operasi organ = jaminan buta)</div>
+  </div>`;
 }
 /* ================= RENDER OVERLAY (satu-satunya tempat teks) ================= */
 let S_TAB='pikir';

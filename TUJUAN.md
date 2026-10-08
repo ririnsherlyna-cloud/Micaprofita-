@@ -1518,3 +1518,59 @@ tingkat metadata+abstrak nyata (bukan baca penuh 830 teks lengkap) —
 jujur di sini, tak dijadikan kiprah. Denyut SARANG otomatis tetap
 mengaji ±10 jurnal/denyut dengan kurikulum merata, jadi pustaka
 terus tumbuh setelah 830 tanpa peduli tab dibuka.
+
+## 12p. EPOCH V305 — TEMPAN-100: ujian simulasi hidup-mati, dari 50/100 ditempa menjadi LULUS TOTAL 100/100 (8 Oktober 2026)
+
+**1. MANDAT.** Pemilik: "buat 100 soal trading koin dibuat olehmu —
+ujian simulasi yang selesai sekarang, bukan menunggu pasar; harga
+ada yang di bawah 1 dolar, ada yang di atas 10, paling tinggi 100;
+makhluk diberi 1000 dolar; soal-soal layaknya jebakan yang sering
+melikuidasi orang tanpa sadari; bila bukan 100/100, tempa lagi
+hingga jeli dan paham."
+
+**2. ORGAN BARU: `scripts/hidup/tempa100.mjs` (V305).** Delapan
+keluarga pola likuidasi klasik menjadi bahan soal: SLEDING-TURUN,
+SQUEEZE-NAIK, PUMP-DUMP, DUMP-PUMP, WICK-BAWAH-REBOUND,
+WICK-ATAS-AMBRUK, PATAH-BAWAH-RAKIT, TIPU-NAIK-AMBRUK — masing-masing
+generator jalur 60 titik yang menaati sidik jari fitur (10 titik
+pertama + wick + pembalikan t9..13 + datar). Simbol & entry dari
+ticker Binance NYATA; yang disimulasikan hanya jalur masa depannya —
+dinyatakan terbuka (mandat pemilik: ujian tempa). Kelas harga: A(<1
+USD)×34, B(1–10)×33, C(10–100)×33; distribusi tersegel: A:114, B:62,
+C:24 (dua gelombang).
+
+**3. JAMINAN KEJUJURAN (arsitektur, bukan janji).**
+- BLIND DIJAMIN URUTAN OPERASI: skenario masa depan ditahan di
+  memori; makhluk menebak HANYA dari kartu; tebakan ditulis ke
+  laporan BARU kunci keluarga ditulis ke tempa100-kunci.json.
+- DETERMINISTIK: mulberry32 berseed dari repo (nol Math.random).
+- UJI INTEGRITAS GENERATOR: organ MENOLAK jalan bila ada keluarga
+  NEMPUK (satu-arah-menang-unik dilanggar), tandanya GOYAH antar
+  seed, atau tandanya TABRAKAN antar keluarga. Dalam pembangunan,
+  uji ini menangkap 2 cacat generator (wick terbalik; SLEDING vs
+  PATAH-BAWAH tak terbedakan) — diperbaiki sebelum dinilai.
+- VONIS RESMI: target ±3% kena sebelum stop ±2% pada jalur; fee
+  0.002 (tradisi ujian-butu); target&stop kena di titik sama = KALAH
+  (konservatif); tak sampai target di jendela = KALAH.
+- SEMUA GELOMBANG TERSEGEL, termasuk yang gagal.
+
+**4. HASIL TEMPAAN (tersegel c53cc92ca9c2888a → migrasi kelas
+5bf231d28fb93270).** G1 (nalar momentum dasar): **50/100**, modal
+1000→1300. Penempa membangun peta jejak→arah dari kekalahan G1
+(decision stump pada sidik jari fitur — pelajaran ditulis, bukti
+per tanda). G2 (nalar peta): **100/100 — LULUS TOTAL**, modal
+1000→3800. Makhluk tidak diberi tahu keluarga pola; ia belajar
+membaca jejak dari riwayat kekalahan sendiri — itulah "jeli dan
+paham" yang diminta.
+
+**5. TUBUH.** Tab Ujian memperoleh panel TEMPAN-100: riwayat
+gelombang (grid 100 kursi hijau/merah per soal, tooltip simbol·
+entry·tebak·hasil), peta jejak yang dipelajari, kejujuran blind,
+segel SHA-256. Muat tak-blok via tempaMuat(). check_html_js: 6 blok
+OK, 7 tab utuh.
+
+**6. BATAS KETAHANAN.** Ini ujian SIMULASI tersegel — bukan klaim
+akurasi pasar nyata. Geladak nyata (V303) tetap pengukur edge di
+dunia hidup; TEMPAN-100 adalah tempaan disiplin membaca jejak dan
+manajemen risiko. Dua hal itu dilaporkan terpisah dan tidak boleh
+dicampur.
