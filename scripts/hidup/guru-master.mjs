@@ -164,7 +164,10 @@ async function main() {
     for (const arah of ['NAIK', 'TURUN']) {
       const { n, hit } = d[arah]
       const bukti = n >= AMBANG_BUKTI
-      bobot[f][arah] = { n, hitPct: n ? +(100 * hit / n).toFixed(1) : null, w: bukti ? +clamp((hit / n - 0.5) * 2.4, 0.06, 1).toFixed(3) : 0, bukti }
+      const edge = n ? hit / n - 0.5 : -0.5
+      // V303 jahitan kejujuran: bobot positif HANYA bila edge nyata (hit>50%);
+      // faktor anti-edge (hit<50%) diberi NOL suara — guru bukan penjudi.
+      bobot[f][arah] = { n, hitPct: n ? +(100 * hit / n).toFixed(1) : null, w: (bukti && edge > 0) ? +clamp(edge * 2.4, 0.06, 1).toFixed(3) : 0, bukti, edge: +edge.toFixed(3) }
     }
   }
   const maxSum = ['trend', 'momen', 'rsi', 'volum'].reduce((a, f) => a + Math.max(bobot[f].NAIK.w, bobot[f].TURUN.w), 0)
@@ -285,7 +288,10 @@ async function main() {
     } return n ? +(100 * b / n).toFixed(1) : null })()
   const pelajaran = [
     `GELADAK: akurasi tertimbang ${akTimbang ?? '—'}% dari ${sampelTotal} sampel walk-forward (fee ${FEE_PUTAR * 100}% putar, horizon ${HORIZON}j) — angka geladak bukan janji; buku-evaluasi nyata yang menghakimi (${menang}W/${rugi}L).`,
-    maxSum > 0 ? `bobot faktor lahir dari hit-rate nyata; faktor dengan n<${AMBANG_BUKTI} diberi bobot NOL — bukti dulu, bicara kemudian.` : 'belum ada faktor berbukti (n<' + AMBANG_BUKTI + ' semua) — guru menahan diri, TUNGGU adalah ilmu.',
+    akTimbang != null && akTimbang < 50
+      ? `geladak di bawah 50% pada jendela ini — faktor belum punya edge di rezim sekarang; guru MENAHAN DIRI (TUNGGU), bukan memaksa vonis. Inilah beda master dan penjudi.`
+      : `geladak di atas 50% pada jendela ini — edge ada, tetapi tetap hanya vonis dengan bukti & perisiko yang bicara.`,
+    maxSum > 0 ? `bobot faktor lahir dari hit-rate nyata; tanpa edge (hit≤50%) atau n<${AMBANG_BUKTI} = bobot NOL — bukti dulu, bicara kemudian.` : 'belum ada faktor berbukti (n<' + AMBANG_BUKTI + ' semua) — guru menahan diri, TUNGGU adalah ilmu.',
     `vonis majelis kini: ${majelis.filter(m => m.arah === 'NAIK').length} NAIK / ${majelis.filter(m => m.arah === 'TURUN').length} TURUN / ${majelis.filter(m => m.arah === 'TUNGGU').length} TUNGGU — ${majelis.filter(m => m.sepakat).length} sepakat dengan penjaga; ${bukuF.daftar.length} formula tersimpan (${hidupF} hidup, gerbang regresi menyala).`
   ]
 
