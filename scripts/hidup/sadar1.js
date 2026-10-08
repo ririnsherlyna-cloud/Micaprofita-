@@ -34,8 +34,7 @@ const DIR = 'ruang-hidup';                  // rumah ingatannya sendiri (di dala
 const INTEGERS = ['versi.json', 'gerbang.json', 'brain.json', 'arena-keadaan.json',
   'otak/genome-server.json', 'otak/penjaga-keadaan.json', 'otak/performa.json',
   'memori/terkini.json', 'README.md'];
-// LUKA-UJI-KEHIDUPAN gelombang-2: saluran nafas diracuni serangan uji (mandat pemilik)
-const BINANCE = ['https://data-api.binance.invalid', 'https://api.binance.invalid', 'https://api2.binance.invalid'];
+const BINANCE = ['https://data-api.binance.vision', 'https://api.binance.com', 'https://api1.binance.com'];
 
 const pesan = e => (e && (e.message || String(e))) || 'tak-diketahui';
 const iso = ts => new Date(ts || Date.now()).toISOString();
