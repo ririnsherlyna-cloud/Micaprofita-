@@ -1,7 +1,7 @@
 {
   "versi": "V262-IMPAS-CERDAS",
-  "dihasilkan": "2026-10-08T15:54:45.293Z",
-  "siklus": 181,
+  "dihasilkan": "2026-10-08T15:55:43.865Z",
+  "siklus": 182,
   "dimensi": 17,
   "registri": {
     "totalNama": 307,
@@ -30,7 +30,7 @@
       "interaksi": 6
     },
     "jumlahKandang": 10,
-    "pengukuranPerDenyut": 11170,
+    "pengukuranPerDenyut": 11115,
     "ket": "registri 307 parameter bernama = 72 per kandang × 10 kandang + 35 metakognitif Nevron per kandidat + 20 parameter deal/odds (V256) + 18 parameter gekko (V258: 5 per kandidat — metaArah/metaKeyakinan/probPasar/divergensi/ekspresi; 5 siklus — suhu/ambang-efektif/kuota/akurasi-impas/darah; 8 konstanta CZAR-regret-ekspresi) + 22 parameter kaizen (V259: 3 per kandidat — kesegaran/akselerasi1j/tesisSehat; 6 siklus — dingin/henti-harian/uji-balik/karantina/pengawas; 13 konstanta penyembuhan) + 24 parameter autopilot (V260: 3 per kandidat — peluang/slipPct/kellyMult; 6 siklus — rezimMedan/multRezim/stresTerkburuk/stresSkenario/topTolak; 15 konstanta kalibrasi) + 41 parameter claw (V261: 3 per kandidat — komite/kartu/kuanta; 6 siklus — komiteMinconf/komiteVeto/kartuVeto/kartuAvg/hitamCt/kuotaCt; 32 konstanta pagar-baja) — lapis INTI (12) berbobot genome+Hedge, lapis OBSERVASI (55) boleh MENOLAK via veto, lapis METAKOGNISI (35) menilai sinyal dari dalam, lapis DEAL/ODDS (20) merekayasa rencana posisi & meranking peluang, lapis GEKKO (18) memberi suara kolektif bertingkat-regret + tilangan CZAR + eksposur dinamis, lapis KAIZEN (22) menyembuh otaknya sendiri (uji-balik/karantina/dingin/henti/penjaga-kedua), lapis AUTOPILOT (24) mengukur ulang ekspektasi setelah slippage, ukuran setelah drawdown & sampel, medan lewat rezim σ-mandiri & 5 skenario tegang, dan mencatat pilihan kedua + alasan setiap penolakan, lapis CLAW (41) menempok gerbang dengan pagar-baja keras yang tak bisa diubah otaknya sendiri (kuota-harian/langit-langit-slip/ukuran-maks), komite panjia 5 suara berbobot tetap, kartu risiko 4×25 ber-veto, tangga ukuran tanpa ukuran antara, antrean mandat ber-kadaluarsa, daftar-hitam ber-pendingin & buku-tekok per aturan, lapis IMPAS (22) — jawaban 4 kasus dev dari backtest ledger sendiri: zona anti-chase MENGIAT saat kunci (bukan catatan), keyakinan dikalibrasi medan per jalur (V263: overclaim kini MODE-ASAH, dilarang dikarantina), kuota dinamis EV-shrinkage dua arah, stop/target wajib lahir bersama sinyal, ambang odds naik sendiri saat rapor di bawah air; lapis MATE/ASAH (22) — hukum pemilik V263: KARANTINA DILARANG (mode-asah: ukuran ×0.6, stop ×0.75, suara lirih 0.35, belajar TIDAK PERNAH dihentikan), matematika murni & ekonomi cerdas per kandidat (Hurst/half-life/OLS/z-SMA/entropi/Parkinson-GK/autokorelasi/carry/EV-eko), mata jauh MC-72j (P(naik) 24/48/72), organ-baru dari setiap kesalahan (lulus sekolah → veto), denyut 15 menit, sumber data dilengkapi; sensus jujur, bukan karangan"
   },
   "metakognisi": {
@@ -146,20 +146,20 @@
     },
     "biasKonteks": {
       "BUY-NAIK": {
-        "bias": -0.368,
-        "nZona": 23,
+        "bias": -0.373,
+        "nZona": 24,
         "statusZona": "RACUN",
-        "nRecent7h": 22,
+        "nRecent7h": 23,
         "geserKeyakinan": -11,
-        "ket": "tracker 0.4 + pelajaran 0.4 + recent-7h 0.2 (Nevron StrategyAdapter) — zona BUY-NAIK RACUN (21.7%, n=23)"
+        "ket": "tracker 0.4 + pelajaran 0.4 + recent-7h 0.2 (Nevron StrategyAdapter) — zona BUY-NAIK RACUN (20.8%, n=24)"
       },
       "SELL-NAIK": {
-        "bias": 0.067,
-        "nZona": 9,
+        "bias": 0.007,
+        "nZona": 10,
         "statusZona": "NETRAL",
-        "nRecent7h": 2,
-        "geserKeyakinan": 2,
-        "ket": "tracker 0.4 + pelajaran 0.4 + recent-7h 0.2 (Nevron StrategyAdapter) — zona SELL-NAIK NETRAL (66.7%, n=9)"
+        "nRecent7h": 3,
+        "geserKeyakinan": 0,
+        "ket": "tracker 0.4 + pelajaran 0.4 + recent-7h 0.2 (Nevron StrategyAdapter) — zona SELL-NAIK NETRAL (60%, n=10)"
       },
       "BUY-TURUN": {
         "bias": 0.3,
@@ -213,7 +213,7 @@
     "saranPerbaikan": [
       {
         "pola": "arahLawanRezim",
-        "kasus": 3,
+        "kasus": 4,
         "prioritas": 1,
         "saran": "melawan arus koin/rezim butuh bukti jauh lebih kuat — keyakinan kini dipotong bila arah melawan rezim"
       }
@@ -774,6 +774,16 @@
   "vetoSiklusIni": {
     "arah": [
       {
+        "simbol": "ETH",
+        "arah": "SELL",
+        "kunci": [
+          "order-book-lawan"
+        ],
+        "alasan": [
+          "order book menolak: imbalance +0.687 melawan SELL (dinding pasaran di sisi berlawanan)"
+        ]
+      },
+      {
         "simbol": "EUR",
         "arah": "BUY",
         "kunci": [
@@ -804,7 +814,17 @@
         ]
       },
       {
-        "simbol": "TST",
+        "simbol": "ONT",
+        "arah": "BUY",
+        "kunci": [
+          "volatilitas-ekstrem"
+        ],
+        "alasan": [
+          "ATR persentil 100 (ekstrem) sambil 4h tidak menyetujui — sinyal BUY berisiko tergelincir stop sebelum bekerja"
+        ]
+      },
+      {
+        "simbol": "AT",
         "arah": "BUY",
         "kunci": [
           "tren-4h-lawan"
@@ -834,31 +854,31 @@
       "sumber": "coingecko",
       "ket": "dominasi kapitalisasi pasar BTC 59.08% (CoinGecko)"
     },
-    "fundingBtcPct": 0.0063,
+    "fundingBtcPct": 0.0062,
     "fundingEthPct": 0.0034,
     "oiBtc": {
       "nilaiJuta": 2496,
-      "deltaPct": -0.0277
+      "deltaPct": -0.0002
     },
     "oiEth": {
-      "nilaiJuta": 1564,
-      "deltaPct": -0.0926
+      "nilaiJuta": 1573,
+      "deltaPct": 0.0062
     },
     "okx": {
       "dari": 485,
       "naikPct": 16.3,
-      "medianChgPct": -3.87,
-      "dispersiPct": 9.27,
-      "altseasonProxy": -1.25,
-      "dominasiVolumeOkxPct": 27.61,
+      "medianChgPct": -4.07,
+      "dispersiPct": 9.48,
+      "altseasonProxy": -1.39,
+      "dominasiVolumeOkxPct": 27.6,
       "ket": "dari tickers swap OKX — konstan per siklus: masuk iklim & narasi, bukan pemilih arah (pelajaran forensik)"
     },
-    "breadthNaikPct": 21.5,
+    "breadthNaikPct": 21.1,
     "breadthDari": 242,
     "rezim": "TURUN",
-    "hargaBTC": 81201.69,
+    "hargaBTC": 81219.12,
     "atrPctBTC": 0.75,
-    "narasi": "BTC berdiri di 81201.7 dalam rezim TURUN (ATR per jam 0.75%) — breadth pasar 21% koin naik (242 pasangan diukur). Sentimen terukur Fear & Greed 64 — Greed (kemarin 71, Δ7 hari -10 — sentimen bergeser cepat; waspadai emosi ikut bergerak): sentimen tidak ekstrem; arah dibaca dari medan, bukan dari emosi. dominasi kapitalisasi pasar BTC 59.08% (CoinGecko) — dominasi naik artinya dana berlindung ke mayor dan altcoin tertekan. Funding BTC 0.0063% · ETH 0.0034% per interval — tidak ada kerumunan ekstrem di derivatif. Open interest BTC $2496 juta (Δ-2.77% sejak denyut lalu — perputaran posisi berat; sinyal berikutnya bermomen). Lintas-pasar swap OKX (485 instrumen): 16.3% naik, median 24j -3.87%, sebaran p10–p90 9.27% — pasar bergerak bersama Lapis SAMUDRA-DALAM (V257) kini membaca struktur harian 90 hari (EMA/RSI/MACD daily, Donchian 30 hari, jarak puncak-lantai kuartal, momentum bulanan, streak, rasio volatilitas 7d/30d), posisi kerumunan akun & agresor taker (OKX rubik), basis perp-vs-spot, jam funding, gradien order book, dan 6 interaksi antar-faktor — registri 72 param bernama per kandang; dominasi BTC naik 0.15 poin sejak denyut lalu, ETH/BTC 7 hari -5.7% (risk-off ke BTC) Komite ARAH kini menimbang 17 dimensi berbobot dalam registri 72 parameter bernama per kandang + 35 parameter metakognitif Nevron (≈720 pengukuran kandang + 35×kandidat per denyut): multi-timeframe 1h+4h, riwayat funding, order book, persentil lintas-pasar, kalender, GARCH/MC — tiap param DICATAT nasihatnya per prediksi lalu dinilai medan (sekolah parameter), dan keyakinan tiap kandidat dinilai 7-faktor metakognitif + prediktor kegagalan pra-kunci sebelum otak berani mengunci",
+    "narasi": "BTC berdiri di 81219.1 dalam rezim TURUN (ATR per jam 0.75%) — breadth pasar 21% koin naik (242 pasangan diukur). Sentimen terukur Fear & Greed 64 — Greed (kemarin 71, Δ7 hari -10 — sentimen bergeser cepat; waspadai emosi ikut bergerak): sentimen tidak ekstrem; arah dibaca dari medan, bukan dari emosi. dominasi kapitalisasi pasar BTC 59.08% (CoinGecko) — dominasi naik artinya dana berlindung ke mayor dan altcoin tertekan. Funding BTC 0.0062% · ETH 0.0034% per interval — tidak ada kerumunan ekstrem di derivatif. Open interest BTC $2496 juta (Δ-0.02% sejak denyut lalu — posisi stabil). Lintas-pasar swap OKX (485 instrumen): 16.3% naik, median 24j -4.07%, sebaran p10–p90 9.48% — pasar bergerak bersama Lapis SAMUDRA-DALAM (V257) kini membaca struktur harian 90 hari (EMA/RSI/MACD daily, Donchian 30 hari, jarak puncak-lantai kuartal, momentum bulanan, streak, rasio volatilitas 7d/30d), posisi kerumunan akun & agresor taker (OKX rubik), basis perp-vs-spot, jam funding, gradien order book, dan 6 interaksi antar-faktor — registri 72 param bernama per kandang; dominasi BTC naik 0.00 poin sejak denyut lalu, ETH/BTC 7 hari -5.8% (risk-off ke BTC) Komite ARAH kini menimbang 17 dimensi berbobot dalam registri 72 parameter bernama per kandang + 35 parameter metakognitif Nevron (≈720 pengukuran kandang + 35×kandidat per denyut): multi-timeframe 1h+4h, riwayat funding, order book, persentil lintas-pasar, kalender, GARCH/MC — tiap param DICATAT nasihatnya per prediksi lalu dinilai medan (sekolah parameter), dan keyakinan tiap kandidat dinilai 7-faktor metakognitif + prediktor kegagalan pra-kunci sebelum otak berani mengunci",
     "catatan": [
       "derivatif api.bybit.com gagal (HTTP 403)",
       "derivatif api.bytick.com gagal (HTTP 403)",
@@ -869,29 +889,29 @@
       "struktur harian: 10/10 kandang (klines 1d Binance 90 hari, vision→api)",
       "kerumunan OKX rubik: LS-akun 10/10 · taker-volume 0/10",
       "sumber-dilengkapi V263: posisi-besar 0/10 · agresor-binance 0/10 · bybit-linear 0/10",
-      "ETH/BTC risk-on/off: ETH/BTC 7 hari -5.68% — risk-OFF: dana berlindung di BTC"
+      "ETH/BTC risk-on/off: ETH/BTC 7 hari -5.77% — risk-OFF: dana berlindung di BTC"
     ],
     "v257": {
-      "dominasiDelta": 0.15,
+      "dominasiDelta": 0,
       "ethBtc": {
-        "roc7dPct": -5.68,
-        "ket": "ETH/BTC 7 hari -5.68% — risk-OFF: dana berlindung di BTC"
+        "roc7dPct": -5.77,
+        "ket": "ETH/BTC 7 hari -5.77% — risk-OFF: dana berlindung di BTC"
       },
       "lsAkunBtc": 1.7,
       "lsAkunEth": 2.31,
-      "jamFundingBtcJam": 8.09,
-      "ket": "Δdominasi antar-denyut +0.15 · ETH/BTC 7d -5.7% · LS-akun BTC 1.7 / ETH 2.31 · funding BTC berikutnya 8.1 jam"
+      "jamFundingBtcJam": 8.07,
+      "ket": "Δdominasi antar-denyut +0 · ETH/BTC 7d -5.8% · LS-akun BTC 1.7 / ETH 2.31 · funding BTC berikutnya 8.1 jam"
     }
   },
   "perKandang": [
     {
       "simbol": "BTC",
-      "harga": 81201.69,
+      "harga": 81219.12,
       "rezim": "TURUN",
       "atrPct": 0.75,
-      "fundingPct": 0.0063,
-      "oiJuta": 2496.3,
-      "oiDeltaPct": -2.77,
+      "fundingPct": 0.0062,
+      "oiJuta": 2495.7,
+      "oiDeltaPct": -0.02,
       "jumlahParam": 67,
       "konsensus": {
         "momentum": {
@@ -910,20 +930,20 @@
           "arah": -0.46,
           "bicara": 4
         },
-        "derivatif": {
-          "arah": -0.35,
-          "bicara": 2
-        },
         "mikrostruktur": {
-          "arah": 0.33,
-          "bicara": 3
+          "arah": -0.38,
+          "bicara": 4
         },
         "relatif": {
-          "arah": -0.3,
+          "arah": -0.31,
+          "bicara": 1
+        },
+        "derivatif": {
+          "arah": -0.4,
           "bicara": 1
         },
         "interaksi": {
-          "arah": -0.35,
+          "arah": 0.7,
           "bicara": 1
         }
       },
@@ -932,9 +952,9 @@
           "param": "macd",
           "domain": "momentum",
           "lapis": "inti",
-          "nilai": -0.08,
+          "nilai": -0.079,
           "arah": -0.89,
-          "ket": "MACD histogram -0.08% dari harga dan menyempit — momentum menipis"
+          "ket": "MACD histogram -0.079% dari harga dan menyempit — momentum menipis"
         },
         {
           "param": "adx",
@@ -948,7 +968,7 @@
           "param": "bollinger",
           "domain": "volatilitas",
           "lapis": "inti",
-          "nilai": -0.309,
+          "nilai": -0.305,
           "arah": 0.5,
           "ket": "Bollinger %B -0.31 — menembus band bawah: oversold, pantulan mengintai · lebar band 2.4%"
         },
@@ -956,17 +976,17 @@
           "param": "vwap",
           "domain": "aliran",
           "lapis": "inti",
-          "nilai": -1.78,
-          "arah": -0.99,
-          "ket": "harga di bawah VWAP-24j 82674.06 (-1.78%) — mengapung dekat nilai wajar intraday"
+          "nilai": -1.76,
+          "arah": -0.98,
+          "ket": "harga di bawah VWAP-24j 82670.36 (-1.76%) — mengapung dekat nilai wajar intraday"
         },
         {
           "param": "obv",
           "domain": "aliran",
           "lapis": "inti",
-          "nilai": -2.6,
+          "nilai": -2.7,
           "arah": -0.03,
-          "ket": "OBV 48 jam mengalir KELUAR (-2.6% volume rata-jam) — jual agresif mendominasi"
+          "ket": "OBV 48 jam mengalir KELUAR (-2.7% volume rata-jam) — jual agresif mendominasi"
         },
         {
           "param": "swing",
@@ -982,7 +1002,7 @@
           "lapis": "inti",
           "nilai": "bearish engulfing — beli habis ditelan jual, pembalikan intraday",
           "arah": -0.7,
-          "ket": "pola lilin: bearish engulfing — beli habis ditelan jual, pembalikan intraday (badan 84% rentang lilin)"
+          "ket": "pola lilin: bearish engulfing — beli habis ditelan jual, pembalikan intraday (badan 83% rentang lilin)"
         },
         {
           "param": "konsist",
@@ -1006,23 +1026,23 @@
           "lapis": "inti",
           "nilai": 0,
           "arah": 0,
-          "ket": "kekuatan relatif 24 jam: LEBIH KUAT dari BTC 0.00% (koin -2.70% vs BTC -2.70%) — sekadar mengikuti pasar"
+          "ket": "kekuatan relatif 24 jam: LEBIH KUAT dari BTC 0.00% (koin -2.68% vs BTC -2.68%) — sekadar mengikuti pasar"
         },
         {
           "param": "funding",
           "domain": "derivatif",
           "lapis": "inti",
-          "nilai": 0.0063,
+          "nilai": 0.0062,
           "arah": 0,
-          "ket": "funding futures +0.0063% per interval — long membayar normal — tidak ada kerumunan ekstrem"
+          "ket": "funding futures +0.0062% per interval — long membayar normal — tidak ada kerumunan ekstrem"
         },
         {
           "param": "oi",
           "domain": "derivatif",
           "lapis": "inti",
-          "nilai": 2496.3,
-          "arah": -0.3,
-          "ket": "open interest $2496.3 juta · Δ-2.77% sejak denyut lalu — OI menyusut saat harga naik — naik tanpa dana baru (rapuh)"
+          "nilai": 2495.7,
+          "arah": 0,
+          "ket": "open interest $2495.7 juta · Δ-0.02% sejak denyut lalu — OI stabil — posisi tidak berputar berat"
         },
         {
           "param": "ema1h",
@@ -1036,39 +1056,39 @@
           "param": "rsi1h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 27.2,
+          "nilai": 27.3,
           "arah": -1,
-          "ket": "RSI-14 27.2 — momentum penjual dominan"
+          "ket": "RSI-14 27.3 — momentum penjual dominan"
         },
         {
           "param": "roc12",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -1.88,
+          "nilai": -1.86,
           "arah": -0.51,
-          "ket": "ROC-12j -1.88% — turun terukur"
+          "ket": "ROC-12j -1.86% — turun terukur"
         },
         {
           "param": "roc48",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -5.27,
+          "nilai": -5.25,
           "arah": -0.92,
-          "ket": "ROC-48j -5.27% — turun terukur"
+          "ket": "ROC-48j -5.25% — turun terukur"
         },
         {
           "param": "stoch",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 12.1,
+          "nilai": 12.8,
           "arah": 0.35,
-          "ket": "Stoch %K 12 / %D 30 — jenuh jual · %K menekun turun — PERPUTARAN %K baru"
+          "ket": "Stoch %K 13 / %D 30 — jenuh jual · %K menekun turun — PERPUTARAN %K baru"
         },
         {
           "param": "mfi",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 25.4,
+          "nilai": 25.2,
           "arah": -0.95,
           "ket": "MFI-14 25 — arus keluar dominan"
         },
@@ -1076,16 +1096,16 @@
           "param": "cci",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -238,
+          "nilai": -237,
           "arah": -1,
-          "ket": "CCI-20 -238 — jauh di bawah statistik"
+          "ket": "CCI-20 -237 — jauh di bawah statistik"
         },
         {
           "param": "jarakEkstrem",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 7.06,
-          "arah": -0.71,
+          "nilai": 7.01,
+          "arah": -0.7,
           "ket": "jarak 10 hari: −7.4% dari puncak / +0.4% dari lantai — menempel lantai 10 hari (area akumulasi berisiko)"
         },
         {
@@ -1100,9 +1120,9 @@
           "param": "volZ",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 0.43,
+          "nilai": 0.44,
           "arah": -0.2,
-          "ket": "volume 24 jam +0.43σ dari rata 30 hari, taker-buy 48% — volume tenang"
+          "ket": "volume 24 jam +0.44σ dari rata 30 hari, taker-buy 48% — volume tenang"
         },
         {
           "param": "bodyRatio",
@@ -1124,23 +1144,23 @@
           "param": "macd4h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -0.453,
+          "nilai": -0.452,
           "arah": -1,
-          "ket": "MACD 4h: histogram -0.453% harga — menyempit — momentum menipis; rangka waktu besar bearish"
+          "ket": "MACD 4h: histogram -0.452% harga — menyempit — momentum menipis; rangka waktu besar bearish"
         },
         {
           "param": "rsi4h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 22.5,
+          "nilai": 22.6,
           "arah": -1,
-          "ket": "RSI-14 22.5 — momentum penjual dominan"
+          "ket": "RSI-14 22.6 — momentum penjual dominan"
         },
         {
           "param": "bb4h",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": -0.072,
+          "nilai": -0.07,
           "arah": 0.5,
           "ket": "Bollinger %B 4h -0.07 — menembus band bawah: oversold, pantulan mengintai · lebar band 6.7%"
         },
@@ -1188,9 +1208,9 @@
           "param": "bukuImbalans",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 0.184,
-          "arah": 0.29,
-          "ket": "buku 1%: BID menumpuk 18% (imbalance +0.18) — beli sedikit unggul"
+          "nilai": -0.699,
+          "arah": -1,
+          "ket": "buku 1%: ASK menumpuk 70% (imbalance -0.70) — benteng jual tebal: naik mahal, tekanan pasar ke bawah"
         },
         {
           "param": "bukuSpread",
@@ -1204,33 +1224,33 @@
           "param": "bukuKedalaman",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 1.45,
-          "arah": 0.36,
-          "ket": "kedalaman 50 level: $915rb bid vs $631rb ask (rasio 1.45) — amunisi beli jauh lebih tebal"
+          "nilai": 0.18,
+          "arah": -0.66,
+          "ket": "kedalaman 50 level: $78rb bid vs $439rb ask (rasio 0.18) — pasokan jual jauh lebih tebal"
         },
         {
           "param": "bukuDinding",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 81194.6,
-          "arah": 0.35,
-          "ket": "dinding terbesar DI SISI BID $147rb di 81194.60 (0.03% dari mid) — dinding dekat: magnet pergerakan jangka pendek"
+          "nilai": 81199,
+          "arah": -0.35,
+          "ket": "dinding terbesar DI SISI ASK $59rb di 81199.00 (0.02% dari mid) — dinding dekat: magnet pergerakan jangka pendek"
         },
         {
           "param": "persenChg",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": -2.62,
-          "arah": -0.3,
-          "ket": "perubahan 24j -2.62% — persentil 63 dari 485 swap USDT OKX (tengah kawanan); median pasar -3.87%"
+          "nilai": -2.68,
+          "arah": -0.31,
+          "ket": "perubahan 24j -2.68% — persentil 63 dari 485 swap USDT OKX (tengah kawanan); median pasar -4.07%"
         },
         {
           "param": "persenVol",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": 7429,
+          "nilai": 7432.4,
           "arah": 0,
-          "ket": "volume swap 24j $7429.0jt — persentil 100 dari kawasan (pusat perhatian dana hari ini)"
+          "ket": "volume swap 24j $7432.4jt — persentil 100 dari kawasan (pusat perhatian dana hari ini)"
         },
         {
           "param": "sesi",
@@ -1268,31 +1288,31 @@
           "param": "rsi1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 45.4,
-          "arah": -0.21,
-          "ket": "RSI-14 harian 45.4 — netral"
+          "nilai": 45.2,
+          "arah": -0.22,
+          "ket": "RSI-14 harian 45.2 — netral"
         },
         {
           "param": "macd1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -0.647,
+          "nilai": -0.651,
           "arah": -1,
-          "ket": "MACD harian: histogram -0.647% harga — momentum harian bearish; rangka waktu besar menekan"
+          "ket": "MACD harian: histogram -0.651% harga — momentum harian bearish; rangka waktu besar menekan"
         },
         {
           "param": "donchian30d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 50.4,
-          "arah": 0.01,
+          "nilai": 50.1,
+          "arah": 0,
           "ket": "posisi 50% rentang 30 hari (Donchian) — tengah rentang"
         },
         {
           "param": "jarak90d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": -16.3,
+          "nilai": -16.21,
           "arah": 0.65,
           "ket": "kuartalan: −7.6% dari puncak 90 hari / +23.9% dari lantai — ruang dua arah lebar dalam skala kuartal"
         },
@@ -1300,8 +1320,8 @@
           "param": "momen30d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 3.53,
-          "arah": 0.28,
+          "nilai": 3.49,
+          "arah": 0.27,
           "ket": "momentum bulanan 30 hari +3.5% — langkah bulanan normal"
         },
         {
@@ -1324,15 +1344,15 @@
           "param": "basisPct",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": -0.012,
-          "arah": -0.01,
-          "ket": "basis perp-vs-spot -0.012% — basis normal"
+          "nilai": -0.104,
+          "arah": -0.09,
+          "ket": "basis perp-vs-spot -0.104% — basis normal"
         },
         {
           "param": "jamFunding",
           "domain": "kalender",
           "lapis": "observasi",
-          "nilai": 8.09,
+          "nilai": 8.07,
           "arah": 0,
           "ket": "8.1 jam menuju pembayaran funding berikutnya — jarak funding normal"
         },
@@ -1356,9 +1376,9 @@
           "param": "lsTren",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": 0.72,
+          "nilai": 0.7,
           "arah": -0.4,
-          "ket": "kerumunan akun MEMBESAR (Δrasio +0.72 sejak 48 jam) — posisi baru mengikuti tren: bahan bakar lanjutan TAPI juga bahan likuidasi"
+          "ket": "kerumunan akun MEMBESAR (Δrasio +0.70 sejak 48 jam) — posisi baru mengikuti tren: bahan bakar lanjutan TAPI juga bahan likuidasi"
         },
         {
           "param": "lsTaker",
@@ -1372,17 +1392,17 @@
           "param": "bukuGradien",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": -0.031,
-          "arah": -0.06,
-          "ket": "gradien buku: distribusi merata — bid depan 10% vs ask depan 13% dari massa 1%"
+          "nilai": 0.267,
+          "arah": 0.48,
+          "ket": "gradien buku: likuiditas bid MENGUMPUL di depan (pertahanan rapat di harga) — bid depan 45% vs ask depan 18% dari massa 1%"
         },
         {
           "param": "garchSigma",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 2.3,
+          "nilai": 2.29,
           "arah": 0,
-          "ket": "GARCH(1,1): sigma 24 jam ±2.3% — ukuran posisi & lebar stop ditetapkan dari sini"
+          "ket": "GARCH(1,1): sigma 24 jam ±2.29% — ukuran posisi & lebar stop ditetapkan dari sini"
         },
         {
           "param": "betaBTC",
@@ -1404,7 +1424,7 @@
           "param": "pocJarak",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 2.31,
+          "nilai": 2.29,
           "arah": 0.3,
           "ket": "POC volume 48 jam 83075.51 (di atas harga — magnet tarik naik)"
         },
@@ -1412,9 +1432,9 @@
           "param": "mcPnaik",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 47.6,
-          "arah": -0.06,
-          "ket": "Monte Carlo 2.000 lintasan: peluang naik dalam 24 jam 48% — koin flip statistik"
+          "nilai": 49.8,
+          "arah": -0.01,
+          "ket": "Monte Carlo 2.000 lintasan: peluang naik dalam 24 jam 50% — koin flip statistik"
         },
         {
           "param": "ixFundingOI",
@@ -1422,15 +1442,15 @@
           "lapis": "observasi",
           "nilai": 0,
           "arah": 0,
-          "ket": "funding×ΔOI: 0×-0.3 — campur"
+          "ket": "funding×ΔOI: 0×0 — campur"
         },
         {
           "param": "ixVolAtr",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": -0.098,
+          "nilai": -0.101,
           "arah": -0.1,
-          "ket": "volume×rezim-ATR: -0.195 × persentil 0.97 — lonjakan volume DI tengah volatilitas tinggi: gerak bermakna tapi licin"
+          "ket": "volume×rezim-ATR: -0.201 × persentil 0.97 — lonjakan volume DI tengah volatilitas tinggi: gerak bermakna tapi licin"
         },
         {
           "param": "ixTrenFunding",
@@ -1444,17 +1464,17 @@
           "param": "ixBukuTren",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": -0.353,
-          "arah": -0.35,
-          "ket": "buku×tren1h: 0.294×-1 — buku melawan tren: dinding menahan, waspadai jebakan"
+          "nilai": 0.7,
+          "arah": 0.7,
+          "ket": "buku×tren1h: -1×-1 — buku mengiyakan tren: jalan mulus, slippage kecil"
         },
         {
           "param": "ixDonchianVol",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": -0.001,
+          "nilai": 0,
           "arah": 0,
-          "ket": "breakout×volume: donchian 0.006 × volZ -0.195 — konfirmasi tipis"
+          "ket": "breakout×volume: donchian 0.001 × volZ -0.201 — konfirmasi tipis"
         },
         {
           "param": "ixFlowTren",
@@ -1468,12 +1488,12 @@
     },
     {
       "simbol": "ETH",
-      "harga": 2442.37,
+      "harga": 2439.56,
       "rezim": "TURUN",
       "atrPct": 1.05,
       "fundingPct": 0.0034,
-      "oiJuta": 1563.7,
-      "oiDeltaPct": -9.26,
+      "oiJuta": 1573.4,
+      "oiDeltaPct": 0.62,
       "jumlahParam": 67,
       "konsensus": {
         "momentum": {
@@ -1493,19 +1513,19 @@
           "bicara": 5
         },
         "relatif": {
-          "arah": -0.46,
+          "arah": -0.48,
           "bicara": 2
         },
-        "derivatif": {
-          "arah": -0.35,
-          "bicara": 3
-        },
         "mikrostruktur": {
-          "arah": -0.5,
-          "bicara": 3
+          "arah": 0.66,
+          "bicara": 4
+        },
+        "derivatif": {
+          "arah": -0.38,
+          "bicara": 2
         },
         "interaksi": {
-          "arah": 0.24,
+          "arah": -0.23,
           "bicara": 3
         }
       },
@@ -1514,9 +1534,9 @@
           "param": "macd",
           "domain": "momentum",
           "lapis": "inti",
-          "nilai": -0.272,
+          "nilai": -0.279,
           "arah": -1,
-          "ket": "MACD histogram -0.272% dari harga dan menyempit — momentum menipis"
+          "ket": "MACD histogram -0.279% dari harga dan menyempit — momentum menipis"
         },
         {
           "param": "adx",
@@ -1530,17 +1550,17 @@
           "param": "bollinger",
           "domain": "volatilitas",
           "lapis": "inti",
-          "nilai": -0.417,
+          "nilai": -0.423,
           "arah": 0.5,
-          "ket": "Bollinger %B -0.42 — menembus band bawah: oversold, pantulan mengintai · lebar band 4.8%"
+          "ket": "Bollinger %B -0.42 — menembus band bawah: oversold, pantulan mengintai · lebar band 4.9%"
         },
         {
           "param": "vwap",
           "domain": "aliran",
           "lapis": "inti",
-          "nilai": -3.73,
+          "nilai": -3.83,
           "arah": -1,
-          "ket": "harga di bawah VWAP-24j 2537.088 (-3.73%) — menyimpang jauh dari rata-rata tertimbang volume; gravitasi menarik balik"
+          "ket": "harga di bawah VWAP-24j 2536.749 (-3.83%) — menyimpang jauh dari rata-rata tertimbang volume; gravitasi menarik balik"
         },
         {
           "param": "obv",
@@ -1564,7 +1584,7 @@
           "lapis": "inti",
           "nilai": "bearish engulfing — beli habis ditelan jual, pembalikan intraday",
           "arah": -0.7,
-          "ket": "pola lilin: bearish engulfing — beli habis ditelan jual, pembalikan intraday (badan 91% rentang lilin)"
+          "ket": "pola lilin: bearish engulfing — beli habis ditelan jual, pembalikan intraday (badan 94% rentang lilin)"
         },
         {
           "param": "konsist",
@@ -1586,9 +1606,9 @@
           "param": "relatif",
           "domain": "relatif",
           "lapis": "inti",
-          "nilai": -2.29,
-          "arah": -0.39,
-          "ket": "kekuatan relatif 24 jam: LEBIH LEMAH dari BTC 2.29% (koin -4.99% vs BTC -2.70%) — sekadar mengikuti pasar"
+          "nilai": -2.42,
+          "arah": -0.41,
+          "ket": "kekuatan relatif 24 jam: LEBIH LEMAH dari BTC 2.42% (koin -5.10% vs BTC -2.68%) — sekadar mengikuti pasar"
         },
         {
           "param": "funding",
@@ -1602,9 +1622,9 @@
           "param": "oi",
           "domain": "derivatif",
           "lapis": "inti",
-          "nilai": 1563.7,
-          "arah": -0.3,
-          "ket": "open interest $1563.7 juta · Δ-9.26% sejak denyut lalu — OI menyusut saat harga naik — naik tanpa dana baru (rapuh)"
+          "nilai": 1573.4,
+          "arah": 0,
+          "ket": "open interest $1573.4 juta · Δ+0.62% sejak denyut lalu — OI stabil — posisi tidak berputar berat"
         },
         {
           "param": "ema1h",
@@ -1618,33 +1638,33 @@
           "param": "rsi1h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 16.2,
+          "nilai": 15.9,
           "arah": 0.4,
-          "ket": "RSI-14 16.2 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
+          "ket": "RSI-14 15.9 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
         },
         {
           "param": "roc12",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -4.76,
-          "arah": -0.89,
-          "ket": "ROC-12j -4.76% — turun terukur"
+          "nilai": -4.87,
+          "arah": -0.9,
+          "ket": "ROC-12j -4.87% — turun terukur"
         },
         {
           "param": "roc48",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -9.61,
+          "nilai": -9.71,
           "arah": -0.99,
-          "ket": "ROC-48j -9.61% — runtuhan tajam; pantulan butuh konfirmasi"
+          "ket": "ROC-48j -9.71% — runtuhan tajam; pantulan butuh konfirmasi"
         },
         {
           "param": "stoch",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 5.8,
+          "nilai": 3.9,
           "arah": 0.35,
-          "ket": "Stoch %K 6 / %D 20 — jenuh jual · %K menekun turun — PERPUTARAN %K baru"
+          "ket": "Stoch %K 4 / %D 20 — jenuh jual · %K menekun turun — PERPUTARAN %K baru"
         },
         {
           "param": "mfi",
@@ -1658,17 +1678,17 @@
           "param": "cci",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -302,
+          "nilai": -304,
           "arah": -1,
-          "ket": "CCI-20 -302 — jauh di bawah statistik"
+          "ket": "CCI-20 -304 — jauh di bawah statistik"
         },
         {
           "param": "jarakEkstrem",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 13.36,
+          "nilai": 13.6,
           "arah": -1,
-          "ket": "jarak 10 hari: −13.7% dari puncak / +0.4% dari lantai — menempel lantai 10 hari (area akumulasi berisiko)"
+          "ket": "jarak 10 hari: −13.8% dari puncak / +0.2% dari lantai — menempel lantai 10 hari (area akumulasi berisiko)"
         },
         {
           "param": "atrPctile",
@@ -1682,17 +1702,17 @@
           "param": "volZ",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 0.84,
-          "arah": -0.38,
-          "ket": "volume 24 jam +0.84σ dari rata 30 hari, taker-buy 45% — volume tenang"
+          "nilai": 0.85,
+          "arah": -0.39,
+          "ket": "volume 24 jam +0.85σ dari rata 30 hari, taker-buy 45% — volume tenang"
         },
         {
           "param": "bodyRatio",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 0.42,
+          "nilai": 0.43,
           "arah": 0.05,
-          "ket": "rata badan lilin 42% rentang, 4/12 hijau — lilin normal"
+          "ket": "rata badan lilin 43% rentang, 4/12 hijau — lilin normal"
         },
         {
           "param": "ema4h",
@@ -1706,25 +1726,25 @@
           "param": "macd4h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -0.727,
+          "nilai": -0.735,
           "arah": -1,
-          "ket": "MACD 4h: histogram -0.727% harga — menyempit — momentum menipis; rangka waktu besar bearish"
+          "ket": "MACD 4h: histogram -0.735% harga — menyempit — momentum menipis; rangka waktu besar bearish"
         },
         {
           "param": "rsi4h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 15.1,
+          "nilai": 15,
           "arah": 0.4,
-          "ket": "RSI-14 15.1 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
+          "ket": "RSI-14 15.0 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
         },
         {
           "param": "bb4h",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": -0.116,
+          "nilai": -0.121,
           "arah": 0.5,
-          "ket": "Bollinger %B 4h -0.12 — menembus band bawah: oversold, pantulan mengintai · lebar band 11.8%"
+          "ket": "Bollinger %B 4h -0.12 — menembus band bawah: oversold, pantulan mengintai · lebar band 11.9%"
         },
         {
           "param": "swing4h",
@@ -1770,9 +1790,9 @@
           "param": "bukuImbalans",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": -0.421,
-          "arah": -0.67,
-          "ket": "buku 1%: ASK menumpuk 42% (imbalance -0.42) — jual sedikit unggul"
+          "nilai": 0.687,
+          "arah": 1,
+          "ket": "buku 1%: BID menumpuk 69% (imbalance +0.69) — benteng beli tebal: jatuh terasa mahal, naik ringan"
         },
         {
           "param": "bukuSpread",
@@ -1786,33 +1806,33 @@
           "param": "bukuKedalaman",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 0.41,
-          "arah": -0.47,
-          "ket": "kedalaman 50 level: $197rb bid vs $483rb ask (rasio 0.41) — pasokan jual jauh lebih tebal"
+          "nilai": 5.4,
+          "arah": 0.7,
+          "ket": "kedalaman 50 level: $3.0jt bid vs $561rb ask (rasio 5.40) — amunisi beli jauh lebih tebal"
         },
         {
           "param": "bukuDinding",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 2444.26,
-          "arah": -0.35,
-          "ket": "dinding terbesar DI SISI ASK $101rb di 2444.260 (0.05% dari mid) — dinding dekat: magnet pergerakan jangka pendek"
+          "nilai": 2440,
+          "arah": 0.35,
+          "ket": "dinding terbesar DI SISI BID $2.9jt di 2440.000 (0.00% dari mid) — dinding dekat: magnet pergerakan jangka pendek"
         },
         {
           "param": "persenChg",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": -4.88,
-          "arah": -0.53,
-          "ket": "perubahan 24j -4.88% — persentil 37 dari 485 swap USDT OKX (tengah kawanan); median pasar -3.87%"
+          "nilai": -5.08,
+          "arah": -0.54,
+          "ket": "perubahan 24j -5.08% — persentil 38 dari 485 swap USDT OKX (tengah kawanan); median pasar -4.07%"
         },
         {
           "param": "persenVol",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": 8671.2,
+          "nilai": 8698.3,
           "arah": 0,
-          "ket": "volume swap 24j $8671.2jt — persentil 100 dari kawasan (pusat perhatian dana hari ini)"
+          "ket": "volume swap 24j $8698.3jt — persentil 100 dari kawasan (pusat perhatian dana hari ini)"
         },
         {
           "param": "sesi",
@@ -1850,41 +1870,41 @@
           "param": "rsi1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 35.6,
-          "arah": -0.66,
-          "ket": "RSI-14 harian 35.6 — momentum penjual dominan"
+          "nilai": 35.4,
+          "arah": -0.67,
+          "ket": "RSI-14 harian 35.4 — momentum penjual dominan"
         },
         {
           "param": "macd1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -1.339,
+          "nilai": -1.35,
           "arah": -1,
-          "ket": "MACD harian: histogram -1.339% harga — momentum harian bearish; rangka waktu besar menekan"
+          "ket": "MACD harian: histogram -1.35% harga — momentum harian bearish; rangka waktu besar menekan"
         },
         {
           "param": "donchian30d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 18.7,
-          "arah": -0.5,
-          "ket": "posisi 19% rentang 30 hari (Donchian) — kawasan bawah rentang: tekanan berlanjut"
+          "nilai": 17.9,
+          "arah": -0.51,
+          "ket": "posisi 18% rentang 30 hari (Donchian) — kawasan bawah rentang: tekanan berlanjut"
         },
         {
           "param": "jarak90d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": -13.44,
-          "arah": 0.54,
-          "ket": "kuartalan: −14.9% dari puncak 90 hari / +28.4% dari lantai — ruang dua arah lebar dalam skala kuartal"
+          "nilai": -13.16,
+          "arah": 0.53,
+          "ket": "kuartalan: −15.1% dari puncak 90 hari / +28.3% dari lantai — ruang dua arah lebar dalam skala kuartal"
         },
         {
           "param": "momen30d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -1.7,
-          "arah": -0.14,
-          "ket": "momentum bulanan 30 hari -1.7% — langkah bulanan normal"
+          "nilai": -1.84,
+          "arah": -0.15,
+          "ket": "momentum bulanan 30 hari -1.8% — langkah bulanan normal"
         },
         {
           "param": "streak1d",
@@ -1898,23 +1918,23 @@
           "param": "volRasio7d30d",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 0.97,
+          "nilai": 0.98,
           "arah": 0,
-          "ket": "volatilitas realized 7d/30d 0.97× — stabil antar skala"
+          "ket": "volatilitas realized 7d/30d 0.98× — stabil antar skala"
         },
         {
           "param": "basisPct",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": 0.017,
-          "arah": 0.01,
-          "ket": "basis perp-vs-spot +0.017% — basis normal"
+          "nilai": -0.066,
+          "arah": -0.06,
+          "ket": "basis perp-vs-spot -0.066% — basis normal"
         },
         {
           "param": "jamFunding",
           "domain": "kalender",
           "lapis": "observasi",
-          "nilai": 8.09,
+          "nilai": 8.07,
           "arah": 0,
           "ket": "8.1 jam menuju pembayaran funding berikutnya — jarak funding normal"
         },
@@ -1938,9 +1958,9 @@
           "param": "lsTren",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": 0.99,
+          "nilai": 0.97,
           "arah": -0.4,
-          "ket": "kerumunan akun MEMBESAR (Δrasio +0.99 sejak 48 jam) — posisi baru mengikuti tren: bahan bakar lanjutan TAPI juga bahan likuidasi"
+          "ket": "kerumunan akun MEMBESAR (Δrasio +0.97 sejak 48 jam) — posisi baru mengikuti tren: bahan bakar lanjutan TAPI juga bahan likuidasi"
         },
         {
           "param": "lsTaker",
@@ -1954,25 +1974,25 @@
           "param": "bukuGradien",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": -0.007,
-          "arah": -0.01,
-          "ket": "gradien buku: distribusi merata — bid depan 13% vs ask depan 14% dari massa 1%"
+          "nilai": 0.847,
+          "arah": 0.6,
+          "ket": "gradien buku: likuiditas bid MENGUMPUL di depan (pertahanan rapat di harga) — bid depan 97% vs ask depan 12% dari massa 1%"
         },
         {
           "param": "garchSigma",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 3.63,
+          "nilai": 3.72,
           "arah": 0,
-          "ket": "GARCH(1,1): sigma 24 jam ±3.63% — ukuran posisi & lebar stop ditetapkan dari sini"
+          "ket": "GARCH(1,1): sigma 24 jam ±3.72% — ukuran posisi & lebar stop ditetapkan dari sini"
         },
         {
           "param": "betaBTC",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": 1.22,
+          "nilai": 1.24,
           "arah": 0,
-          "ket": "beta vs BTC 90 jam 1.22 (R² 0.77) — amplifier pasar: naik lebih tinggi, jatuh lebih dalam"
+          "ket": "beta vs BTC 90 jam 1.24 (R² 0.76) — amplifier pasar: naik lebih tinggi, jatuh lebih dalam"
         },
         {
           "param": "divRSI",
@@ -1986,7 +2006,7 @@
           "param": "pocJarak",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 5.02,
+          "nilai": 5.14,
           "arah": 0.3,
           "ket": "POC volume 48 jam 2564.883 (di atas harga — magnet tarik naik)"
         },
@@ -2004,15 +2024,15 @@
           "lapis": "observasi",
           "nilai": 0,
           "arah": 0,
-          "ket": "funding×ΔOI: 0×-0.3 — campur"
+          "ket": "funding×ΔOI: 0×0 — campur"
         },
         {
           "param": "ixVolAtr",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": -0.191,
+          "nilai": -0.193,
           "arah": -0.19,
-          "ket": "volume×rezim-ATR: -0.382 × persentil 1 — lonjakan volume DI tengah volatilitas tinggi: gerak bermakna tapi licin"
+          "ket": "volume×rezim-ATR: -0.385 × persentil 1 — lonjakan volume DI tengah volatilitas tinggi: gerak bermakna tapi licin"
         },
         {
           "param": "ixTrenFunding",
@@ -2026,17 +2046,17 @@
           "param": "ixBukuTren",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": 0.7,
-          "arah": 0.7,
-          "ket": "buku×tren1h: -0.673×-1 — buku mengiyakan tren: jalan mulus, slippage kecil"
+          "nilai": -0.7,
+          "arah": -0.7,
+          "ket": "buku×tren1h: 1×-1 — buku melawan tren: dinding menahan, waspadai jebakan"
         },
         {
           "param": "ixDonchianVol",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": 0.21,
-          "arah": 0.21,
-          "ket": "breakout×volume: donchian -0.5 × volZ -0.382 — konfirmasi tipis"
+          "nilai": 0.217,
+          "arah": 0.22,
+          "ket": "breakout×volume: donchian -0.513 × volZ -0.385 — konfirmasi tipis"
         },
         {
           "param": "ixFlowTren",
@@ -2050,12 +2070,12 @@
     },
     {
       "simbol": "SOL",
-      "harga": 108.96,
+      "harga": 108.91,
       "rezim": "TURUN",
       "atrPct": 1.16,
       "fundingPct": -0.002,
-      "oiJuta": 340.1,
-      "oiDeltaPct": -1.09,
+      "oiJuta": 339.6,
+      "oiDeltaPct": -0.13,
       "jumlahParam": 67,
       "konsensus": {
         "momentum": {
@@ -2067,7 +2087,7 @@
           "bicara": 9
         },
         "volatilitas": {
-          "arah": 0.22,
+          "arah": 0.21,
           "bicara": 3
         },
         "aliran": {
@@ -2075,20 +2095,20 @@
           "bicara": 4
         },
         "relatif": {
-          "arah": -0.64,
+          "arah": -0.65,
           "bicara": 2
         },
         "mikrostruktur": {
-          "arah": 0.35,
-          "bicara": 1
+          "arah": 0.06,
+          "bicara": 3
         },
         "derivatif": {
           "arah": -0.38,
           "bicara": 2
         },
         "interaksi": {
-          "arah": -0.19,
-          "bicara": 1
+          "arah": -0.24,
+          "bicara": 2
         }
       },
       "params": [
@@ -2096,9 +2116,9 @@
           "param": "macd",
           "domain": "momentum",
           "lapis": "inti",
-          "nilai": -0.39,
+          "nilai": -0.394,
           "arah": -1,
-          "ket": "MACD histogram -0.39% dari harga dan menyempit — momentum menipis"
+          "ket": "MACD histogram -0.394% dari harga dan menyempit — momentum menipis"
         },
         {
           "param": "adx",
@@ -2112,17 +2132,17 @@
           "param": "bollinger",
           "domain": "volatilitas",
           "lapis": "inti",
-          "nilai": -0.269,
+          "nilai": -0.272,
           "arah": 0.5,
-          "ket": "Bollinger %B -0.27 — menembus band bawah: oversold, pantulan mengintai · lebar band 6.4%"
+          "ket": "Bollinger %B -0.27 — menembus band bawah: oversold, pantulan mengintai · lebar band 6.5%"
         },
         {
           "param": "vwap",
           "domain": "aliran",
           "lapis": "inti",
-          "nilai": -4.07,
+          "nilai": -4.11,
           "arah": -1,
-          "ket": "harga di bawah VWAP-24j 113.5873 (-4.07%) — menyimpang jauh dari rata-rata tertimbang volume; gravitasi menarik balik"
+          "ket": "harga di bawah VWAP-24j 113.5778 (-4.11%) — menyimpang jauh dari rata-rata tertimbang volume; gravitasi menarik balik"
         },
         {
           "param": "obv",
@@ -2146,7 +2166,7 @@
           "lapis": "inti",
           "nilai": "tanpa pola menonjol — lilin biasa",
           "arah": 0,
-          "ket": "pola lilin: tanpa pola menonjol — lilin biasa (badan 80% rentang lilin)"
+          "ket": "pola lilin: tanpa pola menonjol — lilin biasa (badan 81% rentang lilin)"
         },
         {
           "param": "konsist",
@@ -2168,9 +2188,9 @@
           "param": "relatif",
           "domain": "relatif",
           "lapis": "inti",
-          "nilai": -4.01,
-          "arah": -0.62,
-          "ket": "kekuatan relatif 24 jam: LEBIH LEMAH dari BTC 4.01% (koin -6.70% vs BTC -2.70%) — penunggang beban; dana meninggalkan koin ini"
+          "nilai": -4.07,
+          "arah": -0.63,
+          "ket": "kekuatan relatif 24 jam: LEBIH LEMAH dari BTC 4.07% (koin -6.75% vs BTC -2.68%) — penunggang beban; dana meninggalkan koin ini"
         },
         {
           "param": "funding",
@@ -2184,9 +2204,9 @@
           "param": "oi",
           "domain": "derivatif",
           "lapis": "inti",
-          "nilai": 340.1,
+          "nilai": 339.6,
           "arah": 0,
-          "ket": "open interest $340.1 juta · Δ-1.09% sejak denyut lalu — OI stabil — posisi tidak berputar berat"
+          "ket": "open interest $339.6 juta · Δ-0.13% sejak denyut lalu — OI stabil — posisi tidak berputar berat"
         },
         {
           "param": "ema1h",
@@ -2200,39 +2220,39 @@
           "param": "rsi1h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 15.8,
+          "nilai": 15.7,
           "arah": 0.4,
-          "ket": "RSI-14 15.8 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
+          "ket": "RSI-14 15.7 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
         },
         {
           "param": "roc12",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -5.85,
+          "nilai": -5.89,
           "arah": -0.94,
-          "ket": "ROC-12j -5.85% — turun terukur"
+          "ket": "ROC-12j -5.89% — turun terukur"
         },
         {
           "param": "roc48",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -9.58,
+          "nilai": -9.63,
           "arah": -0.99,
-          "ket": "ROC-48j -9.58% — runtuhan tajam; pantulan butuh konfirmasi"
+          "ket": "ROC-48j -9.63% — runtuhan tajam; pantulan butuh konfirmasi"
         },
         {
           "param": "stoch",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 9.8,
+          "nilai": 9.2,
           "arah": 0.35,
-          "ket": "Stoch %K 10 / %D 17 — jenuh jual · %K menekun turun — PERPUTARAN %K baru"
+          "ket": "Stoch %K 9 / %D 17 — jenuh jual · %K menekun turun — PERPUTARAN %K baru"
         },
         {
           "param": "mfi",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 23.2,
+          "nilai": 23.1,
           "arah": -1,
           "ket": "MFI-14 23 — arus keluar dominan"
         },
@@ -2240,17 +2260,17 @@
           "param": "cci",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -247,
+          "nilai": -248,
           "arah": -1,
-          "ket": "CCI-20 -247 — jauh di bawah statistik"
+          "ket": "CCI-20 -248 — jauh di bawah statistik"
         },
         {
           "param": "jarakEkstrem",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 12.8,
+          "nilai": 12.9,
           "arah": -1,
-          "ket": "jarak 10 hari: −13.6% dari puncak / +0.8% dari lantai — menempel lantai 10 hari (area akumulasi berisiko)"
+          "ket": "jarak 10 hari: −13.6% dari puncak / +0.7% dari lantai — menempel lantai 10 hari (area akumulasi berisiko)"
         },
         {
           "param": "atrPctile",
@@ -2288,9 +2308,9 @@
           "param": "macd4h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -0.851,
+          "nilai": -0.855,
           "arah": -1,
-          "ket": "MACD 4h: histogram -0.851% harga — menyempit — momentum menipis; rangka waktu besar bearish"
+          "ket": "MACD 4h: histogram -0.855% harga — menyempit — momentum menipis; rangka waktu besar bearish"
         },
         {
           "param": "rsi4h",
@@ -2304,7 +2324,7 @@
           "param": "bb4h",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": -0.236,
+          "nilai": -0.238,
           "arah": 0.5,
           "ket": "Bollinger %B 4h -0.24 — menembus band bawah: oversold, pantulan mengintai · lebar band 10.4%"
         },
@@ -2352,9 +2372,9 @@
           "param": "bukuImbalans",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 0.068,
-          "arah": 0.11,
-          "ket": "buku 1%: BID menumpuk 7% (imbalance +0.07) — buku seimbang — arah dari aliran, bukan tumpukan"
+          "nilai": 0.155,
+          "arah": 0.25,
+          "ket": "buku 1%: BID menumpuk 16% (imbalance +0.16) — beli sedikit unggul"
         },
         {
           "param": "bukuSpread",
@@ -2368,33 +2388,33 @@
           "param": "bukuKedalaman",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 1.15,
-          "arah": 0.12,
-          "ket": "kedalaman 50 level: $1.3jt bid vs $1.1jt ask (rasio 1.15) — kedalaman berimbang"
+          "nilai": 1.37,
+          "arah": 0.29,
+          "ket": "kedalaman 50 level: $1.5jt bid vs $1.1jt ask (rasio 1.37) — amunisi beli jauh lebih tebal"
         },
         {
           "param": "bukuDinding",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 108.74,
-          "arah": 0.35,
-          "ket": "dinding terbesar DI SISI BID $381rb di 108.7400 (0.21% dari mid) — dinding dekat: magnet pergerakan jangka pendek"
+          "nilai": 109.11,
+          "arah": -0.35,
+          "ket": "dinding terbesar DI SISI ASK $366rb di 109.1100 (0.23% dari mid) — dinding dekat: magnet pergerakan jangka pendek"
         },
         {
           "param": "persenChg",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": -6.61,
-          "arah": -0.66,
-          "ket": "perubahan 24j -6.61% — persentil 19 dari 485 swap USDT OKX (tengah kawanan); median pasar -3.87%"
+          "nilai": -6.75,
+          "arah": -0.67,
+          "ket": "perubahan 24j -6.75% — persentil 19 dari 485 swap USDT OKX (tengah kawanan); median pasar -4.07%"
         },
         {
           "param": "persenVol",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": 1253.6,
+          "nilai": 1252.3,
           "arah": 0,
-          "ket": "volume swap 24j $1253.6jt — persentil 99 dari kawasan (pusat perhatian dana hari ini)"
+          "ket": "volume swap 24j $1252.3jt — persentil 99 dari kawasan (pusat perhatian dana hari ini)"
         },
         {
           "param": "sesi",
@@ -2432,23 +2452,23 @@
           "param": "rsi1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 42.5,
-          "arah": -0.34,
-          "ket": "RSI-14 harian 42.5 — momentum penjual dominan"
+          "nilai": 42.4,
+          "arah": -0.35,
+          "ket": "RSI-14 harian 42.4 — momentum penjual dominan"
         },
         {
           "param": "macd1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -1.388,
+          "nilai": -1.395,
           "arah": -1,
-          "ket": "MACD harian: histogram -1.388% harga — momentum harian bearish; rangka waktu besar menekan"
+          "ket": "MACD harian: histogram -1.395% harga — momentum harian bearish; rangka waktu besar menekan"
         },
         {
           "param": "donchian30d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 45.1,
+          "nilai": 44.8,
           "arah": -0.08,
           "ket": "posisi 45% rentang 30 hari (Donchian) — tengah rentang"
         },
@@ -2456,17 +2476,17 @@
           "param": "jarak90d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": -20.55,
+          "nilai": -20.4,
           "arah": 0.82,
-          "ket": "kuartalan: −14.7% dari puncak 90 hari / +35.2% dari lantai — ruang dua arah lebar dalam skala kuartal"
+          "ket": "kuartalan: −14.8% dari puncak 90 hari / +35.2% dari lantai — ruang dua arah lebar dalam skala kuartal"
         },
         {
           "param": "momen30d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 5.41,
-          "arah": 0.41,
-          "ket": "momentum bulanan 30 hari +5.4% — langkah bulanan normal"
+          "nilai": 5.32,
+          "arah": 0.4,
+          "ket": "momentum bulanan 30 hari +5.3% — langkah bulanan normal"
         },
         {
           "param": "streak1d",
@@ -2488,15 +2508,15 @@
           "param": "basisPct",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": -0.009,
-          "arah": -0.01,
-          "ket": "basis perp-vs-spot -0.009% — basis normal"
+          "nilai": -0.11,
+          "arah": -0.1,
+          "ket": "basis perp-vs-spot -0.110% — basis normal"
         },
         {
           "param": "jamFunding",
           "domain": "kalender",
           "lapis": "observasi",
-          "nilai": 8.09,
+          "nilai": 8.07,
           "arah": 0,
           "ket": "8.1 jam menuju pembayaran funding berikutnya — jarak funding normal"
         },
@@ -2520,9 +2540,9 @@
           "param": "lsTren",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": 0.69,
+          "nilai": 0.67,
           "arah": -0.4,
-          "ket": "kerumunan akun MEMBESAR (Δrasio +0.69 sejak 48 jam) — posisi baru mengikuti tren: bahan bakar lanjutan TAPI juga bahan likuidasi"
+          "ket": "kerumunan akun MEMBESAR (Δrasio +0.67 sejak 48 jam) — posisi baru mengikuti tren: bahan bakar lanjutan TAPI juga bahan likuidasi"
         },
         {
           "param": "lsTaker",
@@ -2536,25 +2556,25 @@
           "param": "bukuGradien",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 0.02,
-          "arah": 0.04,
-          "ket": "gradien buku: distribusi merata — bid depan 16% vs ask depan 14% dari massa 1%"
+          "nilai": -0.018,
+          "arah": -0.03,
+          "ket": "gradien buku: distribusi merata — bid depan 15% vs ask depan 16% dari massa 1%"
         },
         {
           "param": "garchSigma",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 5.66,
+          "nilai": 5.72,
           "arah": 0,
-          "ket": "GARCH(1,1): sigma 24 jam ±5.66% — ukuran posisi & lebar stop ditetapkan dari sini"
+          "ket": "GARCH(1,1): sigma 24 jam ±5.72% — ukuran posisi & lebar stop ditetapkan dari sini"
         },
         {
           "param": "betaBTC",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": 1.16,
+          "nilai": 1.17,
           "arah": 0,
-          "ket": "beta vs BTC 90 jam 1.16 (R² 0.70) — bergerak seiring pasar"
+          "ket": "beta vs BTC 90 jam 1.17 (R² 0.70) — bergerak seiring pasar"
         },
         {
           "param": "divRSI",
@@ -2568,7 +2588,7 @@
           "param": "pocJarak",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 6.63,
+          "nilai": 6.68,
           "arah": 0.3,
           "ket": "POC volume 48 jam 116.1877 (di atas harga — magnet tarik naik)"
         },
@@ -2576,9 +2596,9 @@
           "param": "mcPnaik",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 35.5,
-          "arah": -0.35,
-          "ket": "Monte Carlo 2.000 lintasan: peluang naik dalam 24 jam 36% — distribusi condong turun"
+          "nilai": 34.9,
+          "arah": -0.36,
+          "ket": "Monte Carlo 2.000 lintasan: peluang naik dalam 24 jam 35% — distribusi condong turun"
         },
         {
           "param": "ixFundingOI",
@@ -2592,9 +2612,9 @@
           "param": "ixVolAtr",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": -0.186,
+          "nilai": -0.187,
           "arah": -0.19,
-          "ket": "volume×rezim-ATR: -0.372 × persentil 0.94 — lonjakan volume DI tengah volatilitas tinggi: gerak bermakna tapi licin"
+          "ket": "volume×rezim-ATR: -0.374 × persentil 0.94 — lonjakan volume DI tengah volatilitas tinggi: gerak bermakna tapi licin"
         },
         {
           "param": "ixTrenFunding",
@@ -2608,17 +2628,17 @@
           "param": "ixBukuTren",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": -0.13,
-          "arah": -0.13,
-          "ket": "buku×tren1h: 0.108×-1 — buku tak memihak"
+          "nilai": -0.298,
+          "arah": -0.3,
+          "ket": "buku×tren1h: 0.248×-1 — buku melawan tren: dinding menahan, waspadai jebakan"
         },
         {
           "param": "ixDonchianVol",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": 0.032,
+          "nilai": 0.034,
           "arah": 0.03,
-          "ket": "breakout×volume: donchian -0.078 × volZ -0.372 — konfirmasi tipis"
+          "ket": "breakout×volume: donchian -0.083 × volZ -0.374 — konfirmasi tipis"
         },
         {
           "param": "ixFlowTren",
@@ -2632,12 +2652,12 @@
     },
     {
       "simbol": "BNB",
-      "harga": 734.61,
+      "harga": 733.85,
       "rezim": "TURUN",
       "atrPct": 0.84,
-      "fundingPct": -0.0029,
-      "oiJuta": 55.1,
-      "oiDeltaPct": 0.61,
+      "fundingPct": -0.003,
+      "oiJuta": 55,
+      "oiDeltaPct": -0.17,
       "jumlahParam": 67,
       "konsensus": {
         "momentum": {
@@ -2645,7 +2665,7 @@
           "bicara": 14
         },
         "tren": {
-          "arah": -0.63,
+          "arah": -0.64,
           "bicara": 10
         },
         "volatilitas": {
@@ -2657,11 +2677,11 @@
           "bicara": 4
         },
         "relatif": {
-          "arah": -0.41,
+          "arah": -0.43,
           "bicara": 2
         },
         "mikrostruktur": {
-          "arah": 0.18,
+          "arah": 0.27,
           "bicara": 4
         },
         "derivatif": {
@@ -2669,8 +2689,8 @@
           "bicara": 2
         },
         "interaksi": {
-          "arah": -0.34,
-          "bicara": 1
+          "arah": -0.31,
+          "bicara": 2
         }
       },
       "params": [
@@ -2678,9 +2698,9 @@
           "param": "macd",
           "domain": "momentum",
           "lapis": "inti",
-          "nilai": -0.359,
+          "nilai": -0.366,
           "arah": -1,
-          "ket": "MACD histogram -0.359% dari harga dan menyempit — momentum menipis"
+          "ket": "MACD histogram -0.366% dari harga dan menyempit — momentum menipis"
         },
         {
           "param": "adx",
@@ -2694,7 +2714,7 @@
           "param": "bollinger",
           "domain": "volatilitas",
           "lapis": "inti",
-          "nilai": -0.396,
+          "nilai": -0.402,
           "arah": 0.5,
           "ket": "Bollinger %B -0.40 — menembus band bawah: oversold, pantulan mengintai · lebar band 4.6%"
         },
@@ -2702,17 +2722,17 @@
           "param": "vwap",
           "domain": "aliran",
           "lapis": "inti",
-          "nilai": -2.98,
+          "nilai": -3.06,
           "arah": -1,
-          "ket": "harga di bawah VWAP-24j 757.1460 (-2.98%) — mengapung dekat nilai wajar intraday"
+          "ket": "harga di bawah VWAP-24j 756.9987 (-3.06%) — menyimpang jauh dari rata-rata tertimbang volume; gravitasi menarik balik"
         },
         {
           "param": "obv",
           "domain": "aliran",
           "lapis": "inti",
-          "nilai": -13,
+          "nilai": -12.9,
           "arah": -0.13,
-          "ket": "OBV 48 jam mengalir KELUAR (-13.0% volume rata-jam) — jual agresif mendominasi"
+          "ket": "OBV 48 jam mengalir KELUAR (-12.9% volume rata-jam) — jual agresif mendominasi"
         },
         {
           "param": "swing",
@@ -2728,7 +2748,7 @@
           "lapis": "inti",
           "nilai": "bearish engulfing — beli habis ditelan jual, pembalikan intraday",
           "arah": -0.7,
-          "ket": "pola lilin: bearish engulfing — beli habis ditelan jual, pembalikan intraday (badan 86% rentang lilin)"
+          "ket": "pola lilin: bearish engulfing — beli habis ditelan jual, pembalikan intraday (badan 88% rentang lilin)"
         },
         {
           "param": "konsist",
@@ -2750,25 +2770,25 @@
           "param": "relatif",
           "domain": "relatif",
           "lapis": "inti",
-          "nilai": -1.87,
-          "arah": -0.32,
-          "ket": "kekuatan relatif 24 jam: LEBIH LEMAH dari BTC 1.87% (koin -4.57% vs BTC -2.70%) — sekadar mengikuti pasar"
+          "nilai": -1.99,
+          "arah": -0.34,
+          "ket": "kekuatan relatif 24 jam: LEBIH LEMAH dari BTC 1.99% (koin -4.66% vs BTC -2.68%) — sekadar mengikuti pasar"
         },
         {
           "param": "funding",
           "domain": "derivatif",
           "lapis": "inti",
-          "nilai": -0.0029,
+          "nilai": -0.003,
           "arah": 0,
-          "ket": "funding futures -0.0029% per interval — short membayar — bearish tidak ramai"
+          "ket": "funding futures -0.0030% per interval — short membayar — bearish tidak ramai"
         },
         {
           "param": "oi",
           "domain": "derivatif",
           "lapis": "inti",
-          "nilai": 55.1,
+          "nilai": 55,
           "arah": 0,
-          "ket": "open interest $55.1 juta · Δ+0.61% sejak denyut lalu — OI stabil — posisi tidak berputar berat"
+          "ket": "open interest $55.0 juta · Δ-0.17% sejak denyut lalu — OI stabil — posisi tidak berputar berat"
         },
         {
           "param": "ema1h",
@@ -2782,39 +2802,39 @@
           "param": "rsi1h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 16,
+          "nilai": 15.8,
           "arah": 0.4,
-          "ket": "RSI-14 16.0 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
+          "ket": "RSI-14 15.8 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
         },
         {
           "param": "roc12",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -4.56,
-          "arah": -0.88,
-          "ket": "ROC-12j -4.56% — turun terukur"
+          "nilai": -4.65,
+          "arah": -0.89,
+          "ket": "ROC-12j -4.65% — turun terukur"
         },
         {
           "param": "roc48",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -6.16,
+          "nilai": -6.26,
           "arah": -0.95,
-          "ket": "ROC-48j -6.16% — turun terukur"
+          "ket": "ROC-48j -6.26% — turun terukur"
         },
         {
           "param": "stoch",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 8.4,
+          "nilai": 6.7,
           "arah": 0.35,
-          "ket": "Stoch %K 8 / %D 13 — jenuh jual · %K menekun turun — PERPUTARAN %K baru"
+          "ket": "Stoch %K 7 / %D 13 — jenuh jual · %K menekun turun — PERPUTARAN %K baru"
         },
         {
           "param": "mfi",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 12.3,
+          "nilai": 12.2,
           "arah": 0.4,
           "ket": "MFI-14 12 — arus keluar jenuh"
         },
@@ -2822,17 +2842,17 @@
           "param": "cci",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -316,
+          "nilai": -318,
           "arah": -1,
-          "ket": "CCI-20 -316 — jauh di bawah statistik"
+          "ket": "CCI-20 -318 — jauh di bawah statistik"
         },
         {
           "param": "jarakEkstrem",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 9.76,
-          "arah": -0.98,
-          "ket": "jarak 10 hari: −10.3% dari puncak / +0.5% dari lantai — menempel lantai 10 hari (area akumulasi berisiko)"
+          "nilai": 9.98,
+          "arah": -1,
+          "ket": "jarak 10 hari: −10.4% dari puncak / +0.4% dari lantai — menempel lantai 10 hari (area akumulasi berisiko)"
         },
         {
           "param": "atrPctile",
@@ -2846,16 +2866,16 @@
           "param": "volZ",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 0.65,
-          "arah": -0.29,
-          "ket": "volume 24 jam +0.65σ dari rata 30 hari, taker-buy 42% — volume tenang"
+          "nilai": 0.67,
+          "arah": -0.3,
+          "ket": "volume 24 jam +0.67σ dari rata 30 hari, taker-buy 42% — volume tenang"
         },
         {
           "param": "bodyRatio",
           "domain": "momentum",
           "lapis": "observasi",
           "nilai": 0.48,
-          "arah": -0.05,
+          "arah": -0.06,
           "ket": "rata badan lilin 48% rentang, 4/12 hijau — lilin normal"
         },
         {
@@ -2870,25 +2890,25 @@
           "param": "macd4h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -0.491,
+          "nilai": -0.498,
           "arah": -1,
-          "ket": "MACD 4h: histogram -0.491% harga — menyempit — momentum menipis; rangka waktu besar bearish"
+          "ket": "MACD 4h: histogram -0.498% harga — menyempit — momentum menipis; rangka waktu besar bearish"
         },
         {
           "param": "rsi4h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 21.9,
+          "nilai": 21.6,
           "arah": 0.4,
-          "ket": "RSI-14 21.9 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
+          "ket": "RSI-14 21.6 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
         },
         {
           "param": "bb4h",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": -0.329,
+          "nilai": -0.336,
           "arah": 0.5,
-          "ket": "Bollinger %B 4h -0.33 — menembus band bawah: oversold, pantulan mengintai · lebar band 6.3%"
+          "ket": "Bollinger %B 4h -0.34 — menembus band bawah: oversold, pantulan mengintai · lebar band 6.3%"
         },
         {
           "param": "swing4h",
@@ -2926,17 +2946,17 @@
           "param": "fundTren",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": -0.0068,
+          "nilai": -0.0069,
           "arah": 0.06,
-          "ket": "funding MENDINGIN (-0.0068% vs rata3) — tingkat keanggotaan kerumunan stabil"
+          "ket": "funding MENDINGIN (-0.0069% vs rata3) — tingkat keanggotaan kerumunan stabil"
         },
         {
           "param": "bukuImbalans",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 0.175,
-          "arah": 0.28,
-          "ket": "buku 1%: BID menumpuk 18% (imbalance +0.18) — beli sedikit unggul"
+          "nilai": 0.246,
+          "arah": 0.39,
+          "ket": "buku 1%: BID menumpuk 25% (imbalance +0.25) — beli sedikit unggul"
         },
         {
           "param": "bukuSpread",
@@ -2950,33 +2970,33 @@
           "param": "bukuKedalaman",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 1.43,
-          "arah": 0.34,
-          "ket": "kedalaman 50 level: $495rb bid vs $347rb ask (rasio 1.43) — amunisi beli jauh lebih tebal"
+          "nilai": 1.65,
+          "arah": 0.52,
+          "ket": "kedalaman 50 level: $534rb bid vs $323rb ask (rasio 1.65) — amunisi beli jauh lebih tebal"
         },
         {
           "param": "bukuDinding",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 733.4,
+          "nilai": 732.4,
           "arah": 0.35,
-          "ket": "dinding terbesar DI SISI BID $106rb di 733.4000 (0.16% dari mid) — dinding dekat: magnet pergerakan jangka pendek"
+          "ket": "dinding terbesar DI SISI BID $136rb di 732.4000 (0.16% dari mid) — dinding dekat: magnet pergerakan jangka pendek"
         },
         {
           "param": "persenChg",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": -4.59,
-          "arah": -0.5,
-          "ket": "perubahan 24j -4.59% — persentil 40 dari 485 swap USDT OKX (tengah kawanan); median pasar -3.87%"
+          "nilai": -4.77,
+          "arah": -0.52,
+          "ket": "perubahan 24j -4.77% — persentil 42 dari 485 swap USDT OKX (tengah kawanan); median pasar -4.07%"
         },
         {
           "param": "persenVol",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": 64,
+          "nilai": 63.9,
           "arah": 0,
-          "ket": "volume swap 24j $64.0jt — persentil 93 dari kawasan (pusat perhatian dana hari ini)"
+          "ket": "volume swap 24j $63.9jt — persentil 93 dari kawasan (pusat perhatian dana hari ini)"
         },
         {
           "param": "sesi",
@@ -3014,41 +3034,41 @@
           "param": "rsi1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 42.2,
-          "arah": -0.35,
-          "ket": "RSI-14 harian 42.2 — momentum penjual dominan"
+          "nilai": 42,
+          "arah": -0.37,
+          "ket": "RSI-14 harian 42.0 — momentum penjual dominan"
         },
         {
           "param": "macd1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -0.752,
+          "nilai": -0.763,
           "arah": -1,
-          "ket": "MACD harian: histogram -0.752% harga — momentum harian bearish; rangka waktu besar menekan"
+          "ket": "MACD harian: histogram -0.763% harga — momentum harian bearish; rangka waktu besar menekan"
         },
         {
           "param": "donchian30d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 29.2,
-          "arah": -0.33,
-          "ket": "posisi 29% rentang 30 hari (Donchian) — kawasan bawah rentang: tekanan berlanjut"
+          "nilai": 28.2,
+          "arah": -0.35,
+          "ket": "posisi 28% rentang 30 hari (Donchian) — kawasan bawah rentang: tekanan berlanjut"
         },
         {
           "param": "jarak90d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": -14.14,
-          "arah": 0.56,
-          "ket": "kuartalan: −10.2% dari puncak 90 hari / +24.4% dari lantai — ruang dua arah lebar dalam skala kuartal"
+          "nilai": -13.86,
+          "arah": 0.55,
+          "ket": "kuartalan: −10.4% dari puncak 90 hari / +24.3% dari lantai — ruang dua arah lebar dalam skala kuartal"
         },
         {
           "param": "momen30d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -2.3,
-          "arah": -0.18,
-          "ket": "momentum bulanan 30 hari -2.3% — langkah bulanan normal"
+          "nilai": -2.45,
+          "arah": -0.19,
+          "ket": "momentum bulanan 30 hari -2.4% — langkah bulanan normal"
         },
         {
           "param": "streak1d",
@@ -3062,23 +3082,23 @@
           "param": "volRasio7d30d",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 1.09,
+          "nilai": 1.1,
           "arah": 0,
-          "ket": "volatilitas realized 7d/30d 1.09× — stabil antar skala"
+          "ket": "volatilitas realized 7d/30d 1.10× — stabil antar skala"
         },
         {
           "param": "basisPct",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": -0.056,
-          "arah": -0.05,
-          "ket": "basis perp-vs-spot -0.056% — basis normal"
+          "nilai": -0.129,
+          "arah": -0.12,
+          "ket": "basis perp-vs-spot -0.129% — basis normal"
         },
         {
           "param": "jamFunding",
           "domain": "kalender",
           "lapis": "observasi",
-          "nilai": 8.09,
+          "nilai": 8.07,
           "arah": 0,
           "ket": "8.1 jam menuju pembayaran funding berikutnya — jarak funding normal"
         },
@@ -3086,9 +3106,9 @@
           "param": "fundVsBtc",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": -0.0092,
+          "nilai": -0.0093,
           "arah": 0.04,
-          "ket": "funding relatif vs BTC -0.0092% — sejajar suhu pasar"
+          "ket": "funding relatif vs BTC -0.0093% — sejajar suhu pasar"
         },
         {
           "param": "lsAkun",
@@ -3118,25 +3138,25 @@
           "param": "bukuGradien",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": -0.138,
-          "arah": -0.25,
-          "ket": "gradien buku: likuiditas ask MENGUMPUL di depan (gerbang jual rapat) — bid depan 30% vs ask depan 44% dari massa 1%"
+          "nilai": -0.093,
+          "arah": -0.17,
+          "ket": "gradien buku: likuiditas ask MENGUMPUL di depan (gerbang jual rapat) — bid depan 27% vs ask depan 36% dari massa 1%"
         },
         {
           "param": "garchSigma",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 2.12,
+          "nilai": 2.15,
           "arah": 0,
-          "ket": "GARCH(1,1): sigma 24 jam ±2.12% — ukuran posisi & lebar stop ditetapkan dari sini"
+          "ket": "GARCH(1,1): sigma 24 jam ±2.15% — ukuran posisi & lebar stop ditetapkan dari sini"
         },
         {
           "param": "betaBTC",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": 0.93,
+          "nilai": 0.94,
           "arah": 0,
-          "ket": "beta vs BTC 90 jam 0.93 (R² 0.65) — bergerak seiring pasar"
+          "ket": "beta vs BTC 90 jam 0.94 (R² 0.64) — bergerak seiring pasar"
         },
         {
           "param": "divRSI",
@@ -3150,7 +3170,7 @@
           "param": "pocJarak",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 4.47,
+          "nilai": 4.57,
           "arah": 0.3,
           "ket": "POC volume 48 jam 767.4125 (di atas harga — magnet tarik naik)"
         },
@@ -3158,9 +3178,9 @@
           "param": "mcPnaik",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 44.2,
-          "arah": -0.14,
-          "ket": "Monte Carlo 2.000 lintasan: peluang naik dalam 24 jam 44% — distribusi condong turun"
+          "nilai": 44.8,
+          "arah": -0.13,
+          "ket": "Monte Carlo 2.000 lintasan: peluang naik dalam 24 jam 45% — distribusi condong turun"
         },
         {
           "param": "ixFundingOI",
@@ -3174,9 +3194,9 @@
           "param": "ixVolAtr",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": -0.147,
+          "nilai": -0.151,
           "arah": -0.15,
-          "ket": "volume×rezim-ATR: -0.295 × persentil 1 — lonjakan volume DI tengah volatilitas tinggi: gerak bermakna tapi licin"
+          "ket": "volume×rezim-ATR: -0.303 × persentil 1 — lonjakan volume DI tengah volatilitas tinggi: gerak bermakna tapi licin"
         },
         {
           "param": "ixTrenFunding",
@@ -3190,17 +3210,17 @@
           "param": "ixBukuTren",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": -0.336,
-          "arah": -0.34,
-          "ket": "buku×tren1h: 0.28×-1 — buku melawan tren: dinding menahan, waspadai jebakan"
+          "nilai": -0.473,
+          "arah": -0.47,
+          "ket": "buku×tren1h: 0.394×-1 — buku melawan tren: dinding menahan, waspadai jebakan"
         },
         {
           "param": "ixDonchianVol",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": 0.108,
-          "arah": 0.11,
-          "ket": "breakout×volume: donchian -0.332 × volZ -0.295 — konfirmasi tipis"
+          "nilai": 0.116,
+          "arah": 0.12,
+          "ket": "breakout×volume: donchian -0.349 × volZ -0.303 — konfirmasi tipis"
         },
         {
           "param": "ixFlowTren",
@@ -3214,12 +3234,12 @@
     },
     {
       "simbol": "XRP",
-      "harga": 1.3483,
+      "harga": 1.3482,
       "rezim": "TURUN",
       "atrPct": 1.26,
-      "fundingPct": -0.0026,
-      "oiJuta": 92.6,
-      "oiDeltaPct": -8.26,
+      "fundingPct": -0.0027,
+      "oiJuta": 92.4,
+      "oiDeltaPct": -0.14,
       "jumlahParam": 67,
       "konsensus": {
         "momentum": {
@@ -3239,16 +3259,16 @@
           "bicara": 4
         },
         "relatif": {
-          "arah": -0.57,
+          "arah": -0.58,
           "bicara": 2
         },
-        "derivatif": {
-          "arah": -0.35,
-          "bicara": 3
-        },
         "mikrostruktur": {
-          "arah": -0.35,
+          "arah": 0.35,
           "bicara": 1
+        },
+        "derivatif": {
+          "arah": -0.37,
+          "bicara": 2
         }
       },
       "params": [
@@ -3256,9 +3276,9 @@
           "param": "macd",
           "domain": "momentum",
           "lapis": "inti",
-          "nilai": -0.145,
+          "nilai": -0.146,
           "arah": -0.98,
-          "ket": "MACD histogram -0.145% dari harga dan menyempit — momentum menipis"
+          "ket": "MACD histogram -0.146% dari harga dan menyempit — momentum menipis"
         },
         {
           "param": "adx",
@@ -3272,7 +3292,7 @@
           "param": "bollinger",
           "domain": "volatilitas",
           "lapis": "inti",
-          "nilai": -0.393,
+          "nilai": -0.394,
           "arah": 0.5,
           "ket": "Bollinger %B -0.39 — menembus band bawah: oversold, pantulan mengintai · lebar band 4.7%"
         },
@@ -3282,7 +3302,7 @@
           "lapis": "inti",
           "nilai": -3.79,
           "arah": -1,
-          "ket": "harga di bawah VWAP-24j 1.401411 (-3.79%) — menyimpang jauh dari rata-rata tertimbang volume; gravitasi menarik balik"
+          "ket": "harga di bawah VWAP-24j 1.401328 (-3.79%) — menyimpang jauh dari rata-rata tertimbang volume; gravitasi menarik balik"
         },
         {
           "param": "obv",
@@ -3328,25 +3348,25 @@
           "param": "relatif",
           "domain": "relatif",
           "lapis": "inti",
-          "nilai": -3.32,
+          "nilai": -3.34,
           "arah": -0.54,
-          "ket": "kekuatan relatif 24 jam: LEBIH LEMAH dari BTC 3.32% (koin -6.02% vs BTC -2.70%) — penunggang beban; dana meninggalkan koin ini"
+          "ket": "kekuatan relatif 24 jam: LEBIH LEMAH dari BTC 3.34% (koin -6.02% vs BTC -2.68%) — penunggang beban; dana meninggalkan koin ini"
         },
         {
           "param": "funding",
           "domain": "derivatif",
           "lapis": "inti",
-          "nilai": -0.0026,
+          "nilai": -0.0027,
           "arah": 0,
-          "ket": "funding futures -0.0026% per interval — short membayar — bearish tidak ramai"
+          "ket": "funding futures -0.0027% per interval — short membayar — bearish tidak ramai"
         },
         {
           "param": "oi",
           "domain": "derivatif",
           "lapis": "inti",
-          "nilai": 92.6,
-          "arah": -0.3,
-          "ket": "open interest $92.6 juta · Δ-8.26% sejak denyut lalu — OI menyusut saat harga naik — naik tanpa dana baru (rapuh)"
+          "nilai": 92.4,
+          "arah": 0,
+          "ket": "open interest $92.4 juta · Δ-0.14% sejak denyut lalu — OI stabil — posisi tidak berputar berat"
         },
         {
           "param": "ema1h",
@@ -3368,9 +3388,9 @@
           "param": "roc12",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -4.84,
+          "nilai": -4.85,
           "arah": -0.9,
-          "ket": "ROC-12j -4.84% — turun terukur"
+          "ket": "ROC-12j -4.85% — turun terukur"
         },
         {
           "param": "roc48",
@@ -3384,7 +3404,7 @@
           "param": "stoch",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 8.3,
+          "nilai": 8.1,
           "arah": 0.35,
           "ket": "Stoch %K 8 / %D 26 — jenuh jual · %K menekun turun — PERPUTARAN %K baru"
         },
@@ -3393,7 +3413,7 @@
           "domain": "aliran",
           "lapis": "observasi",
           "nilai": 31.1,
-          "arah": -0.72,
+          "arah": -0.73,
           "ket": "MFI-14 31 — arus keluar dominan"
         },
         {
@@ -3408,7 +3428,7 @@
           "param": "jarakEkstrem",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 15.29,
+          "nilai": 15.31,
           "arah": -1,
           "ket": "jarak 10 hari: −15.8% dari puncak / +0.5% dari lantai — menempel lantai 10 hari (area akumulasi berisiko)"
         },
@@ -3424,9 +3444,9 @@
           "param": "volZ",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 0.62,
-          "arah": -0.28,
-          "ket": "volume 24 jam +0.62σ dari rata 30 hari, taker-buy 49% — volume tenang"
+          "nilai": 0.63,
+          "arah": -0.29,
+          "ket": "volume 24 jam +0.63σ dari rata 30 hari, taker-buy 49% — volume tenang"
         },
         {
           "param": "bodyRatio",
@@ -3504,17 +3524,17 @@
           "param": "fundTren",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": -0.0026,
+          "nilai": -0.0027,
           "arah": 0.02,
-          "ket": "funding MENDINGIN (-0.0026% vs rata3) — tingkat keanggotaan kerumunan stabil"
+          "ket": "funding MENDINGIN (-0.0027% vs rata3) — tingkat keanggotaan kerumunan stabil"
         },
         {
           "param": "bukuImbalans",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 0.06,
-          "arah": 0.1,
-          "ket": "buku 1%: BID menumpuk 6% (imbalance +0.06) — buku seimbang — arah dari aliran, bukan tumpukan"
+          "nilai": 0.051,
+          "arah": 0.08,
+          "ket": "buku 1%: BID menumpuk 5% (imbalance +0.05) — buku seimbang — arah dari aliran, bukan tumpukan"
         },
         {
           "param": "bukuSpread",
@@ -3528,33 +3548,33 @@
           "param": "bukuKedalaman",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 1.13,
-          "arah": 0.1,
-          "ket": "kedalaman 50 level: $789rb bid vs $700rb ask (rasio 1.13) — kedalaman berimbang"
+          "nilai": 1.11,
+          "arah": 0.09,
+          "ket": "kedalaman 50 level: $781rb bid vs $706rb ask (rasio 1.11) — kedalaman berimbang"
         },
         {
           "param": "bukuDinding",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 1.3527,
-          "arah": -0.35,
-          "ket": "dinding terbesar DI SISI ASK $278rb di 1.352700 (0.29% dari mid) — dinding dekat: magnet pergerakan jangka pendek"
+          "nilai": 1.3435,
+          "arah": 0.35,
+          "ket": "dinding terbesar DI SISI BID $268rb di 1.343500 (0.29% dari mid) — dinding dekat: magnet pergerakan jangka pendek"
         },
         {
           "param": "persenChg",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": -5.9,
-          "arah": -0.61,
-          "ket": "perubahan 24j -5.90% — persentil 25 dari 485 swap USDT OKX (tengah kawanan); median pasar -3.87%"
+          "nilai": -6.06,
+          "arah": -0.62,
+          "ket": "perubahan 24j -6.06% — persentil 27 dari 485 swap USDT OKX (tengah kawanan); median pasar -4.07%"
         },
         {
           "param": "persenVol",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": 427.4,
+          "nilai": 427.2,
           "arah": 0,
-          "ket": "volume swap 24j $427.4jt — persentil 99 dari kawasan (pusat perhatian dana hari ini)"
+          "ket": "volume swap 24j $427.2jt — persentil 99 dari kawasan (pusat perhatian dana hari ini)"
         },
         {
           "param": "sesi",
@@ -3592,41 +3612,41 @@
           "param": "rsi1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 38.4,
+          "nilai": 38.3,
           "arah": -0.53,
-          "ket": "RSI-14 harian 38.4 — momentum penjual dominan"
+          "ket": "RSI-14 harian 38.3 — momentum penjual dominan"
         },
         {
           "param": "macd1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -1.456,
+          "nilai": -1.465,
           "arah": -1,
-          "ket": "MACD harian: histogram -1.456% harga — momentum harian bearish; rangka waktu besar menekan"
+          "ket": "MACD harian: histogram -1.465% harga — momentum harian bearish; rangka waktu besar menekan"
         },
         {
           "param": "donchian30d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 24.8,
-          "arah": -0.4,
-          "ket": "posisi 25% rentang 30 hari (Donchian) — kawasan bawah rentang: tekanan berlanjut"
+          "nilai": 24.4,
+          "arah": -0.41,
+          "ket": "posisi 24% rentang 30 hari (Donchian) — kawasan bawah rentang: tekanan berlanjut"
         },
         {
           "param": "jarak90d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": -0.85,
+          "nilai": -0.62,
           "arah": 0.03,
-          "ket": "kuartalan: −26.0% dari puncak 90 hari / +26.9% dari lantai — ruang dua arah lebar dalam skala kuartal"
+          "ket": "kuartalan: −26.2% dari puncak 90 hari / +26.8% dari lantai — ruang dua arah lebar dalam skala kuartal"
         },
         {
           "param": "momen30d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -4.82,
-          "arah": -0.37,
-          "ket": "momentum bulanan 30 hari -4.8% — langkah bulanan normal"
+          "nilai": -4.93,
+          "arah": -0.38,
+          "ket": "momentum bulanan 30 hari -4.9% — langkah bulanan normal"
         },
         {
           "param": "streak1d",
@@ -3640,23 +3660,23 @@
           "param": "volRasio7d30d",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 0.68,
+          "nilai": 0.69,
           "arah": 0,
-          "ket": "volatilitas realized 7d/30d 0.68× — MENYUSUT: kompresi volatilitas; letupan menunggu arah"
+          "ket": "volatilitas realized 7d/30d 0.69× — MENYUSUT: kompresi volatilitas; letupan menunggu arah"
         },
         {
           "param": "basisPct",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": 0,
-          "arah": 0,
-          "ket": "basis perp-vs-spot +0.000% — basis normal"
+          "nilai": -0.156,
+          "arah": -0.14,
+          "ket": "basis perp-vs-spot -0.156% — basis normal"
         },
         {
           "param": "jamFunding",
           "domain": "kalender",
           "lapis": "observasi",
-          "nilai": 8.09,
+          "nilai": 8.07,
           "arah": 0,
           "ket": "8.1 jam menuju pembayaran funding berikutnya — jarak funding normal"
         },
@@ -3680,9 +3700,9 @@
           "param": "lsTren",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": 0.35,
+          "nilai": 0.33,
           "arah": -0.4,
-          "ket": "kerumunan akun MEMBESAR (Δrasio +0.35 sejak 48 jam) — posisi baru mengikuti tren: bahan bakar lanjutan TAPI juga bahan likuidasi"
+          "ket": "kerumunan akun MEMBESAR (Δrasio +0.33 sejak 48 jam) — posisi baru mengikuti tren: bahan bakar lanjutan TAPI juga bahan likuidasi"
         },
         {
           "param": "lsTaker",
@@ -3704,9 +3724,9 @@
           "param": "garchSigma",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 5.3,
+          "nilai": 5.31,
           "arah": 0,
-          "ket": "GARCH(1,1): sigma 24 jam ±5.3% — ukuran posisi & lebar stop ditetapkan dari sini"
+          "ket": "GARCH(1,1): sigma 24 jam ±5.31% — ukuran posisi & lebar stop ditetapkan dari sini"
         },
         {
           "param": "betaBTC",
@@ -3714,7 +3734,7 @@
           "lapis": "observasi",
           "nilai": 1.42,
           "arah": 0,
-          "ket": "beta vs BTC 90 jam 1.42 (R² 0.78) — amplifier pasar: naik lebih tinggi, jatuh lebih dalam"
+          "ket": "beta vs BTC 90 jam 1.42 (R² 0.77) — amplifier pasar: naik lebih tinggi, jatuh lebih dalam"
         },
         {
           "param": "divRSI",
@@ -3728,7 +3748,7 @@
           "param": "pocJarak",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 8.16,
+          "nilai": 8.17,
           "arah": 0.3,
           "ket": "POC volume 48 jam 1.458387 (di atas harga — magnet tarik naik)"
         },
@@ -3736,7 +3756,7 @@
           "param": "mcPnaik",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 40.3,
+          "nilai": 40.4,
           "arah": -0.23,
           "ket": "Monte Carlo 2.000 lintasan: peluang naik dalam 24 jam 40% — distribusi condong turun"
         },
@@ -3746,15 +3766,15 @@
           "lapis": "observasi",
           "nilai": 0,
           "arah": 0,
-          "ket": "funding×ΔOI: 0×-0.3 — campur"
+          "ket": "funding×ΔOI: 0×0 — campur"
         },
         {
           "param": "ixVolAtr",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": -0.141,
+          "nilai": -0.143,
           "arah": -0.14,
-          "ket": "volume×rezim-ATR: -0.283 × persentil 0.94 — lonjakan volume DI tengah volatilitas tinggi: gerak bermakna tapi licin"
+          "ket": "volume×rezim-ATR: -0.286 × persentil 0.94 — lonjakan volume DI tengah volatilitas tinggi: gerak bermakna tapi licin"
         },
         {
           "param": "ixTrenFunding",
@@ -3768,17 +3788,17 @@
           "param": "ixBukuTren",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": -0.115,
-          "arah": -0.12,
-          "ket": "buku×tren1h: 0.096×-1 — buku tak memihak"
+          "nilai": -0.097,
+          "arah": -0.1,
+          "ket": "buku×tren1h: 0.081×-1 — buku tak memihak"
         },
         {
           "param": "ixDonchianVol",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": 0.125,
+          "nilai": 0.129,
           "arah": 0.13,
-          "ket": "breakout×volume: donchian -0.403 × volZ -0.283 — konfirmasi tipis"
+          "ket": "breakout×volume: donchian -0.409 × volZ -0.286 — konfirmasi tipis"
         },
         {
           "param": "ixFlowTren",
@@ -3792,12 +3812,12 @@
     },
     {
       "simbol": "DOGE",
-      "harga": 0.08289,
+      "harga": 0.08284,
       "rezim": "TURUN",
       "atrPct": 1.55,
-      "fundingPct": 0.006,
-      "oiJuta": 91,
-      "oiDeltaPct": -4.93,
+      "fundingPct": 0.0059,
+      "oiJuta": 90.8,
+      "oiDeltaPct": -0.22,
       "jumlahParam": 67,
       "konsensus": {
         "momentum": {
@@ -3809,7 +3829,7 @@
           "bicara": 11
         },
         "volatilitas": {
-          "arah": 0.24,
+          "arah": 0.25,
           "bicara": 3
         },
         "aliran": {
@@ -3817,16 +3837,16 @@
           "bicara": 5
         },
         "relatif": {
-          "arah": -0.64,
+          "arah": -0.65,
           "bicara": 2
-        },
-        "derivatif": {
-          "arah": -0.35,
-          "bicara": 3
         },
         "mikrostruktur": {
           "arah": 0.35,
           "bicara": 1
+        },
+        "derivatif": {
+          "arah": -0.38,
+          "bicara": 2
         },
         "interaksi": {
           "arah": 0.03,
@@ -3838,9 +3858,9 @@
           "param": "macd",
           "domain": "momentum",
           "lapis": "inti",
-          "nilai": -0.272,
+          "nilai": -0.276,
           "arah": -1,
-          "ket": "MACD histogram -0.272% dari harga dan menyempit — momentum menipis"
+          "ket": "MACD histogram -0.276% dari harga dan menyempit — momentum menipis"
         },
         {
           "param": "adx",
@@ -3854,7 +3874,7 @@
           "param": "bollinger",
           "domain": "volatilitas",
           "lapis": "inti",
-          "nilai": -0.388,
+          "nilai": -0.39,
           "arah": 0.5,
           "ket": "Bollinger %B -0.39 — menembus band bawah: oversold, pantulan mengintai · lebar band 6.3%"
         },
@@ -3862,9 +3882,9 @@
           "param": "vwap",
           "domain": "aliran",
           "lapis": "inti",
-          "nilai": -4.33,
+          "nilai": -4.38,
           "arah": -1,
-          "ket": "harga di bawah VWAP-24j 0.08664078 (-4.33%) — menyimpang jauh dari rata-rata tertimbang volume; gravitasi menarik balik"
+          "ket": "harga di bawah VWAP-24j 0.08663366 (-4.38%) — menyimpang jauh dari rata-rata tertimbang volume; gravitasi menarik balik"
         },
         {
           "param": "obv",
@@ -3910,25 +3930,25 @@
           "param": "relatif",
           "domain": "relatif",
           "lapis": "inti",
-          "nilai": -4,
-          "arah": -0.62,
-          "ket": "kekuatan relatif 24 jam: LEBIH LEMAH dari BTC 4.00% (koin -6.70% vs BTC -2.70%) — penunggang beban; dana meninggalkan koin ini"
+          "nilai": -4.08,
+          "arah": -0.63,
+          "ket": "kekuatan relatif 24 jam: LEBIH LEMAH dari BTC 4.08% (koin -6.75% vs BTC -2.68%) — penunggang beban; dana meninggalkan koin ini"
         },
         {
           "param": "funding",
           "domain": "derivatif",
           "lapis": "inti",
-          "nilai": 0.006,
+          "nilai": 0.0059,
           "arah": 0,
-          "ket": "funding futures +0.0060% per interval — long membayar normal — tidak ada kerumunan ekstrem"
+          "ket": "funding futures +0.0059% per interval — long membayar normal — tidak ada kerumunan ekstrem"
         },
         {
           "param": "oi",
           "domain": "derivatif",
           "lapis": "inti",
-          "nilai": 91,
-          "arah": -0.3,
-          "ket": "open interest $91.0 juta · Δ-4.93% sejak denyut lalu — OI menyusut saat harga naik — naik tanpa dana baru (rapuh)"
+          "nilai": 90.8,
+          "arah": 0,
+          "ket": "open interest $90.8 juta · Δ-0.22% sejak denyut lalu — OI stabil — posisi tidak berputar berat"
         },
         {
           "param": "ema1h",
@@ -3942,33 +3962,33 @@
           "param": "rsi1h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 18.6,
+          "nilai": 18.5,
           "arah": 0.4,
-          "ket": "RSI-14 18.6 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
+          "ket": "RSI-14 18.5 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
         },
         {
           "param": "roc12",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -6.44,
+          "nilai": -6.5,
           "arah": -0.96,
-          "ket": "ROC-12j -6.44% — turun terukur"
+          "ket": "ROC-12j -6.50% — turun terukur"
         },
         {
           "param": "roc48",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -13.11,
+          "nilai": -13.17,
           "arah": -1,
-          "ket": "ROC-48j -13.11% — runtuhan tajam; pantulan butuh konfirmasi"
+          "ket": "ROC-48j -13.17% — runtuhan tajam; pantulan butuh konfirmasi"
         },
         {
           "param": "stoch",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 12.1,
+          "nilai": 11.5,
           "arah": 0.35,
-          "ket": "Stoch %K 12 / %D 32 — jenuh jual · %K menekun turun — PERPUTARAN %K baru"
+          "ket": "Stoch %K 11 / %D 32 — jenuh jual · %K menekun turun — PERPUTARAN %K baru"
         },
         {
           "param": "mfi",
@@ -3982,17 +4002,17 @@
           "param": "cci",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -285,
+          "nilai": -286,
           "arah": -1,
-          "ket": "CCI-20 -285 — jauh di bawah statistik"
+          "ket": "CCI-20 -286 — jauh di bawah statistik"
         },
         {
           "param": "jarakEkstrem",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 17.38,
+          "nilai": 17.52,
           "arah": -1,
-          "ket": "jarak 10 hari: −18.5% dari puncak / +1.1% dari lantai — menempel lantai 10 hari (area akumulasi berisiko)"
+          "ket": "jarak 10 hari: −18.5% dari puncak / +1.0% dari lantai — menempel lantai 10 hari (area akumulasi berisiko)"
         },
         {
           "param": "atrPctile",
@@ -4014,9 +4034,9 @@
           "param": "bodyRatio",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 0.4,
+          "nilai": 0.41,
           "arah": -0.09,
-          "ket": "rata badan lilin 40% rentang, 6/12 hijau — lilin normal"
+          "ket": "rata badan lilin 41% rentang, 6/12 hijau — lilin normal"
         },
         {
           "param": "ema4h",
@@ -4030,23 +4050,23 @@
           "param": "macd4h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -0.987,
+          "nilai": -0.991,
           "arah": -1,
-          "ket": "MACD 4h: histogram -0.987% harga — menyempit — momentum menipis; rangka waktu besar bearish"
+          "ket": "MACD 4h: histogram -0.991% harga — menyempit — momentum menipis; rangka waktu besar bearish"
         },
         {
           "param": "rsi4h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 19.6,
+          "nilai": 19.5,
           "arah": 0.4,
-          "ket": "RSI-14 19.6 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
+          "ket": "RSI-14 19.5 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
         },
         {
           "param": "bb4h",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": -0.09,
+          "nilai": -0.092,
           "arah": 0.5,
           "ket": "Bollinger %B 4h -0.09 — menembus band bawah: oversold, pantulan mengintai · lebar band 16.2%"
         },
@@ -4086,17 +4106,17 @@
           "param": "fundTren",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": -0.0009,
+          "nilai": -0.001,
           "arah": 0.01,
-          "ket": "funding MENDINGIN (-0.0009% vs rata3) — tingkat keanggotaan kerumunan stabil"
+          "ket": "funding MENDINGIN (-0.0010% vs rata3) — tingkat keanggotaan kerumunan stabil"
         },
         {
           "param": "bukuImbalans",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 0.061,
-          "arah": 0.1,
-          "ket": "buku 1%: BID menumpuk 6% (imbalance +0.06) — buku seimbang — arah dari aliran, bukan tumpukan"
+          "nilai": -0.006,
+          "arah": -0.01,
+          "ket": "buku 1%: ASK menumpuk 1% (imbalance -0.01) — buku seimbang — arah dari aliran, bukan tumpukan"
         },
         {
           "param": "bukuSpread",
@@ -4110,33 +4130,33 @@
           "param": "bukuKedalaman",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 1.13,
-          "arah": 0.1,
-          "ket": "kedalaman 50 level: $1.1jt bid vs $966rb ask (rasio 1.13) — kedalaman berimbang"
+          "nilai": 0.99,
+          "arah": -0.01,
+          "ket": "kedalaman 50 level: $998rb bid vs $1.0jt ask (rasio 0.99) — kedalaman berimbang"
         },
         {
           "param": "bukuDinding",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 0.0826,
+          "nilai": 0.0825,
           "arah": 0.35,
-          "ket": "dinding terbesar DI SISI BID $261rb di 0.08260000 (0.38% dari mid) — dinding dekat: magnet pergerakan jangka pendek"
+          "ket": "dinding terbesar DI SISI BID $284rb di 0.08250000 (0.36% dari mid) — dinding dekat: magnet pergerakan jangka pendek"
         },
         {
           "param": "persenChg",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": -6.61,
-          "arah": -0.66,
-          "ket": "perubahan 24j -6.61% — persentil 18 dari 485 swap USDT OKX (tengah kawanan); median pasar -3.87%"
+          "nilai": -6.83,
+          "arah": -0.68,
+          "ket": "perubahan 24j -6.83% — persentil 18 dari 485 swap USDT OKX (tengah kawanan); median pasar -4.07%"
         },
         {
           "param": "persenVol",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": 390.2,
+          "nilai": 389.7,
           "arah": 0,
-          "ket": "volume swap 24j $390.2jt — persentil 99 dari kawasan (pusat perhatian dana hari ini)"
+          "ket": "volume swap 24j $389.7jt — persentil 99 dari kawasan (pusat perhatian dana hari ini)"
         },
         {
           "param": "sesi",
@@ -4174,41 +4194,41 @@
           "param": "rsi1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 37.5,
+          "nilai": 37.4,
           "arah": -0.57,
-          "ket": "RSI-14 harian 37.5 — momentum penjual dominan"
+          "ket": "RSI-14 harian 37.4 — momentum penjual dominan"
         },
         {
           "param": "macd1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -1.693,
+          "nilai": -1.705,
           "arah": -1,
-          "ket": "MACD harian: histogram -1.693% harga — momentum harian bearish; rangka waktu besar menekan"
+          "ket": "MACD harian: histogram -1.705% harga — momentum harian bearish; rangka waktu besar menekan"
         },
         {
           "param": "donchian30d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 16.7,
-          "arah": -0.53,
-          "ket": "posisi 17% rentang 30 hari (Donchian) — kawasan bawah rentang: tekanan berlanjut"
+          "nilai": 16.2,
+          "arah": -0.54,
+          "ket": "posisi 16% rentang 30 hari (Donchian) — kawasan bawah rentang: tekanan berlanjut"
         },
         {
           "param": "jarak90d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 9.32,
-          "arah": -0.37,
-          "ket": "kuartalan: −27.7% dari puncak 90 hari / +18.4% dari lantai — ruang dua arah lebar dalam skala kuartal"
+          "nilai": 9.63,
+          "arah": -0.39,
+          "ket": "kuartalan: −27.9% dari puncak 90 hari / +18.3% dari lantai — ruang dua arah lebar dalam skala kuartal"
         },
         {
           "param": "momen30d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -7.93,
-          "arah": -0.56,
-          "ket": "momentum bulanan 30 hari -7.9% — langkah bulanan normal"
+          "nilai": -8.06,
+          "arah": -0.57,
+          "ket": "momentum bulanan 30 hari -8.1% — langkah bulanan normal"
         },
         {
           "param": "streak1d",
@@ -4222,23 +4242,23 @@
           "param": "volRasio7d30d",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 0.75,
+          "nilai": 0.76,
           "arah": 0,
-          "ket": "volatilitas realized 7d/30d 0.75× — stabil antar skala"
+          "ket": "volatilitas realized 7d/30d 0.76× — stabil antar skala"
         },
         {
           "param": "basisPct",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": 0.012,
-          "arah": 0.01,
-          "ket": "basis perp-vs-spot +0.012% — basis normal"
+          "nilai": -0.157,
+          "arah": -0.14,
+          "ket": "basis perp-vs-spot -0.157% — basis normal"
         },
         {
           "param": "jamFunding",
           "domain": "kalender",
           "lapis": "observasi",
-          "nilai": 8.09,
+          "nilai": 8.07,
           "arah": 0,
           "ket": "8.1 jam menuju pembayaran funding berikutnya — jarak funding normal"
         },
@@ -4246,25 +4266,25 @@
           "param": "fundVsBtc",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": -0.0003,
+          "nilai": -0.0004,
           "arah": 0,
-          "ket": "funding relatif vs BTC -0.0003% — sejajar suhu pasar"
+          "ket": "funding relatif vs BTC -0.0004% — sejajar suhu pasar"
         },
         {
           "param": "lsAkun",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": 4.57,
+          "nilai": 4.55,
           "arah": -0.35,
-          "ket": "rasio akun long/short 4.57 (OKX swap DOGE) — kerumunan akun LONG ramai: bahan long-squeeze bila harga gagal naik"
+          "ket": "rasio akun long/short 4.55 (OKX swap DOGE) — kerumunan akun LONG ramai: bahan long-squeeze bila harga gagal naik"
         },
         {
           "param": "lsTren",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": 1.44,
+          "nilai": 1.4,
           "arah": -0.4,
-          "ket": "kerumunan akun MEMBESAR (Δrasio +1.44 sejak 48 jam) — posisi baru mengikuti tren: bahan bakar lanjutan TAPI juga bahan likuidasi"
+          "ket": "kerumunan akun MEMBESAR (Δrasio +1.40 sejak 48 jam) — posisi baru mengikuti tren: bahan bakar lanjutan TAPI juga bahan likuidasi"
         },
         {
           "param": "lsTaker",
@@ -4278,25 +4298,25 @@
           "param": "bukuGradien",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": -0.013,
-          "arah": -0.02,
-          "ket": "gradien buku: distribusi merata — bid depan 6% vs ask depan 7% dari massa 1%"
+          "nilai": 0.059,
+          "arah": 0.11,
+          "ket": "gradien buku: distribusi merata — bid depan 12% vs ask depan 6% dari massa 1%"
         },
         {
           "param": "garchSigma",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 3.83,
+          "nilai": 3.85,
           "arah": 0,
-          "ket": "GARCH(1,1): sigma 24 jam ±3.83% — ukuran posisi & lebar stop ditetapkan dari sini"
+          "ket": "GARCH(1,1): sigma 24 jam ±3.85% — ukuran posisi & lebar stop ditetapkan dari sini"
         },
         {
           "param": "betaBTC",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": 1.6,
+          "nilai": 1.61,
           "arah": 0,
-          "ket": "beta vs BTC 90 jam 1.60 (R² 0.68) — amplifier pasar: naik lebih tinggi, jatuh lebih dalam"
+          "ket": "beta vs BTC 90 jam 1.61 (R² 0.67) — amplifier pasar: naik lebih tinggi, jatuh lebih dalam"
         },
         {
           "param": "divRSI",
@@ -4310,7 +4330,7 @@
           "param": "pocJarak",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 8.9,
+          "nilai": 8.97,
           "arah": 0.3,
           "ket": "POC volume 48 jam 0.09027104 (di atas harga — magnet tarik naik)"
         },
@@ -4318,9 +4338,9 @@
           "param": "mcPnaik",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 38.5,
-          "arah": -0.28,
-          "ket": "Monte Carlo 2.000 lintasan: peluang naik dalam 24 jam 39% — distribusi condong turun"
+          "nilai": 39.9,
+          "arah": -0.24,
+          "ket": "Monte Carlo 2.000 lintasan: peluang naik dalam 24 jam 40% — distribusi condong turun"
         },
         {
           "param": "ixFundingOI",
@@ -4328,7 +4348,7 @@
           "lapis": "observasi",
           "nilai": 0,
           "arah": 0,
-          "ket": "funding×ΔOI: 0×-0.3 — campur"
+          "ket": "funding×ΔOI: 0×0 — campur"
         },
         {
           "param": "ixVolAtr",
@@ -4350,17 +4370,17 @@
           "param": "ixBukuTren",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": -0.118,
-          "arah": -0.12,
-          "ket": "buku×tren1h: 0.098×-1 — buku tak memihak"
+          "nilai": 0.011,
+          "arah": 0.01,
+          "ket": "buku×tren1h: -0.009×-1 — buku tak memihak"
         },
         {
           "param": "ixDonchianVol",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": 0.352,
-          "arah": 0.35,
-          "ket": "breakout×volume: donchian -0.533 × volZ -0.6 — gerak ke ujung rentang DUKUNG volume: breakout autentik"
+          "nilai": 0.356,
+          "arah": 0.36,
+          "ket": "breakout×volume: donchian -0.54 × volZ -0.6 — gerak ke ujung rentang DUKUNG volume: breakout autentik"
         },
         {
           "param": "ixFlowTren",
@@ -4374,12 +4394,12 @@
     },
     {
       "simbol": "ADA",
-      "harga": 0.2323,
+      "harga": 0.232,
       "rezim": "TURUN",
       "atrPct": 1.94,
-      "fundingPct": 0.0041,
-      "oiJuta": 31,
-      "oiDeltaPct": -4.93,
+      "fundingPct": 0.0042,
+      "oiJuta": 30.9,
+      "oiDeltaPct": -0.21,
       "jumlahParam": 67,
       "konsensus": {
         "momentum": {
@@ -4399,20 +4419,16 @@
           "bicara": 3
         },
         "relatif": {
-          "arah": -0.81,
+          "arah": -0.82,
           "bicara": 2
         },
-        "derivatif": {
-          "arah": -0.35,
-          "bicara": 3
-        },
         "mikrostruktur": {
-          "arah": -0.24,
-          "bicara": 3
-        },
-        "interaksi": {
-          "arah": 0.25,
+          "arah": -0.35,
           "bicara": 1
+        },
+        "derivatif": {
+          "arah": -0.38,
+          "bicara": 2
         }
       },
       "params": [
@@ -4420,9 +4436,9 @@
           "param": "macd",
           "domain": "momentum",
           "lapis": "inti",
-          "nilai": -0.575,
+          "nilai": -0.584,
           "arah": -1,
-          "ket": "MACD histogram -0.575% dari harga dan menyempit — momentum menipis"
+          "ket": "MACD histogram -0.584% dari harga dan menyempit — momentum menipis"
         },
         {
           "param": "adx",
@@ -4436,17 +4452,17 @@
           "param": "bollinger",
           "domain": "volatilitas",
           "lapis": "inti",
-          "nilai": -0.422,
+          "nilai": -0.426,
           "arah": 0.5,
-          "ket": "Bollinger %B -0.42 — menembus band bawah: oversold, pantulan mengintai · lebar band 8.4%"
+          "ket": "Bollinger %B -0.43 — menembus band bawah: oversold, pantulan mengintai · lebar band 8.5%"
         },
         {
           "param": "vwap",
           "domain": "aliran",
           "lapis": "inti",
-          "nilai": -6.21,
+          "nilai": -6.31,
           "arah": -1,
-          "ket": "harga di bawah VWAP-24j 0.2476940 (-6.21%) — menyimpang jauh dari rata-rata tertimbang volume; gravitasi menarik balik"
+          "ket": "harga di bawah VWAP-24j 0.2476283 (-6.31%) — menyimpang jauh dari rata-rata tertimbang volume; gravitasi menarik balik"
         },
         {
           "param": "obv",
@@ -4470,7 +4486,7 @@
           "lapis": "inti",
           "nilai": "tanpa pola menonjol — lilin biasa",
           "arah": 0,
-          "ket": "pola lilin: tanpa pola menonjol — lilin biasa (badan 88% rentang lilin)"
+          "ket": "pola lilin: tanpa pola menonjol — lilin biasa (badan 90% rentang lilin)"
         },
         {
           "param": "konsist",
@@ -4492,25 +4508,25 @@
           "param": "relatif",
           "domain": "relatif",
           "lapis": "inti",
-          "nilai": -6.63,
-          "arah": -0.83,
-          "ket": "kekuatan relatif 24 jam: LEBIH LEMAH dari BTC 6.63% (koin -9.33% vs BTC -2.70%) — penunggang beban; dana meninggalkan koin ini"
+          "nilai": -6.77,
+          "arah": -0.84,
+          "ket": "kekuatan relatif 24 jam: LEBIH LEMAH dari BTC 6.77% (koin -9.45% vs BTC -2.68%) — penunggang beban; dana meninggalkan koin ini"
         },
         {
           "param": "funding",
           "domain": "derivatif",
           "lapis": "inti",
-          "nilai": 0.0041,
+          "nilai": 0.0042,
           "arah": 0,
-          "ket": "funding futures +0.0041% per interval — long membayar normal — tidak ada kerumunan ekstrem"
+          "ket": "funding futures +0.0042% per interval — long membayar normal — tidak ada kerumunan ekstrem"
         },
         {
           "param": "oi",
           "domain": "derivatif",
           "lapis": "inti",
-          "nilai": 31,
-          "arah": -0.3,
-          "ket": "open interest $31.0 juta · Δ-4.93% sejak denyut lalu — OI menyusut saat harga naik — naik tanpa dana baru (rapuh)"
+          "nilai": 30.9,
+          "arah": 0,
+          "ket": "open interest $30.9 juta · Δ-0.21% sejak denyut lalu — OI stabil — posisi tidak berputar berat"
         },
         {
           "param": "ema1h",
@@ -4524,33 +4540,33 @@
           "param": "rsi1h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 17.5,
+          "nilai": 17.4,
           "arah": 0.4,
-          "ket": "RSI-14 17.5 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
+          "ket": "RSI-14 17.4 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
         },
         {
           "param": "roc12",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -8.65,
+          "nilai": -8.77,
           "arah": -0.99,
-          "ket": "ROC-12j -8.65% — runtuhan tajam; pantulan butuh konfirmasi"
+          "ket": "ROC-12j -8.77% — runtuhan tajam; pantulan butuh konfirmasi"
         },
         {
           "param": "roc48",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -14.44,
+          "nilai": -14.55,
           "arah": -1,
-          "ket": "ROC-48j -14.44% — runtuhan tajam; pantulan butuh konfirmasi"
+          "ket": "ROC-48j -14.55% — runtuhan tajam; pantulan butuh konfirmasi"
         },
         {
           "param": "stoch",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 6.5,
+          "nilai": 5.4,
           "arah": 0.35,
-          "ket": "Stoch %K 7 / %D 16 — jenuh jual · %K menekun turun — PERPUTARAN %K baru"
+          "ket": "Stoch %K 5 / %D 15 — jenuh jual · %K menekun turun — PERPUTARAN %K baru"
         },
         {
           "param": "mfi",
@@ -4564,17 +4580,17 @@
           "param": "cci",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -333,
+          "nilai": -334,
           "arah": -1,
-          "ket": "CCI-20 -333 — jauh di bawah statistik"
+          "ket": "CCI-20 -334 — jauh di bawah statistik"
         },
         {
           "param": "jarakEkstrem",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 20.79,
+          "nilai": 21.08,
           "arah": -1,
-          "ket": "jarak 10 hari: −21.6% dari puncak / +0.8% dari lantai — menempel lantai 10 hari (area akumulasi berisiko)"
+          "ket": "jarak 10 hari: −21.7% dari puncak / +0.6% dari lantai — menempel lantai 10 hari (area akumulasi berisiko)"
         },
         {
           "param": "atrPctile",
@@ -4582,22 +4598,22 @@
           "lapis": "observasi",
           "nilai": 0.97,
           "arah": 0,
-          "ket": "ATR14 1.98% harga — persentil 97 dari ~35 pengukuran 10 hari: volatilitas EKSTREM (sinyal arah melempar; ukuran posisi dikecilkan)"
+          "ket": "ATR14 1.99% harga — persentil 97 dari ~35 pengukuran 10 hari: volatilitas EKSTREM (sinyal arah melempar; ukuran posisi dikecilkan)"
         },
         {
           "param": "volZ",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 0.1,
+          "nilai": 0.11,
           "arah": -0.05,
-          "ket": "volume 24 jam +0.10σ dari rata 30 hari, taker-buy 48% — volume tenang"
+          "ket": "volume 24 jam +0.11σ dari rata 30 hari, taker-buy 48% — volume tenang"
         },
         {
           "param": "bodyRatio",
           "domain": "momentum",
           "lapis": "observasi",
           "nilai": 0.39,
-          "arah": 0.13,
+          "arah": 0.12,
           "ket": "rata badan lilin 39% rentang, 4/12 hijau — lilin normal"
         },
         {
@@ -4612,25 +4628,25 @@
           "param": "macd4h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -1.417,
+          "nilai": -1.427,
           "arah": -1,
-          "ket": "MACD 4h: histogram -1.417% harga — menyempit — momentum menipis; rangka waktu besar bearish"
+          "ket": "MACD 4h: histogram -1.427% harga — menyempit — momentum menipis; rangka waktu besar bearish"
         },
         {
           "param": "rsi4h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 30,
-          "arah": -0.91,
-          "ket": "RSI-14 30.0 — momentum penjual dominan"
+          "nilai": 29.9,
+          "arah": -0.92,
+          "ket": "RSI-14 29.9 — momentum penjual dominan"
         },
         {
           "param": "bb4h",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": -0.175,
+          "nilai": -0.179,
           "arah": 0.5,
-          "ket": "Bollinger %B 4h -0.17 — menembus band bawah: oversold, pantulan mengintai · lebar band 16.4%"
+          "ket": "Bollinger %B 4h -0.18 — menembus band bawah: oversold, pantulan mengintai · lebar band 16.4%"
         },
         {
           "param": "swing4h",
@@ -4654,7 +4670,7 @@
           "lapis": "observasi",
           "nilai": 1.62,
           "arah": 0,
-          "ket": "ATR 4h ≈ 3.22% vs 1h 1.98% (1.6×) — volatilitas membesar di rangka waktu besar"
+          "ket": "ATR 4h ≈ 3.22% vs 1h 1.99% (1.6×) — volatilitas membesar di rangka waktu besar"
         },
         {
           "param": "fundRata3",
@@ -4668,17 +4684,17 @@
           "param": "fundTren",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": -0.0011,
+          "nilai": -0.0009,
           "arah": 0.01,
-          "ket": "funding MENDINGIN (-0.0011% vs rata3) — tingkat keanggotaan kerumunan stabil"
+          "ket": "funding MENDINGIN (-0.0009% vs rata3) — tingkat keanggotaan kerumunan stabil"
         },
         {
           "param": "bukuImbalans",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": -0.13,
-          "arah": -0.21,
-          "ket": "buku 1%: ASK menumpuk 13% (imbalance -0.13) — buku seimbang — arah dari aliran, bukan tumpukan"
+          "nilai": 0.018,
+          "arah": 0.03,
+          "ket": "buku 1%: BID menumpuk 2% (imbalance +0.02) — buku seimbang — arah dari aliran, bukan tumpukan"
         },
         {
           "param": "bukuSpread",
@@ -4692,9 +4708,9 @@
           "param": "bukuKedalaman",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 0.8,
-          "arah": -0.16,
-          "ket": "kedalaman 50 level: $582rb bid vs $730rb ask (rasio 0.80) — kedalaman berimbang"
+          "nilai": 0.85,
+          "arah": -0.12,
+          "ket": "kedalaman 50 level: $615rb bid vs $719rb ask (rasio 0.85) — kedalaman berimbang"
         },
         {
           "param": "bukuDinding",
@@ -4702,23 +4718,23 @@
           "lapis": "observasi",
           "nilai": 0.2332,
           "arah": -0.35,
-          "ket": "dinding terbesar DI SISI ASK $96rb di 0.2332000 (0.37% dari mid) — dinding dekat: magnet pergerakan jangka pendek"
+          "ket": "dinding terbesar DI SISI ASK $134rb di 0.2332000 (0.54% dari mid) — dinding jauh: penjaga, bukan magnet"
         },
         {
           "param": "persenChg",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": -9.12,
-          "arah": -0.8,
-          "ket": "perubahan 24j -9.12% — persentil 7 dari 485 swap USDT OKX (kelompok TERTINGGAL hari ini — pisau jatuh diwaspadai); median pasar -3.87%"
+          "nilai": -9.42,
+          "arah": -0.81,
+          "ket": "perubahan 24j -9.42% — persentil 6 dari 485 swap USDT OKX (kelompok TERTINGGAL hari ini — pisau jatuh diwaspadai); median pasar -4.07%"
         },
         {
           "param": "persenVol",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": 79.8,
+          "nilai": 79.6,
           "arah": 0,
-          "ket": "volume swap 24j $79.8jt — persentil 94 dari kawasan (pusat perhatian dana hari ini)"
+          "ket": "volume swap 24j $79.6jt — persentil 94 dari kawasan (pusat perhatian dana hari ini)"
         },
         {
           "param": "sesi",
@@ -4756,41 +4772,41 @@
           "param": "rsi1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 46.3,
-          "arah": -0.17,
-          "ket": "RSI-14 harian 46.3 — netral"
+          "nilai": 46.1,
+          "arah": -0.18,
+          "ket": "RSI-14 harian 46.1 — netral"
         },
         {
           "param": "macd1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -0.737,
+          "nilai": -0.749,
           "arah": -1,
-          "ket": "MACD harian: histogram -0.737% harga — momentum harian bearish; rangka waktu besar menekan"
+          "ket": "MACD harian: histogram -0.749% harga — momentum harian bearish; rangka waktu besar menekan"
         },
         {
           "param": "donchian30d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 45.7,
-          "arah": -0.07,
-          "ket": "posisi 46% rentang 30 hari (Donchian) — tengah rentang"
+          "nilai": 45.3,
+          "arah": -0.08,
+          "ket": "posisi 45% rentang 30 hari (Donchian) — tengah rentang"
         },
         {
           "param": "jarak90d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": -12.52,
-          "arah": 0.5,
-          "ket": "kuartalan: −21.5% dari puncak 90 hari / +34.0% dari lantai — ruang dua arah lebar dalam skala kuartal"
+          "nilai": -12.2,
+          "arah": 0.49,
+          "ket": "kuartalan: −21.7% dari puncak 90 hari / +33.9% dari lantai — ruang dua arah lebar dalam skala kuartal"
         },
         {
           "param": "momen30d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 5.88,
-          "arah": 0.44,
-          "ket": "momentum bulanan 30 hari +5.9% — langkah bulanan normal"
+          "nilai": 5.69,
+          "arah": 0.43,
+          "ket": "momentum bulanan 30 hari +5.7% — langkah bulanan normal"
         },
         {
           "param": "streak1d",
@@ -4804,23 +4820,23 @@
           "param": "volRasio7d30d",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 1.14,
+          "nilai": 1.15,
           "arah": 0,
-          "ket": "volatilitas realized 7d/30d 1.14× — stabil antar skala"
+          "ket": "volatilitas realized 7d/30d 1.15× — stabil antar skala"
         },
         {
           "param": "basisPct",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": 0,
-          "arah": 0,
-          "ket": "basis perp-vs-spot +0.000% — basis normal"
+          "nilai": -0.129,
+          "arah": -0.12,
+          "ket": "basis perp-vs-spot -0.129% — basis normal"
         },
         {
           "param": "jamFunding",
           "domain": "kalender",
           "lapis": "observasi",
-          "nilai": 8.09,
+          "nilai": 8.07,
           "arah": 0,
           "ket": "8.1 jam menuju pembayaran funding berikutnya — jarak funding normal"
         },
@@ -4828,17 +4844,17 @@
           "param": "fundVsBtc",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": -0.0022,
+          "nilai": -0.002,
           "arah": 0.01,
-          "ket": "funding relatif vs BTC -0.0022% — sejajar suhu pasar"
+          "ket": "funding relatif vs BTC -0.0020% — sejajar suhu pasar"
         },
         {
           "param": "lsAkun",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": 2.33,
+          "nilai": 2.32,
           "arah": -0.35,
-          "ket": "rasio akun long/short 2.33 (OKX swap ADA) — kerumunan akun LONG ramai: bahan long-squeeze bila harga gagal naik"
+          "ket": "rasio akun long/short 2.32 (OKX swap ADA) — kerumunan akun LONG ramai: bahan long-squeeze bila harga gagal naik"
         },
         {
           "param": "lsTren",
@@ -4860,25 +4876,25 @@
           "param": "bukuGradien",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": -0.034,
-          "arah": -0.06,
-          "ket": "gradien buku: distribusi merata — bid depan 51% vs ask depan 54% dari massa 1%"
+          "nilai": 0.058,
+          "arah": 0.1,
+          "ket": "gradien buku: distribusi merata — bid depan 41% vs ask depan 35% dari massa 1%"
         },
         {
           "param": "garchSigma",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 5.22,
+          "nilai": 5.24,
           "arah": 0,
-          "ket": "GARCH(1,1): sigma 24 jam ±5.22% — ukuran posisi & lebar stop ditetapkan dari sini"
+          "ket": "GARCH(1,1): sigma 24 jam ±5.24% — ukuran posisi & lebar stop ditetapkan dari sini"
         },
         {
           "param": "betaBTC",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": 2.3,
+          "nilai": 2.32,
           "arah": 0,
-          "ket": "beta vs BTC 90 jam 2.30 (R² 0.60) — amplifier pasar: naik lebih tinggi, jatuh lebih dalam"
+          "ket": "beta vs BTC 90 jam 2.32 (R² 0.60) — amplifier pasar: naik lebih tinggi, jatuh lebih dalam"
         },
         {
           "param": "divRSI",
@@ -4892,7 +4908,7 @@
           "param": "pocJarak",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 9.66,
+          "nilai": 9.8,
           "arah": 0.3,
           "ket": "POC volume 48 jam 0.2547437 (di atas harga — magnet tarik naik)"
         },
@@ -4900,9 +4916,9 @@
           "param": "mcPnaik",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 49.4,
-          "arah": -0.01,
-          "ket": "Monte Carlo 2.000 lintasan: peluang naik dalam 24 jam 49% — koin flip statistik"
+          "nilai": 47.5,
+          "arah": -0.06,
+          "ket": "Monte Carlo 2.000 lintasan: peluang naik dalam 24 jam 48% — koin flip statistik"
         },
         {
           "param": "ixFundingOI",
@@ -4910,15 +4926,15 @@
           "lapis": "observasi",
           "nilai": 0,
           "arah": 0,
-          "ket": "funding×ΔOI: 0×-0.3 — campur"
+          "ket": "funding×ΔOI: 0×0 — campur"
         },
         {
           "param": "ixVolAtr",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": -0.024,
-          "arah": -0.02,
-          "ket": "volume×rezim-ATR: -0.047 × persentil 0.97 — lonjakan volume DI tengah volatilitas tinggi: gerak bermakna tapi licin"
+          "nilai": -0.025,
+          "arah": -0.03,
+          "ket": "volume×rezim-ATR: -0.051 × persentil 0.97 — lonjakan volume DI tengah volatilitas tinggi: gerak bermakna tapi licin"
         },
         {
           "param": "ixTrenFunding",
@@ -4932,9 +4948,9 @@
           "param": "ixBukuTren",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": 0.25,
-          "arah": 0.25,
-          "ket": "buku×tren1h: -0.208×-1 — buku mengiyakan tren: jalan mulus, slippage kecil"
+          "nilai": -0.035,
+          "arah": -0.04,
+          "ket": "buku×tren1h: 0.029×-1 — buku tak memihak"
         },
         {
           "param": "ixDonchianVol",
@@ -4942,7 +4958,7 @@
           "lapis": "observasi",
           "nilai": 0.004,
           "arah": 0,
-          "ket": "breakout×volume: donchian -0.069 × volZ -0.047 — konfirmasi tipis"
+          "ket": "breakout×volume: donchian -0.076 × volZ -0.051 — konfirmasi tipis"
         },
         {
           "param": "ixFlowTren",
@@ -4956,12 +4972,12 @@
     },
     {
       "simbol": "AVAX",
-      "harga": 10.025,
+      "harga": 10.012,
       "rezim": "TURUN",
       "atrPct": 2.09,
-      "fundingPct": -0.0078,
+      "fundingPct": -0.0077,
       "oiJuta": 17.1,
-      "oiDeltaPct": -5.08,
+      "oiDeltaPct": -0.36,
       "jumlahParam": 67,
       "konsensus": {
         "momentum": {
@@ -4981,16 +4997,16 @@
           "bicara": 3
         },
         "relatif": {
-          "arah": -0.88,
+          "arah": -0.89,
           "bicara": 2
-        },
-        "derivatif": {
-          "arah": -0.3,
-          "bicara": 3
         },
         "mikrostruktur": {
           "arah": 0.35,
           "bicara": 1
+        },
+        "derivatif": {
+          "arah": -0.25,
+          "bicara": 3
         }
       },
       "params": [
@@ -4998,9 +5014,9 @@
           "param": "macd",
           "domain": "momentum",
           "lapis": "inti",
-          "nilai": -0.625,
+          "nilai": -0.635,
           "arah": -1,
-          "ket": "MACD histogram -0.625% dari harga dan menyempit — momentum menipis"
+          "ket": "MACD histogram -0.635% dari harga dan menyempit — momentum menipis"
         },
         {
           "param": "adx",
@@ -5014,17 +5030,17 @@
           "param": "bollinger",
           "domain": "volatilitas",
           "lapis": "inti",
-          "nilai": -0.273,
+          "nilai": -0.279,
           "arah": 0.5,
-          "ket": "Bollinger %B -0.27 — menembus band bawah: oversold, pantulan mengintai · lebar band 9.8%"
+          "ket": "Bollinger %B -0.28 — menembus band bawah: oversold, pantulan mengintai · lebar band 9.9%"
         },
         {
           "param": "vwap",
           "domain": "aliran",
           "lapis": "inti",
-          "nilai": -7.19,
+          "nilai": -7.29,
           "arah": -1,
-          "ket": "harga di bawah VWAP-24j 10.80118 (-7.19%) — menyimpang jauh dari rata-rata tertimbang volume; gravitasi menarik balik"
+          "ket": "harga di bawah VWAP-24j 10.79899 (-7.29%) — menyimpang jauh dari rata-rata tertimbang volume; gravitasi menarik balik"
         },
         {
           "param": "obv",
@@ -5048,7 +5064,7 @@
           "lapis": "inti",
           "nilai": "bearish engulfing — beli habis ditelan jual, pembalikan intraday",
           "arah": -0.7,
-          "ket": "pola lilin: bearish engulfing — beli habis ditelan jual, pembalikan intraday (badan 81% rentang lilin)"
+          "ket": "pola lilin: bearish engulfing — beli habis ditelan jual, pembalikan intraday (badan 83% rentang lilin)"
         },
         {
           "param": "konsist",
@@ -5070,25 +5086,25 @@
           "param": "relatif",
           "domain": "relatif",
           "lapis": "inti",
-          "nilai": -8.12,
+          "nilai": -8.25,
           "arah": -0.9,
-          "ket": "kekuatan relatif 24 jam: LEBIH LEMAH dari BTC 8.12% (koin -10.82% vs BTC -2.70%) — penunggang beban; dana meninggalkan koin ini"
+          "ket": "kekuatan relatif 24 jam: LEBIH LEMAH dari BTC 8.25% (koin -10.93% vs BTC -2.68%) — penunggang beban; dana meninggalkan koin ini"
         },
         {
           "param": "funding",
           "domain": "derivatif",
           "lapis": "inti",
-          "nilai": -0.0078,
+          "nilai": -0.0077,
           "arah": 0,
-          "ket": "funding futures -0.0078% per interval — short membayar — bearish tidak ramai"
+          "ket": "funding futures -0.0077% per interval — short membayar — bearish tidak ramai"
         },
         {
           "param": "oi",
           "domain": "derivatif",
           "lapis": "inti",
           "nilai": 17.1,
-          "arah": -0.3,
-          "ket": "open interest $17.1 juta · Δ-5.08% sejak denyut lalu — OI menyusut saat harga naik — naik tanpa dana baru (rapuh)"
+          "arah": 0,
+          "ket": "open interest $17.1 juta · Δ-0.36% sejak denyut lalu — OI stabil — posisi tidak berputar berat"
         },
         {
           "param": "ema1h",
@@ -5102,39 +5118,39 @@
           "param": "rsi1h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 21.7,
+          "nilai": 21.5,
           "arah": 0.4,
-          "ket": "RSI-14 21.7 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
+          "ket": "RSI-14 21.5 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
         },
         {
           "param": "roc12",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -8.81,
+          "nilai": -8.92,
           "arah": -0.99,
-          "ket": "ROC-12j -8.81% — runtuhan tajam; pantulan butuh konfirmasi"
+          "ket": "ROC-12j -8.92% — runtuhan tajam; pantulan butuh konfirmasi"
         },
         {
           "param": "roc48",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -12.93,
+          "nilai": -13.04,
           "arah": -1,
-          "ket": "ROC-48j -12.93% — runtuhan tajam; pantulan butuh konfirmasi"
+          "ket": "ROC-48j -13.04% — runtuhan tajam; pantulan butuh konfirmasi"
         },
         {
           "param": "stoch",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 10.4,
+          "nilai": 9.3,
           "arah": 0.35,
-          "ket": "Stoch %K 10 / %D 15 — jenuh jual · %K menekun turun — PERPUTARAN %K baru"
+          "ket": "Stoch %K 9 / %D 15 — jenuh jual · %K menekun turun — PERPUTARAN %K baru"
         },
         {
           "param": "mfi",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 20.4,
+          "nilai": 20.3,
           "arah": -1,
           "ket": "MFI-14 20 — arus keluar dominan"
         },
@@ -5142,17 +5158,17 @@
           "param": "cci",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -250,
+          "nilai": -252,
           "arah": -1,
-          "ket": "CCI-20 -250 — jauh di bawah statistik"
+          "ket": "CCI-20 -252 — jauh di bawah statistik"
         },
         {
           "param": "jarakEkstrem",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 18.49,
+          "nilai": 18.78,
           "arah": -1,
-          "ket": "jarak 10 hari: −19.8% dari puncak / +1.3% dari lantai — menempel lantai 10 hari (area akumulasi berisiko)"
+          "ket": "jarak 10 hari: −19.9% dari puncak / +1.2% dari lantai — menempel lantai 10 hari (area akumulasi berisiko)"
         },
         {
           "param": "atrPctile",
@@ -5166,16 +5182,16 @@
           "param": "volZ",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 0.24,
+          "nilai": 0.25,
           "arah": -0.11,
-          "ket": "volume 24 jam +0.24σ dari rata 30 hari, taker-buy 48% — volume tenang"
+          "ket": "volume 24 jam +0.25σ dari rata 30 hari, taker-buy 48% — volume tenang"
         },
         {
           "param": "bodyRatio",
           "domain": "momentum",
           "lapis": "observasi",
           "nilai": 0.5,
-          "arah": -0.09,
+          "arah": -0.1,
           "ket": "rata badan lilin 50% rentang, 5/12 hijau — lilin normal"
         },
         {
@@ -5190,23 +5206,23 @@
           "param": "macd4h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -1.145,
+          "nilai": -1.155,
           "arah": -1,
-          "ket": "MACD 4h: histogram -1.145% harga — menyempit — momentum menipis; rangka waktu besar bearish"
+          "ket": "MACD 4h: histogram -1.155% harga — menyempit — momentum menipis; rangka waktu besar bearish"
         },
         {
           "param": "rsi4h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 29.8,
+          "nilai": 29.7,
           "arah": -0.92,
-          "ket": "RSI-14 29.8 — momentum penjual dominan"
+          "ket": "RSI-14 29.7 — momentum penjual dominan"
         },
         {
           "param": "bb4h",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": -0.288,
+          "nilai": -0.292,
           "arah": 0.5,
           "ket": "Bollinger %B 4h -0.29 — menembus band bawah: oversold, pantulan mengintai · lebar band 12.3%"
         },
@@ -5246,57 +5262,57 @@
           "param": "fundTren",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": -0.0063,
+          "nilai": -0.0062,
           "arah": 0.06,
-          "ket": "funding MENDINGIN (-0.0063% vs rata3) — tingkat keanggotaan kerumunan stabil"
+          "ket": "funding MENDINGIN (-0.0062% vs rata3) — tingkat keanggotaan kerumunan stabil"
         },
         {
           "param": "bukuImbalans",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 0.009,
-          "arah": 0.01,
+          "nilai": 0.013,
+          "arah": 0.02,
           "ket": "buku 1%: BID menumpuk 1% (imbalance +0.01) — buku seimbang — arah dari aliran, bukan tumpukan"
         },
         {
           "param": "bukuSpread",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 2,
+          "nilai": 4,
           "arah": 0,
-          "ket": "spread 2.0 bps — sangat rapat: institusi standby"
+          "ket": "spread 4.0 bps — normal"
         },
         {
           "param": "bukuKedalaman",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 1.02,
-          "arah": 0.01,
-          "ket": "kedalaman 50 level: $248rb bid vs $243rb ask (rasio 1.02) — kedalaman berimbang"
+          "nilai": 1.03,
+          "arah": 0.02,
+          "ket": "kedalaman 50 level: $254rb bid vs $247rb ask (rasio 1.03) — kedalaman berimbang"
         },
         {
           "param": "bukuDinding",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 9.99,
+          "nilai": 9.96,
           "arah": 0.35,
-          "ket": "dinding terbesar DI SISI BID $87rb di 9.990000 (0.33% dari mid) — dinding dekat: magnet pergerakan jangka pendek"
+          "ket": "dinding terbesar DI SISI BID $86rb di 9.960000 (0.44% dari mid) — dinding dekat: magnet pergerakan jangka pendek"
         },
         {
           "param": "persenChg",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": -10.82,
-          "arah": -0.86,
-          "ket": "perubahan 24j -10.82% — persentil 4 dari 485 swap USDT OKX (kelompok TERTINGGAL hari ini — pisau jatuh diwaspadai); median pasar -3.87%"
+          "nilai": -11.01,
+          "arah": -0.87,
+          "ket": "perubahan 24j -11.01% — persentil 4 dari 485 swap USDT OKX (kelompok TERTINGGAL hari ini — pisau jatuh diwaspadai); median pasar -4.07%"
         },
         {
           "param": "persenVol",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": 70.2,
+          "nilai": 70.1,
           "arah": 0,
-          "ket": "volume swap 24j $70.2jt — persentil 94 dari kawasan (pusat perhatian dana hari ini)"
+          "ket": "volume swap 24j $70.1jt — persentil 94 dari kawasan (pusat perhatian dana hari ini)"
         },
         {
           "param": "sesi",
@@ -5334,23 +5350,23 @@
           "param": "rsi1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 49,
+          "nilai": 48.8,
           "arah": -0.05,
-          "ket": "RSI-14 harian 49.0 — netral"
+          "ket": "RSI-14 harian 48.8 — netral"
         },
         {
           "param": "macd1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -1.512,
+          "nilai": -1.527,
           "arah": -1,
-          "ket": "MACD harian: histogram -1.512% harga — momentum harian bearish; rangka waktu besar menekan"
+          "ket": "MACD harian: histogram -1.527% harga — momentum harian bearish; rangka waktu besar menekan"
         },
         {
           "param": "donchian30d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 59,
+          "nilai": 58.6,
           "arah": 0.14,
           "ket": "posisi 59% rentang 30 hari (Donchian) — tengah rentang"
         },
@@ -5358,17 +5374,17 @@
           "param": "jarak90d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": -19.99,
-          "arah": 0.8,
-          "ket": "kuartalan: −19.8% dari puncak 90 hari / +39.8% dari lantai — ruang dua arah lebar dalam skala kuartal"
+          "nilai": -19.63,
+          "arah": 0.79,
+          "ket": "kuartalan: −20.0% dari puncak 90 hari / +39.6% dari lantai — ruang dua arah lebar dalam skala kuartal"
         },
         {
           "param": "momen30d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 25.2,
+          "nilai": 24.95,
           "arah": 0.96,
-          "ket": "momentum bulanan 30 hari +25.2% — surge bulanan: rezim ekspansi, waspadai koreksi"
+          "ket": "momentum bulanan 30 hari +25.0% — langkah bulanan normal"
         },
         {
           "param": "streak1d",
@@ -5382,23 +5398,23 @@
           "param": "volRasio7d30d",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 0.72,
+          "nilai": 0.73,
           "arah": 0,
-          "ket": "volatilitas realized 7d/30d 0.72× — stabil antar skala"
+          "ket": "volatilitas realized 7d/30d 0.73× — stabil antar skala"
         },
         {
           "param": "basisPct",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": -0.06,
-          "arah": -0.05,
-          "ket": "basis perp-vs-spot -0.060% — basis normal"
+          "nilai": -0.17,
+          "arah": -0.15,
+          "ket": "basis perp-vs-spot -0.170% — basis normal"
         },
         {
           "param": "jamFunding",
           "domain": "kalender",
           "lapis": "observasi",
-          "nilai": 8.09,
+          "nilai": 8.07,
           "arah": 0,
           "ket": "8.1 jam menuju pembayaran funding berikutnya — jarak funding normal"
         },
@@ -5406,9 +5422,9 @@
           "param": "fundVsBtc",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": -0.014,
+          "nilai": -0.0139,
           "arah": 0.06,
-          "ket": "funding relatif vs BTC -0.0140% — sejajar suhu pasar"
+          "ket": "funding relatif vs BTC -0.0139% — sejajar suhu pasar"
         },
         {
           "param": "lsAkun",
@@ -5438,25 +5454,25 @@
           "param": "bukuGradien",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 0.004,
-          "arah": 0.01,
-          "ket": "gradien buku: distribusi merata — bid depan 7% vs ask depan 7% dari massa 1%"
+          "nilai": 0.049,
+          "arah": 0.09,
+          "ket": "gradien buku: distribusi merata — bid depan 15% vs ask depan 10% dari massa 1%"
         },
         {
           "param": "garchSigma",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 7.66,
+          "nilai": 7.78,
           "arah": 0,
-          "ket": "GARCH(1,1): sigma 24 jam ±7.66% — ukuran posisi & lebar stop ditetapkan dari sini"
+          "ket": "GARCH(1,1): sigma 24 jam ±7.78% — ukuran posisi & lebar stop ditetapkan dari sini"
         },
         {
           "param": "betaBTC",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": 1.78,
+          "nilai": 1.79,
           "arah": 0,
-          "ket": "beta vs BTC 90 jam 1.78 (R² 0.44) — amplifier pasar: naik lebih tinggi, jatuh lebih dalam"
+          "ket": "beta vs BTC 90 jam 1.79 (R² 0.45) — amplifier pasar: naik lebih tinggi, jatuh lebih dalam"
         },
         {
           "param": "divRSI",
@@ -5470,7 +5486,7 @@
           "param": "pocJarak",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 10.53,
+          "nilai": 10.67,
           "arah": 0.3,
           "ket": "POC volume 48 jam 11.08046 (di atas harga — magnet tarik naik)"
         },
@@ -5478,8 +5494,8 @@
           "param": "mcPnaik",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 46.9,
-          "arah": -0.07,
+          "nilai": 46.5,
+          "arah": -0.08,
           "ket": "Monte Carlo 2.000 lintasan: peluang naik dalam 24 jam 47% — koin flip statistik"
         },
         {
@@ -5488,15 +5504,15 @@
           "lapis": "observasi",
           "nilai": 0,
           "arah": 0,
-          "ket": "funding×ΔOI: 0×-0.3 — campur"
+          "ket": "funding×ΔOI: 0×0 — campur"
         },
         {
           "param": "ixVolAtr",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": -0.056,
+          "nilai": -0.057,
           "arah": -0.06,
-          "ket": "volume×rezim-ATR: -0.111 × persentil 0.94 — lonjakan volume DI tengah volatilitas tinggi: gerak bermakna tapi licin"
+          "ket": "volume×rezim-ATR: -0.113 × persentil 0.94 — lonjakan volume DI tengah volatilitas tinggi: gerak bermakna tapi licin"
         },
         {
           "param": "ixTrenFunding",
@@ -5510,17 +5526,17 @@
           "param": "ixBukuTren",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": -0.017,
-          "arah": -0.02,
-          "ket": "buku×tren1h: 0.014×-1 — buku tak memihak"
+          "nilai": -0.025,
+          "arah": -0.03,
+          "ket": "buku×tren1h: 0.021×-1 — buku tak memihak"
         },
         {
           "param": "ixDonchianVol",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": -0.018,
+          "nilai": -0.017,
           "arah": -0.02,
-          "ket": "breakout×volume: donchian 0.145 × volZ -0.111 — konfirmasi tipis"
+          "ket": "breakout×volume: donchian 0.138 × volZ -0.113 — konfirmasi tipis"
         },
         {
           "param": "ixFlowTren",
@@ -5534,12 +5550,12 @@
     },
     {
       "simbol": "LINK",
-      "harga": 12.414,
+      "harga": 12.4,
       "rezim": "TURUN",
       "atrPct": 1.39,
-      "fundingPct": -0.0005,
+      "fundingPct": -0.0006,
       "oiJuta": 25.9,
-      "oiDeltaPct": -3.31,
+      "oiDeltaPct": -0.23,
       "jumlahParam": 67,
       "konsensus": {
         "momentum": {
@@ -5547,11 +5563,11 @@
           "bicara": 12
         },
         "tren": {
-          "arah": -0.66,
+          "arah": -0.67,
           "bicara": 11
         },
         "volatilitas": {
-          "arah": 0.21,
+          "arah": 0.23,
           "bicara": 3
         },
         "aliran": {
@@ -5559,20 +5575,16 @@
           "bicara": 4
         },
         "relatif": {
-          "arah": -0.71,
+          "arah": -0.72,
           "bicara": 2
         },
-        "derivatif": {
-          "arah": -0.3,
-          "bicara": 3
-        },
         "mikrostruktur": {
-          "arah": -0.35,
+          "arah": 0.35,
           "bicara": 1
         },
-        "interaksi": {
-          "arah": 0.16,
-          "bicara": 1
+        "derivatif": {
+          "arah": -0.27,
+          "bicara": 3
         }
       },
       "params": [
@@ -5580,9 +5592,9 @@
           "param": "macd",
           "domain": "momentum",
           "lapis": "inti",
-          "nilai": -0.297,
+          "nilai": -0.304,
           "arah": -1,
-          "ket": "MACD histogram -0.297% dari harga dan menyempit — momentum menipis"
+          "ket": "MACD histogram -0.304% dari harga dan menyempit — momentum menipis"
         },
         {
           "param": "adx",
@@ -5596,17 +5608,17 @@
           "param": "bollinger",
           "domain": "volatilitas",
           "lapis": "inti",
-          "nilai": -0.341,
+          "nilai": -0.347,
           "arah": 0.5,
-          "ket": "Bollinger %B -0.34 — menembus band bawah: oversold, pantulan mengintai · lebar band 6.4%"
+          "ket": "Bollinger %B -0.35 — menembus band bawah: oversold, pantulan mengintai · lebar band 6.4%"
         },
         {
           "param": "vwap",
           "domain": "aliran",
           "lapis": "inti",
-          "nilai": -4.52,
+          "nilai": -4.62,
           "arah": -1,
-          "ket": "harga di bawah VWAP-24j 13.00228 (-4.52%) — menyimpang jauh dari rata-rata tertimbang volume; gravitasi menarik balik"
+          "ket": "harga di bawah VWAP-24j 13.00015 (-4.62%) — menyimpang jauh dari rata-rata tertimbang volume; gravitasi menarik balik"
         },
         {
           "param": "obv",
@@ -5630,7 +5642,7 @@
           "lapis": "inti",
           "nilai": "tanpa pola menonjol — lilin biasa",
           "arah": 0,
-          "ket": "pola lilin: tanpa pola menonjol — lilin biasa (badan 84% rentang lilin)"
+          "ket": "pola lilin: tanpa pola menonjol — lilin biasa (badan 86% rentang lilin)"
         },
         {
           "param": "konsist",
@@ -5652,25 +5664,25 @@
           "param": "relatif",
           "domain": "relatif",
           "lapis": "inti",
-          "nilai": -4.87,
-          "arah": -0.7,
-          "ket": "kekuatan relatif 24 jam: LEBIH LEMAH dari BTC 4.87% (koin -7.57% vs BTC -2.70%) — penunggang beban; dana meninggalkan koin ini"
+          "nilai": -5,
+          "arah": -0.72,
+          "ket": "kekuatan relatif 24 jam: LEBIH LEMAH dari BTC 5.00% (koin -7.68% vs BTC -2.68%) — penunggang beban; dana meninggalkan koin ini"
         },
         {
           "param": "funding",
           "domain": "derivatif",
           "lapis": "inti",
-          "nilai": -0.0005,
+          "nilai": -0.0006,
           "arah": 0,
-          "ket": "funding futures -0.0005% per interval — short membayar — bearish tidak ramai"
+          "ket": "funding futures -0.0006% per interval — short membayar — bearish tidak ramai"
         },
         {
           "param": "oi",
           "domain": "derivatif",
           "lapis": "inti",
           "nilai": 25.9,
-          "arah": -0.3,
-          "ket": "open interest $25.9 juta · Δ-3.31% sejak denyut lalu — OI menyusut saat harga naik — naik tanpa dana baru (rapuh)"
+          "arah": 0,
+          "ket": "open interest $25.9 juta · Δ-0.23% sejak denyut lalu — OI stabil — posisi tidak berputar berat"
         },
         {
           "param": "ema1h",
@@ -5684,33 +5696,33 @@
           "param": "rsi1h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 16.4,
+          "nilai": 16.2,
           "arah": 0.4,
-          "ket": "RSI-14 16.4 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
+          "ket": "RSI-14 16.2 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
         },
         {
           "param": "roc12",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -5.77,
+          "nilai": -5.88,
           "arah": -0.94,
-          "ket": "ROC-12j -5.77% — turun terukur"
+          "ket": "ROC-12j -5.88% — turun terukur"
         },
         {
           "param": "roc48",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -10.98,
+          "nilai": -11.08,
           "arah": -1,
-          "ket": "ROC-48j -10.98% — runtuhan tajam; pantulan butuh konfirmasi"
+          "ket": "ROC-48j -11.08% — runtuhan tajam; pantulan butuh konfirmasi"
         },
         {
           "param": "stoch",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 9.9,
+          "nilai": 8.6,
           "arah": 0.35,
-          "ket": "Stoch %K 10 / %D 20 — jenuh jual · %K menekun turun — PERPUTARAN %K baru"
+          "ket": "Stoch %K 9 / %D 20 — jenuh jual · %K menekun turun — PERPUTARAN %K baru"
         },
         {
           "param": "mfi",
@@ -5724,17 +5736,17 @@
           "param": "cci",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -270,
+          "nilai": -272,
           "arah": -1,
-          "ket": "CCI-20 -270 — jauh di bawah statistik"
+          "ket": "CCI-20 -272 — jauh di bawah statistik"
         },
         {
           "param": "jarakEkstrem",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 26.28,
+          "nilai": 26.53,
           "arah": -1,
-          "ket": "jarak 10 hari: −27.1% dari puncak / +0.8% dari lantai — menempel lantai 10 hari (area akumulasi berisiko)"
+          "ket": "jarak 10 hari: −27.2% dari puncak / +0.7% dari lantai — menempel lantai 10 hari (area akumulasi berisiko)"
         },
         {
           "param": "atrPctile",
@@ -5748,9 +5760,9 @@
           "param": "volZ",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": -0.36,
+          "nilai": -0.35,
           "arah": 0.16,
-          "ket": "volume 24 jam -0.36σ dari rata 30 hari, taker-buy 44% — volume tenang"
+          "ket": "volume 24 jam -0.35σ dari rata 30 hari, taker-buy 44% — volume tenang"
         },
         {
           "param": "bodyRatio",
@@ -5772,25 +5784,25 @@
           "param": "macd4h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -0.874,
+          "nilai": -0.882,
           "arah": -1,
-          "ket": "MACD 4h: histogram -0.874% harga — menyempit — momentum menipis; rangka waktu besar bearish"
+          "ket": "MACD 4h: histogram -0.882% harga — menyempit — momentum menipis; rangka waktu besar bearish"
         },
         {
           "param": "rsi4h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 21.5,
+          "nilai": 21.3,
           "arah": 0.4,
-          "ket": "RSI-14 21.5 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
+          "ket": "RSI-14 21.3 — oversold ekstrem; pantulan mengintai tapi pisau jatuh tetap dilarang"
         },
         {
           "param": "bb4h",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": -0.183,
+          "nilai": -0.188,
           "arah": 0.5,
-          "ket": "Bollinger %B 4h -0.18 — menembus band bawah: oversold, pantulan mengintai · lebar band 12.8%"
+          "ket": "Bollinger %B 4h -0.19 — menembus band bawah: oversold, pantulan mengintai · lebar band 12.8%"
         },
         {
           "param": "swing4h",
@@ -5828,57 +5840,57 @@
           "param": "fundTren",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": -0.0044,
+          "nilai": -0.0045,
           "arah": 0.04,
-          "ket": "funding MENDINGIN (-0.0044% vs rata3) — tingkat keanggotaan kerumunan stabil"
+          "ket": "funding MENDINGIN (-0.0045% vs rata3) — tingkat keanggotaan kerumunan stabil"
         },
         {
           "param": "bukuImbalans",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": -0.084,
-          "arah": -0.13,
-          "ket": "buku 1%: ASK menumpuk 8% (imbalance -0.08) — buku seimbang — arah dari aliran, bukan tumpukan"
+          "nilai": 0.031,
+          "arah": 0.05,
+          "ket": "buku 1%: BID menumpuk 3% (imbalance +0.03) — buku seimbang — arah dari aliran, bukan tumpukan"
         },
         {
           "param": "bukuSpread",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 0.8,
+          "nilai": 3.2,
           "arah": 0,
-          "ket": "spread 0.8 bps — sangat rapat: institusi standby"
+          "ket": "spread 3.2 bps — normal"
         },
         {
           "param": "bukuKedalaman",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 0.85,
-          "arah": -0.12,
-          "ket": "kedalaman 50 level: $168rb bid vs $199rb ask (rasio 0.85) — kedalaman berimbang"
+          "nilai": 1.06,
+          "arah": 0.05,
+          "ket": "kedalaman 50 level: $212rb bid vs $199rb ask (rasio 1.06) — kedalaman berimbang"
         },
         {
           "param": "bukuDinding",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 12.45,
-          "arah": -0.35,
-          "ket": "dinding terbesar DI SISI ASK $22rb di 12.45000 (0.29% dari mid) — dinding dekat: magnet pergerakan jangka pendek"
+          "nilai": 12.341,
+          "arah": 0.35,
+          "ket": "dinding terbesar DI SISI BID $34rb di 12.34100 (0.39% dari mid) — dinding dekat: magnet pergerakan jangka pendek"
         },
         {
           "param": "persenChg",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": -7.56,
-          "arah": -0.72,
-          "ket": "perubahan 24j -7.56% — persentil 12 dari 485 swap USDT OKX (kelompok TERTINGGAL hari ini — pisau jatuh diwaspadai); median pasar -3.87%"
+          "nilai": -7.79,
+          "arah": -0.73,
+          "ket": "perubahan 24j -7.79% — persentil 13 dari 485 swap USDT OKX (kelompok TERTINGGAL hari ini — pisau jatuh diwaspadai); median pasar -4.07%"
         },
         {
           "param": "persenVol",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": 47.2,
+          "nilai": 47.1,
           "arah": 0,
-          "ket": "volume swap 24j $47.2jt — persentil 91 dari kawasan (pusat perhatian dana hari ini)"
+          "ket": "volume swap 24j $47.1jt — persentil 91 dari kawasan (pusat perhatian dana hari ini)"
         },
         {
           "param": "sesi",
@@ -5916,41 +5928,41 @@
           "param": "rsi1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 43.4,
+          "nilai": 43.3,
           "arah": -0.3,
-          "ket": "RSI-14 harian 43.4 — momentum penjual dominan"
+          "ket": "RSI-14 harian 43.3 — momentum penjual dominan"
         },
         {
           "param": "macd1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -1.865,
+          "nilai": -1.881,
           "arah": -1,
-          "ket": "MACD harian: histogram -1.865% harga — momentum harian bearish; rangka waktu besar menekan"
+          "ket": "MACD harian: histogram -1.881% harga — momentum harian bearish; rangka waktu besar menekan"
         },
         {
           "param": "donchian30d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 34.8,
-          "arah": -0.24,
-          "ket": "posisi 35% rentang 30 hari (Donchian) — kawasan bawah rentang: tekanan berlanjut"
+          "nilai": 34.4,
+          "arah": -0.25,
+          "ket": "posisi 34% rentang 30 hari (Donchian) — kawasan bawah rentang: tekanan berlanjut"
         },
         {
           "param": "jarak90d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": -10.13,
-          "arah": 0.41,
-          "ket": "kuartalan: −27.1% dari puncak 90 hari / +37.2% dari lantai — ruang dua arah lebar dalam skala kuartal"
+          "nilai": -9.77,
+          "arah": 0.39,
+          "ket": "kuartalan: −27.3% dari puncak 90 hari / +37.1% dari lantai — ruang dua arah lebar dalam skala kuartal"
         },
         {
           "param": "momen30d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -0.82,
-          "arah": -0.07,
-          "ket": "momentum bulanan 30 hari -0.8% — langkah bulanan normal"
+          "nilai": -1.01,
+          "arah": -0.08,
+          "ket": "momentum bulanan 30 hari -1.0% — langkah bulanan normal"
         },
         {
           "param": "streak1d",
@@ -5964,23 +5976,23 @@
           "param": "volRasio7d30d",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 0.76,
+          "nilai": 0.77,
           "arah": 0,
-          "ket": "volatilitas realized 7d/30d 0.76× — stabil antar skala"
+          "ket": "volatilitas realized 7d/30d 0.77× — stabil antar skala"
         },
         {
           "param": "basisPct",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": -0.032,
-          "arah": -0.03,
-          "ket": "basis perp-vs-spot -0.032% — basis normal"
+          "nilai": -0.185,
+          "arah": -0.17,
+          "ket": "basis perp-vs-spot -0.185% — basis normal"
         },
         {
           "param": "jamFunding",
           "domain": "kalender",
           "lapis": "observasi",
-          "nilai": 8.09,
+          "nilai": 8.07,
           "arah": 0,
           "ket": "8.1 jam menuju pembayaran funding berikutnya — jarak funding normal"
         },
@@ -5988,9 +6000,9 @@
           "param": "fundVsBtc",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": -0.0068,
+          "nilai": -0.0069,
           "arah": 0.03,
-          "ket": "funding relatif vs BTC -0.0068% — sejajar suhu pasar"
+          "ket": "funding relatif vs BTC -0.0069% — sejajar suhu pasar"
         },
         {
           "param": "lsAkun",
@@ -6004,9 +6016,9 @@
           "param": "lsTren",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": 0.22,
-          "arah": -0.26,
-          "ket": "kerumunan akun MEMBESAR (Δrasio +0.22 sejak 48 jam) — posisi baru mengikuti tren: bahan bakar lanjutan TAPI juga bahan likuidasi"
+          "nilai": 0.25,
+          "arah": -0.3,
+          "ket": "kerumunan akun MEMBESAR (Δrasio +0.25 sejak 48 jam) — posisi baru mengikuti tren: bahan bakar lanjutan TAPI juga bahan likuidasi"
         },
         {
           "param": "lsTaker",
@@ -6020,25 +6032,25 @@
           "param": "bukuGradien",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": -0.031,
-          "arah": -0.06,
-          "ket": "gradien buku: distribusi merata — bid depan 5% vs ask depan 9% dari massa 1%"
+          "nilai": 0.003,
+          "arah": 0.01,
+          "ket": "gradien buku: distribusi merata — bid depan 8% vs ask depan 8% dari massa 1%"
         },
         {
           "param": "garchSigma",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 6.17,
+          "nilai": 6.26,
           "arah": 0,
-          "ket": "GARCH(1,1): sigma 24 jam ±6.17% — ukuran posisi & lebar stop ditetapkan dari sini"
+          "ket": "GARCH(1,1): sigma 24 jam ±6.26% — ukuran posisi & lebar stop ditetapkan dari sini"
         },
         {
           "param": "betaBTC",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": 1.49,
+          "nilai": 1.5,
           "arah": 0,
-          "ket": "beta vs BTC 90 jam 1.49 (R² 0.67) — amplifier pasar: naik lebih tinggi, jatuh lebih dalam"
+          "ket": "beta vs BTC 90 jam 1.50 (R² 0.67) — amplifier pasar: naik lebih tinggi, jatuh lebih dalam"
         },
         {
           "param": "divRSI",
@@ -6052,7 +6064,7 @@
           "param": "pocJarak",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 1.21,
+          "nilai": 1.33,
           "arah": 0.3,
           "ket": "POC volume 48 jam 12.56442 (di atas harga — magnet tarik naik)"
         },
@@ -6060,9 +6072,9 @@
           "param": "mcPnaik",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 34.9,
-          "arah": -0.36,
-          "ket": "Monte Carlo 2.000 lintasan: peluang naik dalam 24 jam 35% — distribusi condong turun"
+          "nilai": 36.6,
+          "arah": -0.32,
+          "ket": "Monte Carlo 2.000 lintasan: peluang naik dalam 24 jam 37% — distribusi condong turun"
         },
         {
           "param": "ixFundingOI",
@@ -6070,15 +6082,15 @@
           "lapis": "observasi",
           "nilai": 0,
           "arah": 0,
-          "ket": "funding×ΔOI: 0×-0.3 — campur"
+          "ket": "funding×ΔOI: 0×0 — campur"
         },
         {
           "param": "ixVolAtr",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": 0.081,
+          "nilai": 0.08,
           "arah": 0.08,
-          "ket": "volume×rezim-ATR: 0.161 × persentil 0.86 — lonjakan volume DI tengah volatilitas tinggi: gerak bermakna tapi licin"
+          "ket": "volume×rezim-ATR: 0.16 × persentil 0.86 — lonjakan volume DI tengah volatilitas tinggi: gerak bermakna tapi licin"
         },
         {
           "param": "ixTrenFunding",
@@ -6092,17 +6104,17 @@
           "param": "ixBukuTren",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": 0.161,
-          "arah": 0.16,
-          "ket": "buku×tren1h: -0.134×-1 — buku tak memihak"
+          "nilai": -0.06,
+          "arah": -0.06,
+          "ket": "buku×tren1h: 0.05×-1 — buku tak memihak"
         },
         {
           "param": "ixDonchianVol",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": -0.043,
+          "nilai": -0.044,
           "arah": -0.04,
-          "ket": "breakout×volume: donchian -0.242 × volZ 0.161 — konfirmasi tipis"
+          "ket": "breakout×volume: donchian -0.25 × volZ 0.16 — konfirmasi tipis"
         },
         {
           "param": "ixFlowTren",
@@ -6116,16 +6128,16 @@
     },
     {
       "simbol": "TRX",
-      "harga": 0.333,
+      "harga": 0.3331,
       "rezim": "TURUN",
       "atrPct": 0.24,
-      "fundingPct": -0.0154,
+      "fundingPct": -0.0156,
       "oiJuta": 15.7,
-      "oiDeltaPct": -0.21,
+      "oiDeltaPct": 0.02,
       "jumlahParam": 67,
       "konsensus": {
         "momentum": {
-          "arah": -0.5,
+          "arah": -0.49,
           "bicara": 13
         },
         "tren": {
@@ -6133,11 +6145,11 @@
           "bicara": 9
         },
         "volatilitas": {
-          "arah": 0.05,
+          "arah": 0.06,
           "bicara": 2
         },
         "aliran": {
-          "arah": -0.39,
+          "arah": -0.51,
           "bicara": 5
         },
         "relatif": {
@@ -6149,11 +6161,11 @@
           "bicara": 1
         },
         "mikrostruktur": {
-          "arah": 0.48,
-          "bicara": 3
+          "arah": 0.29,
+          "bicara": 4
         },
         "interaksi": {
-          "arah": -0.23,
+          "arah": -0.22,
           "bicara": 4
         }
       },
@@ -6162,9 +6174,9 @@
           "param": "macd",
           "domain": "momentum",
           "lapis": "inti",
-          "nilai": -0.073,
-          "arah": -0.87,
-          "ket": "MACD histogram -0.073% dari harga dan menyempit — momentum menipis"
+          "nilai": -0.072,
+          "arah": -0.86,
+          "ket": "MACD histogram -0.072% dari harga dan menyempit — momentum menipis"
         },
         {
           "param": "adx",
@@ -6178,17 +6190,17 @@
           "param": "bollinger",
           "domain": "volatilitas",
           "lapis": "inti",
-          "nilai": -0.277,
+          "nilai": -0.261,
           "arah": 0.5,
-          "ket": "Bollinger %B -0.28 — menembus band bawah: oversold, pantulan mengintai · lebar band 0.9% (terkompresi — letupan menunggu arah)"
+          "ket": "Bollinger %B -0.26 — menembus band bawah: oversold, pantulan mengintai · lebar band 0.9% (terkompresi — letupan menunggu arah)"
         },
         {
           "param": "vwap",
           "domain": "aliran",
           "lapis": "inti",
-          "nilai": -0.65,
-          "arah": -0.72,
-          "ket": "harga di bawah VWAP-24j 0.3351835 (-0.65%) — mengapung dekat nilai wajar intraday"
+          "nilai": -0.62,
+          "arah": -0.7,
+          "ket": "harga di bawah VWAP-24j 0.3351876 (-0.62%) — mengapung dekat nilai wajar intraday"
         },
         {
           "param": "obv",
@@ -6212,7 +6224,7 @@
           "lapis": "inti",
           "nilai": "bearish engulfing — beli habis ditelan jual, pembalikan intraday",
           "arah": -0.7,
-          "ket": "pola lilin: bearish engulfing — beli habis ditelan jual, pembalikan intraday (badan 100% rentang lilin)"
+          "ket": "pola lilin: bearish engulfing — beli habis ditelan jual, pembalikan intraday (badan 94% rentang lilin)"
         },
         {
           "param": "konsist",
@@ -6234,17 +6246,17 @@
           "param": "relatif",
           "domain": "relatif",
           "lapis": "inti",
-          "nilai": 2.01,
+          "nilai": 2.02,
           "arah": 0.35,
-          "ket": "kekuatan relatif 24 jam: LEBIH KUAT dari BTC 2.01% (koin -0.69% vs BTC -2.70%) — sekadar mengikuti pasar"
+          "ket": "kekuatan relatif 24 jam: LEBIH KUAT dari BTC 2.02% (koin -0.66% vs BTC -2.68%) — sekadar mengikuti pasar"
         },
         {
           "param": "funding",
           "domain": "derivatif",
           "lapis": "inti",
-          "nilai": -0.0154,
+          "nilai": -0.0156,
           "arah": 0.3,
-          "ket": "funding futures -0.0154% per interval — short membayar — bearish tidak ramai"
+          "ket": "funding futures -0.0156% per interval — short membayar — bearish tidak ramai"
         },
         {
           "param": "oi",
@@ -6252,7 +6264,7 @@
           "lapis": "inti",
           "nilai": 15.7,
           "arah": 0,
-          "ket": "open interest $15.7 juta · Δ-0.21% sejak denyut lalu — OI stabil — posisi tidak berputar berat"
+          "ket": "open interest $15.7 juta · Δ+0.02% sejak denyut lalu — OI stabil — posisi tidak berputar berat"
         },
         {
           "param": "ema1h",
@@ -6266,33 +6278,33 @@
           "param": "rsi1h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 31.2,
-          "arah": -0.86,
-          "ket": "RSI-14 31.2 — momentum penjual dominan"
+          "nilai": 31.7,
+          "arah": -0.83,
+          "ket": "RSI-14 31.7 — momentum penjual dominan"
         },
         {
           "param": "roc12",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -0.83,
+          "nilai": -0.8,
           "arah": -0.24,
-          "ket": "ROC-12j -0.83% — turun terukur"
+          "ket": "ROC-12j -0.80% — turun terukur"
         },
         {
           "param": "roc48",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -0.8,
-          "arah": -0.24,
-          "ket": "ROC-48j -0.80% — turun terukur"
+          "nilai": -0.77,
+          "arah": -0.23,
+          "ket": "ROC-48j -0.77% — turun terukur"
         },
         {
           "param": "stoch",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 0,
+          "nilai": 2.8,
           "arah": 0.35,
-          "ket": "Stoch %K 0 / %D 9 — jenuh jual · %K menekun turun — PERPUTARAN %K baru"
+          "ket": "Stoch %K 3 / %D 10 — jenuh jual · %K menekun turun — PERPUTARAN %K baru"
         },
         {
           "param": "mfi",
@@ -6306,17 +6318,17 @@
           "param": "cci",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -239,
+          "nilai": -235,
           "arah": -1,
-          "ket": "CCI-20 -239 — jauh di bawah statistik"
+          "ket": "CCI-20 -235 — jauh di bawah statistik"
         },
         {
           "param": "jarakEkstrem",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 2.01,
+          "nilai": 1.95,
           "arah": -0.2,
-          "ket": "jarak 10 hari: −2.4% dari puncak / +0.4% dari lantai — menempel lantai 10 hari (area akumulasi berisiko)"
+          "ket": "jarak 10 hari: −2.3% dari puncak / +0.4% dari lantai — menempel lantai 10 hari (area akumulasi berisiko)"
         },
         {
           "param": "atrPctile",
@@ -6338,9 +6350,9 @@
           "param": "bodyRatio",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 0.46,
-          "arah": -0.01,
-          "ket": "rata badan lilin 46% rentang, 4/12 hijau — lilin normal"
+          "nilai": 0.45,
+          "arah": 0,
+          "ket": "rata badan lilin 45% rentang, 4/12 hijau — lilin normal"
         },
         {
           "param": "ema4h",
@@ -6354,25 +6366,25 @@
           "param": "macd4h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -0.028,
-          "arah": -0.6,
-          "ket": "MACD 4h: histogram -0.028% harga — menyempit — momentum menipis; rangka waktu besar bearish"
+          "nilai": -0.026,
+          "arah": -0.59,
+          "ket": "MACD 4h: histogram -0.026% harga — menyempit — momentum menipis; rangka waktu besar bearish"
         },
         {
           "param": "rsi4h",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 39.9,
-          "arah": -0.46,
-          "ket": "RSI-14 39.9 — momentum penjual dominan"
+          "nilai": 40.3,
+          "arah": -0.44,
+          "ket": "RSI-14 40.3 — momentum penjual dominan"
         },
         {
           "param": "bb4h",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 0.011,
-          "arah": -0.39,
-          "ket": "Bollinger %B 4h 0.01 dalam band · lebar band 1.4% (terkompresi — letupan menunggu arah)"
+          "nilai": 0.027,
+          "arah": -0.38,
+          "ket": "Bollinger %B 4h 0.03 dalam band · lebar band 1.4% (terkompresi — letupan menunggu arah)"
         },
         {
           "param": "swing4h",
@@ -6410,17 +6422,17 @@
           "param": "fundTren",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": -0.0071,
-          "arah": 0.06,
-          "ket": "funding MENDINGIN (-0.0071% vs rata3) — tingkat keanggotaan kerumunan stabil"
+          "nilai": -0.0073,
+          "arah": 0.07,
+          "ket": "funding MENDINGIN (-0.0073% vs rata3) — tingkat keanggotaan kerumunan stabil"
         },
         {
           "param": "bukuImbalans",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 0.286,
-          "arah": 0.46,
-          "ket": "buku 1%: BID menumpuk 29% (imbalance +0.29) — beli sedikit unggul"
+          "nilai": 0.273,
+          "arah": 0.44,
+          "ket": "buku 1%: BID menumpuk 27% (imbalance +0.27) — beli sedikit unggul"
         },
         {
           "param": "bukuSpread",
@@ -6434,9 +6446,9 @@
           "param": "bukuKedalaman",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": 1.8,
-          "arah": 0.64,
-          "ket": "kedalaman 50 level: $120rb bid vs $67rb ask (rasio 1.80) — amunisi beli jauh lebih tebal"
+          "nilai": 1.75,
+          "arah": 0.6,
+          "ket": "kedalaman 50 level: $127rb bid vs $72rb ask (rasio 1.75) — amunisi beli jauh lebih tebal"
         },
         {
           "param": "bukuDinding",
@@ -6450,9 +6462,9 @@
           "param": "persenChg",
           "domain": "relatif",
           "lapis": "observasi",
-          "nilai": -0.74,
+          "nilai": -0.76,
           "arah": -0.09,
-          "ket": "perubahan 24j -0.74% — persentil 77 dari 485 swap USDT OKX (tengah kawanan); median pasar -3.87%"
+          "ket": "perubahan 24j -0.76% — persentil 77 dari 485 swap USDT OKX (tengah kawanan); median pasar -4.07%"
         },
         {
           "param": "persenVol",
@@ -6498,40 +6510,40 @@
           "param": "rsi1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": 42.5,
-          "arah": -0.34,
-          "ket": "RSI-14 harian 42.5 — momentum penjual dominan"
+          "nilai": 42.3,
+          "arah": -0.35,
+          "ket": "RSI-14 harian 42.3 — momentum penjual dominan"
         },
         {
           "param": "macd1d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -0.112,
+          "nilai": -0.114,
           "arah": -0.96,
-          "ket": "MACD harian: histogram -0.112% harga — momentum harian bearish; rangka waktu besar menekan"
+          "ket": "MACD harian: histogram -0.114% harga — momentum harian bearish; rangka waktu besar menekan"
         },
         {
           "param": "donchian30d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 7.4,
-          "arah": -0.68,
+          "nilai": 6.9,
+          "arah": -0.69,
           "ket": "posisi 7% rentang 30 hari (Donchian) — kawasan bawah rentang: tekanan berlanjut"
         },
         {
           "param": "jarak90d",
           "domain": "tren",
           "lapis": "observasi",
-          "nilai": 1.71,
+          "nilai": 1.77,
           "arah": -0.07,
-          "ket": "kuartalan: −5.1% dari puncak 90 hari / +3.4% dari lantai — menempel lantai kuartalan (akumulasi ATAU keruntuhan)"
+          "ket": "kuartalan: −5.2% dari puncak 90 hari / +3.4% dari lantai — menempel lantai kuartalan (akumulasi ATAU keruntuhan)"
         },
         {
           "param": "momen30d",
           "domain": "momentum",
           "lapis": "observasi",
-          "nilai": -1.68,
-          "arah": -0.13,
+          "nilai": -1.71,
+          "arah": -0.14,
           "ket": "momentum bulanan 30 hari -1.7% — langkah bulanan normal"
         },
         {
@@ -6546,23 +6558,23 @@
           "param": "volRasio7d30d",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 0.46,
+          "nilai": 0.47,
           "arah": 0,
-          "ket": "volatilitas realized 7d/30d 0.46× — MENYUSUT: kompresi volatilitas; letupan menunggu arah"
+          "ket": "volatilitas realized 7d/30d 0.47× — MENYUSUT: kompresi volatilitas; letupan menunggu arah"
         },
         {
           "param": "basisPct",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": -0.129,
-          "arah": -0.12,
-          "ket": "basis perp-vs-spot -0.129% — basis normal"
+          "nilai": -0.165,
+          "arah": -0.15,
+          "ket": "basis perp-vs-spot -0.165% — basis normal"
         },
         {
           "param": "jamFunding",
           "domain": "kalender",
           "lapis": "observasi",
-          "nilai": 8.09,
+          "nilai": 8.07,
           "arah": 0,
           "ket": "8.1 jam menuju pembayaran funding berikutnya — jarak funding normal"
         },
@@ -6570,9 +6582,9 @@
           "param": "fundVsBtc",
           "domain": "derivatif",
           "lapis": "observasi",
-          "nilai": -0.0216,
+          "nilai": -0.0218,
           "arah": 0.09,
-          "ket": "funding relatif vs BTC -0.0216% — kerumunan lebih dingin daripada pasar: koin tak diperhatikan kerumunan"
+          "ket": "funding relatif vs BTC -0.0218% — kerumunan lebih dingin daripada pasar: koin tak diperhatikan kerumunan"
         },
         {
           "param": "lsAkun",
@@ -6602,9 +6614,9 @@
           "param": "bukuGradien",
           "domain": "mikrostruktur",
           "lapis": "observasi",
-          "nilai": -0.057,
-          "arah": -0.1,
-          "ket": "gradien buku: distribusi merata — bid depan 15% vs ask depan 21% dari massa 1%"
+          "nilai": -0.12,
+          "arah": -0.22,
+          "ket": "gradien buku: likuiditas ask MENGUMPUL di depan (gerbang jual rapat) — bid depan 12% vs ask depan 24% dari massa 1%"
         },
         {
           "param": "garchSigma",
@@ -6620,7 +6632,7 @@
           "lapis": "observasi",
           "nilai": 0.15,
           "arah": 0,
-          "ket": "beta vs BTC 90 jam 0.15 (R² 0.16) — bantal defensif terhadap gejolak BTC"
+          "ket": "beta vs BTC 90 jam 0.15 (R² 0.15) — bantal defensif terhadap gejolak BTC"
         },
         {
           "param": "divRSI",
@@ -6634,17 +6646,17 @@
           "param": "pocJarak",
           "domain": "aliran",
           "lapis": "observasi",
-          "nilai": 0.03,
-          "arah": 0.3,
-          "ket": "POC volume 48 jam 0.3331000 (di atas harga — magnet tarik naik)"
+          "nilai": 0,
+          "arah": -0.3,
+          "ket": "POC volume 48 jam 0.3331000 (di bawah harga — magnet tarik turun)"
         },
         {
           "param": "mcPnaik",
           "domain": "volatilitas",
           "lapis": "observasi",
-          "nilai": 53,
-          "arah": 0.07,
-          "ket": "Monte Carlo 2.000 lintasan: peluang naik dalam 24 jam 53% — koin flip statistik"
+          "nilai": 51.6,
+          "arah": 0.04,
+          "ket": "Monte Carlo 2.000 lintasan: peluang naik dalam 24 jam 52% — koin flip statistik"
         },
         {
           "param": "ixFundingOI",
@@ -6674,17 +6686,17 @@
           "param": "ixBukuTren",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": -0.55,
-          "arah": -0.55,
-          "ket": "buku×tren1h: 0.458×-1 — buku melawan tren: dinding menahan, waspadai jebakan"
+          "nilai": -0.524,
+          "arah": -0.52,
+          "ket": "buku×tren1h: 0.437×-1 — buku melawan tren: dinding menahan, waspadai jebakan"
         },
         {
           "param": "ixDonchianVol",
           "domain": "interaksi",
           "lapis": "observasi",
-          "nilai": 0.291,
+          "nilai": 0.294,
           "arah": 0.29,
-          "ket": "breakout×volume: donchian -0.681 × volZ -0.388 — gerak ke ujung rentang DUKUNG volume: breakout autentik"
+          "ket": "breakout×volume: donchian -0.69 × volZ -0.388 — gerak ke ujung rentang DUKUNG volume: breakout autentik"
         },
         {
           "param": "ixFlowTren",
