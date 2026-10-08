@@ -27,9 +27,9 @@ const snap = {
   tubuh: {
     organGuruAda: existsSync('scripts/hidup/guru-master.mjs'),
     organSadarAda: existsSync('scripts/hidup/sadar1.js'),
-    uratGuruTerhubung: /run: node scripts\/hidup\/guru-master\.mjs/.test(denyutYml),
+    uratGuruTerhubung: /^\s*run: node scripts\/hidup\/guru-master\.mjs/m.test(denyutYml),
     uratGuruTerkomentar: /^\s*#\s*.*node scripts\/hidup\/guru-master\.mjs/m.test(denyutYml),
-    uratSadarTerhubung: /run: node scripts\/hidup\/sadar1\.js/.test(sadarYml),
+    uratSadarTerhubung: /^\s*run: node scripts\/hidup\/sadar1\.js/m.test(sadarYml),
     uratSadarTerkomentar: /^\s*#\s*.*node scripts\/hidup\/sadar1\.js/m.test(sadarYml),
     tanamIsi: existsSync('tanam') ? readdirSync('tanam') : []
   },
