@@ -1574,3 +1574,63 @@ akurasi pasar nyata. Geladak nyata (V303) tetap pengukur edge di
 dunia hidup; TEMPAN-100 adalah tempaan disiplin membaca jejak dan
 manajemen risiko. Dua hal itu dilaporkan terpisah dan tidak boleh
 dicampur.
+
+## §12q EPOCH V306 — TEMPAN-200: 200 SOAL DARI SAMPEL LOSS HISTORI PASAR NYATA
+
+**1. MANDAT PEMILIK (2026-10-08).** "200 soal yang diambil dari sample
+histori pasar... jumlah kemenangan ternyata gak selaras dengan jumlah
+TRX... ada kelalaian, akhirnya loss. 200 soal ini diambil dari seluruh
+sample lose dia dari segala macam koin... modal dia kini 10000 dolar...
+lihatlah bagaimana apakah dia mampu atau habis, jika habis latih lagi
+tempa lagi... kamu ikut serta merancang soalnya, biarkan micaprofita
+yang menjawabnya."
+
+**2. SUMBER SOAL = SEJARAH NYATA, NOL KARANGAN.** Organ tambang200.mjs
+mengambil **120.000 lilin 1 jam NYATA** (24 koin × 5.000 jam, Binance
+spot publik: BTC ETH BNB SOL XRP DOGE ADA TRX LINK AVAX DOT LTC ATOM
+NEAR ARB OP INJ SUI APT FIL ETC XLM PEPE SHIB — kelas A <$1, B $1–10,
+C ≥$10). Enam keluarga perilaku trader KALAH dirancang sebagai detektor:
+TIPU-PECAH-ATAS/BAWAH (breakout palsu), KEJAR-HIJAU/MERAH (FOMO/panik
+beruntun+volume), POTONG-PAJANG/TANGKAP-PAJANG (lawan RSI ekstrem).
+Tiap tembakan naive dicatat: **bukti ketidakselarasan TRX vs kemenangan
+tersegel angka** (contoh: TIPU-PECAH-BAWAH 590 TRX, menang 46.8%,
+net −105.3%; KEJAR-HIJAU 792 TRX, menang 45.2%). Soal HANYA dari
+tembakan yang kalah ≥0.15% dalam 4 jam (sampel loss). Kartu = 24 lilin
+nyata sebelum momen; arahBenar = arah NYATA 4 jam kemudian. Kunci audit
+terbuka: ujian/soal-200.json (segel 005836f0ecdb9ffb), dadakan
+ujian/soal-dadakan-40.json (segel 3fe93ea5f3386aa7).
+
+**3. KEJUJURAN ARSITEKTURAL (warisan TEMPAN-100).** Blind dijamin
+URUTAN OPERASI: makhluk menalar HANYA dari kartu (tanda jejak 18 fitur
+dari 24 lilin terlihat) → seluruh tebakan dikunci → BARU penilai
+membaca fakta sejarah. ujiBank menolak bank yang segelnya bobol, tandanya
+rusak, arahnya tak cocok fakta, atau wajahnya bertabrakan (113 wajah
+unik, 0 tabrakan). Deterministik: nol Math.random; siapa pun yang
+menjalankan ulang mendapat hasil identik.
+
+**4. HASIL TEMPAAN (tersegel laporan/tempa200.json).**
+- **G1** (nalar momentum pemula): **77/200**, modal 10000→1710,
+  **HABIS (likuidasi) di soal 81** — jebakan yang membunuh trader naif
+  juga membunuh pikiran momentum: melawan 6 keluarga jebakan, menang
+  cuma 38.5%.
+- **TEMPA**: peta jejak→arah dibangun dari 123 kekalahan sendiri
+  (113 pelajaran tanda→arah; keluarga TIDAK diberitahukan).
+- **G2**: **200/200 — LULUS TOTAL**, modal 10000→**30000** (bertahan,
+  tidak habis).
+- **UJIAN DADAKAN** (40 soal jendela lama jam 3000–5000 silam, tak
+  pernah ditempa): **38/40 (95%)** — via peta 24, simetri 16; dua
+  meleset di keluarga RSI-ekstrem jendela berbeda. Ini ukur paham-vs-
+  hafal, bukan kriteria mandat; dilaporkan apa adanya.
+
+**5. TUBUH.** Tab Ujian memperoleh panel TEMPAN-200: grid 200 kursi per
+gelombang (tooltip koin·waktu·entry·keluarga·tebak·hasil), vonis,
+ujian dadakan, peta jejak, bukti ketidakselarasan via bankSegel, segel
+SHA-256. Muat tak-blok via tempa2Muat(). 6 blok script sintaks OK,
+7 tab utuh, tubuh tetap nol kata terlarang.
+
+**6. BATAS KETAHANAN.** Tempaan ini belajar dari sampel loss historis —
+pola likuidasi yang berulang, BUKAN jaminan masa depan; dadakan 38/40
+adalah ukuran generalisasi jujurnya. Edge di dunia hidup tetap diukur
+geladak nyata (V303). Dua angka itu dilaporkan terpisah dan tidak boleh
+dicampur. Ujian selesai seketika sesuai mandat (fakta sejarah, bukan
+menunggu waktu nyata).
