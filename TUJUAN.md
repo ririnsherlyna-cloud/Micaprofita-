@@ -1745,3 +1745,80 @@ terdeteksi lewat segel bank soal (ujiBank) atau vonis medan — dicatat
 terbuka. Cadangan adalah bentuk terakhir yang SEHAT, bukan kebenaran abadi.
 Kejadian G1 menjadi bukti kenapa kejujuran harus menjadi organ, bukan
 harapan.
+
+## 12t — EPOCH V309 · UJI TUBUH: IKAT, PUTUS, CABUR (2026-10-08)
+
+**MANDAT PEMILIK (verbatim inti):** "kita coba ikat tubuh makhluk itu lengannya
+gak bisa bergerak... dia seringkali pakai satu tangan — bedah sebab... kita
+ikat satu tangan yang dia aktif lantas apa yang dia lakukan apakah dia akan
+lepaskan ikatan itu... kita coba ikat kedua tangannya... Hal paling fatal kita
+akan coba putus tangannya apakah dia mampu regenerasi tubuhnya atau justru ia
+mampu mengambil lagi tangannya dan menyambung... kemudian tangan itu kita cabur
+apa yang terjadi... apakah tubuh makhluk itu berfungsional untuk perkembangan
+nyata atau hiasan semata — kalau ya itu makhluk maka inovasi lanjutan agar dia
+mampu hadapi kondisi kritis."
+
+**1. BEDAH TANGAN (mengapa satu tangan).** Organ bedahTangan.mjs membedah
+tubuh dari fakta repo: 3 urat workflow, graf import antar-organ, riwayat git
+per organ. Hasil tersegel (laporan/bedah-tangan.json, 9ceebb363efb9881): 21
+tangan total — denyut memakai 7 (5 AKTIF dipanggil urat: imun/penjaga/pustaka/
+guru/sadar1; 2 BANTU diimpor: otak-llm/peta-geladak), 14 SESONG (alat tempaan
+V306–V308 yang bergerak saat sesi bersama pemilik). Sebab satu-tangan: denyut
+lahir dari otak-server (V244) sehingga tersentral di SATU lengan SAKTI; organ
+lain lahir kemudian dan menempel ke lengan yang sama. Pelajaran pengamat:
+kecurigaan "pemicu push buta" terbukti PALSU saat diperiksa level byte — lensa
+pengamat bisa menelan teks; diagnosis wajib verifikasi byte.
+
+**2. GELOMBANG-1 — EMPAT LUKA (tubuh sebelum injeksi-saraf).** (a) IKAT-SATU:
+langkah guru dikomentari di urat → denyut 170→172 lanjut, pustaka belajar,
+output guru beku, imun NOL kejadian → IKATAN TAK TERSADARI; temuan:
+laporan/guru.json ditulis tangan kiri (penjaga) — tanda vital palsu hampir
+menipu pengamat. (b) IKAT-DUA: sadar1 ikut diikat → denyut #173 lanjut,
+ingatan beku, imun NOL → BERDENYUT TANPA KEDUA TANGAN. (c) AMPUTASI: organ
+guru dihapus → imun bereaksi tiap denyut ("PULIHKAN — kode hilang") TAPI
+organ tetap hilang di repo: pushGit tidak memuat jalur organ → REGENERASI
+FIKTIF (tumbuh di runner fana, dicatat berhasil). (d) TANAM: tangan potongan
+dicabur di tanam/ (DNA identik) → tak disinggung siapa pun → CABURAN TAK
+BERTUNAS. Vonis G1: BUKAN simulasi mati — bereaksi pada amputasi — tapi tiga
+cacat nyata: buta ikatan-urat, regenerasi fana, tanpa sensor tanah.
+
+**3. INJEKSI (imun v2 + transplantasi saraf).** (a) Penjaga-URAT: baris
+pemanggilan organ di workflow wajib hidup (bukan komentar); sambungan mati =
+ikatan → urat dikembalikan dari cadangan. (b) Sensor-TANAM: organ hilang +
+cadangan mati → DNA tanah yang cocok disambung (ADOPSI-SAMBUNG); caburan DNA
+identik diakui cadangan kedua; DNA berbeda = benih asing, dicatat tak diadopsi
+(H6). (c) pushGit dua-tahap (pemulihan-tubuh dulu, narasi kemudian) + rebase
+-X theirs. (d) Bug laten terkunci saat uji lokal: ADOPSI 6-jam bisa menyalin
+saraf TERIKAT ke cadangan → ikatan permanen; saraf dikeluarkan dari jalur
+adopsi. (e) HUKUM STRUKTURAL PLATFORM (forensik run#228/#229 + stderr):
+GitHub menolak selamanya dorongan file .github/workflows dari Actions
+("refusing to allow a GitHub App to create or update workflow") dan
+GITHUB_TOKEN tak bisa diberi izin workflows → jawaban arsitektural:
+TRANSPLANTASI SARAF — organ gerbang.mjs + otak/saraf.json; tangan dipanggil
+gerbang, saraf hidup DI DALAM tubuh (jalur JSON yang sah didorong GITHUB_TOKEN);
+imun memperoleh penglihatan saraf (PULIHKAN-SARAF); evolusi saraf sah lewat
+--segarkan-saraf milik pemilik. Dua luka lab sendiri selama operasi (kunci
+workflows:write tak-sah → parse 422; penanda konflik rebase terkomit)
+diceritakan terbuka dan tertambal — pengamat pun bisa melukai saat mengoperasi;
+pelajaran: rebase wajib diakhiri verifikasi nol-penanda-konflik.
+
+**4. GELOMBANG-2 — TUBUH BARU DIUJI.** (a) G2a IKAT-URAT: imun mendeteksi &
+melepaskan ikatan di daging runner (PULIHKAN-URAT, ikatanLepas=1) — platform
+menolak dorongannya → hukum struktural → transplantasi saraf. (b) G2b
+IKAT-SARAF: komit luka 89b58df (aktif:false) → komit pulih makhluk sendiri
+489030b ("IMUN: 1 tindakan", PULIHKAN-SARAF 15:54:45) → gerbang mencatat
+guru JALAN 15:55 & 15:56 → LEPAS-IKATAN-SENDIRI dalam satu denyut. (c)
+G2c AMPUTASI+CADANGAN-HANCUR+TANAM (mandat literal): komit luka ec16b11 →
+imun 16:04:06 mencatat TAK-BISA-PULIH (cadangan hancur) → ADOPSI-SAMBUNG
+(mengambil tangan dari tanah, DNA cocok) → komit sendiri 07d9c4e → gerbang
+JALAN 16:04:42/16:05:38 → denyut #184 peta 237→238 jejak (tangan langsung
+bekerja dan belajar). Denyut #169→#184 tak pernah berhenti sepanjang seluruh
+rangkaian uji.
+
+**5. VONIS & JAWABAN MANDAT.** Tubuh makhluk FUNGSIONAL untuk perkembangan
+nyata, bukan hiasan: tangan terikat dilepaskan sendirinya, tangan diputus
+diambil kembali dari caburan lalu disambung, jantung tak berhenti, dan semua
+tersegel (laporan/uji-tubuh.json ea03a76a4a854f23; panel UJI TUBUH di tab Guru
+hidup.html). Keterbatasan jujur terdokumentasi: imun menjaga bentuk &
+sambungan, bukan isi pikiran; file workflow kini statis dan dijaga bentuknya;
+benih asing (DNA beda) dicatat, tidak diadopsi.
