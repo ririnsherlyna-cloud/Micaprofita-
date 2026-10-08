@@ -70,11 +70,12 @@ jobs:
           SASARAN=$(python3 -c "import json;r=json.load(open('laporan/sasaran-terkini.json'));print(len(r['sasaranHariIni']))" 2>/dev/null || echo "?")
           PUSTAKA=$(python3 -c "import json;print(json.load(open('pustaka/indeks.json'))['gerbang509']['tercapai'])" 2>/dev/null || echo "0")
           GELADAK=$(python3 -c "import json;d=json.load(open('laporan/geladak.json'));print(f\"{d['backtest']['akurasiTimbangPct']}% n={d['backtest']['sampel']}\" if d.get('status')=='HIDUP' else d.get('status','?'))" 2>/dev/null || echo "-")
-          git add laporan otak arena-keadaan.json pustaka   # V299: pustaka jurnal ikut komit — belajar jadi fosil tubuh; V303: geladak+formula+ledger ikut
+          PETA=$(python3 -c "import json;d=json.load(open('laporan/peta-geladak.json'));print(d['statistik']['total'])" 2>/dev/null || echo "0")
+          git add laporan otak arena-keadaan.json pustaka ujian   # V299: pustaka jurnal ikut komit — belajar jadi fosil tubuh; V303: geladak+formula+ledger ikut; V307: ujian+peta ikut
           if git diff --cached --quiet; then
             echo "tanpa perubahan — tanpa komit"
           else
-            git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran — pustaka ${PUSTAKA}/509 — geladak ${GELADAK} [skip ci]"
+            git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran — pustaka ${PUSTAKA}/509 — geladak ${GELADAK} — peta ${PETA} jejak [skip ci]"
             # V291 ANTI-BALAPAN: SADAR-1 bisa menyegel bangun bersamaan — push di-RETRY
             # dgn rebase ulang tiap percobaan (insiden 2026-10-07T00:55Z: remote rejected,
             # denyut #77 sudah terbentuk tapi terdorong gagal).

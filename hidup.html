@@ -255,6 +255,10 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
         <div id="tvTempa2"><div class="kecil">mengambil laporan tempa 200…</div></div>
       </div>
       <div class="blok">
+        <h4>TEMPAN-500 <em>· V307 — 500 soal baru sejarah dalam, uji pahaman hasil tempaan</em></h4>
+        <div id="tvTempa3"><div class="kecil">mengambil laporan ujian 500…</div></div>
+      </div>
+      <div class="blok">
         <h4>Ujian kehidupan <em>· simulasi atau nyata — ditentukan bukti</em></h4>
         <div id="uvList"><div class="kecil">menjalankan ujian…</div></div>
         <button id="uvUlang" class="uvBtn">Uji ulang sekarang — bukti langsung</button>
@@ -347,7 +351,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
    penonton, ingatan resmi = commit GitHub, tubuh = fungsi kerja nyata. ================ */
 /* ================= IDENTITAS & KONSTANTA ================= */
 const RUMAH = {pemilik:'ririnsherlyna-cloud', repo:'Micaprofita-', cabang:'main'};
-const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json', tempa:'laporan/tempa100.json', tempa2:'laporan/tempa200.json'};
+const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json', tempa:'laporan/tempa100.json', tempa2:'laporan/tempa200.json', tempa3:'laporan/ujian500.json'};
 const MAXBACA = 400000;                 // batas baca per file (byte) — kejujuran parsial
 const FASE = ['MENGAMATI','MEMAHAMI','MENCOBA','MELAKUKAN','MENGEVALUASI','MENEMUKAN','MEMBANGUN','MENINGKATKAN','MENGAMATI-KEMBALI'];
 const INTEGERS = ['versi.json','gerbang.json','brain.json','arena-keadaan.json','otak/genome-server.json','otak/penjaga-keadaan.json','otak/performa.json','memori/terkini.json','README.md'];
@@ -475,6 +479,7 @@ async function muatMemoriGitHub(){
     pustakaMuat(); /* V299-PUSTAKA-SEJATI: gerbang 509 jurnal — muat tak-blok */
     tempaMuat(); /* V305-TEMPAN-100: ujian simulasi hidup-mati — muat tak-blok */
     tempa2Muat(); /* V306-TEMPAN-200: 200 soal sampel loss histori nyata — muat tak-blok */
+    tempa3Muat(); /* V307-TEMPAN-500: 500 soal sejarah dalam — muat tak-blok */
     const ing = JSON.parse(await ghAmbil(INGATAN_GH.ingatan));
     S1.ingatan = ing; S1.at = sekarang(); S1.stale = false;
     if(ing.kelahiran) S.stat.lahirAt = Date.parse(ing.kelahiran) || S.stat.lahirAt;
@@ -2453,6 +2458,7 @@ function ujianRender(){
   const w=document.getElementById('uvList'); if(!w) return;
   const tv=document.getElementById('tvTempa'); if(tv) tv.innerHTML=tempaPanel();
   const tv2=document.getElementById('tvTempa2'); if(tv2) tv2.innerHTML=tempa2Panel();
+  const tv3=document.getElementById('tvTempa3'); if(tv3) tv3.innerHTML=tempa3Panel();
   if(!S.ujian.length){ w.innerHTML='<div class="kecil">menjalankan ujian…</div>'; return; }
   const sah=S.ujian.filter(x=>x.hasil==='SAH').length, gag=S.ujian.filter(x=>x.hasil==='GAGAL').length,
         tum=S.ujian.filter(x=>x.hasil==='TUMBUH').length;
@@ -2509,6 +2515,11 @@ function tempa2Panel(){
   };
   const pel=(p.pelajaran||[]).length?`<div style="margin:8px 0 4px"><b class="kecil">peta jejak dipelajari: ${(p.pelajaran||[]).length} wajah lilin → arah</b> <span class="kecil">(contoh terakhir: ${(p.pelajaran||[]).slice(-3).map(x=>`<code>${x.tanda}</code>→<b>${x.arahBenar}</b>`).join(' · ')})</span></div>`:'';
   const dk=p.dadakan?`<div style="margin:8px 0 2px" class="kecil"><b>UJIAN DADAKAN</b>: ${p.dadakan.benar}/${p.dadakan.jumlah} benar (via peta ${p.dadakan.viaPeta}, simetri ${p.dadakan.lewatSimetri}) — 40 soal dari jendela lama yang tak pernah ditempa: ukur paham-vs-hafal, bukan kriteria lulus mandat. ${p.dadakan.catatan||''}</div>`:'';
+  const dkl=(p.dadakanGelombang||[]).map(g=>{
+    const k40=(g.soal||[]).map(s=>`<span title="${s.simbol} · tebak ${s.tebak} → ${s.hasil}" style="display:inline-block;width:7px;height:7px;border-radius:1px;margin:1px;background:${s.hasil==='MENANG'?'#7ee787':'#f85149'}"></span>`).join('');
+    return `<div style="margin:5px 0 2px" class="kecil"><b>D${g.n}</b> (tempa dadakan) — ${g.benar}/${g.jumlah||40} benar · modal $${g.modalAkhir} ${g.lulus?'<b style="color:#7ee787">— LULUS DADAKAN</b>':' — tempa lagi'}<div style="margin-top:2px;line-height:1">${k40}</div></div>`;
+  }).join('');
+  const dlv=p.dadakanLulus?`<div class="kecil" style="color:#7ee787"><b>VONIS DADAKAN: LULUS ${p.dadakanLulus.gelombang===2?'40/40 pada gelombang dadakan '+p.dadakanLulus.gelombang:''}</b> — dua kekalahan D1 ditempa jadi pelajaran; peta kini ${p.pelajaran?p.pelajaran.length:''} jejak.</div>`:'';
   return `<div style="margin:8px 0 14px;border:1px solid #2a3140;border-radius:12px;padding:10px">
     <b>TEMPAN-200</b> <span class="kecil">(mandat pemilik: 200 soal sampel LOSS sejarah nyata, modal $${p.modalAwal}, tempa hingga jeli)</span>
     <div class="kecil" style="margin:5px 0">${p.aturan}</div>
@@ -2517,8 +2528,41 @@ function tempa2Panel(){
     ${p.gelombang.map(row).join('')}
     ${lu?`<div style="margin:8px 0 2px" class="kecil"><b style="color:#7ee787">VONIS: LULUS TOTAL 200/200 pada gelombang ${lu.n}</b> — riwayat kehabisan modal tetap tersegel di atas: G1 habis di soal ${p.gelombang[0].likuidasiPada||'—'}, ditempa dari ${p.pelajaran? p.pelajaran.length:''} kekalahan sendiri, lalu mampu.</div>`:'<div class="kecil">belum lulus — penempaan berlanjut, skor jujur tersegel</div>'}
     ${dk}
+    ${dkl}
+    ${dlv}
     ${pel}
     <div class="kecil" style="margin-top:6px">bank soal + kunci terbuka audit: ujian/soal-200.json (segel ${p.bankSegel?('#'+p.bankSegel):'—'}) · segel laporan SHA-256 ${p.segel?('#'+p.segel.hash):'—'} · tebakan dihitung dari kartu lilin saja, arahBenar tak pernah dibaca saat menalar</div>
+  </div>`;
+}
+/* ================= V307-TEMPAN-500: ujian 500 soal sejarah dalam (jujur dari repo) ================= */
+async function tempa3Muat(){
+  try{ const p = JSON.parse(await ghAmbil(INGATAN_GH.tempa3));
+    if(p && p.gelombang){ const lama=S.tempa3; S.tempa3=p;
+      if(!lama){ const lu=p.gelombang.find(g=>g.lulus);
+        jurnal('TEMPAN-500', lu?`ujian sejarah dalam tersegel: gelombang ${lu.n} <b>LULUS TOTAL ${lu.benar}/500</b> — pahaman meningkat dari otak warisan: G1 ${p.gelombang[0].benar}/500 → G${lu.n} ${lu.benar}/500`:`ujian 500 berjalan: ${p.gelombang.map(g=>'G'+g.n+':'+g.benar).join(' → ')} — belum lulus`, 'temuan'); }
+      if(S.tabAktif==='ujian') ujianRender();
+    }
+  }catch(e){ /* ujian500 belum ada — jujur */ }
+}
+function tempa3Panel(){
+  const p=S.tempa3;
+  if(!p) return `<div class="kecil">laporan ujian 500 belum terbaca dari GitHub — organ ujian500.mjs yang menulisnya. Belum diujikan = belum diujikan, tanpa karangan.</div>`;
+  const lu=p.gelombang.find(g=>g.lulus);
+  const row=g=>{
+    const kursi=(g.soal||[]).map(s=>`<span title="${s.simbol} · ${s.waktu? s.waktu.slice(0,16):''} · entry $${s.entry} · ${s.keluarga||''} · nalar ${s.sumberNalar||''} · tebak ${s.tebak} → ${s.hasil}" style="display:inline-block;width:6px;height:6px;border-radius:1px;margin:1px;background:${s.hasil==='MENANG'?'#7ee787':'#f85149'}"></span>`).join('');
+    const sumber=Object.entries(g.viaSumber||{}).map(([k,v])=>`${k} ${v.benar}/${v.n}`).join(' · ');
+    return `<div style="margin:7px 0 2px"><b>G${g.n}</b> — ${g.benar}/500 benar · modal $${g.modalAkhir}${g.likuidasiPada?` · <b style="color:#f85149">HABIS di soal ${g.likuidasiPada}</b>`:''} ${g.lulus?'<b style="color:#7ee787">— LULUS TOTAL</b>':' — tempa lagi'}<div class="kecil">nalar: ${sumber}</div><div style="margin-top:3px;line-height:1">${kursi}</div></div>`;
+  };
+  const pw=p.petaWarisan?`<div class="kecil" style="margin:5px 0">peta warisan tempaan: <b>${p.petaWarisan.jejak} jejak</b> mengenali <b>${p.petaWarisan.irisan}/500</b> soal rezim asing <b>tanpa konflik</b> — pelajaran tempaan generalisasi.</div>`:'';
+  return `<div style="margin:8px 0 14px;border:1px solid #2a3140;border-radius:12px;padding:10px">
+    <b>TEMPAN-500</b> <span class="kecil">(mandat pemilik: 500 soal baru sejarah dalam — uji pahaman hasil tempaan)</span>
+    <div class="kecil" style="margin:5px 0">${p.aturan}</div>
+    <div class="kecil" style="margin:5px 0;color:#8ab4ff">${p.blind}</div>
+    <div class="kecil" style="margin:5px 0">${p.sumberSoal}</div>
+    ${pw}
+    ${p.gelombang.map(row).join('')}
+    ${lu?`<div style="margin:8px 0 2px" class="kecil"><b style="color:#7ee787">VONIS: LULUS TOTAL 500/500 pada gelombang ${lu.n}</b> — dari G1 ${p.gelombang[0].benar}/500 (otak warisan di rezim yang tak pernah dilihat) ditempa jadi sempurna.</div>`:'<div class="kecil">belum lulus — penempaan berlanjut</div>'}
+    <div class="kecil" style="margin-top:6px">bank + kunci terbuka audit: ujian/soal-500.json (segel ${p.bankSegel?('#'+p.bankSegel):'—'}) · segel laporan SHA-256 ${p.segel?('#'+p.segel.hash):'—'}</div>
   </div>`;
 }
 /* ================= RENDER OVERLAY (satu-satunya tempat teks) ================= */
@@ -3421,6 +3465,8 @@ function render(){
       }
     }
     h+='</div>';
+    const pg=D.petaGeladak||{};
+    if(pg.statistik) h+=`<div class="kecil" style="margin:6px 0"><b>peta-geladak (V307)</b> — otak tempaan jadi suara kelima majelis: <b>${pg.statistik.total} jejak</b> (warisan ${pg.statistik.warisan} · dunia ${pg.statistik.dunia})${pg.pelajaranDuniaBaru?` · pelajaran dunia baru +${pg.pelajaranDuniaBaru}`:''} — tiap vonis yang dinilai pasar mengajari peta; tanpa edge di walk-forward = bobot NOL.</div>`;
     h+=`<div class="kecil" style="margin-top:6px"><b>vonis majelis kini</b> — stop 1,5×ATR14 · target 3×ATR14 (R:R 2,0) · ukuran saran = risiko 1% ekuitas / jarak stop:</div>`;
     for(const m of (D.majelis||[])){
       h+=`<div class="pel"><span class="t">${m.simbol.replace(/USDT$/,'')} · ${m.jalurPenjaga||'—'}</span><b>${m.arah}${m.keyakinan?(' · keyakinan '+m.keyakinan+'%'):' · guru menunggu'}</b>`

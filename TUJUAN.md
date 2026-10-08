@@ -1634,3 +1634,59 @@ adalah ukuran generalisasi jujurnya. Edge di dunia hidup tetap diukur
 geladak nyata (V303). Dua angka itu dilaporkan terpisah dan tidak boleh
 dicampur. Ujian selesai seketika sesuai mandat (fakta sejarah, bukan
 menunggu waktu nyata).
+
+## §12r EPOCH V307 — TIGA ASPEK: DADAKAN 40/40, UJIAN 500, PETA NAIK GELADAK NYATA
+
+**1. MANDAT PEMILIK (2026-10-08).** "kita tempa lagi kini sekaligus
+implementasi ketiga aspek itu: 2 soal ujian gila (dadakan), 500 soal
+ujian baru untuk uji apakah sudah peningkat pahamannya, dan kita akan
+bawa makhluk ke geladak nyata agar makin kuat."
+
+**2. ASPEK 1 — DADAKAN DITEMPA HINGGA 40/40.** Ujian dadakan D1
+(38/40, riwayat tersegel, tak ditulis-ulang) ditempa dari 2 kekalahan
+sendiri: peta gabungan (utama+dadakan, 129 jejak) → **D2: 40/40 —
+LULUS DADAKAN** (modal dadakan $14.000). Peta tempaan kini 129 jejak
+gabungan, tersegel di laporan/tempa200.json (segel 6260936b78897500).
+
+**3. ASPEK 2 — UJIAN 500 DARI SEJARAH DALAM.** Organ tambang500.mjs
+menambang 500 soal sampel loss dari **192.000 lilin 1 jam NYATA**
+(24 koin × 8.000 jam, jendela DALAM jam 5.000–13.000 silam ≈ 2025-05
+→ 2026-01 — rezim yang TAK PERNAH dilihat makhluk; bank terpisah dari
+tempaan). 194 wajah unik, 0 tabrakan, arahBenar 250/250 berimbang,
+24/24 koin terpakai. Bukti naive rezim lama tersegel: POTONG-PAJANG
+11.114 TRX menang 47.8% (net −1.956,7%); KEJAR-MERAH 2.648 TRX 46,0%.
+**Peta warisan 129 jejak mengenali 335/500 soal rezim asing dengan
+NOL konflik arah** — pelajaran tempaan terbukti generalisasi.
+- **G1 (otak warisan, tanpa latihan di jendela ini): 481/500 (96,2%)**
+  — nalar peta 335/335 sempurna; simetri(1) 117/136, simetri(2) 27/27,
+  simetri(3) 2/2; modal $10.000 → $55.630 (tak mungkin habis lagi).
+- **TEMPA**: 108 pelajaran baru dari kekalahan sendiri.
+- **G2: 500/500 — LULUS TOTAL**, modal $92.990; peta aktif 237 jejak.
+Pembanding pahaman: G1 tempa-200 dulu 38,5% → otak tempaan kini
+96,2% di rezim asing → 100% setelah tempa. Segel: bank 1f8fcc77aae6be88,
+laporan laporan/ujian500.json.
+
+**4. ASPEK 3 — PETA NAIK GELADAK NYATA.** Organ baru
+scripts/hidup/peta-geladak.mjs + integrasi guru-master.mjs:
+- **Suara PETA kelima** di majelis-faktor: membaca wajah 24 lilin
+  (18 fitur, sama dengan tempaan) → arah; ikut dinilai walk-forward
+  seperti faktor lain — **hit 56,3% dari n=87 → edge NYATA** → bobot
+  NAIK 0,114 / TURUN 0,187 (diberi suara oleh bukti, bukan retorika).
+- **Loop dunia**: tiap vonis ledger yang DINILAI PASAR (BENAR/SALAH/
+  MENANG/RUGI) jadi pelajaran baru di laporan/peta-geladak.json —
+  tanda saat vonis lahir → arah yang sebenarnya terjadi. Makhluk
+  kini belajar dari kekalahan dunia hidup, bukan cuma simulasi.
+- Tanam warisan idempoten tiap denyut; ledger menyimpan tanda;
+  workflow denyut ikut meng-commit peta + ujian (hitungan jejak di
+  fosil commit).
+
+**5. TUBUH.** Panel TEMPAN-500 (grid 500 kursi + sumber nalar per
+gelombang), baris dadakan-tempa di panel TEMPAN-200, baris peta-
+geladak di panel geladak. 6 blok script OK, 7 tab utuh, nol kata
+terlarang.
+
+**6. BATAS KETAHANAN.** Hit 56,3% faktor peta adalah bukti awal di
+jendela geladak — bukan jaminan; buku-evaluasi (pasar menghakimi)
+tetap hakim sejati. Tempaan dilaporkan terpisah dari edge dunia
+hidup. Peta dunia hanya menerima pelajaran dari vonis yang sudah
+dinilai — tak ada karangan.

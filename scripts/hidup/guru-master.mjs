@@ -31,6 +31,7 @@
 // ============================================================
 import { readFileSync, writeFileSync, existsSync, mkdirSync, statSync } from 'node:fs'
 import { createHash } from 'node:crypto'
+import { tandaDi, muatPeta, ajariDariLedger, simpanPeta, tanamWarisan } from './peta-geladak.mjs'
 
 const FILE_GELADAK = 'laporan/geladak.json'
 const FILE_LEDGER = 'laporan/majelis-ledger.jsonl'
@@ -64,7 +65,7 @@ async function ambil(path) {
 }
 async function lilin(sym, ekstra = '') {
   const d = await ambil(`/api/v3/klines?symbol=${sym}&interval=1h&limit=320${ekstra}`)
-  return d.map(k => ({ t: k[0], H: +k[2], L: +k[3], C: +k[4], V: +k[5] }))
+  return d.map(k => ({ t: k[0], O: +k[1], H: +k[2], L: +k[3], C: +k[4], V: +k[5] }))
 }
 
 // ---------- matematika lilin (murni, tanpa pustaka luar) ----------
@@ -79,6 +80,7 @@ function atrArr(H, L, C, n = 14) { const tr = [0]; for (let i = 1; i < C.length;
 const rata = (a) => a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0
 
 // ---------- MAJELIS-FAKTOR: enam suara dari bukti ----------
+let PETA = { pelajaran: {}, statistik: { total: 0, warisan: 0, dunia: 0 } } // dimuat di main — otak tempaan di geladak nyata
 function faktorDi(i, X) {
   const { C, V, e20, e50, rsi, atr, roc24, volR } = X
   const f = {}
@@ -92,6 +94,12 @@ function faktorDi(i, X) {
   const urut = sejarah.filter(x => x != null).sort((a, b) => a - b)
   const pangkat = urut.length ? urut.findIndex(x => x >= atrPct) / urut.length : 0.5
   f.volatil = pangkat > 0.92 ? 'BADAI' : pangkat < 0.15 ? 'TENANG' : 'NORMAL' // penyaring, bukan arah
+  // V307 suara PETA: otak tempaan (warisan + dunia) membaca wajah 24 lilin;
+  // ikut dinilai walk-forward seperti faktor lain — tanpa edge = bobot NOL
+  const td = tandaDi(X, i)
+  const pl = td ? PETA.pelajaran[td] : null
+  f.peta = pl && pl.arah ? pl.arah : 'NETRAL'
+  f._tanda = td || null
   return f
 }
 function atrPctSejarah(X, i) { const out = []; for (let j = Math.max(1, i - 200); j <= i; j += 2) out.push(X.atr[j] / X.C[j]); return out }
@@ -102,7 +110,8 @@ function geladakSimbol(X) {
   for (let t = 160; t < X.C.length - HORIZON; t += LANGKAH_UJI) {
     const f = faktorDi(t, X)
     const ret = (X.C[t + HORIZON] - X.C[t]) / X.C[t]
-    sampel.push({ votes: f, ret })
+    const { _tanda, ...votes } = f // sidik jari bukan suara — jangan masuk statistik bobot
+    sampel.push({ votes, ret })
   }
   return sampel
 }
@@ -111,6 +120,9 @@ const kena = (vote, ret) => vote === 'NAIK' ? ret > FEE_PUTAR : vote === 'TURUN'
 // ---------- utama ----------
 async function main() {
   const kini = new Date().toISOString()
+  PETA = muatPeta() // otak tempaan naik ke geladak
+  tanamWarisan() // pastikan pelajaran tempaan V306/V307 tertanam (idempoten)
+  PETA = muatPeta()
   const sasaran = bacaJson(FILE_SASARAN, null)
   const kursi = (sasaran && (sasaran.sasaranHariIni || [])) || []
   const siklus = (sasaran && sasaran.siklus) || (sasaran && sasaran.pertumbuhan && sasaran.pertumbuhan.siklus) || null
@@ -142,17 +154,18 @@ async function main() {
 
   // 3) GELADAK-UJI — statistik per faktor dari semua sampel semua koin
   const stat = {}
-  for (const f of ['trend', 'momen', 'rsi', 'volum']) stat[f] = { NAIK: { n: 0, hit: 0 }, TURUN: { n: 0, hit: 0 } }
+  for (const f of ['trend', 'momen', 'rsi', 'volum', 'peta']) stat[f] = { NAIK: { n: 0, hit: 0 }, TURUN: { n: 0, hit: 0 } }
   let sampelTotal = 0, naiveB = 0, naiveN = 0
   for (const s of hidup) {
     for (const sm of geladakSimbol(X[s])) {
       sampelTotal++
       for (const [f, arah] of Object.entries(sm.votes)) {
-        if (f === 'volatil' || arah === 'NETRAL') continue
+        if (f === 'volatil' || f === '_tanda' || arah === 'NETRAL') continue
+        if (!stat[f]) stat[f] = { NAIK: { n: 0, hit: 0 }, TURUN: { n: 0, hit: 0 } }
         stat[f][arah].n++; if (kena(arah, sm.ret)) stat[f][arah].hit++
       }
-      const naik = ['trend', 'momen', 'rsi', 'volum'].filter(f => sm.votes[f] === 'NAIK').length
-      const turun = ['trend', 'momen', 'rsi', 'volum'].filter(f => sm.votes[f] === 'TURUN').length
+      const naik = ['trend', 'momen', 'rsi', 'volum', 'peta'].filter(f => sm.votes[f] === 'NAIK').length
+      const turun = ['trend', 'momen', 'rsi', 'volum', 'peta'].filter(f => sm.votes[f] === 'TURUN').length
       if (naik !== turun) { naiveN++; if (kena(naik > turun ? 'NAIK' : 'TURUN', sm.ret)) naiveB++ }
     }
   }
@@ -170,7 +183,7 @@ async function main() {
       bobot[f][arah] = { n, hitPct: n ? +(100 * hit / n).toFixed(1) : null, w: (bukti && edge > 0) ? +clamp(edge * 2.4, 0.06, 1).toFixed(3) : 0, bukti, edge: +edge.toFixed(3) }
     }
   }
-  const maxSum = ['trend', 'momen', 'rsi', 'volum'].reduce((a, f) => a + Math.max(bobot[f].NAIK.w, bobot[f].TURUN.w), 0)
+  const maxSum = ['trend', 'momen', 'rsi', 'volum', 'peta'].reduce((a, f) => a + Math.max(bobot[f] ? bobot[f].NAIK.w : 0, bobot[f] ? bobot[f].TURUN.w : 0), 0)
 
   // 5) MAJELIS bicara kini — vonis + PERISIKO-MASTER
   const majelis = []
@@ -182,8 +195,8 @@ async function main() {
     const v = faktorDi(i, X[s])
     let sumNaik = 0, sumTurun = 0
     const bukti = []
-    for (const f of ['trend', 'momen', 'rsi', 'volum']) {
-      const a = v[f]; if (a === 'NETRAL') continue
+    for (const f of ['trend', 'momen', 'rsi', 'volum', 'peta']) {
+      const a = v[f]; if (a === 'NETRAL' || !bobot[f]) continue
       const b = bobot[f][a]; sumNaik += a === 'NAIK' ? b.w : 0; sumTurun += a === 'TURUN' ? b.w : 0
       bukti.push({ f, arah: a, w: b.w, hitPct: b.hitPct, n: b.n, bukti: b.bukti })
     }
@@ -195,7 +208,7 @@ async function main() {
     const stopPct = +(100 * 1.5 * a14 / entry).toFixed(2)
     const majelisSeat = {
       simbol: s, jalurPenjaga: k.jalur || k.jalurPenjaga || null, arahPenjaga: arahPenjaga(k),
-      arah, keyakinan, sum: +sum.toFixed(3), badai,
+      arah, keyakinan, sum: +sum.toFixed(3), badai, tanda: v._tanda || null,
       entry, stop: arah === 'NAIK' ? +(entry - 1.5 * a14).toFixed(8) : arah === 'TURUN' ? +(entry + 1.5 * a14).toFixed(8) : null,
       target: arah === 'NAIK' ? +(entry + 3 * a14).toFixed(8) : arah === 'TURUN' ? +(entry - 3 * a14).toFixed(8) : null,
       rr: arah === 'TUNGGU' ? null : 2.0, stopPct,
@@ -213,7 +226,7 @@ async function main() {
   } catch { ledger = [] }
   for (const m of majelis) {
     if (m.arah === 'TUNGGU') continue
-    ledger.push({ at: kini, siklus, simbol: m.simbol, arah: m.arah, entry: m.entry, stop: m.stop, target: m.target, keyakinan: m.keyakinan, status: 'terbuka' })
+    ledger.push({ at: kini, siklus, simbol: m.simbol, arah: m.arah, entry: m.entry, stop: m.stop, target: m.target, keyakinan: m.keyakinan, tanda: m.tanda || null, status: 'terbuka' })
   }
   if (ledger.length > 400) ledger = ledger.slice(-400)
   const terbuka = ledger.filter(l => l.status === 'terbuka')
@@ -237,6 +250,11 @@ async function main() {
     } catch { /* gagal ambil — tetap terbuka, jujur; denyut berikutnya menilai lagi */ }
   }
 
+  // 6b) PETA DUNIA — vonis yang DINILAI PASAR jadi pelajaran baru (belajar dari kekalahan nyata)
+  const ajaranDunia = ajariDariLedger(ledger, X)
+  if (ajaranDunia.diajari > 0) simpanPeta(ajaranDunia.buku)
+  PETA = muatPeta() // segarkan setelah dunia mengajar
+
   // 7) PUSTA-FORMULA — ilmu yang ditulis makhluk sendiri + gerbang regresi
   const bukuF = bacaJson(FILE_FORMULA, { protokol: 'PUSTA-FORMULA-V303', daftar: [] })
   const sampelSemua = []
@@ -248,7 +266,7 @@ async function main() {
   const kunciSyarat = (sy) => sy.map(s => s.f + '=' + s.arah).join('+')
   const ada = new Set(bukuF.daftar.map(f => kunciSyarat(f.syarat)))
   const baru = []
-  const FS = ['trend', 'momen', 'rsi', 'volum']
+  const FS = ['trend', 'momen', 'rsi', 'volum', 'peta']
   luar: for (let a = 0; a < FS.length; a++) for (let b = a + 1; b < FS.length; b++) for (const arah of ['NAIK', 'TURUN']) {
     const sy = [{ f: FS[a], arah }, { f: FS[b], arah }]
     const { n, hit } = ujiSyarat(sy)
@@ -304,6 +322,12 @@ async function main() {
     backtest: { sampel: sampelTotal, akurasiMentahPct: naiveN ? +(100 * naiveB / naiveN).toFixed(1) : null, akurasiTimbangPct: akTimbang, catatan: 'bobot diturunkan dari sampel yang sama — uji tak-bias sejati adalah buku-evaluasi' },
     majelis, rapor: { menang, rugi, terbuka: terbuka.filter(l => l.status === 'terbuka').length, winRatePct: (menang + rugi) ? +(100 * menang / (menang + rugi)).toFixed(1) : null, rRata, catatan: 'MENANG/BENAR vs RUGI/SALAH dari ledger nyata; R:R 2,0 → MENANG +2R, RUGI −1R' },
     formula: { jumlah: bukuF.daftar.length, hidup: hidupF, baru, berkas: 'pustaka/formula.json' },
+    petaGeladak: { berkas: 'laporan/peta-geladak.json', statistik: PETA.statistik,
+      faktorPeta: { n: stat.peta ? stat.peta.NAIK.n + stat.peta.TURUN.n : 0,
+        hitPctPct: stat.peta ? +(((stat.peta.NAIK.hit + stat.peta.TURUN.hit) / Math.max(1, stat.peta.NAIK.n + stat.peta.TURUN.n)) * 100).toFixed(1) : null,
+        bobotNaik: bobot.peta ? bobot.peta.NAIK.w : 0, bobotTurun: bobot.peta ? bobot.peta.TURUN.w : 0 },
+      pelajaranDuniaBaru: ajaranDunia.diajari,
+      catatan: 'otak tempaan (warisan+dunia) jadi suara kelima majelis; dinilai walk-forward seperti faktor lain — tanpa edge = bobot NOL; tiap vonis yang dinilai pasar mengajari peta' },
     pelajaran,
     segel: null
   }
@@ -312,7 +336,7 @@ async function main() {
 
   // ledger ditulis SETELAH evaluasi (status terbaru)
   writeFileSync(FILE_LEDGER, ledger.map(l => JSON.stringify(l)).join('\n') + '\n')
-  console.log(`GURU-HAKIKI OK: geladak ${akTimbang ?? '?'}% (n=${sampelTotal}) · majelis ${majelis.length} kursi · ledger ${menang}W/${rugi}L/${terbuka.filter(l => l.status === 'terbuka').length} terbuka · formula ${bukuF.daftar.length} (${hidupF} hidup, +${baru.length} baru)`)
+  console.log(`GURU-HAKIKI OK: geladak ${akTimbang ?? '?'}% (n=${sampelTotal}) · majelis ${majelis.length} kursi · ledger ${menang}W/${rugi}L/${terbuka.filter(l => l.status === 'terbuka').length} terbuka · formula ${bukuF.daftar.length} (${hidupF} hidup, +${baru.length} baru) · peta ${PETA.statistik.total} jejak (dunia ${PETA.statistik.dunia}, +${ajaranDunia.diajari} baru)`)
 }
 
 main().catch(e => { console.error('GURU-GAGAL (denyut tetap hidup):', e && e.message ? e.message : e); process.exit(0) })

@@ -31,6 +31,7 @@ const MODAL_AWAL = 10000
 const STAKE = 100
 const KALAH_R = 130 // 1R menang, 1.3R kalah (fee + slippage)
 const MAX_GELOMBANG = 12
+const MAX_DADAKAN = 6
 const hash16 = (s) => createHash('sha256').update(s).digest('hex').slice(0, 16)
 
 // ---------- fitur KARTU (harus identik dengan tambang200.mjs — dijaga ujiBank) ----------
@@ -144,7 +145,7 @@ function jalankanGelombang(n, bank, peta) {
     return { id: s.id, simbol: s.simbol, kelas: s.kelas, waktu: s.waktu, entry: s.entry, keluarga: s.keluarga,
       tanda: s.tanda, tebak: t.arah, sumberNalar: t.sumber, arahBenar: s.arahBenar, hasil: benarQ ? 'MENANG' : 'KALAH', pnl }
   })
-  return { n, soal: baris, benar, salah: bank.soal.length - benar,
+  return { n, jumlah: bank.soal.length, soal: baris, benar, salah: bank.soal.length - benar,
     modalAkhir: +modal.toFixed(2), modalMin: +modalMin.toFixed(2), likuidasiPada,
     perKeluarga, lulus: benar === bank.soal.length }
 }
@@ -160,33 +161,35 @@ async function main() {
   const gelombangLalu = lama ? (lama.gelombang || []) : []
   const sudahLulus = gelombangLalu.find(g => g.lulus)
 
-  // UJIAN DADAKAN — hanya setelah lulus, sekali saja
-  if (sudahLulus && lama && !lama.dadakan && existsSync(FILE_DADAK)) {
+  // UJIAN DADAKAN — setelah lulus; ditempa dari kekalahan sendiri sampai 40/40 (mandat: tempa lagi)
+  if (sudahLulus && lama && existsSync(FILE_DADAK)) {
     const dadak = JSON.parse(readFileSync(FILE_DADAK, 'utf8'))
     const salin = JSON.parse(JSON.stringify(dadak)); salin.segel = null
     if (hash16(JSON.stringify(salin)) !== dadak.segel.hash) throw new Error('segel bank dadakan bobol')
-    const { peta } = tempaPeta(gelombangLalu)
-    let benar = 0, simetri = 0, modal = MODAL_AWAL
-    const baris = dadak.soal.map(s => {
-      let t, sumber
-      if (peta[s.tanda]) { t = peta[s.tanda]; sumber = 'peta' }
-      else { const sm = nalarSimetri(s.tanda, peta); t = sm.arah; sumber = `simetri(${sm.jarak})`; simetri++ }
-      const benarQ = t === s.arahBenar
-      if (benarQ) benar++
-      modal += benarQ ? STAKE : -KALAH_R
-      return { id: s.id, simbol: s.simbol, waktu: s.waktu, keluarga: s.keluarga, tanda: s.tanda,
-        tebak: t, sumberNalar: sumber, arahBenar: s.arahBenar, hasil: benarQ ? 'MENANG' : 'KALAH' }
-    })
-    lama.dadakan = { jumlah: dadak.soal.length, benar, salah: dadak.soal.length - benar,
-      modalAkhir: +modal.toFixed(2), lewatSimetri: simetri, viaPeta: dadak.soal.length - simetri, soal: baris,
-      catatan: 'jendela lama (jam 3000–5000 silam) yang tak pernah ditempa — ukur paham-vs-hafal; bukan kriteria lulus mandat' }
+    const gelDadLalu = lama.dadakanGelombang || []
+    const lulusDad = gelDadLalu.find(g => g.lulus)
+    if (lulusDad) { console.log(`tempa200: dadakan sudah LULUS ${lulusDad.benar}/${lulusDad.jumlah} pada gelombang dadakan ${lulusDad.n}`); return }
+    if (gelDadLalu.length >= MAX_DADAKAN) { console.log(`tempa200: ${MAX_DADAKAN} gelombang dadakan belum 40/40 — laporkan jujur`); return }
+    // peta gabungan: gelombang utama + dadakan G1 (riwayat 38/40, tak ditulis-ulang) + gelombang dadakan tempa
+    const sumberGraded = [...(lama.gelombang || []), ...(lama.dadakan ? [lama.dadakan] : []), ...gelDadLalu]
+    const { peta, bukti } = tempaPeta(sumberGraded)
+    const n = gelDadLalu.length + 2
+    console.log(`dadakan gelombang ${n} — peta ${Object.keys(peta).length} jejak (utama+dadakan)`)
+    const g = jalankanGelombang(n, dadak, peta)
+    lama.dadakanGelombang = [...gelDadLalu, g]
+    lama.dadakanLulus = g.lulus ? { gelombang: n } : null
+    const { bukti: buktiMerged } = tempaPeta(sumberGraded)
+    lama.pelajaran = Object.entries(buktiMerged).map(([t, b]) => ({
+      tanda: t, arahBenar: b.NAIK > b.TURUN ? 'NAIK' : (b.TURUN > b.NAIK ? 'TURUN' : 'NAIK'), bukti: `${b.NAIK}/${b.TURUN}`,
+    }))
+    lama.diperbarui = new Date().toISOString()
     const tubuh0 = JSON.stringify({ ...lama, segel: null })
     lama.segel = { hash: hash16(tubuh0), size: Buffer.byteLength(JSON.stringify(lama)), readAt: new Date().toISOString() }
     writeFileSync(FILE_LAPOR, JSON.stringify(lama, null, 1))
-    console.log(`UJIAN DADAKAN: ${benar}/${dadak.soal.length} benar (via peta ${dadak.soal.length - simetri}, simetri ${simetri}) — tersegel`)
+    console.log(`tempa200: dadakan gelombang ${n} — benar ${g.benar}/${dadak.soal.length} (modal $${g.modalAkhir}) — ${g.lulus ? 'LULUS DADAKAN 40/40' : 'TEMPA LAGI'}`)
     return
   }
-  if (sudahLulus) { console.log(`tempa200: sudah LULUS 200/200 pada gelombang ${sudahLulus.n}`); return }
+  if (sudahLulus) { console.log(`tempa200: sudah LULUS 200/200 pada gelombang ${sudahLulus.n} (bank dadakan belum ada)`); return }
   if (gelombangLalu.length >= MAX_GELOMBANG) { console.log(`tempa200: ${MAX_GELOMBANG} gelombang belum lulus — laporkan jujur`); return }
 
   const { peta, bukti } = tempaPeta(gelombangLalu)
