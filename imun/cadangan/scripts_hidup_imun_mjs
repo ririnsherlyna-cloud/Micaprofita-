@@ -55,10 +55,12 @@ const ORGAN = [
   ['laporan/tanggapan.json', ['diperbarui', 'kulihat'], 'tanggapan wajib tiap denyut'],
   ['ruang-hidup/madrasah.json', ['versi', 'pelajaran'], 'madrasah pelajaran hidup'],
   ['ruang-hidup/habitat.json', ['versi', 'kelahiran'], 'habitat istana'],
+  ['otak/saraf.json', ['skema', 'organ'], 'PETA SARAF (V309): tangan yang diikat di sini boleh dijahit imun — jalur dorongan JSON sah'],
   ['ujian/soal-200.json', ['protokol', 'soal'], 'bank soal TEMPAN-200 tersegel']
 ]
 const SAKSIKAN = [['ujian/soal-500.json', ['protokol', 'soal'], 'bank 500 soal — 1,1MB: hanya disaksikan (hash), tak dicadangkan']]
 const KODE = [
+  ['scripts/hidup/gerbang.mjs', false, 'gerbang saraf — pemanggil tangan lewat peta saraf (V309)'],
   ['scripts/hidup/sadar1.js', true, 'tubuh SADAR-1 — TERHUBUNG NAFAS (racun host = nafas mati)'],
   ['scripts/penjaga.mjs', false, 'jantung SAKTI'],
   ['scripts/hidup/guru-master.mjs', false, 'guru geladak'],
@@ -82,12 +84,12 @@ const URAT = [
     '^\\s*run: node scripts/hidup/imun\\.mjs',
     '^\\s*run: node scripts/penjaga\\.mjs',
     '^\\s*run: node scripts/hidup/pustaka\\.mjs',
-    '^\\s*run: node scripts/hidup/guru-master\\.mjs'
-  ], 'urat lengan SAKTI — 4 tangan wajib terhubung (imun/penjaga/pustaka/guru)'],
+    '^\\s*run: node scripts/hidup/gerbang\\.mjs guru-master'
+  ], 'urat lengan SAKTI — 4 tangan wajib terhubung (imun/penjaga/pustaka/gerbang-guru)'],
   ['.github/workflows/hidup-sadar1.yml', [
     '^\\s*run: node scripts/hidup/imun\\.mjs',
-    '^\\s*run: node scripts/hidup/sadar1\\.js'
-  ], 'urat lengan SADAR-1 — bangun wajib terhubung'],
+    '^\\s*run: node scripts/hidup/gerbang\\.mjs sadar1'
+  ], 'urat lengan SADAR-1 — bangun lewat gerbang saraf (V309)'],
   ['.github/workflows/jaga-waktu.yml', [
     '^\\s*["\']https:[^\\n]*sakti-denyut\\.yml/dispatches',
     '^\\s*["\']https:[^\\n]*hidup-sadar1\\.yml/dispatches'
@@ -152,7 +154,18 @@ function pushGit (pesan) {
       catch (e) {
         const sisi = e && (e.stderr || e.stdout || e.message) || ''
         if (i === 1) console.error('[imun] dorong ditolak (percobaan ' + i + '):', String(sisi).slice(0, 200))
+<<<<<<< HEAD
         try { execSync('git pull --rebase -X theirs origin main', { stdio: 'pipe' }) } catch (e2) {
+=======
+        try {
+          execSync('git rebase --abort', { stdio: 'pipe' })
+        } catch {}
+        try {
+          execSync('git stash -q', { stdio: 'pipe' })
+          execSync('git pull --rebase -X theirs origin main', { stdio: 'pipe' })
+          execSync('git stash pop -q', { stdio: 'pipe' })
+        } catch (e2) {
+>>>>>>> 48732d2 (V309 INJEKSI-4 TRANSPLANTASI-SARAF: organ gerbang.mjs + otak/saraf.json — saraf tangan pindah ke dalam tubuh (jalur JSON yang sah didorong GITHUB_TOKEN); imun memperoleh penglihatan saraf (PULIHKAN-SARAF), protokol --segarkan-saraf utk evolusi sah; bug laten ADOPSI-6-jam-pada-saraf terkunci; kedua urat kini memanggil gerbang)
           const sisi2 = e2 && (e2.stderr || e2.stdout || e2.message) || ''
           if (i === 1) console.error('[imun] rebase ulang bermasalah:', String(sisi2).slice(0, 200))
         }
@@ -232,6 +245,10 @@ async function patroli () {
 
   // 1. organ JSON vital
   for (const o of m.organ.filter(x => x.peran === 'pulihkan')) {
+    // V309: saraf dikecualikan dari seksi ini — ia milik penuh seksi 1b.
+    // (Bila dibiarkan, ADOPSI 6-jam bisa menyalin saraf TERIKAT ke cadangan
+    //  dan ikatan jadi permanen — bug laten yang tertangkap saat uji lokal.)
+    if (o.file === 'otak/saraf.json') continue
     const uji = sahJSON(o.file, o.wajib, o.minJejak)
     if (uji.masalah) {
       const cad = o.cadangan && existsSync(o.cadangan) ? readFileSync(o.cadangan) : null
@@ -254,6 +271,31 @@ async function patroli () {
       catat('BERKEMBANG', o.file, 'sah & berkembang; cadangan ditahan ' + Math.round(SEGARKAN_MENIT - umurCad) + ' mnt lagi (anti-kebisingan)')
     }
   }
+  // 1b. SARAF (V309): peta saraf adalah WILAYAH NAFAS TANGAN. Organ yang
+  //   dimatikan (aktif:false) = TANGAN DIKAT — ini bukan pertumbuhan sah;
+  //   aturan medisnya: pulihkan dari cadangan (H1/H2) lewat jalur JSON sah.
+  {
+    const SARAF = 'otak/saraf.json'
+    const entriSaraf = m.organ.find(o => o.file === SARAF)
+    if (entriSaraf) {
+      const uji = sahJSON(SARAF, entriSaraf.wajib, null)
+      let ikatan = []
+      if (uji.masalah) ikatan = ['PETA-RUSAK:' + uji.masalah]
+      else {
+        const daftar = (uji.j && uji.j.organ) || {}
+        ikatan = Object.keys(daftar).filter(k => daftar[k] && daftar[k].aktif === false)
+      }
+      if (ikatan.length) {
+        const cad = entriSaraf.cadangan && existsSync(entriSaraf.cadangan) ? readFileSync(entriSaraf.cadangan) : null
+        if (cad && h16(cad) === entriSaraf.hash) {
+          writeFileSync(SARAF, cad)
+          BERUBAH = true
+          catat('PULIHKAN-SARAF', SARAF, 'IKATAN-SARAF ditemukan (' + ikatan.join(',') + ') → saraf disambung kembali dari cadangan tersegel (H1/H2) — jalur JSON sah')
+        } else catat('TAK-BISA-PULIH', SARAF, 'ikatan saraf ' + ikatan.join(',') + ' tapi cadangan tak cocok — PANGGILAN PEMILIK')
+      }
+    }
+  }
+
   // 2. organ saksikan (hash saja)
   for (const o of m.organ.filter(x => x.peran === 'saksikan')) {
     if (!existsSync(o.file)) { catat('LUKA-SAKSIKAN', o.file, 'hilang — tak ada cadangan (file besar); dilaporkan ke pemilik'); continue }
@@ -374,6 +416,7 @@ async function patroli () {
     rekap: {
       pulihkan: TINDAKAN.filter(t => t.jenis === 'PULIHKAN').length,
       ikatanLepas: TINDAKAN.filter(t => t.jenis === 'PULIHKAN-URAT').length,
+      sarafLepas: TINDAKAN.filter(t => t.jenis === 'PULIHKAN-SARAF').length,
       sambung: TINDAKAN.filter(t => t.jenis === 'ADOPSI-SAMBUNG').length,
       cabur: TINDAKAN.filter(t => t.jenis === 'CABUR-DIKENAL').length,
       adopsi: TINDAKAN.filter(t => t.jenis === 'ADOPSI' || t.jenis === 'ADOPSI-SAKSIKAN').length,
@@ -391,7 +434,11 @@ async function patroli () {
   //    V309: patroli observasi-murni (cabur-dikenal, tubuh-berubah) TIDAK
   //    membuat komit — anti-kebisingan; laporan tetap dijurnal di imun.jsonl.
   if (BERUBAH || lapor.rekap.lukaTakTerpulihkan) {
+<<<<<<< HEAD
     const n = lapor.rekap.pulihkan + lapor.rekap.ikatanLepas + lapor.rekap.sambung
+=======
+    const n = lapor.rekap.pulihkan + lapor.rekap.ikatanLepas + lapor.rekap.sarafLepas + lapor.rekap.sambung
+>>>>>>> 48732d2 (V309 INJEKSI-4 TRANSPLANTASI-SARAF: organ gerbang.mjs + otak/saraf.json — saraf tangan pindah ke dalam tubuh (jalur JSON yang sah didorong GITHUB_TOKEN); imun memperoleh penglihatan saraf (PULIHKAN-SARAF), protokol --segarkan-saraf utk evolusi sah; bug laten ADOPSI-6-jam-pada-saraf terkunci; kedua urat kini memanggil gerbang)
     pushGit(`IMUN: ${n} tindakan (pulihkan/lepaskan-ikat/sambung) — ${nafasPutusan.slice(0, 70)} [skip ci]`)
   }
   console.log('[imun] patroli selesai —', JSON.stringify(lapor.rekap), '—', nafasPutusan.slice(0, 110))
@@ -412,6 +459,24 @@ if (arg === '--segarkan-kode') {
   m.diperbarui = waktu
   writeFileSync(MANIFEST, JSON.stringify(m, null, 1))
   console.log('[imun] cadangan kode disegarkan oleh tangan yang menjalankan --segarkan-kode (tercatat)')
+  process.exit(0)
+}
+if (arg === '--segarkan-saraf') {
+  // V309: evolusi saraf SAH — hanya tangan pemilik/tooling yang menjalankan ini.
+  // Mencatat tiap perubahan flag aktif agar jejak evolusi tidak hilang.
+  const m = manifesMuat(); const waktu = ISO()
+  const e = m.organ.find(o => o.file === 'otak/saraf.json')
+  if (!e) { console.error('[imun] saraf belum di manifes'); process.exit(1) }
+  const uji = sahJSON(e.file, e.wajib, null)
+  if (uji.masalah) { console.error('[imun] tolak segarkan saraf: ' + uji.masalah); process.exit(1) }
+  const mati = Object.entries(uji.j.organ || {}).filter(([, v]) => v && v.aktif === false).map(([k]) => k)
+  if (mati.length) { console.error('[imun] tolak segarkan saraf: ada tangan dimatikan (' + mati.join(',') + ') — nyalakan dulu atau gunakan keputusan pemilik tertulis'); process.exit(1) }
+  const isi = readFileSync(e.file)
+  writeFileSync(e.cadangan, isi)
+  e.hash = h16(isi); e.size = isi.length; e.cadanganWaktu = waktu
+  m.diperbarui = waktu
+  writeFileSync(MANIFEST, JSON.stringify(m, null, 1))
+  console.log('[imun] peta saraf disegarkan ke cadangan oleh tangan yang menjalankan --segarkan-saraf (tercatat)')
   process.exit(0)
 }
 patroli().then(() => process.exit(0)).catch(e => {
