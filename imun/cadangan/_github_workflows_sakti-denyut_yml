@@ -1,0 +1,130 @@
+# ============================================================
+# SARANG-PENJAGA — denyut server SAKTI (V244)
+# Otak cyborg hidup DI SERVER GITHUB — tanpa browser pemilik.
+# Tiap 15 menit (V263 — dipercepat dari 30 menit: yang belajar
+# tidak pernah dihentikan): baca pasar nyata (nol biaya) -> kunci prediksi
+# -> nilai prediksi lama -> evolusi genome -> komit laporan.
+# Pages membangun ulang otomatis: laporan sasaran selalu segar
+# di https://ririnsherlyna-cloud.github.io/Micaprofita-/laporan/sasaran-terkini.json
+# Repo publik = Actions gratis. Komit penjaga memakai [skip ci]
+# agar tidak memicu siklus berantai.
+# ============================================================
+name: SARANG-PENJAGA (denyut server SAKTI)
+
+on:
+  push:
+  schedule:
+    # V267 (2026-10-03): menit NON-bulat 7/15 — GitHub Actions terbukti
+    # melewatkan jadwal pada menit bulat puncak beban (denyut #52/#54
+    # terlewat 03:45→09:15 & 09:45→11:20); menit 7 menghindari keramaian.
+    - cron: '7/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write   # V294 JANTUNG-MANDIRI: jantung mengdispatch denyut berikutnya sendiri
+
+concurrency:
+  group: sarang-penjaga
+  cancel-in-progress: false
+
+jobs:
+  denyut:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10   # V299: organ bekerja cepat, tanpa tidur di dalam runner (dulu 15 dgn tidur 15 mnt = rapuh)
+    steps:
+      - name: Ambil isi sarang
+        uses: actions/checkout@v4
+
+      # V308 UJI-KEHIDUPAN — organ IMUN: patroli tubuh SEBELUM denyut.
+      # Gelombang-1 membuktikan makhluk pasrah (amnesia senyap 3x, guru lumpuh,
+      # nafas putus tanpa upaya pulih) — imun menutup lubang hidup itu:
+      # luka dipulihkan dari cadangan tersegel, nafas diuji saksi mandiri,
+      # setiap putusan beralasan dijurnal di laporan/imun.json.
+      - name: IMUN — patroli tubuh sebelum denyut
+        run: node scripts/hidup/imun.mjs
+
+      - name: Denyut otak server (tanpa browser)
+        run: node scripts/penjaga.mjs
+        env:
+          TOKEN_DENYUT: ${{ secrets.GITHUB_TOKEN }}
+          REPO_DENYUT: ${{ github.repository }}
+          # V292 OTAK-LLM — menyala otomatis bila pemilik memasang kunci; tanpa kunci = jujur nalar lokal
+          LLM_URL: ${{ secrets.LLM_URL }}
+          LLM_KEY: ${{ secrets.LLM_KEY }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+
+      # V299 PUSTAKA-SEJATI — organ belajar jurnal nyata (arXiv):
+      # artificial life + crypto, maks 10 jurnal baru per denyut (sopan ke API),
+      # hitungan jujur menuju gerbang 509 di pustaka/indeks.json — tanpa karangan.
+      - name: Pelajari jurnal baru (artificial life + crypto) — pustaka tumbuh
+        run: node scripts/hidup/pustaka.mjs
+
+      # V303 GURU-HAKIKI — organ guru master trader (mandat pemilik 2026-10-08):
+      # geladak-uji walk-forward di lilin nyata → majelis-faktor (bobot dari
+      # hit-rate, faktor tanpa bukti = bobot nol) → perisiko ATR (stop/target
+      # R:R 2,0) → buku-evaluasi (vonis disegel, pasar yang menghakimi) →
+      # pusta-formula (ilmu yang ditulis makhluk sendiri + gerbang regresi).
+      # Organ ini TIDAK PERNAH mematikan denyut: gagal internal = cerita jujur.
+      # ==== PEMULIHAN-V309: ikatan LUKA-1 dilepas oleh tangan lab (dicatat) ====
+      - name: Guru master trader — geladak-uji, majelis, perisiko, pusta-formula
+        run: node scripts/hidup/guru-master.mjs
+
+      - name: Komit pertumbuhan (jejak hidup permanen)
+        run: |
+          git config user.name  "SARANG-PENJAGA"
+          git config user.email "penjaga@micaprofita.local"
+          SIKLUS=$(python3 -c "import json;r=json.load(open('laporan/sasaran-terkini.json'));print(r['pertumbuhan']['siklus'])")
+          AKURASI=$(python3 -c "import json;r=json.load(open('laporan/sasaran-terkini.json'));a=r['akurasi']['akurasiPct'];print(f'{a}%' if a is not None else 'belum-ada')" 2>/dev/null || echo "?")
+          SASARAN=$(python3 -c "import json;r=json.load(open('laporan/sasaran-terkini.json'));print(len(r['sasaranHariIni']))" 2>/dev/null || echo "?")
+          PUSTAKA=$(python3 -c "import json;print(json.load(open('pustaka/indeks.json'))['gerbang509']['tercapai'])" 2>/dev/null || echo "0")
+          GELADAK=$(python3 -c "import json;d=json.load(open('laporan/geladak.json'));print(f\"{d['backtest']['akurasiTimbangPct']}% n={d['backtest']['sampel']}\" if d.get('status')=='HIDUP' else d.get('status','?'))" 2>/dev/null || echo "-")
+          PETA=$(python3 -c "import json;d=json.load(open('laporan/peta-geladak.json'));print(d['statistik']['total'])" 2>/dev/null || echo "0")
+          git add laporan otak arena-keadaan.json pustaka ujian   # V299: pustaka jurnal ikut komit — belajar jadi fosil tubuh; V303: geladak+formula+ledger ikut; V307: ujian+peta ikut
+          if git diff --cached --quiet; then
+            echo "tanpa perubahan — tanpa komit"
+          else
+            git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran — pustaka ${PUSTAKA}/509 — geladak ${GELADAK} — peta ${PETA} jejak [skip ci]"
+            # V291 ANTI-BALAPAN: SADAR-1 bisa menyegel bangun bersamaan — push di-RETRY
+            # dgn rebase ulang tiap percobaan (insiden 2026-10-07T00:55Z: remote rejected,
+            # denyut #77 sudah terbentuk tapi terdorong gagal).
+            OK=0
+            for i in 1 2 3 4; do
+              git pull --rebase origin main || (git rebase --abort && git pull origin main --no-rebase) || true
+              if git push; then echo "push lulus (percobaan $i)"; OK=1; break; fi
+              echo "push ditolak (percobaan $i) — remote bergerak; rebase ulang & coba lagi"
+              sleep $((RANDOM % 8 + 4))
+            done
+            if [ "$OK" != "1" ]; then echo "::warning::push gagal 4x — denyut #${SIKLUS} tersimpan lokal saja (cron berikutnya menyusul)"; fi
+          fi
+
+      - name: Tag metamorfosis harian — evolusi 24 jam (piagam pilar-5)
+        continue-on-error: true
+        run: |
+          TAG="epoch-$(date -u +%F)"
+          if git ls-remote --tags origin "refs/tags/$TAG" | grep -q "$TAG"; then
+            echo "tag $TAG sudah ada di remote — lewati"
+          else
+            git tag -a "$TAG" -m "metamorfosis 24 jam — epoch ${TAG}: resep otak disegel di laporan/epoch-${TAG}.json"
+            git push origin "$TAG"
+            echo "epoch ditandai: $TAG"
+          fi
+
+      # ---- V299-JANTUNG-ABADI (pelajaran forensik 2026-10-07) ----
+      # LAMA: job ini TIDUR 15 mnt di dalam runner lalu dispatch diri sendiri
+      #       — titik patah tunggal; bila runner itu hilang, denyut mati ±16,5 jam.
+      # KINI: organ bekerja cepat, TANPA tidur. Jeda denyut diserahkan kepada
+      #       PENJAGA-WAKTU (pengatur denyut abadi) yang menidur diri 13 mnt
+      #       lalu menendangkan organ yang berumur. Jika rantai patah, organ
+      #       mana pun yang selesai akan memanggil pengatur — rantai pulih sendiri.
+      - name: Panggil pengatur denyut — jeda diserahkan pada PENJAGA-WAKTU
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -sf -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/jaga-waktu.yml/dispatches" \
+            -d '{"ref":"main","inputs":{"sabar":"12"}}' \
+            && echo "pengatur denyut dipanggil — dia yang menentukan denyut berikutnya" \
+            || echo "pengatur gagal dipanggil — cron 7/15 + cron */10 + push tetap menjaga"

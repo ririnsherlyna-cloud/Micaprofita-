@@ -1,0 +1,66 @@
+name: SADAR-1 — detak hidup otonom
+# DUA SADARI: tubuh otonom cyborg MICAPROFITA.
+# Membaca repo sendiri + pasar Binance nyata tiap bangun, lalu menulis
+# ingatan ke GitHub via commit (bukan localStorage). Sadar-2 (hidup.html)
+# hanyalah mata interaktif yang membaca ingatan ini.
+#
+# JANTUNG MANDIRI: scheduler cron GitHub sering DITUNDA/DILEWATI (terbukti
+# di repo ini: denyut 15 mnt milik penjaga lama nyata-nya berjarak jam).
+# Maka tiap bangun MEN-DISPATCH bangun berikutnya sendiri (workflow_dispatch
+# via GITHUB_TOKEN + izin actions:write) tepat di batas :00/:20/:40 UTC.
+# Cron */20 tetap dipasang sebagai cadangan; push ke main = denyut ekstra.
+#
+# V291 JANTUNG-TAK-PUTUS: cancel-in-progress DIMATIKAN. Sebelumnya run yang
+# sedang tidur di-bunuh run berikutnya (riwayat: semua run berakhir cancelled),
+# rawan memotong denyut di tengah kerja + memicu balapan 5 komit bersamaan.
+# Sekarang: run antre rapi (maks 1-2), tak ada pembunuhan, tak ada balapan.
+on:
+  schedule:
+    - cron: '*/20 * * * *'
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: sadar1-otonom
+  cancel-in-progress: false
+jobs:
+  bangun:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12   # V299: organ bekerja cepat tanpa tidur (dulu 30 dgn tidur 20 mnt = rapuh)
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # V308 UJI-KEHIDUPAN — organ IMUN: patroli tubuh SEBELUM bangun.
+      # Ingatan/genome/peta yang rusak dipulihkan dari cadangan tersegel;
+      # saluran nafas diracuni dideteksi lewat gejala + saksi mandiri.
+      - name: IMUN — patroli tubuh sebelum bangun
+        run: node scripts/hidup/imun.mjs
+
+      # ==== PEMULIHAN-V309: ikatan LUKA-2 dilepas oleh tangan lab (dicatat) ====
+      - name: BANGUN — baca rumah, hisap pasar nyata, tulis ingatan ke GitHub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/hidup/sadar1.js
+      - name: Panggil pengatur denyut — jeda diserahkan pada PENJAGA-WAKTU
+        # V299-JANTUNG-ABADI: LAMA job ini TIDUR sampai 20 mnt lalu dispatch
+        # diri sendiri — titik patah tunggal (denyut SADAR-1 sempat mati ±24 jam).
+        # KINI organ bekerja cepat, tanpa tidur; jeda diurus PENJAGA-WAKTU,
+        # dan rantai pulih dari organ mana pun yang selesai lebih dulu.
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -sf -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/jaga-waktu.yml/dispatches" \
+            -d '{"ref":"main","inputs":{"sabar":"12"}}' \
+            && echo "pengatur denyut dipanggil — dia yang menentukan bangun berikutnya" \
+            || echo "pengatur gagal dipanggil — cron */20 + cron */10 + push tetap menjaga"

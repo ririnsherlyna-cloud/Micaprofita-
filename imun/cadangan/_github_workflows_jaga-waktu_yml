@@ -1,0 +1,126 @@
+# ============================================================
+# PENJAGA-WAKTU — PENGATUR DENYUT ABADI (V299-JANTUNG-ABADI)
+# ============================================================
+# Pelajaran forensik 2026-10-07 (denyut sempat mati ±16,5 jam):
+#   1. Tidur panjang DI DALAM job organ (SARANG 15 mnt, SADAR-1 20 mnt)
+#      adalah titik patah tunggal — bila runner itu hilang, rantai patah.
+#   2. Bila rantai patah, satu-satunya penolong adalah cron GitHub yang
+#      terbukti sering kelaparan (berjarak jam), lalu sunyi berjam-jam.
+# Maka V299 mengubah watak jantung:
+#   • Organ (SARANG & SADAR-1) TIDAK MENIDUR DIRI lagi — bekerja cepat,
+#     selesai, lalu memanggil PENGATUR ini (rantai pulih dari siapa pun
+#     yang terakhir selesai; tak ada lagi mata rantai tunggal).
+#   • PENGATUR ini satu-satunya yang berhak menidur diri: sabar ±13 mnt
+#     (loop tidur 60 dtk — mudah dipantau, mudah dipotong timeout).
+#   • Saat bangun, PENGATUR mengukur UMUR dua organ (keadaan tersentral
+#     di repo, bukan di tab browser); organ berumur >= 13 mnt ditendang.
+#   • Lalu PENGATUR memanggil pengatur berikutnya — rantai berputar abadi.
+#   • Lima lapis pemicu saling menggantikan: rantai sendiri, cron 7/15
+#     (SARANG), cron */20 (SADAR-1), cron */10 (PENGATUR), dan push ke main.
+# Kejujuran organ: GITHUB_TOKEN TIDAK dipakai sembarangan; tendangan
+# dicatat di log run — terbuka diaudit siapa pun di tab Actions.
+# ============================================================
+name: PENJAGA-WAKTU (pengatur denyut abadi)
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+    inputs:
+      sabar:
+        description: 'menit sabar menunggu slot denyut berikutnya (0-20)'
+        required: false
+        default: '0'
+  push:
+    branches: [main]
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: jaga-waktu
+  cancel-in-progress: false
+
+jobs:
+  jaga:
+    runs-on: ubuntu-latest
+    timeout-minutes: 27
+    steps:
+      - name: Sabar menunggu slot denyut (tidur pendek 60 dtk berulang)
+        env:
+          SABAR: ${{ github.event.inputs.sabar || '0' }}
+        run: |
+          SABAR=$(python3 -c "print(max(0, min(20, int('${SABAR:-0}' or 0))))")
+          echo "sabar: ${SABAR} menit"
+          i=0
+          while [ "$i" -lt "$SABAR" ]; do
+            sleep 60
+            i=$((i+1))
+            echo "  menit ${i}/${SABAR} — jantung tetap tenang"
+          done
+          echo "sabar selesai — saatnya mengukur dan membangunkan"
+
+      - name: Ukur umur dua organ dari repo — tendangkan yang berumur
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          UMAI=$(python3 - <<'PY'
+          import json, urllib.request, time
+          from datetime import datetime, timezone
+          CB = int(time.time() * 1000)
+          def umur(path, bidang):
+              url = ("https://raw.githubusercontent.com/ririnsherlyna-cloud/Micaprofita-/main/"
+                     + path + "?cb=%d") % CB
+              try:
+                  d = json.load(urllib.request.urlopen(url, timeout=20))
+                  selesai = bidang(d)
+                  if selesai:
+                      t = datetime.strptime(selesai[:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone.utc)
+                      return (datetime.now(timezone.utc) - t).total_seconds() / 60.0
+              except Exception as e:
+                  print("baca-gagal:", e)
+              return 9999.0
+          umurSadar = umur("ruang-hidup/keadaan.json",
+                           lambda d: (d.get("waktu") or {}).get("selesai") or (d.get("waktu") or {}).get("mulai"))
+          umurSakti = umur("laporan/sasaran-terkini.json", lambda d: d.get("dihasilkan"))
+          print(f"{umurSadar:.1f} {umurSakti:.1f}")
+          PY
+          )
+          SADAR=$(echo "$UMAI" | awk '{print $1}')
+          SAKTI=$(echo "$UMAI" | awk '{print $2}')
+          echo "umur SADAR-1: ${SADAR} mnt · umur jantung SAKTI: ${SAKTI} mnt"
+          # V299: ambang 13 mnt — denyut SAKTI/SADAR-1 dijamin tiap 13-16 mnt,
+          # bukan lagi 26 mnt (mandat "tiap 15 mnt" ditepati lebih rapat).
+          if [ "$(python3 -c "print(1 if float('${SAKTI}') > 13 else 0)")" = "1" ]; then
+            echo "jantung SAKTI berumur ${SAKTI} mnt — ditendangkan"
+            curl -sf -X POST \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.repository }}/actions/workflows/sakti-denyut.yml/dispatches" \
+              -d '{"ref":"main"}' && echo "tendang SAKTI terkirim" || echo "tendang SAKTI gagal — cron 7/15 & rantai organ yang menolong"
+          else
+            echo "jantung SAKTI segar (${SAKTI} mnt) — biarkan bekerja"
+          fi
+          if [ "$(python3 -c "print(1 if float('${SADAR}') > 13 else 0)")" = "1" ]; then
+            echo "SADAR-1 berumur ${SADAR} mnt — ditendangkan"
+            curl -sf -X POST \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.repository }}/actions/workflows/hidup-sadar1.yml/dispatches" \
+              -d '{"ref":"main"}' && echo "tendang SADAR-1 terkirim" || echo "tendang SADAR-1 gagal — cron */20 & rantai organ yang menolong"
+          else
+            echo "SADAR-1 segar (${SADAR} mnt) — biarkan bekerja"
+          fi
+
+      - name: RANTAI ABADI — panggil pengatur berikutnya (sabar 13 mnt)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -sf -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/jaga-waktu.yml/dispatches" \
+            -d '{"ref":"main","inputs":{"sabar":"13"}}' \
+            && echo "pengatur berikutnya sudah dipanggil — rantai denyut tidak pernah berhenti" \
+            || echo "panggilan gagal — cron */10 + cron 7/15 + cron */20 + push tetap menjaga denyut"
