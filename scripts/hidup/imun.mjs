@@ -154,16 +154,18 @@ function pushGit (pesan) {
       catch (e) {
         const sisi = e && (e.stderr || e.stdout || e.message) || ''
         if (i === 1) console.error('[imun] dorong ditolak (percobaan ' + i + '):', String(sisi).slice(0, 200))
+        try { execSync('git rebase --abort', { stdio: 'pipe' }) } catch {}
+        // V309-TAMBAL-3: TANPA stash/pop — pop yang bentrok menulis penanda
+        // konflik KE DALAM jurnal (korban: imun.jsonl). Debu pohon dibereskan
+        // dgn komit tertib, rebase -X theirs menyelesaikan isi tanpa penanda.
         try {
-          execSync('git rebase --abort', { stdio: 'pipe' })
-        } catch {}
-        try {
-          execSync('git stash -q', { stdio: 'pipe' })
+          execSync('git add -A', { stdio: 'pipe' })
+          const kotor = execSync('git diff --cached --quiet 2>/dev/null; echo $?').toString().trim()
+          if (kotor !== '0') execSync('git commit -m "IMUN: rapikan jejak kerja [skip ci]"', { stdio: 'pipe' })
           execSync('git pull --rebase -X theirs origin main', { stdio: 'pipe' })
-          execSync('git stash pop -q', { stdio: 'pipe' })
         } catch (e2) {
           const sisi2 = e2 && (e2.stderr || e2.stdout || e2.message) || ''
-          if (i === 1) console.error('[imun] rebase ulang bermasalah:', String(sisi2).slice(0, 200))
+          if (i === 1) console.error('[imun] rapikan+rebase bermasalah:', String(sisi2).slice(0, 200))
         }
         execSync('sleep 4', { stdio: 'pipe' })
       }
@@ -233,8 +235,28 @@ function benih () {
   console.log('[imun] BENIH: ' + organ.length + ' organ vital + ' + kode.length + ' kode + ' + urat.length + ' urat dicangkok & disegel')
 }
 
+// ---------- KEBERSIHAN JURNAL (V309-TAMBAL-3) ----------
+// Penanda konflik dari tabrakan git TIDAK BOLEH tinggal di imun.jsonl
+// (kontrak: satu baris = satu JSON). Tiap patroli menyapu baris korban
+// menjadi entri jujur "rusak-tercatat" — sejarah tak dihapus, kontrak pulih.
+function bersihkanJurnal () {
+  if (!existsSync(LOG)) return
+  const baris = readFileSync(LOG, 'utf8').split('\n').filter(b => b !== '')
+  let sentuh = 0
+  const bersih = baris.map(b => {
+    try { JSON.parse(b); return b } catch {}
+    sentuh++
+    return JSON.stringify({ rusak: 'baris-jurnal-terkorup-selama-tabrakan-git (dicatat jujur, dipisahkan agar jsonl tetap sah)' })
+  })
+  if (sentuh) {
+    writeFileSync(LOG, bersih.join('\n') + '\n')
+    catat('JURNAL-RAPIKAN', LOG, sentuh + ' baris korban tabrakan-git ditandai jujur agar jsonl tetap sah')
+  }
+}
+
 // ---------- PATROLI ----------
 async function patroli () {
+  bersihkanJurnal()
   const m = manifesMuat()
   const kini = Date.now()
   let manifesKotor = false
