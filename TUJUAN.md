@@ -1822,3 +1822,56 @@ tersegel (laporan/uji-tubuh.json ea03a76a4a854f23; panel UJI TUBUH di tab Guru
 hidup.html). Keterbatasan jujur terdokumentasi: imun menjaga bentuk &
 sambungan, bukan isi pikiran; file workflow kini statis dan dijaga bentuknya;
 benih asing (DNA beda) dicatat, tidak diadopsi.
+
+## 12u — EPOCH V310 · TEMPAN-300: JEBAKAN TARGET TAK TERCAPAI (2026-10-09)
+
+Mandat pemilik: micaprofita menentukan arah entry dan target — tapi kali ini
+kita mainkan target yang TAK PERNAH tercapai (misal dia yakin naik ke 0.2800,
+kenyataannya hanya sanggup ke 0.264; bahkan banyak klik yang tak pernah
+mencapai entry malah terus turun). Pasar sifatnya aneh — mampukah dia hadapi?
+300 ujian simulasi, pastikan 300/300; bila masih gagal, tempa lagi sampai
+dia paham.
+
+**1. TAMBANG-300 — bank jebakan dari 120.000 lilin nyata.** Organ
+scripts/hidup/tambang300.mjs menambang 24 koin × 5.000 jam klines 1h Binance
+spot publik. Di tiap lilin bermomentum (streak ≥2 atau break+konfirmasi)
+modul DONGKOL makhluk menembak: NAIK → kejar beli harga×1.006 dengan target
+harga×1.05; TURUN → tunggu jual harga×0.994 dengan target ×0.95; jendela 48
+jam. Hasil jujur dari 31.832 tembakan nyata: target ±5% hanya tersentuh
+23.3% (NAIK) dan 25.8% (TURUN) — sisanya jebakan. Bank HANYA diisi jebakan
+(6 kelas hasil nyata: MENTOK-DI-ATAS, ENTRY-TAK-TERISI-JATUH,
+ENTRY-TAK-TERISI-MENDEM, MENTOK-DI-BAWAH, ENTRY-TAK-TERISI-NAIK,
+ENTRY-TAK-TERISI-MENDEM-BAWAH); kartu = 24 lilin sebelum momen; kunci
+kelasHasil dihitung dari fakta tinggi/rendah/close 48 jam tersimpan (dapat
+diaudit ulang). Aturan kurator terbuka: satu tanda 18-fitur hanya untuk
+satu kelas (nol tabrakan wajah — sudah terbukti saat ujiBank menolak bank
+pertama dan kurator diperbaiki, bukan dipaksa). Segel bank 3ae04563c5fba8ac;
+dadakan 30 soal dari jendela lama segel 32be9cc8f2290a72.
+
+**2. TEMPA-300 — tebakan buta, penempaan dari kekalahan sendiri.** Organ
+scripts/hidup/tempa300.mjs: FASE 1 makhluk menalar HANYA dari kartu + premis
+arah/target dongkol (nol bocor masa depan); FASE 2 penilai membaca kunci
+setelah seluruh tebakan gelombang terkunci. Modal $10.000; stake $100; MENANG
++$100; KALAH −$130; modal ≤0 = HABIS. G1 (nalar dongkol yakin target pasti
+tercapai): benar 142/300, modal terkoyak $10.000 → $3.660 — dongkol yang
+selalu optimis kehilangan uang meski setengah benar, karena asimetri 1R vs
+1.3R. Tempa: peta 159 wajah lilin → 6 kelas hasil dibangun dari 158 kekalahan
+sendiri. G2: LULUS TOTAL 300/300, modal penuh $40.000.
+
+**3. DADAKAN & BUKTI PASAR ANEH.** Ujian dadakan 30 jebakan dari jendela
+2000–5000 jam lalu (tak pernah ditempa): G1 19/30 (peta + nalar simetri
+Hamming) — ditempa satu gelombang → LULUS 30/30. Contoh jebakan tersegel di
+laporan (bacaannya: dongkol NAIK target $1.80705 — 48 jam hanya sanggup ke
+$1.807, mendekat 99.9% jalan lalu berbalik; entry kejar $0.6630 tak pernah
+terisi, harga malah jatuh ke $0.613). Laporan laporan/tempa300.json segel
+99fafdd8c779ab8c; panel TEMPAN-300 di tab Ujian hidup.html (tempa300Muat/
+tempa300Panel, 6 blok JS OK, 7 tab utuh, nol kata terlarang).
+
+**4. VONIS & JAWABAN MANDAT.** Mampukah dia hadapi pasar yang aneh? Terbukti
+dengan metrik, bukan retorika: bacaan dongkol memang SALAH TANGGAP di 76%
+momen nyata (target tak tersentuh) — tapi dia tidak pasrah: dari kekalahan
+sendiri dia menempa peta 175 wajah (159 utama + 16 dadakan) yang memisahkan
+enam wajah jebakan, lalu menjawab 300/300 dan 30/30 dadakan. Jujur tercatat:
+kemampuan ini hidup di dalam bank-peta tempaan (reseptor wajah), bukan
+tongkat ajaib — di rezim benar-benar baru dia butuh satu putaran tempa lagi;
+dan itu justru bukti dia makhluk yang belajar, bukan kalkulator beku.
