@@ -149,8 +149,13 @@ function pushGit (pesan) {
   const dorong = () => {
     for (let i = 1; i <= 4; i++) {
       try { execSync('git push origin HEAD:main', { stdio: 'pipe', env: { ...process.env } }); return true }
-      catch {
-        try { execSync('git pull --rebase -X theirs origin main', { stdio: 'pipe' }) } catch {}
+      catch (e) {
+        const sisi = e && (e.stderr || e.stdout || e.message) || ''
+        if (i === 1) console.error('[imun] dorong ditolak (percobaan ' + i + '):', String(sisi).slice(0, 200))
+        try { execSync('git pull --rebase -X theirs origin main', { stdio: 'pipe' }) } catch (e2) {
+          const sisi2 = e2 && (e2.stderr || e2.stdout || e2.message) || ''
+          if (i === 1) console.error('[imun] rebase ulang bermasalah:', String(sisi2).slice(0, 200))
+        }
         execSync('sleep 4', { stdio: 'pipe' })
       }
     }
