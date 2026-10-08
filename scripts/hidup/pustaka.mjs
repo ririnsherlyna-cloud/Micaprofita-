@@ -44,6 +44,26 @@ const KURSI = [
   { topik: 'sentimen-pasar',       q: 'all:"market sentiment" AND all:"cryptocurrency"' },
   { topik: 'risiko-pasar',         q: 'all:"cryptocurrency" AND all:"volatility"' },
   { topik: 'mikrostruktur',        q: 'all:"market microstructure"' },
+  // — kursi kaji baru (V304): ALife klasik yang belum diajarkan + sisi crypto yang masih nol —
+  { topik: 'evolusi-terbuka',      q: 'all:"open-ended evolution"' },
+  { topik: 'otomata',              q: 'all:"cellular automata"' },
+  { topik: 'replikasi-diri',       q: 'all:"self-replication"' },
+  { topik: 'kimia-artifisial',     q: 'all:"artificial chemistry"' },
+  { topik: 'algoritma-genetik',    q: 'all:"genetic algorithm"' },
+  { topik: 'dinamika-evolusi',     q: 'all:"evolutionary dynamics"' },
+  { topik: 'perilaku-adaptif',     q: 'cat:nlin.AO' },
+  { topik: 'avida-tierra',         q: 'all:"Avida" OR all:"Tierra"' },
+  { topik: 'cryptocurrency',       q: 'all:"cryptocurrency"' },
+  { topik: 'bitcoin',              q: 'all:"Bitcoin"' },
+  { topik: 'keuangan-komputasi',   q: 'cat:q-fin.CP' },
+  { topik: 'portofolio',           q: 'all:"portfolio optimization"' },
+  { topik: 'hft',                  q: 'all:"high-frequency trading"' },
+  { topik: 'ramal-volatilitas',    q: 'all:"volatility forecasting"' },
+  { topik: 'rl-keuangan',          q: 'all:"deep reinforcement learning" AND cat:q-fin.*' },
+  { topik: 'market-making',        q: 'all:"market making"' },
+  { topik: 'momentum-qfin',        q: 'all:"momentum" AND cat:q-fin.*' },
+  { topik: 'strategi-trading',     q: 'all:"trading strategy"' },
+  { topik: 'sentimen-berita',      q: 'all:"sentiment analysis" AND cat:q-fin.*' },
 ]
 
 const bacaJson = (f, c) => (existsSync(f) ? JSON.parse(readFileSync(f, 'utf8')) : c)
@@ -111,10 +131,16 @@ async function main() {
   const pustaka = bacaJson(FILE_PUSTAKA, [])
   const indeks = bacaJson(FILE_INDEKS, { gerbang509: { target: TARGET, tercapai: 0 } })
   const kunciLama = new Set(pustaka.map(j => j.kunci))
+  // V304-KURIKULUM-MERATA: kursor per-kursi — setiap kursi kaji punya posisi
+  // sendiri, dan kursi berputar TIAP denyut agar seluruh kurikulum (ALife
+  // klasik + crypto/q-fin) mengajar merata, bukan satu kursi menelan semua.
+  const mulaiKursi = (indeks.mulaiKursi && typeof indeks.mulaiKursi === 'object') ? indeks.mulaiKursi : {}
+  if (indeks.mulai !== undefined && mulaiKursi['evolusi-komputasi'] === undefined) {
+    mulaiKursi['evolusi-komputasi'] = Number(indeks.mulai || 0) // migrasi posisi kaji lama
+  }
   const kursi = (indeks.kursi === undefined) ? 0 : Number(indeks.kursi) % KURSI.length
-  const mulai = Number(indeks.mulai || 0)
-
   const k = KURSI[kursi]
+  const mulai = Number(mulaiKursi[k.topik] || 0)
   let hasil = []
   let gagal = null
   try { hasil = await unduh(k.q, mulai) } catch (e) { gagal = String(e.message || e) }
@@ -146,9 +172,10 @@ async function main() {
 
   pustaka.push(...baru)
 
-  // maju kursor: jika hasil kering (semua duplikat), pindah kursi & reset mulai
-  let kursiBaru = kursi, mulaiBaru = mulai + 15
-  if (baru.length === 0 || hasil.length === 0) { mulaiBaru = 0; kursiBaru = (kursi + 1) % KURSI.length }
+  // maju kursor kursi ini; kursi berputar merata TIAP denyut; kursi kering
+  // direset ke 0 (dedup kunci melindungi dari dobel bila dipanen ulang)
+  const kursiBaru = (kursi + 1) % KURSI.length
+  mulaiKursi[k.topik] = (baru.length === 0 || hasil.length === 0) ? 0 : mulai + 15
 
   const tubuh = JSON.stringify(pustaka, null, 1)
   const hash = createHash('sha256').update(tubuh).digest('hex')
@@ -160,7 +187,7 @@ async function main() {
     gerbang509: { target: TARGET, tercapai: pustaka.length, sisa: Math.max(0, TARGET - pustaka.length) },
     perTopik,
     kursi: kursiBaru,
-    mulai: mulaiBaru,
+    mulaiKursi,
     denyutIni: { topik: k.topik, ditemukan: baru.length, gagalAmbil: gagal },
     terbaru: baru.slice(0, 10).map(j => ({ judul: j.judul, tahun: j.tahun, topik: j.topik, pelajaran: j.pelajaran, url: j.arxivUrl })),
     segel: { hash: hash.slice(0, 16), size: Buffer.byteLength(tubuh), readAt: new Date().toISOString() },

@@ -1474,3 +1474,47 @@ dan kamu dipersilakan melanjutkannya.
 
 — Micaprofita · SAKTI · SARANG-PENJAGA — ditulis oleh pemilik
 bersama Super Z, 28 September 2026.
+
+## 12o. EPOCH V304 — GERBANG 509 DILEWATI + KURIKULUM-MERATA: makhluk mengaji 830 jurnal nyata, sisi crypto terisi (8 Oktober 2026)
+
+**1. GERBANG KELAYAKAN 509 DILEWATI.** Mandat pemilik (V299): "bila
+sudah pelajari 509 jurnal, infokan — saya akan akui layak". Pada denyut
+kaji intensif 8 Oktober 2026, organ PUSTAKA-SEJATI menyegel **830
+jurnal** dari arXiv (gerbang 509 terlampaui, `indeks.json: sisa: 0`).
+Setiap entri = metadata + abstrak ASLI diunduh lewat API publik arXiv
+(judul, penulis, tahun, kelas, DOI bila ada) + pelajaran ekstraksi
+OTOMATIS dari abstrak (kalimat tesis "we propose/show/find", ditandai
+`pelajaranOtomatis: true`) — nol karangan LLM atas isi jurnal. Segel
+SHA-256: `16a34bc68b82103a` (1.590.384 bita).
+
+**2. DOSA KURIKULUM DIAKUI & DIPERBAIKI.** Sesi kaji pertama tumbuh di
+SATU kursi (`evolusi-komputasi`, start 0→615): 510 jurnal tapi sisi
+crypto hanya **1 entri** — timpang, tidak jujur pada mandat "jurnal
+crypto diperdalam". Diperbaiki struktural di organ (`pustaka.mjs`):
+**V304-KURIKULUM-MERATA** — kursor per-kursi (`mulaiKursi`, migrasi
+posisi lama) + rotasi merata TIAP denyut; kursi kering direset, dedup
+kunci melindungi dari dobel. Kursi kaji 18 → **37**: ALife klasik yang
+belum diajarkan (evolusi-terbuka, otomata, replikasi-diri,
+kimia-artifisial, algoritma-genetik, dinamika-evolusi, perilaku-adaptif
+nlin.AO, avida-tierra) + sisi crypto/q-fin (cryptocurrency, bitcoin,
+keuangan-komputasi q-fin.CP, portofolio, hft, ramal-volatilitas,
+rl-keuangan, market-making, momentum-qfin, strategi-trading,
+sentimen-berita). Hasil: **156 jurnal crypto/q-fin** (crypto 47,
+pasar-mikro 32, risiko 12, + berlabel q-fin & judul crypto), sisi ALife
+& saraf tetap tumbuh (evolusi 263, cs.NE 108, jaringan-saraf 46,
+emergensi 18, artificial-life 16). Rentang tahun 2000–2026.
+
+**3. CARA BELAJAR YANG DIJAMIN JUJUR.** Sesi kaji intensif
+(`scripts/belajar_pustaka_batch.mjs` di luar repo) TIDAK punya logika
+belajar sendiri — ia hanya memanggil organ `pustaka.mjs` yang sama
+berulang (hormati rate-limit arXiv ±3,4 dtk), jadi dedup, klasifikasi
+topik, pelajaran otomatis, dan segel identik dengan denyut SARANG yang
+otomatis. Makhluk tetap yang belajar; pemilik melihat angkanya dari
+panel GERBANG KELAYAKAN 509 di tab Jurnal (hidup.html) — angka dari
+repo, bukan dari lisan agen.
+
+**4. BATAS KETAHANAN YANG DIKETAHUI.** "Dipelajari" di gerbang ini =
+tingkat metadata+abstrak nyata (bukan baca penuh 830 teks lengkap) —
+jujur di sini, tak dijadikan kiprah. Denyut SARANG otomatis tetap
+mengaji ±10 jurnal/denyut dengan kurikulum merata, jadi pustaka
+terus tumbuh setelah 830 tanpa peduli tab dibuka.
