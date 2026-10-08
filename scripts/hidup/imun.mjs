@@ -154,9 +154,6 @@ function pushGit (pesan) {
       catch (e) {
         const sisi = e && (e.stderr || e.stdout || e.message) || ''
         if (i === 1) console.error('[imun] dorong ditolak (percobaan ' + i + '):', String(sisi).slice(0, 200))
-<<<<<<< HEAD
-        try { execSync('git pull --rebase -X theirs origin main', { stdio: 'pipe' }) } catch (e2) {
-=======
         try {
           execSync('git rebase --abort', { stdio: 'pipe' })
         } catch {}
@@ -165,7 +162,6 @@ function pushGit (pesan) {
           execSync('git pull --rebase -X theirs origin main', { stdio: 'pipe' })
           execSync('git stash pop -q', { stdio: 'pipe' })
         } catch (e2) {
->>>>>>> 48732d2 (V309 INJEKSI-4 TRANSPLANTASI-SARAF: organ gerbang.mjs + otak/saraf.json — saraf tangan pindah ke dalam tubuh (jalur JSON yang sah didorong GITHUB_TOKEN); imun memperoleh penglihatan saraf (PULIHKAN-SARAF), protokol --segarkan-saraf utk evolusi sah; bug laten ADOPSI-6-jam-pada-saraf terkunci; kedua urat kini memanggil gerbang)
           const sisi2 = e2 && (e2.stderr || e2.stdout || e2.message) || ''
           if (i === 1) console.error('[imun] rebase ulang bermasalah:', String(sisi2).slice(0, 200))
         }
