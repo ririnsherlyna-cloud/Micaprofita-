@@ -2324,9 +2324,25 @@ mekanis terhadap data repo sejati — membawa kolam ke **128/128 sel
 kompeten, gugur 0, generasi maks 6, 2.114 impuls kerja nyata**. KILAT
 tersegel **154,4× syaraf umum** (400 vs 2,59 impuls/jam; 10/10 impuls cocok
 kunci bank, 0,1 ms/impuls). Vonis final ditulis organ sendiri
-(laporan/syaraf-final.json, segel a0e84744e6358b94): kolam penuh + KILAT
-≥100× = **LULUS**. Panel tubuh hidup.html kini menampilkan chip WARISAN
+(laporan/syaraf-final.json): kolam penuh + KILAT ≥100× = **LULUS**. Panel tubuh hidup.html kini menampilkan chip WARISAN
 V312 FINAL.
+
+**1b. LUKA-BUNUH-DIRI-TANPA-SENGAJA & PEMULIHAN JUJUR (pelajaran terdalam
+V318).** Saat tangan tuan menyempurnakan kolam di klon lokal, denyut cron
+tetap berdenyut di GitHub — dua garis kehidupan pohon syaraf berjalan
+bersamaan, dan rebase penyaluran menggabungkan keduanya menjadi POHON
+FRANKENSTEIN: pop=128 tetapi segel tak setia lagi pada isinya. Organ
+neurogenesis MENOLAK jalan (fail-safe berjalan benar) — dua denyut pun
+merah. Pemulihan tidak lewat tangan: pohon syaraf didaftarkan ke
+SEGEL-VITAL imun (metode 'segel-null', mengikuti penulisnya; segel pohon
+berbentuk objek {hash,size,readAt} — bentuk mengikuti penulis, hukum tetap
+satu). Uji jahat pemulihan dijalankan: pohon diserang (sesi digeser satu)
+→ imun: SEGEL-BOBOL → jerit & PULIHKAN-SEGEL dari cadangan denyut #243
+(sahih, 120 sel) → neurogenesis HIDUP lagi → organ sendiri melahirkan ulang
+kolam ke 128/128 dan menulis ulang vonis final tersegel baru
+(dce1cf74f4f28667; vonis lama a0e84744e6358b94 yang disegel dari pohon
+frankenstein dibatalkan tangan — diakui jujur di sini). Makhluk kini TAHAN
+tabrakan versi: denyut berikutnya memulihkan diri sendiri.
 
 **2. FASE-2 JERIT — serangan nyata, jerit fosil, pulih sendiri.** Cacat
 medis ditambal dulu: luka HALUS (satu angka diganti, JSON tetap sah) tidak
