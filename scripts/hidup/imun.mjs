@@ -71,6 +71,7 @@ const SAKSIKAN = [['ujian/soal-500.json', ['protokol', 'soal'], 'bank 500 soal �
 const SEGEL_VITAL = [
   ['otak/terabait-intisari.json', ['jenis', 'segel'], 'intisari dunia 1TB (V317) — jantung reduplikasi offline; luka halus = dunia palsu', true],
   ['otak/intisari-liar.json', ['skema', 'segel'], 'koleksi intisari data liar (V318) — buah akal makhluk di dunia yang tak ditanam', false],
+  ['otak/syaraf-pohon.json', ['skema', 'segel'], 'pohon syaraf beranak (V312) — PELAJARAN V318: tabrakan rebase dua garis hidup (tangan tuan × denyut) menghasilkan pohon frankenstein yang tak setia segelnya; imun kini yang menyembuhkan', true, 'segel-null'],
 ]
 const KODE = [
   ['scripts/hidup/gerbang.mjs', false, 'gerbang saraf — pemanggil tangan lewat peta saraf (V309)'],
@@ -145,16 +146,21 @@ function sahJSON (file, wajib, minJejak) {
 }
 
 // ---------- V318 SEGEL-VITAL: hukum kesetiaan isi ----------
-// Luka halus = segel bobol. Fungsi uji dipakai benih + patroli + uji jahat.
-function segelVitalUji (file, wajib) {
+// Luka halus = segel bobol. Metode mengikuti PENULISNYA (satu hukum, satu tanda):
+//   default (hapus-kunci): hash16(JSON.stringify({segel dihapus})) — cara intisari
+//   'segel-null'        : hash16(JSON.stringify(salin dgn segel=null)) — cara neurogenesis
+function segelVitalUji (file, wajib, metode) {
   if (!existsSync(file)) return { masalah: 'HILANG' }
   let j
   try { j = JSON.parse(readFileSync(file, 'utf8')) } catch (e) { return { masalah: 'JSON-TIDAK-SAH', rincian: String(e).slice(0, 90) } }
   if (!j || typeof j !== 'object') return { masalah: 'BUKAN-OBJEK' }
   const kurang = (wajib || []).filter(k => !(k in j))
   if (kurang.length) return { masalah: 'KUNCI-WAJIB-HILANG', rincian: kurang.join(',') }
-  const { segel, ...tanpa } = j
-  if (hash16Terabait(Buffer.from(JSON.stringify(tanpa))) !== segel) return { masalah: 'SEGEL-BOBOL', rincian: 'isi tak setia pada segelnya' }
+  let hash
+  if (metode === 'segel-null') { const salin = JSON.parse(JSON.stringify(j)); salin.segel = null; hash = hash16Terabait(Buffer.from(JSON.stringify(salin))) }
+  else { const { segel, ...tanpa } = j; hash = hash16Terabait(Buffer.from(JSON.stringify(tanpa))) }
+  const segelNilai = (j.segel && typeof j.segel === 'object') ? j.segel.hash : j.segel // pohon syaraf menyegel sbg objek {hash,size,readAt}
+  if (hash !== segelNilai) return { masalah: 'SEGEL-BOBOL', rincian: 'isi tak setia pada segelnya' }
   return { j }
 }
 
@@ -249,17 +255,17 @@ function benih () {
   // V318: benih merangkul SEGEL-VITAL — hanya dari pohon yang segelnya SAHIH
   // (aset opsional yang belum pernah lahir dilewati jujur — bukan luka)
   const segelVital = []
-  for (const [file, wajib, cat, wajibAda] of SEGEL_VITAL) {
+  for (const [file, wajib, cat, wajibAda, metode] of SEGEL_VITAL) {
     if (!existsSync(file)) {
       if (wajibAda) throw new Error('benih menolak segel-vital: ' + file + ' HILANG — aset wajib tak boleh lahir-lahir hilang')
       console.log('[imun] segel-vital ' + file + ' belum lahir (organ belum pernah makan) — dilewati jujur')
       continue
     }
-    const uji = segelVitalUji(file, wajib)
+    const uji = segelVitalUji(file, wajib, metode)
     if (uji.masalah) throw new Error('benih menolak segel-vital: ' + file + ' (' + uji.masalah + (uji.rincian ? ' ' + uji.rincian : '') + ') — benih hanya dari pohon sehat')
     const isi = readFileSync(file)
     writeFileSync(`${DIR_CADANGAN}/${slug(file)}`, isi)
-    segelVital.push({ file, wajib, catatan: cat, wajibAda: !!wajibAda, cadangan: `${DIR_CADANGAN}/${slug(file)}`, hash: h16(isi), size: isi.length, cadanganWaktu: waktu })
+    segelVital.push({ file, wajib, metode: metode || null, catatan: cat, wajibAda: !!wajibAda, cadangan: `${DIR_CADANGAN}/${slug(file)}`, hash: h16(isi), size: isi.length, cadanganWaktu: waktu })
   }
   // V309: benih kini merangkul URAT — hanya dari tubuh dengan semua sambungan hidup
   const urat = []
@@ -365,11 +371,11 @@ async function patroli () {
       if (v.wajibAda) catat('TAK-BISA-PULIH', v.file, 'aset segel-vital wajib HILANG — PANGGILAN PEMILIK')
       continue // aset opsional belum pernah lahir = bukan luka
     }
-    const uji = segelVitalUji(v.file, v.wajib)
+    const uji = segelVitalUji(v.file, v.wajib, v.metode)
     if (uji.masalah) {
       const cad = v.cadangan && existsSync(v.cadangan) ? readFileSync(v.cadangan) : null
       let cadSehat = null
-      if (cad) { try { const cj = JSON.parse(cad.toString('utf8')); const { segel, ...tanpa } = cj; cadSehat = (hash16Terabait(Buffer.from(JSON.stringify(tanpa))) === segel) ? cad : null } catch { cadSehat = null } }
+      if (cad) { try { const cj = JSON.parse(cad.toString('utf8')); const segelNilai = (cj.segel && typeof cj.segel === 'object') ? cj.segel.hash : cj.segel; const salin = JSON.parse(JSON.stringify(cj)); if (v.metode === 'segel-null') { salin.segel = null; cadSehat = (hash16Terabait(Buffer.from(JSON.stringify(salin))) === segelNilai) ? cad : null } else { const { segel, ...tanpa } = cj; cadSehat = (hash16Terabait(Buffer.from(JSON.stringify(tanpa))) === segelNilai) ? cad : null } } catch { cadSehat = null } }
       if (cadSehat) {
         writeFileSync(v.file, cadSehat)
         BERUBAH = true
