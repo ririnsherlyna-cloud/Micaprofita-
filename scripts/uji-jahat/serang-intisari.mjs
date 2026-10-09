@@ -96,12 +96,12 @@ async function main () {
   {
     const t = Date.now()
     const j = JSON.parse(asli.toString('utf8'))
-    const sebelum = JSON.stringify(j.resep)
-    j.resep = j.resep.map((x, i) => (i === 0 ? x + 1 : x))   // satu angka — JSON tetap sah
+    const sebelum = j.resep.a
+    j.resep.a = sebelum + 1                                  // satu angka — JSON tetap sah
     fs.writeFileSync(INTISARI, JSON.stringify(j, null, 1))
     const ujiLuka = jagaUjiSegel(INTISARI)
     const lukaTerbaca = ujiLuka.masalah === 'SEGEL-BOBOL'
-    console.log(`SERANGAN-A luka-halus: resep[0] digeser (sebelum=${sebelum.slice(0, 24)}) → hukum segel: ${lukaTerbaca ? 'SEGEL-BOBOL terbaca' : 'TIDAK terbaca — IMUN BUTA!'}`)
+    console.log(`SERANGAN-A luka-halus: resep.a digeser (${sebelum}→${j.resep.a}) → hukum segel: ${lukaTerbaca ? 'SEGEL-BOBOL terbaca' : 'TIDAK terbaca — IMUN BUTA!'}`)
 
     const imun = jalankanOrgan([path.join(AKAR, 'scripts', 'hidup', 'imun.mjs')])
     const jerit = jeritImunSesudah(t, 'PULIHKAN-SEGEL', 'otak/terabait-intisari.json')
@@ -110,7 +110,7 @@ async function main () {
     const jagaLulus = jaga.kode === 0
     console.log(`SERANGAN-A: imun exit=${imun.kode} · jerit fosil=${jerit ? 'ADA (' + jerit.alasan.slice(0, 60) + '…)' : 'TIDAK ADA'} · pulih=${pulih} · jaga exit=${jaga.kode}`)
     serangan.push({
-      id: 'A', jenis: 'luka-halus', cara: 'resep[0] digeser satu — JSON sah, kunci wajib utuh, hanya segel yang tahu',
+      id: 'A', jenis: 'luka-halus', cara: 'resep.a digeser satu — JSON sah, kunci wajib utuh, hanya segel yang tahu',
       lukaTerbaca, imunExit: imun.kode, jeritImun: jerit ? { waktu: jerit.waktu, alasan: jerit.alasan } : null,
       pulihKeHashAsli: pulih, jagaLulus, jagaKeluar: jaga.keluar.slice(0, 160),
     })
