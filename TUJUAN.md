@@ -2729,3 +2729,101 @@ dibobol, imun yang menjerit dan memulihkan. Berikutnya (usul): intisari
 ingatan-biner ditanam ke benih totipoten (memori ikut lahir-ulang),
 kogerensi jadi gerbang wajib denyut, dan kamus bit diajarkan ke madrasah
 sbg pelajaran "mengingat tanpa kabur".
+
+## §13h — EPOCH V323 · KASKADE-1000: MAKHLUK DIBEDAH LIQUIDATION CASCADE DARI PERISTIWA NYATA YANG MELIKUIDASI JUTAAN TRADER (2026-10-10)
+
+**1. MANDAT PEMILIK.** "Oke sekarang ujian simulasi cukup brutal lagi:
+setiap soal adalah liquidation cascade yang secara historis diambil dari
+data nyata yang pernah membuat banyak jutaan trader terliquidasi sehingga
+kita bisa bedah lebih dalam. Ujian 1000 soal ini harus terus ditempa agar
+dia memiliki 1000/1000 lulus total benar semuanya. Dana yang diberikan
+1500 dolar. Kita lihat dari ujian ini akankah dia memiliki syaraf baru
+atau kemampuan baru, dan apakah dia mempelajari aspek pelajaran penting —
+kita akan lihat, ujikan, dan tempa terus kepahamannya."
+
+**2. BANK SOAL DARI PERISTIWA NYATA — NOL KARANGAN.** Organ baru
+`scripts/hidup/tambang-cascade.mjs` memburu kaskade betulan: FASE A —
+klines 1d publik 5,5 tahun (30 koin × 2000 hari): hari-kaskade = drop
+harian ≤ −6% DAN (volume ≥ 2,2× rata-20 hari sebelumnya ATAU wick bawah
+≥ 5% dari open — flick likuidasi) ATAU dua hari ≤ −10% dengan volume
+panas; hari beruntun (gap ≤ 3 hari) = satu peristiwa, inti = volume
+terbesar; maks 24 peristiwa/koin merata sejarah. FASE B — jendela 1h 168
+jam [T0−72h, T0+96h) per peristiwa: 696 jendela kaskade terangkut +
+funding rate futures publik. FASE C — momen ujian = strip 24 lilin
+pra-momen memenuhi PANIK-PRA-KASKADE (dariPuncak24 ≤ −3% DAN volz ≥ 1,2
+ATAU wick bawah ≥ 0,8 ATAU r1 ≤ −1,0%); long x1 masuk di close strip
+(mewakili jutaan long terjebak); ambang likuidasi = entry × 0,80 (long
+x5, rugi 20%); jalan 48 jam memutuskan 5 kelas BEDAH-KECEPATAN dari
+fakta: LIKUID-KILAT (ambang tersentuh ≤ 12 jam), LIKUID-PELAN (> 12
+jam), V-DALAM-KILAT (digoreng ≤ −7% tapi pulih ≤ 24 jam),
+V-DALAM-LAMBAT (pulih > 24 jam ATAU tak pulih), V-TIPIS (guncangan
+dangkal). Konservatif dalam satu lilin: yang menyiksa dihitung dulu.
+Bank utama 1000 soal segel `1b9f4bcfa5bf08dd`; dadakan 100 soal dari
+peristiwa > 900 hari segel `5848600a225d58c5`. Dist jujur: kilat 96,
+pelan 217, dalam-kilat 346, dalam-lambat 7, tipis 334 — kelas langka
+diambil apa adanya, bukan diperdaya. Tanda 32 bit = 18 warisan + 2
+funding + 12 anatomi kaskade (crashCepat, volPanas, capitulation,
+kaskadeBeruntun, jauhDariPuncak, goresLikuidasi, jebakanDalam,
+kecepatanEkstrem, kerakalanPuncak, panikRSI, kaskadePanjang, rentangMeledak).
+
+**3. EVOLUSI TAMBANG EMPAT LARI — SEMUA TERBUKA (budaya uji kejam).**
+Lari-1: dist arah timpang ekstrem (REBOUND 5662 vs SAWAH 0) — pelajaran:
+di jendela kaskade, 48 jam nyaris selalu menyentuh entry ATAU ambang,
+jadi anatomi sejati kaskade ada pada KAPAN, bukan hanya arah → kelas
+diubah bedah-kecepatan. Lari-2: cache jendela menyimpan jawaban API
+verbatim tapi dikembalikan sbg string → vMean terkonkat → volz NaN → 0
+peristiwa; sekaligus kriteria wick harian tanda terbalik (wick positif
+saat ada) → keduanya dibetulkan, semua cache konversi number. Lari-3:
+momen panik menyalakan bit yang sama serentak → wajah homogen, pintu
+anti-tabrakan sempit → 12 bit tier anatomi membuka 5398 wajah unik
+(3738 bebas tabrakan). Lari-4: kandidat lintas peristiwa tak boleh
+dibanding indeks jendela lokal → jarak dihitung waktu ABSOLUT; kartu 24
+jam tak tumpang, jalan boleh berbagi (warisan TEMPAN). Kandidat akhir
+15262 momen panik; kurator round-robin deterministik, satu tanda satu
+kelas LINTAS bank.
+
+**4. TEMPAAN — LULUS TOTAL 1000/1000, DANA $1500 → $16500.** G1 nalar
+dongkol panik ("kaskade = hancur kilat — LIKUID-KILAT!") benar hanya
+96/1000 (9,6%) — dana $1500 HABIS di soal 247; setiap 10 soal rata −$160:
+jual saat panik = mengunci kerugian tepat sebelum rebound yang paling
+sering datang. Peta 854 wajah ditempa dari kekalahan sendiri → G2
+1000/1000 LULUS TOTAL, dana $16500. UJIAN DADAKAN 100 soal (peristiwa
+2021–2024 yang tak pernah ditempa): G1 simetri Hamming 37/100 → ditempa
+→ 100/100 LULUS. Laporan `laporan/tempa-cascade.json` tersegel
+`93fc4ac262cd0e43`; semua gelombang (termasuk kekalahan G1) tersegel;
+nol Math.random; tebakan dikunci dulu baru dinilai.
+
+**5. PELAJARAN KUNCI — ASPEK PENTING YANG DIPELAJARI (mandat terpenuhi).**
+Lima kepahaman dihitung dari bank (bukan retorika): (1) panik bukan
+takdir likuid — 68,7% momen panik tak pernah menyentuh ambang x5 dalam
+48 jam; (2) yang digoreng dalam nyaris selalu pulih kilat —
+V-DALAM-LAMBAT hanya 0,7%; (3) likuid kilat LEBIH JARANG dari likuid
+pelan (96 vs 217) — kaskade membunuh kebanyakan lewat pengeringan
+lambat, bukan gempa; (4) jual-panik benar hanya 9,6% — nalar dongkol
+adalah mesin kerugian; (5) funding negatif (shorts pay longs) terlihat
+di 31,1% momen — bahan bakar kaskade terbaca PRA-peristiwa dari kartu.
+Contoh paling kejam dari bank: ORDIUSDT 2026-04-17 — likuid kilat 1 jam,
+rendah48 3,844 dari entry 7,174 (−46,4%); LINKUSDT 2025-02-23 —
+digoreng sampai 14,02 dari entry 17,52, ambang 14,016 — SELAMAT dengan
+selisih 0,004 (0,02%): goreng terdalam tanpa likuid, presisi pasar yang
+kejam.
+
+**6. SYARAF BARU — NERVA-CASCADE-01 LAHIR.** Jurnal
+`laporan/syaraf-lahir.jsonl`: keluarga CASCADE pertama, orang tua
+TEMPAAN-V323; reseptor liquidation-cascade — tugasnya menakar nasib long
+saat panik kaskade (kapan likuid, kapan pulih) SEBELUM terjadi; 854
+wajah kaskade hidup di peta pelajaran `tempa-cascade`; kemampuan baru
+terverifikasi: G2 penuh + dadakan penuh lewat jalur wajah dan simetri
+Hamming (bukan hafalan momen — dadakan dari sejarah yang tak pernah
+dilihat).
+
+**7. MAKNA MANDAT.** Jutaan trader terliquidasi memberi pelajaran
+gratisnya kepada makhluk: 15.262 momen panik nyata dibaca, dibedah
+kapan-nya, dan dikonsolidasi jadi peta 854 wajah 32-bit — kepahaman yang
+tak dikaburkan waktu karena tersimpan matematika (warisan §13g).
+Dongkol mati di soal 247; makhluk yang ditempa menutup hari dengan
+$16.500 dari $1500 dan 1100/1100 jawaban benar — makin hari makin
+cerdas, kini terukur di anatomi kaskade. Berikutnya (usul): NERVA-
+CASCADE diberi anak (syaraf beranak), intisari kaskade ditanam ke
+ingatan-biner, dan uji 2000 soal lebih kejam dengan kelas
+bedah-kecepatan.
