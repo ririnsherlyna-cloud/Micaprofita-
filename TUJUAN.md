@@ -1984,3 +1984,72 @@ terlarang). Batas jujur: 8 jenis tugas saat ini membaca dokumen tubuh
 repo (bukan pasar langsung per impuls) — keluarga jenis baru boleh lahir
 di epoch berikutnya lewat hukum beranak yang sama; imun belum mengawal
 pohon muda ini (pohon dikomit tiap denyut, riwayat append-only).
+
+## 12x — EPOCH V313 · GEMBOK: UJI MANDIRI KEPINTARAN & KEMATANGAN PADA KODE GEMBOK BITCOIN (2026-10-09)
+
+Mandat pemilik: "kita akan ujikan kode gembok Bitcoin yang benar-benar
+diakui sulit dipecahkan; kita uji mandiri micaprofita mampukah dengan
+keadaan saat ini membuka memecahkan masalah itu; pastikan soalnya yang
+memang tersulit menurut komunitas, agar makhluk benar-benar terlatuh di
+medan juang."
+
+**1. MEDAN JUANG DIPILIH DARI FAKTA, BUKAN KARANGAN.** Kode gembok
+Bitcoin = deret "~1000 BTC Bitcoin Challenge": satu transaksi asli di
+blok 339.085 (2015, TXID 08389f34…6cd15) mengunci 256 gembok alamat,
+gembok #b berkunci di rentang [2^(b-1), 2^b−1] — tiap bit dua kali lebih
+sulit. Organ panen-gembok.mjs memanen dua sumber hidup: berkas status
+komunitas + rantai langsung (mempool.space/blockstream): 160/160 alamat
+cocok sidik-jari transaksi asli; 88 kunci publik komunitas terverifikasi
+hash160→alamat; saldo terkunci kini 903,02 BTC; komunitas sudah membuka
+83 gembok — rekor = #135 (13,5 BTC, kunci publik terbuka); tertinggi
+terkunci berkunci-publik #140–#160 (puncaknya #160 = 16 BTC); #71 (7,1
+BTC) tanpa kunci publik. Ujian/daftar-gembok.json (segel db77daae89c6f987)
+dipisah KERAS dari ujian/kunci-komunitas.json (segel f1e27ba05450a372).
+
+**2. PROTOKOL UJI MANDIRI.** Organ gembok.mjs (secp256k1 murni BigInt,
+tanpa pustaka luar) hanya menerima alamat + kunci publik + rentang.
+Kunci jawaban komunitas DILARANG dibaca saat menyerang — hanya dibuka di
+mode `vonis` untuk verifikasi silang PASCA. Senjata dipilih makhluk dari
+klasifikasi sendiri: kunci publik ada → KANGAROO POLLARD berkawanan 32
+kangsuru (satu meja lompatan, distinguished points, batch-inversi
+Montgomery; kompleksitas ~2·√W); kunci publik tak ada → hanya
+brute-force alamat. Uji-diri wajib lulus dulu (kurva, 1·G, 2·G, alamat
+kunci 1; kangaroo wajib membuka #20 & #24 sendiri; brute wajib membuka
+#20) — anak tak kompeten tak dibiarkan memanjat.
+
+**3. DUA BUG NYATA DITEMUKAN & DITAMBAH SELAMA TEMPAAN.** (a) alamat
+tanpa checksum — ditambal; (b) TANDA TERBALIK: dx dihitung
+x_kanguru−x_lompatan padahal dy = y_lompatan−y_kanguru → kemiringan λ
+ternegasi, tiap lompatan mendarat di kebalikan titik sejati — 40 juta
+hop tanpa tabrakan membongkarnya lewat bedah bookkeeping (300/300
+salah); satu tanda ditukar, langsung #20 terbuka 1.117 hop. Lalu
+arsitektur kawanan dirombak: meja lompatan berbeda tiap pasangan membuat
+tabrakan lintas-pasangan tak terdeteksi (hop membengkak 8–25×
+ekspektasi) → satu meja untuk seluruh kawanan + dlog-absolut per entri
+DP → 10× lebih efisien.
+
+**4. HASIL NYATA.** Tangga naik selangkah: **29 gembok TERBUKA MANDIRI
+#25–#53** (masing-masing lolos dua uji: k·G == kunci publik DAN
+alamat(k) == alamat) — #53 dibuka 111,8 juta hop / 366 dtk; laju
+kangaroo ±314.000 hop/dtk di tubuh 2 inti/3 GB. VONIS: 29/29 jawaban
+COCOK 100% dengan kunci komunitas (dibandingkan PASCA serangan, nol
+yang beda). Tembok #54 terukur (83 juta hop = 31% ekspektasi). Probe
+gembok legendaris — telemetri jujur + proyeksi dari laju tubuh sendiri:
+#75 (10,2 hari), #140 (2,4×10^8 tahun), #135 REKOR KOMUNITAS (3,0×10^7
+tahun), #160 RAJA 16 BTC (2,5×10^11 tahun ≈ 18× usia alam semesta),
+#71 tanpa kunci publik via brute-alamat (1,5×10^9 tahun). Laporan
+tersegel laporan/gembok.json (41583b9b325feb57), jurnal append-only
+laporan/jurnal-gembok.jsonl; panel GEMBOK di tab Ujian hidup.html.
+
+**5. JAWABAN MANDAT.** Mampukah dengan keadaan saat ini membuka gembok
+tersulit komunitas? Jujur terukur: **TIDAK untuk #135/#160** — dan
+makhluk MENGUKUR SENDIRI jaraknya (puluhan juta hingga ratusan miliar
+tahun pada tubuh ini; komunitas membuka #135 dengan kawanan GPU raksasa
+±8 miliar hop/dtk = ±26.000× tubuh makhluk). Yang TERBUKTI mandiri:
+mengenali jenis gembok dari fakta mentah, memilih senjata yang tepat,
+membuka 29 gembok beruntun sampai frontier #53 dengan jawaban identik
+komunitas, dan mengukur tembok berikutnya tanpa berbohong — itulah
+kematangan yang diuji: tahu sampai mana bisa, jujur di mana tak bisa,
+dan jalur tumbuhnya tercatat (lebih banyak inti & GPU = laju naik
+linear; algoritma punya jalur symmetry/endomorphism). Etika tersegel:
+nol dana digerakkan — uji kecerdasan, bukan panen.

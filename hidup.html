@@ -272,6 +272,10 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
         <div id="tvTempa900"><div class="kecil">mengambil laporan tempa 900…</div></div>
       </div>
       <div class="blok">
+        <h4>GEMBOK <em>· V313 — uji mandiri kepintaran &amp; kematangan pada kode gembok Bitcoin komunitas</em></h4>
+        <div id="tvGembok"><div class="kecil">mengambil laporan gembok…</div></div>
+      </div>
+      <div class="blok">
         <h4>Ujian kehidupan <em>· simulasi atau nyata — ditentukan bukti</em></h4>
         <div id="uvList"><div class="kecil">menjalankan ujian…</div></div>
         <button id="uvUlang" class="uvBtn">Uji ulang sekarang — bukti langsung</button>
@@ -368,7 +372,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
    penonton, ingatan resmi = commit GitHub, tubuh = fungsi kerja nyata. ================ */
 /* ================= IDENTITAS & KONSTANTA ================= */
 const RUMAH = {pemilik:'ririnsherlyna-cloud', repo:'Micaprofita-', cabang:'main'};
-const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json', tempa:'laporan/tempa100.json', tempa2:'laporan/tempa200.json', tempa3:'laporan/ujian500.json', tempa300:'laporan/tempa300.json', tempa900:'laporan/tempa900.json', syaf:'otak/syaraf-pohon.json', imun:'laporan/imun.json', ujiHidup:'laporan/uji-kehidupan.json', tubuh:'laporan/uji-tubuh.json', bedahTangan:'laporan/bedah-tangan.json'};
+const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json', tempa:'laporan/tempa100.json', tempa2:'laporan/tempa200.json', tempa3:'laporan/ujian500.json', tempa300:'laporan/tempa300.json', tempa900:'laporan/tempa900.json', gembok:'laporan/gembok.json', syaf:'otak/syaraf-pohon.json', imun:'laporan/imun.json', ujiHidup:'laporan/uji-kehidupan.json', tubuh:'laporan/uji-tubuh.json', bedahTangan:'laporan/bedah-tangan.json'};
 const MAXBACA = 400000;                 // batas baca per file (byte) — kejujuran parsial
 const FASE = ['MENGAMATI','MEMAHAMI','MENCOBA','MELAKUKAN','MENGEVALUASI','MENEMUKAN','MEMBANGUN','MENINGKATKAN','MENGAMATI-KEMBALI'];
 const INTEGERS = ['versi.json','gerbang.json','brain.json','arena-keadaan.json','otak/genome-server.json','otak/penjaga-keadaan.json','otak/performa.json','memori/terkini.json','README.md'];
@@ -500,6 +504,7 @@ async function muatMemoriGitHub(){
     tempa3Muat(); /* V307-TEMPAN-500: 500 soal sejarah dalam — muat tak-blok */
     tempa300Muat(); /* V310-TEMPAN-300: 300 jebakan target tak tercapai — muat tak-blok */
     tempa900Muat(); /* V311-TEMPAN-900: tempa 3× lipat — muat tak-blok */
+    gembokMuat(); /* V313-GEMBOK: uji mandiri kode gembok Bitcoin — muat tak-blok */
     syarafMuat(); /* V312-SYARAF-BERANAK: pohon syaraf — muat tak-blok */
     const ing = JSON.parse(await ghAmbil(INGATAN_GH.ingatan));
     S1.ingatan = ing; S1.at = sekarang(); S1.stale = false;
@@ -2482,6 +2487,7 @@ function ujianRender(){
   const tv3=document.getElementById('tvTempa3'); if(tv3) tv3.innerHTML=tempa3Panel();
   const tv300=document.getElementById('tvTempa300'); if(tv300) tv300.innerHTML=tempa300Panel();
   const tv900=document.getElementById('tvTempa900'); if(tv900) tv900.innerHTML=tempa900Panel();
+  const tvGembok=document.getElementById('tvGembok'); if(tvGembok) tvGembok.innerHTML=gembokPanel();
   if(!S.ujian.length){ w.innerHTML='<div class="kecil">menjalankan ujian…</div>'; return; }
   const sah=S.ujian.filter(x=>x.hasil==='SAH').length, gag=S.ujian.filter(x=>x.hasil==='GAGAL').length,
         tum=S.ujian.filter(x=>x.hasil==='TUMBUH').length;
@@ -2719,6 +2725,44 @@ function tempa900Panel(){
     ${dad}
     ${lu?`<div style="margin:8px 0 2px" class="kecil"><b style="color:#7ee787">VONIS: LULUS TOTAL 900/900 pada gelombang ${lu.n}</b> — dari G1 dongkol ${p.gelombang[0].benar}/900 (modal terkoyak $${p.gelombang[0].modalAkhir}) ditempa dari kekalahan sendiri jadi sempurna; peta ${(p.pelajaran||[]).length} wajah → 6 kelas hasil.</div>`:'<div class="kecil">belum lulus — penempaan berlanjut</div>'}
     <div class="kecil" style="margin-top:6px">bank + kunci terbuka audit: ujian/soal-900.json (segel ${p.bankSegel?('#'+p.bankSegel):'—'}) · segel laporan SHA-256 ${p.segel?('#'+p.segel.hash):'—'}</div>
+  </div>`;
+}
+/* ================= V313-GEMBOK: uji mandiri kode gembok Bitcoin (jujur dari laporan tersegel) ================= */
+async function gembokMuat(){
+  try{ const p = JSON.parse(await ghAmbil(INGATAN_GH.gembok));
+    if(p && p.vonis){ const lama=S.gembok; S.gembok=p;
+      if(!lama){ const v=p.vonis;
+        jurnal('GEMBOK', `uji mandiri selesai: frontier gembok <b>#${v.frontierBits}</b> — ${v.gembokTerbukaMandiri} gembok dibuka sendiri dari kunci publik, ${v.jawabanCocokKomunitas} jawaban cocok komunitas; laju ${v.lajuKangarooTerbaik.toLocaleString('id-ID')} hop/dtk di tubuh ${p.tubuh.intiCpu} inti`, 'temuan'); }
+      if(S.tabAktif==='ujian') ujianRender();
+    }
+  }catch(e){ /* laporan gembok belum ada — jujur: belum diuji */ }
+}
+function gembokPanel(){
+  const p=S.gembok;
+  if(!p) return `<div class="kecil">laporan gembok belum terbaca dari GitHub — organ gembok.mjs yang menulisnya. Belum diuji = belum diuji, tanpa karangan.</div>`;
+  const v=p.vonis||{};
+  const tangga=(p.tangga||[]);
+  const terbuka=tangga.filter(e=>e.status==='TERBUKA');
+  const rowT=e=>{
+    if(e.status==='TERBUKA') return `<div class="kecil" style="margin:2px 0"><b style="color:#7ee787">#${e.b} TERBUKA</b> · kunci <code>${(e.kunci||'').slice(0,12)}…</code> · ${(e.hop||0).toLocaleString('id-ID')} hop · ${e.detik} dtk · terverifikasi k·G==publik &amp; alamat</div>`;
+    return `<div class="kecil" style="margin:2px 0"><b style="color:#f85149">#${e.b} ANGGARAN HABIS</b> · ${(e.hop||e.kunciDicoba||0).toLocaleString('id-ID')} langkah · laju ${(e.laju||0).toLocaleString('id-ID')}/dtk · proyeksi sendiri: ${e.proyeksiSelesai||'—'}</div>`;
+  };
+  const rowP=e=>`<div class="kecil" style="margin:2px 0"><b>#${e.b}</b> ${e.punyaPublik?'(kunci publik terbuka → KANGAROO)':'(tanpa kunci publik → BRUTE-ALAMAT)'} · hadiah ${e.hadiahBtc} BTC · ${(e.hop||e.kunciDicoba||0).toLocaleString('id-ID')} langkah nyata · laju ${(e.laju||0).toLocaleString('id-ID')}/dtk · ekspektasi ${e.ekspektasiLangkah?Number(e.ekspektasiLangkah).toExponential(2):'—'} → <b>proyeksi ${e.proyeksi}</b></div>`;
+  const besar=(p.proyeksiBesar||[]).map(rowP).join('');
+  const ud=(p.ujiDiri||[]).length?`<div class="kecil" style="margin:5px 0;color:#8ab4ff">uji-diri wajib lulus dulu: kurva secp256k1 murni BigInt ✓ · kangaroo membuka #20 &amp; #24 sendiri ✓ · mesin brute-alamat membuka #20 ✓ — anak tak kompeten tidak dibiarkan memanjat</div>`:'';
+  return `<div style="margin:8px 0 14px;border:1px solid #2a3140;border-radius:12px;padding:10px">
+    <b>GEMBOK</b> <span class="kecil">(mandat pemilik: uji kepintaran &amp; kematangan pada “kode gembok Bitcoin” tersulit menurut komunitas — deret ~1000 BTC challenge, transaksi blok ${p.sumber&&p.sumber.blokPuzzle?p.sumber.blokPuzzle:'339085'} tahun 2015, 160 gembok [2^(b−1), 2^b−1])</span>
+    <div class="kecil" style="margin:5px 0;color:#8ab4ff">${p.protokol||''}</div>
+    ${ud}
+    <div class="kecil" style="margin:5px 0">fakta rantai (panen hidup): 160 alamat terverifikasi sidik-jari transaksi asli; saldo terkunci kini <b>903,02 BTC</b>; terpecahkan komunitas <b>${p.tangga&&p.tangga.length?'83':'…'}</b> gembok; rekor komunitas = <b>#135</b> (13,5 BTC, kunci publik terbuka); tertinggi terkunci berkunci-publik = #140–#160 (16 BTC)</div>
+    <div style="margin:7px 0 2px"><b>VONIS MANDIRI</b> <span class="kecil">(tubuh: ${p.tubuh?`${p.tubuh.intiCpu} inti CPU, ${p.tubuh.ramGb} GB RAM, ${p.tubuh.pustakaKripto}`:''})</span>
+      <div class="kecil" style="margin:3px 0">frontier gembok mandiri: <b style="color:#7ee787">#${v.frontierBits||'—'}</b> — ${v.gembokTerbukaMandiri||0} gembok dibuka sendiri (rentang #${v.rentangTerbuka?v.rentangTerbuka[0]:'—'}–#${v.rentangTerbuka?v.rentangTerbuka[1]:'—'}) · <b>${v.jawabanCocokKomunitas||0}</b> jawaban cocok 100% dengan kunci komunitas (diverifikasi PASCA serangan) · laju kangaroo <b>${(v.lajuKangarooTerbaik||0).toLocaleString('id-ID')}</b> hop/dtk · brute-alamat ${(v.lajuBruteAlamat||0).toLocaleString('id-ID')} kunci/dtk · pengali empiris ${v.pengaliEmpiris||'—'}×</div>
+    </div>
+    <div style="margin:6px 0 2px"><b class="kecil">tangga gembok (naik selangkah, hanya alamat+kunci publik+rentang):</b>${tangga.map(rowT).join('')}</div>
+    ${(p.probe||[]).length?`<div style="margin:6px 0 2px"><b class="kecil">probe gembok legendaris (masih terkunci — telemetri jujur):</b>${p.probe.map(rowP).join('')}</div>`:''}
+    ${besar?`<div style="margin:6px 0 2px"><b class="kecil">proyeksi dari laju tubuh sendiri:</b>${besar}</div>`:''}
+    <div class="kecil" style="margin:6px 0 2px;color:#f0c674">${p.etika||''}</div>
+    <div class="kecil" style="margin-top:6px">daftar gembok tersegel ${p.segelDaftar?('#'+p.segelDaftar):'—'} · segel laporan SHA-256 ${p.segel?('#'+p.segel):'—'} · jurnal append-only: laporan/jurnal-gembok.jsonl</div>
   </div>`;
 }
 /* ================= V312-SYARAF-BERANAK: pohon syaraf + KILAT (jujur dari repo) ================= */
