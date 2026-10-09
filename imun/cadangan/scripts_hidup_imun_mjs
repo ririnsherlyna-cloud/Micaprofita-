@@ -73,6 +73,7 @@ const SEGEL_VITAL = [
   ['otak/intisari-liar.json', ['skema', 'segel'], 'koleksi intisari data liar (V318) — buah akal makhluk di dunia yang tak ditanam', false],
   ['otak/syaraf-pohon.json', ['skema', 'segel'], 'pohon syaraf beranak (V312) — PELAJARAN V318: tabrakan rebase dua garis hidup (tangan tuan × denyut) menghasilkan pohon frankenstein yang tak setia segelnya; imun kini yang menyembuhkan', true, 'segel-null'],
   ['otak/medan-keadaan.json', ['skema', 'segel'], 'medan hayat kontinu (V319) — intisari Lenia hidup di tubuh: Orbium bertahan dari matematika sejati, pasar nyata menjadi makanan; luka halus = medan palsu', true, 'segel-null'],
+  ['otak/reka-bentuk.json', ['skema', 'segel'], 'genom peta berevolusi + silsilah (V320) — intisari reconfigurable_organisms hidup di tubuh: mutasi, seleksi anak-vs-induk, gerbang tangguh, saksi dunia; luka halus = silsilah palsu', true, 'segel-null'],
 ]
 const KODE = [
   ['scripts/hidup/gerbang.mjs', false, 'gerbang saraf — pemanggil tangan lewat peta saraf (V309)'],
@@ -82,7 +83,8 @@ const KODE = [
   ['scripts/hidup/pustaka.mjs', false, 'organ belajar jurnal'],
   ['scripts/hidup/imun.mjs', false, 'organ imun (dicatat, tak disentuh oleh patroli)'],
   ['scripts/hidup/liar.mjs', false, 'organ LIAR (V318) — mencari data liar betulan & mengintisarikannya tanpa menanam'],
-  ['scripts/hidup/medan-hayat.mjs', false, 'organ MEDAN-HAYAT (V319) — medan hayat kontinu (intisari Lenia): Orbium hidup, pasar nyata jadi makanan']
+  ['scripts/hidup/medan-hayat.mjs', false, 'organ MEDAN-HAYAT (V319) — medan hayat kontinu (intisari Lenia): Orbium hidup, pasar nyata jadi makanan'],
+  ['scripts/hidup/reka-bentuk.mjs', false, 'organ REKA-BENTUK (V320) — genom peta berevolusi (intisari reconfigurable_organisms): mutasi non-netral, wajah beku, anak-vs-induk, gerbang tangguh, saksi dunia, silsilah tersegel']
 ]
 // batas kegembiran: file yang berubah tiap denyut — cadangan diperbarui
 // maksimal sekali per 6 jam agar imun tak membuat komit kebisingan.

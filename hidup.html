@@ -328,6 +328,10 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
         <div id="jvMedan"><div class="kecil">membaca medan hayat…</div></div>
       </div>
       <div class="blok">
+        <h4>SILSILAH REKA-BENTUK <em>· V320 — intisari reconfigurable_organisms hidup di tubuh: genom peta berevolusi, seleksi tangguh, saksi dunia</em></h4>
+        <div id="jvReka"><div class="kecil">membaca silsilah evolusi…</div></div>
+      </div>
+      <div class="blok">
         <h4>Sumber kejujuran <em>· nol karangan</em></h4>
         <div class="kecil">Lilin 1m (gerbang Binance publik, multi-koin) · laporan/sasaran-terkini.json · otak/penjaga-keadaan.json · ruang-hidup/keadaan.json · ruang-hidup/tubuh.json (segel gerak). Bila sumber gagal diambil: jasad MATI-PENUH-NALAR — tubuh kembali ke perilaku dasar dan alasannya ditulis terbuka di sini. Audit langsung: <code>window.__v297</code>, <code>window.__v299</code>, <code>window.__v300</code>, <code>window.__v301</code>.</div>
       </div>
@@ -392,7 +396,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
    penonton, ingatan resmi = commit GitHub, tubuh = fungsi kerja nyata. ================ */
 /* ================= IDENTITAS & KONSTANTA ================= */
 const RUMAH = {pemilik:'ririnsherlyna-cloud', repo:'Micaprofita-', cabang:'main'};
-const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json', tempa:'laporan/tempa100.json', tempa2:'laporan/tempa200.json', tempa3:'laporan/ujian500.json', tempa300:'laporan/tempa300.json', tempa900:'laporan/tempa900.json', squeeze:'laporan/tempa-squeeze.json', jejak:'laporan/tempa-jejak.json', gembok:'laporan/gembok.json', syaf:'otak/syaraf-pohon.json', liar:'otak/intisari-liar.json', jerit:'laporan/jerit.jsonl', ujiJahat:'laporan/uji-jahat-jaga.json', syarafFinal:'laporan/syaraf-final.json', medan:'otak/medan-keadaan.json', imun:'laporan/imun.json', ujiHidup:'laporan/uji-kehidupan.json', tubuh:'laporan/uji-tubuh.json', bedahTangan:'laporan/bedah-tangan.json'};
+const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json', tempa:'laporan/tempa100.json', tempa2:'laporan/tempa200.json', tempa3:'laporan/ujian500.json', tempa300:'laporan/tempa300.json', tempa900:'laporan/tempa900.json', squeeze:'laporan/tempa-squeeze.json', jejak:'laporan/tempa-jejak.json', gembok:'laporan/gembok.json', syaf:'otak/syaraf-pohon.json', liar:'otak/intisari-liar.json', jerit:'laporan/jerit.jsonl', ujiJahat:'laporan/uji-jahat-jaga.json', syarafFinal:'laporan/syaraf-final.json', medan:'otak/medan-keadaan.json', reka:'otak/reka-bentuk.json', imun:'laporan/imun.json', ujiHidup:'laporan/uji-kehidupan.json', tubuh:'laporan/uji-tubuh.json', bedahTangan:'laporan/bedah-tangan.json'};
 const MAXBACA = 400000;                 // batas baca per file (byte) — kejujuran parsial
 const FASE = ['MENGAMATI','MEMAHAMI','MENCOBA','MELAKUKAN','MENGEVALUASI','MENEMUKAN','MEMBANGUN','MENINGKATKAN','MENGAMATI-KEMBALI'];
 const INTEGERS = ['versi.json','gerbang.json','brain.json','arena-keadaan.json','otak/genome-server.json','otak/penjaga-keadaan.json','otak/performa.json','memori/terkini.json','README.md'];
@@ -531,6 +535,7 @@ async function muatMemoriGitHub(){
     liarMuat(); /* V318-LIAR: koleksi intisari data liar — muat tak-blok */
     jeritMuat(); /* V318-JERIT: fosil jerit + vonis uji jahat — muat tak-blok */
     medanMuat(); /* V319-MEDAN: medan hayat kontinu (Lenia hidup) — muat tak-blok */
+    rekaMuat(); /* V320-REKA-BENTUK: silsilah evolusi genom peta — muat tak-blok */
     const ing = JSON.parse(await ghAmbil(INGATAN_GH.ingatan));
     S1.ingatan = ing; S1.at = sekarang(); S1.stale = false;
     if(ing.kelahiran) S.stat.lahirAt = Date.parse(ing.kelahiran) || S.stat.lahirAt;
@@ -2977,6 +2982,30 @@ function medanRender(){
     ${barisM('soliton hidup', `<b>${i.soliton}</b> pola mandiri · terbesar ${i.ukuranSolitonTerbesar} sel · hanyut ${i.hanyut?('<b>'+i.hanyut.jarak+'</b> sel arah ('+i.hanyut.dx+','+i.hanyut.dy+')'):'—'}`)}
     ${barisM('makanan denyut ini', makanan||'— (lilin 1h nyata 3 koin utama)')}
     <div class="kecil" style="margin-top:5px">intisari Lenia (Chakazul, arXiv:1812.05433) hidup-hidup di tubuh: keadaan kontinu [0,1] · kernel bump4 Σ=1 · tumbuh lembut 2·exp(−(n−m)²/2s²)−1 · metabolisme berbatas clip(A+dt·G) — pemahaman pasar EMERGEN dari aturan lokal, bukan ditanam pusat. Makanan dari lilin nyata data-api.binance.vision; medan disegel 'segel-null' — imun menjaga, yang merusak membuat makhluk menjerit. Keadaan: otak/medan-keadaan.json · segel ${p.segel&&p.segel.hash?('#'+p.segel.hash):'—'}</div>`;
+}
+/* ================= V320-REKA-BENTUK: silsilah evolusi genom peta ================= */
+async function rekaMuat(){
+  try{ const p=JSON.parse(await ghAmbil(INGATAN_GH.reka));
+    if(p && p.skema){ const lama=S.reka; S.reka=p;
+      if(!lama || lama.diperbarui!==p.diperbarui){
+        const i=p.inkumben||{}, kb=i.kebugaran||{}, sx=kb.saksi||{};
+        jurnal('REKA-BENTUK', `genom peta berevolusi — generasi <b>${p.generasi}</b> · inkumben <b>${i.id}</b> (dari ${i.orangTua}, kedalaman ${i.kedalaman}) · utama ${kb.utamaBenar}/${kb.utamaTotal} · dadakan ${kb.dadakanBenar}/${kb.dadakanTotal} · tangguh <b>${kb.tangguh!=null?(kb.tangguh*100).toFixed(1):'?'}%</b> · saksi ${sx.simbol||'—'} ${sx.benar!=null?sx.benar+'/'+sx.total:''} · segel ${p.segel&&p.segel.hash}`, 'temuan'); }
+      rekaRender(); }
+  }catch(e){ /* silsilah belum lahir — jujur */ }
+}
+function rekaRender(){
+  const el=document.getElementById('jvReka'); if(!el) return;
+  const p=S.reka;
+  if(!p){ el.innerHTML='<div class="kecil">silsilah belum terbaca — organ reka-bentuk.mjs yang melahirkannya saat denyut. Belum ada = belum ada, tanpa karangan.</div>'; return; }
+  const i=p.inkumben||{}, kb=i.kebugaran||{}, sx=kb.saksi||{};
+  const baris=(k,v)=>`<div class="baris"><span class="k">${k}</span><span class="v">${v}</span></div>`;
+  const sil=(p.silsilahTerakhir||[]).slice().reverse().map(s=>`<div class="kecil" style="margin:3px 0;padding:3px 6px;border-left:2px solid var(--aksen)">gen ${s.generasi} · <b>${s.putusan}</b> — ${s.alasan||''}${s.anak&&s.anak.variasi?`<br><span style="opacity:.75">variasi: ${s.anak.variasi}</span>`:''}${s.saksi&&!s.saksi.gagal?`<br><span style="opacity:.75">saksi ${s.saksi.simbol}: induk ${s.saksi.induk}/${s.saksi.soal} · anak ${s.saksi.anak!=null?s.saksi.anak+'/'+s.saksi.soal:'—'}</span>`:''}</div>`).join('');
+  el.innerHTML=`
+    ${baris('generasi', `<b>${p.generasi}</b> · inkumben <b>${i.id||'—'}</b> lahir dari ${i.orangTua||'—'} · kedalaman ${i.kedalaman!=null?i.kedalaman:'—'} · ${i.wajah||'?'} wajah`)}
+    ${baris('kebugaran', `utama <b>${kb.utamaBenar}/${kb.utamaTotal}</b> · dadakan <b>${kb.dadakanBenar}/${kb.dadakanTotal}</b> · tangguh <b>${kb.tangguh!=null?(kb.tangguh*100).toFixed(1)+'%':'—'}</b>`)}
+    ${baris('saksi dunia', sx.simbol?`${sx.simbol} <b>${sx.benar!=null?sx.benar+'/'+sx.total:'—'}</b> (lilin nyata segar — saksi, bukan hakim)`:'—')}
+    <div style="margin-top:5px"><span class="kecil">silsilah terbaru:</span>${sil||'<div class="kecil">—</div>'}</div>
+    <div class="kecil" style="margin-top:5px">intisari reconfigurable_organisms (Kriegman dkk, PNAS 2020) hidup-hidup di tubuh: genom kecil → tubuh penuh · mutasi non-netral · wajah beku bank utama (penguasaan 2000/2000 tak boleh digadakan) · anak bersaing dengan induknya saja · gerbang tangguh: jawaban harus setia saat SATU pelajaran dilupakan (pelajaran sim2real: juara rapuh gagal pindah ke dunia nyata) · saksi dunia tak pernah jadi hakim. Keadaan: otak/reka-bentuk.json · segel ${p.segel&&p.segel.hash?('#'+p.segel.hash):'—'}</div>`;
 }
 /* ================= RENDER OVERLAY (satu-satunya tempat teks) ================= */
 let S_TAB='pikir';

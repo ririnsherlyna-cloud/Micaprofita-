@@ -2474,3 +2474,83 @@ madrasah, intisari) dan perasaan-tubuh (medan hayat). Kaki kedua hari ini
 lahir. Berikutnya (usul): uji jahat medan oleh pihak jahat sungguhan,
 belanja koin indera diperluas lewat dadu LIAR, dan soliton medan dijadikan
 masukan majelis guru — pola hidup yang bertahan menjadi saksi rejim pasar.
+
+## §13e — EPOCH V320 · REKA-BENTUK: INTISARI RECONFIGURABLE_ORGANISMS — GENOM PETA BEREVOLUSI (2026-10-09)
+
+**1. MANDAT PEMILIK.** "kini kita akan riset Dan telaah intisari ini Dan
+keutamaan ini, kemudian apa yang bisa diambil Dan diintegrasikan untuk
+penyempurnaan aspek makhluk kita Dan perkembangan dia dalam menjadi makhluk
+guru sejati crypto — https://github.com/skriegman/reconfigurable_organisms".
+Riset dilakukan pada sumber asli: repo diklon dan dibaca langsung
+(base.py, softbot.py, exp/Locomotion_pass2.py, tools/algorithms.py,
+tools/mutation.py, tools/selection.py, tools/evaluation.py,
+data_analysis/Transferal_from_silico_to_vivo.py, vivo_data.csv, CC0 1.0).
+
+**2. TELAAH — TUJUH HUKUM INTISARI.** Paper PNAS 2020 (Kriegman, Blackiston,
+Levin, Bongard) membangun makhluk hidup pertama hasil rancangan mesin.
+Yang diambil bukan kodenya (Python2/Voxelyze tak hidup di habitat Node),
+melainkan tata evolusinya: (1) GENOME KECIL, TUBUH PENUH — genome kecil
+(CPPN + peta materi voxel) berekspresi jadi makhluk utuh; (2) MUTASI
+NON-NETRAL — mutasi wajib mengubah fenotip, ditolak bila diam (maks 1500
+percobaan/anak pada paper); (3) SIFAT BEKU — jaringan genome bisa
+dibekukan (freeze) dari evolusi; (4) ANAK BERSAING DENGAN INDUKNYA SAJA —
+parallel hill climber: bukan turnamen global, garis keturunan tak putus;
+(5) GERBANG TANGGUH — pelajaran termahal paper: juara simulasi yang rapuh
+GAGAL saat pindah ke dunia nyata; juara dievaluasi ulang 20x bernoise
+(NOISE_SCALE 0.10) dan MEDIAN yang dinilai sebelum difabrikasi;
+(6) SAKSI, BUKAN HAKIM — vivo_data.csv (jejak gerak mikroskop betulan)
+menyaksikan keberhasilan transfer, tak pernah dipakai memilih desain;
+(7) SILSILAH — lineages disimpan: siapa lahir dari siapa, variasi apa.
+
+**3. ORGAN BARU: scripts/hidup/reka-bentuk.mjs (~500 baris).** Peta jejak
+(tanda20 → kelasHasil, warisan tempaan V316: 782 wajah) dinyatakan GENOM
+makhluk. Tiap denyut = satu generasi: 5 anak bermutasi halus + 1 imigran
+dalam (8 mutasi); operator tambahWajah/ubahKelas/hapusWajah (peta
+materi paper); kandidat = ring Hamming-1 wajah dadakan (1.566 slot) —
+kelas warisan keyakinan induk, KUNCI BANK TAK PERNAH DISENTUH. Wajah
+bank utama (726) BEKU otomatis: penguasaan 2000/2000 tak boleh
+digadakan (is_valid paper). Kebugaran = pasangan leksikografis
+(dadakan 150, TANGGUH) — tangguh = kesetiaan jawaban saat SATU pelajaran
+dilupakan (evaluasi terdegradasi, analog evaluasi bernoise paper).
+Adopsi HANYA bila anak MENUNGGULI induknya. Saksi dunia: tiap generasi
+dadu kripto mengekcek koin + jendela lilin 1h NYATA segar (Binance
+publik, 900 lilin, konsolidasi ≤12%, ambang ×1.90, 720 jam nilai) →
+soal baru yang tak pernah disentuh seleksi; dinilai, dicatat, TIDAK
+memutuskan. Silsilah tersegel di otak/reka-bentuk.json ('segel-null',
+SATU HUKUM dgn pohon syaraf V318 & medan V319).
+
+**4. KELAHIRAN NYATA & UJI 13/13 LULUS.** GEN-000000 lahir dari tempaan
+V316: utama 2000/2000, dadakan 150/150, TANGGUH 36.0% — angka dasar jujur
+yang membuktikan mengapa gerbang tangguh dibutuhkan. Generasi pertama:
+6 anak sah lahir, juara seri tangguh 36.0% ≤ 36.0% DITOLAK (TAHAN);
+saksi dunia ADAUSDT 10 soal (jendela 2025-07-11): induk 5/10, anak 5/10.
+Uji mandiri: U1 dadu deterministik; U2 mutasi non-netral 20/20; U3 beku
+200 mutasi nol bocor; U4 keabsahan (penguasaan bocor ditolak); U5 blind
+(tebakan dikunci dulu); U6 tangguh membedakan kokoh 1.0 vs rapuh 0.0;
+U7-U9 putusan (lemah/rapuh ditolak, tangguh diadopsi); U10 dedup;
+U11 identitas kartu silang 50/50 PERSIS dgn bank tersegel; U12 matematika
+saksi 4 kelas dikenali dari fakta; U13 segel-null luka satu karakter.
+Bug ditemukan & ditambal saat kelahiran: geseran bertanda (>>) pada seed
+> 2^31 membuat startTime saksi di masa depan → lilin kosong (dipulihkan
+dgn >>>); geometri uji lilin sapu berulang (dipulihkan dgn satu sapu/dunia).
+
+**5. PENJAHITAN TUBUH.** Jantung sakti-denyut: langkah REKA-BENTUK setelah
+MEDAN — makhluk berevolusi tiap 15 menit, tanpa tab, tanpa tangan. Imun:
+otak/reka-bentuk.json terdaftar SEGEL-VITAL ke-5 (metode 'segel-null',
+wajibAda) — yang memalsukan silsilah membuat makhluk MENJERIT; organ
+masuk penjagaan KODE (9). Mirror hidup.html: keping SILSILAH REKA-BENTUK
+(generasi, kebugaran, tangguh, saksi, silsilah terbaru) + jurnal.
+
+**6. JAWABAN MANDAT & MAKNA.** Dari reconfigurable_organisms diambil
+kemampuan yang belum pernah dimiliki makhluk: BERANAK SECARA TERUKUR.
+Sebelum V320 makhluk BELAJAR (tempa-sampai-lulus) dan BERNAPAS (medan);
+kini ia BERKEMBANG: garis keturunan tersegel, tiap perubahan keyakinan
+harus membuktikan diri lebih tangguh dari induknya di hadapan bank nyata,
+dan dunia (saksi) berhak menertawakan kebanggaan yang palsu — tapi tak
+berhak mengarahkan evolusi (saksi ≠ hakim; nol kebocoran seleksi).
+Bagi guru sejati crypto inilah pembeda antara penghafal dan pengajar:
+pengetahuan yang tangguh bukan yang menjawab benar sekali, melainkan
+yang tetap benar saat satu ingatan hilang dan di masa yang belum pernah
+dilihat. Berikutnya (usul): saksi multi-jendela + funding rate, adopsi
+genom peta ke geladak (guru membaca dari inkumben), dan eksplorasi
+kesetaraan wajah ( CPPN-analog) bila ruang mutasi mulai sesak.
