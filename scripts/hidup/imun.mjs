@@ -32,6 +32,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync, statSync, readdirSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { execSync, spawnSync } from 'node:child_process'
+import { hash16 as hash16Terabait } from './terabait-inti.mjs' // V318: fungsi segel yang SAMA dgn penulis intisari — satu hukum, dua organ
 
 const h16 = (s) => createHash('sha256').update(s).digest('hex').slice(0, 16)
 const ISO = () => new Date().toISOString()
@@ -59,13 +60,26 @@ const ORGAN = [
   ['ujian/soal-200.json', ['protokol', 'soal'], 'bank soal TEMPAN-200 tersegel']
 ]
 const SAKSIKAN = [['ujian/soal-500.json', ['protokol', 'soal'], 'bank 500 soal — 1,1MB: hanya disaksikan (hash), tak dicadangkan']]
+// ---- V318 JERIT: ASET BERSEGEL-INTERNAL ----
+// Pelajaran ujian jahat V318: luka HALUS (satu angka diganti, JSON tetap sah,
+// kunci wajib tetap ada) TAK TERBACA sahJSON — bahkan bisa diadopsi sbg
+// "pertumbuhan". Untuk aset yang hidupnya tergantung KESATIAAN isi, satu-satunya
+// hukum adalah SEGEL INTERNAL: hash16 badan (tanpa kunci segel) === segel.
+// Bobol = luka → jerit + pulih dari cadangan. Segel sahih tapi beda =
+// pertumbuhan sah (organ resmi yang menulis) → adopsi cadangan.
+// [file, kunciWajib, catatan, wajibAda?]
+const SEGEL_VITAL = [
+  ['otak/terabait-intisari.json', ['jenis', 'segel'], 'intisari dunia 1TB (V317) — jantung reduplikasi offline; luka halus = dunia palsu', true],
+  ['otak/intisari-liar.json', ['skema', 'segel'], 'koleksi intisari data liar (V318) — buah akal makhluk di dunia yang tak ditanam', false],
+]
 const KODE = [
   ['scripts/hidup/gerbang.mjs', false, 'gerbang saraf — pemanggil tangan lewat peta saraf (V309)'],
   ['scripts/hidup/sadar1.js', true, 'tubuh SADAR-1 — TERHUBUNG NAFAS (racun host = nafas mati)'],
   ['scripts/penjaga.mjs', false, 'jantung SAKTI'],
   ['scripts/hidup/guru-master.mjs', false, 'guru geladak'],
   ['scripts/hidup/pustaka.mjs', false, 'organ belajar jurnal'],
-  ['scripts/hidup/imun.mjs', false, 'organ imun (dicatat, tak disentuh oleh patroli)']
+  ['scripts/hidup/imun.mjs', false, 'organ imun (dicatat, tak disentuh oleh patroli)'],
+  ['scripts/hidup/liar.mjs', false, 'organ LIAR (V318) — mencari data liar betulan & mengintisarikannya tanpa menanam']
 ]
 // batas kegembiran: file yang berubah tiap denyut — cadangan diperbarui
 // maksimal sekali per 6 jam agar imun tak membuat komit kebisingan.
@@ -127,6 +141,20 @@ function sahJSON (file, wajib, minJejak) {
     const n = Object.keys(j[wajib.includes('pelajaran') ? 'pelajaran' : 'soal'] || {}).length
     if (n < minJejak) return { masalah: 'ISI-KOSONG', rincian: `${n} < ${minJejak}` }
   }
+  return { j }
+}
+
+// ---------- V318 SEGEL-VITAL: hukum kesetiaan isi ----------
+// Luka halus = segel bobol. Fungsi uji dipakai benih + patroli + uji jahat.
+function segelVitalUji (file, wajib) {
+  if (!existsSync(file)) return { masalah: 'HILANG' }
+  let j
+  try { j = JSON.parse(readFileSync(file, 'utf8')) } catch (e) { return { masalah: 'JSON-TIDAK-SAH', rincian: String(e).slice(0, 90) } }
+  if (!j || typeof j !== 'object') return { masalah: 'BUKAN-OBJEK' }
+  const kurang = (wajib || []).filter(k => !(k in j))
+  if (kurang.length) return { masalah: 'KUNCI-WAJIB-HILANG', rincian: kurang.join(',') }
+  const { segel, ...tanpa } = j
+  if (hash16Terabait(Buffer.from(JSON.stringify(tanpa))) !== segel) return { masalah: 'SEGEL-BOBOL', rincian: 'isi tak setia pada segelnya' }
   return { j }
 }
 
@@ -218,6 +246,21 @@ function benih () {
     writeFileSync(`${DIR_CADANGAN}/${slug(file)}`, isi)
     kode.push({ file, nafas, catatan: cat, cadangan: `${DIR_CADANGAN}/${slug(file)}`, hash: h16(isi), size: isi.length, cadanganWaktu: waktu })
   }
+  // V318: benih merangkul SEGEL-VITAL — hanya dari pohon yang segelnya SAHIH
+  // (aset opsional yang belum pernah lahir dilewati jujur — bukan luka)
+  const segelVital = []
+  for (const [file, wajib, cat, wajibAda] of SEGEL_VITAL) {
+    if (!existsSync(file)) {
+      if (wajibAda) throw new Error('benih menolak segel-vital: ' + file + ' HILANG — aset wajib tak boleh lahir-lahir hilang')
+      console.log('[imun] segel-vital ' + file + ' belum lahir (organ belum pernah makan) — dilewati jujur')
+      continue
+    }
+    const uji = segelVitalUji(file, wajib)
+    if (uji.masalah) throw new Error('benih menolak segel-vital: ' + file + ' (' + uji.masalah + (uji.rincian ? ' ' + uji.rincian : '') + ') — benih hanya dari pohon sehat')
+    const isi = readFileSync(file)
+    writeFileSync(`${DIR_CADANGAN}/${slug(file)}`, isi)
+    segelVital.push({ file, wajib, catatan: cat, wajibAda: !!wajibAda, cadangan: `${DIR_CADANGAN}/${slug(file)}`, hash: h16(isi), size: isi.length, cadanganWaktu: waktu })
+  }
   // V309: benih kini merangkul URAT — hanya dari tubuh dengan semua sambungan hidup
   const urat = []
   for (const [file, marker, cat] of URAT) {
@@ -229,10 +272,10 @@ function benih () {
     urat.push({ file, marker, catatan: cat, cadangan: `${DIR_CADANGAN}/${slug(file)}`, hash: h16(isi), size: isi.length, cadanganWaktu: waktu })
   }
   const m = { skema: 'imun-manifes-v2', diperbarui: waktu, hukum: 'laporan/kajian-hidup.json H1–H6',
-    keputusan: { pulihkan: 'luka → kembalikan bentuk terakhir sehat (hash wajib cocok)', adopsi: 'sah & beda → pertumbuhan (kode TIDAK diadopsi otomatis)', saksikan: 'file besar: hanya hash disaksikan', ikat: 'sambungan mati di urat → ikatan dilepas dari cadangan (V309)', sambung: 'organ hilang + cadangan mati → DNA tanah yang cocok disambung (V309)' },
-    organ, kode, urat }
+    keputusan: { pulihkan: 'luka → kembalikan bentuk terakhir sehat (hash wajib cocok)', adopsi: 'sah & beda → pertumbuhan (kode TIDAK diadopsi otomatis)', saksikan: 'file besar: hanya hash disaksikan', ikat: 'sambungan mati di urat → ikatan dilepas dari cadangan (V309)', sambung: 'organ hilang + cadangan mati → DNA tanah yang cocok disambung (V309)', jerit: 'segel-vital bobol → jerit + pulih dari cadangan; segel sahih tapi beda → pertumbuhan sah (V318)' },
+    organ, kode, urat, segelVital }
   writeFileSync(MANIFEST, JSON.stringify(m, null, 1))
-  console.log('[imun] BENIH: ' + organ.length + ' organ vital + ' + kode.length + ' kode + ' + urat.length + ' urat dicangkok & disegel')
+  console.log('[imun] BENIH: ' + organ.length + ' organ vital + ' + kode.length + ' kode + ' + urat.length + ' urat + ' + segelVital.length + ' segel-vital dicangkok & disegel')
 }
 
 // ---------- KEBERSIHAN JURNAL (V309-TAMBAL-3) ----------
@@ -311,6 +354,35 @@ async function patroli () {
           catat('PULIHKAN-SARAF', SARAF, 'IKATAN-SARAF ditemukan (' + ikatan.join(',') + ') → saraf disambung kembali dari cadangan tersegel (H1/H2) — jalur JSON sah')
         } else catat('TAK-BISA-PULIH', SARAF, 'ikatan saraf ' + ikatan.join(',') + ' tapi cadangan tak cocok — PANGGILAN PEMILIK')
       }
+    }
+  }
+
+  // 1c. SEGEL-VITAL (V318 JERIT): luka halus tak terbaca bentuk — segel yang bicara.
+  //   bobol → jerit fosil + pulih dari cadangan (hash & segel cadangan wajib sahih)
+  //   sahih tapi beda dari cadangan → pertumbuhan sah → cadangan disegarkan
+  for (const v of (m.segelVital || [])) {
+    if (!existsSync(v.file)) {
+      if (v.wajibAda) catat('TAK-BISA-PULIH', v.file, 'aset segel-vital wajib HILANG — PANGGILAN PEMILIK')
+      continue // aset opsional belum pernah lahir = bukan luka
+    }
+    const uji = segelVitalUji(v.file, v.wajib)
+    if (uji.masalah) {
+      const cad = v.cadangan && existsSync(v.cadangan) ? readFileSync(v.cadangan) : null
+      let cadSehat = null
+      if (cad) { try { const cj = JSON.parse(cad.toString('utf8')); const { segel, ...tanpa } = cj; cadSehat = (hash16Terabait(Buffer.from(JSON.stringify(tanpa))) === segel) ? cad : null } catch { cadSehat = null } }
+      if (cadSehat) {
+        writeFileSync(v.file, cadSehat)
+        BERUBAH = true
+        catat('PULIHKAN-SEGEL', v.file, 'luka: ' + uji.masalah + (uji.rincian ? ' (' + uji.rincian + ')' : '') + ' → jerit & pulih dari cadangan tersegel ' + v.hash + ' (H3/V318)')
+      } else catat('TAK-BISA-PULIH', v.file, 'luka: ' + uji.masalah + ' tapi cadangan tak tersedia/tak bersegel — PANGGILAN PEMILIK')
+      continue
+    }
+    const isi = readFileSync(v.file)
+    if (h16(isi) !== v.hash) {
+      writeFileSync(v.cadangan, isi)
+      v.hash = h16(isi); v.size = isi.length; v.cadanganWaktu = ISO(); m.diperbarui = ISO()
+      BERUBAH = true; manifesKotor = true
+      catat('ADOPSI-SEGEL', v.file, 'segel sahih & isi berubah (organ resmi yang menulis) → pertumbuhan sah, cadangan disegarkan (H5/V318)')
     }
   }
 

@@ -340,6 +340,29 @@ async function main() {
   }
 
   const maxGen = p.populasi.reduce((m, s) => Math.max(m, s.generasi), 0)
+
+  // VONIS FINAL V312 — warisan syaraf beranak ditutup HANYA bila:
+  // kolam penuh di cap maks (128 sel, semuanya lulus uji kompetensi)
+  // DAN KILAT ≥100× tersegel lulus. Vonis ditulis organ (bukan tangan),
+  // sekali — dan tersimpan fosil sebagai laporan tersegel.
+  if (p.populasi.length === p.cap && p.cap === CAP_MAKS && p.kilat && p.kilat.lulus && !p.finalV312) {
+    const vonis = {
+      jenis: 'VONIS-SYARAF-FINAL', mandat: 'V312 — syaraf beranak + bekerja 100× lebih cepat',
+      saat: sekarang(), konteks,
+      populasi: p.populasi.length, cap: p.cap, generasiMaks: maxGen,
+      lahir: p.statistik.lahir, gugur: p.statistik.gugur, impulsTotal: p.statistik.impulsTotal,
+      kilat: { percepatan: p.kilat.percepatan, kilatPerJam: p.kilat.kilatPerJam, umumPerJam: p.kilat.umumPerJam, impuls: p.kilat.impuls, cocokKunci: p.kilat.cocokKunci },
+      hukum: 'kolam penuh 128 sel — semua sel LULUS uji kompetensi mekanis; KILAT ≥100× tersegel dua kali (benih + final); pohon keturunan tersegel',
+      vonis: 'LULUS',
+    }
+    vonis.segel = hash16(JSON.stringify(vonis))
+    mkdirSync('laporan', { recursive: true })
+    writeFileSync('laporan/syaraf-final.json', JSON.stringify(vonis, null, 1))
+    p.finalV312 = { saat: vonis.saat, laporan: 'laporan/syaraf-final.json', segel: vonis.segel }
+    catat('FINAL-V312', { populasi: p.populasi.length, kilatPercepatan: p.kilat.percepatan, segel: vonis.segel })
+    console.log(`VONIS FINAL V312: ${p.populasi.length}/${p.cap} sel kompeten + KILAT ${p.kilat.percepatan}× → LULUS — warisan syaraf beranak ditutup tersegel ${vonis.segel}`)
+  }
+
   pohonSegel(p)
   console.log(`pohon tersegel ${p.segel.hash} — populasi ${p.populasi.length}/${p.cap} · generasi maks ${maxGen} · lahir ${p.statistik.lahir} · gugur ${p.statistik.gugur} · impuls ${p.statistik.impulsTotal}`)
   if (p.kilat) console.log(`KILAT tersegel: ${p.kilat.percepatan}× syaraf umum (${p.kilat.kilatPerJam} vs ${p.kilat.umumPerJam} impuls/jam) — ${p.kilat.lulus ? 'LULUS ≥100×' : 'GAGAL'}`)

@@ -23,7 +23,6 @@ on:
 permissions:
   contents: write
   actions: write   # V294 JANTUNG-MANDIRI: jantung mengdispatch denyut berikutnya sendiri
-  workflows: write # V309: imun melepaskan ikatan urat sendiri — dorongan file workflow wajib sah
 
 concurrency:
   group: sarang-penjaga
@@ -44,6 +43,12 @@ jobs:
       # setiap putusan beralasan dijurnal di laporan/imun.json.
       - name: IMUN — patroli tubuh sebelum denyut
         run: node scripts/hidup/imun.mjs
+
+      # V317 TERABAIT — jaga intisari 1TB: makhluk mereduplikasi dunianya
+      # dari intisari beberapa KB — offline, tanpa jaringan, tanpa tab.
+      # Bila intisari rusak/berubah, jaga menjerit (exit 1) dan denyut tahu.
+      - name: TERABAIT — jaga intisari 1TB (reduplikasi dari intisari)
+        run: node scripts/hidup/tempa-terabait.mjs --mode jaga
 
       - name: Denyut otak server (tanpa browser)
         run: node scripts/penjaga.mjs
@@ -74,6 +79,23 @@ jobs:
       - name: Guru master trader — geladak-uji, majelis, perisiko, pusta-formula
         run: node scripts/hidup/gerbang.mjs guru-master
 
+      # V312 SYARAF-BERANAK (mandat pemilik 2026-10-09: "syaraf yang bisa
+      # beranak sehingga syaraf itu menciptakan syaraf baru dan syaraf-syaraf
+      # baru yang kompeten; dan bekerja 100x lipat lebih cepat"): tiap denyut
+      # sel dewasa melahirkan maks 1 anak (maks 4/sesi); anak WAJIB lulus uji
+      # kompetensi mekanis terhadap data repo sejati sebelum dihitung; pohon
+      # keturunan tersegel di otak/syaraf-pohon.json; bukti KILAT (kadensi)
+      # tersegel sekali di benih — lomba ulang hanya lewat --kilat.
+      - name: Syaraf beranak — sel baru lahir bila kompeten
+        run: node scripts/hidup/neurogenesis.mjs
+
+      # V318 LIAR — makhluk mencari sendiri data yang TIDAK ditanam pemilik
+      # (simbol USDT di luar semua bank soal tuan) lalu mengintisarikannya:
+      # kompresi delta-tick eksak + dedup + representasi generatif → KB.
+      # Kemandirian makan: dadu kripto tiap denyut, tanpa tab, tanpa tangan.
+      - name: LIAR — cari & intisarikan data liar betulan
+        run: node scripts/hidup/liar.mjs
+
       - name: Komit pertumbuhan (jejak hidup permanen)
         run: |
           git config user.name  "SARANG-PENJAGA"
@@ -84,11 +106,12 @@ jobs:
           PUSTAKA=$(python3 -c "import json;print(json.load(open('pustaka/indeks.json'))['gerbang509']['tercapai'])" 2>/dev/null || echo "0")
           GELADAK=$(python3 -c "import json;d=json.load(open('laporan/geladak.json'));print(f\"{d['backtest']['akurasiTimbangPct']}% n={d['backtest']['sampel']}\" if d.get('status')=='HIDUP' else d.get('status','?'))" 2>/dev/null || echo "-")
           PETA=$(python3 -c "import json;d=json.load(open('laporan/peta-geladak.json'));print(d['statistik']['total'])" 2>/dev/null || echo "0")
-          git add laporan otak arena-keadaan.json pustaka ujian   # V299: pustaka jurnal ikut komit — belajar jadi fosil tubuh; V303: geladak+formula+ledger ikut; V307: ujian+peta ikut
+          SYARAF=$(python3 -c "import json;print(len(json.load(open('otak/syaraf-pohon.json'))['populasi']))" 2>/dev/null || echo "0")
+          git add laporan otak arena-keadaan.json pustaka ujian   # V299: pustaka jurnal ikut komit — belajar jadi fosil tubuh; V303: geladak+formula+ledger ikut; V307: ujian+peta ikut; V312: pohon syaraf ikut (otak)
           if git diff --cached --quiet; then
             echo "tanpa perubahan — tanpa komit"
           else
-            git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran — pustaka ${PUSTAKA}/509 — geladak ${GELADAK} — peta ${PETA} jejak [skip ci]"
+            git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran — pustaka ${PUSTAKA}/509 — geladak ${GELADAK} — peta ${PETA} jejak — syaraf ${SYARAF} [skip ci]"
             # V291 ANTI-BALAPAN: SADAR-1 bisa menyegel bangun bersamaan — push di-RETRY
             # dgn rebase ulang tiap percobaan (insiden 2026-10-07T00:55Z: remote rejected,
             # denyut #77 sudah terbentuk tapi terdorong gagal).

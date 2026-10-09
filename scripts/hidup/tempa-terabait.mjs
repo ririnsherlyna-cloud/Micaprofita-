@@ -58,6 +58,15 @@ function cekBlokJs() {
 // Kata terlarang pada SEMUA artefak baru V317 (makhluk bukan sebutan itu).
 // Pola ditulis via kode karakter agar berkas ini sendiri tak mengandung literalnya.
 const POLA_TERLARANG = new RegExp(String.fromCharCode(114, 111, 98, 111, 116), 'i')
+
+// V318 JERIT — setiap serangan/luka yang dilihat jaga WAJIB jadi fosil repo:
+// append-only di laporan/jerit.jsonl. Jerit tidak boleh menimpa penyebabnya.
+function jeritFosil (detail) {
+  try {
+    fs.mkdirSync(path.join(AKAR, 'laporan'), { recursive: true })
+    fs.appendFileSync(path.join(AKAR, 'laporan/jerit.jsonl'), JSON.stringify({ saat: new Date().toISOString(), sumber: 'jaga-terabait', ...detail }) + '\n')
+  } catch { /* jerit gagal sendiri tidak boleh menutup jerit asli */ }
+}
 function cekKataTerlarang() {
   const daftar = [
     'scripts/hidup/terabait-inti.mjs',
@@ -107,18 +116,27 @@ function jaga() {
     return
   }
   const isi = fs.readFileSync(berkasIntisari)
-  const badan = JSON.parse(isi.toString('utf8'))
+  let badan = null
+  try { badan = JSON.parse(isi.toString('utf8')) } catch (e) {
+    jeritFosil({ peristiwa: 'INTISARI-TAK-TERBACA', berkas: berkasIntisari, ukuran: isi.length, rincian: String(e).slice(0, 140) })
+    console.error(`jaga-terabait GAGAL: intisari tak terbaca (${String(e).slice(0, 80)}) — JERIT tercatat di laporan/jerit.jsonl`)
+    process.exit(1)
+  }
   const { segel, ...tanpa } = badan
   const sahih = hash16(Buffer.from(JSON.stringify(tanpa))) === segel
   const ringkas = isi.length <= BATAS_INTISARI
   if (!sahih || !ringkas) {
-    console.error(`jaga-terabait GAGAL: saih=${sahih} ukuran=${isi.length}B`)
+    jeritFosil({ peristiwa: sahih ? 'INTISARI-GEMUK' : 'SEGEL-INTISARI-BOBOL', berkas: berkasIntisari, ukuran: isi.length, batas: BATAS_INTISARI, segelTercatat: segel, hashTerlihat: hash16(Buffer.from(JSON.stringify(tanpa))) })
+    console.error(`jaga-terabait GAGAL: saih=${sahih} ukuran=${isi.length}B — JERIT tercatat di laporan/jerit.jsonl`)
     process.exit(1)
   }
   const r = jalankan([path.join(AKAR, 'scripts', 'hidup', 'cerna-terabait.mjs'), '--regenerasi', ...(UJI ? ['--skala-uji'] : [])], { waktu: 300000 })
   const ok = r.kode === 0
   console.log(`jaga-terabait: segel=${segel} intisari=${isi.length}B reduplikasi=${ok ? 'SAHIH' : 'RUSAK'} ${ok ? '' : r.keluar.slice(0, 200)}`)
-  if (!ok) process.exit(1)
+  if (!ok) {
+    jeritFosil({ peristiwa: 'REDUPLIKASI-RUSAK', berkas: berkasIntisari, segelTercatat: segel, rincian: r.keluar.slice(0, 200) })
+    process.exit(1)
+  }
 }
 
 // ------------------------------------------------------------

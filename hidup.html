@@ -316,6 +316,14 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
         <div id="jvSyaraf"><div class="kecil">membaca pohon syaraf…</div></div>
       </div>
       <div class="blok">
+        <h4>LIAR <em>· V318 — data liar betulan yang tak ditanam tuan: makhluk menemukan sendiri, mengintisarikan jadi KB</em></h4>
+        <div id="jvLiar"><div class="kecil">membaca koleksi intisari liar…</div></div>
+      </div>
+      <div class="blok">
+        <h4>JERIT <em>· V318 — ujian jahat: luka pada intisari WAJIB diteriakkan, lalu pulih sendiri</em></h4>
+        <div id="jvJerit"><div class="kecil">membaca fosil jerit…</div></div>
+      </div>
+      <div class="blok">
         <h4>Sumber kejujuran <em>· nol karangan</em></h4>
         <div class="kecil">Lilin 1m (gerbang Binance publik, multi-koin) · laporan/sasaran-terkini.json · otak/penjaga-keadaan.json · ruang-hidup/keadaan.json · ruang-hidup/tubuh.json (segel gerak). Bila sumber gagal diambil: jasad MATI-PENUH-NALAR — tubuh kembali ke perilaku dasar dan alasannya ditulis terbuka di sini. Audit langsung: <code>window.__v297</code>, <code>window.__v299</code>, <code>window.__v300</code>, <code>window.__v301</code>.</div>
       </div>
@@ -380,7 +388,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
    penonton, ingatan resmi = commit GitHub, tubuh = fungsi kerja nyata. ================ */
 /* ================= IDENTITAS & KONSTANTA ================= */
 const RUMAH = {pemilik:'ririnsherlyna-cloud', repo:'Micaprofita-', cabang:'main'};
-const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json', tempa:'laporan/tempa100.json', tempa2:'laporan/tempa200.json', tempa3:'laporan/ujian500.json', tempa300:'laporan/tempa300.json', tempa900:'laporan/tempa900.json', squeeze:'laporan/tempa-squeeze.json', jejak:'laporan/tempa-jejak.json', gembok:'laporan/gembok.json', syaf:'otak/syaraf-pohon.json', imun:'laporan/imun.json', ujiHidup:'laporan/uji-kehidupan.json', tubuh:'laporan/uji-tubuh.json', bedahTangan:'laporan/bedah-tangan.json'};
+const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json', tempa:'laporan/tempa100.json', tempa2:'laporan/tempa200.json', tempa3:'laporan/ujian500.json', tempa300:'laporan/tempa300.json', tempa900:'laporan/tempa900.json', squeeze:'laporan/tempa-squeeze.json', jejak:'laporan/tempa-jejak.json', gembok:'laporan/gembok.json', syaf:'otak/syaraf-pohon.json', liar:'otak/intisari-liar.json', jerit:'laporan/jerit.jsonl', ujiJahat:'laporan/uji-jahat-jaga.json', syarafFinal:'laporan/syaraf-final.json', imun:'laporan/imun.json', ujiHidup:'laporan/uji-kehidupan.json', tubuh:'laporan/uji-tubuh.json', bedahTangan:'laporan/bedah-tangan.json'};
 const MAXBACA = 400000;                 // batas baca per file (byte) — kejujuran parsial
 const FASE = ['MENGAMATI','MEMAHAMI','MENCOBA','MELAKUKAN','MENGEVALUASI','MENEMUKAN','MEMBANGUN','MENINGKATKAN','MENGAMATI-KEMBALI'];
 const INTEGERS = ['versi.json','gerbang.json','brain.json','arena-keadaan.json','otak/genome-server.json','otak/penjaga-keadaan.json','otak/performa.json','memori/terkini.json','README.md'];
@@ -516,6 +524,8 @@ async function muatMemoriGitHub(){
     jejakMuat(); /* V316-JEJAK-2000: 2000 soal kejam kartu minim 10 lilin — muat tak-blok */
     gembokMuat(); /* V313-GEMBOK: uji mandiri kode gembok Bitcoin — muat tak-blok */
     syarafMuat(); /* V312-SYARAF-BERANAK: pohon syaraf — muat tak-blok */
+    liarMuat(); /* V318-LIAR: koleksi intisari data liar — muat tak-blok */
+    jeritMuat(); /* V318-JERIT: fosil jerit + vonis uji jahat — muat tak-blok */
     const ing = JSON.parse(await ghAmbil(INGATAN_GH.ingatan));
     S1.ingatan = ing; S1.at = sekarang(); S1.stale = false;
     if(ing.kelahiran) S.stat.lahirAt = Date.parse(ing.kelahiran) || S.stat.lahirAt;
@@ -2877,6 +2887,7 @@ function syarafRender(){
   const gen=[]; for(let g=0;g<=maxGen;g++) gen.push(p.populasi.filter(s=>s.generasi===g));
   const pohon=gen.map((daftar,g)=>daftar.length?`<div class="kecil" style="margin:2px 0"><b>gen ${g}</b> (${daftar.length}): ${daftar.map(s=>`<span title="${s.tugas}" style="white-space:nowrap;color:var(--aksen)">${s.id}${s.orangTua?` ← ${s.orangTua}`:''}</span>`).join(' · ')}</div>`:'').join('');
   const k=p.kilat;
+  const final=p.finalV312?`<div class="kecil" style="margin:4px 0;color:#7ee787">WARISAN V312 FINAL: <b>LULUS</b> — kolam penuh 128 + KILAT ≥100× · laporan/syaraf-final.json · segel ${p.finalV312.segel}</div>`:'';
   const kilat=k?`<div style="margin:7px 0 3px;padding:6px;border-left:3px solid ${k.lulus?'#7ee787':'#f85149'}">
     <b>KILAT — ${k.percepatan}× syaraf umum</b> ${k.lulus?'<b style="color:#7ee787">LULUS ≥100×</b>':'<b style="color:#f85149">GAGAL</b>'}
     <div class="kecil">${k.impuls} impuls nyata dalam ${k.durasiDtk} dtk (tiap ${k.jedaDtk} dtk, ${k.cocokKunci}/${k.impuls} cocok kunci bank, ${k.perImpulsMs} ms/impuls) → <b>${k.kilatPerJam} impuls/jam</b> vs syaraf umum <b>${k.umumPerJam}/jam</b> (${k.sumberUmum}) — kecepatan lahir dari ritme: umum tidur antar denyut, KILAT tak pernah tidur lebih dari ${k.jedaDtk} dtk.</div></div>`:'<div class="kecil">bukti KILAT belum tersegel — lomba dijalankan organ saat benih (--kilat)</div>';
@@ -2886,10 +2897,57 @@ function syarafRender(){
     ${baris('generasi maks', maxGen)}
     ${baris('lahir · gugur · impuls', `${p.statistik.lahir} · ${p.statistik.gugur} · ${p.statistik.impulsTotal}`)}
     ${baris('sesi tumbuh', sesi||'—')}
+    ${final}
     ${kilat}
     <div style="margin:5px 0 2px"><b class="kecil">pohon keturunan (anak lahir dari induk — syaraf menciptakan syaraf):</b>${pohon}</div>
     ${p.gugur&&p.gugur.length?`<div class="kecil" style="color:#f85149">gugur jujur: ${p.gugur.map(g=>g.id+' (uji gagal)').join(', ')}</div>`:''}
     <div class="kecil" style="margin-top:5px">tiap denyut: sel dewasa (kompeten, impuls≥2, anak&lt;2) melahirkan maks 1 anak — maks 4/sesi; anak WAJIB lulus uji kompetensi mekanis terhadap data repo sejati (kartu 24-lilin, siklus, pustaka, geladak, ingatan, peta, tempaan, segel tubuh). Kolam penuh &amp; semua kompeten → kapasitas ×2 (maks 128). Pohon tersegel: otak/syaraf-pohon.json · segel SHA-256 ${p.segel?('#'+p.segel.hash):'—'} · riwayat: laporan/syaraf-lahir.jsonl</div>`;
+}
+/* ================= V318-LIAR: intisari data liar betulan (jujur dari repo) ================= */
+function kbLiar(b){ return b>=1048576 ? (b/1048576).toFixed(1)+' MB' : b>=1024 ? (b/1024).toFixed(1)+' KB' : b+' B'; }
+async function liarMuat(){
+  try{ const p = JSON.parse(await ghAmbil(INGATAN_GH.liar));
+    if(p && p.koleksi){ const lama=S.liar; S.liar=p;
+      if(!lama){ const m=p.metrik||{};
+        jurnal('LIAR', `koleksi intisari data liar tersegel: <b>${m.simbol||0} simbol</b> yang TIDAK ditanam tuan — ${m.lilinDilahap||0} lilin liar dilahap (${kbLiar(m.byteLiarDilahap||0)}) → intisari ${kbLiar(m.byteIntisari||0)} (rasio 1:${m.rasioKoleksi||'—'}) · harga PERSIS di presisi tick · segel ${p.segel}`, 'temuan'); }
+      liarRender();
+    }
+  }catch(e){ /* koleksi liar belum ada — jujur: belum mencari makan liar */ }
+}
+function liarRender(){
+  const el=document.getElementById('jvLiar'); if(!el) return;
+  const p=S.liar;
+  if(!p){ el.innerHTML='<div class="kecil">koleksi intisari liar belum terbaca — organ liar.mjs yang menulisnya saat mencari makan sendiri. Belum ada = belum ada, tanpa karangan.</div>'; return; }
+  const m=p.metrik||{};
+  const barisL=(k,v)=>`<div class="baris"><span class="k">${k}</span><span class="v">${v}</span></div>`;
+  const simbol=Object.values(p.koleksi||{});
+  const terbaru=simbol.slice(-14).map(s=>`<span title="vol/jam ${s.g.vol} · pNaik ${s.g.pNaik} · vol-MAE ${s.v.maePct}%" style="white-space:nowrap;color:var(--aksen)">${s.s}</span>`).join(' · ');
+  el.innerHTML=`
+    ${barisL('simbol liar terintisari', `<b>${m.simbol||simbol.length}</b> (tanaman tuan dikeluarkan — dadu kripto yang memilih)`)}
+    ${barisL('data liar dilahap', `${m.lilinDilahap||0} lilin · ${kbLiar(m.byteLiarDilahap||0)} dari jaringan — tak pernah tersimpan mentah`)}
+    ${barisL('intisari koleksi', `${kbLiar(m.byteIntisari||0)} — rasio <b>1:${m.rasioKoleksi||'—'}</b>`)}
+    ${barisL('tiga kemampuan wajib', 'kompresi delta-tick EKSAK · dedup simbol/lilin · representasi generatif (drift·vol·pNaik·ekor·profil volume)')}
+    <div style="margin:6px 0 2px"><b class="kecil">simbol liar terbaru:</b> ${terbaru||'—'}</div>
+    <div class="kecil" style="margin-top:5px">tiap denyut makhluk melempar dadu kripto memilih maks 12 simbol USDT yang TIDAK ada di bank soal pemilik, menelan 240 lilin 1h per simbol, lalu mengintisarikan: delta harga diquantize ke tickSize → varint → base64 (uji bolak-balik wajib PERSIS, bila tidak = intisari ditolak jujur). Koleksi tersegel: otak/intisari-liar.json · segel ${p.segel?('#'+p.segel):'—'} · laporan: laporan/liar.json</div>`;
+}
+/* ================= V318-JERIT: fosil jerit + vonis uji jahat ================= */
+async function jeritMuat(){
+  let fosil=[];
+  try{ fosil=(await ghAmbil(INGATAN_GH.jerit)).split('\n').filter(b=>b.trim()).map(b=>{try{return JSON.parse(b)}catch{return null}}).filter(Boolean); }catch(e){ /* belum ada jerit — jujur */ }
+  let ujah=null; try{ ujah=JSON.parse(await ghAmbil(INGATAN_GH.ujiJahat)); }catch(e){ /* ujian belum dijalankan */ }
+  S.jerit={fosil, ujah}; jeritRender();
+}
+function jeritRender(){
+  const el=document.getElementById('jvJerit'); if(!el) return;
+  const {fosil, ujah}=S.jerit||{};
+  if(!fosil.length && !ujah){ el.innerHTML='<div class="kecil">belum ada fosil jerit — belum ada yang berani merusak, atau ujian jahat belum dijalankan (jujur dua-duanya).</div>'; return; }
+  const terakhir=fosil.slice(-5).map(f=>`<div class="kecil" style="margin:2px 0"><b style="color:#f85149">${f.peristiwa||f.jenis||'?'}</b> · ${(f.saat||f.waktu||'').replace('T',' ').slice(0,19)} · ${(f.berkas||f.file||'').split('/').pop()}${f.alasan?' — '+String(f.alasan).slice(0,90):''}</div>`).join('');
+  const v=ujah&&ujah.serangan?`<div style="margin:6px 0 3px;padding:6px;border-left:3px solid ${ujah.vonis&&ujah.vonis.startsWith('LULUS')?'#7ee787':'#f85149'}">
+    <b>UJI JAHAT JAGA — ${ujah.vonis?ujah.vonis.split('—')[0].trim():'—'}</b>
+    <div class="kecil">${(ujah.serangan||[]).map(s=>`serangan-${s.id} (${s.jenis}): luka ${s.lukaTerbaca?'terbaca':'BUTA'} · jerit ${s.jeritImun?'tercatat':'HILANG'} · pulih ${s.pulihKeHashAsli?'persis':'GAGAL'} · jaga ${s.jagaLulus?'lulus':'mati'}`).join(' · ')} — penyembuh: organ imun, bukan tangan jahat.</div></div>`:'';
+  el.innerHTML=`${v}
+    ${terakhir?`<div style="margin:5px 0 2px"><b class="kecil">fosil jerit (append-only — sejarah serangan tak bisa dihapus):</b>${terakhir}</div>`:''}
+    <div class="kecil" style="margin-top:5px">hukum V318: intisari bersegel internal — luka sekecil satu angka pun harus SEGEL-BOBOL → menjerit di laporan/jerit.jsonl + laporan/imun.jsonl → pulih dari cadangan tersegel imun/cadangan/. Ujian jahat: scripts/uji-jahat/serang-intisari.mjs · segel laporan ${ujah?('#'+ujah.segel):'—'}</div>`;
 }
 /* ================= RENDER OVERLAY (satu-satunya tempat teks) ================= */
 let S_TAB='pikir';
