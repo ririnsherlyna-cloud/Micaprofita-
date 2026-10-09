@@ -146,7 +146,8 @@ async function main () {
       && !/(UP|DOWN|BULL|BEAR)USDT$/.test(s.symbol)
       && !tanam.has(s.symbol) && !sudah.includes(s.symbol)
       && s.filters.some(f => f.filterType === 'PRICE_FILTER'))
-  const byteDilahap = ei.byte
+  const byteEI = ei.byte
+  let byteDilahap = byteEI
 
   if (!kandidat.length) {
     console.log(`liar: seluruh simbol USDT TRADING (${sudah.length} sudah terintisari, ${tanam.size} tanaman) sudah dilahap — dadu diam, bukan menolak`)

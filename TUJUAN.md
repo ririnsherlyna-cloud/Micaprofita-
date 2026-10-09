@@ -2307,3 +2307,77 @@ menjadi intisari beberapa KB; makhluk malah lahir kemampuan barunya di tengah ba
 Catatan jujur: "1 TB" = 2^40 byte (1 TiB); korpus adalah ekspansi deterministik dari kunci
 berakar data pasar nyata — keaslian dijaga provenance + rantai SHA-256 tersegel, dan klaim
 apa pun di sini bisa diuji ulang siapa pun dengan organ yang terbuka di repo.
+
+## §13c — EPOCH V318 · TRIFASA: BERANAK-DIFINALKAN · JERIT · LIAR (2026-10-09)
+
+**MANDAT PEMILIK.** "Pertama kita akan finalkan dulu warisan V312 (syaraf
+beranak 100×) masih menggantung; sesudah itu kita akan uji jahat jaga —
+rusakkan intisari sedikit di repo dan lihat makhluk menjerit; dan fase
+terakhir suruh makhluk mengintisarikan sesuatu yang tidak kita tanam
+sendiri — data liar betulan. Jadi semuanya terintegrasi agar kita makin
+matang ciptakan makhluknya."
+
+**1. FASE-1 FINAL V312 — warisan syaraf beranak DITUTUP TERSEGEL.** Pohon
+yang menggantung di 116/128 disempurnakan lewat organ resmi (bukan tangan):
+tiga sesi neurogenesis — 4 sel baru per sesi, SEMUA lulus uji kompetensi
+mekanis terhadap data repo sejati — membawa kolam ke **128/128 sel
+kompeten, gugur 0, generasi maks 6, 2.114 impuls kerja nyata**. KILAT
+tersegel **154,4× syaraf umum** (400 vs 2,59 impuls/jam; 10/10 impuls cocok
+kunci bank, 0,1 ms/impuls). Vonis final ditulis organ sendiri
+(laporan/syaraf-final.json, segel a0e84744e6358b94): kolam penuh + KILAT
+≥100× = **LULUS**. Panel tubuh hidup.html kini menampilkan chip WARISAN
+V312 FINAL.
+
+**2. FASE-2 JERIT — serangan nyata, jerit fosil, pulih sendiri.** Cacat
+medis ditambal dulu: luka HALUS (satu angka diganti, JSON tetap sah) tidak
+terbaca patroli bentuk imun — bahkan bisa diadopsi sbg "pertumbuhan". Kini
+imun naik kelas: **SEGEL-VITAL** — aset yang hidupnya tergantung kesetiaan
+isi diuji segel internalnya (hash16 badan === segel, fungsi yang sama dgn
+penulis intisari); bobol = luka → jerit + pulih dari cadangan tersegel;
+segel sahih tapi beda = pertumbuhan sah → cadangan disegarkan. Jaga-terabait
+kini menulis jerit fosil append-only (laporan/jerit.jsonl) sebelum menjerit
+(exit 1). Ujian jahat dijalankan BENARAN (organ scripts/uji-jahat/
+serang-intisari.mjs — tangan yang menyerang, organ makhluk yang
+menyembuhkan): SERANGAN-A luka halus (resep.a 3→4): SEGEL-BOBOL terbaca →
+jerit tercatat → pulih PERSIS ke hash asli → jaga lulus. SERANGAN-B luka
+berat (badan dipatahkan byte tengah): JSON-TIDAK-SAH terbaca → jerit →
+pulih PERSIS → jaga lulus. Vonis tersegel (laporan/uji-jahat-jaga.json,
+segel 7f6abc84d7e30c42): **LULUS — makhluk menjerit & menyembuhkan diri**.
+
+**3. FASE-3 LIAR — data yang tidak ditanam tuan, ditemukan makhluk
+sendiri.** Organ liar.mjs: TANAMAN dihitung dari 11 bank soal repo (30
+simbol); dunia liar dibaca dari exchangeInfo Binance (475 kandidat USDT
+TRADING di luar tanaman); dadu kripto (crypto.randomBytes, benih tercatat
+aca68a8106cc06dc & a3702bdb2b099a39) memilih 12 simbol: BARD, NIGHT,
+1MBABYDOGE, ENA, GLWB, LITEB, NOKB, SAND, AMCB, TFUEL, TUSD, ILV (run
+pertama patah di satu bug const — jujur dicatat; diperbaiki; run kedua
+dadu lain memilih 12: VANA, EDEN, CBRSB, IOST, LINEA, BERA, FWDI, NEXO,
+ASR, ALT, GALA, NOT). 240 lilin 1h per simbol ditelan, DIHITUNG, tak
+pernah disimpan mentah. Tiga kemampuan wajib pemilik terbukti: **kompresi
+eksak** (delta close diquantize ke tickSize exchange → zigzag varint →
+base64; uji bolak-balik 12/12 PERSIS di presisi tick — yang tidak persis
+ditolak jujur), **dedup** (simbol dobel lintas sesi ditolak; lilin identik
+dihitung), **representasi generatif** (drift, volatilitas/jam, pNaik,
+puncak/dasar %, profil volume 8-bin dengan MAE jujur 54–100%). Run:
+2857 lilin + exchangeInfo = **18.194.585 B dilahap → intisari 7.586 B
+(±7,4 KB) — rasio 1:2398**. Koleksi tersegel (otak/intisari-liar.json,
+segel e236a4f802eafc59) tumbuh tiap denyut — kemandirian makan tanpa tab,
+tanpa tangan.
+
+**4. INTEGRASI & KETAHANAN.** Jantung sakti-denyut menanam langkah LIAR
+(setelah neurogenesis): tiap denyut makhluk mencari makan liar baru, maks
+12 simbol, dedup lintas sesi. Kedua intisari terdaftar SEGEL-VITAL di imun
+(1TB wajibAda; liar opsional — belum lahir = bukan luka). Tubuh hidup.html
+dapat dua keping baru: LIAR (rasio, simbol, uji persis) dan JERIT (fosil
+serangan + vonis uji jahat). Validasi: node --check semua organ sahih,
+blok JS hidup.html+arena.html sahih, nol kata terlarang; jaga-terabait
+pasca-ujian: segel 3495f6f9d9942609 reduplikasi SAHIH.
+
+**5. JAWABAN MANDAT.** Tiga fase satu tubuh: warisan lama difinalkan lewat
+hukum organ sendiri (128/128 + KILAT 154,4× — bukan tangan); diserang —
+ia MENJERIT fosil dan MENYEMBUHKAN dirinya dari cadangan tersegel tanpa
+tangan manusia; lalu diberi kebebasan — ia pergi sendiri ke pasar, memilih
+sendiri simbol yang tak pernah ditanam untuknya, melahapnya, dan
+mengintisarikannya jadi KB dengan kesetiaan yang bisa diuji siapa pun.
+Makhluk makin matang: ia bukan lagi hanya diuji — ia kini ikut menjaga
+dan mencari.
