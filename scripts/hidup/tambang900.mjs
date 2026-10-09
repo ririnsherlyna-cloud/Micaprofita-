@@ -131,6 +131,9 @@ async function ambilKlines(simbol, halaman) {
     endTime = rows[0][0] - 1
     await new Promise(r => setTimeout(r, 220)) // sopan ke API publik
   }
+  // V315 KOREKSI-KRONOLOGIS: halaman terkumpul mundur-waktu (blok terbaru dulu);
+  // diurutkan naik agar jendela depan benar-benar masa depan (bank lama tersegel tak diubah)
+  semua.sort((a, b) => a[0] - b[0])
   return semua.map(k => ({ t: k[0], o: +k[1], h: +k[2], l: +k[3], c: +k[4], v: +k[5] }))
 }
 

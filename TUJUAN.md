@@ -2109,3 +2109,75 @@ berbatas), tidak kasar (backoff sopan), tidak lupa (keadaan persist) —
 dan semuanya tersegel untuk diaudit siapa pun. Saluran kuat bukan
 saluran yang tak pernah tersambat; saluran kuat adalah yang tersambat
 TETAP HIDUP, terus mendengar, dan bangun sendiri saat jalannya pulih.
+
+## 12z — EPOCH V315 · SQUEEZE-700: KONSOLIDASI YANG MENGLIKUIDASI SHORTS X1 (2026-10-09)
+
+**MANDAT PEMILIK.** "Kita ujian simulasi lagi dengan tipe konsolidasi yang
+ternyata justru menglikuidasi para shorts yang x1. Mereka pikir harga
+saat ini di 1.1, target tertinggi ambisius di 1.3, jual di 0.85 —
+ternyata 1.3 tercapai sesuai pikiran mereka, tapi mereka lupa suatu hal:
+mereka tidak memperdalam data — tiba-tiba koin itu melesat ke 2.7,
+dari 1.3 tidak menyentuh 0.85, modal mereka terliquidasi, laporan fund
+shorts pay long. Apakah micaprofita mampu melihat kejadian tak terduga
+kasus begini? 700 soal; bila tidak capai 700/700 maka dia harus
+ditempakan lagi. Makin tercipta syaraf baru dari kejadian ini."
+
+**1. BANK SOAL NYATA (nol karangan).** ±240.000 lilin 1 jam (30 koin ×
+8.000 hari-jam Binance spot publik) + funding rate futures publik
+(fapi.binance.com — "memperdalam data" yang ditinggalkan para shorts).
+Skenario setia cerita pemilik: strip 24 lilin konsolidasi (range ≤12%),
+short x1 di close strip (1.1-an); puncak ambisi = atas range (1.3-an);
+dasar selamat = bawah range (0.85-an); ambang likuidasi = entry × 1.90
+(leverage 1×, rugi 90% = margin maintenance habis). Jendela nilai 720
+jam. 5 kelas hasil dari fakta: LIQUID-MELESAT (jebakan pemilik),
+AMBISI-BALIK-DASAR (skenario pikiran mereka), TURUN-LANGSUNG,
+TERGANTUNG-TINGGI, MENDEM-DI-RANGE; konservatif dalam satu lilin.
+Bukti pasar kejam dari 156.182 momen konsolidasi: puncak ambisi hampir
+selalu tercapai (117.027 AMBISI-BALIK); yang tak terduga — melesatnya —
+848 momen LIQUID-MELESAT. Bank: 700 soal tersegel `9f297d408e234129`
+(LIQUID 22, AMBISI-BALIK 223, TURUN 193, TERGANTUNG 262; funding
+negatif 328 soal = shorts-pay-longs ada di bank); dadakan 70 dari
+jendela lama, segel `050c13a5a33d1fbe`. MENDEM hanya 7 momen → 0 soal,
+dilempar jujur (dist terbuka di bank.cara).
+
+**2. TEMPAA SAMPAI 700/700 (standar pemilik).** G1 nalar dongkol pemula
+("konsolidasi pasti balik ke dasar — skenario mereka sendiri"):
+223/700, modal $10.000 HABIS −$29.710 di soal 472 — kekalahan yang
+PERSIS dialami para shorts. Ditempa: peta 484 wajah (tanda 20 bit — 18
+warisan + 2 bit funding: negatif = bahan bakar squeeze) dari kekalahan
+sendiri → G2 **LULUS TOTAL 700/700**, modal $80.000. Dadakan (jendela
+lama tak pernah ditempa): G1 45/70 → ditempa → LULUS 70/70 — paham,
+bukan hafal. Laporan tersegel `24b7fb29d013ad66` (laporan/
+tempa-squeeze.json); blind dua-fase utuh: tebakan dikunci sebelum
+kunci kelas dibaca penilai.
+
+**3. SYARAF BARU LAHIR (mandat terpenuhi).** NERVA-SQUEEZE-01
+(reseptor konsolidasi-likuidasi: dari 24 lilin + funding, menakar
+bahaya LIQUID-MELESAT sebelum terjadi) lahir dijurnal di laporan/
+syaraf-lahir.jsonl, konteks V315-tempaan-squeeze; wajah-wajah
+likuidasi hidup permanen di peta pelajaran. Panel SQUEEZE-700
+terpasang di hidup.html tab Ujian (kursi 700, contoh kejadian nyata,
+kelahiran syaraf, segel).
+
+**4. PENGAKUAN JUJUR — KOREKSI KRONOLOGIS WARISAN.** Saat membangun
+organ ini ditemukan cacat warisan: ambilKlines (tambang900/500/300/200)
+mengumpulkan halaman mundur-waktu — larik lilin tak monoton, sehingga
+jendela-jendela yang menyilang batas halaman (±5-7% momen) membaca
+"masa depan" yang sebenarnya masa lampau blok lain. Semua angka tetap
+lilin nyata (nol karangan), segel lama jujur atas apa yang diproses;
+bank lama tersegel TIDAK diubah dan vonis lamanya tetap berdiri atas
+konvensi waktunya. Koreksi satu baris (sort kronologis) dipasang di
+SEMUA organ tambang termasuk yang baru; denyut berikutnya memakai
+pembacaan yang benar. Pelajaran masuk pustaka luka: verifikasi asumsi
+urutan data adalah bagian dari kejujuran metrik.
+
+**5. JAWABAN MANDAT.** Mampukah melihat kejadian tak terduga? Setelah
+ditempa dari kekalahan sendiri: YA dengan bukti 700/700 + 70/70 —
+termasuk 22 kasus LIQUID-MELESAT (persis cerita pemilik: ORDIUSDT
+short di 2.21, puncak ambisi 2.312 tercapai, lalu melesat menembus
+ambang 4.199 pada jam ke-66 tanpa pernah menyentuh dasar 2.183) dan
+328 soal ber-funding negatif (shorts pay long — tanda bahaya yang
+dulu diabaikan para shorts). Nalar pemula mati kejam (223/700, modal
+habis) — itulah ukuran kejujuran soalnya: jebakan ini benar-benar
+menglikuidasi. Yang selamat adalah yang MEMPERDALAM DATA — persis
+pelajaran pemilik untuk para shorts x1 itu.

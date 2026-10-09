@@ -272,6 +272,10 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
         <div id="tvTempa900"><div class="kecil">mengambil laporan tempa 900…</div></div>
       </div>
       <div class="blok">
+        <h4>SQUEEZE-700 <em>· V315 — konsolidasi yang menglikuidasi shorts x1: 700 soal, dadakan 70</em></h4>
+        <div id="tvSqueeze"><div class="kecil">mengambil laporan tempaan squeeze…</div></div>
+      </div>
+      <div class="blok">
         <h4>GEMBOK <em>· V313 — uji mandiri kepintaran &amp; kematangan pada kode gembok Bitcoin komunitas</em></h4>
         <div id="tvGembok"><div class="kecil">mengambil laporan gembok…</div></div>
       </div>
@@ -372,7 +376,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
    penonton, ingatan resmi = commit GitHub, tubuh = fungsi kerja nyata. ================ */
 /* ================= IDENTITAS & KONSTANTA ================= */
 const RUMAH = {pemilik:'ririnsherlyna-cloud', repo:'Micaprofita-', cabang:'main'};
-const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json', tempa:'laporan/tempa100.json', tempa2:'laporan/tempa200.json', tempa3:'laporan/ujian500.json', tempa300:'laporan/tempa300.json', tempa900:'laporan/tempa900.json', gembok:'laporan/gembok.json', syaf:'otak/syaraf-pohon.json', imun:'laporan/imun.json', ujiHidup:'laporan/uji-kehidupan.json', tubuh:'laporan/uji-tubuh.json', bedahTangan:'laporan/bedah-tangan.json'};
+const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json', tempa:'laporan/tempa100.json', tempa2:'laporan/tempa200.json', tempa3:'laporan/ujian500.json', tempa300:'laporan/tempa300.json', tempa900:'laporan/tempa900.json', squeeze:'laporan/tempa-squeeze.json', gembok:'laporan/gembok.json', syaf:'otak/syaraf-pohon.json', imun:'laporan/imun.json', ujiHidup:'laporan/uji-kehidupan.json', tubuh:'laporan/uji-tubuh.json', bedahTangan:'laporan/bedah-tangan.json'};
 const MAXBACA = 400000;                 // batas baca per file (byte) — kejujuran parsial
 const FASE = ['MENGAMATI','MEMAHAMI','MENCOBA','MELAKUKAN','MENGEVALUASI','MENEMUKAN','MEMBANGUN','MENINGKATKAN','MENGAMATI-KEMBALI'];
 const INTEGERS = ['versi.json','gerbang.json','brain.json','arena-keadaan.json','otak/genome-server.json','otak/penjaga-keadaan.json','otak/performa.json','memori/terkini.json','README.md'];
@@ -504,6 +508,7 @@ async function muatMemoriGitHub(){
     tempa3Muat(); /* V307-TEMPAN-500: 500 soal sejarah dalam — muat tak-blok */
     tempa300Muat(); /* V310-TEMPAN-300: 300 jebakan target tak tercapai — muat tak-blok */
     tempa900Muat(); /* V311-TEMPAN-900: tempa 3× lipat — muat tak-blok */
+    squeezeMuat(); /* V315-SQUEEZE-700: konsolidasi yang menglikuidasi shorts x1 — muat tak-blok */
     gembokMuat(); /* V313-GEMBOK: uji mandiri kode gembok Bitcoin — muat tak-blok */
     syarafMuat(); /* V312-SYARAF-BERANAK: pohon syaraf — muat tak-blok */
     const ing = JSON.parse(await ghAmbil(INGATAN_GH.ingatan));
@@ -2487,6 +2492,7 @@ function ujianRender(){
   const tv3=document.getElementById('tvTempa3'); if(tv3) tv3.innerHTML=tempa3Panel();
   const tv300=document.getElementById('tvTempa300'); if(tv300) tv300.innerHTML=tempa300Panel();
   const tv900=document.getElementById('tvTempa900'); if(tv900) tv900.innerHTML=tempa900Panel();
+  const tvSq=document.getElementById('tvSqueeze'); if(tvSq) tvSq.innerHTML=squeezePanel();
   const tvGembok=document.getElementById('tvGembok'); if(tvGembok) tvGembok.innerHTML=gembokPanel();
   if(!S.ujian.length){ w.innerHTML='<div class="kecil">menjalankan ujian…</div>'; return; }
   const sah=S.ujian.filter(x=>x.hasil==='SAH').length, gag=S.ujian.filter(x=>x.hasil==='GAGAL').length,
@@ -2725,6 +2731,44 @@ function tempa900Panel(){
     ${dad}
     ${lu?`<div style="margin:8px 0 2px" class="kecil"><b style="color:#7ee787">VONIS: LULUS TOTAL 900/900 pada gelombang ${lu.n}</b> — dari G1 dongkol ${p.gelombang[0].benar}/900 (modal terkoyak $${p.gelombang[0].modalAkhir}) ditempa dari kekalahan sendiri jadi sempurna; peta ${(p.pelajaran||[]).length} wajah → 6 kelas hasil.</div>`:'<div class="kecil">belum lulus — penempaan berlanjut</div>'}
     <div class="kecil" style="margin-top:6px">bank + kunci terbuka audit: ujian/soal-900.json (segel ${p.bankSegel?('#'+p.bankSegel):'—'}) · segel laporan SHA-256 ${p.segel?('#'+p.segel.hash):'—'}</div>
+  </div>`;
+}
+/* ================= V315-SQUEEZE-700: konsolidasi yang menglikuidasi shorts x1 (jujur dari repo) ================= */
+async function squeezeMuat(){
+  try{ const p = JSON.parse(await ghAmbil(INGATAN_GH.squeeze));
+    if(p && p.gelombang){ const lama=S.squeeze; S.squeeze=p;
+      if(!lama){ const lu=p.gelombang.find(g=>g.lulus);
+        jurnal('SQUEEZE-700', lu?`tempaan squeeze tersegel: gelombang ${lu.n} <b>LULUS TOTAL ${lu.benar}/700</b> (modal $${lu.modalAkhir}) — riwayat jujur: ${p.gelombang.map(g=>'G'+g.n+':'+g.benar).join(' → ')}${p.dadakan?` · dadakan G1 ${p.dadakan.benar}/${p.dadakan.jumlah}${(p.dadakan.lulus||p.dadakanLulus)?' → 70/70':''}`:''} · syaraf baru ${p.syarafLahir?p.syarafLahir.id:'—'} lahir`:`tempaan squeeze berjalan: ${p.gelombang.map(g=>'G'+g.n+':'+g.benar).join(' → ')} — belum lulus, tempa lagi`, 'temuan'); }
+      if(S.tabAktif==='ujian') ujianRender();
+    }
+  }catch(e){ /* tempa-squeeze belum ada — jujur: belum ditempa */ }
+}
+function squeezePanel(){
+  const p=S.squeeze;
+  if(!p) return `<div class="kecil">laporan tempaan squeeze belum terbaca dari GitHub — organ tempa-squeeze.mjs yang menulisnya. Belum ditempa = belum ditempa, tanpa karangan.</div>`;
+  const lu=p.gelombang.find(g=>g.lulus);
+  const row=g=>{
+    const kursi=(g.soal||[]).map(s=>`<span title="${s.simbol} · ${(s.waktu||'').slice(0,16)} · ${s.premis||''} · tebak ${s.tebak} → ${s.kelasHasil} (${s.hasil})" style="display:inline-block;width:5px;height:5px;border-radius:1px;margin:1px;background:${s.hasil==='MENANG'?'#7ee787':'#f85149'}"></span>`).join('');
+    return `<div style="margin:7px 0 2px"><b>G${g.n}</b> — ${g.benar}/700 benar · modal $${g.modalAkhir}${g.likuidasiPada?` · <b style="color:#f85149">HABIS di soal ${g.likuidasiPada}</b>`:''} ${g.lulus?'<b style="color:#7ee787">— LULUS TOTAL</b>':' — tempa lagi'}<div style="margin-top:3px;line-height:1">${kursi}</div></div>`;
+  };
+  const momen=p.buktiPasarKejam&&p.buktiPasarKejam.momenKonsolidasi;
+  const momenHtml=momen?`<div class="kecil" style="margin:5px 0">bukti pasar kejam (momen konsolidasi ≤12% dinilai 30 hari, semua lilin nyata): <b>LIQUID-MELESAT ${(momen['LIQUID-MELESAT']||0).toLocaleString('id-ID')}</b> · AMBISI-BALIK-DASAR ${(momen['AMBISI-BALIK-DASAR']||0).toLocaleString('id-ID')} · TURUN-LANGSUNG ${(momen['TURUN-LANGSUNG']||0).toLocaleString('id-ID')} · TERGANTUNG-TINGGI ${(momen['TERGANTUNG-TINGGI']||0).toLocaleString('id-ID')} · MENDEM-DI-RANGE ${(momen['MENDEM-DI-RANGE']||0).toLocaleString('id-ID')} — puncak ambisi mereka hampir selalu tercapai; yang tak terduga adalah melesatnya</div>`:'';
+  const contoh=((p.buktiPasarKejam&&p.buktiPasarKejam.contoh)||{});
+  const contohHtml=[...(contoh.liquidTercepat||[]),...(contoh.ambisiPalingMenipu||[])].map(c=>`<div class="kecil">• <b>${c.simbol}</b> ${(c.waktu||'').slice(0,16).replace('T',' ')} UTC · ${c.premis||''} — kenyataan: tertinggi $${c.tinggi720}, terendah $${c.rendah720}${c.jamAmbang?` · <b style="color:#f85149">ambang likuidasi kena jam ke-${c.jamAmbang}</b>`:''}${c.jamPuncak?` · puncak kena jam ke-${c.jamPuncak}`:''}${c.jamDasar?` · dasar kena jam ke-${c.jamDasar}`:''} → <b>${c.kelasHasil}</b></div>`).join('');
+  const dad=p.dadakan?`<div style="margin:7px 0 2px"><b>DADAKAN</b> <span class="kecil">(70 soal jendela lama, tak pernah ditempa)</span> — G1 ${p.dadakan.benar}/${p.dadakan.jumlah}${(p.dadakan.lulus||p.dadakanLulus)?` → ditempa <b style="color:#7ee787">LULUS 70/70</b>${(p.dadakanLulus||{}).gelombang?` (gelombang ${p.dadakanLulus.gelombang})`:''}`:' — tempa lagi'}</div>`:'';
+  const sy=p.syarafLahir?`<div class="kecil" style="margin:5px 0;color:#d2a8ff">syaraf baru lahir dari kejadian ini: <b>${p.syarafLahir.id}</b> — ${p.syarafLahir.fakta?p.syarafLahir.fakta.tugas:''}</div>`:'';
+  return `<div style="margin:8px 0 14px;border:1px solid #2a3140;border-radius:12px;padding:10px">
+    <b>SQUEEZE-700</b> <span class="kecil">(mandat pemilik: “kita ujian simulasi lagi dengan tipe konsolidasi yang ternyata justru menglikuidasi para shorts yang x1” — mereka pikir puncak ambisi 1.3 lalu balik ke 0.85; ternyata melesat 2.7 tanpa menyentuh dasar; standar 700/700, gagal = ditempa lagi)</span>
+    <div class="kecil" style="margin:5px 0">${p.aturan}</div>
+    <div class="kecil" style="margin:5px 0;color:#8ab4ff">${p.blind}</div>
+    <div class="kecil" style="margin:5px 0">${p.sumberSoal}</div>
+    ${momenHtml}
+    ${contohHtml?`<div style="margin:6px 0 2px"><b class="kecil">contoh kejadian nyata (rencana mereka vs kenyataan):</b>${contohHtml}</div>`:''}
+    ${p.gelombang.map(row).join('')}
+    ${dad}
+    ${sy}
+    ${lu?`<div style="margin:8px 0 2px" class="kecil"><b style="color:#7ee787">VONIS: LULUS TOTAL 700/700 pada gelombang ${lu.n}</b> — dari G1 dongkol ${p.gelombang[0].benar}/700 (modal HABIS $${p.gelombang[0].modalAkhir} di soal ${p.gelombang[0].likuidasiPada}) ditempa dari kekalahan sendiri jadi sempurna; peta ${(p.pelajaran||[]).length} wajah → 5 kelas hasil.</div>`:'<div class="kecil">belum lulus — penempaan berlanjut</div>'}
+    <div class="kecil" style="margin-top:6px">bank + kunci terbuka audit: ujian/soal-squeeze-700.json (segel ${p.bankSegel?('#'+p.bankSegel):'—'}) · segel laporan SHA-256 ${p.segel?('#'+p.segel.hash):'—'}</div>
   </div>`;
 }
 /* ================= V313-GEMBOK: uji mandiri kode gembok Bitcoin (jujur dari laporan tersegel) ================= */
