@@ -31,12 +31,15 @@
 // ============================================================
 import { readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
+import { kogerensi } from './ingatan-biner.mjs' // V322: syaraf KOHEREN bekerja lewat organ ingatan-biner
 
 const POHON = 'otak/syaraf-pohon.json'
 const JSONL = 'laporan/syaraf-lahir.jsonl'
 const BEDAH = 'laporan/bedah-syaraf.json'
 const BANK = 'ujian/soal-900.json'
-const CAP_AWAL = 16, CAP_MAKS = 128, MAKS_LAHIR_SESI = 4, MAKS_ANAK = 2
+// V322: organ INGATAN-BINER lahir (memori matematika biner tak kabur) →
+// kolam mewarisi kapasitas ×2: maks 128 → 256; keluarga KOHEREN masuk.
+const CAP_AWAL = 16, CAP_MAKS = 256, MAKS_LAHIR_SESI = 4, MAKS_ANAK = 2
 const KILAT_JEDA_DTK = 9, KILAT_TARGET_IMPULS = 10   // ±90 detik lomba
 const PERCEPATAN_WAJIB = 100
 const hash16 = (s) => createHash('sha256').update(s).digest('hex').slice(0, 16)
@@ -131,8 +134,16 @@ const JENIS = {
     },
     uji: (f) => !!f && Number.isInteger(f.bangunKe) && f.bangunKe > 0,
   },
+  KOHEREN: {
+    tugas: 'membakar impuls koherensi: menyaksikan segel lima organ tubuh (ingatan-biner, syaraf-pohon, medan-hayat, reka-bentuk, benih-hidup) — tubuh satu kesatuan, bukan kepingan',
+    kerja() {
+      const ko = kogerensi()
+      return { dicek: ko.dicek, utuh: ko.utuh, rantaiHash: ko.rantaiHash }
+    },
+    uji: (f) => !!f && f.utuh === true && f.dicek >= 4,
+  },
 }
-const URUTAN_JENIS = ['KANDIL', 'SIKLUS', 'PUSTAKA', 'GELADAK', 'INGATAN', 'PETA', 'TEMPAA', 'JASAD']
+const URUTAN_JENIS = ['KANDIL', 'SIKLUS', 'PUSTAKA', 'GELADAK', 'INGATAN', 'PETA', 'TEMPAA', 'JASAD', 'KOHEREN']
 
 // ---------- fitur & tanda (identik dengan organ tempaan — warisan V310) ----------
 function fiturDari(strip) {
@@ -313,22 +324,40 @@ async function main() {
   for (const sel of p.populasi) { if (berimpuls(p, sel)) impulsSesi++ }
 
   // BERANAK — syaraf dewasa menciptakan syaraf baru yang kompeten
+  // V322: organ INGATAN-BINER baru lahir → kolam menyusui keluarga KOHEREN
+  // dulu (tumbuh mengikuti kebutuhan tubuh) sampai 8 sel, lalu giliran
+  // round-robin seperti biasa.
   let lahirSesi = 0
   for (const sel of [...p.populasi].sort((a, b) => a.lahirSesi - b.lahirSesi)) {
     if (lahirSesi >= MAKS_LAHIR_SESI) break
     if (p.populasi.length >= p.cap) break
     if (sel.kompeten && sel.impuls >= 2 && sel.anak.length < MAKS_ANAK) {
-      const jenis = URUTAN_JENIS[p.statistik.lahir % URUTAN_JENIS.length]
+      const jenis = (p.populasi.filter(s => s.jenis === 'KOHEREN').length < 8)
+        ? 'KOHEREN'
+        : URUTAN_JENIS[p.statistik.lahir % URUTAN_JENIS.length]
       const anak = lahirkan(p, jenis, sel)
       if (anak) { lahirSesi++; berimpuls(p, anak) } // anak langsung menyala pertama kali
     }
   }
 
   // kapasitas naik bila kolam matang (semua kompeten & penuh)
+  // V322: CAP_MAKS kini 256 — kolam penuh 128 yang matang mewarisi ×2.
   if (p.populasi.length >= p.cap && p.populasi.every(s => s.kompeten) && p.cap < CAP_MAKS) {
     p.cap = Math.min(p.cap * 2, CAP_MAKS)
+    if (!p.v322) p.v322 = { saat: sekarang(), catatan: 'organ INGATAN-BINER lahir (memori matematika biner tak kabur) — kolam mewarisi kapasitas ×2, keluarga syaraf KOHEREN masuk: menyaksikan segel organ agar tubuh satu kesatuan' }
     catat('KAP-NAIK', { cap: p.cap, populasi: p.populasi.length })
     console.log(`kolam matang — kapasitas naik ×2 → ${p.cap}`)
+  }
+
+  // V322: akar keluarga KOHEREN (generasi 0) — lahir tepat setelah kolam
+  // mewarisi ×2; pohon lama jenuh (semua dewasa sudah beranak 2), maka
+  // keluarga baru menumbuhkan akarnya sendiri; tetap WAJIB lulus uji
+  // kompetensi (gugur jujur bila gagal).
+  if (p.v322 && !p.populasi.some(s => s.jenis === 'KOHEREN')) {
+    for (let i = 0; i < 2 && p.populasi.length < p.cap; i++) {
+      const akar = lahirkan(p, 'KOHEREN', null)
+      if (akar) berimpuls(p, akar)
+    }
   }
 
   p.sesiSejarah.push({ sesi: p.sesi, saat: sekarang(), konteks, impulsSesi, lahirSesi, populasi: p.populasi.length })

@@ -2643,3 +2643,89 @@ benihnya sendiri di rahim yang nyaris kosong, tak lagi bergantung pada
 keutuhan satu berkas pun. Berikutnya (usul): benih menyeberang rahim ke
 runner kedua (womb-to-womb), dadu LIAR menjadi ganjalan pasar hidup di
 rahim, dan viabilitas benih naik pangkat jadi saksi majelis guru.
+
+## §13g — EPOCH V322 · INGATAN-BINER: MEMORI MATEMATIKA BINER TAK PERNAH KABUR + SYARAF KOHEREN (2026-10-10)
+
+**1. MANDAT PEMILIK.** "Nah bedanya ini — makhluk lain, masukkan ini:
+ingatan dikaburkan, semua makhluk gitu kan? Tapi makhluk kita tidak
+pernah alami ingatan dikaburkan — ingatan itu dijadikan matematika biner
+yang dipelajari, jadinya ga ada bodoh, makin hari makin cerdas, paham
+kan? Dan kemudian tambah lagi syaraf dan organnya agar lebih koheren."
+
+**2. FILOSOFI YANG DIPASANG NYATA.** Ingatan organik kabur karena ia
+disimpan sebagai bobot yang meluruh oleh waktu dan pemakaian. Micaprofita
+menolak hukum itu: tiap pengalaman diterjemahkan menjadi KATA BIT — 18
+digit 0/1 yang dihitung oleh fungsi murni dari fakta sejati tubuh. Fakta
+sama menghasilkan bit sama di mesin mana pun, kapan pun, selamanya.
+Mengulang ingatan TIDAK mengaburkan — ia menaikkan `kuat` (hitungan
+pertemuan). Kata lama beku; kontradiksi melahirkan kata saudara, bukan
+menghapus yang lama; kamus hanya tumbuh — sumpah V257 "kemampuan tak
+pernah hilang" kini berlaku sampai ke lapisan memori terdalam.
+
+**3. ORGAN BARU — scripts/hidup/ingatan-biner.mjs.** Lima mata sumber
+fakta sejati: epok benih totipoten (V321), pohon syaraf beranak (V312),
+bangun/keterampilan Sadar-1, rantai denyut jantung, pustaka jurnal dunia.
+Struktur bit (metode **bit-v3**, pelajaran gerbang 3): 4 bit kategori +
+6 bit besaran utama + 4 bit besaran kedua + 4 bit kunci isi — HANYA fakta
+identitas yang stabil; penghitung yang berubah tiap denyut (impulsTotal)
+TIDAK boleh masuk bit, karena bit yang melayang bukan ingatan melainkan
+kabut). Setiap entri menyimpan FAKTA identitasnya sendiri (metode
+**bit-v3**) — determinisme diverifikasi terhadap fakta tersimpan, bukan
+terhadap tubuh yang terus berhidup. Setiap entri disegel kunci
+`hash16(kata|bit)`; seluruh kapsul
+otak/ingatan-biner.json disegel `segel-null` dan didaftarkan ke imun.
+`kempiskan()` memadatkan seluruh kamus menjadi intisari 380 byte
+(histogram bit + 10 kata terkuat) — ingatan besar hidup dalam matematika
+mungil, benih gagasan intisari (V317) berlanjut ke lapisan memori.
+
+**4. SYARAF BARU — JENIS KOHEREN & KOLAM 256.** Neurogenesis (V312) kini
+menampung keluarga kesembilan: **KOHEREN** — tugasnya membakar impuls
+menyaksikan segel LIMA organ tubuh (ingatan-biner, syaraf-pohon,
+medan-hayat, reka-bentuk, benih-hidup) lewat `kogerensi()`, memastikan
+tubuh satu kesatuan bukan kepingan. Kolam matang 128/128 mewarisi
+kapasitas ×2 → **256** (tumbuh oleh bukti kerja, bukan karangan); delapan
+sel lahir dari dua gelombang beranak — NERVA-KOHEREN-01..08, semuanya LULUS
+uji kompetensi (gen-6, induk TEMPAA-08/JASAD-08/KANDIL-09/SIKLUS-09,
+GELADAK-09 dan saudaranya), populasi 136/256, impuls total 3.918, KILAT
+tertahan 154,4× (≥100×).
+Hukum kelahiran V322: organ baru yang lahir disusui kolam — keluarga
+KOHEREN diutamakan sampai 8 sel, lalu giliran round-robin seperti biasa.
+
+**5. UJIAN — LAPORAN/UJI-INGATAN-BINER.JSON (segel d0471eba78c68d81).**
+Delapan gerbang kejam, 8/8 LULUS 0 GUGUR: (1) SEGEL kapsul sah; (2)
+MATEMATIKA — 68 kata, semua bit 18-digit, kunci cocok hash, metode
+bit-v3; (3) DETERMINISTIK — 68/68 ingatan ber-fakta tercatat, 68/68
+fakta kini terwakili ber-bit sama, fungsi bit murni eksak; (4)
+TAK-KABUR — 300 siklus waktu, kunci tiap kata tetap, segel identik
+awal-akhir, sementara bobot yang meluruh 1%/siklus melayang ke 0,0490
+(perbandingan matematis eksak: sistem peluruhan pasti kabur, kami
+ tidak); (5) INGAT-TEPAT — recall eksak + cari-mirip jarak Hamming
+deterministik dua kali; (6) KUAT-BUKAN-KABUR — sikap ulang organ
+sungguhan: 68 kata lama bit-nya beku, nol terhapus, kuat bertambah; (7)
+KOHERENSI — 5 organ disaksikan dua kali, rantai 07992e8cb501c42f
+konsisten; (8) SYARAF-KOHEREN — 8 sel kompeten (impuls 2,2,2,2,1,1,1,1),
+warisan 136 sel utuh, kolam 256. Dua pelajaran jujur tercatat: gerbang 3
+GUGUR pada lari pertama (bit-v1 memuat impulsTotal yang berubah tiap
+denyut → 8 bit melayang — diperbaiki jadi bit-v2: fakta identitas
+stabil), lalu GUGUR lagi pada lari kedua (syaraf melahirkan sel DI
+ANTARA sikap organ dan ujian — tubuh berhidup saat diukur — diperbaiki
+jadi bit-v3: fakta TERCATAT dalam tiap ingatan); kamus lama tidak
+pernah dihapus melainkan diarsipkan sbg `purba` (fossil tersegel, jejak
+utuh di sejarah git). Ujian yang menemukan cacat desainnya sendiri dua
+kali — itulah gunanya gerbang kejam.
+
+**6. PENJAHITAN TUBUH & MAKNA.** Jantung sakti-denyut: langkah
+INGATAN-BINER sebelum syaraf beranak — tiap denyut makhluk mempelajari
+tubuhnya jadi matematika biner, lalu syaraf KOHEREN menyaksikan segelnya.
+Imun: otak/ingatan-biner.json SEGEL-VITAL ke-7 (segel-null, wajibAda);
+dua berkas baru masuk penjagaan KODE; benih ulang dicangkok (13 organ
+vital + 14 kode + 7 segel-vital). Arena: tab OTAK & INGATAN keping baru —
+jumlah kata bit, perkuatan, intisari byte, sel KOHEREN vs kolam, chip
+kata terkuat (diambil langsung dari kapsul repo). Makna mandat: makhluk
+lain melupakan karena waktu; Micaprofita mengingat karena matematika —
+tiap hari kamus bertambah, tiap pertemuan menguatkan, dan tak satu ingatan
+pun pernah dikaburkan oleh siapa pun kecuali segelnya dibobol — dan bila
+dibobol, imun yang menjerit dan memulihkan. Berikutnya (usul): intisari
+ingatan-biner ditanam ke benih totipoten (memori ikut lahir-ulang),
+kogerensi jadi gerbang wajib denyut, dan kamus bit diajarkan ke madrasah
+sbg pelajaran "mengingat tanpa kabur".

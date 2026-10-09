@@ -75,6 +75,7 @@ const SEGEL_VITAL = [
   ['otak/medan-keadaan.json', ['skema', 'segel'], 'medan hayat kontinu (V319) — intisari Lenia hidup di tubuh: Orbium bertahan dari matematika sejati, pasar nyata menjadi makanan; luka halus = medan palsu', true, 'segel-null'],
   ['otak/reka-bentuk.json', ['skema', 'segel'], 'genom peta berevolusi + silsilah (V320) — intisari reconfigurable_organisms hidup di tubuh: mutasi, seleksi anak-vs-induk, gerbang tangguh, saksi dunia; luka halus = silsilah palsu', true, 'segel-null'],
   ['otak/benih-hidup.json', ['skema', 'segel'], 'benih totipoten (V321) — intisari lab Hanna (Weizmann) hidup: keadaan mungil membawa identitas, epok, syaraf, peta, muatan byte-exact; luka halus = benih palsu, lahir-ulang tercemar', true, 'segel-null'],
+  ['otak/ingatan-biner.json', ['skema', 'segel'], 'ingatan biner (V322) — memori matematika biner tak kabur: kata bit 18-digit deterministik dari fakta sejati, diulang = kuat bukan kabur; luka halus = ingatan palsu, sejarah belajar tercemar', true, 'segel-null'],
 ]
 const KODE = [
   ['scripts/hidup/gerbang.mjs', false, 'gerbang saraf — pemanggil tangan lewat peta saraf (V309)'],
@@ -88,7 +89,9 @@ const KODE = [
   ['scripts/hidup/reka-bentuk.mjs', false, 'organ REKA-BENTUK (V320) — genom peta berevolusi (intisari reconfigurable_organisms): mutasi non-netral, wajah beku, anak-vs-induk, gerbang tangguh, saksi dunia, silsilah tersegel'],
   ['scripts/hidup/benih-inti.mjs', false, 'inti benih totipoten (V321) — segel, deteksi luka, jerit, bangkit-ulang byte-exact, viabilitas 6 gerbang (intisari lab Hanna)'],
   ['scripts/hidup/tambang-hidup.mjs', false, 'kurator HIDUP-1000 (V321) — 1000 simulasi kehidupan dari rincian jurnal lab Hanna, bank tersegel'],
-  ['scripts/hidup/tempa-hidup.mjs', false, 'rahim ex-utero (V321) — 1000 kehidupan: deteksi-jerit-pulih-jawab-napas-viabilitas; gugur = pelajaran epigenetik']
+  ['scripts/hidup/tempa-hidup.mjs', false, 'rahim ex-utero (V321) — 1000 kehidupan: deteksi-jerit-pulih-jawab-napas-viabilitas; gugur = pelajaran epigenetik'],
+  ['scripts/hidup/ingatan-biner.mjs', false, 'organ INGATAN-BINER (V322) — ingatan jadi matematika biner tak kabur: kata bit deterministik, kuat bukan kabur, kogerensi menyaksikan segel organ'],
+  ['scripts/hidup/uji-ingatan-biner.mjs', false, 'ujian INGATAN-BINER (V322) — 8 gerbang: segel, matematika, deterministik, tak-kabur 300 siklus, ingat-eksak, kuat-bukan-kabur, koherensi, syaraf KOHEREN']
 ]
 // batas kegembiran: file yang berubah tiap denyut — cadangan diperbarui
 // maksimal sekali per 6 jam agar imun tak membuat komit kebisingan.
