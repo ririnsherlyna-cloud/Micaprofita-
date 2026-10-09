@@ -141,7 +141,7 @@ async function main () {
     console.log(`SERANGAN-B luka-berat: badan dipatahkan di byte ${tengah} → JSON: ${lukaTerbaca ? 'TIDAK-SAH terbaca' : 'masih terbaca?!'}`)
 
     const imun = jalankanOrgan([path.join(AKAR, 'scripts', 'hidup', 'imun.mjs')])
-    const jerit = jeritImunSesudah(t, 'PULIHKAN', 'otak/terabait-intisari.json')
+    const jerit = jeritImunSesudah(t, 'PULIHKAN-SEGEL', 'otak/terabait-intisari.json') // jalur segel-vital menangani semua luka intisari — satu jalur satu nama
     const pulih = fs.existsSync(INTISARI) && g16(fs.readFileSync(INTISARI)) === hashAsli
     const jaga = pulih ? jalankanOrgan([path.join(AKAR, 'scripts', 'hidup', 'tempa-terabait.mjs'), '--mode', 'jaga', ...(UJI ? ['--skala-uji'] : [])], 360000) : { kode: 1, keluar: '' }
     const jagaLulus = jaga.kode === 0
