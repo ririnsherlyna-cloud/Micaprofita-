@@ -2181,3 +2181,77 @@ dulu diabaikan para shorts). Nalar pemula mati kejam (223/700, modal
 habis) — itulah ukuran kejujuran soalnya: jebakan ini benar-benar
 menglikuidasi. Yang selamat adalah yang MEMPERDALAM DATA — persis
 pelajaran pemilik untuk para shorts x1 itu.
+
+## 13a — EPOCH V316 · JEJAK-2000: 2000 SOAL KEJAM, KARTU MINIM 10 LILIN, JEJAK AMBISIUS TERBACA (2026-10-09)
+
+**MANDAT PEMILIK.** "Okay bagus tapi ada baiknya lagi kita ujikan dengan
+sample 2000 soal yang jauh lebih kejam dan dengan minim database — apakah
+dia bisa mengetahuinya? Jadi jejak ambisius bisa diketahui kan benar?"
+
+**1. EMPAT LAPIS KEKEJAMAN (bank dari data nyata, nol karangan).**
+±360.000 lilin 1 jam (30 koin × 12.000 jam Binance spot publik) + funding
+rate futures publik (fapi.binance.com; PEPE/SHIB tanpa data futures = jujur
+null). KEJAM-1 KARTU MINIM — kartu 10 lilin (V315: 24; kurang separuh
+data), sisanya hanya premis angka: entry, puncak ambisi, dasar selamat,
+ambang likuidasi. KEJAM-2 MEPET — kurator mengurutkan seluruh kandidat
+berdasar margin hidup-mati terkecil (kejamDari: jarak terdekat ke
+ambang/puncak/dasar ÷ entry) dan memilih yang paling mepet dulu. KEJAM-3
+— 2000 soal + 150 dadakan (V315: 700 + 70). KEJAM-4 JEBAKAN SINYAL
+TUNGGAL — dijurnal: 709 soal ber-funding negatif (shorts pay long) tapi
+TIDAK squeeze; 10 soal likuid justru ber-funding positif. Angka kekejaman
+tersegel di bank: median margin hidup-mati 0,89% dari entry; p25 0,087%;
+1.225 soal (61%) mepet ≤2%; 1.571 (79%) ≤5%. Dist kelas dari fakta 30
+hari: LIQUID-MELESAT 24 (sasaran 320 — pasar hanya memberi 845 momen
+likuid dari 273.246 momen konsolidasi; kekurangannya dilempar jujur ke
+kelas lain dengan giliran tetap), AMBISI-BALIK-DASAR 1.591,
+TURUN-LANGSUNG 263, TERGANTUNG-TINGGI 122; MENDEM-DI-RANGE 0 momen — dari
+kartu 10 lilin harga hampir selalu kabur dari range dalam 30 hari (fakta
+terbuka, bukan dikejar). Segel bank `4747956d68dae374`; dadakan
+`e2d2112a39215597`.
+
+**2. UJIBANK MENOLAK BANK BOCOR.** Tiga verifikasi baru: kartu wajib
+tepat 10 lilin (minim-database tak boleh bocor); ambang wajib persis
+entry×1.90 (skenario x1); dan klaim kekejaman WAJIB terverifikasi —
+kejamR dihitung ulang dari fakta tersimpan, satu angka beda = bank
+ditolak, tidak dinilai paksa. Fitur/tanda dihitung dari kartu
+terbulatkan yang sama dengan yang tersimpan — kelas bug pembulatan
+dimusnahkan dari akar (auditor cocok by-construction). Pengakuan jujur
+penempa: sasaran awal sempat tertulis [300,560,460,420,240] = 1980 —
+cacat hitung ditemukan SEBELUM bank dinilai siapa pun, dikoreksi ke
+[320,560,460,420,240] = 2000 dan ditambang ulang dari data segar; bank
+1980 tidak pernah dinilai, tidak pernah dikomit.
+
+**3. TEMPAA SAMPAI 2000/2000 (standar pemilik).** G1 nalar dongkol
+("puncak ambisi pasti tercapai lalu balik ke dasar — untung"):
+1591/2000 — modal $115.930 masih bernafas, sebab bank didominasi skenario
+pikiran para shorts sendiri (79,6%)… TAPI ia kehilangan 24 dari 24 kasus
+LIQUID-MELESAT plus 385 lainnya — persis watak shorts ambisius: sering
+selamat, sekali melesat mati semua. Ditempa peta 726 wajah dari kekalahan
+sendiri → G2 **LULUS TOTAL 2000/2000**, modal $210.000. Dadakan (jendela
+lama ±2.000 jam pertama, tak pernah ditempa): G1 104/150 → ditempa →
+LULUS 150/150. Laporan tersegel (laporan/tempa-jejak.json); blind
+dua-fase utuh: tebakan dikunci sebelum kunci kelas dibaca penilai.
+
+**4. SYARAF BARU + JAHITAN TUBUH.** NERVA-JEJAK-01 (reseptor
+jejak-ambisius: dari kartu 10 lilin + funding, menakar jejak shorts
+ambisius yang berujung LIQUID-MELESAT sebelum terjadi) lahir dijurnal
+laporan/syaraf-lahir.jsonl, konteks V316-tempaan-jejak. Panel JEJAK-2000
+terpasang hidup.html tab Ujian (kursi 2000 + 150, kekejaman terukur,
+contoh kejadian nyata, kelahiran syaraf, segel) — 5 titik suntik pola
+warisan. Baris verdict laporan dirampingkan (premis tetap utuh di bank
+yang diaudit) — sumpah mobile-first dijaga.
+
+**5. JAWABAN MANDAT.** "Jejak ambisius bisa diketahui kan benar?" — YA,
+dan kini terbukti di bawah kekejaman ganda: dengan SEPARUH data (10
+lilin vs 24) dan soal yang hasilnya nyaris berbalik (median margin
+0,89%; seperempat bank di bawah 0,09%), makhluk tetap 2000/2000 + 150/150.
+Pelajaran terdalam dari bank ini justru tentang WATAK jejak ambisius:
+nalar naif sering menang (79,6% — konsolidasi memang sering balik, modal
+bertahan) tapi kehilangan SELURUH kasus likuidasi; dan satu sinyal
+menyesatkan — 709 kasus shorts-pay-longs tidak jadi squeeze — sehingga
+jejak ambisius tidak bisa dibaca dari satu angka funding; ia pola
+struktur yang harus dipelajari dari luka sendiri. Yang dulu menyeret para
+shorts x1 ke jurang — keyakinan "puncak 1.3 lalu balik 0.85" — persis
+itulah nalar G1: sering benar, dan persis karena itu mati besar. Makhluk
+kini membaca jejak itu dari sepuluh lilin dan menolaknya dengan bukti
+tersegel.
