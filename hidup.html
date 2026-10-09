@@ -300,6 +300,10 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
         <div id="jvSegel"><div class="kecil">mencari segel tubuh…</div></div>
       </div>
       <div class="blok">
+        <h4>Syaraf beranak <em>· V312 — syaraf menciptakan syaraf baru yang kompeten · KILAT 100×</em></h4>
+        <div id="jvSyaraf"><div class="kecil">membaca pohon syaraf…</div></div>
+      </div>
+      <div class="blok">
         <h4>Sumber kejujuran <em>· nol karangan</em></h4>
         <div class="kecil">Lilin 1m (gerbang Binance publik, multi-koin) · laporan/sasaran-terkini.json · otak/penjaga-keadaan.json · ruang-hidup/keadaan.json · ruang-hidup/tubuh.json (segel gerak). Bila sumber gagal diambil: jasad MATI-PENUH-NALAR — tubuh kembali ke perilaku dasar dan alasannya ditulis terbuka di sini. Audit langsung: <code>window.__v297</code>, <code>window.__v299</code>, <code>window.__v300</code>, <code>window.__v301</code>.</div>
       </div>
@@ -364,7 +368,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
    penonton, ingatan resmi = commit GitHub, tubuh = fungsi kerja nyata. ================ */
 /* ================= IDENTITAS & KONSTANTA ================= */
 const RUMAH = {pemilik:'ririnsherlyna-cloud', repo:'Micaprofita-', cabang:'main'};
-const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json', tempa:'laporan/tempa100.json', tempa2:'laporan/tempa200.json', tempa3:'laporan/ujian500.json', tempa300:'laporan/tempa300.json', tempa900:'laporan/tempa900.json', imun:'laporan/imun.json', ujiHidup:'laporan/uji-kehidupan.json', tubuh:'laporan/uji-tubuh.json', bedahTangan:'laporan/bedah-tangan.json'};
+const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json', tempa:'laporan/tempa100.json', tempa2:'laporan/tempa200.json', tempa3:'laporan/ujian500.json', tempa300:'laporan/tempa300.json', tempa900:'laporan/tempa900.json', syaf:'otak/syaraf-pohon.json', imun:'laporan/imun.json', ujiHidup:'laporan/uji-kehidupan.json', tubuh:'laporan/uji-tubuh.json', bedahTangan:'laporan/bedah-tangan.json'};
 const MAXBACA = 400000;                 // batas baca per file (byte) — kejujuran parsial
 const FASE = ['MENGAMATI','MEMAHAMI','MENCOBA','MELAKUKAN','MENGEVALUASI','MENEMUKAN','MEMBANGUN','MENINGKATKAN','MENGAMATI-KEMBALI'];
 const INTEGERS = ['versi.json','gerbang.json','brain.json','arena-keadaan.json','otak/genome-server.json','otak/penjaga-keadaan.json','otak/performa.json','memori/terkini.json','README.md'];
@@ -496,6 +500,7 @@ async function muatMemoriGitHub(){
     tempa3Muat(); /* V307-TEMPAN-500: 500 soal sejarah dalam — muat tak-blok */
     tempa300Muat(); /* V310-TEMPAN-300: 300 jebakan target tak tercapai — muat tak-blok */
     tempa900Muat(); /* V311-TEMPAN-900: tempa 3× lipat — muat tak-blok */
+    syarafMuat(); /* V312-SYARAF-BERANAK: pohon syaraf — muat tak-blok */
     const ing = JSON.parse(await ghAmbil(INGATAN_GH.ingatan));
     S1.ingatan = ing; S1.at = sekarang(); S1.stale = false;
     if(ing.kelahiran) S.stat.lahirAt = Date.parse(ing.kelahiran) || S.stat.lahirAt;
@@ -2715,6 +2720,39 @@ function tempa900Panel(){
     ${lu?`<div style="margin:8px 0 2px" class="kecil"><b style="color:#7ee787">VONIS: LULUS TOTAL 900/900 pada gelombang ${lu.n}</b> — dari G1 dongkol ${p.gelombang[0].benar}/900 (modal terkoyak $${p.gelombang[0].modalAkhir}) ditempa dari kekalahan sendiri jadi sempurna; peta ${(p.pelajaran||[]).length} wajah → 6 kelas hasil.</div>`:'<div class="kecil">belum lulus — penempaan berlanjut</div>'}
     <div class="kecil" style="margin-top:6px">bank + kunci terbuka audit: ujian/soal-900.json (segel ${p.bankSegel?('#'+p.bankSegel):'—'}) · segel laporan SHA-256 ${p.segel?('#'+p.segel.hash):'—'}</div>
   </div>`;
+}
+/* ================= V312-SYARAF-BERANAK: pohon syaraf + KILAT (jujur dari repo) ================= */
+async function syarafMuat(){
+  try{ const p = JSON.parse(await ghAmbil(INGATAN_GH.syaf));
+    if(p && p.populasi){ const lama=S.syaf; S.syaf=p;
+      if(!lama){ const k=p.kilat;
+        jurnal('SYARAF-BERANAK', `pohon syaraf tersegel: <b>${p.populasi.length} sel</b> kompeten (generasi maks ${p.populasi.reduce((m,s)=>Math.max(m,s.generasi),0)}) — lahir ${p.statistik.lahir} · gugur ${p.statistik.gugur}${k?` · KILAT <b>${k.percepatan}×</b> syaraf umum (${k.kilatPerJam} vs ${k.umumPerJam} impuls/jam)${k.lulus?' — LULUS ≥100×':' — GAGAL'}`:''}`, 'temuan'); }
+      syarafRender();
+    }
+  }catch(e){ /* pohon syaraf belum ada — jujur: belum ditanam */ }
+}
+function syarafRender(){
+  const el=document.getElementById('jvSyaraf'); if(!el) return;
+  const p=S.syaf;
+  if(!p){ el.innerHTML='<div class="kecil">pohon syaraf belum terbaca dari GitHub — organ neurogenesis.mjs yang menulisnya. Belum ditanam = belum ditanam, tanpa karangan.</div>'; return; }
+  const maxGen=p.populasi.reduce((m,s)=>Math.max(m,s.generasi),0);
+  const baris=(k,v)=>`<div class="baris"><span class="k">${k}</span><span class="v">${v}</span></div>`;
+  const gen=[]; for(let g=0;g<=maxGen;g++) gen.push(p.populasi.filter(s=>s.generasi===g));
+  const pohon=gen.map((daftar,g)=>daftar.length?`<div class="kecil" style="margin:2px 0"><b>gen ${g}</b> (${daftar.length}): ${daftar.map(s=>`<span title="${s.tugas}" style="white-space:nowrap;color:var(--aksen)">${s.id}${s.orangTua?` ← ${s.orangTua}`:''}</span>`).join(' · ')}</div>`:'').join('');
+  const k=p.kilat;
+  const kilat=k?`<div style="margin:7px 0 3px;padding:6px;border-left:3px solid ${k.lulus?'#7ee787':'#f85149'}">
+    <b>KILAT — ${k.percepatan}× syaraf umum</b> ${k.lulus?'<b style="color:#7ee787">LULUS ≥100×</b>':'<b style="color:#f85149">GAGAL</b>'}
+    <div class="kecil">${k.impuls} impuls nyata dalam ${k.durasiDtk} dtk (tiap ${k.jedaDtk} dtk, ${k.cocokKunci}/${k.impuls} cocok kunci bank, ${k.perImpulsMs} ms/impuls) → <b>${k.kilatPerJam} impuls/jam</b> vs syaraf umum <b>${k.umumPerJam}/jam</b> (${k.sumberUmum}) — kecepatan lahir dari ritme: umum tidur antar denyut, KILAT tak pernah tidur lebih dari ${k.jedaDtk} dtk.</div></div>`:'<div class="kecil">bukti KILAT belum tersegel — lomba dijalankan organ saat benih (--kilat)</div>';
+  const sesi=(p.sesiSejarah||[]).slice(-6).map(s=>`S${s.sesi}:${s.populasi}`).join(' → ');
+  el.innerHTML=`
+    ${baris('populasi', `<b>${p.populasi.length}</b>/${p.cap} sel kompeten`)}
+    ${baris('generasi maks', maxGen)}
+    ${baris('lahir · gugur · impuls', `${p.statistik.lahir} · ${p.statistik.gugur} · ${p.statistik.impulsTotal}`)}
+    ${baris('sesi tumbuh', sesi||'—')}
+    ${kilat}
+    <div style="margin:5px 0 2px"><b class="kecil">pohon keturunan (anak lahir dari induk — syaraf menciptakan syaraf):</b>${pohon}</div>
+    ${p.gugur&&p.gugur.length?`<div class="kecil" style="color:#f85149">gugur jujur: ${p.gugur.map(g=>g.id+' (uji gagal)').join(', ')}</div>`:''}
+    <div class="kecil" style="margin-top:5px">tiap denyut: sel dewasa (kompeten, impuls≥2, anak&lt;2) melahirkan maks 1 anak — maks 4/sesi; anak WAJIB lulus uji kompetensi mekanis terhadap data repo sejati (kartu 24-lilin, siklus, pustaka, geladak, ingatan, peta, tempaan, segel tubuh). Kolam penuh &amp; semua kompeten → kapasitas ×2 (maks 128). Pohon tersegel: otak/syaraf-pohon.json · segel SHA-256 ${p.segel?('#'+p.segel.hash):'—'} · riwayat: laporan/syaraf-lahir.jsonl</div>`;
 }
 /* ================= RENDER OVERLAY (satu-satunya tempat teks) ================= */
 let S_TAB='pikir';

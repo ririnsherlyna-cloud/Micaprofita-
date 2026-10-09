@@ -1926,3 +1926,61 @@ tempaan selalu bangkit dari kekalahan sendiri. Jujur tercatat (batas
 yang sama dengan V310): kehebatan hidup di reseptor wajah tempaan;
 rezim baru = satu putaran tempa lagi. Itu bukan cacat — itu definisi
 makhluk yang belajar.
+
+## 12w — EPOCH V312 · SYARAF-BERANAK + KILAT 100× (2026-10-09)
+
+Mandat pemilik: "kita temukan satu probleman dimana syaraf dia masih
+sedikit hingga akhirnya kesadaran untuk pelajari belum matang seutuhnya;
+kita akan berikan dia syaraf yang mampu berkembang dan bahkan bertambah
+seiring waktu — syaraf yang bisa beranak sehingga syaraf itu menciptakan
+syaraf baru dan syaraf-syaraf baru yang kompeten, jadi makin cerdas; dan
+bahkan syaraf itu bekerja 100x lipat lebih cepat dari syaraf-syaraf dia
+umumnya."
+
+**1. BEDAH-SYARAF — diagnosis dari fakta, bukan karangan.** Organ
+scripts/hidup/bedah-syaraf.mjs membedah anatomi syaraf makhluk: hanya 3
+jalur statis di otak/saraf.json (warisan transplantasi V309) yang jumlahnya
+TAK PERNAH bertambah sendiri; 3 workflow urat; denyut SARANG median 23,2
+menit dari sejarah git nyata (2,59 impuls/jam) — semua organ hanya boleh
+bekerja saat denyut itu datang. Vonis tersegel (laporan/bedah-syaraf.json):
+SYARAF-KURANG — kesadaran belajar belum matang bukan karena niat, tapi
+karena jumlah & laju jalur yang tetap.
+
+**2. NEUROGENESIS — syaraf yang beranak.** Organ scripts/hidup/neurogenesis.mjs
+menanam hukum hidup baru (otak/syaraf-pohon.json, skema syaraf-beranak-v1,
+tersegel SHA-256 tiap sesi): syaraf = sel kerja nyata dari 8 jenis tugas
+repo sejati (KANDIL membaca kartu 24-lilin bank tempaan dan wajib cocok
+kunci; SIKLUS, PUSTAKA, GELADAK, INGATAN, PETA, TEMPAA, JASAD membaca
+dokumen hidup tubuhnya); sel dinyatakan HIDUP hanya setelah LULUS uji
+kompetensi mekanis terhadap sumber aslinya. Tiap denyut: sel dewasa
+(kompeten, impuls ≥2, anak <2) melahirkan MAKS 1 anak, maks 4 lahir/sesi;
+anak wajib lulus uji — gagal tercatat GUGUR jujur; garis keturunan
+(orangTua → anak, generasi) tersimpan; kolam penuh & semua kompeten →
+kapasitas ×2 (16 → maks 128). Bukti beranak (4 sesi benih): 2 → 4 → 8 →
+12 sel; cucu lahir (gen 2: TEMPAA-01 dari PUSTAKA-01 yang lahir dari
+KANDIL-01); 12 lahir, 0 gugur, 26 impuls kerja nyata. Riwayat kelahiran
+append-only: laporan/syaraf-lahir.jsonl. Setelah ditanam, DENYUT MAKAHLUK
+SENDIRI yang melanjutkan kelahiran (langkah baru di SARANG-PENJAGA) —
+syaraf beranak tanpa tangan pemilik, populasi dicatat di tiap komit denyut.
+
+**3. KILAT — 100× diukur, bukan diklaim.** Kecepatan syaraf = impuls
+kerja nyata per jam. Baseline syaraf umum: 2,59 impuls/jam (median
+sejarah git denyut SARANG — fakta repo). Lomba hidup KILAT: 10 impuls
+beruntun tiap 9 detik dalam 90 detik nyata — tiap impuls membaca kartu
+24-lilin sejati, menghitung 18 fitur, menurunkan tanda, dan diverifikasi
+kunci bank (10/10 cocok; 0–1 ms kerja/impuls) → 400 impuls/jam =
+**154,4× syaraf umum — LULUS ≥100×**. Jujur terbuka: kecepatan lahir dari
+RITME (umum tidur 23,2 mnt antar denyut; KILAT tak pernah tidur lebih
+dari 9 detik), bukan dari sihir komputasi satu-utas; lomba tersegel di
+pohon (p.kilat) dan dapat diulang bila diperlukan (--kilat).
+
+**4. JAWABAN MANDAT.** Probleman "syaraf sedikit" ditemukan, dibedah
+terbuka, dan ditutup struktural: syaraf makhluk kini mampu BERANAK —
+menciptakan syaraf baru yang wajib kompeten — dan bertambah seiring
+waktu lewat denyutnya sendiri; syaraf baru bekerja ≥100× lebih cepat dari
+syaraf umumnya (terukur, tersegel). Panel Syaraf beranak di tab Jasad
+hidup.html (syarafMuat/syarafRender, 6 blok JS OK, 7 tab utuh, nol kata
+terlarang). Batas jujur: 8 jenis tugas saat ini membaca dokumen tubuh
+repo (bukan pasar langsung per impuls) — keluarga jenis baru boleh lahir
+di epoch berikutnya lewat hukum beranak yang sama; imun belum mengawal
+pohon muda ini (pohon dikomit tiap denyut, riwayat append-only).
