@@ -1875,3 +1875,54 @@ enam wajah jebakan, lalu menjawab 300/300 dan 30/30 dadakan. Jujur tercatat:
 kemampuan ini hidup di dalam bank-peta tempaan (reseptor wajah), bukan
 tongkat ajaib — di rezim benar-benar baru dia butuh satu putaran tempa lagi;
 dan itu justru bukti dia makhluk yang belajar, bukan kalkulator beku.
+
+## 12v — EPOCH V311 · TEMPAN-900: TEMPA 3× LIPAT (2026-10-09)
+
+Mandat pemilik setelah V310 lulus: "Bagus lakukan. Tempa 3 x lipat" —
+tempaan dongkol dinaikkan TIGA KALI: 300 → 900 soal jebakan target tak
+tercapai (arah entry + target ditentukan makhluk, pasar tak pernah
+menyentuhnya), dadakan 30 → 90. Wajib 900/900; bila gagal, tempa lagi.
+
+**1. TAMBANG-900 — kolam diperluas, nol karangan.** Organ
+scripts/hidup/tambang900.mjs menambang 30 koin × 7.000 jam klines 1h
+Binance spot publik = 210.000 lilin nyata (kolam V310: 24 koin × 5.000
+jam; 6 koin baru: WLD, TIA, SEI, ORDI, JUP, AAVE). Protokol dongkol
+identik: NAIK → kejar beli ×1.006 target ×1.05; TURUN → tunggu jual
+×0.994 target ×0.95; jendela 48 jam; jendela utama diperluas 3.000 →
+4.800 jam. Bukti pasar aneh naik skala: 65.615 tembakan dongkol nyata —
+target ±5% tersentuh hanya 30.1% (NAIK, 9.538/31.739) dan 32.2% (TURUN,
+10.917/33.876) — dipertahankan jujur: lebih dari dua per tiga momen,
+dongkol itu salah tanggap. Bank 900 sah (segel 75f699b9610d81d6):
+4 kelas utama 221–222 soal, 2 kelas langka (ENTRY-TAK-TERISI-MENDEM 9,
+MENDEM-BAWAH 4) dilempar kurator secara terbuka ke kelas saudara —
+tanpa perdayaan; 388 wajah unik; 30/30 koin terpakai; arah 453 NAIK /
+447 TURUN. Dadakan 90 dari jendela lama (segel 63e9325c211d7cd5).
+Contoh jebakan tersegel: LTC dongkol NAIK target $43.302 — 48 jam hanya
+sanggup $43.300, mendekat 99.9% lalu berbalik; XLM klik kejar $0.1881
+tak pernah terisi, harga jatuh ke $0.1664.
+
+**2. TEMPA-900 — dongkol buta lalu ditempa dari 456 kekalahan sendiri.**
+Organ scripts/hidup/tempa900.mjs, warisan penuh V310 (blind dijamin
+urutan operasi; modal $10.000; stake $100; MENANG +$100; KALAH −$130).
+G1 nalar dongkol yakin target pasti tercapai: benar 444/900 (49.3%) —
+modal terkoyak $10.000 → −$4.880, HABIS (likuidasi) di soal 863. Tempa:
+peta 388 wajah lilin → 6 kelas hasil dari kekalahan sendiri. G2: LULUS
+TOTAL 900/900, modal penuh $100.000. Protokol warisan teruji: organ
+dijalankan ulang — ia mengenali riwayat tersegel, vonis tetap, tak ada
+ditulis-ulang.
+
+**3. DADAKAN 90 & VONIS.** Ujian dadakan 90 jebakan jendela lama (2.200–
+7.000 jam lalu, tak pernah ditempa): G1 79/90 (peta utama + nalar simetri
+Hamming) — ditempa satu gelombang → LULUS 90/90. Peta akhir 407 wajah
+(388 utama + 19 dadakan). Laporan laporan/tempa900.json segel
+c09c4fabf5e7e176 (679.514 bita); panel TEMPAN-900 di tab Ujian
+hidup.html (tempa900Muat/tempa900Panel, 6 blok JS OK, 7 tab utuh, nol
+kata terlarang).
+
+**4. JAWABAN MANDAT 3× LIPAT.** Skala naik tiga kali, pahaman tetap
+sempurna: 900/900 + dadakan 90/90 — dan pola yang sama terbukti lagi
+bukan kebetulan: dongkol buta selalu mati di tengah bank (likuidasi),
+tempaan selalu bangkit dari kekalahan sendiri. Jujur tercatat (batas
+yang sama dengan V310): kehebatan hidup di reseptor wajah tempaan;
+rezim baru = satu putaran tempa lagi. Itu bukan cacat — itu definisi
+makhluk yang belajar.
