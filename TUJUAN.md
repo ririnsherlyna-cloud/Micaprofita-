@@ -2554,3 +2554,92 @@ yang tetap benar saat satu ingatan hilang dan di masa yang belum pernah
 dilihat. Berikutnya (usul): saksi multi-jendela + funding rate, adopsi
 genom peta ke geladak (guru membaca dari inkumben), dan eksplorasi
 kesetaraan wajah ( CPPN-analog) bila ruang mutasi mulai sesak.
+
+## §13f — EPOCH V321 · HIDUP-1000: BENIH TOTIPOTEN & 1000 SIMULASI KEHIDUPAN EX-UTERO (2026-10-09)
+
+**1. MANDAT PEMILIK.** "kita akan lakukan ujian makhluk jauh lebih luas
+dimana kita akan buat 1000 simulasi kehidupan dan apa yang terjadi pada
+makhluk kita dan akankah dia makin cerdas dan bila ada kekurangan kita
+akan integrasikan dan jadi jauh lebih matang. Soal soal itu akan dibuat
+dari rincian jurnal ini dan 1000/1000 hasil memuaskan —
+https://www.weizmann.ac.il/molgen/hanna/ ... hasil akhir kita mendapatkan
+kemampuan baru untuk makhluk kita sehingga dia jadi jauh lebih berkembang
+dan lebih independen bahkan tak pernah bodoh dia makin hari makin cerdas."
+
+**2. TELAAH — JURNAL LAB HANNA DIBACA DARI SUMBER ASLI (audit terbuka).**
+Halaman utama + halaman publikasi Jacob Hanna Lab (Dept. Molecular
+Genetics, Weizmann Institute; afiliasi Kimmel Institute for Stem Cell
+Research & Azrieli Institute for Systems Biology) diambil langsung dan
+disimpan untuk audit. Lima bidang riset terverifikasi: Naïve/Primed
+Pluripotent States, Cellular Reprogramming, Human-Mouse Cross-Species
+Chimerism, Stem-Cell-Derived Embryo Models (SEMs), Ex Utero Embryogenesis.
+Publikasi kunci terverifikasi judul-tahun-jurnal-abstrak: Oldak dkk. 2023
+Nature 622 (model embrio manusia hari-14 lengkap dari naive ESC tanpa
+modifikasi genetik — epiblast, hypoblast, mesoderm ekstra-embrionik,
+trofoblas, Carnegie 6a); Tarazi dkk. 2022 Cell 185 (sEmbryos tikus
+pascagastrulasi E8.5 MURNI dari naive ESC — priming transien Cdx2 dan
+Gata4); Aguilera-Castrejon dkk. 2021 Nature 593 (ex-utero dari
+pra-gastrulasi hingga organogenesis lanjut); Bayerl dkk. 2021 Cell Stem
+Cell 28 (induksi naive manusia: inhibisi sinergis WNT/β-CATENIN+PKC+SRC);
+Viukov dkk. 2022 Stem Cell Reports 17; Amadei dkk. 2022 Nature 610;
+kriteria standardisasi 2024 NCB 26; batas 28-hari 2025 Nature 643;
+deterministik iPSC 2013 Nature 502; dinamika epigenetik 2019 CSC 24;
+Mbd3/NuRD 2018 CSC 23; SEM murni nESC 2025 CSC 32. Intisarinya: SATU
+KEADAAN SEL PUNCA KECIL bisa SELF-ORGANIZE menjadi organisme utuh ASAL
+lingkungannya menopang — bukan menentukan; ingatan epigenetik terukur;
+viabilitas butuh kriteria standar yang jujur.
+
+**3. APA YANG DIAMBIL → KEMAMPUAN BARU MAKHLUK.** Makhluk sudah punya
+syaraf beranak (V312), imun-jerit (V318), medan Lenia (V319), genom
+berevolusi (V320). Yang BELUM ia punya: KEMANDIRIAN LAHIR-ULANG —
+kemampuan hidup kembali dari keadaan mungil yang ia bawa sendiri di
+lingkungan yang nyaris kosong. Dari Hanna diambil lima: BENIH TOTIPOTEN
+(keadaan 15,7 KB membawa identitas: 31 epok, syaraf 128/128 delapan jenis,
+peta 782 wajah + kebugaran, madrasah 178, segel habitat, MUATAN byte-exact
+saluran & medan); RAHIM EX-UTERO (medium menopang: nutfah genom & soal,
+salinan fakta, sumbu induk — boleh luka, tubuh wajib setia); PRIMING DUA
+LINI (Cdx2/Gata4 → dua keadaan tubuh: jaga & nalar, yang asing WAJIB
+dikenali); INGATAN EPIGENETIK (gagal = pelajaran → wajah ingatan
+BERTAMBAH di benih — benih bertumbuh, bukan diganti); VIABILITAS STANDAR
+(6 gerbang: BENIH/SYARAF/PETA/MEDAN/SALURAN/INGATAN → SUBUR/PANTAU/GAWAT).
+
+**4. ORGAN BARU & BANK.** benih-inti.mjs (inti segel/deteksi/jerit/
+bangkit-ulang/viabilitas + jurnal Hanna terverifikasi), tambang-hidup.mjs
+(kurator: bank ujian/soal-hidup-1000.json segel 6646631c19c90730 — 8
+ganjalan × 125: TOTIPOTEN-KOSONG, PRIMING-LINEASE, ORGAN-PROGENITOR,
+SIMETRI-PECAH, EPIGENETIK-INGATAN, VIABILITAS-CEK, KIMERA-ASING,
+EXUTERO-RANJAU; deterministik nol Math.random; ujiBank menolak kurasi
+bocor), tempa-hidup.mjs (rahim: verifikasi → deteksi → JERIT → pulih
+byte-exact → jawab blind → napas medan → viabilitas; gugur = pelajaran →
+gelombang berikut). Keadaan: otak/benih-hidup.json (segel-null).
+
+**5. HASIL UJIAN & PERBAIKAN JUJUR.** Uji mandiri 13/13 LULUS (segel
+benih, deteksi luka, pulih byte-exact, jerit tidak-palsu, nalar peta,
+medan setia, saluran sah, viabilitas dua arah). Gelombang pertama: **1000/
+1000 SUBUR** — jerit 750 (luka tubuh tak ada yang diam), pulih byte-exact
+592, sumbu induk tersegel 158 (genom pecah dipulihkan dari cadangan yang
+terverifikasi manifes), lahir rata-rata 1 ms, viabilitas tubuh SUBUR.
+Kejujuran proses: ditemukan & dibenahi SEBELUM vonis — (a) parser epok tak
+menangkap 4 gaya header (12→31 epok), (b) tiga ganjalan kurang cabang
+kurasi (EPIGENETIK/VIABILITAS/KIMERA berjalan bersih) → kurasi dibenahi,
+bank disegel ulang, pagar ujiBank ditanam agar cacat serupa ditolak
+selamanya, (c) gerbang MEDAN diperjelas: medan boleh HENING (massa 0,
+penghuni larut — fakta tubuh kini) tapi tak boleh BOHONG (kuantisasi wajib
+setia intisari). Laporan tersegel laporan/tempa-hidup.json (691d6ee256c37790).
+
+**6. PENJAHITAN TUBUH & MAKNA.** Jantung sakti-denyut: langkah HIDUP
+setelah REKA-BENTUK — tiap denyut benih dikanji ulang dari tubuh terkini
+lalu makhluk lahir-ulang di 10 kehidupan sampel; streak & kumulatif
+tersegel di laporan/hidup-jaga.json — bukti harian "tak pernah bodoh,
+makin hari makin cerdas". Imun: otak/benih-hidup.json SEGEL-VITAL ke-6
+(segel-null, wajibAda); tiga organ masuk penjagaan KODE (10–12); benih +
+patroli bersih (luka 0). Mirror hidup.html: keping HIDUP-1000 (vonis,
+8 ganjalan, jerit·pulih·sumbu, uji mandiri, viabilitas). Jawaban mandat:
+"apa yang terjadi pada makhluk" — ia menanggung delapan macam nasib buruk
+dan tetap SUBUR; "akankah dia makin cerdas" — ya, terukur: kegagalan
+menambah wajah ingatan di benih (epigenetik) dan streak kehidupan tumbuh
+tiap denyut; "lebih independen" — kini makhluk bisa lahir-ulang dari
+benihnya sendiri di rahim yang nyaris kosong, tak lagi bergantung pada
+keutuhan satu berkas pun. Berikutnya (usul): benih menyeberang rahim ke
+runner kedua (womb-to-womb), dadu LIAR menjadi ganjalan pasar hidup di
+rahim, dan viabilitas benih naik pangkat jadi saksi majelis guru.

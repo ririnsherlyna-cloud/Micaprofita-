@@ -332,6 +332,10 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
         <div id="jvReka"><div class="kecil">membaca silsilah evolusi…</div></div>
       </div>
       <div class="blok">
+        <h4>HIDUP-1000 <em>· V321 — intisari lab Hanna (Weizmann) hidup: benih totipoten, 1000 simulasi kehidupan ex-utero</em></h4>
+        <div id="jvHidup"><div class="kecil">membaca rahim &amp; benih…</div></div>
+      </div>
+      <div class="blok">
         <h4>Sumber kejujuran <em>· nol karangan</em></h4>
         <div class="kecil">Lilin 1m (gerbang Binance publik, multi-koin) · laporan/sasaran-terkini.json · otak/penjaga-keadaan.json · ruang-hidup/keadaan.json · ruang-hidup/tubuh.json (segel gerak). Bila sumber gagal diambil: jasad MATI-PENUH-NALAR — tubuh kembali ke perilaku dasar dan alasannya ditulis terbuka di sini. Audit langsung: <code>window.__v297</code>, <code>window.__v299</code>, <code>window.__v300</code>, <code>window.__v301</code>.</div>
       </div>
@@ -396,7 +400,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
    penonton, ingatan resmi = commit GitHub, tubuh = fungsi kerja nyata. ================ */
 /* ================= IDENTITAS & KONSTANTA ================= */
 const RUMAH = {pemilik:'ririnsherlyna-cloud', repo:'Micaprofita-', cabang:'main'};
-const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json', tempa:'laporan/tempa100.json', tempa2:'laporan/tempa200.json', tempa3:'laporan/ujian500.json', tempa300:'laporan/tempa300.json', tempa900:'laporan/tempa900.json', squeeze:'laporan/tempa-squeeze.json', jejak:'laporan/tempa-jejak.json', gembok:'laporan/gembok.json', syaf:'otak/syaraf-pohon.json', liar:'otak/intisari-liar.json', jerit:'laporan/jerit.jsonl', ujiJahat:'laporan/uji-jahat-jaga.json', syarafFinal:'laporan/syaraf-final.json', medan:'otak/medan-keadaan.json', reka:'otak/reka-bentuk.json', imun:'laporan/imun.json', ujiHidup:'laporan/uji-kehidupan.json', tubuh:'laporan/uji-tubuh.json', bedahTangan:'laporan/bedah-tangan.json'};
+const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json', tempa:'laporan/tempa100.json', tempa2:'laporan/tempa200.json', tempa3:'laporan/ujian500.json', tempa300:'laporan/tempa300.json', tempa900:'laporan/tempa900.json', squeeze:'laporan/tempa-squeeze.json', jejak:'laporan/tempa-jejak.json', gembok:'laporan/gembok.json', syaf:'otak/syaraf-pohon.json', liar:'otak/intisari-liar.json', jerit:'laporan/jerit.jsonl', ujiJahat:'laporan/uji-jahat-jaga.json', syarafFinal:'laporan/syaraf-final.json', medan:'otak/medan-keadaan.json', reka:'otak/reka-bentuk.json', hidup:'laporan/tempa-hidup.json', jaga:'laporan/hidup-jaga.json', imun:'laporan/imun.json', ujiHidup:'laporan/uji-kehidupan.json', tubuh:'laporan/uji-tubuh.json', bedahTangan:'laporan/bedah-tangan.json'};
 const MAXBACA = 400000;                 // batas baca per file (byte) — kejujuran parsial
 const FASE = ['MENGAMATI','MEMAHAMI','MENCOBA','MELAKUKAN','MENGEVALUASI','MENEMUKAN','MEMBANGUN','MENINGKATKAN','MENGAMATI-KEMBALI'];
 const INTEGERS = ['versi.json','gerbang.json','brain.json','arena-keadaan.json','otak/genome-server.json','otak/penjaga-keadaan.json','otak/performa.json','memori/terkini.json','README.md'];
@@ -536,6 +540,7 @@ async function muatMemoriGitHub(){
     jeritMuat(); /* V318-JERIT: fosil jerit + vonis uji jahat — muat tak-blok */
     medanMuat(); /* V319-MEDAN: medan hayat kontinu (Lenia hidup) — muat tak-blok */
     rekaMuat(); /* V320-REKA-BENTUK: silsilah evolusi genom peta — muat tak-blok */
+    hidupMuat(); /* V321-HIDUP-1000: rahim dan benih totipoten — muat tak-blok */
     const ing = JSON.parse(await ghAmbil(INGATAN_GH.ingatan));
     S1.ingatan = ing; S1.at = sekarang(); S1.stale = false;
     if(ing.kelahiran) S.stat.lahirAt = Date.parse(ing.kelahiran) || S.stat.lahirAt;
@@ -3006,6 +3011,28 @@ function rekaRender(){
     ${baris('saksi dunia', sx.simbol?`${sx.simbol} <b>${sx.benar!=null?sx.benar+'/'+sx.total:'—'}</b> (lilin nyata segar — saksi, bukan hakim)`:'—')}
     <div style="margin-top:5px"><span class="kecil">silsilah terbaru:</span>${sil||'<div class="kecil">—</div>'}</div>
     <div class="kecil" style="margin-top:5px">intisari reconfigurable_organisms (Kriegman dkk, PNAS 2020) hidup-hidup di tubuh: genom kecil → tubuh penuh · mutasi non-netral · wajah beku bank utama (penguasaan 2000/2000 tak boleh digadakan) · anak bersaing dengan induknya saja · gerbang tangguh: jawaban harus setia saat SATU pelajaran dilupakan (pelajaran sim2real: juara rapuh gagal pindah ke dunia nyata) · saksi dunia tak pernah jadi hakim. Keadaan: otak/reka-bentuk.json · segel ${p.segel&&p.segel.hash?('#'+p.segel.hash):'—'}</div>`;
+}
+/* ================= V321-HIDUP-1000: rahim & benih totipoten ================= */
+async function hidupMuat(){
+  try{ const p=JSON.parse(await ghAmbil(INGATAN_GH.hidup));
+    if(p && p.protokol){ S.hidup1000=p; hidupRender(); }
+  }catch(e){ /* rahim belum melahirkan — jujur */ }
+}
+function hidupRender(){
+  const el=document.getElementById('jvHidup'); if(!el) return;
+  const p=S.hidup1000;
+  if(!p){ el.innerHTML='<div class="kecil">rahim belum melahirkan — organ tempa-hidup.mjs yang melangsungkannya saat ujian. Belum ada = belum ada, tanpa karangan.</div>'; return; }
+  const g=(p.gelombang||[])[p.gelombang.length-1]||{};
+  const baris=(k,v)=>`<div class="baris"><span class="k">${k}</span><span class="v">${v}</span></div>`;
+  const dist=Object.entries(p.dist||{}).map(([k,v])=>`${k.split('-')[0]}·${v}`).join(' · ');
+  const jt=g.jeritTotal;
+  el.innerHTML=`
+    ${baris('vonis', `<b>${p.vonis||'—'}</b>`)}
+    ${baris('8 ganjalan (×125)', dist||'—')}
+    ${baris('jerit · pulih · sumbu', jt?`<b>${jt.jerit}</b> · <b>${jt.pulih}</b> · <b>${jt.sumbu}</b> (luka diteriakkan · pulih byte-exact · sumbu induk tersegel)`:'—')}
+    ${baris('uji mandiri', `${(p.ujiMandiri||[]).filter(u=>u.ok).length}/${(p.ujiMandiri||[]).length} LULUS · lahir ${g.lahirMsMean!=null?g.lahirMsMean+'ms':'—'}`)}
+    ${baris('viabilitas tubuh', `${p.viabilitasTubuh?p.viabilitasTubuh.putusan:'—'} · benih #${(p.benihSegel||'—').slice(0,8)} · bank #${(p.bankSegel||'—').slice(0,8)}`)}
+    <div class="kecil" style="margin-top:5px">intisari lab Hanna (Weizmann, jurnal asli dibaca 2026-10-09) hidup di tubuh: benih totipoten kecil membawa identitas-epok-syaraf-peta-muatan → 8 ganjalan kehidupan ex-utero (totipoten kosong · priming dua lini Cdx2/Gata4 · organ progenitor · simetri pecah · ingatan epigenetik · cek viabilitas · kimera asing · ranjau ex-utero) → deteksi-jerit-pulih-jawab-napas → 6 gerbang viabilitas → SUBUR. Gugur = pelajaran → wajah ingatan bertambah di benih (epigenetik) — tak pernah bodoh, makin hari makin cerdas. Keadaan: otak/benih-hidup.json · laporan/tempa-hidup.json · segel ${p.segel&&p.segel.hash?('#'+p.segel.hash):'—'}</div>`;
 }
 /* ================= RENDER OVERLAY (satu-satunya tempat teks) ================= */
 let S_TAB='pikir';
