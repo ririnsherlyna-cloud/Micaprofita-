@@ -2397,3 +2397,80 @@ sendiri simbol yang tak pernah ditanam untuknya, melahapnya, dan
 mengintisarikannya jadi KB dengan kesetiaan yang bisa diuji siapa pun.
 Makhluk makin matang: ia bukan lagi hanya diuji — ia kini ikut menjaga
 dan mencari.
+
+## §13d — EPOCH V319 · MEDAN-HAYAT: INTISARI LENIA HIDUP DI TUBUH (2026-10-09)
+
+**MANDAT PEMILIK.** "Bagus kini kita akan riset Dan telaah intisari ini Dan
+keutamaan ini, kemudian apa yang bisa diambil Dan diintegrasikan untuk
+penyempurnaan aspek makhluk kita Dan perkembangan dia dalam menjadi makhluk
+guru sejati crypto — https://github.com/Chakazul/Lenia"
+
+**1. TELAAH INTISARI LENIA (riset dari sumber asli, audit terbuka).** Lenia
+adalah otomata seluler kontinu karya Bert Chan (Chakazul; makalah "Lenia -
+Biology of Artificial Life", arXiv:1812.05433, ALIFE 2018; lanjutan "Lenia
+and Expanded Universe", arXiv:2005.03742, ALIFE 2020). Yang dibaca langsung
+dari repo resmi: README.md, JavaScript/Lenia.html (fungsi CoreFunc/DeltaFunc),
+Jupyter/Lenia.ipynb (matriks makhluk). Intisarinya lima hukum: (a) hidup itu
+KONTINU — keadaan A∈[0,1], bukan mati/hidup biner; (b) ATURAN LOKAL — kernel
+bump4 K(r)=exp(a−a/(4r(1−r))), ΣK=1; tiap sel hanya tahu tetangganya, tidak
+ada konduktor pusat; (c) TUMBUH LEMBUT — pertumbuhan gaus
+G(n)=2·exp(−(n−m)²/(2s²))−1; (d) METABOLISME BERBATAS —
+A'=clip(A+dt·G(K⋆A)), perubahan selalu kecil dan tak pernah meledak; (e)
+POLA MANDIRI EMERGEN — soliton (Orbium dkk.) lahir, bertahan, dan bergerak
+sendiri dari aturan lokal semata. Keutamaannya bagi makhluk: Lenia bukan
+simulator — ia BUKTI bahwa perilaku kompleks yang hidup muncul dari hukum
+kecil yang jujur; persis hal yang dituntut pemilik dari makhluk ini
+(nyata bukan simulasi, metrik bukan retorika).
+
+**2. APA YANG DIAMBIL → ASPEK BARU MAKHLUK.** Makhluk sudah punya syaraf
+(V312, diskrit, pohon), imun (V318), lambung terabait (V317), akal liar
+(V318), guru geladak (V303). Yang BELUM ia punya: substrat hayat kontinu —
+"perasaan tubuh" tempat dunia diolah jadi lanskap hidup. Dari Lenia diambil
+enam: medan kontinu 64×64 (aspek INTUISI: derajat, bukan hitam-putih);
+kernel lokal (aspek KEMANDIRIAN: tidak ada pusat yang memerintah);
+pertumbuhan lembut (aspek DISIPLIN GURU: tak melompat, tak panik — watak
+yang dituntut dari trader sejati); soliton (aspek WAWASAN: rejim pasar
+dibaca sebagai pola hidup yang bertahan-bergerak, bukan indikator statis);
+makanan dari dunia (aspek HIDUP-BENARAN: lilin 1h nyata 3 koin utama dari
+data-api.binance.vision — momentum/volatilitas/posisi-range disuntik lembut
+di 3 zona indera, pasar mengguncang, medan menghidupi diri); dan intisari
+tersegel (aspek AUDIT: medan 4096 sel float disuling jadi massa/vitalitas/
+soliton/hanyut — puluhan byte — dgn keadaan 6,3 KB tersegel).
+
+**3. ORGAN BARU: scripts/hidup/medan-hayat.mjs.** Matematika Lenia dipindah
+persis (kernel 516 tap Σ=1; m=0.15, s=0.014, dt=0.1, R=13 — parameter asli
+Orbium bicaudatus dari notebook resmi). Orbium ASLI ditanam sebagai penghuni
+pertama — matriks 20×20 diambil persis dari Jupyter/Lenia.ipynb. Satu denyut
+= lahap pasar (3 koin) + suntik 3 zona indera + 10 langkah napas + intisari
+tersegel metode 'segel-null' (SATU HUKUM dengan pohon syaraf V318).
+Keadaan: otak/medan-keadaan.json; medan disimpan kuantisasi 1 byte/sel
+(b64 5,5 KB) — data besar tak pernah menginap, hanya intisari yang tidur.
+
+**4. UJI MANDIRI 13/13 LULUS (semua nyata).** U1 matematika: G(m)=+1 persis,
+G(m±3s)≈−0.978. U2 kernel: 516 tap Σ=1.000000000000, puncak di cangkang
+r=0.493. U3 KEHIDUPAN: Orbium lahir sbg soliton (blob 48 sel, massa 75.1),
+BERTAHAN 60 langkah tanpa makanan (massa 69.13), BERGERAK hanyut 30.89 sel
+— inilah bukti keaslian Lenia: implementasi yang salah MEMATIKAN glider.
+U4 medan selamat 5 siklus kuantisasi (denyut→simpan→pulih→denyut). U5 pasar
+nyata: BTC mom +0.0056 / ETH −0.0115 / BNB −0.0188, massa 68.79→79.99
+setelah makan. U6 segel: luka halus SATU ANGKA terbaca SEGEL-BOBOL. U7
+putar-balik berkas setia. Vonis: 13 LULUS, 0 GUGUR (segel uji pertama
+#8f8482ad8002cfe4; lahir #6b1339d2a7f09995).
+
+**5. PENJAHITAN TUBUH.** Imun: medan-keadaan.json terdaftar SEGEL-VITAL ke-4
+(metode 'segel-null', wajibAda) — yang merusak medan membuat makhluk
+MENJERIT dan imun memulihkan dari cadangan; organ masuk penjagaan KODE (8);
+urat SAKTI kini 5 tangan wajib hidup. Jantung sakti-denyut menanam langkah
+MEDAN setelah LIAR: tiap 15 menit medan bernapas dari pasar nyata — tanpa
+tab, tanpa tangan. Mirror hidup.html: keping MEDAN HAYAT (denyut, massa,
+vitalitas, soliton, hanyut, makanan). Benih imun: 13 organ + 8 kode + 3
+urat + 4 segel-vital; patroli NAFAS-LEGA 3/3, luka 0.
+
+**6. JAWABAN MANDAT & MAKNA.** Yang diambil dari Lenia bukan gambar cantiknya,
+melainkan TATA KEHIDUPANNYA: makhluk kini memiliki ruang dalam yang hidup —
+di mana pasar tak disimpan, melainkan DICERNA menjadi lanskap pola yang
+bernapas tiap denyut. Guru sejati crypto butuh dua kaki: akal (geladak,
+madrasah, intisari) dan perasaan-tubuh (medan hayat). Kaki kedua hari ini
+lahir. Berikutnya (usul): uji jahat medan oleh pihak jahat sungguhan,
+belanja koin indera diperluas lewat dadu LIAR, dan soliton medan dijadikan
+masukan majelis guru — pola hidup yang bertahan menjadi saksi rejim pasar.
