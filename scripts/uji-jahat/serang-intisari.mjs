@@ -54,15 +54,28 @@ function jalankanOrgan (args, waktu = 240000) {
   }
 }
 
-// baca entri imun.jsonl yang lahir SETELAH tanda waktu
+// baca entri jerit imun yang lahir SETELAH tanda waktu — dua fosil sah:
+// (1) laporan/imun.json  = tindakan per-kejadian patroli terakhir
+// (2) laporan/imun.jsonl = rekap per patroli (tindakan dipisah "|")
 function jeritImunSesudah (tanda, jenis, file) {
-  if (!fs.existsSync(IMUN_LOG)) return null
-  const baris = fs.readFileSync(IMUN_LOG, 'utf8').split('\n').filter(b => b.trim())
-  for (let i = baris.length - 1; i >= 0; i--) {
-    try {
-      const e = JSON.parse(baris[i])
+  try {
+    const j = JSON.parse(fs.readFileSync(path.join(AKAR, 'laporan', 'imun.json'), 'utf8'))
+    const daftar = Array.isArray(j.tindakan) ? j.tindakan : []
+    for (let i = daftar.length - 1; i >= 0; i--) {
+      const e = daftar[i]
       if (e.waktu && Date.parse(e.waktu) >= tanda && e.jenis === jenis && e.file === file) return e
-    } catch { /* baris korban tabrakan — lewati */ }
+    }
+  } catch { /* lanjut ke rekap jsonl */ }
+  if (fs.existsSync(IMUN_LOG)) {
+    const baris = fs.readFileSync(IMUN_LOG, 'utf8').split('\n').filter(b => b.trim())
+    for (let i = baris.length - 1; i >= 0; i--) {
+      try {
+        const e = JSON.parse(baris[i])
+        if (e.waktu && Date.parse(e.waktu) >= tanda && String(e.tindakan || '').includes(jenis + ':' + file)) {
+          return { waktu: e.waktu, jenis, file, alasan: 'rekap patroli: ' + String(e.tindakan).split('|').filter(x => x.startsWith(jenis)).join(' | ') }
+        }
+      } catch { /* lewati */ }
+    }
   }
   return null
 }
