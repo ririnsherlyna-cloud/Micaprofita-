@@ -1824,6 +1824,11 @@ let st = null;          // keadaan arena terakhir
 let stAt = 0;           // waktu data diterima
 let mode = 'snapshot';  // 'live' | 'snapshot'
 let liveFail = 0;
+// ---- V314 SALURAN-PULIH: keadaan denyut sambung-ulang (backoff, tak pernah macet) ----
+let saluranCoba = 0;          // gagal beruntun sejak terakhir nyala
+let saluranJeda = 6000;       // jeda denyut berikutnya (6→12→24→48→60 dtk, cap)
+let saluranTimer = null;
+let saluranGerbangAt = 0;     // baca gerbang.json terakhir
 let duel = false;
 let busy = false;
 let chartMeta = null;
@@ -1851,11 +1856,19 @@ async function muatLive() {
   if (!LIVE) return;
   try {
     const d = await ambil(LIVE.url.replace(/\/+$/, '') + '/api/arena', 15000);
+    const tadinyaPutus = mode !== 'live' && saluranCoba > 0;
     terima(d, 'live');
+    if (tadinyaPutus) { console.log('[saluran] pulih sendiri setelah ' + saluranCoba + ' gagal beruntun'); }
+    saluranCoba = 0; saluranJeda = 6000; // pulih → napas kembali normal
   } catch (e) {
     liveFail++;
     if (liveFail >= 2 && mode === 'live') mode = 'snapshot';
+    // V314 SALURAN-PULIH: backoff sopan — pihak yang tumbang tidak dihujan tembakan,
+    // tapi saluran TIDAK PERNAH berhenti mendengar (jeda cap 60 dtk, probe terus)
+    saluranCoba++;
+    saluranJeda = Math.min(60000, 6000 * Math.pow(2, Math.min(4, saluranCoba - 1)));
     chipSumber();
+    jadwalSaluran();
   }
 }
 
@@ -1904,11 +1917,11 @@ async function sambungOtomatis() {
 function chipSumber() {
   const el = $('#hSumber');
   if (mode === 'live' && LIVE) { el.className = 'chip em'; el.textContent = 'HIDUP · tersambung arena wadah · 6 dtk'; }
-  else if (LIVE) { el.className = 'chip ros'; el.textContent = 'HIDUP TERPUTUS · tampil cermin'; }
+  else if (LIVE) { el.className = 'chip ros'; el.textContent = 'HIDUP TERPUTUS · MENYAMBUNG-ULANG ke-' + (saluranCoba + 1) + ' (jeda ' + Math.round(saluranJeda / 1000) + ' dtk) · tampil cermin'; }
   else {
     const usia = st ? Math.max(0, Math.round((Date.now() - eksporAt()) / 60000)) : null;
     el.className = 'chip';
-    el.textContent = 'CERMIN SNAPSHOT' + (usia !== null ? ' · usia ' + (usia < 1 ? '<1' : usia) + ' mnt' : '');
+    el.textContent = 'CERMIN SNAPSHOT' + (usia !== null ? ' · usia ' + (usia < 1 ? '<1' : usia) + ' mnt' : '') + ' · mendengarkan gerbang';
   }
 }
 function eksporAt() {
@@ -2304,10 +2317,15 @@ async function tanya(q) {
   };
   try {
     if (!LIVE) { jawabLokal(''); return; }
+    // V314 SALURAN-PULIH: guru cepat-gugur (batas 12 dtk) — pihak tumbang tak boleh
+    // membuat percakapan menghang; otak mandiri mengambil alih dalam kedipan
+    const ctlG = new AbortController();
+    const tG = setTimeout(() => ctlG.abort(), 12000);
     const r = await fetch(LIVE.url.replace(/\/+$/, '') + '/api/guru', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question, duel }),
+      body: JSON.stringify({ question, duel }), signal: ctlG.signal,
     });
+    clearTimeout(tG);
     const d = await r.json();
     if (!r.ok) throw new Error(d.error || 'Gagal menjawab');
     const src = (d.sources || []).slice(0, 4).map((s) => `<li><a href="${esc(s.url)}" target="_blank" rel="noreferrer">${esc(s.title)}</a></li>`).join('');
@@ -2326,11 +2344,40 @@ async function tanya(q) {
     holder.innerHTML = `<div class="q"><p class="t">Pertanyaan</p><p class="b">${esc(question)}</p></div>` + html;
   } catch (e) {
     // ==== V270: guru LLM putus ≠ diam — otak mandiri mengambil alih ====
-    jawabLokal('Guru LLM di wadah sedang tak terjangkau (' + e.message + ') — otak mandiriku mengambil alih, tetap cerdas tanpa server.');
+    // V314 SALURAN-PULIH: kegagalan guru juga memberi makan backoff saluran
+    liveFail++; saluranCoba++;
+    saluranJeda = Math.min(60000, 6000 * Math.pow(2, Math.min(4, saluranCoba - 1)));
+    jadwalSaluran();
+    jawabLokal('Guru LLM di wadah sedang tak terjangkau (' + e.message + ') — otak mandiriku mengambil alih, tetap cerdas tanpa server. Saluran terus menyondong pintu: ke-' + (saluranCoba + 1) + ' dalam ' + Math.round(saluranJeda / 1000) + ' dtk.');
   } finally {
     busy = false; btn.disabled = false; btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
   }
 }
+// ---------- V314 SALURAN-PULIH: denyut sambung-ulang ----------
+// Hukum cermin: TIDAK PERNAH MACET (jeda naik tapi probe terus),
+// TIDAK PERNAH BISU (snapshot cermin selalu tampil), SOPAN KE PIHAK SANA
+// (jeda backoff berbatas; gerbang.json dibaca rajin saat putus, sopan saat nyala).
+function jadwalSaluran() {
+  clearTimeout(saluranTimer);
+  saluranTimer = setTimeout(denyutSaluran, saluranJeda);
+}
+async function denyutSaluran() {
+  try {
+    if (LIVE && mode === 'live') { saluranCoba = 0; saluranJeda = 6000; }
+    if (LIVE) await muatLive();
+    // gerbang.json: didengar rajin saat belum hidup (≥30 dtk antar baca),
+    // dan tiap 2 menit saat LIVE terpasang tapi putus (pindah alamat = pulih)
+    const gerbangGap = (!LIVE || mode !== 'live') ? 30000 : 120000;
+    if (Date.now() - saluranGerbangAt > gerbangGap) {
+      saluranGerbangAt = Date.now();
+      const nyala = await sambungOtomatis();
+      if (nyala) { saluranCoba = 0; saluranJeda = 6000; }
+    }
+    if (!LIVE || mode !== 'live') { saluranJeda = Math.min(60000, saluranJeda); chipSumber(); }
+  } catch (e) {}
+  jadwalSaluran();
+}
+
 // ---------- modal ----------
 function bukaModal() { $('#modal').classList.add('on'); $('#mUrl').value = LIVE ? LIVE.url : ''; $('#mmsg').textContent = ''; }
 function tutupModal() { $('#modal').classList.remove('on'); }
@@ -2429,11 +2476,9 @@ function init() {
   tick(); setInterval(tick, 1000);
   initOtakUI(); // V270: kesadaran bertanya + sekolah mandiri
   muatSnapshot();
-  sambungOtomatis();
-  if (LIVE) muatLive();
-  setInterval(() => { if (LIVE) muatLive(); }, 6000);
-  setInterval(() => { if (!LIVE || mode !== 'live') muatSnapshot(); }, 60000);
-  setInterval(() => { if (mode !== 'live') sambungOtomatis(); }, 5 * 60 * 1000);
+  sambungOtomatis().then(() => { if (LIVE) muatLive(); });
+  // V314 SALURAN-PULIH — denyut sambung-ulang backoff (6→60 dtk), tak pernah berhenti mendengar
+  jadwalSaluran();
   setInterval(() => { if (st) chipSumber(); }, 30000);
 }
 

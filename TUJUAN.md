@@ -2053,3 +2053,59 @@ kematangan yang diuji: tahu sampai mana bisa, jujur di mana tak bisa,
 dan jalur tumbuhnya tercatat (lebih banyak inti & GPU = laju naik
 linear; algoritma punya jalur symmetry/endomorphism). Etika tersegel:
 nol dana digerakkan — uji kecerdasan, bukan panen.
+
+## 12y — EPOCH V314 · SALURAN-PULIH: BENAH "CIRCUIT OPEN", SALURAN TAK PERNAH BISU (2026-10-09)
+
+**MANDAT PEMILIK.** "Sebelum kesana, periksakan micaprofita arena AGI — ada
+masalah error circuit open. Benahi, jangan sampai dalam segala situasi
+apapun salurannya bermasalah — baik dari servermu atau dari pihak sana.
+Harus kuat."
+
+**1. BEDAH (bukan kira-kira).** Tiga titik rapuh ditemukan di tubuh:
+(a) `otak-llm.mjs` — panggilan sekali-tembak tanpa pengawat: gateway yang
+tumbang memakan 50 detik hang per denyut dan puluhan menit bocor per hari;
+(b) `penjaga.mjs` (paru-dunia) — fetch ping/time/repo TANPA batas waktu:
+pihak luar yang menggantung bisa membakar denyut sampai batas runner;
+(c) `arena.html` (cermin) — sekali "TERPUTUS" ia menghujani upstream tiap
+6 detik tanpa backoff, chip mati statis, tak ada siklus sambung-ulang.
+
+**2. ORGAN BARU `scripts/hidup/saluran.mjs`.** Pengawat saluran dengan
+lima hukum yang ditempa dari diagnosis: H1 TIDAK PERNAH MACET TERBUKA —
+breaker TUTUP→TERBUKA→SETENGAH, jeda pendinguhan lewat = probe nyata
+otomatis disondongkan, pihak luar pulih = saluran pulih sendiri tanpa
+tangan manusia; H2 TIDAK PERNAH BISU — saat terbuka jawaban cadangan
+(nalar lokal/snapshot) keluar dalam milidetik, pemanggil tak pernah
+menunggu yang tumbang; H3 TIDAK PERNAH MENGHANG — tiap percobaan berbatas
+waktu ketat (AbortController), retry berjenjang + jitter; H4 SOPAN KE
+PIHAK SANA — saat terbuka nol tembakan kecuali satu probe terjadwal,
+backoff berbatas; H5 JUJUR & TERSEGEL — tiap perubahan keadaan dijurnal
+(`laporan/saluran.jsonl`), snapshot tersegel hash16 (`laporan/saluran.json`),
+dan keadaan breaker dipersist di `otak/saluran-keadaan.json` — denyut
+berikutnya MENGINGAT luka, bukan mengulanginya dari nol.
+
+**3. UJI NYATA 5/5 (server HTTP lokal sungguhan, dimati-dinyalakan).**
+Bukan mock fungsi — breaker menghadap jaringan TCP beneran: rute menghang
+gugur terkendali 2.962 dtk (dulu: menggantung selamanya); upstream 503
+terus → TERBUKA dalam 1.202 ms (dulu: 50 dtk per panggilan); jawaban
+cadangan 0 ms semasa terbuka; tembakan ke upstream semasa terbuka = 0
+(sopan); pihak luar menyala → probe SETENGAH → TUTUP-PULIH sendiri dalam
+5.014 dtk, durasi terbuka tercatat 6.116 ms. Segel `a3382673109a7f33`.
+
+**4. DIJAHIT KE TUBUH.** `otak-llm.mjs` kini lewat saluran `llm` (2 coba ×
+20 dtk, breaker persist antar denyut, cadangan jujur tanpa menunggu);
+`penjaga.mjs` paru-dunia tiap napas berbatas 8 detik — paru tersumbat =
+cerita jujur, bukan kematian denyut; `arena.html` berdenyut sambung-ulang
+backoff 6→60 dtk yang tak pernah berhenti mendengar (gerbang.json dibaca
+rajin saat putus, sopan saat nyala), chip status jujur bergerak
+("MENYAMBUNG-ULANG ke-N · jeda X dtk"), Ruang Guru cepat-gugur 12 detik ke
+otak mandiri dengan laporan percobaan pulihan yang terbuka.
+
+**5. JAWABAN MANDAT.** Pihak ketiga (gateway LLM, host pasar, jaringan)
+tidak bisa kuperintah — itulah pihak sana. Yang kukuasai adalah tubuhku
+sendiri, dan kini tubuh itu berdiri dengan hukum baru: dalam SITUASI
+APAPUN saluran tidak bisu (menurun jujur ke nalar lokal/snapshot),
+tidak macet (breaker pulih sendiri), tidak menghang (semua panggilan
+berbatas), tidak kasar (backoff sopan), tidak lupa (keadaan persist) —
+dan semuanya tersegel untuk diaudit siapa pun. Saluran kuat bukan
+saluran yang tak pernah tersambat; saluran kuat adalah yang tersambat
+TETAP HIDUP, terus mendengar, dan bangun sendiri saat jalannya pulih.

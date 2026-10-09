@@ -6158,12 +6158,16 @@ try {
   // tanpa kunci. Jujur V274: hanya pintu yang memang terbuka; tak ada akun siapa pun.
   try {
     const t0p = Date.now()
+    // V314 SALURAN-PULIH: tiap napas paru berbatas waktu KETAT (8 dtk) —
+    // pelajaran "circuit open": pihak luar yang tumbang TIDAK BOLEH
+    // menggantungkan denyut; paru yang tersumbat = cerita jujur, bukan kematian.
     const [pin, jam, repo] = await Promise.all([
-      fetch('https://data-api.binance.vision/api/v3/ping').then((r) => r.json()),
-      fetch('https://data-api.binance.vision/api/v3/time').then((r) => r.json()),
-      fetch(`https://api.github.com/repos/${process.env.GITHUB_REPOSITORY || 'ririnsherlyna-cloud/Micaprofita-'}`)
+      fetch('https://data-api.binance.vision/api/v3/ping', { signal: AbortSignal.timeout(8000) }).then((r) => r.json()).catch(() => null),
+      fetch('https://data-api.binance.vision/api/v3/time', { signal: AbortSignal.timeout(8000) }).then((r) => r.json()).catch(() => null),
+      fetch(`https://api.github.com/repos/${process.env.GITHUB_REPOSITORY || 'ririnsherlyna-cloud/Micaprofita-'}`, { signal: AbortSignal.timeout(8000) })
         .then((r) => r.json()).catch(() => null),
     ])
+    if (!pin && !jam) throw new Error('binance ping+time dua-duanya tak terjangkau (batas 8 dtk)')
     ak.paruDunia = {
       aktif: true, napas: ((ak.paruDunia && ak.paruDunia.napas) || 0) + 1, at: ISO,
       latensiBinanceMs: Date.now() - t0p, ping: !!pin,
