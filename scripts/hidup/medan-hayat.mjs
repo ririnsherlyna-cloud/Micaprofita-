@@ -264,6 +264,19 @@ async function denyut () {
   }
   const kernel = bangunKernel()
   const A = pulihkan(lama.field)
+  // KELAHIRAN-ULANG (V324 — laporan pemilik: "aspek jadi nol, makin bodoh?"):
+  // medan mati sejati (massa 0, tanpa soliton) TIDAK BISA membangkitkan
+  // dirinya — pelajaran denyut #5-#9: Orbium kelaparan (massa 71 → 56,5 →
+  // 0,18 → 0) dan makanan yang datang tak bisa menjadi kehidupan tanpa
+  // penghuni. Menanam penghuni asli lagi (matriks Orbium bicaudatus
+  // notebook Lenia, matematika sama) = kehidupan, bukan karangan —
+  // dijurnal jujur di catatan kapsul.
+  const i0 = lama.intisari || {}
+  let kelahiranUlang = null
+  if ((i0.massa || 0) < 0.0001 && (i0.soliton || 0) === 0) {
+    tanamOrbium(A)
+    kelahiranUlang = 'kelahiran-ulang setelah kelaparan (massa 0, soliton 0 — penghuni asli ditanam kembali)'
+  }
   const gen = await lahapPasar()
   const massaSebelum = A.reduce((a, b) => a + b, 0)
   suntikMakanan(A, gen)
@@ -272,11 +285,11 @@ async function denyut () {
   const baris = segelBubuhkan({
     skema: lama.skema, lahir: lama.lahir, denyut: (lama.denyut || 0) + 1,
     tetap: lama.tetap, field: kuantisasi(A), intisari, gen,
-    catatan: 'massa sebelum makan ' + massaSebelum.toFixed(4)
+    catatan: 'massa sebelum makan ' + massaSebelum.toFixed(4) + (kelahiranUlang ? ' · ' + kelahiranUlang : ''),
   })
   writeFileSync(BERKAS, JSON.stringify(baris, null, 1))
   const i2 = intisari
-  console.log('[medan] denyut #' + baris.denyut + ' — massa ' + i2.massa + ' (+' + (i2.massa - massaSebelum).toFixed(4) + ' dgn makan) · vitalitas ' + i2.vitalitasPct + '% · soliton ' + i2.soliton + ' (terbesar ' + i2.ukuranSolitonTerbesar + ' sel) · hanyut ' + (i2.hanyut ? i2.hanyut.jarak + ' sel arah (' + i2.hanyut.dx + ',' + i2.hanyut.dy + ')' : '—') + ' · segel #' + baris.segel.hash)
+  console.log('[medan] denyut #' + baris.denyut + (kelahiranUlang ? ' [KELAHIRAN-ULANG] ' : ' — ') + 'massa ' + i2.massa + ' (+' + (i2.massa - massaSebelum).toFixed(4) + ' dgn makan) · vitalitas ' + i2.vitalitasPct + '% · soliton ' + i2.soliton + ' (terbesar ' + i2.ukuranSolitonTerbesar + ' sel) · hanyut ' + (i2.hanyut ? i2.hanyut.jarak + ' sel arah (' + i2.hanyut.dx + ',' + i2.hanyut.dy + ')' : '—') + ' · segel #' + baris.segel.hash)
 }
 
 // ---------- uji mandiri: semua NYATA, nol karangan ----------

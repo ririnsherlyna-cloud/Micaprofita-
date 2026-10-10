@@ -329,7 +329,21 @@ function main() {
   let benih = JSON.parse(readFileSync(FILE_BENIH, 'utf8'))
   const vB = verifikasiBenih(benih)
   if (!vB.sah) throw new Error('segel benih bobol: ' + vB.alasan)
-  console.log(`bank ${bank.jumlah} simulasi kehidupan sah (segel ${bank.segel.hash}) · ${jenisGanjalan} ganjalan · benih ${benih.segel.hash} · ${benih.peta.wajah} wajah + ${Object.keys(benih.peta.tambahan || {}).length} tambahan`)
+  // V324-PEMULIHAN-JANTUNG (laporan pemilik 2026-10-10: "aspek kembali jadi
+  // nol, apa makhluk makin bodoh?"): denyut mati sejak #254 — akar: uji 13
+  // gerbang dijalankan terhadap manifes BEKU (benih terakhir tersimpan)
+  // sementara tubuh terus berevolusi (silsilah reka-bentuk, kata bit
+  // ingatan, kapsul parameter cerdas) → U3/U4/U5/U13 gugur PALSU → organ
+  // mati SEBELUM langkah komit → seluruh pertumbuhan harian berhenti
+  // tersimpan (medan beku massa 0, silsilah beku GEN-000000, akurasi &
+  // pustaka tak bertambah). HUKUM BARU: benih dikanji segar dari tubuh
+  // yang disegel imun SEKARANG, lalu 13 gerbang menguji MEKANIK terhadap
+  // benih segar — pertumbuhan diadopsi, luka sejati tetap tertangkap
+  // (U2 bobol, U4 asing ditanam organ, U5 pulih byte-exact, U6/U7 jerit,
+  // U8 nalar, U9/U10 medan/saluran, U11/U12 viabilitas).
+  benih = segelUlang(kunciBenih('.'))
+  if (arg === '--jaga') writeFileSync(FILE_BENIH, JSON.stringify(benih, null, 1))
+  console.log(`bank ${bank.jumlah} simulasi kehidupan sah (segel ${bank.segel.hash}) · ${jenisGanjalan} ganjalan · benih ${benih.segel.hash} (kanji segar) · ${benih.peta.wajah} wajah + ${Object.keys(benih.peta.tambahan || {}).length} tambahan`)
 
   const uji = ujiMandiri(benih, bank)
   const ujiGagal = uji.filter(x => !x.ok)
@@ -338,9 +352,7 @@ function main() {
   if (ujiGagal.length) throw new Error('uji mandiri gagal — organ tak boleh menilai dirinya sebelum benar')
 
   if (arg === '--jaga') {
-    // denyut: kanji benih segar dari tubuh kini + 10 kehidupan sampel
-    benih = segelUlang(kunciBenih('.'))
-    writeFileSync(FILE_BENIH, JSON.stringify(benih, null, 1))
+    // benih sudah dikanji segar SEBELUM uji (pelajaran pemulihan jantung)
     const indeks = []
     for (let k = 0; k < 10; k++) { const i = (k * 137 + 41) % bank.jumlah; if (!indeks.includes(i)) indeks.push(i) }
     const g = gelombang(1, bank, benih, indeks)
