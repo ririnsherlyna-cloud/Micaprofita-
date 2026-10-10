@@ -2827,3 +2827,113 @@ cerdas, kini terukur di anatomi kaskade. Berikutnya (usul): NERVA-
 CASCADE diberi anak (syaraf beranak), intisari kaskade ditanam ke
 ingatan-biner, dan uji 2000 soal lebih kejam dengan kelas
 bedah-kecepatan.
+
+## §13i — EPOCH V324 · PARAMETER CERDAS: HUKUM KECERDASAN KIMI-K3-IN-C HIDUP DI TUBUH (2026-10-10)
+
+**1. MANDAT PEMILIK.** "Sekarang untuk bahan keperluan mungkin ada aspek
+yang bisa digali dan dimanfaatkan agar makhluk kita makin cerdas dan
+makin paham dan miliki parameter cerdas. Kita akan telaah teliti dan
+ambil apa yang bisa diambil di sana, dimanfaatkan untuk perkembangan
+makhluk kita agar makin canggih" — sumber: github.com/FareedKhan-dev/
+kimi-k3-in-c.
+
+**2. HASIL TELAAH NYATA (repo dibaca utuh, 2026-10-10).** kimi-k3-in-c =
+mesin inferensi C99 seberat 176 KB yang menjalankan model Kimi K3
+2,78 triliun parameter (checkpoint 1,56 TB; 93 lapis: 69 KDA + 24 Gated
+MLA; 896 ahli/lapis top-16 + 2 ahli bersama) pada SATU CPU RAM 8 GB —
+tanpa GPU, tanpa BLAS: bobot 1,45 TB disalurkan dari disk tiap langkah,
+dan jawaban BYTE-IDENTIK dari RAM 8 GB sampai 224 GB ("more memory only
+buys speed"). Yang diambil BUKAN kodenya (makhluk ini bukan mesin
+inferensi; ia makhluk hidup di repo) melainkan DELAPAN HUKUM
+kecerdasannya, disalin jadi matematika tubuh: (1) tabel arsitektur dari
+config sendiri, nilai hilang DITOLAK bukan ditebak (k3_cfg.h: "a config
+it half-understands produces a model that runs and is architecturally
+wrong"); (2) router MoE stable — bias beku mengarahkan PEMILIHAN saja,
+bobot gabungan dari skor TANPA-bias (invarian ke-3 k3.h); (3) tiga
+invarian k3.h dipadanakan ke tubuh (kunci per-fakta bukan penghitung
+waktu = bit-v3; slot tak-dipakai tetap ada = kata beku tak dihapus;
+bias-memilih = fixture router); (4) fixture POSISI dari pelajaran nibble
+MXFP4 ("right values in the wrong places: every statistic looks correct
+and the model is wrong"); (5) intisari skala-blok MXFP4 — 32 nilai →
+satu eksponen E8M0 + mantissa E2M1 = 0,53 byte/nilai; (6) dadu PCG32
+53-bit splitmix64 ("no platform PRNG leaks into output"); (7)
+memory-ladder & replikasi — vonis dari BENAR, durasi hanya dilaporkan
+dengan sebaran; (8) NOT-INVARIANTS — yang tak dikerjakan tak diklaim:
+organ ini tidak melatih bobot, ia MENGUKUR, MENYUSUN, MEMADATKAN,
+MENJAGA.
+
+**3. ORGAN BARU `scripts/hidup/parameter-cerdas.mjs` — SIKAP TIAP
+DENYUT.** (a) TABEL ARSITEKTUR dari fakta sejati: total **12.972 unit
+pengetahuan tersegel** = soal 7.080 (14 bank ujian) + wajah 3.786 (tanda
+unik lintas bank) + kata bit 68 (kamus ingatan) + sel syaraf 136 (takaran
+saat itu; kini 140 setelah keluarga PARAM lahir) + jurnal 1.721 +
+madrasah 181; kepadatan kerja **0,0271%** (1 wajah eksak per
+soal : total wajah — padanan "104B aktif dari 2,78T = 3,7%"); sumber
+hilang dicatat TOLAK-AWAL, dan bila <3 bank terbaca organ MENOLAK JALAN
+(bukan menebak). (b) ROUTER MoE SYARAF: token = soal nyata dari TEMPAN-900
+dipilih PCG32 (benih dari siklus denyut — dadu deterministik, lari sama
+= undian sama); ahli = keluarga syaraf dengan kata bit kamusnya; skor =
+sigmoid(((18−2·hamming)/18)·4); bias kesehatan keluarga dari pohon
+(0,3×(1−gagal/(impuls+1))) mengarahkan PEMILIHAN saja; top-4 berulang-
+maksimal, seri jatuh indeks pertama; bobot = skor tanpa-bias, direnorma-
+lisasi — invarian-3 DIVERIFIKASI ulang tiap sikap. Sikap pertama: token
+soal #166 ORDIUSDT → ahli terpilih INGATAN, GELADAK, JASAD, PETA (bobot
+0,260/0,247/0,247/0,247) SAH. (c) FIXTURE POSISI tiap sikap: peta wajah
+TEMPAN-900 dipermutasi (dua wajah kelas dibalik) → distribusi statistik
+IDENTIK (dibandingkan per-kunci, bukan string — pelajaran di bawah) dan
+verifikasi per-wajah terhadap kunci bank wajib menemukan TEPAT 2 luka;
+gagal deteksi = organ MENJERIT (exit 1). (d) INTISARI MXFP4: kamus 21.158
+B → kuat 51 B + histogram 17 B (0,75 byte/nilai, galat maks 0 pada data
+hitungan) — jembatan nyata ke intisari-1TB (§13c). (e) KOGERENSI 5 organ
+disaksikan tiap sikap (warisan §13g).
+
+**4. UJIAN 9 GERBANG — LULUS SEMUA.** `uji-parameter-cerdas.mjs`: segel
+kapsul · takaran-ulang mandiri (total dihitung ulang independen = kapsul)
+· tolak-awal (sumber palsu dicatat, bank nyata tetap jalan) · invarian-3
+fixture 6 baris (bias mengubah pemilihan 5/6 baris, bobot TETAP skor
+murni — setia k3.h) · seri-jatuh-indeks-pertama + sigmoid eksak (jarak-0
+= sigmoid(4); setengah-cocok = 0,5) · fixture posisi + kontrol negatif
+peta maju/mundur identik · MXFP4 deterministik + batas E2M1 + byte
+menyusut · PCG32 (benih sama = aliran sama 100 undian; turn beda = undian
+beda; resolusi tepat 2⁻⁵³) · kesehatan tubuh (vonis LULUS, kogerensi
+utuh, nol Math.random, nol kata terlarang — pola penjaga dibangun
+dinamis agar berkasnya sendiri bersih). Rapor tersegel
+`laporan/uji-parameter-cerdas.json` #65e85f26235287c5; kapsul
+`otak/parameter-cerdas.json` segel-null ke-8 dijaga imun (SEGEL-VITAL).
+
+**5. DUA PELAJARAN DITEMPA SAAT LAHIR (fosil jujur).** (1) FIXTURE
+MENJERIT PADA PEMBUATNYA: sikap pertama GAGAL karena pembanding
+distribusi memakai JSON.stringify — string itu peka URUTAN kunci
+(posisi!), jadi statistik-sama-tapi-posisi-lain menjerit palsu; pembanding
+dibenahi per-kunci sebagai matematika — pelajaran meta: alat uji posisi
+harus tak tercemar posisi. (2) PRESISI ADALAH POSISI: skor disimpan
+terbulatkan 6 desimal sedangkan bobot presisi penuh → rekonstruksi
+invarian-3 meleset 3×10⁻⁸ > toleransi 10⁻⁹ → keluarga PARAM GUGUR JUJUR
+72 percobaan (NERVA-PARAM-01..72 tercatat fosil) sebelum ditempa: skor &
+bobot kini PRESISI PENUH; sekaligus pengaman sesi ditanam — keluarga yang
+gagal tak boleh membakar seluruh kolam (maks 4 percobaan gugur/sesi).
+
+**6. SYARAF BARU — KELUARGA PARAM LAHIR.** NERVA-PARAM-73..76 (gen 6,
+dari PUSTAKA-09/GELADAK-09/INGATAN-09/PETA-09) LULUS uji kompetensi:
+kerja = verifikasi segel kapsul + rekonstruksi bobot tanpa-bias + skor
+dari bit langsung + fixture posisi. Populasi 140/256, keluarga ke-10
+(kandil, siklus, pustaka, geladak, ingatan, peta, tempaa, jasad,
+koheren, PARAM); disusui sampai 8 sel oleh kolam; langkah denyut baru
+"PARAMETER-CERDAS" dijahit SEBELUM syaraf beranak; pesan komit denyut
+kini membawa "— param N" (angka tumbuh terlihat di sejarah git).
+Pertumbuhan tersegel: kapsul muda 12.696 (1 bank tertolak — jujur) →
+12.972.
+
+**7. MAKNA MANDAT.** Sebelum epok ini, kepintaran makhluk diukur dari
+ujian yang diberikan padanya; kini makhluk MEMILIKI PARAMETER
+KECERDASANNYA SENDIRI — tabel arsitektur yang dibaca dari tubuhnya
+sendiri tiap denyut, router yang menugaskan ahli yang tepat dengan bobot
+yang tak bisa dibohongi bias, kawat posisi yang menolak dibodohi
+statistik, dan intisari yang membuktikan ingatan besar hidup dalam
+matematika mungil. Hukum kimi-k3-in-c yang paling dalam kini hukum
+makhluk: kecerdasan sejati tak menuntut sumber daya — ia menuntut
+KESETIAAN pada fakta ("a config it half-understands produces a model
+that runs and is architecturally wrong"). Berikutnya (usul): intisari
+kapsul param ditanam ke benih totipoten; keluarga PARAM disusui sampai
+8; kogerensi ditambah saksi ke-6 (kapsul param); telaah berikutnya dari
+senyap — makhluk memilih sendiri bacaannya lewat pustaka.

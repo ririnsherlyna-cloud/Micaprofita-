@@ -336,6 +336,10 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
         <div id="jvHidup"><div class="kecil">membaca rahim &amp; benih…</div></div>
       </div>
       <div class="blok">
+        <h4>PARAMETER CERDAS <em>· V324 — arsitektur kecerdasan tersegel dari telaah kimi-k3-in-c: router MoE syaraf, fixture posisi, intisari MXFP4</em></h4>
+        <div id="jvParam"><div class="kecil">menakar arsitektur…</div></div>
+      </div>
+      <div class="blok">
         <h4>Sumber kejujuran <em>· nol karangan</em></h4>
         <div class="kecil">Lilin 1m (gerbang Binance publik, multi-koin) · laporan/sasaran-terkini.json · otak/penjaga-keadaan.json · ruang-hidup/keadaan.json · ruang-hidup/tubuh.json (segel gerak). Bila sumber gagal diambil: jasad MATI-PENUH-NALAR — tubuh kembali ke perilaku dasar dan alasannya ditulis terbuka di sini. Audit langsung: <code>window.__v297</code>, <code>window.__v299</code>, <code>window.__v300</code>, <code>window.__v301</code>.</div>
       </div>
@@ -400,7 +404,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
    penonton, ingatan resmi = commit GitHub, tubuh = fungsi kerja nyata. ================ */
 /* ================= IDENTITAS & KONSTANTA ================= */
 const RUMAH = {pemilik:'ririnsherlyna-cloud', repo:'Micaprofita-', cabang:'main'};
-const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json', tempa:'laporan/tempa100.json', tempa2:'laporan/tempa200.json', tempa3:'laporan/ujian500.json', tempa300:'laporan/tempa300.json', tempa900:'laporan/tempa900.json', squeeze:'laporan/tempa-squeeze.json', jejak:'laporan/tempa-jejak.json', gembok:'laporan/gembok.json', syaf:'otak/syaraf-pohon.json', liar:'otak/intisari-liar.json', jerit:'laporan/jerit.jsonl', ujiJahat:'laporan/uji-jahat-jaga.json', syarafFinal:'laporan/syaraf-final.json', medan:'otak/medan-keadaan.json', reka:'otak/reka-bentuk.json', hidup:'laporan/tempa-hidup.json', jaga:'laporan/hidup-jaga.json', imun:'laporan/imun.json', ujiHidup:'laporan/uji-kehidupan.json', tubuh:'laporan/uji-tubuh.json', bedahTangan:'laporan/bedah-tangan.json'};
+const INGATAN_GH = {keadaan:'ruang-hidup/keadaan.json', ingatan:'ruang-hidup/ingatan.json', harian:'ruang-hidup/buku_harian.jsonl', habitat:'ruang-hidup/habitat.json', madrasah:'ruang-hidup/madrasah.json', pustaka:'pustaka/indeks.json', tempa:'laporan/tempa100.json', tempa2:'laporan/tempa200.json', tempa3:'laporan/ujian500.json', tempa300:'laporan/tempa300.json', tempa900:'laporan/tempa900.json', squeeze:'laporan/tempa-squeeze.json', jejak:'laporan/tempa-jejak.json', gembok:'laporan/gembok.json', syaf:'otak/syaraf-pohon.json', liar:'otak/intisari-liar.json', jerit:'laporan/jerit.jsonl', ujiJahat:'laporan/uji-jahat-jaga.json', syarafFinal:'laporan/syaraf-final.json', medan:'otak/medan-keadaan.json', reka:'otak/reka-bentuk.json', hidup:'laporan/tempa-hidup.json', jaga:'laporan/hidup-jaga.json', imun:'laporan/imun.json', ujiHidup:'laporan/uji-kehidupan.json', tubuh:'laporan/uji-tubuh.json', bedahTangan:'laporan/bedah-tangan.json', param:'otak/parameter-cerdas.json'};
 const MAXBACA = 400000;                 // batas baca per file (byte) — kejujuran parsial
 const FASE = ['MENGAMATI','MEMAHAMI','MENCOBA','MELAKUKAN','MENGEVALUASI','MENEMUKAN','MEMBANGUN','MENINGKATKAN','MENGAMATI-KEMBALI'];
 const INTEGERS = ['versi.json','gerbang.json','brain.json','arena-keadaan.json','otak/genome-server.json','otak/penjaga-keadaan.json','otak/performa.json','memori/terkini.json','README.md'];
@@ -541,6 +545,7 @@ async function muatMemoriGitHub(){
     medanMuat(); /* V319-MEDAN: medan hayat kontinu (Lenia hidup) — muat tak-blok */
     rekaMuat(); /* V320-REKA-BENTUK: silsilah evolusi genom peta — muat tak-blok */
     hidupMuat(); /* V321-HIDUP-1000: rahim dan benih totipoten — muat tak-blok */
+    paramMuat(); /* V324-PARAMETER-CERDAS: arsitektur kecerdasan dari telaah kimi-k3-in-c — muat tak-blok */
     const ing = JSON.parse(await ghAmbil(INGATAN_GH.ingatan));
     S1.ingatan = ing; S1.at = sekarang(); S1.stale = false;
     if(ing.kelahiran) S.stat.lahirAt = Date.parse(ing.kelahiran) || S.stat.lahirAt;
@@ -3033,6 +3038,31 @@ function hidupRender(){
     ${baris('uji mandiri', `${(p.ujiMandiri||[]).filter(u=>u.ok).length}/${(p.ujiMandiri||[]).length} LULUS · lahir ${g.lahirMsMean!=null?g.lahirMsMean+'ms':'—'}`)}
     ${baris('viabilitas tubuh', `${p.viabilitasTubuh?p.viabilitasTubuh.putusan:'—'} · benih #${(p.benihSegel||'—').slice(0,8)} · bank #${(p.bankSegel||'—').slice(0,8)}`)}
     <div class="kecil" style="margin-top:5px">intisari lab Hanna (Weizmann, jurnal asli dibaca 2026-10-09) hidup di tubuh: benih totipoten kecil membawa identitas-epok-syaraf-peta-muatan → 8 ganjalan kehidupan ex-utero (totipoten kosong · priming dua lini Cdx2/Gata4 · organ progenitor · simetri pecah · ingatan epigenetik · cek viabilitas · kimera asing · ranjau ex-utero) → deteksi-jerit-pulih-jawab-napas → 6 gerbang viabilitas → SUBUR. Gugur = pelajaran → wajah ingatan bertambah di benih (epigenetik) — tak pernah bodoh, makin hari makin cerdas. Keadaan: otak/benih-hidup.json · laporan/tempa-hidup.json · segel ${p.segel&&p.segel.hash?('#'+p.segel.hash):'—'}</div>`;
+}
+/* ================= V324-PARAMETER-CERDAS: arsitektur kecerdasan (telaah kimi-k3-in-c) ================= */
+async function paramMuat(){
+  try{ const p=JSON.parse(await ghAmbil(INGATAN_GH.param));
+    if(p && p.skema){ S.paramCerdas=p; paramRender(); }
+  }catch(e){ /* kapsul belum lahir — jujur */ }
+}
+function paramRender(){
+  const el=document.getElementById('jvParam'); if(!el) return;
+  const p=S.paramCerdas;
+  if(!p){ el.innerHTML='<div class="kecil">kapsul belum lahir — organ parameter-cerdas.mjs yang menakarnya tiap denyut. Belum ada = belum ada, tanpa karangan.</div>'; return; }
+  const baris=(k,v)=>`<div class="baris"><span class="k">${k}</span><span class="v">${v}</span></div>`;
+  const a=p.arsitektur||{}, b=a.bagian||{}, rt=p.router||{}, f=p.fixturePosisi||{}, i=p.intisari||{}, t=p.pertumbuhan||{};
+  const dipilih=(rt.dipilih||[]).join(' · ')||'—';
+  const terpilih=(rt.ahli||[]).filter(x=>x.terpilih).map(x=>`${x.jenis} ${x.bobot!=null?x.bobot.toFixed(3):'?'}`).join(' · ')||'—';
+  el.innerHTML=`
+    ${baris('vonis', `<b>${p.vonis?p.vonis.teks:'—'}</b> · kapsul #${p.segel&&p.segel.hash?('#'+p.segel.hash):'—'}`)}
+    ${baris('total pengetahuan', `<b>${(a.total||0).toLocaleString('id-ID')}</b> unit — soal <b>${(b.soalTotal||0).toLocaleString('id-ID')}</b> · wajah <b>${(b.wajahTempaan||0).toLocaleString('id-ID')}</b> · kata bit <b>${b.kataBit||0}</b> · sel syaraf <b>${b.selSyaraf||0}</b>${b.jurnalPustaka!=null?' · jurnal <b>'+b.jurnalPustaka.toLocaleString('id-ID')+'</b>':''}${b.pelajaranMadrasah!=null?' · madrasah <b>'+b.pelajaranMadrasah+'</b>':''}`)}
+    ${baris('kepadatan kerja', a.kepadatanKerja!=null?`<b>${(a.kepadatanKerja*100).toFixed(4)}%</b> wajah dikonsultasi eksak per soal — padanan "104B aktif dari 2,78T (3,7%)"`:'—')}
+    ${baris('router MoE', `token soal #${rt.token?rt.token.soalId:'?'} ${rt.token?rt.token.simbol:'—'} → <b>${dipilih}</b> · bobot tanpa-bias: ${terpilih} ${rt.invarian3&&rt.invarian3.sah?'<b>SAH</b>':'TAK SAH'}`)}
+    ${baris('fixture posisi', f.jalan?`statistik identik <b>${f.statistikSama?'YA':'TIDAK'}</b> · permutasi nilai-benar-posisi-salah terdeteksi <b>${f.terdeteksi}/${f.lukaSeharusnya}</b> — tubuh tak bisa dibodohi agregat`:(f.alasan||'—'))}
+    ${baris('intisari MXFP4', `kamus ${(i.byteKamusAsli||0).toLocaleString('id-ID')} B → kuat ${i.kuat?i.kuat.byteSesudah:'?'} B${i.histogramBit?' + histo '+i.histogramBit.byteSesudah+' B':''} · <b>${i.bytePerNilai}</b> byte/nilai · galat maks ${i.kuat?i.kuat.galatMaks:'?'}`)}
+    ${baris('pertumbuhan', t.sebelum!=null?`<b>${t.sebelum.toLocaleString('id-ID')}</b> → <b>${t.sesudah.toLocaleString('id-ID')}</b> (${t.naik?'naik/stabil':'TURUN — jujur dicatat'})`:'kapsul pertama')}
+    ${baris('kogerensi tubuh', p.kogerensi?`${p.kogerensi.dicek} organ disaksikan — <b>${p.kogerensi.utuh?'utuh':'ADA SEGEL TAK SAH'}</b>`:'—')}
+    <div class="kecil" style="margin-top:5px">intisari telaah FareedKhan-dev/kimi-k3-in-c (2026-10-10): mesin 176 KB menjalankan model 2,78T parameter (1,56 TB) di RAM 8 GB, jawaban byte-identik di semua anggaran — hukum kecerdasannya kini hidup di tubuh: arsitektur dibaca dari fakta sejati (sumber hilang = tolak-awal, bukan tebakan — hukum k3_cfg.h), bias kesehatan keluarga mengarahkan PEMILIHAN saja sementara bobot gabungan lahir dari skor tanpa-bias (invarian ke-3 k3.h), fixture posisi memastikan nilai-benar-posisi-salah tak pernah lolos statistik, intisari skala-blok E2M1+E8M0 memadatkan ingatan dengan galat terukur, dadu PCG32 53-bit tanpa Math.random. Vonis dari BENAR — durasi ${p.durasiMs!=null?p.durasiMs+' ms':'—'} hanya dilaporkan (memory-ladder: cepat berisik, benar tidak). Organ ini tidak melatih bobot — ia mengukur, menyusun, memadatkan, menjaga (not-invariants: yang tak dikerjakan tak diklaim). Keadaan: otak/parameter-cerdas.json · keluarga syaraf PARAM (V324) · segel ${p.segel&&p.segel.hash?('#'+p.segel.hash):'—'}</div>`;
 }
 /* ================= RENDER OVERLAY (satu-satunya tempat teks) ================= */
 let S_TAB='pikir';
