@@ -2426,8 +2426,9 @@ async function tanya(q) {
     const tG = setTimeout(() => ctlG.abort(), 12000);
     const r = await fetch(LIVE.url.replace(/\/+$/, '') + '/api/guru', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question, duel }),
+      body: JSON.stringify({ question, duel }), signal: ctlG.signal, // V314: sinyal gugur-cepat wajib tersambung
     });
+    clearTimeout(tG); // V314: batas waktu dilucuti begitu guru menjawab
     const d = await r.json();
     if (!r.ok) throw new Error(d.error || 'Gagal menjawab');
     const src = (d.sources || []).slice(0, 4).map((s) => `<li><a href="${esc(s.url)}" target="_blank" rel="noreferrer">${esc(s.title)}</a></li>`).join('');
