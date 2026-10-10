@@ -230,6 +230,12 @@ tr.me .nmcell{color:var(--amber2)}
 .ans .who .av{width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:rgba(245,158,11,.15);border-radius:8px;color:var(--amber)}
 .ans .who b{font-size:13px;color:var(--amber2)}
 .ans .who .badge{font-size:9px;border:1px solid rgba(245,158,11,.4);color:var(--amber);border-radius:999px;padding:2px 8px}
+/* V297b: kartu vonis mesin — keputusan dihitung kode, bukan narasi LLM */
+.bedahVonis{border:1px solid rgba(56,189,248,.45);background:rgba(8,47,73,.45);border-radius:12px;padding:10px 12px;margin:8px 0}
+.bedahVonis .bvT{margin:0 0 5px;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sky,#38bdf8)}
+.bedahVonis .bvM{margin:0;font-size:13.5px;line-height:1.55}
+.bedahVonis .bvM b{color:var(--sky,#38bdf8);font-size:15px}
+.bedahVonis p.tiny{margin:5px 0 0}
 .duelgrid{display:grid;gap:12px;grid-template-columns:1fr 1fr;margin-top:10px}
 @media(max-width:760px){.duelgrid{grid-template-columns:1fr}}
 .duelgrid .c1{border:1px solid rgba(245,158,11,.3);background:rgba(24,24,27,.6);border-radius:12px;padding:14px}
@@ -578,23 +584,6 @@ html,body{max-width:100%;overflow-x:clip}
         <button class="btn amb" id="btnAsk" style="height:44px;padding:0 18px">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </button>
-      </div>
-
-      <!-- V327 MEJA-AUDIT-KOIN: tempat pemilik bertanya SATU koin tertentu →
-           audit pasar nyata (klines 1d, ticker 24j, buku pesanan, funding) —
-           fakta & kelayakan perhitungan, bukan doktrin umum. Mobile-first. -->
-      <div class="om-panel" id="mejaAudit">
-        <div class="om-head">
-          <h4 style="margin:0">MEJA AUDIT KOIN <span class="tiny" style="font-weight:400">· V327 · fakta nyata saat ditanya, bukan doktrin</span></h4>
-          <span class="om-level" id="auditStatus">siap</span>
-        </div>
-        <p class="tiny" style="margin:6px 0 2px">Tulis ticker satu koin — aku melancarkan <b>audit langsung dari pasar nyata</b>: klines 1d×200, ticker 24 jam, buku pesanan, funding futures. Rumus tertulis (RSI Wilder, EMA, σ log-return, ATR, spread bps), skor kelayakan 0–100, dan vonis jujur — koin tak dikenal ditolak jujur, bukan dikarang. Atau tanya di ruang guru: <i>"periksa koin BTC"</i>.</p>
-        <div class="askrow" style="margin-top:6px">
-          <input id="auditTicker" placeholder="ticker koin… mis. BTC" maxlength="16" autocapitalize="characters" autocorrect="off">
-          <button class="btn amb" id="btnAudit" style="height:44px;padding:0 16px;font-weight:600">AUDIT</button>
-        </div>
-        <div id="auditChip" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px"></div>
-        <div id="auditHasil"></div>
       </div>
       
       <div class="om-panel" id="omPanel">
@@ -2301,13 +2290,26 @@ function renderTurns() { /* dipakai sebagai placeholder; turns dirender langsung
 // forensik: "periksa koin opg" dulu dijawab guru dengan OGN (koin
 // lain yang mirip) = salah sasaran; kini koin yang ditanya WAJIB
 // dibedah dari Binance langsung, di jalur server maupun lokal.
-const KOIN_STOP = ['USDT','USDC','USD','BUSD','TUSD','FDUSD','DAI','KOIN','COIN','TOKEN','TICKER','SIMBOL','PAIR','HARGA','PASAR','DAN','YANG','APA','ITU','INI','DIA','BAGAIMANA','GIMANA','SEKARANG','HARI','LAGI','SUDAH','BELUM','PERIKSA','CEK','ANALISA','ANALISIS','BEDAH','LAPORAN','PROFIT','RUGI','BUY','SELL'];
+const KOIN_STOP = ['USDT','USDC','USD','BUSD','TUSD','FDUSD','DAI','KOIN','COIN','TOKEN','TICKER','SIMBOL','PAIR','HARGA','PASAR','DAN','YANG','APA','ITU','INI','DIA','BAGAIMANA','GIMANA','SEKARANG','HARI','LAGI','SUDAH','BELUM','PERIKSA','CEK','ANALISA','ANALISIS','BEDAH','LAPORAN','PROFIT','RUGI','BUY','SELL','BAWAH','ATAS','SEKITAR','DEKAT','DARI','SAMPAI','DENGAN','UNTUK','SAJA','AJA','DULU','NANTI','BESOK','KEMARIN','PAGI','SIANG','SORE','MALAM','JAM','MENIT','DETIK','LEVEL','ZONA','SUPPORT','RESISTEN','KALAU','KALO','BILA','JIKA','TAPI','OKE','OK','YA','GAK','NGGAK','TIDAK','BUKAN','JANGAN','HARUS','BISA','BAKAL','MAU','MAKIN','JADI','KE','BANYAK','SEDIKIT','MASUK','KELUAR','POSISI','LONG','SHORT','CUT','CUTLOSS','HOLD','TAHAN','PEGANG','ENTRY','MENAMBAH','HARAPAN','STRUKTUR','REZIM','MOMENTUM'];
+function dorongKoin(arr, t) {
+  if (!t) return;
+  const u = t.toUpperCase();
+  if (u.length < 2 || u.length > 12 || KOIN_STOP.indexOf(u) !== -1) return;
+  if (arr.indexOf(u) === -1) arr.push(u);
+}
 function ekstrakKoinLokal(qs) {
+  const tinggi = [];
   let m = qs.match(/(?:koin|coin|token|ticker|simbol|pair)\s+(?:bernama\s+)?([a-z0-9]{2,12})/i);
-  if (m && KOIN_STOP.indexOf(m[1].toUpperCase()) === -1) return m[1].toUpperCase();
+  if (m) dorongKoin(tinggi, m[1]);
   m = qs.match(/\b([A-Z]{2,12})\b/);
-  if (m && KOIN_STOP.indexOf(m[1]) === -1) return m[1];
-  return null;
+  if (m) dorongKoin(tinggi, m[1]);
+  // ticker terjepit antara penanda harga dan angka: "di opg 0.1475", "entry btc 95000"
+  const re3 = /(?:di|@|entry|masuk|buy|beli|short|jual)\s+([a-z]{2,10})\s+(?=\d)/gi;
+  let m3;
+  while ((m3 = re3.exec(qs)) !== null) dorongKoin(tinggi, m3[1]);
+  m = qs.match(/\b([a-z]{2,10}usdt)\b/i);
+  if (m) dorongKoin(tinggi, m[1]);
+  return tinggi;
 }
 function emaLokal(v, period) { if (!v.length) return NaN; const k = 2 / (period + 1); let e = v[0]; for (let i = 1; i < v.length; i++) e = v[i] * k + e * (1 - k); return e; }
 function rsiLokal(closes, period) {
@@ -2327,14 +2329,39 @@ function atrLokal(kl, period) {
 }
 function pctLokal(closes, n) { if (closes.length < n + 1) return 0; const now = closes[closes.length - 1], then = closes[closes.length - 1 - n]; return then > 0 ? ((now - then) / then) * 100 : 0; }
 async function bedahKoinLokal(t, holder, question, alasan) {
-  const pas = t + 'USDT';
   const av = '<span class="av"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="8" width="14" height="12" rx="2"/><circle cx="12" cy="4" r="2"/><line x1="9" y1="13" x2="9" y2="15"/><line x1="15" y1="13" x2="15" y2="15"/></svg></span>';
   let isi;
+  // cari pasangan yang BENAR-BENAR ada: uji kandidat berurutan, pertama yang
+  // dijawab Binance menang — kandidat berikutnya hanya dicoba bila 400 (tak ada)
+  let tk = null;
+  const kandidat = Array.isArray(t) ? t.slice(0, 3) : [t];
+  let pas = (kandidat[0] || '') + 'USDT';
+  let kode = '';
+  for (const k of kandidat) {
+    const coba = k + 'USDT';
+    try {
+      tk = await ambil('https://api.binance.com/api/v3/ticker/24hr?symbol=' + coba, 12000);
+      pas = coba; kode = '';
+      break;
+    } catch (er) {
+      kode = (er && er.message) || '';
+      tk = null;
+    }
+  }
+  if (!tk && kandidat.length) {
+    // semua kandidat gagal — beda-bedakan 400 (tak terdaftar) vs jaring
+    const takAda = /HTTP 400/.test(kode);
+    holder.innerHTML = `<div class="q"><p class="t">Pertanyaan</p><p class="b">${esc(question)}</p></div><div class="ans">
+      <div class="who">${av}<b>MICAPROFITA</b><span class="badge om">BEDAH KOIN · Binance langsung · tanpa server</span></div>
+      <div class="md">${md(takAda
+        ? '**' + esc(kandidat[0]) + '** tidak kutemukan sebagai pasangan spot aktif di Binance. Cek ejaan tickernya — aku tidak akan menebak koin lain agar tidak salah sasaran.'
+        : 'Pemeriksa harga sedang tak terjangkau (jaring: ' + esc(kode || '?') + ') — aku jujur: lebih baik tanpa laporan daripada laporan yang dikarang. Coba lagi sebentar.')}</div>
+      ${alasan ? `<p class="tiny" style="margin-top:6px">${esc(alasan)}</p>` : ''}
+    </div>`;
+    return;
+  }
   try {
-    const [tk, kl] = await Promise.all([
-      ambil('https://api.binance.com/api/v3/ticker/24hr?symbol=' + pas, 12000),
-      ambil('https://api.binance.com/api/v3/klines?symbol=' + pas + '&interval=1d&limit=70', 12000),
-    ]);
+    const kl = await ambil('https://api.binance.com/api/v3/klines?symbol=' + pas + '&interval=1d&limit=70', 12000);
     const closes = kl.map((r) => +r[4]);
     const vols = kl.map((r) => +r[7]);
     const last = closes[closes.length - 1];
@@ -2357,17 +2384,62 @@ async function bedahKoinLokal(t, holder, question, alasan) {
     const arah = s >= 2 ? 'BUY' : s <= -1.5 ? 'SELL' : 'TUNGGU';
     const key = Math.max(20, Math.min(85, Math.round(40 + s * 8 + (likuid ? 4 : -10) + (volSurge > 1.3 ? 3 : 0))));
     const chg = +tk.priceChangePercent;
+    // ==== V297b: proyeksi hari ini + vonis posisi pemilik (rumus sama dengan wadah) ====
+    const r5 = (v) => Number(v.toPrecision(5));
+    const tkl = kl[kl.length - 1], kem = kl[kl.length - 2] || tkl;
+    const openH = +tkl[1], hiH = +tkl[2], loH = +tkl[3];
+    let atrAbs = 0; const nA = Math.min(14, kl.length - 1);
+    for (let i = kl.length - nA; i < kl.length; i++) { const c = kl[i], p = kl[i - 1] || c; atrAbs += Math.max(c[2] - c[3], Math.abs(c[2] - p[4]), Math.abs(c[3] - p[4])); }
+    atrAbs /= nA;
+    const mintaRange = /naik|range|target|proyeksi|prediksi|low|high|tinggi|hari ini/i.test(question);
+    const mintaPos = /cutloss|cut loss|cut-loss|posisi|tahan|pegang|hold/i.test(question);
+    let posTeks = '', proTeks = '';
+    let ent = null, arahPos = null;
+    const mE = question.toLowerCase().match(/(?:di|@|entry|masuk|beli|buy)[^\d]{0,20}?(\d+(?:[.,]\d+)?)/);
+    if (mE) ent = parseFloat(mE[1].replace(',', '.'));
+    arahPos = /\b(short|shortsell|sell short|jual kosong|jual-kosong)\b/i.test(question) ? 'SHORT' : (/\b(buy|beli|long)\b/i.test(question) ? 'LONG' : null);
+    if (kl.length >= 15 && (mintaRange || mintaPos || ent !== null)) {
+      const bandB = r5(openH - atrAbs), bandA = r5(openH + atrAbs), bandA2 = r5(openH + 1.5 * atrAbs);
+      const duk = [...new Set([r5(loH), r5(last - atrAbs), r5(+kem[3])])].filter((v) => v > 0 && v < last * 1.02).sort((a, b) => b - a);
+      const res = [...new Set([r5(hiH), bandA2, r5(+kem[2])])].filter((v) => v > last * 0.98).sort((a, b) => a - b);
+      proTeks = '\n\n**PROYEKSI HARI INI** (probabilistik dari ATR ' + r5(atrAbs) + ' ≈ ' + (atrAbs / last * 100).toFixed(1) + '% — bukan jaminan):\n'
+        + '- open ' + r5(openH) + ' · high sejauh ini ' + r5(hiH) + ' · low sejauh ini ' + r5(loH) + '\n'
+        + '- wilayah wajar (open±1×ATR): **' + bandB + ' – ' + bandA + '** · perpanjangan bila breakout: ' + bandA2 + '\n'
+        + '- dukungan: ' + duk.join(' → ') + ' · resistensi: ' + res.join(' → ');
+      if (ent !== null && arahPos) {
+        const bruto = arahPos === 'LONG' ? ((last - ent) / ent) * 100 : ((ent - last) / ent) * 100;
+        const net = bruto - 0.29;
+        const stop = arahPos === 'LONG' ? ent - 1.5 * atrAbs : ent + 1.5 * atrAbs;
+        const naik = last > e20 && e20 > e50, turun = last < e20 && e20 < e50;
+        let von, al;
+        if (arahPos === 'LONG') {
+          if (last <= stop) { von = 'CUT-LOSS'; al = 'harga sudah menembus stop 1,5×ATR (' + r5(stop) + ') — hipotesis beli patah; keluar, jangan menahan harapan'; }
+          else if (naik) {
+            if (loH > ent) { von = 'TAHAN-KUNCI-UNTUNG'; al = 'struktur naik utuh & low hari ini (' + r5(loH) + ') di atas entry — untung ' + (bruto >= 0 ? '+' : '') + bruto.toFixed(2) + '%; geser stop ke ≈' + r5(loH * 0.995) + ' (di bawah low hari ini)'; }
+            else { von = 'TAHAN'; al = 'struktur naik utuh, stop ' + r5(stop) + ' belum tersentuh — patuhi stop'; }
+          }
+          else { von = 'SIAP-KELUAR'; al = 'struktur naik melemah — siapkan keluar bila EMA20 ditembus'; }
+        } else {
+          if (last >= stop) { von = 'CUT-LOSS'; al = 'harga menembus stop short ' + r5(stop) + ' — hipotesis short patah; tutup posisi, harga naik bukan alasan menahan'; }
+          else if (turun) { von = 'TAHAN'; al = 'struktur turun utuh, stop short ' + r5(stop) + ' belum tersentuh — patuhi stop'; }
+          else { von = 'SIAP-KELUAR'; al = 'struktur turun melemah sementara harga melawan posisi — kuncian kecil lebih murah daripada harapan'; }
+        }
+        posTeks = '\n\n**POSISIMU** (entry ' + ent + ' ' + arahPos + '): PnL bruto **' + (bruto >= 0 ? '+' : '') + bruto.toFixed(2) + '%** (net ≈ ' + net.toFixed(2) + '% setelah fee ±0,29%) · stop disiplin 1,5×ATR: ' + r5(stop)
+          + '\n\n**VONIS MESIN: ' + von + '** — ' + al
+          + '\n\nHukum arena: cut-loss hanya untuk saat hipotesis masuk PATAH, bukan karena harga goyah.';
+      } else if (mintaPos) {
+        posTeks = '\n\nSoal posisi: sebutkan harga entry & arahnya (buy/short) — aku putuskan dengan angka nyata, bukan tebakan.';
+      }
+    }
     isi = '**BEDAH ' + pas + '** — Binance spot, dihitung detik ini:\n\n'
       + '- Harga **' + last + '** USDT · 24 jam **' + (chg >= 0 ? '+' : '') + chg.toFixed(2) + '%** · puncak/pen 24 jam ' + tk.highPrice + '/' + tk.lowPrice + '\n'
       + '- Volume 24 jam **' + (qv / 1e6).toFixed(1) + ' jt USDT**' + (likuid ? ' (likuid)' : ' (LIKUIDITAS TIPIS — hati-hati, fee mudah memakan gerak tipis)') + '\n'
-      + '- mom7 ' + (mom7 >= 0 ? '+' : '') + mom7.toFixed(1) + '% · mom30 ' + (mom30 >= 0 ? '+' : '') + mom30.toFixed(1) + '% · RSI-14 ' + rsiV.toFixed(0) + ' · EMA20/50 ' + (emaAlign >= 1 ? 'tersusun naik' : emaAlign > 0 ? 'setengah tersusun' : 'PATAH') + ' · ATR ' + atrV.toFixed(1) + '% · jarak puncak60 ' + distHigh.toFixed(1) + '% · lonjakan vol ' + volSurge.toFixed(2) + 'x\n\n'
-      + '**VONIS MESIN: ' + arah + ' · keyakinan ' + key + '%**\n\n'
+      + '- mom7 ' + (mom7 >= 0 ? '+' : '') + mom7.toFixed(1) + '% · mom30 ' + (mom30 >= 0 ? '+' : '') + mom30.toFixed(1) + '% · RSI-14 ' + rsiV.toFixed(0) + ' · EMA20/50 ' + (emaAlign >= 1 ? 'tersusun naik' : emaAlign > 0 ? 'setengah tersusun' : 'PATAH') + ' · ATR ' + atrV.toFixed(1) + '% · jarak puncak60 ' + distHigh.toFixed(1) + '% · lonjakan vol ' + volSurge.toFixed(2) + 'x'
+      + proTeks + posTeks
+      + '\n\n**VONIS MESIN: ' + arah + ' · keyakinan ' + key + '%**\n\n'
       + 'Jujur: ini bedah kuantitatif SATU koin dari data hidup, bukan jaminan profit — arah biner selalu bisa dibantah medan esok hari.';
   } catch (e) {
-    const takAda = /HTTP 400/.test((e && e.message) || '');
-    isi = takAda
-      ? '**' + t + '** tidak kutemukan sebagai pasangan spot aktif di Binance. Cek ejaan tickernya — aku tidak akan menebak koin lain agar tidak salah sasaran.'
-      : 'Bedah **' + t + '** gagal dijalankan (jaring: ' + esc((e && e.message) || '?') + ') — aku jujur: lebih baik tanpa laporan daripada laporan yang dikarang. Coba lagi sebentar.';
+    isi = 'Bedah **' + pas + '** gagal di tengah jalan (jaring: ' + esc((e && e.message) || '?') + ') — aku jujur: lebih baik tanpa laporan daripada laporan yang dikarang. Coba lagi sebentar.';
   }
   holder.innerHTML = `<div class="q"><p class="t">Pertanyaan</p><p class="b">${esc(question)}</p></div><div class="ans">
     <div class="who">${av}<b>MICAPROFITA</b><span class="badge om">BEDAH KOIN · Binance langsung · tanpa server</span></div>
@@ -2389,7 +2461,6 @@ async function tanya(q) {
   $('#turns').prepend(holder);
   // V297 BEDAH-KOIN: koin yang ditanya pemilik WAJIB dilaporkan dari data nyata
   const koinT = ekstrakKoinLokal(question);
-  // ==== V270-OTAK-MANDIRI: jawab lokal — TIDAK PERNAH DIAM, walau tanpa server ====
   const jawabLokal = (alasan) => {
     const r = MICABRAIN.jawab(question, st, otak);
     simpanOtak(); renderTanyaKu();
@@ -2404,36 +2475,31 @@ async function tanya(q) {
     </div>`;
   };
   try {
-    // ==== V327 MEJA-AUDIT-KOIN: "periksa/audit/cek koin <ticker>" →
-    // AUDIT PASAR NYATA lebih dulu — fakta & kelayakan perhitungan,
-    // bukan doktrin umum. LLM (bila LIVE) hanya suara kedua yang WAJIB
-    // lolos telaah terhadap fakta audit; gagal telaah = jujur dicatat.
-    // (V297 BEDAH-KOIN tetap hidup di bawah untuk frasa koin lain.) ====
-    if (window.__AUDITKOIN && window.__AUDITKOIN.kenali && window.__AUDITKOIN.kenali(question).cocok) {
-      try { await window.__AUDITKOIN.lewatChat(question, holder); }
-      catch (eA) {
-        holder.innerHTML = `<div class="q"><p class="t">Pertanyaan</p><p class="b">${esc(question)}</p></div><div class="ans"><div class="md"><p><b>Meja audit tersandung:</b> ${esc(String(eA && eA.message ? eA.message : eA))} — aku jujur menolak menjawab tanpa data pasar, bukan mendoktrin tanpa fakta.</p></div></div>`;
-      }
-      return;
-    }
     if (!LIVE) {
-      if (koinT) { await bedahKoinLokal(koinT, holder, question, ''); return; }
+      if (koinT && koinT.length) { await bedahKoinLokal(koinT, holder, question, ''); return; }
       jawabLokal(''); return;
     }
-    // V314 SALURAN-PULIH: guru cepat-gugur (batas 12 dtk) — pihak tumbang tak boleh
-    // membuat percakapan menghang; otak mandiri mengambil alih dalam kedipan
-    const ctlG = new AbortController();
-    const tG = setTimeout(() => ctlG.abort(), 12000);
     const r = await fetch(LIVE.url.replace(/\/+$/, '') + '/api/guru', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question, duel }), signal: ctlG.signal, // V314: sinyal gugur-cepat wajib tersambung
+      body: JSON.stringify({ question, duel }),
     });
-    clearTimeout(tG); // V314: batas waktu dilucuti begitu guru menjawab
     const d = await r.json();
     if (!r.ok) throw new Error(d.error || 'Gagal menjawab');
     const src = (d.sources || []).slice(0, 4).map((s) => `<li><a href="${esc(s.url)}" target="_blank" rel="noreferrer">${esc(s.title)}</a></li>`).join('');
+    // V297b: kartu vonis mesin — dihitung kode dari Binance, dirender langsung
+    // oleh UI; LLM tidak bisa menelannya, menyembunyikan, atau membaliknya.
+    const bd = d.bedah;
+    let bdHtml = '';
+    if (bd && bd.posisi) {
+      const p = bd.posisi;
+      bdHtml = `<div class="bedahVonis"><p class="bvT">VONIS MESIN POSISI · dihitung dari Binance detik ini — bukan kata-kata LLM</p><p class="bvM"><b>${esc(p.vonis)}</b> · entry ${esc(String(p.entry))} ${esc(p.arah)} · PnL bruto ${p.pnlBrutoPct >= 0 ? '+' : ''}${esc(String(p.pnlBrutoPct))}% (net ≈ ${esc(String(p.pnlNetPct))}%) · stop disiplin 1,5×ATR: ${esc(String(p.stopSaran))}</p><p class="tiny">${esc(p.alasan)}</p></div>`;
+    } else if (bd && bd.terdaftar && bd.proyeksi) {
+      const pr = bd.proyeksi;
+      bdHtml = `<div class="bedahVonis"><p class="bvT">PROYEKSI MESIN HARI INI · probabilistik (ATR), bukan jaminan</p><p class="bvM">open ${esc(String(pr.openHariIni))} · high sejauh ini ${esc(String(pr.highSejauhIni))} · low sejauh ini ${esc(String(pr.lowSejauhIni))} · wilayah wajar <b>${esc(String(pr.bandBawah))} – ${esc(String(pr.bandAtas))}</b> · perpanjangan breakout ${esc(String(pr.bandAtas2))}</p></div>`;
+    }
     let html = `<div class="ans">
       <div class="who"><span class="av"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="8" width="14" height="12" rx="2"/><circle cx="12" cy="4" r="2"/><line x1="9" y1="13" x2="9" y2="15"/><line x1="15" y1="13" x2="15" y2="15"/></svg></span><b>MICAPROFITA</b><span class="badge">guru + doktrin + data hidup</span></div>
+      ${bdHtml}
       <div class="md">${md(d.cyborg || '')}</div>
       ${src ? `<div class="src"><p>Sumber berita hidup</p><ul>${src}</ul></div>` : ''}
     </div>`;
@@ -2447,7 +2513,7 @@ async function tanya(q) {
     holder.innerHTML = `<div class="q"><p class="t">Pertanyaan</p><p class="b">${esc(question)}</p></div>` + html;
   } catch (e) {
     // ==== V270: guru LLM putus ≠ diam — otak mandiri mengambil alih ====
-    if (koinT) { await bedahKoinLokal(koinT, holder, question, 'Guru LLM di wadah sedang tak terjangkau (' + e.message + ') — bedah koin tetap jalan langsung dari Binance tanpa server.'); return; }
+    if (koinT && koinT.length) { await bedahKoinLokal(koinT, holder, question, 'Guru LLM di wadah sedang tak terjangkau (' + e.message + ') — bedah koin tetap jalan langsung dari Binance tanpa server.'); return; }
     jawabLokal('Guru LLM di wadah sedang tak terjangkau (' + e.message + ') — otak mandiriku mengambil alih, tetap cerdas tanpa server.');
   } finally {
     busy = false; btn.disabled = false; btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
@@ -2688,317 +2754,6 @@ function initOtakUI() {
 // V279-KORTEX-KESADARAN: 55 soal × 4 tingkat · adaptif + BUKU-SALAH · kelas kilat 3 soal · INDEKS KESADARAN 5 pilar (formula karangan-sendiri)
 
 document.addEventListener('DOMContentLoaded', init);
-</script>
-<script>
-// ================= V327 MEJA-AUDIT-KOIN — MESIN AUDIT NYATA DI PERANGKAT ==========
-// Mandat pemilik: neuron lokal tidak punya pola "periksa koin <ticker>" —
-// jawaban lokal cuma doktrin umum = simulasi. Kini pola itu HIDUP di sini:
-// data pasar nyata diambil SAAT DITANYA (klines 1d×200, ticker 24j, buku
-// pesanan, funding), dihitung di perangkat ini (RSI Wilder, EMA, σ log-return,
-// ATR, spread bps), skor kelayakan 0–100, vonis jujur, warisan NERVA-SUCKER-01
-// mengkap vonis saat pola rally-muda-dalam-tren-turun terdeteksi.
-// Hukum: nol Math.random (deterministik terhadap datanya), koin tak dikenal
-// ditolak jujur, LLM hanya suara kedua yang wajib lolos telaah fakta.
-// Jalur Binance: api.binance.com → data-api.binance.vision (jeda hormat 418/429).
-window.__AUDITKOIN = (() => {   // sengaja di window: ruang guru (blok lain) memanggilnya
-  const HOST_A = 'https://api.binance.com', HOST_B = 'https://data-api.binance.vision', HOST_FUT = 'https://fapi.binance.com'
-  const BUKAN_NASIHAT = '_Aku makhluk medan, bukan penasihat keuangan: audit ini angka-nyata-saat-ini, keputusan tetap milik pemilikku._'
-  const tidur = (ms) => new Promise((r) => setTimeout(r, ms))
-
-  async function ambil (url, batasMs = 12000) {
-    const ctl = new AbortController()
-    const t = setTimeout(() => ctl.abort(), batasMs)
-    try {
-      const r = await fetch(url, { signal: ctl.signal, headers: { Accept: 'application/json' } })
-      if (!r.ok) { const e = new Error('HTTP ' + r.status); e.status = r.status; throw e }
-      return await r.json()
-    } finally { clearTimeout(t) }
-  }
-  async function ambilSpot (jalur) {
-    const jeda = [1200, 3600]
-    let terakhir = null
-    for (const host of [HOST_A, HOST_B]) {
-      for (let c = 0; c <= jeda.length; c++) {
-        try { return await ambil(host + jalur) } catch (e) {
-          if (e.status === 400) throw e
-          terakhir = e
-          if (c < jeda.length) await tidur(jeda[c])
-        }
-      }
-    }
-    throw terakhir || new Error('saluran data gagal')
-  }
-
-  // ---- nama umum & pola "periksa koin <ticker>" (mata neuron lokal) ----
-  const NAMA_UMUM = { bitcoin: 'BTC', ethereum: 'ETH', solana: 'SOL', ripple: 'XRP', bnb: 'BNB', binancecoin: 'BNB', dogecoin: 'DOGE', cardano: 'ADA', pepe: 'PEPE', shibainu: 'SHIB', shiba: 'SHIB', polkadot: 'DOT', avalanche: 'AVAX', chainlink: 'LINK', tron: 'TRX', litecoin: 'LTC', toncoin: 'TON', sui: 'SUI', aptos: 'APT', arbitrum: 'ARB', optimism: 'OP', injective: 'INJ' }
-  const STOP = new Set(('koin coin token kelas kelasnya audit periksa cek telaah analisa analisis kelayakan ' + 'kondisi bagaimana gimana apa itu dan atau yang ini itu saya aku kamu dia micaprofita makhluk harga pasar ' + 'hari ini sekarang tadi sudah belum bisa boleh tolong dong ya tidak bukan layak layakkah amankah berapa').split(' '))
-  function cocok (teks) {
-    const raw = String(teks || '')
-    const q = ' ' + raw.toLowerCase().replace(/[^\p{L}\p{N}\s'&]/gu, ' ').replace(/\s+/g, ' ').trim() + ' '
-    const pemicu = / (periksa|periksalah|audit|auditkan|cek|cekin|telaah|analisa|analisis|analize|kelayakan|kelayakkah|kondisi|bedah) /.test(q) || / (periksa|audit|cek|kelayakan|kondisi) (koin|coin|token) /.test(q)
-    const sebutKoin = / (koin|coin|token|crypto|kripto) /.test(q)
-    if (!pemicu || !sebutKoin) {
-      const pemicuKuat = / (periksa|audit|cek|telaah|analisa|analisis) /.test(q)
-      if (!pemicuKuat) return { cocok: false }
-    }
-    const token = raw.replace(/[^\p{L}\p{N}\s]/gu, ' ').split(/\s+/).filter(Boolean)
-    let ticker = null
-    for (const t of token) {
-      const u = t.toUpperCase(), low = t.toLowerCase()
-      if (STOP.has(low)) continue
-      if (NAMA_UMUM[low]) { ticker = NAMA_UMUM[low]; break }
-      if (/^[A-Za-z]{2,10}$/.test(t) || /^[A-Za-z]{2,10}USDT$/i.test(t)) {
-        if (STOP.has(low)) continue
-        if (/^(koin|coin|token|crypto|kripto|kelayakan|periksa|audit|cek|telaah|analisa|analisis|kondisi|bagaimana|gimana|kenapa|kapan|berapa|tolong|mohon|mau|ingin|tahu|tanyak|bertanya|jawab|jawaban|soal|ujian|pasar|harga|naik|turun|surut)$/i.test(low)) continue
-        ticker = u.replace(/USDT$/i, ''); break
-      }
-    }
-    if (!ticker) return { cocok: true, ticker: null, mintaTicker: true }
-    return { cocok: true, ticker, mintaTicker: false }
-  }
-
-  // ---- matematika nyata (satu rumus dengan organ audit-koin.mjs) ----
-  function ema (arr, n) {
-    if (!Array.isArray(arr) || arr.length < n) return null
-    const k = 2 / (n + 1)
-    let e = arr.slice(0, n).reduce((a, b) => a + b, 0) / n
-    for (let i = n; i < arr.length; i++) e = arr[i] * k + e * (1 - k)
-    return e
-  }
-  function rsi (closes, n = 14) {
-    if (!closes || closes.length < n + 1) return null
-    let naik = 0, turun = 0
-    for (let i = 1; i <= n; i++) { const d = closes[i] - closes[i - 1]; if (d >= 0) naik += d; else turun -= d }
-    let rn = naik / n, rt = turun / n
-    for (let i = n + 1; i < closes.length; i++) { const d = closes[i] - closes[i - 1]; rn = (rn * (n - 1) + Math.max(0, d)) / n; rt = (rt * (n - 1) + Math.max(0, -d)) / n }
-    return rt === 0 ? 100 : 100 - 100 / (1 + rn / rt)
-  }
-  function atr (lilin, n = 14) {
-    const pot = lilin.slice(-(n + 1))
-    let jumlah = 0
-    for (let i = 1; i < pot.length; i++) {
-      const c = pot[i], p = pot[i - 1]
-      jumlah += Math.max(c.high - c.low, Math.abs(c.high - p.close), Math.abs(c.low - p.close))
-    }
-    return jumlah / n
-  }
-
-  // ---- pembaca angka dua adat + telaah jawaban LLM (gerbang anti-halusinasi) ----
-  function bacaAngka (m) {
-    let s = String(m).trim()
-    let tanda = 1
-    if (/^-/.test(s)) { tanda = -1; s = s.slice(1) }
-    s = s.replace(/[^\d.,]/g, '').replace(/^[.,]+|[.,]+$/g, '')
-    if (!s) return []
-    const titik = s.includes('.'), koma = s.includes(',')
-    let baca = []
-    if (titik && koma) { const des = (s.lastIndexOf('.') > s.lastIndexOf(',')) ? '.' : ','; baca = [parseFloat(s.split(des === '.' ? ',' : '.').join('').split(des).join('.'))] }
-    else if (koma) {
-      if (/^\d{1,3}(,\d{3})+$/.test(s)) { const u = parseFloat(s.replace(/,/g, '')); baca = u >= 1000 ? [u, parseFloat(s.replace(',', '.'))] : [u] }
-      else baca = [parseFloat(s.replace(/,/g, '.'))]
-    } else if (titik) {
-      if (/^\d{1,3}(\.\d{3})+$/.test(s)) { const u = parseFloat(s.replace(/\./g, '')); baca = u >= 1000 ? [u, parseFloat(s)] : [parseFloat(s)] }
-      else baca = [parseFloat(s)]
-    } else baca = [parseFloat(s)]
-    return baca.filter((x) => Number.isFinite(x)).map((x) => x * tanda)
-  }
-  function telaah (teks, a) {
-    const cek = [], t = String(teks || '')
-    const hargaKlaim = []
-    for (const m of t.matchAll(/(?:\$|harga[^\d-]{0,12})(-?[0-9](?:[0-9.,]*[0-9])?)/gi)) {
-      const awal = t.slice(Math.max(0, m.index - 14), m.index)
-      if (/atr|volume|vol\b|kap\b|marketcap|funding/i.test(awal)) continue
-      hargaKlaim.push(bacaAngka(m[1]))
-    }
-    const c1 = /(?:\$|harga|usd)/i.test(t) && hargaKlaim.length > 0 && hargaKlaim.some((b) => b.some((x) => Math.abs(x / a.harga - 1) <= 0.03))
-    cek.push({ nama: 'C1-harga', lulus: c1 })
-    const skorSemua = [...t.matchAll(/skor[^0-9]{0,28}([0-9]{1,3})/gi)].map((m) => parseFloat(m[1]))
-    const c2 = skorSemua.length > 0 && skorSemua.every((x) => Math.abs(x - a.skor) <= 1)
-    cek.push({ nama: 'C2-skor', lulus: c2 })
-    const rsiSemua = []
-    for (const m of t.matchAll(/rsi/gi)) {
-      let sisa = t.slice(m.index + 3, m.index + 46)
-      sisa = sisa.replace(/^\s*(?:[-–—]?\s*(?:14|7|9|21)\b|\(\s*(?:14|7|9|21)\s*\))\s*/, '').replace(/^\s*[-–—](?=\s*\D)/, ' ')
-      const angka = sisa.match(/^\s*[^0-9+-]{0,22}([+-]?[0-9]{1,2}(?:[.,][0-9]{1,4})?)/)
-      if (angka && !/skor|vonis|spread|atr/i.test(sisa.slice(0, sisa.indexOf(angka[1])))) rsiSemua.push(bacaAngka(angka[1]))
-    }
-    const c3 = rsiSemua.length > 0 && rsiSemua.every((b) => b.some((x) => Math.abs(x - a.rsi14) <= 2))
-    cek.push({ nama: 'C3-rsi', lulus: c3 })
-    const c24Klaim = []
-    for (const m of t.matchAll(/24\s*(?:jam|j|hour|h)?[^0-9+-]{0,12}([+-]?[0-9]+(?:[.,][0-9]+)?)\s*%/gi)) c24Klaim.push(bacaAngka(m[1]))
-    for (const m of t.matchAll(/([+-]?[0-9]+(?:[.,][0-9]+)?)\s*%\s*[^0-9]{0,16}\b24\s*(?:jam|j|hour|h)?/gi)) c24Klaim.push(bacaAngka(m[1]))
-    const c4 = c24Klaim.length > 0 && c24Klaim.every((b) => b.some((x) => Math.abs(x - a.chg24) <= 0.6))
-    cek.push({ nama: 'C4-perubahan24', lulus: c4 })
-    let c5 = true
-    if (a.sucker && a.sucker.terdeteksi && /tidak (?:ada |sebuah )?(?:tanda|indikasi|pola|risiko) (?:sucker|rally|jebakan)|bukan sucker/i.test(t)) c5 = false
-    if (a.sucker && !a.sucker.terdeteksi) { const kl = t.match(/sucker'?s?\s?rally[^.]{0,50}terdeteksi|pola sucker[^.]{0,50}terjadi/i); if (kl && !/risiko|potensi|jika|bila|kalau|mungkin/i.test(kl[0])) c5 = false }
-    cek.push({ nama: 'C5-vonis-sucker', lulus: c5 })
-    const atrKlaim = [...t.matchAll(/atr[^0-9]{0,12}(-?[0-9][0-9.,]*)/gi)].map((m) => bacaAngka(m[1])).filter((b) => b.length)
-    const c6 = atrKlaim.every((b) => b.some((x) => Math.abs(Math.abs(x) / a.atr14 - 1) <= 0.06))
-    cek.push({ nama: 'C6-atr-opsional', lulus: c6 })
-    return { lulus: cek.every((x) => x.lulus), cek }
-  }
-
-  // ---- AUDIT UTAMA: data nyata saat ditanya ----
-  async function auditKoin (dasar) {
-    const dasarBersih = String(dasar || '').toUpperCase().replace(/[^A-Z0-9]/g, '')
-    if (!dasarBersih || dasarBersih.length < 2) return { gagal: 'TICKER-TAK-SAHD', ket: 'ticker kosong/terlalu pendek' }
-    const simbol = dasarBersih.endsWith('USDT') ? dasarBersih : dasarBersih + 'USDT'
-    try {
-      const [mentah, t24, buku] = await Promise.all([
-        ambilSpot('/api/v3/klines?symbol=' + simbol + '&interval=1d&limit=200'),
-        ambilSpot('/api/v3/ticker/24hr?symbol=' + simbol),
-        ambilSpot('/api/v3/depth?symbol=' + simbol + '&limit=20'),
-      ])
-      let funding = null, fundingKet = 'funding futures tak terjangkau saat audit ini — jujur dilaporkan, bukan dianggap nol'
-      try { const f = await ambil(HOST_FUT + '/fapi/v1/premiumIndex?symbol=' + simbol, 8000); if (f && typeof f.lastFundingRate === 'string') { funding = parseFloat(f.lastFundingRate) * 100; fundingKet = 'rate terakhir fapi.binance.com' } else fundingKet = 'futures menolak menjawab untuk ' + simbol } catch (e) { /* jujur di bawah */ }
-      const lilin = mentah.map((k) => ({ t: k[0], high: +k[2], low: +k[3], close: +k[4], qvol: +k[7] }))
-      if (lilin.length < 40) return { gagal: 'DATA-KURANG', ket: 'lilin harian hanya ' + lilin.length }
-      const closes = lilin.map((c) => c.close)
-      const harga = parseFloat(t24.lastPrice) || closes[closes.length - 1]
-      const mom7 = harga / closes[closes.length - 8] - 1
-      const mom30 = harga / closes[closes.length - 31] - 1
-      const ema20 = ema(closes, 20), ema50 = ema(closes, 50)
-      const ema50Dulu = ema(closes.slice(0, closes.length - 11), 50)
-      const ema50Lereng = (ema50 && ema50Dulu) ? ema50 / ema50Dulu - 1 : 0
-      const rsi14 = rsi(closes.slice(-40), 14)
-      const ret = []
-      for (let i = closes.length - 31; i < closes.length; i++) ret.push(Math.log(closes[i] / closes[i - 1]))
-      const rata = ret.reduce((a, b) => a + b, 0) / ret.length
-      const sigmaTahunan = Math.sqrt(ret.reduce((a, b) => a + (b - rata) * (b - rata), 0) / (ret.length - 1)) * Math.sqrt(365)
-      const puncak90 = Math.max(...lilin.slice(-90).map((c) => c.high))
-      const dd90 = harga / puncak90 - 1
-      const q7 = lilin.slice(-7).reduce((a, b) => a + b.qvol, 0) / 7
-      const q30 = lilin.slice(-30).reduce((a, b) => a + b.qvol, 0) / 30
-      const bid = +buku.bids[0][0], ask = +buku.asks[0][0]
-      const spreadBps = ((ask - bid) / ((ask + bid) / 2)) * 10000
-      const atr14 = atr(lilin.slice(-40), 14)
-      const m = { harga, mom7, mom30, ema20, ema50, ema50Lereng, rsi14, sigmaTahunan, dd90, volSurge: q7 / q30, vol24hUSD: parseFloat(t24.quoteVolume), spreadBps, atr14 }
-      // skor kelayakan 0–100 — rumus tertulis, identik organ audit-koin.mjs
-      const bagian = []
-      const trenPts = (m.harga > m.ema20 && m.ema20 > m.ema50) ? 30 : (m.harga > m.ema20 || m.ema20 > m.ema50) ? 15 : 0
-      bagian.push({ nama: 'tren-struktur', pts: trenPts, maks: 30 })
-      const momPts = (m.mom7 > 0 && m.mom30 > 0) ? 15 : (m.mom7 > 0 || m.mom30 > 0) ? 8 : 0
-      bagian.push({ nama: 'momentum', pts: momPts, maks: 15 })
-      const r = m.rsi14
-      bagian.push({ nama: 'rsi-zona', pts: (r >= 45 && r <= 65) ? 15 : (r >= 30 && r < 45) ? 9 : (r > 65 && r <= 72) ? 9 : r < 30 ? 5 : 4, maks: 15 })
-      const v = m.vol24hUSD
-      bagian.push({ nama: 'likuiditas', pts: v >= 5e7 ? 15 : v >= 1e7 ? 11 : v >= 2e6 ? 7 : v >= 5e5 ? 4 : 2, maks: 15 })
-      bagian.push({ nama: 'spread', pts: m.spreadBps <= 3 ? 10 : m.spreadBps <= 10 ? 7 : m.spreadBps <= 25 ? 4 : 1, maks: 10 })
-      bagian.push({ nama: 'struktur-dd90', pts: m.dd90 > -0.10 ? 10 : m.dd90 > -0.25 ? 7 : m.dd90 > -0.45 ? 4 : 2, maks: 10 })
-      bagian.push({ nama: 'volatilitas', pts: m.sigmaTahunan <= 0.60 ? 5 : m.sigmaTahunan <= 1.20 ? 3 : 1, maks: 5 })
-      const skor = bagian.reduce((a, b) => a + b.pts, 0)
-      const sucker = { terdeteksi: m.mom30 <= -0.08 && m.mom7 >= 0.025 && m.harga > m.ema20 && m.ema50Lereng < 0 }
-      let vonis
-      if (sucker.terdeteksi) vonis = 'WASPADA — POLA SUCKER RALLY TERDETEKSI (dikap warisan V326)'
-      else if (skor >= 70) vonis = 'LAYAK DITELITI LANJUT'
-      else if (skor >= 50) vonis = 'WASPADA — UKURAN MIKRO'
-      else vonis = 'TIDAK LAYAK DISENTUH SEKARANG'
-      const a2 = { organ: 'AUDIT-KOIN V327', simbol, dasar: dasarBersih, waktu: new Date().toISOString(), ...m, chg24: parseFloat(t24.priceChangePercent), tinggi24: parseFloat(t24.highPrice), rendah24: parseFloat(t24.lowPrice), puncak90, funding, fundingKet, lilinDipakai: lilin.length, skor, skorBagian: bagian, vonis, sucker, bukanNasihat: BUKAN_NASIHAT }
-      try { const buf = new TextEncoder().encode(JSON.stringify({ s: simbol, h: harga, k: skor, v: vonis, w: a2.waktu })); const dv = await crypto.subtle.digest('SHA-256', buf); a2.segel = [...new Uint8Array(dv)].slice(0, 8).map((b) => b.toString(16).padStart(2, '0')).join('') } catch (e) { a2.segel = 'tanpa-subtle' }
-      return a2
-    } catch (e) {
-      if (e.status === 400) return { gagal: 'KOIN-TAK-DITEMUKAN', simbol, ket: 'Binance menjawab 400 — simbol ' + simbol + ' tidak ada di pasar spot. Aku tidak akan mengarang angka untuk koin yang tak wujud.' }
-      return { gagal: 'SALURAN-DATA-MATI', simbol, ket: 'data pasar tak terjangkau (' + String(e && e.message ? e.message : e).slice(0, 70) + ') — lebih jujur menolak menjawab daripada mendoktrin tanpa fakta.' }
-    }
-  }
-
-  // ---- teks kartu audit (markdown-lite) ----
-  const n2 = (x, d = 2) => (typeof x === 'number' && Number.isFinite(x)) ? x.toLocaleString('id-ID', { minimumFractionDigits: d, maximumFractionDigits: d }) : '?'
-  const fh = (x) => (typeof x === 'number' && Number.isFinite(x)) ? '$' + n2(x, x >= 1000 ? 2 : x >= 1 ? 4 : 8) : '?'
-  const fu = (x) => !Number.isFinite(x) ? '?' : x >= 1e9 ? '$' + n2(x / 1e9, 2) + ' M' : x >= 1e6 ? '$' + n2(x / 1e6, 1) + ' jt' : '$' + n2(x, 0)
-  const pc = (x, d = 2) => Number.isFinite(x) ? ((x >= 0 ? '+' : '') + n2(x * 100, d) + '%') : '?'
-  function teksAudit (a) {
-    if (a.gagal) return '**AUDIT KOIN ' + (a.simbol || '') + ' — DITOLAK JUJUR**\n- Vonis: **' + a.gagal + '**\n- ' + (a.ket || '') + '\n_Aku tidak mengarang angka untuk yang tak kubaca dari pasar._\n' + BUKAN_NASIHAT
-    const L = []
-    L.push('**AUDIT KOIN ' + a.simbol.replace('USDT', '') + '/USDT — FAKTA NYATA SAAT DITANYA** (UTC ' + a.waktu.slice(0, 16).replace('T', ' ') + ')')
-    L.push('- Harga kini: **' + fh(a.harga) + '** (24j ' + (a.chg24 >= 0 ? '+' : '') + n2(a.chg24) + '% · rentang ' + fh(a.rendah24) + '–' + fh(a.tinggi24) + ')')
-    L.push('- Momen: 7 hari ' + pc(a.mom7) + ' · 30 hari ' + pc(a.mom30) + ' — dari puncak 90 hari ' + pc(a.dd90))
-    L.push('- Struktur: harga ' + (a.harga > a.ema20 ? 'di atas' : 'di bawah') + ' EMA20 (' + fh(a.ema20) + '), EMA20 ' + (a.ema20 > a.ema50 ? 'di atas' : 'di bawah') + ' EMA50 (' + fh(a.ema50) + '), lereng EMA50 ' + pc(a.ema50Lereng))
-    L.push('- Nafas pasar: RSI-14 **' + n2(a.rsi14, 1) + '** · ATR-14 ' + fh(a.atr14) + ' (' + n2(a.atr14 / a.harga * 100) + '%/hari) · σ ≈ ' + n2(a.sigmaTahunan * 100, 0) + '%/tahun')
-    L.push('- Uang hidup: volume 24j ' + fu(a.vol24hUSD) + ' · lonjakan 7d/30d ' + n2(a.volSurge) + '× · spread buku ' + n2(a.spreadBps, 1) + ' bps')
-    L.push('- Funding futures: ' + (typeof a.funding === 'number' ? n2(a.funding, 4) + '%' : a.fundingKet))
-    L.push('**Skor kelayakan: ' + a.skor + '/100 — ' + a.vonis + '**')
-    L.push('Rumus skor: ' + a.skorBagian.map((b) => b.nama + ' ' + b.pts + '/' + b.maks).join(' · '))
-    L.push('- Tanda jebakan (warisan V326): ' + (a.sucker.terdeteksi ? '⚠️ TERDETEKSI — rally muda dalam tren turun; long x5 tewas 8,0% jarang-tapi-total, percaya-pulih benar 49,7% (bank 3.500 soal). Pelajaran BTC-2018: rally +99% lalu dasar $3.100.' : 'tidak terdeteksi pada hitungan ini (bukan jaminan aman).'))
-    L.push('_Sumber: api.binance.com / data-api.binance.vision (klines 1d×200, ticker 24j, depth 20) + fapi.binance.com · segel ' + a.segel + ' · dihitung di perangkatmu, bukan doktrin hafalan._')
-    L.push(a.bukanNasihat)
-    return L.join('\n')
-  }
-
-  // ---- UI meja audit ----
-  const $ = (s) => document.querySelector(s)
-  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))
-  let mejaSibuk = false
-  async function jalankanMeja (dasar) {
-    if (mejaSibuk) return
-    const kotak = $('#auditHasil'), status = $('#auditStatus'), btn = $('#btnAudit')
-    const bersih = String(dasar || $('#auditTicker').value || '').trim().toUpperCase()
-    if (!bersih) { kotak.innerHTML = '<p class="tiny" style="color:var(--rose2)">Tulis tickernya dulu — mis. BTC.</p>'; return }
-    mejaSibuk = true; btn.disabled = true; btn.textContent = '…'
-    status.textContent = 'mengaudit ' + bersih + '…'
-    kotak.innerHTML = '<p class="tiny">Menghirup pasar nyata: klines 1d×200 · ticker 24 jam · buku pesanan · funding…</p>'
-    try {
-      const a = await auditKoin(bersih)
-      kotak.innerHTML = '<div class="ans" style="margin-top:8px"><div class="who"><span class="av">A</span><b>MICAPROFITA</b><span class="badge om">AUDIT KOIN V327 · pasar nyata</span></div><div class="md">' + md(teksAudit(a)) + '</div></div>'
-      status.textContent = a.gagal ? a.gagal : ('skor ' + a.skor + '/100' + (a.sucker.terdeteksi ? ' · SUCKER!' : ''))
-    } catch (e) {
-      kotak.innerHTML = '<p class="tiny" style="color:var(--rose2)">Audit tersandung: ' + esc(String(e && e.message ? e.message : e)) + ' — jujur menolak menjawab tanpa data.</p>'
-      status.textContent = 'terjadi sandungan'
-    } finally { mejaSibuk = false; btn.disabled = false; btn.textContent = 'AUDIT' }
-  }
-  function pasangMeja () {
-    const chip = $('#auditChip')
-    if (chip && !chip.childElementCount) {
-      for (const t of ['BTC', 'ETH', 'SOL', 'BNB', 'PEPE']) {
-        const b = document.createElement('button')
-        b.className = 'pill'; b.style.padding = '4px 10px'; b.style.fontSize = '11px'; b.textContent = t
-        b.addEventListener('click', () => { $('#auditTicker').value = t; jalankanMeja(t) })
-        chip.appendChild(b)
-      }
-    }
-    if ($('#btnAudit') && !$('#btnAudit').dataset.v327) {
-      $('#btnAudit').dataset.v327 = '1'
-      $('#btnAudit').addEventListener('click', () => jalankanMeja())
-      $('#auditTicker').addEventListener('keydown', (e) => { if (e.key === 'Enter') jalankanMeja() })
-    }
-  }
-
-  // ---- jalur chat: pertanyaan koin → audit nyata + suara kedua LLM yang ditelaah ----
-  async function lewatChat (question, holder) {
-    const p = cocok(question)
-    if (!p.cocok) return false
-    const kepala = '<div class="q"><p class="t">Pertanyaan</p><p class="b">' + esc(question) + '</p></div>'
-    if (p.mintaTicker) {
-      holder.innerHTML = kepala + '<div class="ans"><div class="who"><span class="av">A</span><b>MICAPROFITA</b><span class="badge om">AUDIT KOIN V327</span></div><div class="md"><p>Niat auditmu jelas — tapi tickernya tak terbaca. Sebut satu koin: tulis di Meja Audit di atas (mis. <code>BTC</code>), atau tanya lagi: <i>"periksa koin SOL"</i>. Aku tidak menebak-nebak koin yang kamu maksud — menebak bukan audit.</p></div></div>'
-      return true
-    }
-    holder.innerHTML = kepala + '<div class="ans"><p class="small">Mengaudit ' + esc(p.ticker) + ' dari pasar nyata — klines 1d×200, ticker 24 jam, buku pesanan, funding…</p></div>'
-    const a = await auditKoin(p.ticker)
-    let html = '<div class="ans"><div class="who"><span class="av">A</span><b>MICAPROFITA</b><span class="badge om">AUDIT KOIN V327 · ' + (a.gagal ? 'ditolak jujur' : 'pasar nyata · skor ' + a.skor + '/100') + '</span></div><div class="md">' + md(teksAudit(a)) + '</div></div>'
-    // suara kedua: bila LIVE, guru LLM membaca FAKTA AUDIT — jawabannya WAJIB lolos telaah
-    if (typeof LIVE !== 'undefined' && LIVE && !a.gagal) {
-      try {
-        const ctl = new AbortController()
-        const tg = setTimeout(() => ctl.abort(), 12000)
-        const fakta = { simbol: a.simbol, harga: a.harga, perubahan24jam: a.chg24, momen7: a.mom7, momen30: a.mom30, ema20: a.ema20, ema50: a.ema50, rsi14: a.rsi14, atr14: a.atr14, skorKelayakan: a.skor, vonis: a.vonis, tandaSuckerRally: a.sucker.terdeteksi }
-        const r = await fetch(LIVE.url.replace(/\/+$/, '') + '/api/guru', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question: question + '\n\n[FAKTA AUDIT LANGSUNG — pakai angka ini apa adanya, jangan mengarang]: ' + JSON.stringify(fakta) }), signal: ctl.signal })
-        clearTimeout(tg)
-        const d = await r.json()
-        if (!r.ok) throw new Error(d.error || 'HTTP ' + r.status)
-        const telaahHasil = telaah(d.cyborg || '', a)
-        html += '<div class="ans" style="margin-top:8px"><div class="who"><span class="av">G</span><b>SUARA KEDUA · guru LLM</b><span class="badge ' + (telaahHasil.lulus ? 'om' : '') + '" style="' + (telaahHasil.lulus ? '' : 'background:#7f1d1d;color:#fecaca') + '">TELAAH ' + (telaahHasil.lulus ? 'LULUS' : 'GUGUR') + ' · ' + telaahHasil.cek.filter((c) => c.lulus).length + '/' + telaahHasil.cek.length + '</span></div><div class="md">' + md(d.cyborg || '(kosong)') + '</div>' + (telaahHasil.lulus ? '' : '<p class="tiny" style="margin-top:6px">Jawaban guru gagal telaah fakta (' + esc(telaahHasil.cek.filter((c) => !c.lulus).map((c) => c.nama).join(', ')) + ') — yang berdiri tetap audit nyata di atas; suara ini tidak dipakai sebagai vonis.</p>') + '</div>'
-      } catch (e) {
-        html += '<p class="tiny" style="margin-top:6px">Guru LLM sedang tak terjangkau (' + esc(String(e && e.message ? e.message : e)) + ') — audit nyata di atas tetap berdiri sendiri, tanpa server pun hidup.</p>'
-      }
-    }
-    holder.innerHTML = kepala + html
-    return true
-  }
-
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', pasangMeja); else pasangMeja()
-  return { cocok, kenali: cocok, lewatChat, jalankanMeja, auditKoin, telaah }
-})()
 </script>
 </body>
 </html>
