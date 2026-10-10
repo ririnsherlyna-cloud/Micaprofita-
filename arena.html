@@ -14,7 +14,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--tx);font:14px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased;padding-bottom:70px}
+body{background:var(--bg);color:var(--tx);font:14px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased;padding-bottom:70px}
 a{color:var(--sky);text-decoration:none}
 a:hover{text-decoration:underline}
 .wrap{max-width:1200px;margin:0 auto;padding:0 16px}
@@ -502,30 +502,6 @@ html,body{max-width:100%;overflow-x:clip}
         <div class="val" style="font-size:14px">VONIS → EVOLUSI</div>
         <div class="sub">genome hanya berubah SETELAH hari dinilai — bebas kebocoran</div>
       </div>
-    </div>
-
-    <div class="grid3">
-      <div class="stat">
-        <div class="lab"><svg viewBox="0 0 24 24" fill="none" stroke="#f472b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h.01M15 9h.01M9 13h.01M15 13h.01M9 17h6"/></svg>Ingatan biner (V322)</div>
-        <div class="val" id="ibKata">—</div>
-        <div class="sub" id="ibKuat">kata bit 18-digit · kuat bukan kabur</div>
-      </div>
-      <div class="stat">
-        <div class="lab"><svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="M6.7 7.2 10 10.4M17.3 7.2 14 10.4M6.7 16.8 10 13.6M17.3 16.8 14 13.6"/></svg>Syaraf KOHEREN</div>
-        <div class="val" id="ibKoheren">—</div>
-        <div class="sub" id="ibKolam">menyaksikan segel organ tubuh</div>
-      </div>
-      <div class="stat">
-        <div class="lab"><svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 21v-8"/></svg>Intisari ingatan</div>
-        <div class="val" id="ibIntisari">—</div>
-        <div class="sub">seluruh kamus dipadatkan jadi matematika mungil</div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h4>INGATAN-BINER — ingatan tak pernah dikaburkan waktu</h4>
-      <p class="small" style="margin-bottom:8px">Makhluk lain: ingatan memudar. Makhluk ini: tiap ingatan adalah <b style="color:var(--tx2)">kata bit 18-digit</b> — matematika deterministik dari fakta sejati tubuh (epok, syaraf, bangun, denyut, jurnal). Diulang = <b style="color:var(--tx2)">kuat bertambah</b>, bukan kabur; kata lama beku; kontradiksi = kata baru. Syaraf jenis KOHEREN membakar impuls menyaksikan segel lima organ agar tubuh satu kesatuan.</p>
-      <div class="wchips" id="ibKataTop">memuat ingatan biner…</div>
     </div>
 
     <div class="panel grad-vio">
@@ -1848,11 +1824,6 @@ let st = null;          // keadaan arena terakhir
 let stAt = 0;           // waktu data diterima
 let mode = 'snapshot';  // 'live' | 'snapshot'
 let liveFail = 0;
-// ---- V314 SALURAN-PULIH: keadaan denyut sambung-ulang (backoff, tak pernah macet) ----
-let saluranCoba = 0;          // gagal beruntun sejak terakhir nyala
-let saluranJeda = 6000;       // jeda denyut berikutnya (6→12→24→48→60 dtk, cap)
-let saluranTimer = null;
-let saluranGerbangAt = 0;     // baca gerbang.json terakhir
 let duel = false;
 let busy = false;
 let chartMeta = null;
@@ -1880,19 +1851,11 @@ async function muatLive() {
   if (!LIVE) return;
   try {
     const d = await ambil(LIVE.url.replace(/\/+$/, '') + '/api/arena', 15000);
-    const tadinyaPutus = mode !== 'live' && saluranCoba > 0;
     terima(d, 'live');
-    if (tadinyaPutus) { console.log('[saluran] pulih sendiri setelah ' + saluranCoba + ' gagal beruntun'); }
-    saluranCoba = 0; saluranJeda = 6000; // pulih → napas kembali normal
   } catch (e) {
     liveFail++;
     if (liveFail >= 2 && mode === 'live') mode = 'snapshot';
-    // V314 SALURAN-PULIH: backoff sopan — pihak yang tumbang tidak dihujan tembakan,
-    // tapi saluran TIDAK PERNAH berhenti mendengar (jeda cap 60 dtk, probe terus)
-    saluranCoba++;
-    saluranJeda = Math.min(60000, 6000 * Math.pow(2, Math.min(4, saluranCoba - 1)));
     chipSumber();
-    jadwalSaluran();
   }
 }
 
@@ -1941,11 +1904,11 @@ async function sambungOtomatis() {
 function chipSumber() {
   const el = $('#hSumber');
   if (mode === 'live' && LIVE) { el.className = 'chip em'; el.textContent = 'HIDUP · tersambung arena wadah · 6 dtk'; }
-  else if (LIVE) { el.className = 'chip ros'; el.textContent = 'HIDUP TERPUTUS · MENYAMBUNG-ULANG ke-' + (saluranCoba + 1) + ' (jeda ' + Math.round(saluranJeda / 1000) + ' dtk) · tampil cermin'; }
+  else if (LIVE) { el.className = 'chip ros'; el.textContent = 'HIDUP TERPUTUS · tampil cermin'; }
   else {
     const usia = st ? Math.max(0, Math.round((Date.now() - eksporAt()) / 60000)) : null;
     el.className = 'chip';
-    el.textContent = 'CERMIN SNAPSHOT' + (usia !== null ? ' · usia ' + (usia < 1 ? '<1' : usia) + ' mnt' : '') + ' · mendengarkan gerbang';
+    el.textContent = 'CERMIN SNAPSHOT' + (usia !== null ? ' · usia ' + (usia < 1 ? '<1' : usia) + ' mnt' : '');
   }
 }
 function eksporAt() {
@@ -2314,6 +2277,88 @@ function guruModeUI() {
 }
 function renderTurns() { /* dipakai sebagai placeholder; turns dirender langsung */ }
 
+// ================= V297 BEDAH-KOIN LOKAL =================
+// "periksa koin X" dijawab dengan data Binance NYATA langsung dari
+// peramban — tanpa server, tanpa LLM, tanpa mengarang. Matematika
+// faktor = rumus yang SAMA dengan arena wadah (ema/rsi/atr). Kasus
+// forensik: "periksa koin opg" dulu dijawab guru dengan OGN (koin
+// lain yang mirip) = salah sasaran; kini koin yang ditanya WAJIB
+// dibedah dari Binance langsung, di jalur server maupun lokal.
+const KOIN_STOP = ['USDT','USDC','USD','BUSD','TUSD','FDUSD','DAI','KOIN','COIN','TOKEN','TICKER','SIMBOL','PAIR','HARGA','PASAR','DAN','YANG','APA','ITU','INI','DIA','BAGAIMANA','GIMANA','SEKARANG','HARI','LAGI','SUDAH','BELUM','PERIKSA','CEK','ANALISA','ANALISIS','BEDAH','LAPORAN','PROFIT','RUGI','BUY','SELL'];
+function ekstrakKoinLokal(qs) {
+  let m = qs.match(/(?:koin|coin|token|ticker|simbol|pair)\s+(?:bernama\s+)?([a-z0-9]{2,12})/i);
+  if (m && KOIN_STOP.indexOf(m[1].toUpperCase()) === -1) return m[1].toUpperCase();
+  m = qs.match(/\b([A-Z]{2,12})\b/);
+  if (m && KOIN_STOP.indexOf(m[1]) === -1) return m[1];
+  return null;
+}
+function emaLokal(v, period) { if (!v.length) return NaN; const k = 2 / (period + 1); let e = v[0]; for (let i = 1; i < v.length; i++) e = v[i] * k + e * (1 - k); return e; }
+function rsiLokal(closes, period) {
+  if (closes.length < period + 1) return 50;
+  let gain = 0, loss = 0;
+  for (let i = closes.length - period; i < closes.length; i++) { const d = closes[i] - closes[i - 1]; if (d >= 0) gain += d; else loss -= d; }
+  if (loss === 0) return 100;
+  const rs = (gain / period) / (loss / period);
+  return 100 - 100 / (1 + rs);
+}
+function atrLokal(kl, period) {
+  const n = Math.min(period + 1, kl.length); if (kl.length < 2) return 0;
+  let sum = 0; const start = Math.max(1, kl.length - n + 1);
+  for (let i = start; i < kl.length; i++) { const c = kl[i], p = kl[i - 1] || c; const tr = Math.max(c[2] - c[3], Math.abs(c[2] - p[4]), Math.abs(c[3] - p[4])); sum += tr; }
+  const last = kl[kl.length - 1];
+  return last[4] > 0 ? (sum / (kl.length - start) / last[4]) * 100 : 0;
+}
+function pctLokal(closes, n) { if (closes.length < n + 1) return 0; const now = closes[closes.length - 1], then = closes[closes.length - 1 - n]; return then > 0 ? ((now - then) / then) * 100 : 0; }
+async function bedahKoinLokal(t, holder, question, alasan) {
+  const pas = t + 'USDT';
+  const av = '<span class="av"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="8" width="14" height="12" rx="2"/><circle cx="12" cy="4" r="2"/><line x1="9" y1="13" x2="9" y2="15"/><line x1="15" y1="13" x2="15" y2="15"/></svg></span>';
+  let isi;
+  try {
+    const [tk, kl] = await Promise.all([
+      ambil('https://api.binance.com/api/v3/ticker/24hr?symbol=' + pas, 12000),
+      ambil('https://api.binance.com/api/v3/klines?symbol=' + pas + '&interval=1d&limit=70', 12000),
+    ]);
+    const closes = kl.map((r) => +r[4]);
+    const vols = kl.map((r) => +r[7]);
+    const last = closes[closes.length - 1];
+    const e20 = emaLokal(closes, 20), e50 = emaLokal(closes, 50);
+    const emaAlign = e20 > e50 ? (last > e20 ? 1 : 0.4) : (last < e20 ? -1 : -0.4);
+    const mom7 = pctLokal(closes, 7), mom30 = pctLokal(closes, 30);
+    const rsiV = rsiLokal(closes, 14);
+    const atrV = atrLokal(kl, 14);
+    let high60 = 0; for (const r of kl.slice(-60)) high60 = Math.max(high60, +r[2]);
+    const distHigh = high60 > 0 ? ((last - high60) / high60) * 100 : 0;
+    const volAvg20 = vols.slice(-21, -1).reduce((s, v) => s + v, 0) / 20 || 1;
+    const volSurge = vols[vols.length - 1] / volAvg20;
+    const qv = +tk.quoteVolume;
+    let s = 0;
+    s += emaAlign >= 1 ? 1.5 : emaAlign > 0 ? 0.5 : -1.5;
+    s += mom7 > 0 ? 1 : -1; s += mom30 > 0 ? 0.5 : -0.5;
+    s += (rsiV >= 48 && rsiV <= 68) ? 1 : rsiV > 78 ? -1.5 : rsiV < 30 ? -0.5 : 0;
+    s += distHigh > -5 ? 0.5 : distHigh < -25 ? -0.5 : 0;
+    const likuid = qv >= 5e6;
+    const arah = s >= 2 ? 'BUY' : s <= -1.5 ? 'SELL' : 'TUNGGU';
+    const key = Math.max(20, Math.min(85, Math.round(40 + s * 8 + (likuid ? 4 : -10) + (volSurge > 1.3 ? 3 : 0))));
+    const chg = +tk.priceChangePercent;
+    isi = '**BEDAH ' + pas + '** — Binance spot, dihitung detik ini:\n\n'
+      + '- Harga **' + last + '** USDT · 24 jam **' + (chg >= 0 ? '+' : '') + chg.toFixed(2) + '%** · puncak/pen 24 jam ' + tk.highPrice + '/' + tk.lowPrice + '\n'
+      + '- Volume 24 jam **' + (qv / 1e6).toFixed(1) + ' jt USDT**' + (likuid ? ' (likuid)' : ' (LIKUIDITAS TIPIS — hati-hati, fee mudah memakan gerak tipis)') + '\n'
+      + '- mom7 ' + (mom7 >= 0 ? '+' : '') + mom7.toFixed(1) + '% · mom30 ' + (mom30 >= 0 ? '+' : '') + mom30.toFixed(1) + '% · RSI-14 ' + rsiV.toFixed(0) + ' · EMA20/50 ' + (emaAlign >= 1 ? 'tersusun naik' : emaAlign > 0 ? 'setengah tersusun' : 'PATAH') + ' · ATR ' + atrV.toFixed(1) + '% · jarak puncak60 ' + distHigh.toFixed(1) + '% · lonjakan vol ' + volSurge.toFixed(2) + 'x\n\n'
+      + '**VONIS MESIN: ' + arah + ' · keyakinan ' + key + '%**\n\n'
+      + 'Jujur: ini bedah kuantitatif SATU koin dari data hidup, bukan jaminan profit — arah biner selalu bisa dibantah medan esok hari.';
+  } catch (e) {
+    const takAda = /HTTP 400/.test((e && e.message) || '');
+    isi = takAda
+      ? '**' + t + '** tidak kutemukan sebagai pasangan spot aktif di Binance. Cek ejaan tickernya — aku tidak akan menebak koin lain agar tidak salah sasaran.'
+      : 'Bedah **' + t + '** gagal dijalankan (jaring: ' + esc((e && e.message) || '?') + ') — aku jujur: lebih baik tanpa laporan daripada laporan yang dikarang. Coba lagi sebentar.';
+  }
+  holder.innerHTML = `<div class="q"><p class="t">Pertanyaan</p><p class="b">${esc(question)}</p></div><div class="ans">
+    <div class="who">${av}<b>MICAPROFITA</b><span class="badge om">BEDAH KOIN · Binance langsung · tanpa server</span></div>
+    <div class="md">${md(isi)}</div>
+    ${alasan ? `<p class="tiny" style="margin-top:6px">${esc(alasan)}</p>` : ''}
+  </div>`;
+}
+
 async function tanya(q) {
   const question = (q || $('#ask').value).trim();
   if (!question || busy) return;
@@ -2325,6 +2370,8 @@ async function tanya(q) {
   holder.className = 'turn';
   holder.innerHTML = `<div class="q"><p class="t">Pertanyaan</p><p class="b">${esc(question)}</p></div><div class="ans"><p class="small">MICAPROFITA sedang berpikir…</p></div>`;
   $('#turns').prepend(holder);
+  // V297 BEDAH-KOIN: koin yang ditanya pemilik WAJIB dilaporkan dari data nyata
+  const koinT = ekstrakKoinLokal(question);
   // ==== V270-OTAK-MANDIRI: jawab lokal — TIDAK PERNAH DIAM, walau tanpa server ====
   const jawabLokal = (alasan) => {
     const r = MICABRAIN.jawab(question, st, otak);
@@ -2340,16 +2387,14 @@ async function tanya(q) {
     </div>`;
   };
   try {
-    if (!LIVE) { jawabLokal(''); return; }
-    // V314 SALURAN-PULIH: guru cepat-gugur (batas 12 dtk) — pihak tumbang tak boleh
-    // membuat percakapan menghang; otak mandiri mengambil alih dalam kedipan
-    const ctlG = new AbortController();
-    const tG = setTimeout(() => ctlG.abort(), 12000);
+    if (!LIVE) {
+      if (koinT) { await bedahKoinLokal(koinT, holder, question, ''); return; }
+      jawabLokal(''); return;
+    }
     const r = await fetch(LIVE.url.replace(/\/+$/, '') + '/api/guru', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question, duel }), signal: ctlG.signal,
+      body: JSON.stringify({ question, duel }),
     });
-    clearTimeout(tG);
     const d = await r.json();
     if (!r.ok) throw new Error(d.error || 'Gagal menjawab');
     const src = (d.sources || []).slice(0, 4).map((s) => `<li><a href="${esc(s.url)}" target="_blank" rel="noreferrer">${esc(s.title)}</a></li>`).join('');
@@ -2368,40 +2413,12 @@ async function tanya(q) {
     holder.innerHTML = `<div class="q"><p class="t">Pertanyaan</p><p class="b">${esc(question)}</p></div>` + html;
   } catch (e) {
     // ==== V270: guru LLM putus ≠ diam — otak mandiri mengambil alih ====
-    // V314 SALURAN-PULIH: kegagalan guru juga memberi makan backoff saluran
-    liveFail++; saluranCoba++;
-    saluranJeda = Math.min(60000, 6000 * Math.pow(2, Math.min(4, saluranCoba - 1)));
-    jadwalSaluran();
-    jawabLokal('Guru LLM di wadah sedang tak terjangkau (' + e.message + ') — otak mandiriku mengambil alih, tetap cerdas tanpa server. Saluran terus menyondong pintu: ke-' + (saluranCoba + 1) + ' dalam ' + Math.round(saluranJeda / 1000) + ' dtk.');
+    if (koinT) { await bedahKoinLokal(koinT, holder, question, 'Guru LLM di wadah sedang tak terjangkau (' + e.message + ') — bedah koin tetap jalan langsung dari Binance tanpa server.'); return; }
+    jawabLokal('Guru LLM di wadah sedang tak terjangkau (' + e.message + ') — otak mandiriku mengambil alih, tetap cerdas tanpa server.');
   } finally {
     busy = false; btn.disabled = false; btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
   }
 }
-// ---------- V314 SALURAN-PULIH: denyut sambung-ulang ----------
-// Hukum cermin: TIDAK PERNAH MACET (jeda naik tapi probe terus),
-// TIDAK PERNAH BISU (snapshot cermin selalu tampil), SOPAN KE PIHAK SANA
-// (jeda backoff berbatas; gerbang.json dibaca rajin saat putus, sopan saat nyala).
-function jadwalSaluran() {
-  clearTimeout(saluranTimer);
-  saluranTimer = setTimeout(denyutSaluran, saluranJeda);
-}
-async function denyutSaluran() {
-  try {
-    if (LIVE && mode === 'live') { saluranCoba = 0; saluranJeda = 6000; }
-    if (LIVE) await muatLive();
-    // gerbang.json: didengar rajin saat belum hidup (≥30 dtk antar baca),
-    // dan tiap 2 menit saat LIVE terpasang tapi putus (pindah alamat = pulih)
-    const gerbangGap = (!LIVE || mode !== 'live') ? 30000 : 120000;
-    if (Date.now() - saluranGerbangAt > gerbangGap) {
-      saluranGerbangAt = Date.now();
-      const nyala = await sambungOtomatis();
-      if (nyala) { saluranCoba = 0; saluranJeda = 6000; }
-    }
-    if (!LIVE || mode !== 'live') { saluranJeda = Math.min(60000, saluranJeda); chipSumber(); }
-  } catch (e) {}
-  jadwalSaluran();
-}
-
 // ---------- modal ----------
 function bukaModal() { $('#modal').classList.add('on'); $('#mUrl').value = LIVE ? LIVE.url : ''; $('#mmsg').textContent = ''; }
 function tutupModal() { $('#modal').classList.remove('on'); }
@@ -2500,9 +2517,11 @@ function init() {
   tick(); setInterval(tick, 1000);
   initOtakUI(); // V270: kesadaran bertanya + sekolah mandiri
   muatSnapshot();
-  sambungOtomatis().then(() => { if (LIVE) muatLive(); });
-  // V314 SALURAN-PULIH — denyut sambung-ulang backoff (6→60 dtk), tak pernah berhenti mendengar
-  jadwalSaluran();
+  sambungOtomatis();
+  if (LIVE) muatLive();
+  setInterval(() => { if (LIVE) muatLive(); }, 6000);
+  setInterval(() => { if (!LIVE || mode !== 'live') muatSnapshot(); }, 60000);
+  setInterval(() => { if (mode !== 'live') sambungOtomatis(); }, 5 * 60 * 1000);
   setInterval(() => { if (st) chipSumber(); }, 30000);
 }
 
@@ -2635,36 +2654,6 @@ function initOtakUI() {
 // V279-KORTEX-KESADARAN: 55 soal × 4 tingkat · adaptif + BUKU-SALAH · kelas kilat 3 soal · INDEKS KESADARAN 5 pilar (formula karangan-sendiri)
 
 document.addEventListener('DOMContentLoaded', init);
-document.addEventListener('DOMContentLoaded', muatIngatanBiner);
-
-// ---------- INGATAN-BINER (V322): cermin memori matematika biner tak kabur ----------
-async function muatIngatanBiner() {
-  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-  try {
-    const ib = await ambil('otak/ingatan-biner.json?t=' + Date.now(), 12000);
-    const kata = Object.keys(ib.kamus || {});
-    const totalKuat = kata.reduce((a, nm) => a + (ib.kamus[nm].kuat || 0), 0);
-    set('ibKata', kata.length + ' kata bit');
-    set('ibKuat', 'dipelajari dari fakta sejati · ' + totalKuat + ' perkuatan (kuat bukan kabur)');
-    set('ibIntisari', ib.intisari && ib.intisari.byte != null ? ib.intisari.byte + ' byte tersegel' : '—');
-    const top = (ib.intisari && ib.intisari.terkuat || []).slice(0, 8)
-      .map((t) => { const b = ib.kamus[t.kata] ? ib.kamus[t.kata].bit : ''; return t.kata + ' · ' + b + ' ×' + t.kuat; });
-    const chipTop = document.getElementById('ibKataTop');
-    if (chipTop) chipTop.innerHTML = (top.length ? top : ['kamus masih kosong']).map((s) => '<span>' + s + '</span>').join('');
-  } catch (e) {
-    set('ibKata', '—');
-    set('ibKuat', 'kapsul ingatan belum terjangkau dari sini');
-  }
-  try {
-    const p = await ambil('otak/syaraf-pohon.json?t=' + Date.now(), 12000);
-    const ko = (p.populasi || []).filter((s) => s.jenis === 'KOHEREN');
-    set('ibKoheren', ko.length + ' sel · ' + p.populasi.length + '/' + p.cap);
-    set('ibKolam', ko.filter((s) => s.kompeten).length + ' kompeten menyaksikan segel ' + (p.v322 ? '5' : '0') + ' organ');
-  } catch (e) {
-    set('ibKoheren', '—');
-    set('ibKolam', 'pohon syaraf belum terjangkau dari sini');
-  }
-}
 </script>
 </body>
 </html>
