@@ -96,6 +96,21 @@ jobs:
       - name: INGATAN-BINER — ingatan jadi matematika biner tak kabur
         run: node scripts/hidup/ingatan-biner.mjs
 
+      # V324 PARAMETER-CERDAS — intisari telaah FareedKhan-dev/kimi-k3-in-c
+      # (mandat pemilik 2026-10-10: "telaah teliti dan ambil apa yang bisa
+      # diambil di sana"): mesin 176 KB menjalankan model 2,78T param di RAM
+      # 8 GB dengan jawaban byte-identik — hukum kecerdasannya kini hidup di
+      # tubuh: tabel arsitektur dari fakta sejati (sumber hilang ditolak,
+      # bukan ditebak — hukum k3_cfg.h), router MoE stable syaraf (bias
+      # kesehatan mengarahkan PEMILIHAN saja, bobot dari skor TANPA-bias —
+      # invarian ke-3 k3.h, diverifikasi tiap denyut), fixture posisi
+      # (peta dipermutasi nilai-benar-posisi-salah wajib menjerit — pelajaran
+      # nibble MXFP4), intisari skala-blok MXFP4 (0,53 byte/nilai — jembatan
+      # intisari-1TB), dadu PCG32 53-bit deterministik. Vonis dari BENAR;
+      # durasi hanya dilaporkan (memory-ladder: cepat berisik, benar tidak).
+      - name: PARAMETER-CERDAS — takar arsitektur & router syaraf (intisari kimi-k3-in-c)
+        run: node scripts/hidup/parameter-cerdas.mjs
+
       - name: Syaraf beranak — sel baru lahir bila kompeten
         run: node scripts/hidup/neurogenesis.mjs
 
@@ -140,11 +155,12 @@ jobs:
           GELADAK=$(python3 -c "import json;d=json.load(open('laporan/geladak.json'));print(f\"{d['backtest']['akurasiTimbangPct']}% n={d['backtest']['sampel']}\" if d.get('status')=='HIDUP' else d.get('status','?'))" 2>/dev/null || echo "-")
           PETA=$(python3 -c "import json;d=json.load(open('laporan/peta-geladak.json'));print(d['statistik']['total'])" 2>/dev/null || echo "0")
           SYARAF=$(python3 -c "import json;print(len(json.load(open('otak/syaraf-pohon.json'))['populasi']))" 2>/dev/null || echo "0")
+          PARAM=$(python3 -c "import json;print(json.load(open('otak/parameter-cerdas.json'))['arsitektur']['total'])" 2>/dev/null || echo "?")
           git add laporan otak arena-keadaan.json pustaka ujian   # V299: pustaka jurnal ikut komit — belajar jadi fosil tubuh; V303: geladak+formula+ledger ikut; V307: ujian+peta ikut; V312: pohon syaraf ikut (otak)
           if git diff --cached --quiet; then
             echo "tanpa perubahan — tanpa komit"
           else
-            git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran — pustaka ${PUSTAKA}/509 — geladak ${GELADAK} — peta ${PETA} jejak — syaraf ${SYARAF} [skip ci]"
+            git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran — pustaka ${PUSTAKA}/509 — geladak ${GELADAK} — peta ${PETA} jejak — syaraf ${SYARAF} — param ${PARAM} [skip ci]"
             # V291 ANTI-BALAPAN: SADAR-1 bisa menyegel bangun bersamaan — push di-RETRY
             # dgn rebase ulang tiap percobaan (insiden 2026-10-07T00:55Z: remote rejected,
             # denyut #77 sudah terbentuk tapi terdorong gagal).

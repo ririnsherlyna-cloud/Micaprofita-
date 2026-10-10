@@ -32,6 +32,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { kogerensi } from './ingatan-biner.mjs' // V322: syaraf KOHEREN bekerja lewat organ ingatan-biner
+import { skorAhli } from './parameter-cerdas.mjs' // V324: syaraf PARAM menakar parameter cerdas (telaah kimi-k3-in-c)
 
 const POHON = 'otak/syaraf-pohon.json'
 const JSONL = 'laporan/syaraf-lahir.jsonl'
@@ -57,6 +58,7 @@ function darahMuat() {
   baca('peta', 'laporan/peta-geladak.json')
   baca('tempa900', 'laporan/tempa900.json')
   baca('tubuh', 'ruang-hidup/tubuh.json')
+  baca('param', 'otak/parameter-cerdas.json') // V324: kapsul parameter cerdas
   baca('bank', BANK)
   darah.kartu = (darah.bank && Array.isArray(darah.bank.soal)) ? darah.bank.soal : []
   darah.penunjukKartu = 0
@@ -142,8 +144,40 @@ const JENIS = {
     },
     uji: (f) => !!f && f.utuh === true && f.dicek >= 4,
   },
+  // V324: keluarga PARAM — parameter cerdas dari telaah FareedKhan-dev/
+  // kimi-k3-in-c (mandat pemilik 2026-10-10): tabel arsitektur dari fakta
+  // sejati (tolak-awal, bukan tebakan), router MoE stable (invarian ke-3
+  // k3.h: bias memilih, bobot tanpa-bias), fixture posisi, intisari MXFP4.
+  PARAM: {
+    tugas: 'menakar parameter cerdas makhluk: verifikasi segel kapsul otak/parameter-cerdas.json + rekonstruksi bobot tanpa-bias router MoE (invarian-3) + fixture posisi (nilai benar posisi salah wajib terdeteksi)',
+    kerja() {
+      const k = darah.param
+      if (!k || !k.segel) throw new Error('kapsul parameter cerdas tak terbaca/tanpa segel')
+      const salin = JSON.parse(JSON.stringify(k)); salin.segel = null
+      const segelSah = hash16(JSON.stringify(salin)) === k.segel.hash
+      // rekonstruksi bobot tanpa-bias dari skor tercatat — invarian ke-3 k3.h:
+      // bobot gabungan TIDAK boleh memuat bias, hanya skor murni
+      const terpilih = (k.router.ahli || []).filter((a) => a.terpilih)
+      const jumlah = terpilih.reduce((a, x) => a + x.score, 0)
+      const bobotSah = terpilih.length > 0 && terpilih.every((x) => {
+        const catat = (k.router.ahli.find((a) => a.jenis === x.jenis) || {}).bobot
+        return catat != null && Math.abs(x.score / (jumlah + 1e-20) - catat) < 1e-9
+      })
+      // rekonstruksi skor dari bit & token langsung (matematika router sama)
+      const tandaToken = (k.router.token || {}).tanda || ''
+      const skorSah = tandaToken.length > 0 && terpilih.every((x) => {
+        const s = skorAhli(tandaToken, x.bit, tandaToken.length)
+        return Math.abs(s.score - x.score) < 1e-6
+      })
+      const fixtureSah = !!k.fixturePosisi && k.fixturePosisi.jalan === true &&
+        k.fixturePosisi.statistikSama === true && k.fixturePosisi.terdeteksi === k.fixturePosisi.lukaSeharusnya
+      const total = k.arsitektur ? k.arsitektur.total : 0
+      return { total, segelSah, bobotSah, skorSah, fixtureSah, dipilih: (k.router.dipilih || []).join('/') }
+    },
+    uji: (f) => !!f && f.segelSah === true && f.bobotSah === true && f.skorSah === true && f.fixtureSah === true && Number.isInteger(f.total) && f.total > 0,
+  },
 }
-const URUTAN_JENIS = ['KANDIL', 'SIKLUS', 'PUSTAKA', 'GELADAK', 'INGATAN', 'PETA', 'TEMPAA', 'JASAD', 'KOHEREN']
+const URUTAN_JENIS = ['KANDIL', 'SIKLUS', 'PUSTAKA', 'GELADAK', 'INGATAN', 'PETA', 'TEMPAA', 'JASAD', 'KOHEREN', 'PARAM']
 
 // ---------- fitur & tanda (identik dengan organ tempaan — warisan V310) ----------
 function fiturDari(strip) {
@@ -327,16 +361,22 @@ async function main() {
   // V322: organ INGATAN-BINER baru lahir → kolam menyusui keluarga KOHEREN
   // dulu (tumbuh mengikuti kebutuhan tubuh) sampai 8 sel, lalu giliran
   // round-robin seperti biasa.
-  let lahirSesi = 0
+  let lahirSesi = 0, gugurSesi = 0
   for (const sel of [...p.populasi].sort((a, b) => a.lahirSesi - b.lahirSesi)) {
     if (lahirSesi >= MAKS_LAHIR_SESI) break
+    // V324 pelajaran: keluarga baru yang gagal uji TIDAK BOLEH membakar
+    // seluruh kolam (72 percobaan pernah terjadi sebelum presisi ditempa) —
+    // gagal beruntun sebatas jatah lahir = sesi berhenti jujur.
+    if (gugurSesi >= MAKS_LAHIR_SESI) break
     if (p.populasi.length >= p.cap) break
     if (sel.kompeten && sel.impuls >= 2 && sel.anak.length < MAKS_ANAK) {
       const jenis = (p.populasi.filter(s => s.jenis === 'KOHEREN').length < 8)
         ? 'KOHEREN'
-        : URUTAN_JENIS[p.statistik.lahir % URUTAN_JENIS.length]
+        : (p.populasi.filter(s => s.jenis === 'PARAM').length < 8)
+          ? 'PARAM' // V324: keluarga parameter cerdas disusui sampai 8 sel
+          : URUTAN_JENIS[p.statistik.lahir % URUTAN_JENIS.length]
       const anak = lahirkan(p, jenis, sel)
-      if (anak) { lahirSesi++; berimpuls(p, anak) } // anak langsung menyala pertama kali
+      if (anak) { lahirSesi++; berimpuls(p, anak) } else { gugurSesi++ } // anak langsung menyala pertama kali
     }
   }
 
@@ -356,6 +396,21 @@ async function main() {
   if (p.v322 && !p.populasi.some(s => s.jenis === 'KOHEREN')) {
     for (let i = 0; i < 2 && p.populasi.length < p.cap; i++) {
       const akar = lahirkan(p, 'KOHEREN', null)
+      if (akar) berimpuls(p, akar)
+    }
+  }
+
+  // V324: keluarga PARAM — parameter cerdas (intisari telaah kimi-k3-in-c)
+  // masuk tubuh: arsitektur tersegel, router MoE, fixture posisi, MXFP4,
+  // PCG32. Akar lahir saat kapsul sah pertama terbaca; tetap WAJIB lulus
+  // uji kompetensi (gugur jujur bila gagal).
+  if (!p.v324 && darah.param && darah.param.segel) {
+    p.v324 = { saat: sekarang(), catatan: 'parameter cerdas masuk (intisari telaah FareedKhan-dev/kimi-k3-in-c): keluarga syaraf PARAM menakar arsitektur dari fakta, router MoE invarian-3, fixture posisi, intisari MXFP4, dadu PCG32' }
+    catat('V324', { catatan: p.v324.catatan })
+  }
+  if (p.v324 && !p.populasi.some(s => s.jenis === 'PARAM')) {
+    for (let i = 0; i < 2 && p.populasi.length < p.cap; i++) {
+      const akar = lahirkan(p, 'PARAM', null)
       if (akar) berimpuls(p, akar)
     }
   }
