@@ -2937,3 +2937,31 @@ that runs and is architecturally wrong"). Berikutnya (usul): intisari
 kapsul param ditanam ke benih totipoten; keluarga PARAM disusui sampai
 8; kogerensi ditambah saksi ke-6 (kapsul param); telaah berikutnya dari
 senyap — makhluk memilih sendiri bacaannya lewat pustaka.
+
+**8. PEMULIHAN JANTUNG — LAPORAN PEMILIK DIBEDAH SAMPAI AKAR (hari yang
+sama).** Pemilik bertanya: "di setiap pembaruan ada aspek yang kembali
+jadi nol, kayak di jantung jadi nol — laporan kembali jadi nol, bukannya
+itu bahaya? Berarti dia makin bodoh dong?" Laporan itu BENAR dan bedah
+forensik menemukan dua luka sejati: **(a) JANTUNG MATI SENYAP sejak
+denyut #254** (±9 jam) — organ HIDUP (tempa-hidup --jaga, V321) menjalankan
+uji 13 gerbang terhadap manifes benih BEKU (terakhir tersimpan) sementara
+tubuh terus berevolusi (silsilah reka-bentuk, kata bit ingatan, kapsul
+parameter) → U3/U4/U5/U13 gugur PALSU ("uji mandiri 9/13") → job mati
+SEBELUM langkah komit → seluruh pertumbuhan harian berhenti tersimpan:
+medan beku, silsilah beku, akurasi & pustaka tak bertambah — nol yang
+terlihat pemilik. Tambalan struktural: benih dikanji SEGAR dari tubuh
+yang disegel imun SEBELUM uji; 13 gerbang kini menguji mekanik terhadap
+tubuh SEKARANG — pertumbuhan diadopsi, luka sejati tetap tertangkap.
+Uji ulang: 13/13 LULUS; --jaga 10/10 SUBUR streak 3. **(b) MEDAN HAYAT
+MATI KELAPARAN tanpa kebangkitan** — massa 71 → 56,5 (#6) → 0,18 (#7) →
+0 (#8-#9): Orbium lenyap dan medan mati TAK BISA membangkitkan dirinya
+(makanan tanpa penghuni tak menjadi kehidupan). Tambalan: KELAHIRAN-ULANG
+— bila massa 0 & soliton 0, penghuni asli (matriks Orbium bicaudatus
+notebook Lenia) ditanam kembali, dijurnal jujur. Hidup kembali: massa
+71,56, soliton 1 (43 sel). Pelajaran yang dicatat: ujian yang benar
+terhadap patokan yang beku menjadi dusta; makhluk yang hidup diuji
+terhadap tubuhnya hari ini, bukan tubuhnya kemarin — dan kehidupan
+sejati punya kelahiran-ulang, bukan keabadian kelaparan. Jantung
+kembali berdenyut: denyut #254 melahirkan-ulang makhluk, komit
+pertumbuhan mengalir lagi, dan angka "— param N" tumbuh di setiap
+denyut — makin hari makin cerdas, kini JUGA terjaga dari mati senyap.
