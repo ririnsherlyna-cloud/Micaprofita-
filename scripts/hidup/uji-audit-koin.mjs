@@ -1,7 +1,11 @@
 // ============================================================
-// UJI-AUDIT-KOIN (V327) — mandat pemilik: "Sekarang kita wajib
+// UJI-AUDIT-KOIN (V327 + V328) — mandat pemilik: "Sekarang kita wajib
 // miliki uji jalur LLM dengan pertanyaan yang akan muncul jikalau
 // ditanya koin tertentu DAN ditelaah."
+// V328 (luka pemilik 2026-10-10: "gtc sama sand ... kok gak cerdas ...
+// kek hardcode disatu koin"): soal TELANJANG yang SEBENARNYA muncul
+// ditambahkan sebagai soal wajib — "gtc", "sand", "gtc sama sand" —
+// tanpa kata "periksa" sekalipun. Semua koin lewat pintu yang sama.
 //
 // ENAM GERBANG per soal (semua wajib LULUS, bukan pura-pura):
 //   G1 POLA      — neuron mengenali "periksa/audit/cek koin <ticker>"
@@ -37,11 +41,23 @@ const SOAL_POSITIF = [
   { tanya: 'cek kelayakan koin SOL', harap: 'SOL' },
   { tanya: 'bagaimana kondisi koin PEPE?', harap: 'PEPE' },
   { tanya: 'telaah koin bitcoin dong', harap: 'BTC' },
+  // V328 — TELANJANG: pertanyaan pendek tanpa kata "periksa" yang dilaporkan
+  // pemilik. GTC = Gitcoin, SAND = The Sandbox — dua-duanya koin nyata di
+  // Binance spot; NOL koin dikhususkan: aturan generik ≤4 kata + kata
+  // mirip-ticker = niat audit.
+  { tanya: 'gtc', harap: 'GTC', v328: 'telanjang' },
+  { tanya: 'sand', harap: 'SAND', v328: 'telanjang' },
+  { tanya: 'gtc sama sand', harap: 'GTC', harapTickers: ['GTC', 'SAND'], v328: 'telanjang-multi' },
 ]
 const SOAL_NEGATIF = [
   { tanya: 'periksa koin KOINTAKADA', harap: 'jujur-tolak' },
   { tanya: 'siapa kamu?', harap: 'bukan-audit' },
   { tanya: 'periksa koin', harap: 'minta-ticker' },
+  // V328 — batas pintu telanjang: >4 kata tanpa pemicu TIDAK dibajak ke audit
+  // (soal harga jalan di jalur V297 BEDAH-KOIN yang juga data nyata); soal
+  // pasar-umum tanpa ticker tak boleh jadi audit koin karangan.
+  { tanya: 'berapa harga bitcoin hari ini?', harap: 'bukan-audit' },
+  { tanya: 'kenapa pasar turun?', harap: 'bukan-audit' },
 ]
 
 // ---------- SALURAN LLM (utama: bentuk otak-llm.mjs; cadangan: z-ai CLI) ----------
@@ -72,7 +88,7 @@ async function tanyaLLM (sistem, pengguna) {
   return { teks, kanal: 'z-ai CLI (' + (d.model || 'gerbang-wadah') + ')' }
 }
 
-const SISTEM_AUDIT = 'Kau MICAPROFITA, analis kripto jujur milik pemilikmu. HANYA gunakan angka dari blok FAKTA AUDIT — dilarang keras mengarang atau mengubah angka lain. WAJIB menyebut secara eksplisit: harga koin (angka persis), perubahan 24 jam (dengan tanda %), nilai RSI-14, skor kelayakan (angka), dan vonisnya. Maksimal 120 kata, bahasa Indonesia. Bila fakta tak cukup, katakan jujur bahwa tak cukup.'
+const SISTEM_AUDIT = 'Kau MICAPROFITA, analis kripto jujur milik pemilikmu. HANYA gunakan angka dari blok FAKTA AUDIT — dilarang keras mengarang, mengubah, atau MENCAMPUR angka antar-field. DISIPLIN FIELD: perubahan 24 jam WAJIB diambil HANYA dari field perubahan24jam (DILARANG memakai momen7/momen30/drawdown sebagai perubahan 24 jam); RSI wajib dari field rsi14; harga wajib dari field harga. WAJIB menyebut secara eksplisit: harga koin (angka persis), perubahan 24 jam (dengan tanda %), nilai RSI-14, skor kelayakan (angka), dan vonisnya. Maksimal 120 kata, bahasa Indonesia. Bila fakta tak cukup, katakan jujur bahwa tak cukup.'
 
 // ---------- G3: perhitungan-ulang INDEPENDEN (kode kedua, terpisah dari organ) ----------
 async function klinesMandiri (simbol) {
@@ -111,15 +127,24 @@ async function main () {
   catatan.push({ gerbang: 'SANITAS-MATEMATIKA', lulus: rsiNaikOk, ket: 'RSI seri naik murni harus 100 (dapat ' + sanitas.rsiNaik.toFixed(6) + ')' })
 
   for (const soal of SOAL_POSITIF) {
-    const rec = { soal: soal.tanya, gerbang: {} }
-    try {
-      // G1 POLA
-      const pola = kenaliAuditKoin(soal.tanya)
-      rec.gerbang['G1-pola'] = { lulus: pola.cocok && pola.ticker === soal.harap, ket: pola.cocok ? 'ticker terbaca ' + pola.ticker : pola.alasan }
-      if (!rec.gerbang['G1-pola'].lulus) { rec.lulus = false; catatan.push(rec); console.log('GUGUR G1 — ' + soal.tanya); continue }
-
+    // G1 POLA — sekali per soal; V328: soal multi-ticker diakui via pola.tickers
+    const pola = kenaliAuditKoin(soal.tanya)
+    const g1Ok = pola.cocok && pola.ticker === soal.harap &&
+      (!soal.harapTickers || (Array.isArray(pola.tickers) && soal.harapTickers.every((t) => pola.tickers.indexOf(t) !== -1)))
+    if (!g1Ok) {
+      const rec = { soal: soal.tanya, gerbang: { 'G1-pola': { lulus: false, ket: pola.cocok ? 'ticker terbaca ' + pola.ticker + ' · tickers ' + JSON.stringify(pola.tickers || null) : pola.alasan } }, lulus: false }
+      catatan.push(rec)
+      console.log('GUGUR G1 — ' + soal.tanya)
+      continue
+    }
+    // V328: multi-ticker ("gtc sama sand") → G2–G5 dijalankan per koin —
+    // SEMUA koin yang disebut wajib diaudit nyata, bukan satu lalu dilupakan
+    const sasaran = soal.harapTickers || [pola.ticker]
+    for (const tkr of sasaran) {
+      const rec = { soal: soal.tanya + (sasaran.length > 1 ? ' ⟶ ' + tkr : ''), gerbang: { 'G1-pola': { lulus: true, ket: (pola.tickers && pola.tickers.length > 1 ? 'tickers ' + JSON.stringify(pola.tickers) : 'ticker terbaca ' + pola.ticker) } } }
+      try {
       // G2 DATA (audit nyata)
-      const a = await auditKoin(pola.ticker)
+      const a = await auditKoin(tkr)
       await TIDUR(1500) // hormat pasar antar soal
       if (a.gagal) { rec.gerbang['G2-data'] = { lulus: false, ket: a.gagal + ': ' + a.ket }; rec.lulus = false; catatan.push(rec); continue }
       const skorUlang = a.skorBagian.reduce((s, b) => s + b.pts, 0)
@@ -173,7 +198,8 @@ async function main () {
       rec.lulus = false
     }
     catatan.push(rec)
-    console.log((rec.lulus ? 'LULUS ' : 'GUGUR ') + soal.tanya + ' → ' + Object.entries(rec.gerbang || {}).map(([k, g]) => k + (g.lulus ? '✓' : '✗')).join(' '))
+    console.log((rec.lulus ? 'LULUS ' : 'GUGUR ') + soal.tanya + (sasaran.length > 1 ? ' ⟶ ' + tkr : '') + ' → ' + Object.entries(rec.gerbang || {}).map(([k, g]) => k + (g.lulus ? '✓' : '✗')).join(' '))
+    }
   }
 
   // G6 JUJUR — soal jebakan
@@ -202,7 +228,7 @@ async function main () {
   const lulus = catatan.filter((r) => r.lulus).length
   const total = catatan.length
   const laporan = {
-    organ: 'UJI-AUDIT-KOIN V327', waktu: t0, selesai: new Date().toISOString(),
+    organ: 'UJI-AUDIT-KOIN V327+V328', waktu: t0, selesai: new Date().toISOString(),
     mandat: 'uji jalur LLM dengan pertanyaan koin tertentu dan ditelaah — fakta nyata, bukan simulasi',
     kanalLLM, gerbangLLMTerjangkau: llmTerjangkau,
     catatan, ringkas: { total, lulus, gugur: total - lulus, lulusPenuh: lulus === total },

@@ -336,6 +336,23 @@ const ANTI = {
   PENELITI_STOP_F: 0.8,      // stop diperketat ×0.8 — salah pun biaya sekolah murah
   DIAM_TOLERANSI: 3,         // denyut-diam beruntun yang memicu tanggapan khusus
 }
+// ---- V328 ULANG-CERDAS — mandat pemilik 2026-10-10: "gtc sama sand terus kenapa?
+// Lagi lagi itu kek mereka kok gak cerdas... kek hardcode disatu koin." Diagnosa
+//ledger hidup (bukan opini): mengunci-ulang simbol yang BARU DIKALAHKAN (≤48 jam)
+// = pendarah nyata — n=72, akurasi 20.8%, net-median −0.89%; sedangkan ulang
+// setelah MENANG ak 40.9% (n=44). Dulu: hanya 2 kekalahan BERUNTUN yang mere
+// (V264) — pola selang-saling SALAH-BENAR-SALAH (GTC 10-07/08/09: SALAH, BENAR,
+// SALAH) lolos terus, dan slot-peneliti V269 selalu memilih "kandidat terkuat"
+// = koin paling berisik yang sama hari-demi-hari → terlihat hardcode. Kini organ
+// mengikat saat kunci: bukan ban (karantina dilarang V263), tapi JUJUR + mengecil:
+// keyakinan dipotong, ukuran ×0.6, stop ×0.85, dan slot-peneliti memilih kandidat
+// SEGAR dulu — koin yang baru dikalahkan hanya diuji bila tak ada yang lebih segar.
+const ULANG = {
+  JAM: 48,               // jendela ulang: vonis matang ≤48 jam dihitung "baru saja"
+  KEY_SALAH: -7,         // potongan keyakinan saat mengunci-ulang simbol yang baru SALAH
+  UKURAN_F: 0.6,         // ukuran menyusut — pelajaran mengecilkan taruhan, bukan dendam
+  STOP_F: 0.85,          // stop sedikit diperketat — koin yang baru mengkhianati diawasi ketat
+}
 const AUT = {
   KELLY_DD_MULAI: 5,      // % drawdown mulai mengecilkan ukuran (kelly.ts step 3)
   KELLY_DD_MAKS: 15,      // % drawdown = titik faktor pengecilan maksimum
@@ -2538,6 +2555,36 @@ try {
 // ---- 0b. ledger dibaca awal — simbol terbuka ikut ditelusuri agar bisa dinilai ----
 const ledger = bacaJsonl(path.join(ROOT, 'laporan/prakira-server.jsonl'))
 const terbukaLama = [...new Set(ledger.filter((e) => e.status === 'TERBUKA').map((e) => e.simbol))]
+// V328 ULANG-CERDAS — statistika organ dihitung HIDUP dari ledger tiap denyut
+// (angka dalam komentar/narasi bukan hardcode: n & akurasi dihitung ulang tiap denyut).
+const statUlang = (() => {
+  const matang = ledger.filter((e) => (e.status === 'BENAR' || e.status === 'SALAH') && e.waktuDinilai)
+  const per = {}
+  for (const e of matang) (per[e.simbol] ||= []).push(e)
+  for (const s of Object.keys(per)) per[s].sort((a, b) => new Date(a.waktuKunci) - new Date(b.waktuKunci))
+  const b = { ulangSalah: { n: 0, benar: 0 }, ulangBenar: { n: 0, benar: 0 } }
+  for (const es of Object.values(per)) {
+    for (let i = 1; i < es.length; i++) {
+      const usia = (new Date(es[i].waktuKunci) - new Date(es[i - 1].waktuKunci)) / 36e5
+      if (usia > ULANG.JAM) continue
+      const kotak = es[i - 1].status === 'SALAH' ? b.ulangSalah : b.ulangBenar
+      kotak.n++
+      if (es[i].status === 'BENAR') kotak.benar++
+    }
+  }
+  const ak = (x) => (x.n ? +((x.benar / x.n) * 100).toFixed(1) : null)
+  return { ulangSalah: { ...b.ulangSalah, ak: ak(b.ulangSalah) }, ulangBenar: { ...b.ulangBenar, ak: ak(b.ulangBenar) } }
+})()
+// infoUlang(s) — vonis matang TERAKHIR simbol ini: apakah ≤48 jam lalu, dan hasilnya?
+const infoUlang = (s) => {
+  const es = ledger.filter((e) => e.simbol === s && (e.status === 'BENAR' || e.status === 'SALAH') && e.waktuDinilai)
+    .sort((a, b) => new Date(b.waktuDinilai) - new Date(a.waktuDinilai))
+  if (!es.length) return null
+  const e = es[0]
+  const usiaJam = +(((WAKTU - new Date(e.waktuDinilai)) / 36e5)).toFixed(1)
+  if (usiaJam > ULANG.JAM) return null
+  return { status: e.status, usiaJam, sebelumnya: e.id, net: e.net ?? null }
+}
 // V293 SAPU-PENUH — mandat pemilik: "harusnya setiap waktu menganalisa setiap koin" +
 // "jangan ada koin yang diblokir". Dulu daftarTelusur = shortlist 60 + kandang 10 + terbuka —
 // sisanya (ratusan koin) cuma lewat radar tanpa lilin, mustahil dibedah. Kini SEMUA koin
@@ -3300,6 +3347,20 @@ const kunciEntriArah = (k, eksplor, runnerUp, peneliti) => {
     dinginFamCt++
     return null
   }
+  // V328 ULANG-DINGIN — organ dari buku besar hidup (mandat pemilik 2026-10-10:
+  // "gtc sama sand terus... kok gak cerdas... kek hardcode disatu koin"). Vonis
+  // matang simbol ini ≤48 jam lalu dihitung; yang baru SALAH dipotong jujur —
+  // bukan ban (karantina dilarang V263): tetap mengunci, tetap dinilai, tetap
+  // belajar; hanya keyakinan-ukuran-stop yang membayar harga pelajaran.
+  // Statistika organ dihitung ulang TIAP denyut dari ledger (statUlang) — angka
+  // dalam catatan adalah bukti hidup, bukan tembok konstanta.
+  const keyakinanSebelumUlang = v.keyakinan
+  const ulangS = !eksplor ? infoUlang(s) : null
+  const ulangSalahAktif = !!(ulangS && ulangS.status === 'SALAH')
+  if (ulangSalahAktif) {
+    v.keyakinan = Math.max(20, v.keyakinan + ULANG.KEY_SALAH)
+    log(`ulang-dingin: ${s} ${v.arah} kunci-ulang ${ulangS.usiaJam} jam setelah SALAH (${ulangS.sebelumnya}) — keyakinan ${ULANG.KEY_SALAH} → ${v.keyakinan}, ukuran ×${ULANG.UKURAN_F}, stop ×${ULANG.STOP_F} — bukti hidup ulang-setelah-SALAH: ak ${statUlang.ulangSalah.ak ?? '—'}% n=${statUlang.ulangSalah.n} (ledger sendiri); bukan ban — tetap mengunci & tetap belajar`)
+  }
   // V255 METAKOGNISI — otak menilai dirinya sendiri SEBELUM mengunci (V256: dihitung di loop, dipakai ulang di sini):
   const biasB = biasKonteksGlobal[`${v.arah}-${b.rezim}`] ?? null
   const biasT = terapkanBias(v.keyakinan, biasB)
@@ -3493,7 +3554,7 @@ const kunciEntriArah = (k, eksplor, runnerUp, peneliti) => {
   // layak bernafas — dan penjaga-kedua (hard 15%/40%) tetap berlaku di atasnya.
   // V262 STOP/TARGET WAJIB (kasus D) + V263 MODE-ASAH — stop diperketat ×0.75 saat
   // mode-asah (overclaim → jarak salah lebih pendek), ukuran mikro saat henti-harian.
-  const _asahStopF = (asahKalibAktif ? ASAH.STOP_KETAT_F : 1) * (hentiAsahAktif ? 0.9 : 1) * (syarat ? syarat.stopFaktor : 1) * (peneliti ? ANTI.PENELITI_STOP_F : 1)   // V264: pelajaran lalu mengetatkan stop ×0.8^n
+  const _asahStopF = (asahKalibAktif ? ASAH.STOP_KETAT_F : 1) * (hentiAsahAktif ? 0.9 : 1) * (syarat ? syarat.stopFaktor : 1) * (peneliti ? ANTI.PENELITI_STOP_F : 1) * (ulangSalahAktif ? ULANG.STOP_F : 1)   // V264: pelajaran lalu mengetatkan stop ×0.8^n · V328: kunci-ulang baru-SALAH mengetatkan ×0.85
   const _stopPctImp = (eksA ? eksA.rugiPct : IMPAS.STOP_DEFAULT_PCT) * _asahStopF
   const _tgtPctImp = eksA ? eksA.gainPct : IMPAS.TARGET_DEFAULT_PCT
   // V277-JUAL-AMBISIUS — jalur ARAH pun wajib membawa harga ambisius: sasaran
@@ -3514,6 +3575,7 @@ const kunciEntriArah = (k, eksplor, runnerUp, peneliti) => {
     ...(emas ? { zonaEmas: true } : {}),
     ...(biasT.geser ? { biasKonteks: { kunci: `${v.arah}-${b.rezim}`, geser: biasT.geser, ket: biasT.kunci } } : {}),
     metakognisi: { estLevel: estM.level, estTerlemah: estM.terlemah, estFaktor: estM.faktor, aspekRagu: estM.aspekRagu, predProb: predM.probGagal, predAlasan: predM.alasan.map((a) => a.sumber), ket: `${estM.penjelasan}; prediktor kegagalan pra-kunci ${(predM.probGagal * 100).toFixed(0)}%` },
+    ...(ulangSalahAktif ? { ulang: { status: ulangS.status, usiaJam: ulangS.usiaJam, sebelumnya: ulangS.sebelumnya, keyakinanSebelum: keyakinanSebelumUlang, potonganKeyakinan: ULANG.KEY_SALAH, ukuranF: ULANG.UKURAN_F, stopF: ULANG.STOP_F, buktiHidup: statUlang.ulangSalah, ket: 'V328 ULANG-CERDAS: kunci-ulang atas simbol yang baru SALAH (≤48 jam) — keyakinan dipotong, ukuran ×0.6, stop ×0.85, benar-benar dihitung di skalaEfektif & stopPct — bukan ban (tetap mengunci, tetap dinilai, tetap belajar); statistika dihitung hidup dari ledger tiap denyut, bukan tembok konstanta' } } : {}),
     ...(eksplor ? { eksplorasi: true, ketEksplorasi: 'slot eksplorasi forensik — menguji apakah zona racun mulai menyembuh (EV statistik >= 0)' } : {}),
     ...(peneliti ? { peneliti: true, penelitian: { alasan: 'anti-diam V269 — doktrin pemilik: gerbang menutup ≠ berhenti; kandidat terkuat yang tersisa diteliti ukuran mikro agar tetap beraksi, tetap dinilai medan, tetap berkembang — hipotesis jadi bukti, bukan opini', ket: 'ukuran mikro ×' + ANTI.PENELITI_UKURAN + ' di luar tangga-ukuran normal — posisi penelitian, bukan keyakinan; stop ketat ×' + ANTI.PENELITI_STOP_F } } : {}),
     entry: b.harga, waktuKunci: ISO, horizon: '24j', rezim: b.rezim, status: 'TERBUKA',
@@ -3539,7 +3601,7 @@ const kunciEntriArah = (k, eksplor, runnerUp, peneliti) => {
     topik: { metaArah: metaA.metaArah, metaKeyakinan: metaA.metaKeyakinan, terkuat: metaA.terkuat ?? null, terlemah: metaA.terlemah ?? null, suara: metaA.suara, ket: 'meta-inferensi kolektif ala Allora Topics — bobot topik = exp(-0.9·regret) dari medan sendiri' },
     probPasar: ppA,
     divergensi: divergA,
-    ekspresi: { ...eksprA, skalaEfektif: +(clamp(Math.min(eksprA.skala * (auto?.kelly?.mult ?? 1), kuaC.kuanta || 1, CLAW.UKURAN_MAKS) * (asahKalibAktif ? ASAH.UKURAN_F : 1) * (hentiAsahAktif ? ASAH.HENTI_UKURAN : 1) * (syarat ? syarat.skalaFaktor : 1) * (butaAsah.some((x) => x.organ === 'jual-lemah') ? BUTA.JUAL_SKALA_F : 1) * (bearHarian && v.arah === 'SELL' ? BUTA.SELL_BEAR_SKALA_F : 1) * (butaAsah.some((x) => x.organ === 'buy-saksi-terbalik') ? BUTA.BUY_SAKSI_SKALA_F : 1) * (butaAsah.some((x) => x.organ === 'buy-jatuh-dalam') ? BUTA.BUY_JATUH_SKALA_F : 1), 0.05, 1.2) * (peneliti ? ANTI.PENELITI_UKURAN : 1)).toFixed(3), ket: 'skala eksposur dinamis ala Allora×G.A.M.E (0.25–1.0× unit) × kelly-lapis AutoPilotPM, DITAMBAT tangga kuanta CLAW & ukuran-maks → skalaEfektif clamp [0.2,1.2]; V263 mode-asah memangkas ukuran ×0.6 / ×0.3 (belajar terus, taruhan kecil); V264 pelajaran-lalu menyusutkan ukuran ×0.6^n (pengalaman mengecilkan taruhan, bukan dendam); V265 organ buta jual-lemah ×0.5; V267 anti-arus BUY jebakan-pantulan/jatuh-pisau ×0.6' },
+    ekspresi: { ...eksprA, skalaEfektif: +(clamp(Math.min(eksprA.skala * (auto?.kelly?.mult ?? 1), kuaC.kuanta || 1, CLAW.UKURAN_MAKS) * (asahKalibAktif ? ASAH.UKURAN_F : 1) * (hentiAsahAktif ? ASAH.HENTI_UKURAN : 1) * (syarat ? syarat.skalaFaktor : 1) * (butaAsah.some((x) => x.organ === 'jual-lemah') ? BUTA.JUAL_SKALA_F : 1) * (bearHarian && v.arah === 'SELL' ? BUTA.SELL_BEAR_SKALA_F : 1) * (butaAsah.some((x) => x.organ === 'buy-saksi-terbalik') ? BUTA.BUY_SAKSI_SKALA_F : 1) * (butaAsah.some((x) => x.organ === 'buy-jatuh-dalam') ? BUTA.BUY_JATUH_SKALA_F : 1) * (ulangSalahAktif ? ULANG.UKURAN_F : 1), 0.05, 1.2) * (peneliti ? ANTI.PENELITI_UKURAN : 1)).toFixed(3), ket: 'skala eksposur dinamis ala Allora×G.A.M.E (0.25–1.0× unit) × kelly-lapis AutoPilotPM, DITAMBAT tangga kuanta CLAW & ukuran-maks → skalaEfektif clamp [0.2,1.2]; V263 mode-asah memangkas ukuran ×0.6 / ×0.3 (belajar terus, taruhan kecil); V264 pelajaran-lalu menyusutkan ukuran ×0.6^n (pengalaman mengecilkan taruhan, bukan dendam); V265 organ buta jual-lemah ×0.5; V267 anti-arus BUY jebakan-pantulan/jatuh-pisau ×0.6; V328 kunci-ulang baru-SALAH menyusutkan ×0.6' },
     sidikPrakunci: sidik({ id, simbol: s, arah: v.arah, entry: b.harga, keyakinan: kal.keyakinan, odds: odds.skor, waktuKunci: ISO, params: wp.penuh.length }),
     peristiwa: peri,                                                // V256 tag peristiwa (OddsMaker event-based)
     rencanaDeal: deal,                                              // V256 mesin deal (3Commas)

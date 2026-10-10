@@ -74,7 +74,14 @@ const NAMA_UMUM = {
 // kata yang TIDAK boleh dianggap ticker bila muncul setelah "koin"
 const STOP = new Set(('koin coin token kelas kelasnya audit periksa cek telaah analisa analisis kelayakan ' +
   'kondisi bagaimana gimana apa itu dan atau yang ini itu saya aku kamu dia micaprofita makhluk harga pasar ' +
-  'hari ini sekarang tadi sudah belum bisa boleh tolong dong ya tidak bukan layak layakkah amankah berapa').split(' '))
+  'hari ini sekarang tadi sudah belum bisa boleh tolong dong ya tidak bukan layak layakkah amankah berapa ' +
+  'siapa siapakah apakah mengapa kenapa kapan dimana mana jelaskan sebutkan ceritakan sama dengan untuk dari ke di ' +
+  'kita mereka punya pun milik ' +
+  'saja juga lagi akan sedang tengah pernah harus jangan mau ingin tahu tau tanyak bertanya mohon ' +
+  'halo hai hallo ok oke thanks makasih terima kasih master tuan pemilik ' +
+  'naik turun surut naiknya turunnya pajangan soal ujian jawab jawaban ' +
+  'bullish bearish bullrun halving pump dump candle chart support resistance leverage margin ' +
+  'liquidation likuidasi futures spot orderbook funding scam rugpull dyor defi nft airdrop staking hodl fomo fud').split(' '))
 
 // ---------- POLA PERTANYAAN: "periksa koin <ticker>" ----------
 // Mandat: neuron lokal TIDAK punya pola ini — organ ini yang memberinya.
@@ -85,10 +92,23 @@ export function kenaliAuditKoin (teks) {
   const pemicu = / (periksa|periksalah|audit|auditkan|cek|cekin|telaah|telaaah|analisa|analisis|analize|kelayakan|kelayakkah|kondisi|bedah|pergiinkan) /.test(q) ||
     / (periksa|audit|cek|kelayakan|kondisi) (koin|coin|token) /.test(q)
   const sebutKoin = / (koin|coin|token|crypto|kripto) /.test(q)
+  // V328 (luka pemilik: "gtc sama sand kok gak cerdas, kek hardcode disatu
+  // koin"): ticker TELANJANG — pertanyaan PENDEK (≤4 kata) yang menyisakan
+  // kata mirip-ticker = niat audit koin itu, TANPA perlu kata "periksa".
+  // Aturan GENERIK untuk koin apa pun — bukan daftar koin karangan.
+  const tokenAwal = raw.replace(/[^\p{L}\p{N}\s]/gu, ' ').split(/\s+/).filter(Boolean)
+  const calon = []
+  for (const t of tokenAwal) {
+    const u = t.toUpperCase(), low = t.toLowerCase()
+    if (STOP.has(low)) continue
+    if (NAMA_UMUM[low]) { if (calon.indexOf(NAMA_UMUM[low]) === -1) calon.push(NAMA_UMUM[low]); continue }
+    if (/^[A-Za-z]{2,10}$/.test(t) || /^[A-Za-z]{2,10}USDT$/i.test(t)) { if (calon.indexOf(u.replace(/USDT$/i, '')) === -1) calon.push(u.replace(/USDT$/i, '')) }
+  }
+  const tickerTelanjang = tokenAwal.length <= 4 && calon.length > 0
   if (!pemicu || !sebutKoin) {
     // "periksa BTC" / "audit BTCUSDT" tanpa kata koin juga sah bila ada ticker jelas
     const pemicuKuat = / (periksa|audit|cek|telaah|analisa|analisis) /.test(q)
-    if (!pemicuKuat) return { cocok: false, alasan: 'bukan pertanyaan audit koin' }
+    if (!pemicuKuat && !tickerTelanjang) return { cocok: false, alasan: 'bukan pertanyaan audit koin' }
   }
   // cari ticker: token huruf/angka 2..10, bukan stopword, di teks ASLI (huruf besar kecil dijaga)
   const tokenKu = raw.replace(/[^\p{L}\p{N}\s]/gu, ' ').split(/\s+/).filter(Boolean)
@@ -107,8 +127,13 @@ export function kenaliAuditKoin (teks) {
       ticker = u.replace(/USDT$/i, ''); break
     }
   }
-  if (!ticker) return { cocok: true, ticker: null, mintaTicker: true, alasan: 'niat audit jelas tapi ticker tak terbaca' }
-  return { cocok: true, ticker, mintaTicker: false }
+  if (!ticker && calon.length) ticker = calon[0] // V328: calon (termasuk nama-umum) boleh menyelamatkan ticker
+  if (!ticker) return { cocok: true, ticker: null, tickers: [], mintaTicker: true, alasan: 'niat audit jelas tapi ticker tak terbaca' }
+  // V328: tickers — beberapa koin sekaligus ("gtc sama sand") diakui secara jujur;
+  // ticker tunggal = calon pertama. Aturan generik, nol koin dikhususkan.
+  const tickers = calon.length ? calon.slice() : [ticker]
+  if (tickers.indexOf(ticker) === -1) tickers.unshift(ticker)
+  return { cocok: true, ticker, tickers: tickers.slice(0, 3), mintaTicker: false }
 }
 
 // ---------- pengambil data NYATA (host cadangan + hormat 418/429) ----------
@@ -330,7 +355,9 @@ function bacaAngka (m) {
     const ribu = des === '.' ? ',' : '.'
     baca = [parseFloat(s.split(ribu).join('').split(des).join('.'))]
   } else if (koma) {
-    if (/^\d{1,3}(,\d{3})+$/.test(s)) {
+    // V328: pola ribuan hanya sah bila grup pertama TAK diawali nol — "0,415"
+    // (adat Indonesia) pasti desimal 0,415; ribuan "0,415" = 415 tak masuk akal
+    if (/^[1-9]\d{0,2}(,\d{3})+$/.test(s)) {
       // pola ribuan "1,234"/"1,234,567" — bacaan desimal "1,234"=1,234 hanya
       // disertakan bila angka utuh ≥ 1000 (ambiguitas dua adat yang masuk akal)
       const utuh = parseFloat(s.replace(/,/g, ''))
@@ -377,14 +404,26 @@ export function telaahJawabLLM (teks, a) {
     sisa = sisa.replace(/^\s*(?:[-–—]?\s*(?:14|7|9|21)\b|\(\s*(?:14|7|9|21)\s*\))\s*/, '')
     sisa = sisa.replace(/^\s*[-–—](?=\s*\D)/, ' ') // "RSI- berada di 50.18" (srip tipografis LLM)
     const angka = sisa.match(/^\s*[^0-9+-]{0,22}([+-]?[0-9]{1,2}(?:[.,][0-9]{1,4})?)/)
-    if (angka && !/skor|vonis|spread|atr/i.test(sisa.slice(0, sisa.indexOf(angka[1])))) rsiSemua.push(bacaAngka(angka[1]))
+    const jendela = angka ? sisa.slice(0, sisa.indexOf(angka[1])) : ''
+    // V328: angka setelah kata PEMBANDING = ambang kualitatif ("RSI di bawah 50"),
+    // bukan klaim nilai RSI — dilewati; "berada di 50.18" tetap nilai (di = at)
+    if (angka && !/skor|vonis|spread|atr/i.test(jendela) &&
+        !/(di\s+)?(bawah|atas)\b|(below|above|under|over)\b|(kurang|lebih)\s+dari|[<>≤≥]/i.test(jendela)) rsiSemua.push(bacaAngka(angka[1]))
   }
   const rsiOk = rsiSemua.length > 0 && rsiSemua.every((baca) => baca.some((x) => Math.abs(x - a.rsi14) <= 2))
   cek.push({ nama: 'C3-rsi', lulus: rsiOk, ket: rsiOk ? 'RSI disebut = RSI audit' : (rsiSemua.length ? 'RSI LLM (' + rsiSemua.join(',') + ') ≠ RSI audit ' + fmtAngka(a.rsi14, 1) : 'RSI tak disebut') })
   // C4: perubahan 24 jam disebut & cocok (±0,6 poin) — DUA urutan kalimat:
-  //   A: "perubahan 24 jam: +0.37%"   B: "perubahan -0.335% dalam 24 jam"
+  //   A: "perubahan 24 jam: +0.37%" / "24 jam positif sebesar +0.337%" (V328:
+  //      jembatan ≤28 karakter, ditolak bila mengandung batas kalimat atau kata
+  //      metrik lain — volume/spread/funding/ATR/skor/RSI tak boleh tertelan)
+  //   B: "perubahan -0.335% dalam 24 jam"
   const c24Klaim = []
-  for (const m of t.matchAll(/24\s*(?:jam|j|hour|h)?[^0-9+-]{0,12}([+-]?[0-9]+(?:[.,][0-9]+)?)\s*%/gi)) c24Klaim.push(bacaAngka(m[1]))
+  for (const m of t.matchAll(/\b24\s*(?:jam|j|hour|h)?([^0-9+-]{0,28}?)(([+-]?[0-9]+(?:[.,][0-9]+)?)\s*%)/gi)) {
+    const jendela = m[1]
+    if (/volume|spread|funding|atr|skor|rsi|kap\b/i.test(jendela)) continue // metrik lain tak boleh ditelan sebagai 24 jam
+    if (/[.;!?\n]/.test(jendela)) continue // batas kalimat = bukan satu klaim
+    c24Klaim.push(bacaAngka(m[3]))
+  }
   for (const m of t.matchAll(/([+-]?[0-9]+(?:[.,][0-9]+)?)\s*%\s*[^0-9]{0,16}\b24\s*(?:jam|j|hour|h)?/gi)) c24Klaim.push(bacaAngka(m[1]))
   const c24Ok = c24Klaim.length > 0 && c24Klaim.every((baca) => baca.some((x) => Math.abs(x - a.chg24) <= 0.6))
   cek.push({ nama: 'C4-perubahan24', lulus: c24Ok, ket: c24Ok ? 'perubahan 24j disebut = fakta' : (c24Klaim.length ? 'angka 24j LLM (' + c24Klaim.map((b) => b.join('|')).join(' ; ') + ') ≠ ' + fmtAngka(a.chg24, 2) + '%' : 'perubahan 24j tak disebut') })

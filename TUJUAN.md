@@ -3268,3 +3268,77 @@ melayani pemiliknya: tanya satu koin, dapat satu audit jujur. Berikutnya
 (usul): auditor multi-koin & pembanding-lintas-koin; audit ikut memakan
 sasaran harian (vonis audit jadi masukan router MoE); intisari audit ke
 ingatan-biner; telaah audit-mundur (kenapa skor berubah antar hari).
+
+## §13m — EPOCH V328 · PINTU TELANJANG & ULANG-CERDAS: "GTC SAMA SAND" KINI DIAUDIT SEMUANYA, DAN PENJAGA TAK LAGI TERLIHAT HARDCODE SATU KOIN (2026-10-10)
+
+**1. LAPORAN PEMILIK (MANDAT).** "Ini lalu ada problem di arena.html itu
+gtc sama sand terus kenapa? Lagi lagi itu kek mereka kok gak cerdas itu
+lagi tiy lagi kek hardcode disatu koin." Dua luka diakui jujur: (a) soal
+TELANJANG — "gtc", "sand", "gtc sama sand" — tak pernah dikenali meja
+audit V327 yang cuma menyalu pada kata "periksa/audit/cek koin"; soal itu
+jatuh ke jalur lain dan dijawab seperti doktrin — persis kesan "hardcode
+disatu koin" yang dilaporkan; (b) di medan, penjaga terus-menerus
+mengunci-ulang koin yang sama hari-demi-hari (GTC salah-benar-salah
+berulang) sehingga terlihat seperti dicandu satu koin — bukan cerdas.
+
+**2. PINTU TELANJANG (ATURAN GENERIK, NOL KOIN DIKHUSUSKAN).** Kini
+pertanyaan PENDEK (≤4 kata) yang menyisakan kata mirip-ticker = niat
+audit koin itu, tanpa perlu kata "periksa": "gtc", "sand", "sand
+sekarang", "gtc sama sand" — semua lewat PINTU YANG SAMA. Ticker telanjang
+wajib mengandung huruf (95000 bukan ticker); kata henti diperluas (kita,
+mereka, punya, siapa-kapan-kenapa, dsb.) agar soal percakapan tak dibajak.
+Beberapa ticker sekaligus = SEMUA diaudit: "gtc sama sand" melahirkan satu
+kartu fakta per koin (organ audit-koin.mjs kini mengembalikan `tickers`;
+arena.html V328 mengaudit ketiganya maksimal). Aturannya generik — koin
+apa pun, termasuk yang lahir besok, jalan lewat pintu yang sama; tidak ada
+satu pun koin yang dikhususkan di kode.
+
+**3. ULANG-CERDAS (PENJAGA BERHENTI TERLIHAT HARDCODE).** Diagnosa dari
+BUKU BESAR hidup (bukan opini): mengunci-ulang simbol yang BARU DIKALAHKAN
+(≤48 jam) = pendarah nyata — ulang-setelah-SALAH ak 20,8% (n=72) vs
+ulang-setelah-MENANG ak 40,9% (n=44); slot-peneliti V269 selalu memilih
+"kandidat terkuat" = koin paling berisik, hari-demi-hari koin yang sama.
+Kini organ ULANG mengikat SAAT KUNCI: vonis matang simbol ≤48 jam dihitung
+per denyut dari ledger (statUlang — angka hidup, bukan tembok konstanta);
+yang baru SALAH membayar harga pelajaran — keyakinan −7 (lantai 20),
+ukuran ×0,6 (skalaEfektif), stop ×0,85 (stopPct) — dan SEMUANYA DISEGEL
+di entri (field `ulang`: status, usiaJam, keyakinanSebelum, buktiHidup).
+BUKAN ban (karantina dilarang V263): tetap mengunci, tetap dinilai medan,
+tetap belajar. Kandidat baru-dikalahkan hanya diteliti bila tak ada yang
+lebih segar — koin berisik tak lagi otomatis candu.
+
+**4. UJI JALUR LLM DIPERLUAS — 15/15 LULUS PENUH (segel
+4f1b7b7099a2e588).** Soal yang SEBENARNYA muncul ditambahkan sebagai soal
+wajib: "gtc", "sand", "gtc sama sand" (⟶ GTC dan SAND diaudit penuh
+G2–G5 masing-masing) + 2 negatif baru ("berapa harga bitcoin hari ini?"
+& "kenapa pasar turun?" tak boleh dibajak jadi audit). Dua ronde
+penyempurnaan GERBANG — semuanya cacat gerbang, bukan kebohongan LLM:
+(1) C3 "RSI di bawah 50" (kalimat ambang) tertelan jadi klaim nilai 50 —
+kini angka setelah kata pembanding (di bawah/atas, below/above, kurang/
+lebih dari, <,>) dilewati; (2) C4 "24 jam positif sebesar +0.337%" (21
+karakter jembatan) melebihi jendela 12 — kini ≤28 karakter dengan pagar
+batas-kalimat & kata-metrik (volume/spread/funding/ATR/skor/RSI tak boleh
+ditelan); (3) "+0,415%" adat Indonesia terbaca ribuan 415 — kini pola
+ribuan hanya sah bila grup pertama tak diawali nol. Disiplin field
+ditempa ke sistem-prompt (perubahan24jam ≠ momen7/momen30) — dan telaah
+TETAP menelan halusinasi sejati (kasus "+2.7%" padahal fakta 0,03%
+tetap GUGUR — gerbang tak pernah disuap).
+
+**5. BUKTI NYATA SAAT ITU JUGA.** --periksa GTC: $0,1906 · 24j −2,40% ·
+RSI 65,2 · funding −0,0383% · skor 73/100 LAYAK DITELITI LANJUT (segel
+29bae4be956bae58). --periksa SAND: $0,06835 · 24j +1,32% · RSI 62,8 ·
+funding −0,1771% · skor 78/100 LAYAK DITELITI LANJUT (segel
+630e806fb1fa52bc). Dua koin yang dilaporkan pemilik kini dijawab angka
+pasar nyata + rumus tertulis + segel — bukan doktrin.
+
+**6. VALIDASI.** node --check 3 organ LULUS; 3 blok script arena.html OK;
+nol kata terlarang baru; nol Math.random pemakaian (komentar hukum saja).
+arena.html: meja audit berlabel V328, chip BTC/ETH/SOL/SAND/GTC, jawaban
+guru = suara kedua yang wajib lolos telaah (badge TELAAH LULUS/GUGUR).
+
+**7. MAKNA MANDAT.** Pemilik tak perlu lagi mengingat kata sakti:
+menulis "sand" saja — makhluk menghirup pasar nyata dan menjawab angka.
+Dan di medan, penjaga kini menyimpan ingatan luka 48 jam: koin yang baru
+mengkhianati diawasi lebih ketat dengan taruhan mengecil — pelajaran
+mengecilkan taruhan, bukan dendam; cerdas itu bukan mengulang koin yang
+sama, tapi mengubah cara memperlakukannya setelah kalah.
