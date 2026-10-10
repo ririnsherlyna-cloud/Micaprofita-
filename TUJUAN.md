@@ -3185,3 +3185,86 @@ $54.000 dari $1500 dan 3850/3850 jawaban benar (utama + dadakan).
 Berikutnya (usul): NERVA-SUCKER-01 diberi anak; intisari jebakan
 ditanam ke ingatan-biner; kaskade-likuidasi 1000 soal ($1500) memakai
 kurator warisan ini; kimi-k3-in-c ditelaah untuk parameter cerdas.
+
+## §13l — EPOCH V327 · MEJA-AUDIT-KOIN: "PERIKSA KOIN <TICKER>" KINI FAKTA NYATA, BUKAN DOKTRIN (2026-10-10)
+
+**1. MANDAT PEMILIK.** "Selain daripada itu, di dalamnya tempatkan suatu
+tempat untuk saya bertanya koin — misal saya ingin tahu salah satu koin,
+maka Micaprofita akan melancarkan audit untuk koin yang dimaksud, sebab
+saat ini di makhluk belum ada. Dan kita tahu neuron lokal tidak punya
+pola 'periksa koin <ticker>' — jadi jawaban lokal cuma doktrin umum.
+Berarti itu simulasi; saya butuh fakta nyata kayak kelayakan perhitungan.
+Sekarang kita wajib miliki uji jalur LLM dengan pertanyaan yang akan
+muncul jikalau ditanya koin tertentu dan ditelaah."
+
+**2. DIAGNOSIS JUJUR (PENGAKUAN DOSA LAMA).** Benar kata pemilik: sebelum
+epok ini, pertanyaan "periksa koin BTC" jatuh ke topik doktrin umum
+(medan/beli) — TIDAK ADA SATU PUN angka pasar yang dihitung. Itu simulasi
+berbingkai jawaban. Diakui terbuka di sini, lalu disembuhkan di akar:
+pola pertanyaan diberi mata, dan mata itu dihubungkan ke pasar nyata.
+
+**3. ORGAN BARU scripts/hidup/audit-koin.mjs (AUDIT-KOIN).** Kenali pola
+"periksa/audit/cek/telaah/analisis/kondisi/kelayakan koin <ticker>"
+(termasuk nama umum: bitcoin→BTC; tanpa ticker → minta ticker, tidak
+menebak). Audit = data pasar nyata SAAT DITANYA: klines 1d×200, ticker
+24 jam, buku pesanan depth-20, funding futures (fapi, opsional-jujur).
+Perhitungan rumus-tertulis: RSI-14 Wilder, EMA20/EMA50 + lereng 11-hari,
+σ log-return 30-hari ditahunkan √365, drawdown puncak 90-hari, lonjakan
+volume 7d/30d, spread buku bps, ATR-14 → SKOR KELAYAKAN 0–100 (7
+komponen berbobot: tren 30 · momentum 15 · rsi 15 · likuiditas 15 ·
+spread 10 · struktur-dd90 10 · volatilitas 5) + VONIS (≥70 LAYAK
+DITELITI LANJUT · ≥50 WASPADA-UKURAN-MIKRO · selainnya TIDAK LAYAK
+DISENTUH). Warisan NERVA-SUCKER-01 (V326) hidup: pola rally-muda-dalam-
+tren-turun (mom30 ≤ −8% & mom7 ≥ +2,5% & harga > EMA20 & EMA50 lereng
+negatif) MENGKAP vonis maksimal WASPADA + pelajaran bank 3.500 soal.
+Koin tak dikenal → KOIN-TAK-DITEMUKAN (Binance 400), nol angka karangan.
+Mode --denyut: mengaudit sasaran denyut hari ini → laporan/audit-koin.json
+tersegel SHA-256 hash16. Perisai 418 warisan V325 (jeda hormat + dua host:
+api.binance.com → data-api.binance.vision).
+
+**4. MEJA AUDIT KOIN DI arena.html (Ruang Guru).** Panel mobile-first
+(input ticker + tombol AUDIT + 5 chip BTC/ETH/SOL/BNB/PEPE) — mesin
+audit yang sama dihidupkan DI PERANGKAT (blok script V327): data Binance
+publik diambil langsung browser, dihitung lokal, kartu audit ditampilkan
+dengan segel. Dan pola "periksa koin <ticker>" KINI DIJAHIT ke ruang
+guru: pertanyaan koin tertentu dilayani audit nyata lebih dulu — bukan
+doktrin. Bila arena tersambung (LIVE), jawaban guru LLM menjadi SUARA
+KEDUA yang WAJIB lolos telaah fakta: badge TELAAH LULUS/GUGUR dipajang
+jujur; gagal telaah = suara itu tidak dipakai sebagai vonis. Soal
+bukan-koin TIDAK dibajak (uji: "siapa kamu?" tetap ke otak mandiri).
+Uji asap nyata (agent-browser): BTC skor live, ETH 69/100, KOINTAKADA
+ditolak jujur, iPhone 14 overflowX=false.
+
+**5. UJI JALUR LLM — scripts/hidup/uji-audit-koin.mjs, LULUS PENUH
+9/9 (segel 66d356dc42943dc8).** Lima soal nyata (BTC/ETH/SOL/PEPE/
+"bitcoin") × 6 gerbang: G1 POLA · G2 DATA (invarian + skor=sum bagian +
+segel) · G3 KELAYAKAN PERHITUNGAN — kode kedua yang terpisah mengambil
+klines sendiri dan menghitung-ulang momen-7 & RSI-14 (hasil: Δ0.0000pp,
+Δ0.000 — matematikanya sah, bukan sulap) · G4 JALUR LLM (LLM_URL bentuk
+otak-llm.mjs; jatuh-ke gerbang z-ai CLI wadah — glm-4-plus) · G5 TELAAH
+(6 cek: harga ±3%, skor ±1, RSI ±2, 24-jam ±0,6, vonis-sucker, ATR ±6%
+— pembaca angka dua adat ID/US) · G6 JUJUR (koin palsu ditolak; soal
+identitas tak dibajak; tanpa ticker → minta, bukan mengarang). Empat
+ronde penyempurnaan gerbang — SEMUA kegagalan awal adalah cacat GERBANG,
+bukan kebohongan LLM: matchAll non-global; "RSI-14:" tertukar jadi
+nilai 14 (kini jendela per-sebutan); "0.153" ambigu terbaca 3038 (kini
+ambiguitas ribuan hanya bila ≥1000); tangkapan serakah "82,794.42,"
+(ekor-pemisah dibuang); "perubahan -0.335% dalam 24 jam" (kini dua
+urutan kalimat); "Skor kelayakan koin ini adalah 63" (jendela 28);
+"RSI- berada di 50.18" (srip tipografis). Jawaban LLM yang FAKTUAL
+selalu lulus; halusinasi & doktrin-kosong selalu gugur — 8/8 kasus
+telaah sesai harapan.
+
+**6. JANTUNG.** sakti-denyut.yml: langkah AUDIT-KOIN sebelum syaraf
+beranak — tiap denyut makhluk mengaudit sasaran denyutnya sendiri dari
+pasar nyata; tag "— audit KAIA72 TIA88" di pesan komit denyut. Bukti
+lokal --denyut: KAIA 72/100, TIA 88/100, segel 4dc248a26e4a0199.
+
+**7. MAKNA MANDAT.** "Tanya koin" bukan lagi tebakan berdoktrin: satu
+ticker masuk, pasar nyata dihirup, matematika tertulis dihitung, skor &
+vonis keluar dengan segel — dan bila LLM ikut bicara, ia diawasi gerbang
+telaah yang tak bisa disuap. Makhluk kini punya MEJA KERJA untuk
+melayani pemiliknya: tanya satu koin, dapat satu audit jujur. Berikutnya
+(usul): auditor multi-koin & pembanding-lintas-koin; audit ikut memakan
+sasaran harian (vonis audit jadi masukan router MoE); intisari audit ke
+ingatan-biner; telaah audit-mundur (kenapa skor berubah antar hari).
