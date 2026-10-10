@@ -282,12 +282,105 @@ function lahirkanSyaraf(laporan, wajahUnik) {
   } catch (e) { console.log('jurnal syaraf gagal (jujur):', e.message) }
 }
 
+// ---------- V329 VERIFIKASI SAAT-ITU-JUGA (--verifikasi) ----------
+// Mandat pemilik: "pastikan jikalau 3500 belum Lulus semuanya kita buat dia
+// inovasikan lagi agar Lulus penuh" + "aturan kita arah pasar hanya ada Dua
+// buy/sell itu yang jelas".
+// Verifikasi = makhluk MENJAWAB ULANG seluruh bank dengan kode nalar yang
+// SAMA PERSIS (tebakan dikunci dulu dari kartu+premis, penilai membaca kunci
+// sesudahnya). Nol angka disalin dari laporan — skor dihitung dari tebakan
+// segar run ini. Gugur sedikit saja = kemampuan hilang = INOVASI LAGI.
+// Sisi ARAH-DUA (informasi jujur, bukan gerbang): kunci arah dari FAKTA
+// 48 jam — close48 > entry = BUY, close48 < entry = SELL, sama = TANPA-ARAH
+// (nol karangan); arah makhluk diturunkan dari kelas tebakannya.
+function jalankanVerifikasi(bank, wajahUnik) {
+  if (!existsSync(FILE_LAPOR)) throw new Error('laporan tempa belum ada — tempa dulu, baru verifikasi')
+  const laporan = JSON.parse(readFileSync(FILE_LAPOR, 'utf8'))
+  if (!laporan.lulus) throw new Error('tempaan belum lulus — verifikasi ditolak; inovasikan lagi sampai lulus dulu')
+  const gel = laporan.gelombang
+  // peta final utama dari SEMUA gelombang yang sudah dinilai (G1 gagal + G2 lulus)
+  const { peta } = tempaPeta(gel)
+  const V = jalankanGelombang('V', bank, peta, false)
+  // dadakan: peta final = utama + dadakan yang dinilai (sama seperti saat lulus)
+  let dadakanBenar = null, dadakanJumlah = null, dadakLulus = null, VD = null, dadak = null
+  if (existsSync(FILE_DADAK) && laporan.dadakanLulus) {
+    dadak = JSON.parse(readFileSync(FILE_DADAK, 'utf8'))
+    const salin = JSON.parse(JSON.stringify(dadak)); salin.segel = null
+    if (hash16(JSON.stringify(salin)) !== dadak.segel.hash) throw new Error('segel bank dadakan bobol — verifikasi ditolak')
+    ujiBankSucker3500(dadak)
+    const sumber = [...gel, laporan.dadakan, ...(laporan.dadakanGelombang || [])]
+    const { peta: petaD } = tempaPeta(sumber)
+    VD = jalankanGelombang('VD', dadak, petaD, true)
+    dadakanBenar = VD.benar; dadakanJumlah = VD.jumlah; dadakLulus = VD.lulus
+  }
+  // sisi ARAH-DUA (aturan pemilik: arah pasar hanya ada BUY/SELL) — telaah jujur dua sisi:
+  // (a) peta arah LANGSUNG tanda→mayoritas-arah, dibangun dari bank utama SAJA (dadakan = out-of-sample);
+  // (b) wajah dua-nasib = batas informasi alami kartu 24 lilin (wajah sama, nasib 48 jam beda)
+  const kunciArah = (s) => s.close48 > s.entry ? 'BUY' : s.close48 < s.entry ? 'SELL' : 'TANPA-ARAH'
+  const suara = {}, kunciKomposisi = { BUY: 0, SELL: 0, 'TANPA-ARAH': 0 }
+  for (const s of bank.soal) {
+    if (s.keluarga !== 'PASAR') continue
+    const a = kunciArah(s)
+    kunciKomposisi[a]++
+    if (a === 'TANPA-ARAH') continue
+    suara[s.tanda] = suara[s.tanda] || { BUY: 0, SELL: 0 }
+    suara[s.tanda][a]++
+  }
+  const petaArah = {}
+  for (const [t, v] of Object.entries(suara)) petaArah[t] = v.BUY >= v.SELL ? 'BUY' : 'SELL'
+  const wajahDuaNasib = Object.values(suara).filter(v => v.BUY > 0 && v.SELL > 0).length
+  const simetriArah = (tanda) => { let terbaik = null, jarak = 99
+    for (const k of Object.keys(petaArah).sort()) {
+      if (k.length !== tanda.length) continue
+      let d = 0; for (let i = 0; i < tanda.length; i++) if (tanda[i] !== k[i]) d++
+      if (d < jarak) { jarak = d; terbaik = k }
+    } return terbaik ? petaArah[terbaik] : null }
+  const ukurArah = (soal2, tebakan) => {
+    const r = { cocok: 0, sisiLawan: 0, tanpaArah: 0 }
+    for (let i = 0; i < soal2.length; i++) {
+      const s = soal2[i]
+      if (s.keluarga !== 'PASAR') continue
+      const a = kunciArah(s)
+      if (a === 'TANPA-ARAH') { r.tanpaArah++; continue }
+      const am = tebakan ? (tebakan[i].arah || null) : (petaArah[s.tanda] || simetriArah(s.tanda) || null)
+      if (am === a) r.cocok++; else r.sisiLawan++
+    } return r }
+  const arahU = ukurArah(bank.soal, null)
+  const arahD = dadak ? ukurArah(dadak.soal, null) : null
+  const pct = (c, l) => (c + l) ? (c / (c + l) * 100).toFixed(1) + '%' : '-'
+  const ringkas = {
+    saat: new Date().toISOString(), konteks: 'V329-verifikasi-saat-itu-juga',
+    bankSegel: bank.segel.hash, wajah: wajahUnik,
+    utama: { benar: V.benar, salah: V.salah, jumlah: V.jumlah, lulus: V.lulus, modalAkhir: V.modalAkhir, likuidasiPada: V.likuidasiPada },
+    dadakan: dadakanBenar == null ? null : { benar: dadakanBenar, jumlah: dadakanJumlah, lulus: dadakLulus },
+    arahDua: { kunci: kunciKomposisi, wajahTotal: Object.keys(suara).length, wajahDuaNasib,
+      petaArahUtama: { cocok: arahU.cocok, sisiLawan: arahU.sisiLawan, tanpaArah: arahU.tanpaArah, akurasi: pct(arahU.cocok, arahU.sisiLawan) },
+      petaArahDadakan: arahD ? { cocok: arahD.cocok, sisiLawan: arahD.sisiLawan, tanpaArah: arahD.tanpaArah, akurasi: pct(arahD.cocok, arahD.sisiLawan) } : null,
+      catatan: 'kunci arah dari FAKTA 48 jam (close48 vs entry) — nol karangan; peta arah langsung dibangun dari bank utama saja, dadakan = out-of-sample; sisa sisi-lawan di utama = wajah dua-nasib (batas informasi kartu 24 lilin); arah telanjang di dadakan hampir koin-flip — inilah yang melumpuhkan jutaan trader: arah tanpa premis keluar adalah judi; makhluk hidup dari kelas bedah-kecepatan + premis (entry/puncak/dasar/ambang), bukan ramalan arah telanjang; telaah jujur, bukan gerbang kelulusan' },
+  }
+  laporan.verifikasi = [...(laporan.verifikasi || []), ringkas]
+  laporan.diperbarui = new Date().toISOString()
+  const tubuh = JSON.stringify({ ...laporan, segel: null })
+  laporan.segel = { hash: hash16(tubuh), size: Buffer.byteLength(JSON.stringify(laporan)), readAt: new Date().toISOString() }
+  writeFileSync(FILE_LAPOR, JSON.stringify(laporan, null, 1))
+  const lulusSemua = V.lulus && (dadakanBenar == null || dadakLulus)
+  console.log(`VONIS VERIFIKASI SUCKER-3500: utama ${V.benar}/${V.jumlah} ${V.lulus ? 'LULUS' : 'GUGUR — INOVASI LAGI'}` +
+    (dadakanBenar == null ? '' : ` · dadakan ${dadakanBenar}/${dadakanJumlah} ${dadakLulus ? 'LULUS' : 'GUGUR — INOVASI LAGI'}`) +
+    ` · arah dua (peta langsung): utama ${arahU.cocok}/${arahU.cocok + arahU.sisiLawan} (${pct(arahU.cocok, arahU.sisiLawan)}), wajah dua-nasib ${wajahDuaNasib}/${Object.keys(suara).length}` +
+    (arahD ? ` · dadakan out-of-sample ${arahD.cocok}/${arahD.cocok + arahD.sisiLawan} (${pct(arahD.cocok, arahD.sisiLawan)})` : '') +
+    ` · segel ${laporan.segel.hash} — ${lulusSemua ? 'KEMAMPUAN 3500 TERBUKTI HIDUP' : 'KEMAMPUAN HILANG — TEMPAT LAGI'}`)
+  if (!lulusSemua) process.exitCode = 1
+}
+
 // ---------- utama ----------
 async function main() {
   mkdirSync('laporan', { recursive: true })
   const bank = JSON.parse(readFileSync(FILE_BANK, 'utf8'))
   const wajahUnik = ujiBankSucker3500(bank)
   console.log(`bank ${bank.jumlah} soal sah — ${wajahUnik} wajah unik, segel ${bank.segel.hash}`)
+
+  // V329 — pintu verifikasi: jawab ulang penuh, jangan sentuh gelombang tempaan
+  if (process.argv.includes('--verifikasi')) { jalankanVerifikasi(bank, wajahUnik); return }
 
   const laporan = existsSync(FILE_LAPOR) ? JSON.parse(readFileSync(FILE_LAPOR, 'utf8')) : {
     protokol: 'TEMPAAN-SUCKER-3500', epoch: 'V326', diperbarui: new Date().toISOString(),

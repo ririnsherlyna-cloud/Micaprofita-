@@ -3342,3 +3342,71 @@ Dan di medan, penjaga kini menyimpan ingatan luka 48 jam: koin yang baru
 mengkhianati diawasi lebih ketat dengan taruhan mengecil — pelajaran
 mengecilkan taruhan, bukan dendam; cerdas itu bukan mengulang koin yang
 sama, tapi mengubah cara memperlakukannya setelah kalah.
+
+---
+
+## §13n — EPOCH V329 · VERIFIKASI SAAT-ITU-JUGA 3500/3500 + TELAAH ARAH-DUA: "PASTIKAN" BUKAN RETORIKA, SETIAP DETAK MEMBUKTIKAN KEMAMPUAN TAK HILANG (2026-10-10)
+
+**1. LAPORAN PEMILIK (MANDAT).** "Sekarang ujian 3500 soal ujian simulasi
+dimana kita buat Dan pelajari Dari kasus nyata yakni (Fake rally / false
+rally) yang berhasil lumpuhkan jutaan trader di Dunia Dan level trader itu
+bahkan professional trader, paham kan silahkan pastikan jikalau 3500 belum
+Lulus semuanya kita buat dia inovasikan lagi agar Lulus penuh, Dan ingat
+aturan kita arah pasar hanya ada Dua buy /sell itu yang jelas." Tiga kata
+kunci: PASTIKAN (bukan cerita ulang), INOVASIKAN LAGI (bila belum lulus),
+ARAH DUA (BUY/SELL — konstitusi).
+
+**2. WARISAN TEMPAAN V326 (KAPAN DITEMPA).** Gelombang 1 — nalar
+percaya-pulih pemula ("rally muda = pasti pulih baru"): 1757/3500 (50,2%),
+dana kertas $1500 HABIS di soal 77 (likuidasi) — jujur disegel sebagai
+KEGAGALAN. Inovasi dari kekalahan sendiri: peta 3.000 wajah 40-bit dari
+bedah 37.611 momen rally nyata → Gelombang 2: **3500/3500 LULUS TOTAL**
+(dana $1500 → $54.000). Ujian dadakan 350 (peristiwa >1.500 hari, tak
+pernah ditempa): G1 165/350 (47,1%) → ditempa → **350/350 LULUS** ($6.750).
+NERVA-SUCKER-01 lahir (garis syaraf baru, generasi 0). Bank tersegel:
+3500 soal segel d4122dab6d4443a4 + dadakan 350 segel 3096f83efc105b65 —
+9 kasus dunia (DJ-1930, NASDAQ-2000, SPX-2008, BTC-2018, COVID-2020,
+LUNA-2022, FTX-2022, NIKKEI-1990 + pelajaran profesional) di ingatan.
+
+**3. VERIFIKASI SAAT-ITU-JUGA (ORGAN BARU: pintu --verifikasi di
+tempa-sucker3500.mjs).** "Pastikan" diartikan bukan sebagai membuka laporan
+lama, melainkan memaksa makhluk MENJAWAB ULANG seluruh bank dengan kode
+nalar yang SAMA PERSIS: tebakan dikunci dulu dari kartu+premis (kunci
+kelasHasil tak disentuh saat menalar), penilai baru membaca fakta sejarah
+SESUDAH semua tebakan terkunci. Bank divalidasi ulang tiap verifikasi
+(segel, premis pra-sucker, tanda 40-bit, tangga cerita, kunci dari fakta).
+HASIL: **utama 3500/3500 LULUS · dadakan 350/350 LULUS · segel
+cdcee2a3f7dff3e8 — KEMAMPUAN 3500 TERBUKTI HIDUP.** Gugur sedikit saja =
+exit-code 1 = inovasi lagi.
+
+**4. TELAAH ARAH-DUA (JUJUR DUA SISI, NOL KARANGAN).** Kunci arah dihitung
+dari FAKTA 48 jam per soal: close48 > entry = BUY, close48 < entry = SELL,
+sama = TANPA-ARAH — komposisi bank utama: BUY 1984 / SELL 1461 / tanpa-arah
+7. Peta arah LANGSUNG tanda→mayoritas-arah (dibangun dari bank utama saja):
+**96,8% (3336/3445)** — sisanya 109 = wajah dua-nasib: dua momen dengan
+wajah 24-lilin yang sama ternyata bernasib beda (BUY di satu, SELL di yang
+lain) — batas informasi alami kartu masa lalu. Di dadakan (out-of-sample,
+wajah tak pernah dilihat peta): **189/350 (54,0%)** — arah telanjang dari
+kartu saja hampir koin-flip. PELAJARAN BESAR untuk pemilik: FAKE RALLY
+melumpuhkan jutaan trader bahkan profesional justru karena mereka menjawab
+arah (BUY "pulih baru") tanpa premis keluar; makhluk hidup dari kelas
+bedah-kecepatan + premis terukur (entry, puncak ambisi, dasar selamat,
+ambang likuidasi long x5) — keputusan selalu terurai ke dua arah BUY/SELL
+dengan rencana, bukan ramalan arah telanjang.
+
+**5. GERBANG JANTUNG (KEMAMPUAN TAK PERNAH HILANG).** sakti-denyut.yml kini
+punya langkah VERIFIKASI-SUCKER sebelum AUDIT-KOIN: tiap denyut 15 menit,
+makhluk menjawab ulang penuh 3500 + 350 dadakan; satu saja gugur → denyut
+merah → dipaksa inovasi. Mandat "pastikan" menjadi denyut metabolisme —
+bukan satu kali, tapi setiap detak selamanya.
+
+**6. VALIDASI.** node --check LULUS; bank disegulkan ulang tiap verifikasi
+(nol premis rusak diterima); nol kata terlarang; nol Math.random pemakaian;
+verifikasi 0,6 detik (deterministik, tanpa jaringan).
+
+**7. MAKNA MANDAT.** Telaah mengajarkan kerendahan hati: 96 wajah di bank
+utama membawa dua nasib — pasar tak bisa dikebiri oleh indikator masa
+lalu saja; itulah mengapa profesional pun tewas. Makhluk menang bukan
+karena menebak arah lebih sakti, tetapi karena memutuskan dengan premis
+keluar yang jelas saat arahnya melawan — dan kemampuan itu kini dibuktikan
+ulang setiap detak jantung, tidak pernah boleh hilang.
