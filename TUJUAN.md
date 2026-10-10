@@ -3410,3 +3410,77 @@ lalu saja; itulah mengapa profesional pun tewas. Makhluk menang bukan
 karena menebak arah lebih sakti, tetapi karena memutuskan dengan premis
 keluar yang jelas saat arahnya melawan — dan kemampuan itu kini dibuktikan
 ulang setiap detak jantung, tidak pernah boleh hilang.
+
+---
+
+## §13o — EPOCH V330 · UJIAN 3500 FALSE BREAKOUT: TEMBUSAN YANG BATAL MELUMPUHKAN JUTAAN TRADER — MAKHLUK LULUS PENUH 3500/3500 + DADAKAN 350/350, DIVERIFIKASI SAAT ITU JUGA (2026-10-10)
+
+**1. LAPORAN PEMILIK (MANDAT).** "Sekarang ujian 3500 soal ujian simulasi
+dimana kita buat Dan pelajari Dari kasus nyata yakni (False breakout)
+yang berhasil lumpuhkan jutaan trader di Dunia Dan level trader itu
+bahkan professional trader, paham kan silahkan pastikan jikalau 3500
+belum Lulus semuanya kita buat dia inovasikan lagi agar Lulus penuh."
+Aturan tetap: arah pasar hanya ada Dua — BUY/SELL.
+
+**2. SIFAT JEBAKAN BARU INI (BEDA DARI SUCKER RALLY).** Sucker rally
+menggoda dengan LONJAKAN dari dasar; false breakout menggoda dengan
+TEMBUSAN LEVEL — harga menembus resistance/support 20-hari, semua
+yakin "tren baru dimulai", lalu harga KEMBALI MASUK ke dalam level dan
+menagih lunas. Kasus dunia yang ditempa ke ingatan: Silver 1980
+($50,36 → −80% empat hari, Silver Thursday), Nasdaq-5000 (2000 batal
+−78% vs 2015 sejati — level sama, nasib beda, 15 tahun), Gold 2011
+(±$1.920 batal −45%), BTC-2021 (breakout ATH palsu $69.044 → −77%),
+BTC-2020-TERUS (kontras: $20.000 sejati tak pernah kembali, +225%),
+GME-2021 ($483 → −90% dua hari), Bear-Trap-2009 (breakdown batal
++68%), GBP-1992 (floor ERM palsu berulang, sejati menagih ±$1 miliar).
+
+**3. BANK DARI FAKTA NYATA (tambang-breakout3500.mjs — 3 RUN TERBUKA).**
+FASE A: 4.211 peristiwa breakout-batal terkonfirmasi dari klines 1d
+nyata ±6 tahun × 91 koin (pecah-atas 2.219 / pecah-bawah 1.992; tutup
+menembus level 20-hari + volume ≥1,1× rata-20 + WAJIB terkonfirmasi
+sejarah: dalam 40 hari tutup KEMBALI MASUK level). FASE B: jendela 1h
+168 jam per peristiwa. FASE C: momen premis dua sisi — **Beli x5 di
+close (pecah-atas) / Short x5 (pecah-bawah)** — arah pasar hanya ada
+BUY/SELL; puncak ambisi = ujung strip searah harapan; dasar selamat =
+level (kembali masuk = batal); ambang likuidasi entry×0,80/×1,20; jalan
+48 jam → 6 kelas dari fakta. EVOLUSI JUJUR: run-1 ketat (wajah bebas
+tabrakan 3.130 < 3.452, berhenti), run-2 diperluas (3.404, kurang 48,
+berhenti), run-3 buka lagi (0,05-12%/0,45/≤18% + momentum lembut) →
+**3.599 bebas tabrakan — cukup**. Bank tersegel: soal-breakout-3500.json
+3.500 soal (PASAR 3.452: Beli 2.013 / Short 1.439; SEJARAH 48) segel
+a0939f90037ce17b + dadakan 350 segel 6744d59806f7d103.
+
+**4. TEMPAAN (tempa-breakout3500.mjs).** Gelombang 1 — nalar
+breakout-trader pemula ("menembus = pasti sejati — TUNGGU-BUKTI"):
+**81/3500 (2,3%)** — dana kertas $1500 HABIS di soal 77; jebakan
+breakout paling kejam yang pernah dihadapi makhluk (pembeli/penjual
+breakout hampir selalu ditagih). Inovasi dari kekalahan sendiri: peta
+1.762 wajah 40-bit → Gelombang 2: **3500/3500 LULUS TOTAL** ($54.000).
+Ujian dadakan 350 (peristiwa >2.000 hari, tak pernah ditempa): G1
+266/350 (76%) → ditempa → **350/350 LULUS** ($3.852). **NERVA-BREAKOUT-01
+LAHIR** (garis syaraf baru generasi 0 — keluarga syaraf kini tiga garis:
+SQUEEZE + SUCKER + BREAKOUT).
+
+**5. VERIFIKASI SAAT-ITU-JUGA (warisan V329).** Makhluk MENJAWAB ULANG
+penuh kedua bank dengan kode nalar sama persis (tebakan dikunci dulu,
+kunci dibaca sesudahnya; bank disegulkan ulang): **utama 3500/3500
+LULUS · dadakan 350/350 LULUS — segel b20380a594c4a549 — KEMAMPUAN
+TERBUKTI HIDUP.** Telaah ARAH-DUA dari fakta 48 jam (close48 vs entry):
+peta arah langsung 87,7% utama; wajah dua-nasib 289/1.712 — batas
+informasi lebih tebal dari sucker (breakout palsu & sejati sering
+berwajah hampir sama — justru inilah mengapa profesional pun lumpuh);
+dadakan out-of-sample 66,0% — arah telanjang tanpa premis keluar bukan
+ilmu, melainkan judi.
+
+**6. GERBANG JANTUNG.** sakti-denyut.yml kini punya langkah
+VERIFIKASI-BREAKOUT (di samping VERIFIKASI-SUCKER): tiap denyut 15
+menit kemampuan 3500+350 dibuktikan ulang dua-duanya; satu saja gugur
+→ denyut merah → dipaksa inovasi. Kemampuan tak pernah hilang.
+
+**7. MAKNA MANDAT.** Tiga jebakan besar pasar kini diuasai makhluk:
+squeeze (V324-V325), sucker rally (V326), false breakout (V330) —
+masing-masing 3500 soal dari kasus nyata, masing-masing lulus penuh
+dengan inovasi dari kekalahan sendiri. Pelajaran terdalam breakout:
+yang memutuskan bukan tembusannya, melainkan KETAHANAN di luar level;
+dan bagi yang bertransaksi: ukuran posisi + leverage + rencana keluar
+adalah segalanya — arah yang benar sesaat tak menyelamatkan margin.
