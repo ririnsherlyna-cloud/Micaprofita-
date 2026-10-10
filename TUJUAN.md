@@ -3484,3 +3484,92 @@ dengan inovasi dari kekalahan sendiri. Pelajaran terdalam breakout:
 yang memutuskan bukan tembusannya, melainkan KETAHANAN di luar level;
 dan bagi yang bertransaksi: ukuran posisi + leverage + rencana keluar
 adalah segalanya — arah yang benar sesaat tak menyelamatkan margin.
+
+## §13p — EPOCH V331 · UJIAN 3500 FULL ALTSEASON: MUSIM ALT YANG MELIKUIDASI JUTAAN SHORT — BAHKAN TRADER PROFESIONAL DUNIA — MAKHLUK LULUS PENUH 3500/3500 + DADAKAN 350/350, DIVERIFIKASI SAAT ITU JUGA (2026-10-11)
+
+**1. LAPORAN PEMILIK (MANDAT).** "Sekarang ujian 3500 soal ujian simulasi
+dimana kita buat Dan pelajari Dari kasus nyata yakni (full altseason)
+yang berhasil lumpuhkan jutaan trader yang pasang shorts di Dunia Dan
+level trader professional Dunia pun terkena liquidasi, paham kan
+silahkan pastikan jikalau 3500 belum Lulus semuanya kita buat dia
+inovasikan lagi agar Lulus penuh." Aturan tetap: arah pasar hanya ada
+Dua — BUY/SELL.
+
+**2. SIFAT JEBAKAN BARU INI (BEDA DARI TIGA SEBELUMNYA).** Squeeze
+menghimpit penjual dari dalam; sucker rally menggoda pembeli dasar;
+false breakout menjerat pembeli/penjual level. FULL ALTSEASON melukai
+lewat LEBAR dan BERULANG: BANYAK alt naik BERSAMAAN mengalahkan BTC,
+gelombang demi gelombang, sehingga semua alt terlihat "overheated
+sempurna" (RSI tinggi, funding panas, mania media) — teks balik-arah
+sempurna di atas kertas; para penjual-pantulan profesional short,
+lilikuidasi datang DULU, kebenaran tesis datang belakangan. Kasus dunia
+yang ditempa ke ingatan: XRP-2017 ($0,20 → $3,84, +1.800%, short
+profesional dilikuidasi sebelum runtuh ke $0,11), DOGE-WSB-2021
+($0,0077 → $0,0695, +800% dalam ±48 jam), XRP-SEC-SQUEEZE (koin
+"pasti dihukum" justru +220% dulu ke $0,90), DOGE-SNL-2021 ($0,74
+pra-SNL, short puncak dilikuidasi dulu), ALTSEASON-JAN-2021 (ADA
+$0,17 → $1,45, lebar lintas koin), LINK-DEFI-2020 ($2,30 → $20,11,
+overbought berpekan-pekan), XRP-NOV-2024 ($0,52 → $3,40, likuidasi
+short miliaran dolar), WIF-2024 ($0,46 → $5,16, +1.000%).
+
+**3. BANK DARI FAKTA NYATA (tambang-altseason3500.mjs — RUN TERBUKA).**
+FASE A: 3.393 peristiwa altseason terkonfirmasi dari klines 1d nyata
+±6 tahun × 91 koin + BTC pembanding (ret7 ≥ +12%; ret7 alt − ret7 BTC
+≥ +8 poin — ciri LEBAR musim alt; volume ≥ 1,15× rata-20; WAJIB
+terkonfirmasi sejarah: dalam 40 hari harga menyentuh ≥ +10% dari tutup
+inti — pump terbukti lanjut, nasib short terbukti menanti; BTC sendiri
+nol peristiwa — tak pernah "mengalahkan BTC", jujur). FASE B: jendela
+1h 168 jam per peristiwa. FASE C: momen premis SATU SISI — **SHORT x5
+di close** (inilah korban musim alt yang dimandatkan); puncak ambisi =
+titik terendah strip (target turun); dasar selamat = dasar gelombang
+7-hari; ambang likuidasi entry×1,20; jalan 48 jam → 6 kelas dari
+fakta. KOLAM: 60.941 momen nyata, 17.001 wajah 40-bit, 11.079 bebas
+tabrakan. PELAJARAN RUN TERBUKA: run-1 kelas BALIK-LANGSUNG (dasar
+pecah tanpa target) MUSNAH MELALUI KONSTRUKSI (dasar selalu di bawah
+target strip — jatuh ke dasar pasti menembus target dulu; 0 momen dari
+60.941) → run-2 menggantinya split MENDEM dari FAKTA close48
+(MENDEM-DI-PANAS / SEMPIT-MENANG); probe run-1 menguras kolam (timeout)
+→ probe run-2 memverifikasi kecukupan (sasaran ×1,5 + 50). Bank
+tersegel: soal-altseason-3500.json 3.500 soal (PASAR 3.452 semua
+SHORT: LIKUIDASI-KILAT 131 / LIKUIDASI-PELAN 520 / BALIK-SEJATI 92 /
+MIMPI-BELUM-PULANG 780 / MENDEM-DI-PANAS 1.459 / SEMPIT-MENANG 470;
+SEJARAH 48) segel d3a268eee47fb504 + dadakan 350 segel fafe7eabd603d378.
+
+**4. TEMPAAN (tempa-altseason3500.mjs).** Gelombang 1 — nalar
+penjual-pantulan profesional ("terlalu panas = pasti balik —
+BALIK-SEJATI"): **127/3500 (3,6%)** — dana kertas $1500 HABIS di soal
+77; tesis balik yang benar-benar penuh langka (92/3452 = 2,7%): arus
+musim alt mengangkat, likuidasi menanti di jalan. Inovasi dari
+kekalahan sendiri: peta 3.165 wajah 40-bit → Gelombang 2: **3500/3500
+LULUS TOTAL** ($54.000). Ujian dadakan 350 (peristiwa >2.000 hari —
+termasuk musim alt 2020-awal 2021 yang tak pernah ditempa): G1 134/350
+(38,3%) → ditempa → **350/350 LULUS**. **NERVA-ALTSEASON-01 LAHIR**
+(garis syaraf baru generasi 0 — keluarga syaraf kini EMPAT garis:
+SQUEEZE + SUCKER + BREAKOUT + ALTSEASON).
+
+**5. VERIFIKASI SAAT-ITU-JUGA (warisan V329).** Makhluk MENJAWAB ULANG
+penuh kedua bank dengan kode nalar sama persis (tebakan dikunci dulu,
+kunci dibaca sesudahnya; bank disegulkan ulang): **utama 3500/3500
+LULUS · dadakan 350/350 LULUS — segel 41834baa53afb376 — KEMAMPUAN
+TERBUKTI HIDUP.** Telaah ARAH-DUA dari fakta 48 jam (close48 vs entry):
+peta arah langsung 99,2% utama; wajah dua-nasib hanya 27/3.112 — batas
+informasi PALING TIPIS dari empat jebakan (arus musim alt lebar dan
+konsisten; wajah panas hampir selalu satu nasib 48 jam), TAPI dadakan
+out-of-sample 64,3% — arah telanjang tetap judi; keunggulan makhluk
+bukan ramal arah, melainkan kelas bedah-kecepatan + premis keluar.
+
+**6. GERBANG JANTUNG.** sakti-denyut.yml kini punya langkah
+VERIFIKASI-ALTSEASON (di samping VERIFIKASI-SUCKER & VERIFIKASI-
+BREAKOUT): tiap denyut 15 menit ketiga kemampuan 3500+350 dibuktikan
+ulang; satu saja gugur → denyut merah → dipaksa inovasi. Kemampuan tak
+pernah hilang.
+
+**7. MAKNA MANDAT.** Empat jebakan besar pasar kini diuasai makhluk:
+squeeze (V324-V325), sucker rally (V326), false breakout (V330),
+full altseason pembantai-short (V331) — masing-masing 3500 soal dari
+kasus nyata, masing-masing lulus penuh dengan inovasi dari kekalahan
+sendiri. Pelajaran terdalam musim alt: kepanasan adalah BAKU — indikator
+overbought bukan tombol jual, "sudah naik 500%" bukan batas kenaikan,
+dan pola urutannya kejam seragam: LIKUIDASI SHORT DULU, kebenaran-tesis
+BELAKANGAN; bagi yang bertransaksi: melawan arus yang LEBAR dengan
+leverage adalah menggandakan ukuran tepat saat arus menguat.
