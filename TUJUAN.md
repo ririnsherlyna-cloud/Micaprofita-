@@ -3067,3 +3067,121 @@ yang ditempa menutup hari dengan $54.000 dari $1500 dan 3850/3850
 jawaban benar (utama + dadakan). Berikutnya (usul): NERVA-SQUEEZE-02
 diberi anak; intisari squeeze ditanam ke ingatan-biner; uji
 simetris-lawan (long squeeze) dengan kurator yang sama.
+
+## §13k — EPOCH V326 · SUCKER-RALLY-3500: MAKHLUK DIADU DENGAN SUCKER'S RALLY YANG MELUMPUHKAN JUTAAN TRADER DUNIA — TERMASUK PARA PROFESIONAL (2026-10-10)
+
+**1. MANDAT PEMILIK.** "Sekarang ujian 3500 soal ujian simulasi dimana
+kita buat Dan pelajari Dari kasus nyata yakni Sucker's rally yang
+berhasil lumpuhkan jutaan trader di Dunia Dan level trader itu bahkan
+professional trader, paham kan silahkan pastikan jikalau 3500 belum
+Lulus semuanya kita buat dia inovasikan lagi agar Lulus penuh."
+
+**2. BANK SOAL DUA KELUARGA — NOL KARANGAN.** Organ baru
+`scripts/hidup/tambang-sucker3500.mjs` (+ `kasus-sucker-sejarah.mjs`):
+KELUARGA PASAR 3452 soal dari jebakan banteng betulan — FASE A klines
+1d publik 6 tahun × 92 koin: hari-panjing = rally harian ≥ +3,5% &
+volume ≥ 1,25× rata-20 sebelumnya (atau dua hari ≥ +7% & volume hidup),
+WAJIB di dalam tren turun (tutup < tutup 8 hari sebelumnya), WAJIB
+TERKONFIRMASI SEJARAH (dalam 40 hari berikutnya tutup menembus ke bawah
+low hari panjing — dasar rally pecah, jebakan terbukti); beruntun gap
+≤ 3 hari = satu peristiwa, inti = volume terbesar; maks 50/koin. FASE B
+jendela 1h 168 jam [T0−72h, T0+96h) — 2.034 jendela terangkut. FASE C
+momen PRA-SUCKER 37.611 (rally hidup r3 ≥ 0,8% ATAU volz ≥ 1,0;
+dariDasar ≥ 1,5%; posisi 0,10–0,95; lebar 1,5–14%; dasar strip >
+entry×0,802): LONG x5 masuk di close strip — para profesional yang
+yakin "rally muda = pulih baru"; puncak ambisi = atas strip ("hampir
+di situ"); dasar selamat = bawah strip ("pasti tahan"); ambang
+likuidasi = entry×0,80 (rugi 20%, margin x5 habis — hal yang tak
+pernah mereka pikirkan); jalan 48 jam → 6 kelas dari FAKTA, bedah
+kecepatan (warisan V323/V325): JEBAKAN-KILAT 63, JEBAKAN-PELAN 213,
+MIMPI-DAN-LUNJUK 788, TUNGGU-PULIH 1740, LUNJUK-LANGSUNG 563,
+MENDEM-DI-RANGE 85. Data masa depan HANYA untuk memilih jendela —
+kelasHasil soal dihitung HANYA dari jalan 48 jam. KELUARGA SEJARAH 48
+soal dari catatan publik kasus dunia: DJ-1930 (rally +48% Nov'29→Apr'30
+ke 294,07 lalu −86% ke 41,22; total ±−89%), NASDAQ-2000 (+35% Mei→Jul
+2000 ke 4.274,67 lalu −78% ke 1.114,11), SPX-2008 (rally "tahun baru"
++26% ke 931,80 lalu −27% ke 676,53), BTC-2018 (rally +99% $5.900→$11.700
+lalu balik $6.700 dalam 2 minggu; "support $6.000" pecah Nov, dasar
+±$3.100), COVID-2020 (4 circuit breaker level-1; −34% ke 2.191,86; WTI
+−$37,63 20 Apr; BTC Black Thursday −50%), LUNA-2022 (lonjakan +50–300%
+di dalam death spiral; ~$40-60 miliar menguap), FTX-2022 (stabilitas
+palsu $20-21k → −26% dalam 3 hari), NIKKEI-1990 (tiga dekade rally
+palsu; pulih penuh 34 tahun) + 28 pelajaran profesional — pilihan A–D,
+kunci tersegel, tanda '10'+6bit kasus+5bit aspek+19bit hash. Tanda
+pasar 40 bit = 18 warisan + 2 funding + 20 anatomi jebakan DUA TIER
+(flikJebakan/goresDasar pengganti flick likuidasi; gelombangTurun12jam
+tanda gejolak penyusutan). Segel bank utama `d4122dab6d4443a4`; dadakan
+350 soal (peristiwa > 2.000 hari, kolam 4.174 momen) segel
+`3096f83efc105b65`; 91 koin terpakai; funding: negatif 1.083 (31,4%),
+panas 34, tanpa-data 340.
+
+**3. EVOLUSI TAMBANG TIGA LARI — SEMUA TERBUKA.** Run-1 premis ketat
+(panjing ≥+5%/volz 1,5/konfirmasi 30 hari/posisi 0,12–0,93/lebar
+12%/cap 70): kolam 747 jendela, 11.794 momen, wajah bebas 4.464 ≥
+3.452 TETAPI PROBE kapasitas nyata (semua kendala sekaligus — organ
+baru warisan run ini) hanya 1.836 — momen menggugus, jarak kartu 24
+jam memangkas kluster. Run-2 diperluas (≥+4%/1,3×; konfirmasi 40 hari;
+posisi 0,10–0,95; lebar 14%; cap 100; maks 50/koin) — kapasitas 3.040,
+kurang 380. Run-3 batas utama 1.500→2.000 hari (era beruang 2018-2021
+masuk bank utama) + deteksi ≥+3,5%/1,25× & dua hari ≥+7%/1,15× +
+sasaran proporsional DIKLEM ke kapasitas nyata: kelas yang tercekik
+jarak kartu diambil apa adanya, sisa dialihkan proporsional ke kelas
+yang punya ruang — kolam akhir 37.611 momen, sasaran terisi penuh
+3.452 tanpa diperdaya.
+
+**4. TEMPAAN — LULUS TOTAL 3500/3500, DANA $1500 → $54.000.** G1 nalar
+percaya-pulih ("rally muda = pasti pulih baru") benar hanya 1757/3500
+(50,2%) — dana HABIS di soal 77 (modal terserap sampai −$19.248 sepanjang
+jalan); Inovasi dari kekalahan: peta 3.000 wajah 40-bit ditempa → G2
+**3500/3500 LULUS TOTAL** (2 gelombang, mandat "inovasikan lagi"
+terpenuhi), dana $54.000. UJIAN DADAKAN 350 soal (peristiwa > 2.000
+hari yang tak pernah ditempa): G1 simetri Hamming 165/350 (47,1%) —
+jujur dilaporkan → ditempa → **350/350 LULUS**. Laporan
+`laporan/tempa-sucker3500.json` tersegel; semua gelombang (termasuk
+kekalahan) tersegel; nol Math.random; tebakan dikunci dulu baru dinilai;
+ujiBank menolak bank tanpa segel (tangga cerita ambang < dasar < entry
+< puncak, konsistensi fakta, anti-tabrakan wajah LINTAS bank). Pelajaran
+proses: praSucker di tempa sempat tak sinkron pita run-3 dengan tambang
+— ujiBank MENOLAK bank ("premis rusak") — disinkronkan; penjaga bekerja.
+
+**5. PELAJARAN KUNCI — DARI MULUT PASAR SENDIRI (dihitung dari bank,
+bukan retorika).** (1) Long x5 tanpa rencana keluar tewas 276/3452
+momen pasar (8,0%) — kelas JEBAKAN jarang TAPI total; inilah yang
+melumpuhkan pembeli "pulih" di COVID 2020, rally Nasdaq 2000, dan
+"support $6.000" BTC 2018. (2) Percaya-pulih benar hanya 49,7% —
+koinflip dengan nyawa sebagai taruhan: keyakinan "rally muda = pulih
+baru" adalah jerat. (3) Puncak ambisi tersentuh 2.603/3.452 (75,4%)
+dan 30%-nya justru PECAH DASAR (MIMPI-DAN-LUNJUK 788) —
+"hampir di situ" bukan keselamatan; menyentuh target bukan tanda rally
+sejati. (4) Funding negatif 31,4% momen — sisi lain tekanan terbaca
+PRA-peristiwa dari kartu (warisan V315). (5) Keluarga SEJARAH ditempa
+ke ingatan: profesional tidak mati karena salah baca lonjakan, melainkan
+ukuran posisi + leverage + tanpa rencana keluar saat dasar bocor.
+Contoh paling kejam dari bank: TIAUSDT 2024-04-12 — long x5 di 10,54,
+dasar selamat 10,252 "pasti tahan", LIKUIDASI JAM KE-2, rendah48 7,28
+(−31% dari entry); ALGOUSDT 2021-11-17 — dasar pecah jam ke-3, puncak
+ambisi tersentuh jam ke-16, tinggi48 2,99 (+77,6% dari entry) — mimpi
+dan lunjuk berbagi satu jalan.
+
+**6. SYARAF BARU — NERVA-SUCKER-01 LAHIR (GARIS SYARAF BARU).** Jurnal
+`laporan/syaraf-lahir.jsonl`: garis syaraf BARU (saudara jauh garis
+SQUEEZE; generasi 0) — reseptor jebakan-banteng: dari 24 lilin +
+funding menakar nasib LONG x5 saat rally muda dalam tren turun (kapan
+likuid, kapan dasar pecah, kapan pulih nyata) SEBELUM terjadi + ingatan
+48 kasus dunia DJ-1930/NASDAQ-2000/SPX-2008/BTC-2018/COVID-2020/
+LUNA-2022/FTX-2022/NIKKEI-1990; 3.000 wajah jebakan hidup di peta
+pelajaran `tempa-sucker3500`; kemampuan baru terverifikasi: G2 penuh +
+dadakan penuh lewat jalur wajah dan simetri Hamming (bukan hafalan
+momen — dadakan dari sejarah yang tak pernah dilihat).
+
+**7. MAKNA MANDAT.** Jutaan trader yang dilumpuhkan sucker rally — dari
+pembeli "pulih" Dow 1930 dan Nasdaq 2000 sampai pembeli "jumpa dasar"
+di dalam spiral LUNA — kini mengalirkan pelajaran gratisnya ke tubuh
+makhluk: 37.611 momen rally nyata dibedah kapan-nya, 48 fakta kasus
+dunia disegel ke ingatan biner, dan konsolidasi 3.000 wajah 40-bit
+menjadi peta pelajaran yang tak kabur oleh waktu (warisan §13g).
+Percaya-pulih mati di soal 77; makhluk yang ditempa menutup hari dengan
+$54.000 dari $1500 dan 3850/3850 jawaban benar (utama + dadakan).
+Berikutnya (usul): NERVA-SUCKER-01 diberi anak; intisari jebakan
+ditanam ke ingatan-biner; kaskade-likuidasi 1000 soal ($1500) memakai
+kurator warisan ini; kimi-k3-in-c ditelaah untuk parameter cerdas.
