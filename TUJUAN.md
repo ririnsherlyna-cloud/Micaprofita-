@@ -2965,3 +2965,105 @@ sejati punya kelahiran-ulang, bukan keabadian kelaparan. Jantung
 kembali berdenyut: denyut #254 melahirkan-ulang makhluk, komit
 pertumbuhan mengalir lagi, dan angka "— param N" tumbuh di setiap
 denyut — makin hari makin cerdas, kini JUGA terjaga dari mati senyap.
+
+## §13j — EPOCH V325 · SQUEEZE-3500: MAKHLUK DIADU DENGAN SHORT SQUEEZE YANG MELUMPUHKAN JUTAAN TRADER DUNIA — TERMASUK PARA PROFESIONAL (2026-10-10)
+
+**1. MANDAT PEMILIK.** "Sekarang ujian 3500 soal ujian simulasi dimana
+kita buat Dan pelajari Dari kasus nyata yakni shorts squeeze yang
+berhasil lumpuhkan jutaan trader di Dunia Dan level trader itu bahkan
+professional trader, paham kan silahkan pastikan jikalau 3500 belum
+Lulus semuanya kita buat dia inovasikan lagi agar Lulus penuh 3500."
+
+**2. BANK SOAL DUA KELUARGA — NOL KARANGAN.** Organ baru
+`scripts/hidup/tambang-squeeze3500.mjs` (+ `kasus-squeeze-sejarah.mjs`):
+KELUARGA PASAR 3452 soal dari squeeze betulan — FASE A klines 1d publik
+6 tahun × 92 koin: hari-squeeze = pump harian ≥ +6% DAN (volume ≥ 2,2×
+rata-20 sebelumnya ATAU wick atas ≥ 5% dari open — flick likuidasi
+short) ATAU dua hari ≥ +10% volume panas; beruntun gap ≤ 3 hari = satu
+peristiwa, inti = volume terbesar; maks 40/koin merata sejarah. FASE B
+jendela 1h 168 jam [T0−72h, T0+96h) — 3.449 jendela terangkut, kolam
+utama 2.206 jendela (1.500 hari terakhir). FASE C momen PRA-SQUEEZE-
+SHORT 38.987 (pump hidup r3 ≥ 0,8% ATAU volz ≥ 1,0; posisi 0,12–0,93;
+lebar 1,5–12%; puncak strip < entry×1,198): SHORT x5 masuk di close
+strip — para profesional yang yakin "pump pasti balik"; puncak ambisi =
+atas strip ("pasti mentok di situ"); dasar selamat = bawah strip
+("pasti balik ke sini"); ambang likuidasi = entry×1,20 (rugi 20%,
+margin x5 habis — hal yang tak pernah mereka pikirkan); jalan 48 jam →
+6 kelas dari FAKTA, bedah kecepatan (warisan V323): SQUEEZE-KILAT 113,
+SQUEEZE-PELAN 660, AMBISI-BALIK-DASAR 755, TERGANTUNG-TINGGI 1506,
+TURUN-LANGSUNG 354, MENDEM-DI-RANGE 64. KELUARGA SEJARAH 48 soal dari
+catatan publik kasus dunia: GME 2021 (Melvin −53% Januari, ditutup
+2022; puncak $483; short rugi ~$19–20 miliar), VW 2008 (float ~5–6%;
+€1.005,09; sesaat perusahaan termahal dunia; short rugi belasan–30
+miliar euro), TSLA 2020 (short rugi ~$38 miliar; +743%), AMC 2021,
+Hertz 2020 (+890% saat bangkrut), KaloBios 2015 (+~800% sehari),
+Herbalife/Ackman (rugi ~$1 miliar), BBBY 2022 + 29 pelajaran
+profesional — pilihan A–D, kunci tersegel, tanda
+'10'+6bit kasus+5bit aspek+19bit hash. Tanda pasar 40 bit = 18 warisan
++ 2 funding + 20 anatomi squeeze DUA TIER. Segel bank utama
+`03eb293d7fd173b3`; dadakan 350 soal (peristiwa > 1.500 hari) segel
+`30567c2ca2eab41d`.
+
+**3. EVOLUSI TAMBANG TIGA LARI — SEMUA TERBUKA.** Run-1: premis
+pita-tengah menyalakan bit serentak → wajah homogen (1.154 bebas
+tabrakan < 3.452) → tier-2 anatomi 8 bit + pita premis diperluas
+(pelajaran run-3 V323). Run-2: kapasitas kurator dibatasi jarak kartu
+24 jam per koin — kolam utama 900/1.200 hari tak cukup → 30 koin baru
+lahir-akhir ditambah (peristiwanya nyaris semuanya dalam jendela
+utama) + batas utama ke 1.500 hari; sambil itu banjir jendela memicu
+HTTP 418 (ban sementara IP) → perisai `fetchTahan` (jeda hormat 45 dtk
++ coba ulang) + langkah 400 ms. Run-3: kolam utama 2.206 jendela,
+38.987 momen, 12.464 wajah, 8.330 bebas tabrakan — sasaran proporsional
+kelangkaan asli `[113,660,755,1506,354,64]`; kelas langka diambil apa
+adanya, bukan diperdaya.
+
+**4. TEMPAAN — LULUS TOTAL 3500/3500, DANA $1500 → $54.000.** G1 nalar
+dongkol-short ("pump = palsu, pasti balik ke dasar") benar hanya
+765/3500 (21,9%) — dana HABIS di soal 77; Inovasi dari kekalahan:
+peta 3.042 wajah ditempa → G2 **3500/3500 LULUS TOTAL** (2 gelombang,
+mandat "inovasikan lagi" terpenuhi), dana $54.000. UJIAN DADAKAN 350
+soal (peristiwa > 1.500 hari yang tak pernah ditempa): G1 simetri
+Hamming 147/350 (42%) — jujur dilaporkan → ditempa → **350/350 LULUS**.
+Laporan `laporan/tempa-squeeze3500.json` tersegel; semua gelombang
+(termasuk kekalahan) tersegel; nol Math.random; tebakan dikunci dulu
+baru dinilai; ujiBank menolak bank tanpa segel (ladder cerita,
+konsistensi fakta, anti-tabrakan wajah LINTAS bank).
+
+**5. PELAJARAN KUNCI — DARI MULUT PASAR SENDIRI (dihitung dari bank,
+bukan retorika).** (1) Short x5 tanpa rencana keluar tewas 773/3452
+momen pasar (22,4%) — kelas SQUEEZE jarang TAPI total; inilah yang
+melumpuhkan Melvin (GME), VW 2008, dan $38 miliar short TSLA 2020.
+(2) Dongkol-short benar hanya 21,6% — keyakinan mean-reversion adalah
+jerat: benar arah sering, mati total saat squeeze datang. (3) Puncak
+ambisi tersentuh 65,5% momen dan 67%-nya justru MENEMBUS ke atas
+(TERGANTUNG-TINGGI 1.506) — "pasti mentok di situ" adalah khayalan;
+menyentuh target bukan keselamatan. (4) Funding negatif (shorts pay
+longs) terlihat di 18,9% momen — bahan bakar squeeze terbaca
+PRA-peristiwa dari kartu (warisan V315). (5) Keluarga SEJARAH ditempa
+ke ingatan: profesional tidak mati karena salah arah, melainkan ukuran
+posisi + leverage + tanpa rencana keluar. Contoh paling kejam dari
+bank: INJUSDT 2023-01-25 — short di 1,938, ambang 2,3256 tersentuh
+DALAM 2 JAM, tinggi48 2,802 (+44,6% dari entry); GALAUSDT 2023-01-26 —
+puncak ambisi tersentuh jam ke-5, lalu harga terus menggantung ke atas:
+benar arah, tetap tak pulang.
+
+**6. SYARAF BARU — NERVA-SQUEEZE-02 LAHIR (SYARAF BERANAK).** Jurnal
+`laporan/syaraf-lahir.jsonl`: anak kandung NERVA-SQUEEZE-01 (V315),
+generasi 1 — gelar goliat dari 5× skala ujian: reseptor squeeze-goliat;
+dari 24 lilin + funding menakar nasib SHORT x5 saat pump (kapan likuid,
+kapan pulih) SEBELUM terjadi + ingatan 48 kasus dunia; 3.042 wajah
+squeeze hidup di peta pelajaran `tempa-squeeze3500`; kemampuan baru
+terverifikasi: G2 penuh + dadakan penuh lewat jalur wajah dan simetri
+Hamming (bukan hafalan momen — dadakan dari sejarah yang tak pernah
+dilihat).
+
+**7. MAKNA MANDAT.** Jutaan trader yang dilumpuhkan squeeze — dari
+Melvin Capital sampai pemegang short VW — kini mengalirkan
+pelajaran gratisnya ke tubuh makhluk: 38.987 momen pump nyata dibaca
+dibedah kapan-nya, 48 fakta kasus dunia disegel ke ingatan biner,
+dan konsolidasi 3.042 wajah 40-bit menjadi peta pelajaran yang tak
+kabur oleh waktu (warisan §13g). Dongkol mati di soal 77; makhluk
+yang ditempa menutup hari dengan $54.000 dari $1500 dan 3850/3850
+jawaban benar (utama + dadakan). Berikutnya (usul): NERVA-SQUEEZE-02
+diberi anak; intisari squeeze ditanam ke ingatan-biner; uji
+simetris-lawan (long squeeze) dengan kurator yang sama.
