@@ -76,6 +76,7 @@ const SEGEL_VITAL = [
   ['otak/reka-bentuk.json', ['skema', 'segel'], 'genom peta berevolusi + silsilah (V320) — intisari reconfigurable_organisms hidup di tubuh: mutasi, seleksi anak-vs-induk, gerbang tangguh, saksi dunia; luka halus = silsilah palsu', true, 'segel-null'],
   ['otak/benih-hidup.json', ['skema', 'segel'], 'benih totipoten (V321) — intisari lab Hanna (Weizmann) hidup: keadaan mungil membawa identitas, epok, syaraf, peta, muatan byte-exact; luka halus = benih palsu, lahir-ulang tercemar', true, 'segel-null'],
   ['otak/ingatan-biner.json', ['skema', 'segel'], 'ingatan biner (V322) — memori matematika biner tak kabur: kata bit 18-digit deterministik dari fakta sejati, diulang = kuat bukan kabur; luka halus = ingatan palsu, sejarah belajar tercemar', true, 'segel-null'],
+  ['otak/parameter-cerdas.json', ['skema', 'segel'], 'parameter cerdas (V324) — arsitektur kecerdasan tersegel dari telaah kimi-k3-in-c: tabel dari fakta (tolak-awal), router MoE syaraf (bias memilih, bobot tanpa-bias), fixture posisi, intisari MXFP4, dadu PCG32; luka halus = cerdas palsu', true, 'segel-null'],
 ]
 const KODE = [
   ['scripts/hidup/gerbang.mjs', false, 'gerbang saraf — pemanggil tangan lewat peta saraf (V309)'],
@@ -91,7 +92,9 @@ const KODE = [
   ['scripts/hidup/tambang-hidup.mjs', false, 'kurator HIDUP-1000 (V321) — 1000 simulasi kehidupan dari rincian jurnal lab Hanna, bank tersegel'],
   ['scripts/hidup/tempa-hidup.mjs', false, 'rahim ex-utero (V321) — 1000 kehidupan: deteksi-jerit-pulih-jawab-napas-viabilitas; gugur = pelajaran epigenetik'],
   ['scripts/hidup/ingatan-biner.mjs', false, 'organ INGATAN-BINER (V322) — ingatan jadi matematika biner tak kabur: kata bit deterministik, kuat bukan kabur, kogerensi menyaksikan segel organ'],
-  ['scripts/hidup/uji-ingatan-biner.mjs', false, 'ujian INGATAN-BINER (V322) — 8 gerbang: segel, matematika, deterministik, tak-kabur 300 siklus, ingat-eksak, kuat-bukan-kabur, koherensi, syaraf KOHEREN']
+  ['scripts/hidup/uji-ingatan-biner.mjs', false, 'ujian INGATAN-BINER (V322) — 8 gerbang: segel, matematika, deterministik, tak-kabur 300 siklus, ingat-eksak, kuat-bukan-kabur, koherensi, syaraf KOHEREN'],
+  ['scripts/hidup/parameter-cerdas.mjs', false, 'organ PARAMETER-CERDAS (V324) — intisari telaah kimi-k3-in-c: tabel arsitektur dari fakta sejati (tolak-awal bukan tebakan), router MoE syaraf (bias memilih, bobot tanpa-bias), fixture posisi, intisari skala-blok MXFP4, dadu PCG32 53-bit'],
+  ['scripts/hidup/uji-parameter-cerdas.mjs', false, 'ujian PARAMETER-CERDAS (V324) — 9 gerbang: segel kapsul, takaran-ulang mandiri, tolak-awal, invarian-3 router, seri-deterministik, fixture posisi, MXFP4, PCG32, kesehatan tubuh']
 ]
 // batas kegembiran: file yang berubah tiap denyut — cadangan diperbarui
 // maksimal sekali per 6 jam agar imun tak membuat komit kebisingan.
