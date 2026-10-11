@@ -2459,20 +2459,23 @@ async function bedahKoinLokal(t, holder, question, alasan) {
   </div>`;
 }
 
-// ================= V298-SASARAN-LIMA =================
-// Mandat pemilik (2026-10-11): slot resmi hanya menampilkan 2 koin —
-// "kini kita tambah jadi 5 koin terbaik sasaran arena hari ini".
-// Panel ini MENAMBAH (slot SAKTI/genome tidak disentuh): tiap kali halaman
-// dibuka, arena membedah SENDIRI 40 koin paling likuid Binance langsung dari
-// peramban — tanpa server, tanpa LLM, tanpa mengarang — memakai rumus faktor
-// yang SAMA PERSIS dengan mesin bedah V297 dan vonis arena (ema/rsi/atr/
-// momen/lonjak-volume/jarak-puncak). Lima terbaik tampil ber-rencana penuh
-// (V273: sasaran tak pernah tampil tanpa level E→T→S).
+// ================= V298-SASARAN-LIMA (v2 KANDANG-PENUH) =================
+// Mandat pemilik (2026-10-11): slot resmi hanya menampilkan 2 koin (CHIP, STRK) —
+// "diperlakukan sama seperti mencari dua koin itu, hanya saja kini bertambah jadi
+// mencari 5 koin; masa hanya 40 koin yang dirender, rasanya gak wajar".
+// DIPATUHI PENUH: kini arena membedah SENDIRI SELURUH KANDANG — semua pasangan
+// USDT likuid Binance (qv ≥ 3 jt, ~100–150 koin, bukan lagi 40) langsung dari
+// peramban, tanpa server, tanpa mengarang, rumus faktor SAMA PERSIS dengan mesin
+// bedah V297. Kasus forensik CHIP: volume 17,8 jt tapi tepat terpotong batas
+// top-40 volume = tak pernah terbedah — kini mustahil terpotong.
+// Lima terbaik ber-rencana penuh (V273: tanpa level, bukan sasaran). Koin yang
+// juga jadi SASARAN RESMI SAKTI hari ini diberi badge — satu rumah satu kebenaran.
 // Jujur V274: kata "pasti kena" TIDAK ADA di rumah ini — yang ada skor
 // transparan + keyakinan, dan benar/salahnya dinilai medan candle besok.
-const S5_STABLE = ['USDCUSDT','TUSDUSDT','FDUSDUSDT','USDPUSDT','DAIUSDT','EURUSDT','AEURUSDT','BUSDUSDT','USTUSDT','PAXGUSDT','BUSDUSDT','EURIUSDT','XUSDUSDT','USD1USDT'];
+const S5_STABLE = ['USDCUSDT','TUSDUSDT','FDUSDUSDT','USDPUSDT','DAIUSDT','EURUSDT','AEURUSDT','BUSDUSDT','USTUSDT','PAXGUSDT','EURIUSDT','XUSDUSDT','USD1USDT'];
 const S5_GANDA = /(UP|DOWN|BULL|BEAR)USDT$/;
-let S5_CACHE = null, S5_CACHE_AT = 0, S5_JALAN = false;
+const S5_QV_MIN = 3e6;   // kandang penuh: semua pasangan USDT likuid ≥ 3 jt USDT/hari
+let S5_CACHE = null, S5_CACHE_AT = 0, S5_JALAN = false, S5_META = null;
 
 async function s5peta(list, sekaligus, fn) {
   const out = new Array(list.length).fill(null); let i = 0;
@@ -2517,23 +2520,29 @@ async function sasaranLimaJalan(paksa) {
   if (!paksa && S5_CACHE && kini - S5_CACHE_AT < 30 * 60 * 1000) { s5render(S5_CACHE); return; }
   if (S5_JALAN) return;
   S5_JALAN = true;
-  box.innerHTML = '<p class="tiny" style="color:var(--dim)">menyusun sasaran: menarik seluruh pasangan USDT lalu membedah 40 koin paling likuid dari Binance — kira-kira 10 detik, sabar…</p>';
+  box.innerHTML = '<p class="tiny" style="color:var(--dim)">menyusun sasaran: menarik seluruh pasangan USDT dari Binance — kandang penuh akan dibedah satu-satu…</p>';
   try {
     const semua = await ambil('https://api.binance.com/api/v3/ticker/24hr', 25000);
     const pool = (semua || []).filter((t) => /USDT$/.test(t.symbol) && !S5_GANDA.test(t.symbol)
-      && S5_STABLE.indexOf(t.symbol) === -1 && +t.quoteVolume >= 5e6 && +t.lastPrice > 0)
-      .sort((a, b) => +b.quoteVolume - +a.quoteVolume).slice(0, 40);
+      && S5_STABLE.indexOf(t.symbol) === -1 && +t.quoteVolume >= S5_QV_MIN && +t.lastPrice > 0)
+      .sort((a, b) => +b.quoteVolume - +a.quoteVolume);
     if (!pool.length) throw new Error('daftar pasangan tak terbaca dari Binance');
-    const hasil = await s5peta(pool, 8, async (t) => {
-      const kl = await ambil('https://api.binance.com/api/v3/klines?symbol=' + t.symbol + '&interval=1d&limit=70', 15000);
-      if (!kl || kl.length < 25) return null;
-      const f = s5faktor(kl, +t.quoteVolume);
-      if (!isFinite(f.last) || f.last <= 0) return null;
-      f.symbol = t.symbol; f.chg = +t.priceChangePercent; f.qv = +t.quoteVolume;
-      return f;
+    let prog = 0;
+    const hasil = await s5peta(pool, 10, async (t) => {
+      try {
+        const kl = await ambil('https://api.binance.com/api/v3/klines?symbol=' + t.symbol + '&interval=1d&limit=70', 15000);
+        if (!kl || kl.length < 25) return null;
+        const f = s5faktor(kl, +t.quoteVolume);
+        if (!isFinite(f.last) || f.last <= 0) return null;
+        f.symbol = t.symbol; f.chg = +t.priceChangePercent; f.qv = +t.quoteVolume;
+        return f;
+      } finally {
+        prog++;
+        if (prog % 20 === 0) box.innerHTML = '<p class="tiny" style="color:var(--dim)">membedah kandang penuh: ' + prog + '/' + pool.length + ' koin selesai…</p>';
+      }
     });
     const ada = hasil.filter(Boolean);
-    if (!ada.length) throw new Error('bedah 40 koin semua gagal (jaring sedang sakit)');
+    if (!ada.length) throw new Error('bedah ' + pool.length + ' koin semua gagal (jaring sedang sakit)');
     // gerbang: kandidat ber-arah penuh (BUY/SELL) dulu, terkuat dulu — bila kurang
     // dari 5, sisanya dilengkapi kandidat TUNGGU berlabel jujur PENGAWASAN.
     const skorDesc = (a, b) => (b.s * b.s) - (a.s * a.s);
@@ -2542,6 +2551,14 @@ async function sasaranLimaJalan(paksa) {
     const butuh = 5 - Math.min(5, kunci.length);
     const lima = kunci.slice(0, 5).concat(butuh > 0 ? sisa.slice(0, butuh) : []);
     if (!lima.length) throw new Error('tak ada kandidat yang terbaca utuh');
+    // satu rumah satu kebenaran: posisi sasaran RESMI SAKTI hari ini dipetakan jujur
+    const resmi = (((typeof st !== 'undefined' ? st : null) || {}).venaSatuRumah || {}).sasaran || [];
+    const ranking = ada.slice().sort(skorDesc);
+    const posisiResmi = resmi.map((sim) => {
+      const idx = ranking.findIndex((f) => f.symbol === String(sim).toUpperCase() + 'USDT');
+      return idx >= 0 ? { sim: String(sim).toUpperCase(), peringkat: idx + 1, total: ranking.length, arah: ranking[idx].arah, skor: ranking[idx].s, key: ranking[idx].key } : { sim: String(sim).toUpperCase(), peringkat: null };
+    });
+    S5_META = { posisiResmi, dibedah: ada.length, target: pool.length };
     S5_CACHE = lima; S5_CACHE_AT = kini;
     s5render(lima);
   } catch (e) {
@@ -2555,8 +2572,11 @@ function s5render(lima) {
   const n5 = (x) => (x == null || !isFinite(x)) ? '—' : (+x).toPrecision(5).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '');
   const jam = new Date(S5_CACHE_AT).toISOString().slice(11, 16);
   const wEl = document.getElementById('s5Waktu');
-  if (wEl) wEl.textContent = '· dibedah ' + jam + ' UTC dari Binance langsung';
+  if (wEl) wEl.textContent = '· kandang penuh ' + (S5_META ? S5_META.dibedah + '/' + S5_META.target : '') + ' koin · ' + jam + ' UTC · Binance langsung';
+  const resmiSet = {}; (S5_META && S5_META.posisiResmi || []).forEach((p) => { resmiSet[p.sim] = p; });
   const rows = lima.map((f, i) => {
+    const resmiInfo = resmiSet[String(f.symbol).replace('USDT', '')];
+    const badgeResmi = resmiInfo ? '<span class="chip em" style="font-size:9px;padding:1px 6px" title="koin ini juga sasaran resmi denyut SAKTI hari ini — satu rumah satu kebenaran">SASARAN RESMI</span>' : '';
     const sim = String(f.symbol).replace('USDT', '');
     const ent = f.last;
     const tK = f.arah === 'SELL' ? ent - f.atrAbs : ent + f.atrAbs;
@@ -2575,14 +2595,22 @@ function s5render(lima) {
       + '<span class="mono" style="color:var(--amber2);font-weight:700">#' + (i + 1) + '</span>'
       + '<span class="dir ' + dirCls + '"' + dirStyle + '>' + esc(f.arah) + '</span>'
       + '<span class="mono" style="font-weight:600;color:var(--tx2)">' + esc(sim) + '</span>'
+      + badgeResmi
       + '<span class="tiny">keyakinan ' + f.key + '% · skor ' + (f.s >= 0 ? '+' : '') + f.s.toFixed(1) + '</span>'
       + '<span class="why" title="' + esc(ket + ' · ' + alasan) + '">' + esc(alasan) + '</span>'
       + '</div><div class="picklevel"><span class="mono">E ' + n5(ent) + ' \u2192 T ' + n5(tK) + ' (' + (tPct >= 0 ? '+' : '') + tPct.toFixed(1) + '%) \u2192 S ' + n5(sK) + ' (' + sPct.toFixed(1) + '%)</span>'
       + '<span class="mono" style="color:' + (f.likuid ? 'var(--em2)' : 'var(--rose2)') + '">' + (f.qv / 1e6).toFixed(1) + ' jt/24j</span>'
       + '<span class="mono" style="color:var(--dim2)">24j ' + (f.chg >= 0 ? '+' : '') + f.chg.toFixed(1) + '%</span></div></div>';
   }).join('');
-  box.innerHTML = rows
-    + '<p class="tiny" style="margin-top:9px;line-height:1.65">Sumber: <b>Binance spot langsung lewat perambanmu</b> — 40 koin paling likuid dibedah ' + esc(jam) + ' UTC dengan rumus yang sama dengan mesin arena (EMA/RSI/ATR/momen/lonjak-volume/jarak-puncak). Jujur hukum V274: <b>"pasti kena" tidak ada di rumah ini</b> — inilah 5 terbaik menurut skor transparan saat itu'
+  // satu rumah: sasaran resmi SAKTI yang TIDAK masuk lima besar tetap dipetakan jujur
+  const luarResmi = ((S5_META && S5_META.posisiResmi) || []).filter((p) => !lima.some((f) => String(f.symbol).replace('USDT', '') === p.sim));
+  const luarHtml = luarResmi.length
+    ? '<div class="picklevel" style="color:var(--dim);margin-top:4px">sasaran resmi SAKTI di luar lima besar mesin arena: '
+      + luarResmi.map((p) => p.peringkat ? '<span class="mono" style="color:var(--tx2)">' + esc(p.sim) + '</span> peringkat ' + p.peringkat + '/' + S5_META.dibedah + ' (skor ' + (p.skor >= 0 ? '+' : '') + (+p.skor).toFixed(1) + ' · ' + esc(p.arah) + ' · key ' + p.key + '%)' : '<span class="mono" style="color:var(--tx2)">' + esc(p.sim) + '</span> volume di bawah kandang mesin arena').join(' · ')
+      + '</div>'
+    : '';
+  box.innerHTML = rows + luarHtml
+    + '<p class="tiny" style="margin-top:9px;line-height:1.65">Sumber: <b>Binance spot langsung lewat perambanmu</b> — KANDANG PENUH: ' + (S5_META ? S5_META.dibedah + ' dari ' + S5_META.target + ' pasangan USDT likuid (≥3 jt USDT/hari)' : 'seluruh koin likuid') + ' dibedah ' + esc(jam) + ' UTC, rumus sama dengan mesin arena (EMA/RSI/ATR/momen/lonjak-volume/jarak-puncak). Jujur hukum V274: <b>"pasti kena" tidak ada di rumah ini</b> — inilah 5 terbaik menurut skor transparan saat itu'
     + (lima.some((f) => f.arah === 'TUNGGU') ? '; yang bertanda TUNGGU cuma pengawasan, bukan undangan masuk' : '')
     + '. Benar/salahnya dinilai medan candle besok, bukan oleh mulut siapa pun. Patuhi stop, jangan menawar dengan harapan.</p>';
 }
