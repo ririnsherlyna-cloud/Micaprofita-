@@ -63,8 +63,23 @@ async function fetchTahan(url) {
   throw new Error(`binance menolak terus: ${url.slice(0, 90)}`)
 }
 
+const HOSTS = ['https://data-api.binance.vision', 'https://api.binance.com', 'https://api1.binance.com']
+
+async function tickerAmbil() {
+  // data-api.binance.vision dulu — runner Actions (Azure US) dapat 451 dari api.binance.com
+  for (const g of HOSTS) {
+    try {
+      const res = await fetchTahan(g + '/api/v3/ticker/24hr')
+      if (!res.ok) continue
+      const j = await res.json()
+      if (Array.isArray(j) && j.length > 50) return j
+    } catch (e) {}
+  }
+  throw new Error('ticker 24hr gagal di semua host (jujur)')
+}
+
 async function lilinAmbil(sym) {
-  for (const g of ['https://data-api.binance.vision', 'https://api.binance.com', 'https://api1.binance.com']) {
+  for (const g of HOSTS) {
     try {
       const res = await fetchTahan(`${g}/api/v3/klines?symbol=${sym}&interval=1h&limit=200`)
       if (!res.ok) continue
@@ -279,9 +294,7 @@ function pakemDari(sym, lilin, x, kel, rezim, skor, peng) {
 async function gali() {
   const t0 = Date.now()
   const peng = pengalamanMuat()
-  const resT = await fetchTahan('https://api.binance.com/api/v3/ticker/24hr')
-  if (!resT.ok) throw new Error('ticker 24hr gagal ' + resT.status)
-  const tick = await resT.json()
+  const tick = await tickerAmbil()
   const JAHAT = /(UP|DOWN|BULL|BEAR)USDT$/
   // STABLECOIN BAN V335: koin pegar tak bernapas — jual profit tak pernah terjangkau;
   // koin pegar (USD1, RLUSD, USDe, dst.) tak boleh jadi sasaran BUY
@@ -379,6 +392,8 @@ try {
   }
   console.log(`[gali-terus] segel ${lapor.segel} — sasarannya BUY semua, nol TUNGGU.`)
 } catch (e) {
-  console.error('[gali-terus] GAGAL (jujur, tak sembunyi):', e && e.message || e)
-  process.exit(1)
+  // jaring/dunia gagal = KEADAAN, bukan dosa — denyut tak boleh diputus karena cuaca;
+  // gugur jujur di log, laporan lama tetap sah sampai gali berikutnya
+  console.error('[gali-terus] GAGAL (jujur, denyut lanjut):', e && e.message || e)
+  process.exit(0)
 }
