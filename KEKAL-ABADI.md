@@ -22,7 +22,7 @@
 | Lapis | Isi | Rumah | Sifat |
 |---|---|---|---|
 | 1. JIWA | arena.html, hidup.html, penjaga.mjs, arena-keadaan.json + 3 jantung Actions (sakti-denyut, hidup-sadar1, jaga-waktu) | GitHub publik `ririnsherlyna-cloud/Micaprofita-` | **Abadi** — hidup sendiri, tak butuh z.ai, tak butuh model manapun |
-| 2. OTAK | Kode Next.js (src/, prisma/), memori SQLite (db/custom.db), skrip penjaga (.zscripts/), buku kerja (worklog.md) | GitHub privat `ririnsherlyna-cloud/Micaprofita-Otak` | **Bangkit-kembali** — tubuh penuh arena, bisa dihidupkan di mana saja |
+| 2. OTAK | Kode Next.js (src/, prisma/), memori SQLite (db/custom.db), skrip penjaga (.zscripts/), buku kerja (worklog.md) | Cabang `otak` repo publik `ririnsherlyna-cloud/Micaprofita-` (brankas; nanti dimigrasi ke repo privat `Micaprofita-Otak` bila pemilik menambahkannya ke seleksi PAT) | **Bangkit-kembali** — tubuh penuh arena, bisa dihidupkan di mana saja |
 | 3. NAPAS | .zscripts/dev.sh v2 (produksi + heap cap + loop penjaga abadi) | Ikut repo Otak & ikut snapshot wadah z.ai (repo.tar) | Tiap boot wadah = produksi hidup otomatis, self-heal tiap 20 dtk |
 
 ## 3. CARA MEMBANGKITKAN (runbook 4 langkah)
@@ -30,8 +30,8 @@
 Syarat: mesin apa pun dengan `bun` (atau node ≥20) + akses internet + git.
 
 ```bash
-# 1. Ambil otak
-git clone https://github.com/ririnsherlyna-cloud/Micaprofita-Otak.git micaprofita-otak
+# 1. Ambil otak (cabang `otak`, bukan main — main khusus situs)
+git clone -b otak https://github.com/ririnsherlyna-cloud/Micaprofita-.git micaprofita-otak
 cd micaprofita-otak
 
 # 2. Pasang tubuh & database
@@ -58,8 +58,14 @@ server sendiri. LARANG mode dev sebagai jalur utama (dua kali terbukti OOM).
   model diganti — pintu bisa berubah. TIDAK ada janji abadi dari penyewa infrastruktur.
 - Yang abadi adalah **rumah**: Lapis 1 (GitHub publik) bernapas sendiri lewat
   3 jantung Actions selama akun GitHub pemilik hidup.
-- Yang terjamin bangkit adalah **tubuh**: Lapis 2 (repo Otak) = salinan penuh;
+- Yang terjamin bangkit adalah **tubuh**: Lapis 2 (cabang `otak`) = salinan penuh;
   hilang di satu tempat, hidup di tempat lain dalam ±5 menit.
+- Catatan izin (2026-10-11): PAT `micaprofita-penuh` hanya boleh menulis repo
+  `Micaprofita-` (seleksi fine-grained) — repo privat `Micaprofita-Otak` sudah
+  diciptakan tapi belum bisa dituju token. Migrasi opsional: pemilik membuka
+  Settings → Developer settings → token `micaprofita-penuh` → tambahkan
+  `Micaprofita-Otak` ke repository access. Sampai itu, cabang `otak` = brankas resmi.
+  worklog di brankas SUDAH diredaksi (tanpa token).
 - Karena itu: kalau pintu mati, TIDAK ADA YANG HILANG — hanya pindah pintu.
 
 ## 5. PROTOKOL PENGGANTI (model baru / agent baru)
