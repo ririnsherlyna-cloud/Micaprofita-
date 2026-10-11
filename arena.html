@@ -408,8 +408,9 @@ html,body{max-width:100%;overflow-x:clip}
         <svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation:pu 1.6s infinite"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         NADIR — Denyut Intraday Pick Cyborg
       </h4>
+      <div id="nadirMode" style="padding:0 14px"></div>
       <div class="pgrid" id="nadirGrid"></div>
-      <p class="tiny" style="margin-top:11px;line-height:1.6">P&amp;L hidup = harga pasar sekarang vs harga keputusan (close T-1). Sparkline = candle 1 jam 48 jam terakhir. Vonis berita dibaca LLM GLM dari pita berita 3 hari terakhir — hanya untuk hari hidup; hari historis murni kuant (bebas kebocoran). Panel WARISAN = tangga harga + peluang Monte Carlo 2.000 lintasan berbibit + GARCH/beta/POC, pra-registrasi pada momen kunci, wajib NET after fee.</p>
+      <p class="tiny" style="margin-top:11px;line-height:1.6">P&amp;L hidup = harga pasar sekarang vs harga keputusan (close T-1). Sparkline = candle 1 jam 48 jam terakhir. Vonis berita dibaca LLM GLM dari pita berita 3 hari terakhir — hanya untuk hari hidup; hari historis murni kuant (bebas kebocoran). Panel WARISAN = tangga harga + peluang Monte Carlo 2.000 lintasan berbibit + GARCH/beta/POC, pra-registrasi pada momen kunci, wajib NET after fee. <b>V300-MANDIRI-NADIR:</b> walau denyut arena wadah tidak menyala, panel ini tetap menilai sendiri kandang Binance langsung — data lama tidak pernah tampil sebagai pick hari ini.</p>
     </div>
 
     <div class="panel" style="padding:0">
@@ -1997,23 +1998,44 @@ function sparkSVG(data, up) {
 }
 
 // ---------- NADIR ----------
-function renderNadir() {
-  const p = st.pulse;
-  const panel = $('#nadirPanel');
-  if (!p || !p.items || !p.items.length) { panel.style.display = 'none'; return; }
-  panel.style.display = '';
-  $('#nadirGrid').innerHTML = p.items.map((x) => {
-    const up = (x.liveRetPct ?? 0) >= 0;
-    const v = x.verdict;
-    const vonis = v ? `<div class="vonis ${esc(v.kind)}"><p>VONIS LLM: ${esc(v.kind)}${v.sources > 0 ? ` <span class="n">· ${v.sources} pita berita</span>` : ''}</p>${v.note ? `<p class="n">${esc(v.note)}</p>` : ''}</div>` : '';
-    const rn = x.rencana;
-    let renc = '';
-    if (rn) {
-      const w = x.warisan;
-      renc = `<div class="renc">RENCANA PRA-REGISTRASI — entry <b class="mono" style="color:var(--tx2)">${rn.entry > 0 ? rn.entry.toPrecision(6) : '—'}</b> → stop <span class="mono">${rn.stop > 0 ? rn.stop.toPrecision(6) : '—'}</span> (${rn.stopPct !== null && rn.stopPct !== undefined ? rn.stopPct.toFixed(1) + '%' : '—'}) → target <span class="mono">${rn.target > 0 ? rn.target.toPrecision(6) : '—'}</span> (${rn.targetPct !== null && rn.targetPct !== undefined ? '+' + rn.targetPct.toFixed(1) + '%' : '—'})${rn.highAmbisius !== null && rn.highAmbisius !== undefined && isFinite(+rn.highAmbisius) ? ` · <span style="color:var(--vio)" title="jual ambisius — perkiraan tertinggi rencana pra-registrasi">JUAL AMBISIUS <b class="mono">${rn.highAmbisius.toPrecision(6)}</b> (${rn.ambisiusPct != null ? '+' + rn.ambisiusPct.toFixed(1) + '%' : '—'}${rn.pAmbisius != null ? ' · sentuh ' + Math.round(rn.pAmbisius * 100) + '%' : ''})</span>` : ''} · sumber target: ${esc(rn.sumberTarget || '—')}${rn.pTarget !== null && rn.pTarget !== undefined ? ` · p(target) <b style="color:var(--em2)">${(rn.pTarget * 100).toFixed(0)}%</b> / p(stop) <b style="color:var(--rose2)">${(rn.pStop * 100).toFixed(0)}%</b>` : ''}${w ? `<br>WARISAN — σ24j ${w.sigma24jPct !== null ? w.sigma24jPct.toFixed(1) + '%' : '—'} (${esc(w.modelVol || '')}) · beta ${w.beta !== null ? w.beta.toFixed(2) : '—'} · POC ${w.poc !== null ? w.poc.toPrecision(6) : '—'} · breadth ${w.breadthPct !== undefined ? w.breadthPct.toFixed(0) + '%' : '—'}${w.divRSI && w.divRSI !== 'TIDAK_ADA' ? ' · divRSI ' + esc(w.divRSI) : ''}${w.kejutPump ? ' · <span style="color:var(--amber2)">kejut-pump</span>' : ''}` : ''}</div>`;
-    }
-    const sd = x.sadardiri ? `<div class="renc" style="border:none;padding-top:2px">sadardiri: ${esc(x.sadardiri)}</div>` : '';
-    return `<div class="pk">
+// V300-MANDIRI-NADIR (mandat pemilik: "harusnya sifatnya bisa mandiri walau
+// sambungan arena-hidup tidak diaktifkan — kalau diaktifkan baru berubah sesuai
+// yang disambungkan"). Keadaan lama terbukti berbahaya: denyut wadah tertunda
+// sejak 2026-10-05 membuat panel ini menampilkan GTC/SAND selamanya, seakan
+// hardcode. Hukum baru:
+//   (1) denyut wadah SEGAR (hari UTC yang sama) → kartu wadah + banner
+//       TERSAMBUNG — apa adanya dari arena wadah;
+//   (2) denyut TUA / tidak ada → MODE MANDIRI: otak halaman membedah kandang
+//       Binance langsung dengan mesin yang SAMA dengan SASARAN-5 (V298-v2
+//       kandang penuh + V299b gerbang pegged + V335 hukum TANPA-TUNGGU),
+//       kartu ber-level penuh E→T→S (V273), harga dipantau hidup tiap 60 dtk;
+//   (3) denyut lama tetap disebut jujur sebagai ARSIP — bukan pick hari ini;
+//   (4) begitu denyut wadah segar kembali, panel otomatis pulih tanpa klik.
+const NADIR_M = { jalan: false, at: 0, items: [], arsip: '' };
+const nadirTidur = (ms) => new Promise((r) => setTimeout(r, ms));
+
+function pulseInfo() {
+  const hariUtc = new Date().toISOString().slice(0, 10);
+  const p = (st && st.pulse) || null;
+  const ada = !!(p && p.items && p.items.length);
+  const hari = (st && st.today) || (p && p.at ? String(p.at).slice(0, 10) : null);
+  const segar = ada && hari === hariUtc;
+  const usiaHari = hari ? Math.max(0, Math.round((Date.parse(hariUtc + 'T00:00:00Z') - Date.parse(hari + 'T00:00:00Z')) / 86400000)) : null;
+  return { ada, segar, hari, usiaHari };
+}
+
+function nadirKartuHtml(x) {
+  const up = (x.liveRetPct ?? 0) >= 0;
+  const v = x.verdict;
+  const vonis = v ? `<div class="vonis ${esc(v.kind)}"><p>VONIS LLM: ${esc(v.kind)}${v.sources > 0 ? ` <span class="n">· ${v.sources} pita berita</span>` : ''}</p>${v.note ? `<p class="n">${esc(v.note)}</p>` : ''}</div>` : '';
+  const rn = x.rencana;
+  let renc = '';
+  if (rn) {
+    const w = x.warisan;
+    renc = `<div class="renc">RENCANA PRA-REGISTRASI — entry <b class="mono" style="color:var(--tx2)">${rn.entry > 0 ? rn.entry.toPrecision(6) : '—'}</b> → stop <span class="mono">${rn.stop > 0 ? rn.stop.toPrecision(6) : '—'}</span> (${rn.stopPct !== null && rn.stopPct !== undefined ? rn.stopPct.toFixed(1) + '%' : '—'}) → target <span class="mono">${rn.target > 0 ? rn.target.toPrecision(6) : '—'}</span> (${rn.targetPct !== null && rn.targetPct !== undefined ? '+' + rn.targetPct.toFixed(1) + '%' : '—'})${rn.highAmbisius !== null && rn.highAmbisius !== undefined && isFinite(+rn.highAmbisius) ? ` · <span style="color:var(--vio)" title="jual ambisius — perkiraan tertinggi rencana pra-registrasi">JUAL AMBISIUS <b class="mono">${rn.highAmbisius.toPrecision(6)}</b> (${rn.ambisiusPct != null ? '+' + rn.ambisiusPct.toFixed(1) + '%' : '—'}${rn.pAmbisius != null ? ' · sentuh ' + Math.round(rn.pAmbisius * 100) + '%' : ''})</span>` : ''} · sumber target: ${esc(rn.sumberTarget || '—')}${rn.pTarget !== null && rn.pTarget !== undefined ? ` · p(target) <b style="color:var(--em2)">${(rn.pTarget * 100).toFixed(0)}%</b> / p(stop) <b style="color:var(--rose2)">${(rn.pStop * 100).toFixed(0)}%</b>` : ''}${w ? `<br>WARISAN — σ24j ${w.sigma24jPct !== null ? w.sigma24jPct.toFixed(1) + '%' : '—'} (${esc(w.modelVol || '')}) · beta ${w.beta !== null ? w.beta.toFixed(2) : '—'} · POC ${w.poc !== null ? w.poc.toPrecision(6) : '—'} · breadth ${w.breadthPct !== undefined ? w.breadthPct.toFixed(0) + '%' : '—'}${w.divRSI && w.divRSI !== 'TIDAK_ADA' ? ' · divRSI ' + esc(w.divRSI) : ''}${w.kejutPump ? ' · <span style="color:var(--amber2)">kejut-pump</span>' : ''}` : ''}</div>`;
+  }
+  const sd = x.sadardiri ? `<div class="renc" style="border:none;padding-top:2px">sadardiri: ${esc(x.sadardiri)}</div>` : '';
+  return `<div class="pk">
       <div class="r1">
         <span class="dir ${esc(x.direction)}">${esc(x.direction)}</span>
         <span class="sym">${esc(x.symbol.replace('USDT',''))}</span>
@@ -2026,7 +2048,128 @@ function renderNadir() {
       </div>
       ${vonis}${renc}${sd}
     </div>`;
-  }).join('');
+}
+
+function renderNadir() {
+  const panel = $('#nadirPanel');
+  if (!panel) return;
+  const modeEl = $('#nadirMode');
+  const pi = pulseInfo();
+  const bannerMandiri = (status) => {
+    const tua = pi.ada ? `tertunda (data ${esc(pi.hari || '?')}${pi.usiaHari ? ', usia ' + pi.usiaHari + ' hari' : ''})` : 'belum tersedia';
+    return '<p class="tiny" style="color:var(--amber2);margin:0 0 6px;line-height:1.6"><b>MODE MANDIRI V300</b> — denyut wadah ' + tua + '. Otak yang ditanam di halaman ini <b>menilai sendiri kandang Binance langsung</b> (mesin sama dengan SASARAN-5: kandang penuh + gerbang pegged + hukum TANPA-TUNGGU) — bukan data lama, bukan pengulangan. Saat denyut wadah segar kembali, panel ini pulih otomatis.' + (status ? ' ' + status : '') + '</p>'
+      + (NADIR_M.arsip ? '<p class="tiny" style="color:var(--dim2);margin:0 0 6px">Arsip jujur — denyut wadah terakhir: ' + NADIR_M.arsip + ' — arsip, <b>bukan</b> pick hari ini.</p>' : '');
+  };
+  if (pi.segar) {
+    panel.style.display = '';
+    if (modeEl) modeEl.innerHTML = '<p class="tiny" style="color:var(--em2);margin:0 0 6px">TERSAMBUNG — denyut wadah hidup (' + esc(pi.hari) + ' UTC) · pick arena wadah apa adanya.</p>';
+    $('#nadirGrid').innerHTML = st.pulse.items.map(nadirKartuHtml).join('');
+    return;
+  }
+  panel.style.display = '';
+  if (!NADIR_M.jalan && (!NADIR_M.items.length || Date.now() - NADIR_M.at > 30 * 60000)) {
+    try { nadirMandiriJalan(false); } catch (e) { /* diam jujur */ }
+  }
+  if (!NADIR_M.items.length) {
+    if (modeEl) modeEl.innerHTML = bannerMandiri('Bedah kandang sedang berjalan — hasil muncul seketika selesai; aku tidak akan menampilkan data ' + (pi.ada ? esc(pi.hari) : 'lama') + ' sebagai pick hari ini.');
+    $('#nadirGrid').innerHTML = '<div class="pk"><p class="tiny" style="color:var(--dim);margin:0">membedah kandang penuh Binance…</p></div>';
+    return;
+  }
+  if (modeEl) modeEl.innerHTML = bannerMandiri('');
+  $('#nadirGrid').innerHTML = NADIR_M.items.map(nadirKartuHtml).join('');
+}
+
+// V300 — mesin penilaian mandiri NADIR: satu rumah satu matematika. Jalur
+// utama = OTAK-INTI (otak tanam-abadi): bedahKandang() dengan cache 30 menit
+// + levelETS() — NADIR menampilkan SNAPSHOT OTAK yang sama persis dengan
+// panel SASARAN-5. Jalur cadangan = bedah milik arena (S5_ALL). Spark 1h×48,
+// harga hidup dipantau 60 dtk.
+async function nadirMandiriJalan(paksa) {
+  if (NADIR_M.jalan) return;
+  if (!paksa && NADIR_M.items.length && Date.now() - NADIR_M.at < 30 * 60000) { renderNadir(); return; }
+  NADIR_M.jalan = true;
+  try {
+    let lima = null, kandangKet = '';
+    // jalur utama: otak inti (tanam abadi). NADIR TIDAK pernah memanggil
+    // bedahKandang saat denyut inti berjalan (hukum anti-rebut K_JALAN):
+    // (1) snapshot inti ada → pakai; (2) belum ada → dengarkan ketikaSnap
+    // (maks 150 dtk); (3) inti gagal total → barulah bedah sendiri.
+    if (typeof OTAK !== 'undefined' && OTAK.inti && typeof OTAK.inti.snap === 'function') {
+      const tungguSnap = (ms) => new Promise((res) => {
+        let selesai = false;
+        const habis = setTimeout(() => { if (!selesai) { selesai = true; res(null); } }, ms);
+        try {
+          OTAK.inti.ketikaSnap((s) => { if (!selesai) { selesai = true; clearTimeout(habis); res(s); } });
+        } catch (e) { clearTimeout(habis); res(null); }
+      });
+      let s = null;
+      try { s = OTAK.inti.snap(); } catch (e) { s = null; }
+      if (!s || !s.lima || !s.lima.length) s = await tungguSnap(150000);
+      if (s && s.lima && s.lima.length) { lima = s.lima; kandangKet = ' (kandang ' + s.dibedah + '/' + s.target + ' koin)'; }
+    }
+    // jalur cadangan: bedah milik arena bila otak inti absen/gagal total
+    if (!lima) {
+      if (typeof OTAK !== 'undefined' && OTAK.bedahKandang) {
+        try {
+          const s2 = await OTAK.bedahKandang({ paksa: false });
+          if (s2 && s2.lima && s2.lima.length) { lima = s2.lima; kandangKet = ' (kandang ' + s2.dibedah + '/' + s2.target + ' koin)'; }
+        } catch (e) { /* inti masih memegang bedah — tunggu denyut berikutnya */ }
+      }
+      if (!lima && S5_ALL && S5_ALL.length) lima = S5_ALL.filter((f) => f.arah === 'BUY').slice(0, 5);
+    }
+    if (!lima || !lima.length) { renderNadir(); return; } // jaring gagal — renderNadir jujur menunggu
+    await s5peta(lima, 5, async (f) => {
+      try {
+        const kl = await ambil('https://api.binance.com/api/v3/klines?symbol=' + f.symbol + '&interval=1h&limit=48', 12000);
+        f.spark = (kl || []).map((r) => +r[4]);
+      } catch (e) { f.spark = null; }
+    });
+    NADIR_M.items = lima.map((f) => {
+      const L = (typeof OTAK !== 'undefined' && OTAK.levelETS) ? OTAK.levelETS(f) : null;
+      const ent = L ? L.E : f.last;
+      const tK = L ? L.T : ent + f.atrAbs;
+      const sK = L ? L.S : ent - Math.max(1.5 * f.atrAbs, ent * 0.015);
+      const tPct = L && L.tPct != null ? L.tPct : ((tK - ent) / ent) * 100;
+      const sPct = L && L.sPct != null ? L.sPct : ((sK - ent) / ent) * 100;
+      return {
+        symbol: f.symbol, direction: f.arah || 'BUY', entryClose: ent, livePrice: ent, liveRetPct: 0,
+        spark: f.spark,
+        sadardiri: 'MODE MANDIRI V300: denyut wadah tidak segar — otak halaman menilai sendiri dari Binance langsung' + kandangKet + '; data ' + ((st && st.today) || 'lama') + ' tidak dipakai sebagai pick hari ini.',
+        rencana: {
+          entry: ent, stop: sK, stopPct: sPct,
+          target: tK, targetPct: tPct,
+          sumberTarget: 'levelETS otak inti (1×ATR) — mesin mandiri V300',
+        },
+      };
+    });
+    NADIR_M.at = Date.now();
+    const pi = pulseInfo();
+    NADIR_M.arsip = pi.ada
+      ? (st.pulse.items || []).map((x) => esc(String(x.symbol).replace('USDT', '')) + ' ' + esc(x.direction)).join(' · ') + ' (data ' + esc(pi.hari || '?') + ')'
+      : '';
+    renderNadir();
+    nadirPantauHidup();
+  } finally { NADIR_M.jalan = false; }
+}
+
+let NADIR_M_POLL = null;
+function nadirPantauHidup() {
+  if (NADIR_M_POLL) return;
+  NADIR_M_POLL = setInterval(async () => {
+    if (!NADIR_M.items.length) return;
+    if (pulseInfo().segar) { clearInterval(NADIR_M_POLL); NADIR_M_POLL = null; return; } // wadah pulih — poller pamit
+    try {
+      const q = encodeURIComponent(JSON.stringify(NADIR_M.items.map((x) => x.symbol)));
+      const h = await ambil('https://api.binance.com/api/v3/ticker/price?symbols=' + q, 10000);
+      const peta = {}; (h || []).forEach((r) => { peta[r.symbol] = +r.price; });
+      let berubah = false;
+      NADIR_M.items.forEach((x) => {
+        const p = peta[x.symbol];
+        if (p > 0) { x.livePrice = p; x.liveRetPct = ((p - x.entryClose) / x.entryClose) * 100; berubah = true; }
+      });
+      if (berubah) renderNadir();
+    } catch (e) { /* jaring lelah — coba lagi di denyut berikutnya */ }
+  }, 60000);
 }
 
 // ---------- barisan hari ----------
@@ -2502,6 +2645,7 @@ const S5_PEGGED_BASE = /(USD|EUR|DAI|USDE|USDS|USD1|PYUSD|USDP|USDD|PAXG|XAUT|US
 const S5_GANDA = /(UP|DOWN|BULL|BEAR)USDT$/;
 const S5_QV_MIN = 3e6;   // kandang penuh: semua pasangan USDT likuid ≥ 3 jt USDT/hari
 let S5_CACHE = null, S5_CACHE_AT = 0, S5_JALAN = false, S5_META = null;
+let S5_ALL = null;   // V300-MANDIRI-NADIR: hasil bedah penuh (ranking utuh) — dipakai bersama NADIR mandiri
 
 async function s5peta(list, sekaligus, fn) {
   const out = new Array(list.length).fill(null); let i = 0;
@@ -2611,6 +2755,7 @@ async function sasaranLimaJalan(paksa) {
     // satu rumah satu kebenaran: posisi sasaran RESMI SAKTI hari ini dipetakan jujur
     const resmi = (((typeof st !== 'undefined' ? st : null) || {}).venaSatuRumah || {}).sasaran || [];
     const ranking = adaGali.slice().sort(skorDesc);
+    S5_ALL = ranking;   // V300: satu bedah dua pemakai — SASARAN-5 dan NADIR mandiri
     const posisiResmi = resmi.map((sim) => {
       const idx = ranking.findIndex((f) => f.symbol === String(sim).toUpperCase() + 'USDT');
       return idx >= 0 ? { sim: String(sim).toUpperCase(), peringkat: idx + 1, total: ranking.length, arah: ranking[idx].arah, skor: ranking[idx].s, key: ranking[idx].key } : { sim: String(sim).toUpperCase(), peringkat: null };
@@ -2674,6 +2819,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const b = document.getElementById('s5Ulang');
   if (b) b.addEventListener('click', () => sasaranLimaJalan(true));
   setTimeout(() => { try { sasaranLimaJalan(false); } catch (e) { /* jujur diam bukan jalurnya */ } }, 1500);
+  // V300-MANDIRI-NADIR: panel NADIR hidup walau denyut wadah tak pernah menyala
+  setTimeout(() => { try { if (!pulseInfo().segar) nadirMandiriJalan(false); } catch (e) { /* diam jujur */ } }, 4000);
 });
 
 async function tanya(q) {
@@ -3024,7 +3171,7 @@ document.addEventListener('DOMContentLoaded', init);
   fetch('arena-keadaan.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(render).catch(function () {});
 })();
 </script>
-<!-- V322-OTAK-INTI: otak & token DNA ditanam — matematika sama dengan otak Next.js, hidup tanpa wadah -->
-<script src="otak-inti.js?v=322"></script>
+<!-- V322-OTAK-INTI v1.2 (V300-MANDIRI): otak & token DNA ditanam — hidup tanpa wadah, denyut tua tak pernah jadi pick hari ini -->
+<script src="otak-inti.js?v=330"></script>
 </body>
 </html>
