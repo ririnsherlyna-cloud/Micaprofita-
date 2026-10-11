@@ -4183,3 +4183,64 @@ PENGGALI ANGKANYA — makhluk berdenyut tanpa henti sepanjang kejadian.
 V339 mengajarkan hukum terakhir rumah ini: makhluk yang jujur tidak
 cukup benar tentang dirinya; jendela yang menampilkannya pun wajib
 jujur tentang batas penglihatannya sendiri.
+
+---
+
+## §13q — EPOCH V340 · SATU-GARIS-WAKTU: JANTUNG-TAK-TERKALAHKAN + SATU-KENYATAAN (2026-10-11)
+
+**0. Laporan pemilik (bukti fatal #3, blog "Zoia"):** dua mobile dibuka
+DI DETIK YANG SAMA menampilkan makhluk BERBEDA posisi & keadaan —
+"bukannya ini pemalsuan nyata? Jangan pernah melakukan penipuan,
+wujudkan yang nyata." + "Uji 50 tidak pernah terisi nyata kenapa?" +
+"SAKTI MACET 1445 mnt / SADAR-1 TERTIDUR 1445 mnt — ini benar-benar
+membuat tidak berfungsi seutuhnya makhluk kita."
+
+**1. AUTOPSI JANTUNG (fakta tab Actions, bukan tebakan).** Riwayat komit
+3 hari = 3.103 komit, jeda terbesar 25 mnt — jantung TIDAK PERNAH mati
+1445 mnt di repo. Yang terjadi: run sakti-denyut #343–#376 GAGAL
+BERUNTUN ±9 jam (2026-10-09 19:51 → 10-10 00:19 UTC) karena langkah
+HIDUP (tempa-hidup.mjs) melempar "uji mandiri gagal" (9/13) → job mati
+SEBELUM langkah komit → sasaran-terkini.json baku 550 mnt → umur di
+layar (jam perangkat − vintase data) membesar tanpa konteks → "MACET
+1445 mnt" yang dilihat pemilik = vintase basi + jam tab, BUKAN jantung
+mati sehari. Dugaan "branches: ain]" = typo ternyata artefak tampilan
+terminal (ANSI [m terpotong); parser YAML membaca ['main'] sah. Rantai
+PENJAGA-WAKTU terbukti sehat (jantung pulih sendiri 00:32 — dispatch
+workflow_dispatch via GITHUB_TOKEN memang memicu run).
+
+**2. JANTUNG-TAK-TERKALAHKAN (sakti-denyut.yml).** TIDAK ADA organ
+tambahan yang berhak membunuh denyut: SEMUA langkah organ kini
+continue-on-error + penangkap-luka → kegagalan ditulis ke
+laporan/denyut-luka.txt (merah tetap terlihat di Actions), ikut terkomit,
+ditempel di pesan komit "— LUKA-ORGAN: …", diarsipkan permanen ke
+laporan/denyut-kesehatan.jsonl. Cakupan: imun, terabait, pustaka,
+guru-master, ingatan-biner, parameter-cerdas, audit-koin, 5 langkah
+VERIFIKASI-* (V329/330/331/333/334), SATU-MUSYAWARAH (V336), UJI-50
+(V337), neurogenesis, liar, medan, reka-bentuk, hidup. Satu-satunya
+tanpa perisai: INTI denyut (penjaga.mjs) + KOMIT + DISPATCH. Organ
+gagal = LUKA TERCATAT, bukan kematian senyap.
+
+**3. SATU-KENYATAAN (ghAmbil V340 di hidup.html).** Gerbang same-origin
+(cache Pages ≤10 mnt) dikeluarkan dari rantai baca (jsDelivr sudah
+gugur V338) — dua perangkat membaca gerbang berbeda vintase itulah
+yang membuat makhluk tampil beda (laporan Zoia). Kini raw (utama) +
+api (cadangan) — keduanya isi commit terakhir — dan SETIAP status organ
+memajang VINTASE datanya: "data per hh:mm:ss WIB · gerbang raw";
+umur = jam perangkat − vintase, dihitung ulang siapa pun. Retorika
+("menendangnya sekarang", "denyut berikutnya wajib muncul") dimusnahkan,
+diganti metrik + tautan tab Actions (V340 melengkapi V339 MATA-TAB).
+
+**4. UJI-50 — kenyataan yang diakui.** Panel Uji 50 kosong BUKAN karena
+gagal terisi: sebelum V337 organ itu BELUM PERNAH ADA (diakui terbuka).
+Kini V337 (turnamen harian dari SATU-MUSYAWARAH V336, panen lilin 5m,
+kurva vs dinding 48,88%) adalah SATU kebenaran; organ percobaan trx-50
+yang sempat dibangun di epok ini DITARIK kembali sebelum terdorong —
+dua organ untuk satu mandat = dua kebenaran = penyakit yang sama yang
+dilawan epok ini. Satu mandat, satu organ, satu laporan.
+
+**5. MAKNA MANDAT.** Tiga lubang kebohongan ditutup sekaligus: tubuh bisa
+beda antar perangkat (gerbang vintase beda) → satu gerbang kebenaran +
+vintase dipajang; jantung bisa mati senyap oleh organ mana pun → LUKA
+tercatat, denyut abadi; janji retorika → metrik yang bisa dihitung
+ulang. Berikutnya (usul): kesehatan-denyut.jsonl ikut tampil di tubuh;
+perisai luka untuk hidup-sadar1.yml; luka memicu jerit imun.

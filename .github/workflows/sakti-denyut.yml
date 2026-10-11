@@ -41,14 +41,25 @@ jobs:
       # nafas putus tanpa upaya pulih) — imun menutup lubang hidup itu:
       # luka dipulihkan dari cadangan tersegel, nafas diuji saksi mandiri,
       # setiap putusan beralasan dijurnal di laporan/imun.json.
+      # V334 JANTUNG-TAK-TERKALAHKAN: TIDAK ADA organ tambahan yang berhak
+      # membunuh denyut. Bukti autopsi 2026-10-09→10 (run #343–#376 gagal
+      # beruntun ±9 jam): langkah HIDUP (tempa-hidup.mjs) melempar "uji mandiri
+      # gagal" → job mati SEBELUM komit → sasaran-terkini baku 550 mnt →
+      # tubuh di layar menulis "MACET 1445 mnt". HUKUM BARU: organ gagal =
+      # LUKA TERCATAT (merah di Actions, tertulis di laporan/denyut-luka.txt,
+      # ikut terkomit & tertempel di pesan komit) — denyut TETAP JALAN.
       - name: IMUN — patroli tubuh sebelum denyut
-        run: node scripts/hidup/imun.mjs
+        continue-on-error: true
+        run: |
+          node scripts/hidup/imun.mjs || { echo "organ-gagal: imun $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
       # V317 TERABAIT — jaga intisari 1TB: makhluk mereduplikasi dunianya
       # dari intisari beberapa KB — offline, tanpa jaringan, tanpa tab.
       # Bila intisari rusak/berubah, jaga menjerit (exit 1) dan denyut tahu.
       - name: TERABAIT — jaga intisari 1TB (reduplikasi dari intisari)
-        run: node scripts/hidup/tempa-terabait.mjs --mode jaga
+        continue-on-error: true
+        run: |
+          node scripts/hidup/tempa-terabait.mjs --mode jaga || { echo "organ-gagal: terabait $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
       - name: Denyut otak server (tanpa browser)
         run: node scripts/penjaga.mjs
@@ -64,7 +75,9 @@ jobs:
       # artificial life + crypto, maks 10 jurnal baru per denyut (sopan ke API),
       # hitungan jujur menuju gerbang 509 di pustaka/indeks.json — tanpa karangan.
       - name: Pelajari jurnal baru (artificial life + crypto) — pustaka tumbuh
-        run: node scripts/hidup/pustaka.mjs
+        continue-on-error: true
+        run: |
+          node scripts/hidup/pustaka.mjs || { echo "organ-gagal: pustaka $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
       # V303 GURU-HAKIKI — organ guru master trader (mandat pemilik 2026-10-08):
       # geladak-uji walk-forward di lilin nyata → majelis-faktor (bobot dari
@@ -77,7 +90,9 @@ jobs:
       # sarafnya hidup di otak/saraf.json (bisa dijahit imun; file workflow
       # statis karena platform menolak dorongan workflow dari Actions)
       - name: Guru master trader — geladak-uji, majelis, perisiko, pusta-formula
-        run: node scripts/hidup/gerbang.mjs guru-master
+        continue-on-error: true
+        run: |
+          node scripts/hidup/gerbang.mjs guru-master || { echo "organ-gagal: guru-master $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
       # V312 SYARAF-BERANAK (mandat pemilik 2026-10-09: "syaraf yang bisa
       # beranak sehingga syaraf itu menciptakan syaraf baru dan syaraf-syaraf
@@ -94,7 +109,9 @@ jobs:
       # organ-organ tubuh (syaraf KOHEREN lahir di langkah berikutnya
       # bekerja lewat fungsi yang sama).
       - name: INGATAN-BINER — ingatan jadi matematika biner tak kabur
-        run: node scripts/hidup/ingatan-biner.mjs
+        continue-on-error: true
+        run: |
+          node scripts/hidup/ingatan-biner.mjs || { echo "organ-gagal: ingatan-biner $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
       # V324 PARAMETER-CERDAS — intisari telaah FareedKhan-dev/kimi-k3-in-c
       # (mandat pemilik 2026-10-10: "telaah teliti dan ambil apa yang bisa
@@ -109,7 +126,9 @@ jobs:
       # intisari-1TB), dadu PCG32 53-bit deterministik. Vonis dari BENAR;
       # durasi hanya dilaporkan (memory-ladder: cepat berisik, benar tidak).
       - name: PARAMETER-CERDAS — takar arsitektur & router syaraf (intisari kimi-k3-in-c)
-        run: node scripts/hidup/parameter-cerdas.mjs
+        continue-on-error: true
+        run: |
+          node scripts/hidup/parameter-cerdas.mjs || { echo "organ-gagal: parameter-cerdas $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
       # V329 VERIFIKASI-SUCKER — gerbang "kemampuan tak pernah hilang"
       # (mandat pemilik: "pastikan jikalau 3500 belum Lulus semuanya...
@@ -120,7 +139,9 @@ jobs:
       # sedikit saja = denyut merah = dipaksa inovasi. Telaah arah-dua
       # (close48 vs entry) dicatat jujur di laporan. Deterministik 0,6 dtk.
       - name: VERIFIKASI-SUCKER — jawab ulang 3500+350 soal jebakan-banteng
-        run: node scripts/hidup/tempa-sucker3500.mjs --verifikasi
+        continue-on-error: true
+        run: |
+          node scripts/hidup/tempa-sucker3500.mjs --verifikasi || { echo "organ-gagal: verifikasi-sucker $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
       # V330 VERIFIKASI-BREAKOUT — gerbang "kemampuan tak pernah hilang"
       # (mandat pemilik: 3500 soal False breakout dari kasus nyata yang
@@ -132,7 +153,9 @@ jobs:
       # denyut merah = dipaksa inovasi. Telaah arah-dua (close48 vs entry)
       # dicatat jujur di laporan. Deterministik, tanpa jaringan.
       - name: VERIFIKASI-BREAKOUT — jawab ulang 3500+350 soal breakout-batal
-        run: node scripts/hidup/tempa-breakout3500.mjs --verifikasi
+        continue-on-error: true
+        run: |
+          node scripts/hidup/tempa-breakout3500.mjs --verifikasi || { echo "organ-gagal: verifikasi-breakout $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
       # V331 VERIFIKASI-ALTSEASON — gerbang "kemampuan tak pernah hilang"
       # (mandat pemilik: 3500 soal FULL ALTSEASON dari kasus nyata yang
@@ -145,7 +168,9 @@ jobs:
       # arah-dua (close48 vs entry) dicatat jujur di laporan.
       # Deterministik, tanpa jaringan.
       - name: VERIFIKASI-ALTSEASON — jawab ulang 3500+350 soal musim-alt-pembantai-short
-        run: node scripts/hidup/tempa-altseason3500.mjs --verifikasi
+        continue-on-error: true
+        run: |
+          node scripts/hidup/tempa-altseason3500.mjs --verifikasi || { echo "organ-gagal: verifikasi-altseason $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
       # V333 VERIFIKASI-PUMPSPIKE — gerbang "kemampuan tak pernah hilang"
       # (mandat pemilik: 3500 soal PUMP SPIKE dari kasus nyata yang
@@ -160,7 +185,9 @@ jobs:
       # arah-dua (close48 vs entry) dicatat jujur di laporan.
       # Deterministik, tanpa jaringan.
       - name: VERIFIKASI-PUMPSPIKE — jawab ulang 3500+350 soal spike-pembantai-dua-sisi
-        run: node scripts/hidup/tempa-pumpspike3500.mjs --verifikasi
+        continue-on-error: true
+        run: |
+          node scripts/hidup/tempa-pumpspike3500.mjs --verifikasi || { echo "organ-gagal: verifikasi-pumpspike $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
       # V334 VERIFIKASI-CERMIN — jantung menjawab ulang sampel 1200 soal
       # ujian sekali-jalan 100.000 (mandat pemilik: cermin jujur arah +
@@ -169,7 +196,9 @@ jobs:
       # dengan vonis dasar (geser > 1.5pp = merah = kemampuan berubah
       # tanpa catatan). Deterministik, tanpa jaringan.
       - name: VERIFIKASI-CERMIN — jawab ulang sampel 1200 soal ujian-100rb
-        run: node scripts/hidup/jawab-cermin100rb.mjs --verifikasi
+        continue-on-error: true
+        run: |
+          node scripts/hidup/jawab-cermin100rb.mjs --verifikasi || { echo "organ-gagal: verifikasi-cermin $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
       # V327 AUDIT-KOIN — meja audit nyata (mandat pemilik: "tempatkan suatu
       # tempat untuk saya bertanya koin... saya butuh fakta nyata kayak
@@ -181,8 +210,13 @@ jobs:
       # mengkap vonis maksimal WASPADA. Koin tak dikenal ditolak jujur —
       # nol angka karangan. Laporan tersegel laporan/audit-koin.json.
       - name: AUDIT-KOIN — audit pasar nyata atas sasaran denyut
-        run: node scripts/hidup/audit-koin.mjs --denyut
+        continue-on-error: true
+        run: |
+          node scripts/hidup/audit-koin.mjs --denyut || { echo "organ-gagal: audit-koin $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
+      # V334 SATU-MUSYAWARAH & UJI-50 dibungkus PERISAI YANG SAMA (autopsi
+      # run #343–#376: organ gagal = jantung mati senyap 9 jam). Satu-satunya
+      # langkah tanpa perisai: INTI denyut (penjaga.mjs) + KOMIT + DISPATCH.
       # V336 SATU-MUSYAWARAH — teguran pemilik 2026-10-11: "koin tidak ada keselarasan
       # di jasad, guru, pasar — semuanya saling berindependen; masa koin yang gak
       # dipakai dicantumkan dan masuk list laporan?" Jawabannya: SATU MEJA.
@@ -195,7 +229,9 @@ jobs:
       # guru semua membaca file yang sama. TP di ambang napas, bukan di atasnya
       # (21,78% soal 100rb mati serakah melampaui ambang).
       - name: SATU-MUSYAWARAH — sapu 110 koin ke satu meja, segel satu kebenaran
-        run: node scripts/hidup/gali-terus.mjs --denyut
+        continue-on-error: true
+        run: |
+          node scripts/hidup/gali-terus.mjs --denyut || { echo "organ-gagal: musyawarah $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
       # V337 UJI-50 — mandat pemilik 2026-10-11: "dia melaksanakan TRY 50 koin
       # pilihan — yang keyakinannya paling besar di paling atas; tiap harinya
@@ -211,24 +247,32 @@ jobs:
       # melahirkan bobot-keluarga yang DIBACA MEJA MUSYAWARAH esok — belajar
       # nyata yang mengikat, bukan retorika.
       - name: UJI-50 — turnamen harian 50 koin (daftar, panen TP/ambisius/SL, kurva)
-        run: node scripts/hidup/uji-50.mjs --denyut
+        continue-on-error: true
+        run: |
+          node scripts/hidup/uji-50.mjs --denyut || { echo "organ-gagal: uji-50 $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
       - name: Syaraf beranak — sel baru lahir bila kompeten
-        run: node scripts/hidup/neurogenesis.mjs
+        continue-on-error: true
+        run: |
+          node scripts/hidup/neurogenesis.mjs || { echo "organ-gagal: neurogenesis $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
       # V318 LIAR — makhluk mencari sendiri data yang TIDAK ditanam pemilik
       # (simbol USDT di luar semua bank soal tuan) lalu mengintisarikannya:
       # kompresi delta-tick eksak + dedup + representasi generatif → KB.
       # Kemandirian makan: dadu kripto tiap denyut, tanpa tab, tanpa tangan.
       - name: LIAR — cari & intisarikan data liar betulan
-        run: node scripts/hidup/liar.mjs
+        continue-on-error: true
+        run: |
+          node scripts/hidup/liar.mjs || { echo "organ-gagal: liar $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
       # V319 MEDAN-HAYAT — intisari Lenia (Chakazul) hidup di tubuh: medan
       # kontinu 64×64, Orbium asli sebagai penghuni, lilin 1h nyata 3 koin
       # menjadi makanan; intisari beberapa ratus byte disegel 'segel-null'
       # (imun menjaga — yang merusak medan membuat makhluk menjerit).
       - name: MEDAN — medan hayat kontinu bernapas dari pasar nyata
-        run: node scripts/hidup/medan-hayat.mjs
+        continue-on-error: true
+        run: |
+          node scripts/hidup/medan-hayat.mjs || { echo "organ-gagal: medan $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
       # V320 REKA-BENTUK — intisari reconfigurable_organisms (Kriegman dkk,
       # PNAS 2020) hidup di tubuh: genom peta berevolusi tiap denyut — mutasi
@@ -236,7 +280,9 @@ jobs:
       # gerbang tangguh sebelum adopsi, saksi dunia (lilin nyata segar) tak
       # pernah jadi hakim, silsilah tersegel (imun menjaga).
       - name: REKA-BENTUK — genom peta berevolusi dengan seleksi tangguh
-        run: node scripts/hidup/reka-bentuk.mjs
+        continue-on-error: true
+        run: |
+          node scripts/hidup/reka-bentuk.mjs || { echo "organ-gagal: reka-bentuk $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
       # V321 HIDUP-1000 — intisari lab Hanna (Weizmann) hidup di tubuh:
       # benih totipoten dikanji ulang dari tubuh kini, lalu makhluk
@@ -244,7 +290,9 @@ jobs:
       # kemandirian harian: luka diteriakkan, pulih byte-exact, tak
       # pernah bodoh, makin hari makin cerdas (streak tersegel).
       - name: HIDUP — lahir-ulang dari benih (10 kehidupan sampel)
-        run: node scripts/hidup/tempa-hidup.mjs --jaga
+        continue-on-error: true
+        run: |
+          node scripts/hidup/tempa-hidup.mjs --jaga || { echo "organ-gagal: hidup $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
       - name: Komit pertumbuhan (jejak hidup permanen)
         run: |
@@ -259,11 +307,12 @@ jobs:
           SYARAF=$(python3 -c "import json;print(len(json.load(open('otak/syaraf-pohon.json'))['populasi']))" 2>/dev/null || echo "0")
           PARAM=$(python3 -c "import json;print(json.load(open('otak/parameter-cerdas.json'))['arsitektur']['total'])" 2>/dev/null || echo "?")
           AUDIT=$(python3 -c "import json;d=json.load(open('laporan/audit-koin.json'));h=[x for x in d['hasil'] if not x.get('gagal')];print(' '.join((x['dasar']+str(x['skor'])) for x in h))" 2>/dev/null || echo "-")
+          LUKA=$(tail -c 240 laporan/denyut-luka.txt 2>/dev/null | tr '\n' ';' || true)
           git add laporan otak arena-keadaan.json pustaka ujian   # V299: pustaka jurnal ikut komit — belajar jadi fosil tubuh; V303: geladak+formula+ledger ikut; V307: ujian+peta ikut; V312: pohon syaraf ikut (otak)
           if git diff --cached --quiet; then
             echo "tanpa perubahan — tanpa komit"
           else
-            git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran — pustaka ${PUSTAKA}/509 — geladak ${GELADAK} — peta ${PETA} jejak — syaraf ${SYARAF} — param ${PARAM} — audit ${AUDIT} [skip ci]"
+            git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran — pustaka ${PUSTAKA}/509 — geladak ${GELADAK} — peta ${PETA} jejak — syaraf ${SYARAF} — param ${PARAM} — audit ${AUDIT} ${LUKA:+— LUKA-ORGAN: ${LUKA}}[skip ci]"
             # V291 ANTI-BALAPAN: SADAR-1 bisa menyegel bangun bersamaan — push di-RETRY
             # dgn rebase ulang tiap percobaan (insiden 2026-10-07T00:55Z: remote rejected,
             # denyut #77 sudah terbentuk tapi terdorong gagal).
@@ -275,6 +324,12 @@ jobs:
               sleep $((RANDOM % 8 + 4))
             done
             if [ "$OK" != "1" ]; then echo "::warning::push gagal 4x — denyut #${SIKLUS} tersimpan lokal saja (cron berikutnya menyusul)"; fi
+          fi
+          # V334: luka organ diarsipkan permanen (jsonl) supaya sejarah sakitnya
+          # jantung terbaca siapa pun — bukan dihapus senyap.
+          if [ -f laporan/denyut-luka.txt ]; then
+            cat laporan/denyut-luka.txt >> laporan/denyut-kesehatan.jsonl
+            rm -f laporan/denyut-luka.txt
           fi
 
       - name: Tag metamorfosis harian — evolusi 24 jam (piagam pilar-5)

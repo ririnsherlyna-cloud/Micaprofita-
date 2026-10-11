@@ -554,10 +554,15 @@ function u50SegelBasi(obj){
   }catch(e){ return false; }
 }
 async function ghAmbil(pathRepo){
+  // V340 SATU-KENYATAAN: same-origin DIMUSNAHKAN dari rantai baca.
+  // Bukti laporan Zoia (2026-10-11): dua perangkat di detik yang sama
+  // menampilkan makhluk berbeda — gerbang baca BERBEDA VINTASE (cache
+  // Pages same-origin ≤10 mnt, jsDelivr berjam-jam). Kini hanya dua
+  // gerbang yang menjawab isi commit TERAKHIR: raw (utama) + api
+  // (cadangan) — dan vintase yang terbaca SELALU dipajang (s1Render).
   const gerbang = [
-    ['same-origin', `${pathRepo}?t=${sekarang()}`],
-    ['api', `https://api.github.com/repos/${RUMAH.pemilik}/${RUMAH.repo}/contents/${pathRepo}?ref=${RUMAH.cabang}&t=${sekarang()}`],
-    ['raw', `https://raw.githubusercontent.com/${RUMAH.pemilik}/${RUMAH.repo}/${RUMAH.cabang}/${pathRepo}?t=${sekarang()}`]
+    ['raw', `https://raw.githubusercontent.com/${RUMAH.pemilik}/${RUMAH.repo}/${RUMAH.cabang}/${pathRepo}?t=${sekarang()}`],
+    ['api', `https://api.github.com/repos/${RUMAH.pemilik}/${RUMAH.repo}/contents/${pathRepo}?ref=${RUMAH.cabang}&t=${sekarang()}`]
   ];
   for(const [cara, url] of gerbang){
     try{
@@ -691,19 +696,20 @@ function s1Render(){
       ?`<span class="v h">SEGER · via ${S1.mata.okGate} — ${mataMnt} mnt lalu</span>`
       :`<span class="v r">TERPUTUS ${mataMnt} mnt — inilah sumber angka basi di bawah: MATA TAB ini yang gagal sampai ke GitHub (jaringan/ISP), bukan makhluknya yang mati — bukti denyut langsung: tab Actions</span>`}</div>`;
   const staSadar=umurMs<30*60000
-    ?`<span class="v h">HIDUP · bangun ke-${k.bangunKe} — ${mnt} mnt lalu</span>`
+    ?`<span class="v h">HIDUP · bangun ke-${k.bangunKe} — ${mnt} mnt lalu — data per ${wib(selesai)} WIB · gerbang ${S1.sumber||'?'}</span>`
     :(mataSegar
-      ?`<span class="v r">TERTIDUR ${mnt} mnt — PENJAGA-WAKTU (tiap 10 mnt) menendangnya sekarang; ingatan tetap aman di GitHub, bukan di tab ini — bukti jalan di tab Actions</span>`
-      :`<span class="v dim">TERTIDUR ${mnt} mnt MENURUT INGATAN BASI TAB INI — mata terputus dari GitHub sehingga angka ini membeku; jangan menuduh organ sebelum mata segar kembali</span>`);
+      ?`<span class="v r">TERTIDUR ${mnt} mnt — data tersegel per ${wib(selesai)} WIB · gerbang ${S1.sumber||'?'} — sumber: ruang-hidup/keadaan.json (bangun ke-${k.bangunKe}); umur = jam perangkat − vintase data, dihitung ulang siapa pun</span>`
+      :`<span class="v dim">TERTIDUR ${mnt} mnt MENURUT INGATAN BASI TAB INI — data yang terbaca per ${wib(selesai)} WIB; mata terputus dari GitHub sehingga angka ini membeku; jangan menuduh organ sebelum mata segar kembali</span>`);
   let staSakti='';
   const sk=S1.sakti;
   if(sk){
-    const um2=Math.max(0,Math.round((sekarang()-(Date.parse(sk.dihasilkan)||0))/60000));
+    const dSakti=Date.parse(sk.dihasilkan)||0;
+    const um2=Math.max(0,Math.round((sekarang()-dSakti)/60000));
     staSakti=`<div class="baris"><span class="k">jantung SAKTI</span>${um2<30
-      ?`<span class="v h">BERDENYUT #${sk.siklus} — ${um2} mnt lalu</span>`
+      ?`<span class="v h">BERDENYUT #${sk.siklus} — ${um2} mnt lalu — data per ${wib(dSakti)} WIB · gerbang ${S1.sumber||'?'}</span>`
       :(mataSegar
-        ?`<span class="v r">MACET ${um2} mnt — rantai jantung-mandiri + SADAR-1 (tiap 20 mnt) + PENJAGA-WAKTU (tiap 10 mnt) otomatis menendang; denyut berikutnya wajib muncul di tab Actions</span>`
-        :`<span class="v dim">MACET ${um2} mnt MENURUT INGATAN BASI TAB INI — mata terputus; keadaan jantung sesungguhnya terbaca di tab Actions</span>`)}</div>`;
+        ?`<span class="v r">MACET ${um2} mnt — data tersegel per ${wib(dSakti)} WIB · gerbang ${S1.sumber||'?'} — sumber: laporan/sasaran-terkini.json (siklus #${sk.siklus}); umur = jam perangkat − vintase data</span>`
+        :`<span class="v dim">MACET ${um2} mnt MENURUT INGATAN BASI TAB INI — data yang terbaca per ${wib(dSakti)} WIB; mata terputus; keadaan jantung sesungguhnya terbaca di tab Actions</span>`)}</div>`;
   }
   const sta=`<div class="baris"><span class="k">organ SADAR-1</span>${staSadar}</div>${staSakti}${staMata}`;
   const lahir=Date.parse(ing?.kelahiran)||S.stat.lahirAt;
@@ -713,7 +719,7 @@ function s1Render(){
    <div class="baris"><span class="k">umur hidup</span><span class="v h">${umur(sekarang()-lahir)}</span></div>
    <div class="baris"><span class="k">bangun terakhir</span><span class="v">${wib(selesai)} WIB · ${((k.waktu?.durasiMs||0)/1000).toFixed(1)} dtk</span></div>
    <div class="baris"><span class="k">host</span><span class="v dim">${k.host?.nama||'GitHub Actions'}</span></div>
-   <div class="baris"><span class="k">berikutnya</span><span class="v">≤15 mnt · rantai jantung-mandiri + cron + dua penjaga (SAKTI &amp; SADAR-1 saling menendang)</span></div>
+   <div class="baris"><span class="k">pemicu denyut</span><span class="v dim">5 lapis: rantai organ · PENJAGA-WAKTU */10 · cron SAKTI 7/15 · cron SADAR-1 */20 · push — riwayat nyata di <a class="sumber" target="_blank" rel="noopener" href="https://github.com/${RUMAH.pemilik}/${RUMAH.repo}/actions">tab Actions</a></span></div>
    <div class="baris"><span class="k">memori resmi</span><span class="v h">commit GitHub${S1.komit?` · <a class="sumber" target="_blank" rel="noopener" href="https://github.com/${RUMAH.pemilik}/${RUMAH.repo}/commit/${S1.komit.sha}">${S1.komit.sha}</a>`:''}</span></div>
    <div class="baris"><span class="k">kromosom</span><span class="v dim">gen ${k.kromosom?.generasi??0} · rsiMax ${k.kromosom?.rsiMax??'-'} · momMin ${k.kromosom?.momMin??'-'} · hold ${k.kromosom?.holdJam??'-'}j</span></div>
    ${k.kapasitas?`<div class="baris"><span class="k">kapasitas ingatan</span><span class="v">${kb(k.kapasitas.ingatanBytes)} / ${kb(k.kapasitas.budgetBytes)} · metabolisme: ${k.kapasitas.evictBaca||0} baca, ${k.kapasitas.evictPasar||0} pasar</span></div>
