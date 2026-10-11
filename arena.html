@@ -2018,10 +2018,13 @@ function pulseInfo() {
   const hariUtc = new Date().toISOString().slice(0, 10);
   const p = (st && st.pulse) || null;
   const ada = !!(p && p.items && p.items.length);
-  const hari = (st && st.today) || (p && p.at ? String(p.at).slice(0, 10) : null);
-  const segar = ada && hari === hariUtc;
-  const usiaHari = hari ? Math.max(0, Math.round((Date.parse(hariUtc + 'T00:00:00Z') - Date.parse(hari + 'T00:00:00Z')) / 86400000)) : null;
-  return { ada, segar, hari, usiaHari };
+  // V300b: yang dinilai umurnya adalah DENYUT-nya sendiri (pulse.at) — BUKAN
+  // tanggal ekspor. Bukti nyata: ekspor 2026-10-11 segar tetapi pulse.at masih
+  // 2026-10-05 (GTC/SAND terbawa-bawa) — ekspor segar bisa membawa denyut lama.
+  const hariPulse = (p && p.at) ? String(p.at).slice(0, 10) : ((st && st.today) || null);
+  const segar = ada && hariPulse === hariUtc;
+  const usiaHari = hariPulse ? Math.max(0, Math.round((Date.parse(hariUtc + 'T00:00:00Z') - Date.parse(hariPulse + 'T00:00:00Z')) / 86400000)) : null;
+  return { ada, segar, hari: hariPulse, usiaHari, eksporHari: (st && st.today) || null };
 }
 
 function nadirKartuHtml(x) {
