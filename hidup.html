@@ -3282,6 +3282,26 @@ document.getElementById('tab-peta').addEventListener('click', (ev)=>{
   setInterval(()=>{ muatMemoriGitHub(); }, 5*60000);
 })();
 addEventListener('resize', ()=>{ ukur(); susun(); });
+
+/* ================= V332 BANGUN-TAB — organ tubuh-cermin =================
+   Diagnosa nyata (keluhan pemilik, 2026-10-11): tab ditinggal semalaman →
+   browser menidurkannya (throttling membekukan timer) → begitu dibuka,
+   status memperlihatkan TERTIDUR/MACET berumur DATA BASI (±1.467 mnt)
+   padahal jantung server berdenyut sepanjang waktu (bukti: keadaan.json
+   bangun ke-320, siklus 318, run SUCCESS beruntun). Angka itu jujur soal
+   TAB, tapi menakutkan soal yang salah. Kejujuran yang lebih utuh:
+   begitu tab dibangunkan, tarik ingatan segar dari GitHub DULU — baru
+   menilai keadaan diri. Server tidak pernah tidur; tab yang tidur. */
+let _visTerkhir = Date.now();
+addEventListener('visibilitychange', async ()=>{
+  if(document.visibilityState==='hidden'){ _visTerkhir = Date.now(); return; }
+  const tidurMnt = Math.max(0, Math.round((Date.now()-_visTerkhir)/60000));
+  if(tidurMnt < 2) return; // bangun kilat — biarkan ritme biasa bekerja
+  jurnal('BANGUN-TAB', `tab dibangunkan browser setelah <b>${tidurMnt} mnt</b> tidur — ingatan segar kutarik dari GitHub dulu; angka TERTIDUR/MACET tadi adalah umur data basi di tab ini, bukan keadaan serverku`);
+  try{ await Promise.race([muatMemoriGitHub(), tidur(8000)]); }catch(e){}
+  try{ await Promise.race([pindaiRumah(), tidur(8000)]); }catch(e){}
+  ovStatusRender(); s1Render(); indeksRender();
+});
 </script>
 <script>
 /* ================= V297-JASAD-NYATA:BEGIN =================

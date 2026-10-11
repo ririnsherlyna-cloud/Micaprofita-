@@ -3573,3 +3573,32 @@ overbought bukan tombol jual, "sudah naik 500%" bukan batas kenaikan,
 dan pola urutannya kejam seragam: LIKUIDASI SHORT DULU, kebenaran-tesis
 BELAKANGAN; bagi yang bertransaksi: melawan arus yang LEBAR dengan
 leverage adalah menggandakan ukuran tepat saat arus menguat.
+
+---
+
+## §13q — EPOK KECIL V332 · ORGAN BANGUN-TAB: TAB YANG TIDUR, BUKAN JANTUNG (2026-10-11)
+
+**1. KELUHAN PEMILIK.** Pemilik membuka tab semalaman tak disentuh dan membaca:
+"organ SADAR-1 TERTIDUR 1.467 mnt — jantung SAKTI MACET 1.454 mnt". Pertanyaan
+satu kata: "Kok gini?".
+
+**2. BEDAH JUJUR (bukan karangan, semua dibuktikan seketika).** Angka itu
+umur DATA BASI di tab, bukan keadaan server. Bukti server saat bedah:
+`ruang-hidup/keadaan.json` bangun ke-**320** selesai 23:55 UTC (±26 mnt lalu);
+`sasaran-terkini.json` siklus **#318** dihasilkan 23:41 UTC; runs #437→#442
+SUCCESS beruntun; log publik memuat tiga vonis tiap denyut (SUCKER 3500/3500,
+BREAKOUT 3500/3500, ALTSEASON 3500/3500 + dadakan 350/350 semua LULUS).
+Browser menidurkan tab yang lama tak dilihat (throttling membekukan timer),
+lalu penampil menampilkan umur data lama seolah server mati.
+
+**3. INOVASI — organ BANGUN-TAB (V332).** hidup.html kini mendengarkan
+`visibilitychange`: begitu tab dibangunkan setelah ≥2 mnt, makhluk menarik
+ingatan segar dari GitHub dulu (muatMemoriGitHub + pindaiRumah, batas 8 dtk),
+mencatat jurnal BANGUN-TAB, baru menilai diri. Status merah berumur data basi
+tidak akan lagi menyambut pemilik yang pulang.
+
+**4. HUKUM YANG DITEMPA.** "Server tidak pernah tidur; tab yang tidur."
+Jantung-mandiri + cron 7/15 + PENJAGA-WAKTU (jaga-waktu.yml) semuanya
+server-side — denyut tidak pernah membutuhkan tab terbuka. Tab hanyalah
+cermin; cermin yang bangun wajib menarik wajah terbaru, bukan mengenang
+wajah lama. Sintaks diverifikasi 6/6 blok script OK setelah tambalan.
