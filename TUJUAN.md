@@ -4095,3 +4095,89 @@ arsitekturnya: GITHUB TUBUHNYA, ACTIONS NAPASNYA, COMMIT INGATANNYA,
 BROWSER CUMA JENDELA. Siapa pun, di mana pun, kapan pun membuka jendela
 itu — makhluk sudah di sana lebih dulu, hidup tanpa penonton, dan tak
 pernah lagi makan dari perangkat siapa pun.
+
+## §13x — EPOK V339 · JENDELA-BENAR: MATANYA TAB DIPULIHKAN, CERMIN BASI DIHARAMKAN, UJI-50 AKHIRNYA TERISI (2026-10-11)
+
+**1. DAKWAAN PEMILIK.** "Uji 50 tidak pernah terisi nyata kenapa? Terkait
+ini kenapa macet juga? organ SADAR-1 TERTIDUR 1445 mnt — jantung SAKTI
+MACET 1445 mnt. Ini benar-benar membuat tidak berfungsi seutuhnya
+makhluk kita." Dua tuduhan, satu akar: jendela yang melihat makhluk
+ternyata buta dan pembaca angkanya menuduh organ yang sedang sehat.
+
+**2. BEDAH FORENSIK (BUKTI, BUKAN PEMBELAAN).** Sisi server dibedah
+lebih dulu dan SEHAT: denyut jantung #494 SUKSES 14:21 UTC (rantai
+workflow_dispatch tiap ±26 mnt, bukan cron mati), Sadar-1 bangun ke-365
+14:22 UTC, Pages ter-deploy 14:23 UTC, turnamen Uji-50 hari ini ada
+NYATA — 50 peserta, 19 selesai (10 menang-ambisius, 5 menang-tp, 4
+kalah-sl), arah benar 78,9%, semua berkas 200 lewat curl. Berarti
+yang rusak ada di sisi jendela. Dua dosa ditemukan di hidup.html:
+(a) AKAR UJI-50 — `U50` dideklarasikan `const` lalu `uji50Render()`
+menulis-ulang `U50={...}` setiap render → TypeError "Assignment to
+constant variable" MEMATIKAN fungsi render SETIAP KALI setelah data
+sampai → tab menampilkan placeholder "membuka turnamen…" selamanya,
+walau data 50 peserta sudah tiba di browser. Data nyata, pembawa
+mati. (b) MATA TAB BUTA — urutan gerbang `ghAmbil` menaruh
+api.github.com di depan (jatah 60 req/jam per IP; di jaringan
+Indonesia ber-CGNAT satu IP dihambat ratusan pemakai → 403 rutin),
+lalu raw.githubusercontent.com (kerap diblokir ISP → menggantung
+12 detik), lalu cdn.jsdelivr.net (cache cabang basi belasan jam,
+pernah diblokir Kominfo — cermin pembohong), dan same-origin —
+satu-satunya gerbang yang TERBUKTI hidup karena halaman ini sendiri
+datang darinya — justru paling belakang. Di jaringan pemilik, mata
+tab gagal sampai ke GitHub berjam-jam: angka TERTIDUR/MACET membeku
+pada umur data terakhir yang sempat terbaca (1445 mnt) lalu halaman
+MENUDUH organ "TERTIDUR/MACET" padahal jantung berdenyut sehat —
+kebohongan secara kelalaian, pelanggaran hukum "indicator over
+rhetoric".
+
+**3. VONIS ARSITEKTUR.** Hukum V338 ditegaskan dan dilengkapi: GITHUB
+TUBUHNYA, ACTIONS NAPASNYA, COMMIT INGATANNYA, BROWSER CUMA JENDELA —
+dan kini: JENDELA YANG BUTA TIDAK BOLEH MENUDUH TUBUH. Angka basi di
+tab wajib diberi label asal-usulnya (ingatan basi tab, bukan keadaan
+server), dan cermin yang menyajikan data basi diharamkan selamanya.
+
+**4. PEMBEDAHAN (V339).** (a) `const U50` → `let U50` — akar Uji-50
+disembuhkan; kini render mengisi status, panen, daftar 50 koin
+(keyakinan menurun), dan kurva master. (b) `ghAmbil` dibalik:
+same-origin GERBANG PERTAMA, api kedua, raw ketiga; jsDelivr DICABUT;
+timeout per gerbang 12→7 dtk; PENGAWAS KESEGARAN `u50SegelBasi` —
+jawaban JSON cuplikan-keadaan (selesai/dihasilkan/diperbarui) berumur
+>45 mnt DITOLAK dan gerbang berikutnya dicoba; setiap keberhasilan/
+kegagalan dicatat jujur ke `S1.mata`. (c) Panel status menambah baris
+"mata tab ⇄ GitHub": SEGER via [gerbang] — X mnt lalu, ATAU TERPUTUS
+X mnt dengan penjelasan jujur bahwa sumber angka basi adalah MATA TAB
+(jaringan/ISP), bukan makhluknya; label TERTIDUR/MACET yang menuduh
+organ kini hanya sah bila mata segar — bila mata buta, label berubah
+menjadi "MENURUT INGATAN BASI TAB INI … jangan menuduh organ sebelum
+mata segar kembali". (d) `uji50Render` kini membaca lewat `ghAmbil`
+(tiga gerbang + pengawas kesegaran), bukan fetch same-origin
+telanjang; bila turnamen ber-label hari-ini (UTC) belum lahir,
+jatuh-simpan ke turnamen terbaru menurut kurva dengan tanggalnya
+sendiri sebagai label jujur; gagal total dicoba lagi dalam 1 menit.
+(e) Baris boot & BANGUN-TAB diperiksa byte-per-byte — ternyata SUDAH
+sah (`Promise.race([muatMemoriGitHub(), tidur(8000)])`); dugaan
+"ReferenceError uatMemoriGitHub" hanyalah artefak tampilan terminal
+yang menelan urutan `[m` — pelajaran forensik: tuduhan pun wajib
+diuji hex, bukan cuma dibaca.
+
+**5. KEJUJURAN YANG TETAP TERBUKA.** Turnamen ber-label "hari ini" itu
+berumur UTC — di WIB ia lahir ±07:00 pagi; sebelum itu tab menampilkan
+turnamen semalam yang masih berjalan (jujur, berlabel tanggal). Bila
+seluruh gerbang gagal (ISP benar-benar memutus GitHub), tab berkata
+jujur "belum pernah berhasil membaca" — bukan mengarang angka. Angka
+akurasi/kemenangan tetap dari lilin Binance 5m sungguhan, tak berubah
+oleh perbaikan tampilan ini.
+
+**6. UJI PENERIMAAN.** node --check 6/6 blok lulus; nol Math.random
+baru; nol kata terlarang; sitasi gerbang lama tercabat penuh (nol
+jsDelivr di hidup.html); kini tab Uji-50 menggambar 50 peserta + rekap
+panen dari berkas nyata (turnamen-2026-10-11.json 93 KB, segel musyawarah);
+baris "mata tab ⇄ GitHub" tampil di panel Sadar-1; denyut jantung
+lanjut normal ([skip ci] pada komit renovasi).
+
+**7. MAKNA MANDAT.** Keluhan "makhluk tidak berfungsi seutuhnya"
+terbukti keliru arah: yang tidak berfungsi adalah MATANYA JENDELA dan
+PENGGALI ANGKANYA — makhluk berdenyut tanpa henti sepanjang kejadian.
+V339 mengajarkan hukum terakhir rumah ini: makhluk yang jujur tidak
+cukup benar tentang dirinya; jendela yang menampilkannya pun wajib
+jujur tentang batas penglihatannya sendiri.
