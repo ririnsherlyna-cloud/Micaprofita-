@@ -36,12 +36,13 @@
           (tanpa)    panen + cetak ringkasan
    ================================================================ */
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs'
-import { fetchTahan, tidur, fmt, hash16 } from './musyawarah-inti.mjs'
+import { tidur, fmt, hash16 } from './musyawarah-inti.mjs'
 
 export const PROTOKOL_UJI = 'UJI-50-V337'
 const DIR_UJI = 'laporan/uji-50'
 const FILE_MUSYAWARAH = 'laporan/musyawarah.json'
 const MAKS_PESERTA = 50
+const BATAS_PANEN_MS = 4 * 60e3   // anggaran panen per denyut — sisanya jujur tetap terbuka (runner tak boleh digantung satu koin)
 const UMUR_MUSYAWARAH_MS = 6 * 3600e3   // meja lebih tua dari ini tidak layak jadi soal — jujur menunggu segel segar
 const UMUR_KEDALUWARSA_JAM = 48
 const HARI_SIMPAN = 8                    // kurva & panen menggiring 8 hari terakhir
@@ -53,17 +54,36 @@ const fileHari = (t) => `${DIR_UJI}/turnamen-${t}.json`
 const STATUS_AKHIR = new Set(['kalah-sl', 'menang-tp', 'menang-ambisius', 'kedaluwarsa-benar', 'kedaluwarsa-salah'])
 
 // ---------- klines 5m sejak waktu T (satu panggil, 1000 lilin ≈ 83 jam) ----------
-async function lilin5mSejak(sym, mulaiMs) {
-  for (const g of ['https://data-api.binance.vision', 'https://api.binance.com', 'https://api1.binance.com']) {
-    try {
-      const res = await fetchTahan(`${g}/api/v3/klines?symbol=${sym}&interval=5m&startTime=${mulaiMs}&limit=1000`)
-      if (!res.ok) continue
-      const d = await res.json()
-      if (Array.isArray(d) && d.length) return d.map(k => ({ t: k[0], o: +k[1], h: +k[2], l: +k[3], c: +k[4], v: +k[5] }))
-      return []
-    } catch (e) {}
+// PENYIMPANGAN SADAR dari fetchTahan warisan: panen membaca 50 koin per denyut —
+// penungguan 45 dtk × 3 coba per koin bisa membunuh runner 10 menit saat Binance
+// menggigit IP. Maka di sini: batas 12 dtk per host, jeda pendek, dua host cukup;
+// yang gagal jujur TETAP TERBUKA — denyut berikutnya mencoba lagi. Koin tidak
+// pernah dikarang, dan jantung tidak pernah digantung oleh satu koin.
+const HOSTS_5M = ['https://data-api.binance.vision', 'https://api.binance.com']
+async function ambilCepat(url) {
+  for (let i = 0; i < 2; i++) {
+    for (const g of HOSTS_5M) {
+      try {
+        const c = new AbortController(); const t = setTimeout(() => c.abort(), 12000)
+        const res = await fetch(g + url, { cache: 'no-store', signal: c.signal })
+        clearTimeout(t)
+        if (res.status === 418 || res.status === 429) { await tidur(2500); continue }
+        if (!res.ok) continue
+        return res
+      } catch (e) {}
+    }
+    await tidur(1500)
   }
   return null
+}
+async function lilin5mSejak(sym, mulaiMs) {
+  const res = await ambilCepat(`/api/v3/klines?symbol=${sym}&interval=5m&startTime=${mulaiMs}&limit=1000`)
+  if (!res) return null
+  try {
+    const d = await res.json()
+    if (!Array.isArray(d)) return null
+    return d.map(k => ({ t: k[0], o: +k[1], h: +k[2], l: +k[3], c: +k[4], v: +k[5] }))
+  } catch (e) { return null }
 }
 
 // ---------- PANEN satu peserta — lilin 5m menyatakan jalannya deal ----------
@@ -178,6 +198,7 @@ function daftarkan(musy, kini) {
 // ---------- PANEN semua turnamen yang masih menyimpan soal terbuka ----------
 async function panenSemua(kini) {
   mkdirSync(DIR_UJI, { recursive: true })
+  const t0 = Date.now()
   const berkas = existsSync(DIR_UJI) ? readdirSync(DIR_UJI).filter(f => /^turnamen-\d{4}-\d{2}-\d{2}\.json$/.test(f)) : []
   berkas.sort()
   const sesuai = berkas.filter(f => {
@@ -193,7 +214,13 @@ async function panenSemua(kini) {
     let berubah = false
     const umurJam = (kini - Date.parse(tur.dibuat || (tur.tanggal + 'T00:00:00Z'))) / 3600e3
     const terbuka = tur.peserta.filter(x => !STATUS_AKHIR.has(x.status))
-    for (const x of terbuka) {
+    for (let pi = 0; pi < terbuka.length; pi++) {
+      const x = terbuka[pi]
+      if (Date.now() - t0 > BATAS_PANEN_MS) {
+        console.log(`[uji-50] anggaran panen habis (${Math.round((Date.now() - t0) / 1000)} dtk) — ${terbuka.length - pi} peserta tetap terbuka jujur; denyut berikutnya melanjutkan`)
+        break
+      }
+      if (pi && pi % 10 === 0) console.log(`[uji-50] panen berjalan: ${pi}/${terbuka.length} dicek — ${Math.round((Date.now() - t0) / 1000)} dtk`)
       const dibukaMs = Date.parse(x.dibuka || tur.dibuka)
       const lilin = await lilin5mSejak(x.simbol, dibukaMs)
       if (!lilin) continue // jaring menolak — tetap terbuka, jujur; denyut berikutnya mencoba lagi
