@@ -185,6 +185,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
     <button data-tab="pasar">Pasar</button>
     <button data-tab="jurnal">Jurnal</button>
     <button data-tab="ujian">Ujian</button>
+    <button data-tab="uji50">Uji-50</button>
     <button data-tab="jasad">Jasad</button>
   </div>
   <div id="pIsi">
@@ -298,6 +299,24 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
         <div id="uvList"><div class="kecil">menjalankan ujian…</div></div>
         <button id="uvUlang" class="uvBtn">Uji ulang sekarang — bukti langsung</button>
         <button id="lsBersih" class="uvBtn" hidden>BERSIHKAN sisa localStorage di perangkat — sekali saja, lalu 0 selamanya</button>
+      </div>
+    </div>
+    <div id="tab-uji50" hidden>
+      <div class="blok">
+        <h4>Turnamen hari ini <em>· 50 koin pilihan — keyakinan terbesar di paling atas (mandat pemilik 2026-10-11: “dia melaksanakan TRY 50 koin pilihan — menguji, merender, mengkaji”)</em></h4>
+        <div id="u50Status"><div class="kecil">membuka turnamen…</div></div>
+      </div>
+      <div class="blok">
+        <h4>Daftar kemenangan <em>· panen dari lilin 5m Binance sesungguhnya — kena TP / kena ambisius / justru kena SL, dengan data &amp; alasan</em></h4>
+        <div id="u50Panen"><div class="kecil">membuka panen…</div></div>
+      </div>
+      <div class="blok">
+        <h4>50 koin pilihan <em>· pakem lima baris didinginkan sekali per hari — soal tak pernah diubah-ubah; keyakinan menurun dari atas ke bawah</em></h4>
+        <div id="u50Daftar"><div class="kecil">membuka daftar…</div></div>
+      </div>
+      <div class="blok">
+        <h4>Kurva master <em>· arah benar harian melawan dinding 48,88% — tiada henti sampai jadi master crypto</em></h4>
+        <div id="u50Kurva"><div class="kecil">membuka kurva…</div></div>
       </div>
     </div>
     <div id="tab-jasad" hidden>
@@ -2316,7 +2335,7 @@ function sapa(){
 const ovEl=document.getElementById('overlay'), pintuEl=document.getElementById('pintu');
 function bukaOverlay(){ ovEl.classList.add('buka'); pintuEl.classList.add('on');
   if(S.tabAktif==='peta') petaRender(); if(S.tabAktif==='pasar') pasarRender(); if(S.tabAktif==='jurnal') jurnalRender();
-  if(S.tabAktif==='guru') guruRender(); if(S.tabAktif==='ujian') ujianRender();
+  if(S.tabAktif==='guru') guruRender(); if(S.tabAktif==='ujian') ujianRender(); if(S.tabAktif==='uji50') uji50Render();
   if(S.tabAktif==='jasad'&&window.__v297&&window.__v297.render) window.__v297.render(); }
 function tutupOverlay(){ ovEl.classList.remove('buka'); pintuEl.classList.remove('on'); }
 pintuEl.addEventListener('click', ()=> ovEl.classList.contains('buka') ? tutupOverlay() : bukaOverlay());
@@ -3400,10 +3419,89 @@ function jurnalRender(){
     `<div class="jr ${j.kelas}"><span class="t">${wib(j.at)} WIB · ${j.jenis}</span><br>${j.teks}</div>`).join('')
     || '<div class="kecil">—</div>');
 }
+/* ================= UJI-50 — TURNAMEN HARIAN 50 KOIN (V337) =================
+   Mandat pemilik 2026-10-11: "dia melaksanakan TRY 50 koin pilihan —
+   menguji, merender, mengkaji; keyakinan paling besar di paling atas.
+   Tiap hari dia trade: apakah benar terkena TP, benar terkena ambisius,
+   atau justru terkena SL. Tiada henti sampai jadi master crypto."
+   Sumber SATU kebenaran: laporan/uji-50/ (turnamen-<tgl>.json + kurva.json)
+   yang ditulis organ tubuh (scripts/hidup/uji-50.mjs) dari meja
+   SATU-MUSYAWARAH — Sadar-2 di sini hanya MATA yang membaca, bukan
+   pengambil keputusan kedua. */
+const U50={at:0, kurva:null, hari:null, kemarin:null};
+const U50_ST={ 'menang-ambisius':{t:'MENANG-AMBISIUS',c:'var(--aksen)'}, 'menang-tp':{t:'MENANG-TP',c:'var(--aksen)'},
+  'kalah-sl':{t:'KALAH-SL',c:'var(--salah)'}, 'kedaluwarsa-benar':{t:'KEDALUWARSA · ARAH BENAR',c:'var(--legap)'},
+  'kedaluwarsa-salah':{t:'KEDALUWARSA · ARAH SALAH',c:'var(--legap)'}, 'terbuka':{t:'JALAN',c:'var(--legap)'} };
+function u50Tanggal(ms){ return new Date(ms).toISOString().slice(0,10); }
+function u50Kartu(p, tunjukAlasan){
+  const st=U50_ST[p.status]||U50_ST.terbuka;
+  const k=p.pakem||{};
+  const panen=p.panen?` · ret <b>${p.panen.retPct>0?'+':''}${p.panen.retPct}%</b> · R ${p.panen.r??'—'}${p.panen.ditutup?` · ditutup ${p.panen.ditutup.slice(5,16).replace('T',' ')}`:''}`:'';
+  return `<div class="baris"><span class="k">#${p.peringkat} <b>${p.simbol}</b>${p.keluarga?` <span style="color:var(--legap)">· ${p.keluarga}</span>`:''}</span>
+    <span class="v"><span style="color:${st.c};font-weight:700;font-size:9.5px">${st.t}</span>${panen}</span></div>
+    <div class="kecil" style="margin:-1px 0 3px;padding-left:8px">keyakinan <b>${p.layakSkor}</b> · entry ${k.entry} · stop ${k.stopLoss} (risiko ${k.risikoPct}%) · <b>jual profit ${k.jualProfit}</b> (+${k.jarakJualPct}%, ambang napas) · <b>ambisius ${k.jualAmbisius}</b> (+${k.jarakAmbisiusPct}%)</div>
+    ${tunjukAlasan&&p.alasanAmbisius?`<div class="kecil" style="margin:-1px 0 5px;padding-left:8px;color:var(--tx2)">alasan: ${p.alasanAmbisius}</div>`:''}`;
+}
+async function uji50Render(){
+  const w=document.getElementById('u50Status'); if(!w) return;
+  const tab=document.getElementById('tab-uji50');
+  if(S.tabAktif!=='uji50'){ tab.dataset.kotor='1'; return; }
+  delete tab.dataset.kotor;
+  const kini=sekarang();
+  if(!U50.at || kini-U50.at>5*60000){
+    const [kurva, hari, kemarin]=await Promise.all([
+      fetch('./laporan/uji-50/kurva.json?t='+kini,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch('./laporan/uji-50/turnamen-'+u50Tanggal(kini)+'.json?t='+kini,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch('./laporan/uji-50/turnamen-'+u50Tanggal(kini-86400000)+'.json?t='+kini,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)]);
+    U50={at:kini, kurva, hari, kemarin};
+  }
+  /* — turnamen hari ini — */
+  if(U50.hari && U50.hari.peserta && U50.hari.peserta.length){
+    const r=U50.hari.rekap||{};
+    w.innerHTML=`<div class="baris"><span class="k">turnamen</span><span class="v h"><b>${U50.hari.tanggal}</b> · ${U50.hari.peserta.length} peserta</span></div>
+      <div class="baris"><span class="k">meja asal</span><span class="v">musyawarah segel ${U50.hari.sumberMusyawarah.segel} (${U50.hari.sumberMusyawarah.vonisTotal} vonis) — SATU-MUSYAWARAH</span></div>
+      <div class="baris"><span class="k">panen kini</span><span class="v"><span style="color:var(--aksen)">ambisius <b>${r.menangAmbisius??0}</b></span> · <span style="color:var(--aksen)">tp <b>${r.menangTp??0}</b></span> · <span style="color:var(--salah)">sl <b>${r.kalahSl??0}</b></span> · kedaluwarsa ${r.kedaluwarsaBenar??0}/${r.kedaluwarsaSalah??0} · jalan ${r.terbuka??0} — arah benar ${r.arahBenar==null?'—':'<b>'+r.arahBenar+'%</b>'} (dinding 48,88%)</span></div>
+      <div class="kecil" style="margin-top:3px">${U50.hari.hukum?U50.hari.hukum[2]:''}</div>`;
+  } else w.innerHTML='<div class="kecil">turnamen hari ini belum didaftar — denyut jantung berikutnya mendaftarkannya dari 50 vonis teratas meja musyawarah; jujur menunggu segel, tanpa karangan.</div>';
+  /* — daftar kemenangan (kemarin dulu, lalu hari ini yang sudah selesai) — */
+  const wp=document.getElementById('u50Panen');
+  const selesaiDari=(tur)=>tur&&tur.peserta?tur.peserta.filter(p=>p.status&&p.status!=='terbuka'):[];
+  const kemarinSelesai=selesaiDari(U50.kemarin), hariIniSelesai=selesaiDari(U50.hari);
+  let html='';
+  if(kemarinSelesai.length){
+    html+=`<div class="baris"><span class="k">turnamen ${U50.kemarin.tanggal}</span><span class="v h">${kemarinSelesai.length}/${U50.kemarin.peserta.length} selesai</span></div>`;
+    html+=kemarinSelesai.map(p=>u50Kartu(p,true)).join('');
+  } else if(U50.kemarin===null){
+    html+='<div class="kecil">panen kemarin belum ada (turnamen pertama baru lahir hari ini) — esok lilin 5m mulai menyatakan kemenangan tiap koin dengan datanya.</div>';
+  }
+  if(hariIniSelesai.length){
+    html+=`<div class="baris" style="margin-top:4px"><span class="k">hari ini — sudah divonis lilin</span><span class="v h">${hariIniSelesai.length} selesai</span></div>`;
+    html+=hariIniSelesai.map(p=>u50Kartu(p,true)).join('');
+  }
+  wp.innerHTML=html||'<div class="kecil">belum ada vonis lilin — semua peserta masih jalan; panen tiap denyut 15 menit.</div>';
+  /* — 50 koin pilihan hari ini, keyakinan menurun — */
+  const wd=document.getElementById('u50Daftar');
+  wd.innerHTML=(U50.hari&&U50.hari.peserta&&U50.hari.peserta.length)
+    ? U50.hari.peserta.map(p=>u50Kartu(p,true)).join('')
+    : '<div class="kecil">daftar belum terbuka — organ tubuh mendaftarkan 50 koin dari meja musyawarah pada denyut pertama hari ini.</div>';
+  /* — kurva master — */
+  const wk=document.getElementById('u50Kurva');
+  if(U50.kurva && U50.kurva.hari && U50.kurva.hari.length){
+    const t=U50.kurva.total||{};
+    const bk=Object.entries(U50.kurva.bobotKeluarga||{}).filter(([,b])=>b.delta);
+    wk.innerHTML=`<div class="baris"><span class="k">kumulatif</span><span class="v">arah benar <b>${t.arahBenar==null?'—':t.arahBenar+'%'}</b> dari ${t.selesai} selesai · R rata <b>${t.rRata??'—'}</b> — dinding 100rb: arah 48,88% · serakah 21,78%</span></div>`
+      +U50.kurva.hari.map(h=>`<div class="baris"><span class="k">${h.tanggal}</span><span class="v">${h.arahBenar==null?'—':h.arahBenar+'%'} benar · ambisius ${h.menangAmbisius} · tp ${h.menangTp} · sl ${h.kalahSl} · jalan ${h.terbuka}</span></div><div class="arahBar"><i style="width:${Math.max(2,Math.min(100,h.arahBenar||0))}%"></i></div>`).join('')
+      +(bk.length?`<div class="baris" style="margin-top:4px"><span class="k">suara-kurva ke meja esok</span><span class="v h">${bk.length} keluarga berbobot</span></div>`
+        +bk.map(([kel,b])=>`<div class="kecil" style="padding-left:8px;margin-bottom:2px">${kel}: winrate <b>${b.winratePct}%</b> (n=${b.n}) → ${b.delta>0?'+':''}${b.delta} — ${b.alasan}</div>`).join('')
+        :'<div class="kecil" style="margin-top:4px">suara-kurva belum lahir — butuh ≥8 vonis matang per keluarga; belajar nyata butuh bukti, bukan napsu cepat.</div>');
+  } else wk.innerHTML='<div class="kecil">kurva belum terbuka — hari pertama turnamen; esok lilin 5m mulai menggambar kurva sang master.</div>';
+  jurnal('UJI-50', `turnamen ${U50.hari?U50.hari.tanggal:'—'} dibuka mata: ${U50.hari&&U50.hari.peserta?U50.hari.peserta.length:0} peserta, panen ${(kemarinSelesai.length+hariIniSelesai.length)} vonis lilin terbaca`);
+}
 function tabKe(nama){ S.tabAktif=nama;
   document.querySelectorAll('#pTabs button').forEach(b=>b.classList.toggle('akt', b.dataset.tab===nama));
-  for(const t of ['guru','pikir','peta','pasar','jurnal','ujian','jasad']) document.getElementById('tab-'+t).hidden = t!==nama;
+  for(const t of ['guru','pikir','peta','pasar','jurnal','ujian','uji50','jasad']) document.getElementById('tab-'+t).hidden = t!==nama;
   if(nama==='guru'){ const tg=document.getElementById('tab-guru'); if(tg.dataset.kotor||!tg.innerHTML.trim()) guruRender(); }
+  if(nama==='uji50') uji50Render();
   if(nama==='peta'){ if(document.getElementById('tab-peta').dataset.kotor||!document.getElementById('tab-peta').innerHTML.trim()) petaRender(); }
   if(nama==='pasar') pasarRender();
   if(nama==='jurnal') jurnalRender();

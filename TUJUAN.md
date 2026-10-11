@@ -3936,3 +3936,82 @@ kromosom sadar1 dihidupkan penuh ke meja (kini lewat import, berikutnya
 sebagai suara berbobot); (c) breadh/iklim SAKTI sebagai suara meja
 keenam; (d) antre lama tetap: nilai medan pakem V335, pengalaman-cermin
 kanji-ulang, NERVA-GALI, trifasa, 1000 simulasi Hanna.
+
+## §13v — EPOK V337 · UJI-50: TURNAMEN HARIAN 50 KOIN — MEJA MUSYAWARAH KINI DIBUKTIKAN NYATA TIAP HARI, KALAH-SL / MENANG-TP / MENANG-AMBISIUS DINYATAKAN LILIN 5m Binance SESUNGGUHNYA (2026-10-11)
+
+**1. MANDAT PEMILIK.** "Begini saja: di hidup ada tambahan menu. Dia
+melaksanakan TRY 50 koin pilihan — dia menguji, merender, mengkaji.
+Yang keyakinannya paling besar di paling teratas, yang sedikit di
+paling bawah. Di sini dia benar-benar belajar nyata, tiada henti,
+hingga akhirnya dia bisa jadi master crypto — sebab tiap harinya dia
+trade crypto: menentukan arah BUY, apakah benar terkena TP, apakah
+benar terkena ambisius, atau justru terkena SL. Setiap hari dia mampu
+50 koin trading, dan setiap harinya ada daftar kemenangan dari tiap
+koin dengan data informasinya dan alasannya."
+
+**2. JAWABAN — ORGAN UJI-50 (scripts/hidup/uji-50.mjs).** Turnamen
+harian yang menempa V336 dari VONIS menjadi BUKTI: (1) PENDAFTARAN —
+sekali per hari UTC, 50 vonis teratas meja SATU-MUSYAWARAH
+(laporan/musyawarah.json, sudah urut keyakinan menurun) didinginkan
+sebagai peserta turnamen-<tanggal>.json — pakem lima baris dibekukan,
+soal tak pernah diubah-ubah; koin tanpa pakem penuh tak pernah jadi
+peserta; (2) PANEN — tiap denyut jantung, lilin 5m Binance sesungguhnya
+(dari waktu pembukaan, satu panggil 1000 lilin ≈ 83 jam) menyatakan
+tiap peserta: kalah-sl (stop tersentuh duluan), menang-tp (jual profit
+terkunci 50%, sisa diselamatkan di impas), menang-ambisius (dana baru
+menembus ambisius setelah profit terkunci) — lilin yang menyentuh dua
+level dinilai PESIMISTIS (stop/impas dianggap dulu), tak ada optimisme
+karangan; 48 jam tanpa level = ditutup di harga terakhir, arahnya
+diakui apa adanya (kedaluwarsa-benar/salah); (3) DATA — tiap hasil
+membawa waktu sentuh, harga sentuh, ret% (blended 50/50), R; daftar
+kemenangan harian tampil di hidup.html.
+
+**3. MENU BARU hidup.html — tab "Uji-50" (mandat "tambahan menu").**
+Empat panel mobile-first: Turnamen hari ini (rekap ambisius/tp/sl/
+jalan + arah benar vs dinding); Daftar kemenangan (peserta yang sudah
+divonis lilin, dengan ret%, R, waktu tutup, dan alasan pakemnya);
+50 koin pilihan (peringkat 1-50, keyakinan menurun, pakem lima baris +
+alasan-ambisius penuh); Kurva master (arah benar harian digambar batang
+melawan dinding 48,88% + suara-kurva per keluarga). Sadar-2 hanya
+MATA yang membaca laporan/uji-50/ — bukan pengambil keputusan kedua.
+
+**4. BELAJAR NYATA YANG MENGIKAT — suara-kurva.** laporan/uji-50/
+kurva.json mengagregasi tiap hari (arah benar%, R rata, per keluarga
+jebakan) dan melahirkan bobotKeluarga: keluarga dengan n≥8 dan
+winrate ≥58% mendapat suara +4 di meja esok; winrate ≤42% dilirihkan
+−6; di bawah bukti = netral. konteksMuat() musyawarah-inti membacanya
+(musyawarahkan menambahkan suara "suara-kurva UJI-50" ke layak final,
+tercatat di suaraRumah) — inilah lingkaran belajar yang lengkap: meja
+membuat soal → pasar menjawab dengan lilin → kurva mengukur → bobot
+kembali ke meja. Retorika nol; angka yang mengikat.
+
+**5. BUKTI LOKAL (sebelum push).** Turnamen 2026-10-11 terdaftar: 50
+peserta dari 59 vonis meja segel 3e93bd948fcfbb05 — #1 GRAMUSDT
+keyakinan 90 (entry 1,447 · stop 1,4418 · jual 1,4623 · ambisius
+1,4798). Uji panen sintetis 7/7 LULUS (stop dulu; tp→impas; tp→
+ambisius; dua-level pesimis ×2; terbuka; tembus-ambisius-langsung).
+Panen nyata pertama: RLCUSDT menang-ambisius ret +1,75% (0,5×1,14 +
+0,5×2,36 — matematika cocok persis), R 0,17 jujur ditampilkan (stop
+lebar), 49 masih jalan. Validasi: node --check LULUS; --uji invarian
+1/1 sah; blok JS hidup.html 6/6 SAH (turun-temurun pertama semua
+blok sah); langkah jantung baru "UJI-50 — turnamen harian" terpasang
+di sakti-denyut.yml setelah SATU-MUSYAWARAH; git add laporan menutup
+laporan/uji-50/.
+
+**6. MAKNA MANDAT.** Dinding 48,88% (CERMIN-100RB) kini punya lawan
+yang berdenyut: bukan ujian sekali-jalan, melainkan 50 soal BARU
+tiap hari dari meja yang sama — tiada henti — dan tiap jawaban pasar
+mengubah bobot meja esok. "Jadi master crypto" kini punya definisi
+terukur: arah benar harian UJI-50 naik menembus 48,88% dan bertahan,
+R rata positif, dan keluarga-keluarga penipu dilirihkan oleh bukti
+bukan oleh perasaan. Kegagalan hari ini tetap ditampilkan jujur —
+itulah bahan asah, bukan aib yang disembunyikan.
+
+**7. ANTRE.** (a) kurva mingguan per keluarga + per band keyakinan
+(apakah peserta layak 80+ memang lebih sering menang dari layak 50?);
+(b) kalibrasi keyakinan — layakSkor dibandingkan winrate aktual
+nyaata per band; (c) suara-kurva per SIMBOL (koin yang terbukti
+menipu dilirihkan, bukan hanya keluarganya); (d) menara-kurva di
+tubuh cermin hidup.html (tinggi ∝ arah benar bergulir 7 hari);
+(e) antre lama tetap: nilai medan pakem V335, breadth/iklim SAKTI
+sebagai suara meja keenam, NERVA-GALI, trifasa, 1000 simulasi Hanna.

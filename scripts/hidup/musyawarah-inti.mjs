@@ -41,6 +41,7 @@ export const PROTOKOL = 'SATU-MUSYAWARAH-V336'
 const FILE_PENGALAMAN = 'laporan/pengalaman-cermin.json'
 const FILE_AUDIT = 'laporan/audit-koin.json'
 const FILE_SASARAN = 'laporan/sasaran-terkini.json'
+const FILE_KURVA_UJI = 'laporan/uji-50/kurva.json'
 export const FILE_MUSYAWARAH = 'laporan/musyawarah.json'
 export const FILE_MIRROR = 'laporan/gali-terus.json'   // cermin warisan V335 — isi identik, satu kebenaran
 
@@ -319,7 +320,7 @@ export function anggotaDari(sym, lilin) {
 // (b) sasaran resmi SAKTI: laporan/sasaran-terkini.json (segar ≤ 45 mnt) — koin yang
 //     benar-benar DIPAKAI tubuh; inilah jawaban "koin yang gak dipakai jangan dicantumkan"
 export function konteksMuat(kini = Date.now()) {
-  const konteks = { audit: new Map(), sasaranResmi: new Set(), sumber: { audit: null, sasaran: null } }
+  const konteks = { audit: new Map(), sasaranResmi: new Set(), bobotKeluarga: new Map(), sumber: { audit: null, sasaran: null, kurva: null } }
   try {
     const a = JSON.parse(readFileSync(FILE_AUDIT, 'utf8'))
     const umur = kini - Date.parse(a.waktu || 0)
@@ -343,6 +344,20 @@ export function konteksMuat(kini = Date.now()) {
       konteks.sumber.sasaran = FILE_SASARAN + ' (' + Math.round(umur / 60000) + ' mnt)'
     }
   } catch (e) {}
+  // suara-kurva UJI-50 (V337): bukti medan turnamen harian 50 koin — keluarga
+  // yang TERBUKTI menang diberi suara lebih keras, yang TERBUKTI menyesatkan
+  // dilirihkan. Ini pembelajaran nyata yang mengikat di meja — bukan retorika.
+  try {
+    const k = JSON.parse(readFileSync(FILE_KURVA_UJI, 'utf8'))
+    const umur = kini - Date.parse(k.diperbarui || 0)
+    if (umur >= 0 && umur < 36 * 3600e3 && k.bobotKeluarga) {
+      for (const [kel, b] of Object.entries(k.bobotKeluarga)) {
+        if (b && b.delta !== 0 && typeof b.winratePct === 'number' && typeof b.n === 'number')
+          konteks.bobotKeluarga.set(kel, b)
+      }
+      if (konteks.bobotKeluarga.size) konteks.sumber.kurva = FILE_KURVA_UJI + ' (' + Math.round(umur / 3600000) + ' jam)'
+    }
+  } catch (e) {}
   return konteks
 }
 
@@ -359,12 +374,15 @@ export const AMBANG_MEJA = 45
 export function musyawarahkan(kandidat, konteks = {}) {
   const sasaranResmi = konteks.sasaranResmi instanceof Set ? konteks.sasaranResmi : new Set(konteks.sasaranResmi || [])
   const audit = konteks.audit instanceof Map ? konteks.audit : new Map(Object.entries(konteks.audit || {}))
+  const bobotKeluarga = konteks.bobotKeluarga instanceof Map ? konteks.bobotKeluarga : new Map(Object.entries(konteks.bobotKeluarga || {}))
   const vonis = [], kembaliTambang = []
   const RACUN = /anti-pisau|anti-kejar|papan-mati/
   for (const a of (Array.isArray(kandidat) ? kandidat : [])) {
     if (!a || !a.simbol || !a.pakem) continue
     let sk = a.layakSkor || 0
     const suaraRumah = []
+    const bk = bobotKeluarga.get(a.keluarga)
+    if (bk && bk.delta) { sk += bk.delta; suaraRumah.push('suara-kurva UJI-50 keluarga ' + a.keluarga + ' winrate ' + bk.winratePct + '% (n=' + bk.n + ') → ' + (bk.delta > 0 ? '+' : '') + bk.delta) }
     const dipakai = sasaranResmi.has(a.simbol)
     if (dipakai) { sk += 8; suaraRumah.push('dipakai-tubuh +8 — koin ini benar-benar dijalankan jasad (sasaran resmi SAKTI); jasad & meja selaras') }
     const au = audit.get(a.simbol)
@@ -380,7 +398,7 @@ export function musyawarahkan(kandidat, konteks = {}) {
     vonis.push(Object.assign({}, a, { layakSkor: layakFinal, suaraRumah }))
   }
   vonis.sort((x, y) => y.layakSkor - x.layakSkor || (x.simbol < y.simbol ? -1 : 1))
-  return { vonis, kembaliTambang, meta: { kandidat: (kandidat || []).length, dipakaiTubuh: [...sasaranResmi], auditN: audit.size, ambangMeja: AMBANG_MEJA } }
+  return { vonis, kembaliTambang, meta: { kandidat: (kandidat || []).length, dipakaiTubuh: [...sasaranResmi], auditN: audit.size, bobotKeluargaN: bobotKeluarga.size, ambangMeja: AMBANG_MEJA } }
 }
 
 // ---------- SEGEL — satu kebenaran ditulis SATU kali, dibaca SEMUA organ ----------
@@ -402,6 +420,7 @@ export function segelMusyawarah(hasil, konteks, penyelenggara = 'gali-terus') {
       ambangMeja: hasil.meta.ambangMeja,
       dipakaiTubuh: hasil.meta.dipakaiTubuh,
       auditN: hasil.meta.auditN,
+      bobotKeluargaN: hasil.meta.bobotKeluargaN || 0,
       sumberAudit: konteks.sumber ? konteks.sumber.audit : null,
       sumberSasaran: konteks.sumber ? konteks.sumber.sasaran : null,
       contohAlasanGali: hasil.kembaliTambang.slice(0, 5).map(k => k.simbol + ' — ' + k.kenapa),
