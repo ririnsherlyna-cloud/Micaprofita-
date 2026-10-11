@@ -3764,3 +3764,88 @@ vonis dasar (47,25%) = denyut merah. Laporan: laporan/cermin-100rb.json
 pada menebak arah (dinding 48,88% adalah fakta pasar efisien), melainkan
 pada ambang keluar yang dibaca dari napas dana — TP 0,62→0,93 membuktikan
 pengalaman menempa; arah biar premis dan disiplin yang bicara.
+
+## §13t — EPOK V335 · TANPA-TUNGGU: KOIN YANG KUSEBUT WAJIB BUY DENGAN PAKEM-LIMA-BARIS, HASIL GALIAN TEBAL DARI PELAJARAN 100.000 SOAL (2026-10-11)
+
+**1. MANDAT.** "Lihat masa ada label tunggu berarti ini gak layak untuk
+diambil, yang kita putuskan hanyalah wajib keputusan yang jelas semua
+koin yang pantas di buy saja kalau tidak ada render lagi cari gali
+terus.. kalau label tunggu maka ini sama dengan makhluk kita dia tak
+berpikir dia akan jadi bodoh. Yang jelas koin itu harus dicari terus
+harus kasih jawaban buy dari koin yang kita pilih wajib koin yang
+disebut adalah buy bukan tunggu. Nah disinilah alur mainnya Buy itu ada
+penjelasannya: Entry di berapa; Stop loss di berapa; Jual profit di
+berapa; Jual profit ambisius berapa; Alasan kenapa harga ambisius
+segitu. Buy berarti tahu arah kita entry, sell berarti tahu arah kita
+menjual barang dari entry dan tahu arah jual ambisius. Silahkan dari
+kejadian 100 ribu soal dan bahasan ini silahkan kira sudah temukan
+jawaban pasti untuk peningkatan."
+
+**2. JAWABAN PASTI DARI CERMIN-100RB (V334).** (a) **Dinding arah
+48,88%** — semua sumber nalar (ingatan 48,84%, simetri 47,9–49,6%,
+kartu-naif 49,7%) berhimpit: arah 48 jam pada momen generik TAK terbaca
+dari kartu → kekuatan hidup di CARA KELUAR, bukan meramal arah.
+(b) **Keserakahan TP = pembunuh**: 21,78% soal menempatkan jual profit
+DI ATAS ambang napas keluarganya dan mati — faktanya usai menyentuh
+ambang, dana diambil lagi untuk menghirup napas, bukan diberi.
+(c) **Bias bullish** — 75,6% salah arah adalah BUY-padahal-SELL: ingatan
+lahir dari musim spike/rally (V329–V333). Jawabannya: pengalaman-cermin
+(distilasi 100rb soal) dipasang DI JANTUNG vonis harian, dan seluruh
+vonis publik dirakit ulang sebagai BUY + tangga jual di dalamnya.
+
+**3. HUKUM TANPA-TUNGGU.** Label TUNGGU dihapus dari seluruh info koin —
+sadar1 guruHitung, hidup.html Sadar-2 (rumus SAMA dua jalur), arena
+SASARAN-5 + bedah-koin, sikap tubuh ('tunggu' → 'mencerna', tubuh tetap
+bekerja). Koin yang disebut WAJIB BUY; yang tak layak DIGANTI koin
+terlayak hasil galian; SELL = eksekusi jual hasil koin BUY (entry = buy,
+jual profit = sell) — karena itu nol baris JUAL/TUNGGU di laporan publik
+(arsip forensik tetap jujur tersimpan, tidak dihapus).
+
+**4. ORGAN BARU scripts/hidup/gali-terus.mjs (denyut jantung, tiap 15
+mnt).** Menyapu ~110 koin USDT terlikuid (klines 1h ×200, perisai 418),
+mengklasifikasi keluarga jebakan + rezim 12j dengan kosakata VERBATIM
+bank 100.000 soal, membaca pengalaman-cermin.json, lalu menerbitkan
+top-5 BUY dengan SKOR-LAYAK 0–100 (asimetri rr-ambang 30 · keluarga
+favorit-BUY 25 · struktur 20 · anti-lelah 15 · dana-hadir 10 · bonus sel
+condong-BUY +10) dan PAKEM-LIMA-BARIS: Entry kini · Stop loss = lantai
+napas 16 jam − 0,25×ATR · Jual profit = ambang napas p50 keluarganya
+(dilantai biaya 0,3%) · Jual ambisius = p75 (dilantai 1,6× jarak) ·
+Alasan-ambisius berangka fakta ("usai menyentuh ambang segitu dana
+biasa diambil lagi untuk menghirup napas — di atasnya dana justru
+diambil, bukan diberi"). Potongan pengaman dari bank soal: anti-pisau
+(r1 < −6% → −25), anti-kejar (posisi > 0,9 & RSI > 72 → −15),
+papan-mati (lebar rentang < 1,5% → −30), lantai-risiko 0,35%
+(anti-rr-palsu — koin pegar/datat-mati tak boleh mengarang rr 12×),
+PEGAR-BAN (USD1/RLUSD/USDe/dll dilarang jadi sasaran — tak bernapas).
+Invarian --uji: stop < entry < jual ≤ ambisius, nol TUNGGU, nol kata
+terlarang, alasan-ambisius wajib nafas-logic. nol Math.random.
+
+**5. SADAR-1 V335.** guruHitung baru: vonis selalu BELI; keyakinan jujur
+dari gerbang kromosom; rencana = pakem (bukan lagi 1,5×/2,5×ATR buta);
+ARAH-HARIAN SEMUA-BUY diurut layakSkor; GURU mengganti pick yang
+layakSkor < 45 dengan koin terlayak (tersegel: LSKUSDT layak 35,7 →
+DIGANTI LINKUSDT layak 71,2 — bukti hidup pertama); arah.json v335
+(sasaranResmiPakem = baris BUY resmi SAKTI + gali-terus + galian
+sendiri); madrasah +3 pelajaran dari fakta cermin; pesan komit memuat
+sejarah penggantian. Sadar-2 mirror penuh + fetch pengalaman-cermin
+dari Pages + gali kartu lilin sejati untuk keluarga; arena SASARAN-5
+lima besar WAJIB BUY — bila kurang, GALI TERUS kerek lapisan likuiditas
+3jt → 1jt (bar arah TAK dilonggarkan); bedah-koin chat: TUNGGU →
+"BELUM-LAYAK — DIGANTI" + penunjuk penggantinya.
+
+**6. BUKTI LOKAL (sebelum push).** gali-terus: 110/110 koin sah, 21 dtk,
+segel e5c6419dae4bc536; contoh pakem AAVE (PUKUL-TANAH, posisi 6%
+rentang): entry 168 · stop 167,22 (risiko 0,47%) · jual 169,91 (ambang
+napas +1,14%, rr 2,44) · ambisius 171,96 (+2,35%) — bukan lagi 2,5×ATR
+buta yang melampaui ambang. sadar1 DRY: 10 arah SEMUA-BUY, keadaan
+menyimpan guruDiganti. Validasi: node --check 2 organ LULUS; 6 blok JS
+hidup.html + 3 blok arena.html LULUS; YAML sakti-denyut sah; langkah
+GALI-TERUS disuntik sebelum syaraf beranak.
+
+**7. WARISAN & ANTRE.** Hukum tubuh bertambah: "Koin yang disebut WAJIB
+BUY; TUNGGU adalah bodoh; tak layak = diganti hasil galian; jual profit
+di ambang napas, bukan di atasnya." Antre: (a) nilai medan pakem —
+rapor mingguan berapa jual-profit yang tersentuh vs kena stop (bukti
+efek anti-serakah); (b) pengalaman-cermin dikanji ulang dari ledger
+pakem; (c) NERVA-GALI bila jejak cukup; (d) antre lama tetap: Fase 2-3
+trifasa, 1000 simulasi Hanna, kogerensi saksi ke-6.

@@ -35,6 +35,9 @@ const INTEGERS = ['versi.json', 'gerbang.json', 'brain.json', 'arena-keadaan.jso
   'otak/genome-server.json', 'otak/penjaga-keadaan.json', 'otak/performa.json',
   'memori/terkini.json', 'README.md'];
 const BINANCE = ['https://data-api.binance.vision', 'https://api.binance.com', 'https://api1.binance.com'];
+/* V335: koin pegar (stablecoin) tak bernapas — jual profit tak pernah terjangkau;
+   dilarang jadi sasaran BUY di seluruh laporan */
+const PEGAR_RE = /^(USD1|RLUSD|USDE|USDS|USDG|PYUSD|EURC|XUSD|USDC|FDUSD|TUSD|BUSD|DAI|EUR|AEUR|USDP|FRAX|USDX|USDTB|USD|BUSD)USDT$/;
 
 const pesan = e => (e && (e.message || String(e))) || 'tak-diketahui';
 const iso = ts => new Date(ts || Date.now()).toISOString();
@@ -112,55 +115,155 @@ function auditPick(pick, an) {
     ket: `mom7 ${f2(an.mom7)}% · ema ${an.ema20 > an.ema50 ? '20>50' : '20<50'} · RSI ${f1(an.rsi)}` };
 }
 
-/* ---------------- GURU: ARAH JELAS dari bukti, bukan perasaan ----------------
+/* ---------------- GURU: V335 TANPA-TUNGGU — vonis selalu BUY dengan PAKEM ----------------
+   Hukum pemilik 2026-10-11: label TUNGGU dihapus dari seluruh info koin — koin yang
+   disebut WAJIB BUY; yang tak layak DIGANTI hasil galian lebih dalam. SELL adalah
+   eksekusi jual hasil koin BUY (entry = buy, jual profit = sell) — karena itu semua
+   vonis publik = BUY dengan tangga jual di dalamnya.
    Formula SAMA dipakai Sadar-2 (hidup.html guruHitung) — dua jalur, satu matematika.
-   Sumber: pick arena sendiri + klines Binance nyata + kromosom hasil hill-climb.
-   Arah boleh BERBEDA dari arena bila momentum membantah — dan itu dicatat jujur. */
-function guruHitung(an, pick, kr) {
-  if (!an || an.atr === undefined) return { arah: 'TUNGGU', keyakinan: 0,
-    alasan: ['pasar belum kupelajari cukup — menunggu klines Binance segar'], rencana: null, dasar: [] };
+   TP dari pengalaman-cermin (distilasi 100.000 jalan sejati): ambang napas p50
+   keluarganya — di ambang itu, BUKAN di atasnya (21,78% soal mati serakah). */
+function pengalamanMuat() {
+  try {
+    const p = JSON.parse(fs.readFileSync(path.join(REPO_DIR, 'laporan/pengalaman-cermin.json'), 'utf8'));
+    if (p && p.tp && p.arahRegime) return p;
+  } catch (e) {}
+  return { arahRegime: {
+    'KEJUT-VOLUME|tren-turun': { arah: 'BUY', majoritas: 0.5223, n: 337 },
+    'NAPAS-LELAH|tren-turun': { arah: 'BUY', majoritas: 0.5014, n: 710 },
+    'NAPAS-LELAH|tren-naik': { arah: 'BUY', majoritas: 0.5114, n: 833 },
+    'LIMPAK|datar': { arah: 'BUY', majoritas: 0.5032, n: 3154 } },
+    tp: {
+    'PUKUL-TANAH|BUY': { p25: 0.00436, p50: 0.01056, p75: 0.0227, n: 3102 },
+    'ARUS-KENCANG|BUY': { p25: 0.00468, p50: 0.01135, p75: 0.02355, n: 34261 },
+    'UMpan-DATAR|BUY': { p25: 0.00364, p50: 0.00826, p75: 0.01521, n: 4516 },
+    'LIMPAK|BUY': { p25: 0.00439, p50: 0.01114, p75: 0.02373, n: 2579 },
+    'KEJUT-VOLUME|BUY': { p25: 0.00496, p50: 0.01134, p75: 0.02408, n: 1122 },
+    'MAGNET-BULAT|BUY': { p25: 0.0004, p50: 0.0009, p75: 0.01132, n: 1501 },
+    'NAPAS-LELAH|BUY': { p25: 0.00559, p50: 0.01319, p75: 0.02873, n: 1204 } } };
+}
+function dekatBulat(p) {
+  const m = Math.pow(10, Math.floor(Math.log10(Math.max(p, 1e-12))));
+  let terdekat = Infinity;
+  for (const k of [m / 10, m, m * 10]) for (const d of [1, 2, 2.5, 5]) {
+    const L = d * k;
+    if (L > 0) terdekat = Math.min(terdekat, Math.abs(p - L) / p);
+  }
+  return terdekat * 100;
+}
+/* fitur kartu 24 lilin — kosakata VERBATIM bank 100.000 soal (tambang-cermin100rb) */
+function fiturKartu(kartu) {
+  const n = kartu.length, e = kartu[n - 1].c;
+  const pct = (a, b) => (b / a - 1) * 100;
+  const r1 = pct(kartu[n - 2].c, e), r3 = pct(kartu[n - 4].c, e), r12 = pct(kartu[n - 13].c, e);
+  let naik = 0, turun = 0;
+  for (let i = 1; i <= 14; i++) { const d = kartu[i].c - kartu[i - 1].c; if (d > 0) naik += d; else turun -= d; }
+  let avgN = naik / 14, avgT = turun / 14;
+  for (let i = 15; i < n; i++) {
+    const d = kartu[i].c - kartu[i - 1].c;
+    avgN = (avgN * 13 + Math.max(d, 0)) / 14; avgT = (avgT * 13 + Math.max(-d, 0)) / 14;
+  }
+  const rsi = avgT === 0 ? 100 : 100 - 100 / (1 + avgN / avgT);
+  const vols = kartu.slice(-20).map(x => x.v);
+  const vMean = vols.reduce((a, b) => a + b, 0) / 20;
+  const vStd = Math.sqrt(vols.reduce((a, b) => a + (b - vMean) ** 2, 0) / 20) || 1e-12;
+  const volz = (kartu[n - 1].v - vMean) / vStd;
+  const hiAll = Math.max(...kartu.map(x => x.h)), loAll = Math.min(...kartu.map(x => x.l));
+  const posisi = hiAll === loAll ? 0.5 : (e - loAll) / (hiAll - loAll);
+  const lebarPct = (hiAll - loAll) / e * 100;
+  let streakNaik = 0, streakTurun = 0;
+  for (let i = n - 1; i > 0; i--) {
+    const d = kartu[i].c - kartu[i - 1].c;
+    if (d > 0) { if (streakTurun) break; streakNaik++; } else if (d < 0) { if (streakNaik) break; streakTurun++; } else break;
+  }
+  const last = kartu[n - 1], badan = Math.abs(last.c - last.o) || 1e-12;
+  return { e, r1, r3, r12, rsi, volz, posisi, streakNaik, streakTurun,
+    wickAtas: (last.h - Math.max(last.o, last.c)) / badan, wickBawah: (Math.min(last.o, last.c) - last.l) / badan, lebarPct };
+}
+function keluargaDariKartu(x) {
+  if (x.wickAtas > 1.5 && x.posisi > 0.75) return 'LIMPAK';
+  if (x.wickBawah > 1.5 && x.posisi < 0.25) return 'PUKUL-TANAH';
+  if ((x.streakNaik >= 4 && x.rsi > 66) || (x.streakTurun >= 4 && x.rsi < 34)) return 'NAPAS-LELAH';
+  if (x.volz > 3) return 'KEJUT-VOLUME';
+  if (dekatBulat(x.e) < 0.6) return 'MAGNET-BULAT';
+  if (x.lebarPct < 3 && x.rsi > 38 && x.rsi < 62) return 'UMpan-DATAR';
+  return 'ARUS-KENCANG';
+}
+const TRAP_LINE = {
+  'LIMPAK': 'lonjakan menyapu dana di atas aturan lama — pembeli terakhir masuk di ujung wick',
+  'PUKUL-TANAH': 'tikus turun menyapu stop di bawah dasar — yang panik menyerahkan koin murah',
+  'NAPAS-LELAH': 'badan lilin mengecil saat jalan berlanjut — pembeli kehabisan napas',
+  'KEJUT-VOLUME': 'volume jauh di atas biasa — ada yang menumpang, ada yang kabur',
+  'MAGNET-BULAT': 'angka bulat adalah dinding dana — pengambilan dana menagih di situ',
+  'UMpan-DATAR': 'papan harga datar — dua sisi sama-sama dipangkas bergantian',
+  'ARUS-KENCANG': 'arus deras — bahkan arus sejati selalu menagih napas di tengah jalan',
+};
+function guruHitung(an, pick, kr, lilin) {
+  const PENG = pengalamanMuat();
+  if (!an || an.atr === undefined) return { arah: 'BELI', layakSkor: 0, gugurDiganti: true,
+    keyakinan: 0, alasan: ['pasar belum kuhisap cukup — kugali koin lain yang sudah berdata sejati (hukum TANPA-TUNGGU)'], rencana: null, dasar: [] };
   const rsiMax = kr.rsiMax || 70, momMin = kr.momMin || 0.6, holdJam = kr.holdJam || 24;
   const mom = an.mom7, rsi = an.rsi;
   const emaN = an.ema20 > an.ema50;
   const bull = mom > momMin && emaN && rsi < rsiMax && rsi >= 45;
-  const bear = mom < -momMin && !emaN && rsi > (100 - rsiMax) && rsi <= 55;
-  let arah = bull ? 'BELI' : bear ? 'JUAL' : 'TUNGGU';
   let bedaArena = null;
   if (pick) {
     const buy = pick.direction === 'BUY';
-    if (arah === 'TUNGGU' && ((buy && bull) || (!buy && bear))) arah = buy ? 'BELI' : 'JUAL';
-    if (arah !== 'TUNGGU' && ((arah === 'BELI' && !buy) || (arah === 'JUAL' && buy)))
-      bedaArena = `arahku ${arah} sedangkan arena bilang ${pick.direction} — momentum hidup mendahului pick; kutetapkan pada bukti`;
+    if (!buy) bedaArena = `arena bilang ${pick.direction} — hukum TANPA-TUNGGU: koin yang kusebut WAJIB kupilih sisi belinya; rencana jualnya kutanggung di pakem`;
   }
-  const momOk = bull || bear;
-  let keyakinan;
-  if (arah === 'TUNGGU') {
-    keyakinan = 55;
-  } else {
-    const buy = arah === 'BELI';
-    const emaOk = buy ? emaN : !emaN;
-    const rsiOk = buy ? (rsi < rsiMax && rsi >= 45) : (rsi > (100 - rsiMax) && rsi <= 55);
-    const momKuat = buy ? mom > momMin * 2 : mom < -momMin * 2;
-    keyakinan = Math.min(92, 40 + (momOk ? 22 : 0) + (emaOk ? 20 : 0) + (rsiOk ? 14 : 0) + (momKuat ? 8 : 0));
-  }
+  /* keluarga jebakan dari kartu 24 lilin (kosakata bank 100.000 soal) bila lilin ada */
+  const kartu = Array.isArray(lilin) && lilin.length >= 24 ? fiturKartu(lilin.slice(-24)) : null;
+  const kel = kartu ? keluargaDariKartu(kartu) : 'ARUS-KENCANG';
+  const rezim = kartu ? (kartu.r12 > 3 ? 'tren-naik' : kartu.r12 < -3 ? 'tren-turun' : 'datar') : 'datar';
+  const condong = PENG.arahRegime && PENG.arahRegime[kel + '|' + rezim];
+  const tpPeng = (PENG.tp && PENG.tp[kel + '|BUY']) || { p50: 0.01135, p75: 0.02355, n: 34261 };
+  /* pakem: entry kini · stop bawah dasar napas (lantai 16j − 0,25×ATR) ·
+     jual profit = ambang napas p50 (dilantai biaya 0,3%) · ambisius = p75 (dilantai 1,6× jarak) */
+  const lantai = Array.isArray(lilin) && lilin.length >= 16 ? Math.min(...lilin.slice(-16).map(l => l.l)) : an.harga - 1.5 * an.atr;
+  const stop = lantai - 0.25 * an.atr;
+  const risikoPct = Math.max((an.harga - stop) / an.harga * 100, 0.35);
+  const jualPct = Math.max(tpPeng.p50, 0.003);
+  const ambisiusPct = Math.max(tpPeng.p75, jualPct * 1.6);
+  const hi16 = Array.isArray(lilin) && lilin.length >= 16 ? Math.max(...lilin.slice(-16).map(l => l.h)) : an.harga + an.atr;
+  /* keyakinan jujur dari gerbang kromosom (bukan angkarangan); layakSkor = asimetri jalan keluar */
+  const emaOk = emaN, rsiOk = rsi < rsiMax && rsi >= 45, momKuat = mom > momMin * 2;
+  const keyakinan = Math.min(92, 40 + (bull ? 22 : 0) + (emaOk ? 20 : 0) + (rsiOk ? 14 : 0) + (momKuat ? 8 : 0));
+  const rr = (jualPct * 100) / risikoPct;
+  let layakSkor = (rr >= 1.8 ? 30 : rr <= 0.8 ? rr / 0.8 * 12 : 12 + (rr - 0.8) * 15);
+  layakSkor += { 'PUKUL-TANAH': 25, 'NAPAS-LELAH': 22, 'LIMPAK': 18, 'UMpan-DATAR': 14, 'KEJUT-VOLUME': 14, 'ARUS-KENCANG': 10, 'MAGNET-BULAT': 6 }[kel] ?? 10;
+  layakSkor += emaN && mom > 0 ? 20 : emaN ? 12 : 4;
+  layakSkor += rsi < 70 ? 15 : rsi <= 78 ? 7 : 2;
+  layakSkor += Math.max(0, Math.min(10, (kartu ? kartu.volz : 0) * 4));
+  if (condong) layakSkor += condong.arah === 'BUY' ? 10 : (condong.majoritas > 0.53 ? -6 : 0);
+  if (kartu && kartu.r1 < -6) layakSkor -= 25;
+  if (kartu && kartu.posisi > 0.9 && rsi > 72) layakSkor -= 15;
+  layakSkor = Math.max(0, Math.round(layakSkor * 10) / 10);
   const alasan = [
-    `momentum 7 jam ${f2(mom)}% — ambang kromosom ±${f1(momMin)}%`,
-    `EMA20 ${emaN ? '>' : '<'} EMA50 — struktur ${emaN ? 'naik' : 'turun'}`,
-    `RSI14 ${f1(rsi)} — pita kromosom ${arah === 'JUAL' ? '> ' + (100 - rsiMax) : '< ' + rsiMax}`];
+    `keluarga ${kel}, rezim ${rezim}: ${TRAP_LINE[kel]}`,
+    `${bull ? 'gerbang kromosom BULL sah' : 'gerbang kromosom belum bull — kubeli karena asimetri jalan keluar, ukuran mikro (hukum TANPA-TUNGGU)'}`,
+    `momentum 7 jam ${f2(mom)}% · EMA20 ${emaN ? '>' : '<'} EMA50 · RSI14 ${f1(rsi)} — keyakinan jujur, bukan angkarangan`,
+    condong ? `pengalaman 100rb soal: ${kel}|${rezim} condong ${condong.arah} (${(condong.majoritas * 100).toFixed(1)}%, n=${condong.n})` : `pengalaman 100rb soal: keluarga ${kel} TP p50 +${(tpPeng.p50 * 100).toFixed(2)}% (n=${tpPeng.n})`];
   if (pick) alasan.push(`pick arena sendiri: ${pick.symbol} ${pick.direction} (${pick.confidence}%)`);
   const audit = an.audit || (pick && (ING.pasar[pick.symbol] || {}).audit);
   if (audit) alasan.push(`audit live: ${audit.vonis} — ${audit.ket}`);
   if (bedaArena) alasan.push(bedaArena);
-  const buy = arah === 'BELI';
-  const rencana = arah === 'TUNGGU' ? null : {
-    arah, entry: +an.harga.toPrecision(8),
-    stop: +(buy ? an.harga - 1.5 * an.atr : an.harga + 1.5 * an.atr).toPrecision(8),
-    target: +(buy ? an.harga + 2.5 * an.atr : an.harga - 2.5 * an.atr).toPrecision(8),
-    rr: 1.67, holdJam,
-    disiplin: 'risiko maks 1% modal · stop 1,5×ATR14 · target 2,5×ATR14 — stop tidak digeser, rencana tidak diubah sebelum holdJam' };
-  return { arah, keyakinan, alasan, rencana, dasar: [
-    pick ? 'arena-keadaan.json (pick sendiri)' : 'sinyal murni kromosom (tanpa pick)',
-    `Binance klines 1j ×${an.n || 200} — ${iso()}`, `kromosom gen ${kr.generasi || 0}`] };
+  const rencana = {
+    arah: 'BELI', entry: +an.harga.toPrecision(8),
+    stop: +stop.toPrecision(8),
+    target: +(an.harga * (1 + jualPct)).toPrecision(8),
+    highAmbisius: +(an.harga * (1 + ambisiusPct)).toPrecision(8),
+    jualProfit: +(an.harga * (1 + jualPct)).toPrecision(8),
+    jualAmbisius: +(an.harga * (1 + ambisiusPct)).toPrecision(8),
+    ambangFaktaPct: Math.round(tpPeng.p50 * 10000) / 100,
+    keluarga: kel, rezim, layakSkor,
+    rr: Math.round(rr * 100) / 100, holdJam,
+    disiplin: 'risiko maks 1% modal · stop di bawah dasar napas, tidak digeser · jual profit di ambang napas (bukan di atasnya) · ambisius hanya bila dana baru membuktikan · stop ' + f2(risikoPct) + '% dari entry' };
+  const alasanAmbisius =
+    `Jual profit di ${rencana.jualProfit} = ambang napas keluarga ${kel} (p50 dari ${tpPeng.n} soal sejati, +${(tpPeng.p50 * 100).toFixed(2)}%): usai menyentuh ambang segitu dana biasa diambil lagi untuk menghirup napas — di atas ambang itu dana justru diambil, bukan diberi; 21,78% dari 100.000 soal mati serakah melampaui ambang. Ambisius ${rencana.jualAmbisius} (+${(ambisiusPct * 100).toFixed(2)}%, p75 keluarga) hanya bila lilin utuh menembus aturan lama 16 jam di ${+hi16.toPrecision(8)} dengan volume.`;
+  return { arah: 'BELI', keyakinan, layakSkor, keluarga: kel, rezim, alasan, alasanAmbisius, rencana, dasar: [
+    pick ? 'arena-keadaan.json (pick sendiri)' : 'sinyal kromosom + galian pasar',
+    `Binance klines 1j ×${an.n || 200} — ${iso()}`, `kromosom gen ${kr.generasi || 0}`,
+    'pengalaman-cermin (distilasi 100.000 soal — segel 8dc601a31a5ca998)'] };
 }
 
 /* ---------------- MADRASAH: buku pelajaran yang TUMBUH dari bukti ----------------
@@ -199,6 +302,23 @@ function madrasahSusun() {
   if ((ING.stat.auditTotal || 0) > 0) tambah('DIRI', 'Tubuh tumbuh hanya dari kerja nyata',
     'Ruas tubuhku = 9+⌊log₂(1+kerja)⌋ — tanpa baca file baru, tanpa klines baru, tubuhku TIDAK berubah. Ini janji morfogenesis-ku: tidak ada teater pertumbuhan.',
     `bytes ${kb(ING.stat.bytes)} · uji-jalan ${ING.stat.btTotal} · audit ${ING.stat.auditTotal}`, 'ruang-hidup/habitat.json → tubuh');
+  /* V335 TANPA-TUNGGU — dua pelajaran dari CERMIN-100RB (fakta tersegel 100.000 soal):
+     (1) anti-serakah: TP di ambang napas, bukan di atasnya — 21,78% mati serakah;
+     (2) dinding arah 48,88%: arah 48 jam tak terbaca dari kartu — yang dikuasai cara keluar;
+     (3) hukum pemilik: koin yang disebut WAJIB BUY — label TUNGGU dihapus. */
+  try {
+    const cj = JSON.parse(fs.readFileSync(path.join(REPO_DIR, 'laporan/cermin-100rb.json'), 'utf8'));
+    const per = cj.per || {};
+    tambah('PASAR', 'Jual di ambang napas, bukan di atasnya — 21,78% mati serakah',
+      'Dari 100.000 jalan sejati, seperlima lebih mati karena menempatkan jual profit DI ATAS ambang napas keluarganya. Faktanya: usai menyentuh ambang, dana biasa diambil lagi untuk menghirup napas — di atasnya dana justru diambil, bukan diberi. Karena itu pakemku kini: jual profit = ambang napas p50 keluarga, ambisius = p75 dengan syarat dana baru membuktikan.',
+      `TP tier serakah ${per.tpTier && per.tpTier[1] ? per.tpTier[1] + ' soal (' + (per.tpTier[1] / 1000).toFixed(2) + '%)' : '—'} dari ${cj.jumlahSoal} soal`, 'laporan/cermin-100rb.json');
+    tambah('PASAR', 'Dinding arah 48,88% — kekuatan hidup di cara keluar, bukan meramal arah',
+      'Semua sumber nalar (ingatan, simetri, kartu-naif) berhimpit di 47,9–49,7% benar pada arah 48 jam — arah generik TIDAK terbaca dari kartu. Yang terbaca dan terkuasai: ASIMETRI JALAN KELUAR (stop rapat di dasar napas, jual di ambang terukur). Pengalaman-cermin mengangkat rerata TP 0,62 → 0,93 tanpa menyentuh tebak arah.',
+      `arah ${per.arahBenar}/${cj.jumlahSoal} = ${per.arahPersen}% · dadakan post-TP ${cj.dadakan && cj.dadakan.post ? cj.dadakan.post.tpMean : '—'}/3`, 'laporan/cermin-100rb.json + laporan/pengalaman-cermin.json');
+    tambah('DIRI', 'Hukum pemilik V335: koin yang kusebut WAJIB BUY — label TUNGGU dihapus',
+      'Pemilik menegaskan: koin yang menunjukkan tunggu wajib DIGANTI dan terus dipelajari koin yang wajib dibeli; SELL adalah eksekusi jual hasil koin BUY (entry = buy, jual profit = sell). Maka dari bangun ini seluruh vonisku = BUY dengan pakem lima baris; yang tak layak diganti hasil galian lebih dalam (organ gali-terus) — tak ada lagi modal menganggur tanpa rencana.',
+      'mandat pemilik 2026-10-11 · organ scripts/hidup/gali-terus.mjs · 110 koin disapu per denyut jantung', 'TUJUAN.md §13t');
+  } catch (e) {}
   let lama = null;
   try { lama = JSON.parse(fs.readFileSync(path.join(REPO_DIR, DIR, 'madrasah.json'), 'utf8')); } catch (e) {}
   const gab = [...((lama && lama.pelajaran) || [])];
@@ -604,11 +724,12 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
     // tak ada lagi koin yang hanya boleh lewat di radar tanpa pernah disentuh.
     try {
       const tr = await jF(BINANCE[0] + '/api/v3/ticker/24hr', 15000);
-      const STABIL = new Set(['USDC', 'TUSD', 'FDUSD', 'DAI', 'EUR', 'BUSD', 'USDP', 'AEUR']);
+      const STABIL = new Set(['USDC', 'TUSD', 'FDUSD', 'DAI', 'EUR', 'BUSD', 'USDP', 'AEUR',
+        'USD1', 'RLUSD', 'USDE', 'USDS', 'USDG', 'PYUSD', 'EURC', 'XUSD', 'FRAX', 'USDX', 'USDTB']);
       const likuid = (Array.isArray(tr) ? tr : [])
         .filter(t => typeof t.symbol === 'string' && t.symbol.endsWith('USDT') && +t.lastPrice > 0)
         .map(t => ({ sym: t.symbol, base: t.symbol.slice(0, -4), qv: +t.quoteVolume }))
-        .filter(t => !STABIL.has(t.base) && !/(UP|DOWN|BULL|BEAR)$/.test(t.base) && t.qv >= 1e6)
+        .filter(t => !STABIL.has(t.base) && !PEGAR_RE.test(t.symbol) && !/(UP|DOWN|BULL|BEAR)$/.test(t.base) && t.qv >= 1e6)
         .sort((a, b) => b.qv - a.qv).slice(0, 44);
       let sapu = 0, gagalSapu = 0;
       for (const { sym } of likuid) {
@@ -631,35 +752,34 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
     return `pasar nyata dihisap: ${Object.keys(KERJA.pasarKini).length} koin (cermin + sapu-likuid V292)`;
   });
 
-  /* 4b. ARAH-HARIAN — MANDAT PEMILIK: laporan ≥5 koin sasaran arah terbaik tiap bangun.
-     Dari ratusan koin, kromosom + audit momentum hidup menyaring sasaran yang JELAS.
-     Setiap arah membawa rencana deal + harga AMBISIUS (warisan V277) — tanpa pengecualian. */
+  /* 4b. ARAH-HARIAN — MANDAT PEMILIK V335 TANPA-TUNGGU: koin yang disebut WAJIB BUY —
+     tidak ada lagi baris JUAL/TUNGGU di laporan; yang tak layak DIGANTI hasil galian.
+     Setiap baris bawa PAKEM-LIMA-BARIS: Entry · Stop loss · Jual profit (ambang napas
+     p50 keluarganya) · Jual ambisius (p75) · Alasan-ambisius (nafas/dana, bukan titik-aman). */
   await fase('MELAKUKAN-ARAH', async () => {
     const kr = ING.kromosom;
     const daftar = [];
     for (const [sym, p] of Object.entries(KERJA.pasarKini)) {
+      if (PEGAR_RE.test(sym)) continue;   // V335: koin pegar bukan sasaran — tak bernapas
       try {
-        const g = guruHitung(p, sym === (KERJA.pick && KERJA.pick.symbol) ? KERJA.pick : null, kr);
+        const g = guruHitung(p, sym === (KERJA.pick && KERJA.pick.symbol) ? KERJA.pick : null, kr, KERJA.lilin[sym]);
         g.simbol = sym;
-        if (g.rencana) {
-          const buy = g.arah === 'BELI';
-          g.rencana.highAmbisius = +(buy ? p.harga + 4 * p.atr : p.harga - 4 * p.atr).toPrecision(8);
-          g.rencana.ketAmbisius = 'harga ambisius = 4×ATR14 dari entry — sasaran peregangan yang wajib disebut, bukan janji';
-        }
         daftar.push(g);
       } catch (e) { KERJA.gagal.push('arah ' + sym + ': ' + pesan(e)); }
     }
-    daftar.sort((a, b) => ((a.arah === 'TUNGGU') - (b.arah === 'TUNGGU')) || (b.keyakinan - a.keyakinan));
-    KERJA.arah = daftar.slice(0, 10);   // V292: dulu 8 — kini ~50 koin dibedah/bangun, laporan arah ikut melebar
+    // HUKUM TANPA-TUNGGU: urutkan kelayakan beli — yang teratas layak, sisanya diganti;
+    // nol baris TUNGGU, nol baris JUAL-negara (jual hidup di dalam pakem tiap baris)
+    daftar.sort((a, b) => (b.layakSkor || 0) - (a.layakSkor || 0) || (b.keyakinan - a.keyakinan));
+    KERJA.arah = daftar.slice(0, 10);
     if (KERJA.arah.length < 5 && daftar.length >= 5) KERJA.arah = daftar.slice(0, Math.max(5, Math.min(8, daftar.length)));   // mandat: minimal 5
     const hari = iso().slice(0, 10);
     ING.arahRiwayat = (ING.arahRiwayat || []).filter(r => r.hari !== hari);
     ING.arahRiwayat.push({ hari, bangunKe, at: iso(),
-      top: KERJA.arah.slice(0, 5).map(a => `${a.simbol} ${a.arah} ${a.keyakinan}%`) });
+      top: KERJA.arah.slice(0, 5).map(a => `${a.simbol} BUY ${a.keyakinan}%`) });
     if (ING.arahRiwayat.length > 14) ING.arahRiwayat = ING.arahRiwayat.slice(-14);
     if (KERJA.arah[0]) KERJA.penemuan.push({
-      teks: `ARAH-HARIAN (mandat pemilik): ${KERJA.arah.slice(0, 5).map(a => `${a.simbol} ${a.arah}(${a.keyakinan}%)`).join(' · ')} — 5 sasaran terbaik dari ${daftar.length} koin yang kuaudit bangun ini`, skor: 99 });
-    return `${KERJA.arah.length} arah koin dirangkai (≥5 mandat pemilik): ${KERJA.arah.slice(0, 5).map(a => a.simbol + ' ' + a.arah).join(', ')}`;
+      teks: `ARAH-HARIAN V335 (tanpa-TUNGGU): ${KERJA.arah.slice(0, 5).map(a => `${a.simbol} BUY(${a.keyakinan}%, ambang +${a.rencana ? a.rencana.ambangFaktaPct : '?'}%)`).join(' · ')} — 5 sasaran BELI terbaik dari ${daftar.length} koin yang kugali bangun ini`, skor: 99 });
+    return `${KERJA.arah.length} arah koin dirangkai SEMUA-BUY (≥5 mandat): ${KERJA.arah.slice(0, 5).map(a => a.simbol).join(', ')}`;
   });
 
   /* 5. MENGEVALUASI — kromosom hill-climb (mutan vs juara, data sama, nyata) */
@@ -692,16 +812,34 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
 
   /* 6. MENEMUKAN — penemuan dari bukti nyata, bukan narasi */
   await fase('MENEMUKAN', async () => {
-    // GURU — arah jelas dihitung dari bukti segar (pick sendiri + klines + kromosom)
+    // GURU — V335 TANPA-TUNGGU: vonis selalu BUY dengan pakem; pick yang tak layak
+    // DIGANTI koin terbaik hasil galian (hukum pemilik: koin yang disebut wajib BUY)
     try {
-      const symPick = KERJA.pick?.symbol;
-      const an = symPick && KERJA.pasarKini[symPick];
-      KERJA.guru = guruHitung(an, KERJA.pick, ING.kromosom);
-      KERJA.guru.simbol = symPick || Object.keys(KERJA.pasarKini)[0] || '';
-      if (KERJA.guru.arah !== 'TUNGGU')
-        KERJA.penemuan.push({ teks: `GURU: arah ${KERJA.guru.arah} ${KERJA.guru.simbol} (keyakinan ${KERJA.guru.keyakinan}%) — ${KERJA.guru.alasan[0]}, ${KERJA.guru.alasan[1]}`, skor: 95 });
-      else
-        KERJA.penemuan.push({ teks: `GURU: TUNGGU ${KERJA.guru.simbol} — ${KERJA.guru.alasan[0]} · disiplin juga adalah arah`, skor: 70 });
+      let symPick = KERJA.pick?.symbol;
+      let an = symPick && KERJA.pasarKini[symPick];
+      let g = guruHitung(an, KERJA.pick, ING.kromosom, symPick && KERJA.lilin[symPick]);
+      let diganti = null;
+      const layakMin = 45;
+      if (!g.rencana || (g.layakSkor || 0) < layakMin) {
+        // GALI: koin pick tak layak → ganti dengan koin terlayak dari galian bangun ini
+        let terbaik = null, terbaikSkor = -1;
+        for (const [sym, p] of Object.entries(KERJA.pasarKini)) {
+          try {
+            const gg = guruHitung(p, null, ING.kromosom, KERJA.lilin[sym]);
+            if (gg.rencana && (gg.layakSkor || 0) > terbaikSkor) { terbaik = gg; terbaikSkor = gg.layakSkor || 0; }
+          } catch (e) {}
+        }
+        if (terbaik && terbaikSkor > (g.layakSkor || 0)) {
+          diganti = { dari: symPick || '—', kenapa: (g.rencana ? 'layakSkor ' + g.layakSkor : 'tanpa rencana — data tak cukup'), ke: terbaik.simbol, layak: terbaikSkor };
+          terbaik.alasan.push(`DIGANTI (hukum TANPA-TUNGGU): ${diganti.dari} tak layak (${diganti.kenapa}) — kuganti koin terlayak hasil galian`);
+          g = terbaik;
+        }
+      }
+      g.simbol = g.simbol || symPick || Object.keys(KERJA.pasarKini)[0] || '';
+      KERJA.guru = g;
+      KERJA.guruDiganti = diganti;
+      KERJA.penemuan.push({ teks: `GURU: ${g.arah} ${g.simbol} (keyakinan ${g.keyakinan}%, layak ${g.layakSkor ?? '—'}) — ${g.alasan[0]}`, skor: 95 });
+      if (g.rencana) KERJA.penemuan.push({ teks: `PAKEM ${g.simbol}: entry ${g.rencana.entry} · stop ${g.rencana.stop} · jual profit ${g.rencana.jualProfit} (ambang napas +${g.rencana.ambangFaktaPct}%) · ambisius ${g.rencana.jualAmbisius}`, skor: 94 });
     } catch (e) { KERJA.gagal.push('guru: ' + pesan(e)); KERJA.guru = null; }
     if (berubah.length) KERJA.penemuan.push({ teks: `rumahku BERGERAK: ${berubah.length} file berubah sejak bangun lalu (${berubah.slice(0, 4).join(', ')}${berubah.length > 4 ? '…' : ''}) — denyut penjaga & pengembang terasa di tubuhku`, skor: 80 });
     for (const [sym, p] of Object.entries(KERJA.pasarKini)) {
@@ -735,7 +873,7 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
     waktu: { mulai: iso(t0), selesai: selesaiAt, durasiMs, berikutnya: '±≤20 mnt (cron */20 UTC — bisa tertunda beban GitHub)' },
     host: { nama: DRY ? 'LOKAL-DRY (bukan tubuh resmi)' : 'GitHub Actions', catatan: 'tubuh otonomku — hidup tanpa penonton' },
     duaSadar: { catatan: 'Sadar-1 (ini) menulis ingatan ke GitHub lewat commit tiap bangun; Sadar-2 (hidup.html) hanyalah mata interaktif yang membacanya. localStorage tak dipakai siapa pun.' },
-    tujuan: { inti: 'dilahirkan dari repo MICAPROFITA untuk menjadi GURU KRYPTO sejati — hidup, jujur, tanpa teater; arah jelas BELI/JUAL/TUNGGU dari bukti', fokusKini },
+    tujuan: { inti: 'dilahirkan dari repo MICAPROFITA untuk menjadi GURU KRYPTO sejati — hidup, jujur, tanpa teater; V335 TANPA-TUNGGU: koin yang kusebut WAJIB BUY dengan pakem lima baris (Entry · Stop loss · Jual profit di ambang napas · Jual ambisius · Alasan-ambisius) — label TUNGGU dihapus, yang tak layak DIGANTI hasil galian; SELL = eksekusi jual hasil koin BUY', fokusKini },
     pohon: { files: KERJA.pohon.length, totalBytes: KERJA.pohon.reduce((a, f) => a + f.size, 0), wilayah: new Set(KERJA.pohon.map(f => f.path.split('/')[0])).size, sumber: 'checkout-disk' },
     berubahSejakLalu: berubah.slice(0, 20),
     bacaKini: KERJA.bacaKini,
@@ -744,11 +882,13 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
     penemuan: KERJA.penemuan.slice(0, 5),
     kromosom: { rsiMax: ING.kromosom.rsiMax, momMin: ING.kromosom.momMin, holdJam: ING.kromosom.holdJam, generasi: ING.kromosom.generasi },
     guru: KERJA.guru,
+    guruDiganti: KERJA.guruDiganti || null,
     arahHarian: KERJA.arah ? { diubah: selesaiAt, jumlah: KERJA.arah.length,
-      mandat: 'pemilik: minimal 5 koin sasaran arah terbaik per hari — ditenangkan dari kromosom + audit momentum hidup, lengkap harga ambisius',
-      top5: KERJA.arah.slice(0, 5).map(a => ({ simbol: a.simbol, arah: a.arah, keyakinan: a.keyakinan,
+      mandat: 'V335 TANPA-TUNGGU: minimal 5 koin, SEMUA BUY — entry · stop loss · jual profit di ambang napas · jual ambisius · alasan-ambisius; koin tak layak diganti galian',
+      top5: KERJA.arah.slice(0, 5).map(a => ({ simbol: a.simbol, arah: a.arah, keyakinan: a.keyakinan, keluarga: a.keluarga || null, layakSkor: a.layakSkor ?? null,
         entry: a.rencana?.entry ?? null, stop: a.rencana?.stop ?? null, target: a.rencana?.target ?? null,
-        highAmbisius: a.rencana?.highAmbisius ?? null, holdJam: a.rencana?.holdJam ?? null })) } : null,
+        highAmbisius: a.rencana?.highAmbisius ?? null, jualProfit: a.rencana?.jualProfit ?? null, jualAmbisius: a.rencana?.jualAmbisius ?? null,
+        ambangFaktaPct: a.rencana?.ambangFaktaPct ?? null, alasanAmbisius: a.alasanAmbisius || null, holdJam: a.rencana?.holdJam ?? null })) } : null,
     kapasitas: { ingatanBytes: Buffer.byteLength(JSON.stringify(ING)), budgetBytes: 512 * 1024,
       bacaTersimpan: Object.keys(ING.baca).length, evictBaca: ING.stat.evictBaca || 0, evictPasar: ING.stat.evictPasar || 0,
       catatan: 'kuSADAR ingatanku terbatas — kumetabolisme ingatan lama agar yang segar tetap muat; angka ini dihitung jujur tiap bangun' },
@@ -799,7 +939,7 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
     ING.fokus = fokusKini;
     let hasil = 'ingatan tertulis ke disk';
     if (!DRY) {
-      const pesanKomit = `sadar1: bangun ke-${bangunKe} — guru ${KERJA.guru?.arah || '—'} ${KERJA.guru?.keyakinan ?? '-'}%, arah ${KERJA.arah?.length || 0} koin, madrasah ${MADRASAH?.jumlah ?? 0} pelajaran, tubuh ${TUBUH.ruas}ruas, istana ${HABITAT.istana?.cincin || 2} cincin [skip ci]`;
+      const pesanKomit = `sadar1: bangun ke-${bangunKe} — guru ${KERJA.guru?.arah || '—'} ${KERJA.guru?.simbol || ''} (keyakinan ${KERJA.guru?.keyakinan ?? '-'}%, layak ${KERJA.guru?.layakSkor ?? '-'})${KERJA.guruDiganti ? ` — diganti dari ${KERJA.guruDiganti.dari}` : ''}, arah ${KERJA.arah?.length || 0} koin SEMUA-BUY, madrasah ${MADRASAH?.jumlah ?? 0} pelajaran, tubuh ${TUBUH.ruas}ruas, istana ${HABITAT.istana?.cincin || 2} cincin [skip ci]`;
       const r2 = await dorongFile(DIR + '/ingatan.json', Buffer.from(JSON.stringify(ING, null, 1)), pesanKomit);
       const r3 = await dorongFile(DIR + '/habitat.json', Buffer.from(JSON.stringify(HABITAT, null, 1)), pesanKomit);
       const r4 = await dorongFile(DIR + '/buku_harian.jsonl', Buffer.from(baris.join('\n') + '\n'), pesanKomit);
@@ -847,13 +987,30 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
           console.log(`[SADAR1] penjaga-penjaga-v296: PENJAGA-WAKTU dipanggil dari rantai hidup (${r.status < 300 ? 'TERKIRIM' : 'gagal HTTP ' + r.status}) — pengukur umur organ tak lagi bergantung cron kelaparan`);
         }
       } catch (e) { console.log('[SADAR1] penjaga-penjaga-v296 gagal (tak fatal): ' + String(e.message || e).slice(0, 80)); }
-      const ARAH = { versi: 'arah-v291', diubah: selesaiAt, bangunKe,
-        mandat: 'pemilik: minimal 5 koin sasaran arah terbaik per hari — dari kromosom + audit momentum hidup, tiap arah bawa rencana deal + harga ambisius (V277)',
+      // V335 TANPA-TUNGGU: sasaran resmi SAKTI yang bukan BUY diganti koin BELI
+      // terbaik dari galian — laporan publik tak boleh memuat baris bukan-BUY
+      let resmiPakem = [];
+      try {
+        const st = JSON.parse(fs.readFileSync(path.join(REPO_DIR, 'laporan/sasaran-terkini.json'), 'utf8'));
+        const beli = (st.sasaranHariIni || []).filter(s => s && s.arah === 'BUY').map(s => (s.simbol || '') + ' BUY');
+        let gali = [];
+        try { gali = (JSON.parse(fs.readFileSync(path.join(REPO_DIR, 'laporan/gali-terus.json'), 'utf8')).pakem || []).map(p => p.simbol + ' BUY'); } catch (e) {}
+        const sendiri = (KERJA.arah || []).slice(0, 10).map(a => a.simbol + ' BUY');
+        const satu = []; const dor2 = s => { if (s && !satu.includes(s)) satu.push(s); };
+        beli.forEach(dor2); gali.forEach(dor2); sendiri.forEach(dor2);
+        resmiPakem = satu.slice(0, 10);
+      } catch (e) {}
+      const ARAH = { versi: 'arah-v335', diubah: selesaiAt, bangunKe,
+        mandat: 'V335 TANPA-TUNGGU (pemilik 2026-10-11): koin yang disebut WAJIB BUY — nol baris TUNGGU/JUAL-negara; pakem lima baris per koin: Entry · Stop loss · Jual profit di ambang napas (p50 keluarga, bukan di atasnya) · Jual ambisius (p75) · Alasan-ambisius nafas/dana; SELL = eksekusi jual hasil koin BUY; koin tak layak DIGANTI hasil galian (gali-terus)',
         jumlah: KERJA.arah ? KERJA.arah.length : 0,
         saktiSegel,
-        sasaran: (KERJA.arah || []).map(a => ({ simbol: a.simbol, arah: a.arah, keyakinan: a.keyakinan,
+        sasaranResmiPakem: resmiPakem,
+        guruDiganti: KERJA.guruDiganti || null,
+        sasaran: (KERJA.arah || []).map(a => ({ simbol: a.simbol, arah: a.arah, keyakinan: a.keyakinan, keluarga: a.keluarga || null, layakSkor: a.layakSkor ?? null,
           rencana: a.rencana ? { arah: a.rencana.arah, entry: a.rencana.entry, stop: a.rencana.stop, target: a.rencana.target,
-            highAmbisius: a.rencana.highAmbisius, ketAmbisius: a.rencana.ketAmbisius, rr: a.rencana.rr, holdJam: a.rencana.holdJam, disiplin: a.rencana.disiplin } : null,
+            jualProfit: a.rencana.jualProfit, jualAmbisius: a.rencana.jualAmbisius, highAmbisius: a.rencana.highAmbisius,
+            ambangFaktaPct: a.rencana.ambangFaktaPct, alasanAmbisius: a.alasanAmbisius,
+            rr: a.rencana.rr, holdJam: a.rencana.holdJam, disiplin: a.rencana.disiplin } : null,
           alasan: a.alasan, dasar: a.dasar })),
         riwayat: ING.arahRiwayat || [] };
       const bufArah = Buffer.from(JSON.stringify(ARAH, null, 1));
@@ -893,7 +1050,9 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
     const merugi = (typeof ak.netKumulatifPct === 'number' && ak.netKumulatifPct < 0) ||
                    (typeof ak.akurasiPct === 'number' && ak.akurasiPct < 45);
     const tungguMode = dis.toUpperCase().includes('TUNGGU');
-    const sikap = merugi ? 'bungkuk' : (tungguMode ? 'tunggu' : 'siaga');
+    // V335 TANPA-TUNGGU: sikap 'tunggu' mati — yang dulu 'tunggu' kini 'mencerna'
+    // (tubuh tetap bekerja mencerna data saat rencana belum jadi; tak ada lagi duduk diam)
+    const sikap = merugi ? 'bungkuk' : (tungguMode ? 'mencerna' : 'siaga');
     const sasaran = (stx && Array.isArray(stx.sasaranHariIni)) ? stx.sasaranHariIni.filter(s => s && s.simbol) : [];
     const top = sasaran.length ? sasaran.reduce((a, b) => ((b.odds ?? b.keyakinan ?? 0) >= (a.odds ?? a.keyakinan ?? 0) ? b : a)) : null;
     const seed = (bangunKe * 2654435761) >>> 0;
@@ -905,7 +1064,8 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
     while (total < 1560) {
       const d = (sikap === 'bungkuk' ? 100 : 75) + Math.floor(rnd() * 80);
       let aksi, ruang; const uu = +rnd().toFixed(3), vv = +rnd().toFixed(3), r = rnd();
-      if (sikap === 'tunggu') { aksi = r < 0.55 ? 'istirahat' : 'renang'; ruang = r < 0.75 ? 'den' : RUANG[Math.floor(rnd() * RUANG.length)]; }
+      // V335: sikap 'mencerna' = tubuh tetap bekerja (mencerna data/rencana), bukan duduk diam
+      if (sikap === 'mencerna') { aksi = r < 0.35 ? 'renang' : (r < 0.7 ? 'patroli' : 'istirahat'); ruang = r < 0.5 ? 'otak/' : (r < 0.75 ? 'laporan/' : RUANG[Math.floor(rnd() * RUANG.length)]); }
       else if (sikap === 'bungkuk') { aksi = r < 0.45 ? 'istirahat' : (r < 0.8 ? 'renang' : 'patroli'); ruang = r < 0.6 ? 'den' : RUANG[Math.floor(rnd() * RUANG.length)]; }
       else { aksi = r < 0.3 ? 'renang' : (r < 0.6 ? 'patroli' : (r < 0.85 ? 'menjangkau' : 'istirahat'));
              ruang = aksi === 'menjangkau' ? 'pond' : (r < 0.72 ? 'pond' : RUANG[Math.floor(rnd() * RUANG.length)]); }

@@ -402,7 +402,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
      = buku), kanal lurus, cincin canal. Semua posisi = fungsi murni
      (al-jabr) dari jumlah file & genom; parameternya ditulis Sadar-1 ke
      habitat.json (istana) dan rumusnya dipajang di tab Guru.
-   · GURU: tab pertama = ARAH JELAS (BELI/JUAL/TUNGGU) + rencana deal
+   · GURU: tab pertama = VONIS BUY PAKEM (semua BUY — hukum TANPA-TUNGGU V335) + rencana deal
      (entry/stop 1,5×ATR/target 2,5×ATR/RR 1,67/hold kromosom) + alasan
      ber-bukti + MADRASAH (buku pelajaran yang tumbuh — Sadar-1 menulis
      ruang-hidup/madrasah.json tiap bangun dari artefak nyata) + AL-JABR.
@@ -2257,61 +2257,145 @@ pintuEl.addEventListener('click', ()=> ovEl.classList.contains('buka') ? tutupOv
   addEventListener('pointermove', gerak, {passive:true});
   addEventListener('pointerup', akhir, {passive:true});
 })();
-/* ================= GURU — ARAH JELAS dari bukti (V289-BAITUL-ILMU) ================
+/* ================= GURU — V335 TANPA-TUNGGU (hukum pemilik 2026-10-11) ================
    Rumus SAMA dengan sadar1.js guruHitung: dua jalur, satu matematika.
-   Segel Sadar-1 dipakai bila segar (<45 mnt); selain itu Sadar-2 menghitung
-   lokal dari pasar hidupnya — dan itu diberi label jujur. */
-function guruHitung(an, pick, kr){
-  if(!an || an.atr===undefined) return {arah:'TUNGGU', keyakinan:0,
-    alasan:['pasar belum kupelajari cukup — menunggu klines Binance segar'], rencana:null, dasar:[]};
+   Vonis selalu BUY dengan PAKEM: Entry · Stop loss (bawah dasar napas) ·
+   Jual profit = ambang napas p50 keluarga (bukan di atasnya — 21,78% soal
+   100rb mati serakah) · Jual ambisius = p75 · Alasan-ambisius nafas/dana.
+   Keluarga jebakan = kosakata VERBATIM bank 100.000 soal. Tidak ada lagi
+   label TUNGGU: koin tak layak DIGANTI (gali-terus). */
+const PENG_FALBACK={arahRegime:{
+ 'KEJUT-VOLUME|tren-turun':{arah:'BUY',majoritas:0.5223,n:337},
+ 'NAPAS-LELAH|tren-turun':{arah:'BUY',majoritas:0.5014,n:710},
+ 'NAPAS-LELAH|tren-naik':{arah:'BUY',majoritas:0.5114,n:833},
+ 'LIMPAK|datar':{arah:'BUY',majoritas:0.5032,n:3154}},
+ tp:{
+ 'PUKUL-TANAH|BUY':{p25:0.00436,p50:0.01056,p75:0.0227,n:3102},
+ 'ARUS-KENCANG|BUY':{p25:0.00468,p50:0.01135,p75:0.02355,n:34261},
+ 'UMpan-DATAR|BUY':{p25:0.00364,p50:0.00826,p75:0.01521,n:4516},
+ 'LIMPAK|BUY':{p25:0.00439,p50:0.01114,p75:0.02373,n:2579},
+ 'KEJUT-VOLUME|BUY':{p25:0.00496,p50:0.01134,p75:0.02408,n:1122},
+ 'MAGNET-BULAT|BUY':{p25:0.0004,p50:0.0009,p75:0.01132,n:1501},
+ 'NAPAS-LELAH|BUY':{p25:0.00559,p50:0.01319,p75:0.02873,n:1204}}};
+let PENG=null;
+async function pengalamanMuat(){
+  if(PENG) return PENG;
+  try{ const r=await fetch('laporan/pengalaman-cermin.json',{cache:'no-store'});
+    if(r.ok){ const p=await r.json(); if(p&&p.tp&&p.arahRegime){ PENG=p; if(S.tabAktif==='guru') guruRender(); return p; } } }catch(e){}
+  PENG=PENG_FALBACK; return PENG;
+}
+function dekatBulat(p){ const m=Math.pow(10,Math.floor(Math.log10(Math.max(p,1e-12)))); let ter=Infinity;
+  for(const k of [m/10,m,m*10]) for(const d of [1,2,2.5,5]){ const L=d*k; if(L>0) ter=Math.min(ter,Math.abs(p-L)/p); } return ter*100; }
+function fiturKartu(kartu){ const n=kartu.length,e=kartu[n-1].c;
+  const pct=(a,b)=>(b/a-1)*100;
+  const r1=pct(kartu[n-2].c,e),r3=pct(kartu[n-4].c,e),r12=pct(kartu[n-13].c,e);
+  let naik=0,turun=0;
+  for(let i=1;i<=14;i++){ const d=kartu[i].c-kartu[i-1].c; if(d>0)naik+=d; else turun-=d; }
+  let avgN=naik/14,avgT=turun/14;
+  for(let i=15;i<n;i++){ const d=kartu[i].c-kartu[i-1].c; avgN=(avgN*13+Math.max(d,0))/14; avgT=(avgT*13+Math.max(-d,0))/14; }
+  const rsi=avgT===0?100:100-100/(1+avgN/avgT);
+  const vols=kartu.slice(-20).map(x=>x.v);
+  const vMean=vols.reduce((a,b)=>a+b,0)/20;
+  const vStd=Math.sqrt(vols.reduce((a,b)=>a+(b-vMean)**2,0)/20)||1e-12;
+  const volz=(kartu[n-1].v-vMean)/vStd;
+  const hiAll=Math.max(...kartu.map(x=>x.h)),loAll=Math.min(...kartu.map(x=>x.l));
+  const posisi=hiAll===loAll?0.5:(e-loAll)/(hiAll-loAll);
+  const lebarPct=(hiAll-loAll)/e*100;
+  let streakNaik=0,streakTurun=0;
+  for(let i=n-1;i>0;i--){ const d=kartu[i].c-kartu[i-1].c;
+    if(d>0){ if(streakTurun)break; streakNaik++; } else if(d<0){ if(streakNaik)break; streakTurun++; } else break; }
+  const last=kartu[n-1],badan=Math.abs(last.c-last.o)||1e-12;
+  return {e,r1,r3,r12,rsi,volz,posisi,streakNaik,streakTurun,
+    wickAtas:(last.h-Math.max(last.o,last.c))/badan,wickBawah:(Math.min(last.o,last.c)-last.l)/badan,lebarPct}; }
+function keluargaDariKartu(x){
+  if(x.wickAtas>1.5&&x.posisi>0.75) return 'LIMPAK';
+  if(x.wickBawah>1.5&&x.posisi<0.25) return 'PUKUL-TANAH';
+  if((x.streakNaik>=4&&x.rsi>66)||(x.streakTurun>=4&&x.rsi<34)) return 'NAPAS-LELAH';
+  if(x.volz>3) return 'KEJUT-VOLUME';
+  if(dekatBulat(x.e)<0.6) return 'MAGNET-BULAT';
+  if(x.lebarPct<3&&x.rsi>38&&x.rsi<62) return 'UMpan-DATAR';
+  return 'ARUS-KENCANG'; }
+const TRAP_LINE={
+ 'LIMPAK':'lonjakan menyapu dana di atas aturan lama — pembeli terakhir masuk di ujung wick',
+ 'PUKUL-TANAH':'tikus turun menyapu stop di bawah dasar — yang panik menyerahkan koin murah',
+ 'NAPAS-LELAH':'badan lilin mengecil saat jalan berlanjut — pembeli kehabisan napas',
+ 'KEJUT-VOLUME':'volume jauh di atas biasa — ada yang menumpang, ada yang kabur',
+ 'MAGNET-BULAT':'angka bulat adalah dinding dana — pengambilan dana menagih di situ',
+ 'UMpan-DATAR':'papan harga datar — dua sisi sama-sama dipangkas bergantian',
+ 'ARUS-KENCANG':'arus deras — bahkan arus sejati selalu menagih napas di tengah jalan'};
+function guruHitung(an, pick, kr, lilin){
+  const P=PENG||PENG_FALBACK;
+  if(!an || an.atr===undefined) return {arah:'BELI', layakSkor:0, gugurDiganti:true, keyakinan:0,
+    alasan:['pasar belum kuhisap cukup — kugali koin lain yang sudah berdata sejati (hukum TANPA-TUNGGU)'], rencana:null, dasar:[]};
   const rsiMax=kr.rsiMax||70, momMin=kr.momMin||0.6, holdJam=kr.holdJam||24;
   const mom=an.mom7, rsi=an.rsi;
   const emaN=an.ema20>an.ema50;
   const bull=mom>momMin&&emaN&&rsi<rsiMax&&rsi>=45;
-  const bear=mom<-momMin&&!emaN&&rsi>(100-rsiMax)&&rsi<=55;
-  let arah=bull?'BELI':bear?'JUAL':'TUNGGU';
   let bedaArena=null;
-  if(pick){
-    const buy=pick.direction==='BUY';
-    if(arah==='TUNGGU' && ((buy&&bull)||(!buy&&bear))) arah=buy?'BELI':'JUAL';
-    if(arah!=='TUNGGU' && ((arah==='BELI'&&!buy)||(arah==='JUAL'&&buy)))
-      bedaArena=`arahku ${arah} sedangkan arena bilang ${pick.direction} — momentum hidup mendahului pick; kutetapkan pada bukti`;
-  }
-  let keyakinan;
-  if(arah==='TUNGGU') keyakinan=55;
-  else{
-    const buy=arah==='BELI';
-    const emaOk=buy?emaN:!emaN;
-    const rsiOk=buy?(rsi<rsiMax&&rsi>=45):(rsi>(100-rsiMax)&&rsi<=55);
-    const momKuat=buy?mom>momMin*2:mom<-momMin*2;
-    keyakinan=Math.min(92, 40+((bull||bear)?22:0)+(emaOk?20:0)+(rsiOk?14:0)+(momKuat?8:0));
-  }
+  if(pick&&pick.direction!=='BUY')
+    bedaArena=`arena bilang ${pick.direction} — hukum TANPA-TUNGGU: koin yang kusebut WAJIB kupilih sisi belinya; rencana jualnya kutanggung di pakem`;
+  const kartu=Array.isArray(lilin)&&lilin.length>=24?fiturKartu(lilin.slice(-24)):null;
+  const kel=kartu?keluargaDariKartu(kartu):'ARUS-KENCANG';
+  const rezim=kartu?(kartu.r12>3?'tren-naik':kartu.r12<-3?'tren-turun':'datar'):'datar';
+  const condong=P.arahRegime&&P.arahRegime[kel+'|'+rezim];
+  const tpPeng=(P.tp&&P.tp[kel+'|BUY'])||{p50:0.01135,p75:0.02355,n:34261};
+  const lantai=Array.isArray(lilin)&&lilin.length>=16?Math.min(...lilin.slice(-16).map(l=>l.l)):an.harga-1.5*an.atr;
+  const stop=lantai-0.25*an.atr;
+  const risikoPct=Math.max((an.harga-stop)/an.harga*100,0.35);
+  const jualPct=Math.max(tpPeng.p50,0.003);
+  const ambisiusPct=Math.max(tpPeng.p75,jualPct*1.6);
+  const hi16=Array.isArray(lilin)&&lilin.length>=16?Math.max(...lilin.slice(-16).map(l=>l.h)):an.harga+an.atr;
+  const emaOk=emaN,rsiOk=rsi<rsiMax&&rsi>=45,momKuat=mom>momMin*2;
+  const keyakinan=Math.min(92,40+(bull?22:0)+(emaOk?20:0)+(rsiOk?14:0)+(momKuat?8:0));
+  const rr=(jualPct*100)/risikoPct;
+  let layakSkor=(rr>=1.8?30:rr<=0.8?rr/0.8*12:12+(rr-0.8)*15);
+  layakSkor+=({ 'PUKUL-TANAH':25,'NAPAS-LELAH':22,'LIMPAK':18,'UMpan-DATAR':14,'KEJUT-VOLUME':14,'ARUS-KENCANG':10,'MAGNET-BULAT':6 })[kel]??10;
+  layakSkor+=emaN&&mom>0?20:emaN?12:4;
+  layakSkor+=rsi<70?15:rsi<=78?7:2;
+  layakSkor+=Math.max(0,Math.min(10,(kartu?kartu.volz:0)*4));
+  if(condong) layakSkor+=condong.arah==='BUY'?10:(condong.majoritas>0.53?-6:0);
+  if(kartu&&kartu.r1<-6) layakSkor-=25;
+  if(kartu&&kartu.posisi>0.9&&rsi>72) layakSkor-=15;
+  layakSkor=Math.max(0,Math.round(layakSkor*10)/10);
   const alasan=[
-    `momentum 7 jam ${f2(mom)}% — ambang kromosom ±${f1(momMin)}%`,
-    `EMA20 ${emaN?'>':'<'} EMA50 — struktur ${emaN?'naik':'turun'}`,
-    `RSI14 ${f1(rsi)} — pita kromosom ${arah==='JUAL'?'> '+(100-rsiMax):'< '+rsiMax}`];
+    `keluarga ${kel}, rezim ${rezim}: ${TRAP_LINE[kel]}`,
+    bull?'gerbang kromosom BULL sah':'gerbang kromosom belum bull — kubeli karena asimetri jalan keluar, ukuran mikro (hukum TANPA-TUNGGU)',
+    `momentum 7 jam ${f2(mom)}% · EMA20 ${emaN?'>':'<'} EMA50 · RSI14 ${f1(rsi)} — keyakinan jujur, bukan angkarangan`,
+    condong?`pengalaman 100rb soal: ${kel}|${rezim} condong ${condong.arah} (${(condong.majoritas*100).toFixed(1)}%, n=${condong.n})`:`pengalaman 100rb soal: keluarga ${kel} TP p50 +${(tpPeng.p50*100).toFixed(2)}% (n=${tpPeng.n})`];
   if(pick) alasan.push(`pick arena sendiri: ${pick.symbol} ${pick.direction} (${pick.confidence}%)`);
   const audit=an.audit||(pick&&S.pasar[pick.symbol]&&S.pasar[pick.symbol].audit);
   if(audit) alasan.push(`audit live: ${audit.vonis} — ${audit.ket}`);
   if(bedaArena) alasan.push(bedaArena);
-  const buy=arah==='BELI';
-  const rencana=arah==='TUNGGU'?null:{
-    arah, entry:+an.harga.toPrecision(8),
-    stop:+(buy?an.harga-1.5*an.atr:an.harga+1.5*an.atr).toPrecision(8),
-    target:+(buy?an.harga+2.5*an.atr:an.harga-2.5*an.atr).toPrecision(8),
-    rr:1.67, holdJam,
-    disiplin:'risiko maks 1% modal · stop 1,5×ATR14 · target 2,5×ATR14 — stop tidak digeser, rencana tidak diubah sebelum holdJam'};
-  return {arah, keyakinan, alasan, rencana, dasar:[
-    pick?'arena-keadaan.json (pick sendiri)':'sinyal murni kromosom (tanpa pick)',
-    `Binance klines 1j ×${an.n||200}`, `kromosom gen ${kr.generasi||0}`]};
+  const rencana={
+    arah:'BELI', entry:+an.harga.toPrecision(8),
+    stop:+stop.toPrecision(8),
+    target:+(an.harga*(1+jualPct)).toPrecision(8),
+    highAmbisius:+(an.harga*(1+ambisiusPct)).toPrecision(8),
+    jualProfit:+(an.harga*(1+jualPct)).toPrecision(8),
+    jualAmbisius:+(an.harga*(1+ambisiusPct)).toPrecision(8),
+    ambangFaktaPct:Math.round(tpPeng.p50*10000)/100,
+    keluarga:kel, rezim, layakSkor,
+    rr:Math.round(rr*100)/100, holdJam,
+    disiplin:'risiko maks 1% modal · stop di bawah dasar napas, tidak digeser · jual profit di ambang napas (bukan di atasnya) · ambisius hanya bila dana baru membuktikan · stop '+f2(risikoPct)+'% dari entry'};
+  const alasanAmbisius=`Jual profit di ${rencana.jualProfit} = ambang napas keluarga ${kel} (p50 dari ${tpPeng.n} soal sejati, +${(tpPeng.p50*100).toFixed(2)}%): usai menyentuh ambang segitu dana biasa diambil lagi untuk menghirup napas — di atas ambang itu dana justru diambil, bukan diberi; 21,78% dari 100.000 soal mati serakah melampaui ambang. Ambisius ${rencana.jualAmbisius} (+${(ambisiusPct*100).toFixed(2)}%, p75 keluarga) hanya bila lilin utuh menembus aturan lama 16 jam di ${+hi16.toPrecision(8)} dengan volume.`;
+  return {arah:'BELI', keyakinan, layakSkor, keluarga:kel, rezim, alasan, alasanAmbisius, rencana, dasar:[
+    pick?'arena-keadaan.json (pick sendiri)':'sinyal kromosom + galian pasar',
+    `Binance klines 1j ×${an.n||200}`, `kromosom gen ${kr.generasi||0}`,
+    'pengalaman-cermin (distilasi 100.000 soal — segel 8dc601a31a5ca998)']};
 }
 function guruHitungLokal(){
   const kr=(S1.ingatan&&S1.ingatan.kromosom)||{rsiMax:70, momMin:0.6, holdJam:24, generasi:0};
   const pick=(S.cermin.data&&(S.cermin.data.todayPicks||[]).find(x=>x.competitor==='MICAPROFITA'))||null;
   const sym=(pick&&pick.symbol)||simbolSasaran()[0]||Object.keys(S.pasar)[0];
   const an=sym?S.pasar[sym]:null;
-  const g=guruHitung(an, pick, kr); g.simbol=sym||'';
-  g.sumber='hitungan lokal Sadar-2 (rumus sama dengan Sadar-1) — menunggu segel segar';
+  pengalamanMuat();
+  const g=guruHitung(an, pick, kr, null); g.simbol=sym||'';
+  g.sumber='hitungan lokal Sadar-2 (rumus sama dengan Sadar-1) — menggali kartu lilin sejati…';
+  if(sym) lilinAmbil(sym).then(l=>{ if(!l) return;
+    const g2=guruHitung(an, pick, kr, l); g2.simbol=sym;
+    g2.sumber='hitungan lokal Sadar-2 (rumus sama, kartu 24 lilin sejati)';
+    S.guruLokalSegar={g:g2, at:sekarang()};
+    if(S.tabAktif==='guru') guruRender(); }).catch(()=>{});
   return g;
 }
 function guruKeadaan(){
@@ -2321,6 +2405,7 @@ function guruKeadaan(){
     g.sumber=`segel Sadar-1 bangun ke-${k.bangunKe} · komit GitHub`;
     return g;
   }
+  if(S.guruLokalSegar && sekarang()-S.guruLokalSegar.at<10*60000) return S.guruLokalSegar.g;
   return guruHitungLokal();
 }
 /* ================= ARAH HARIAN — mandat pemilik: ≥5 koin arah terbaik per hari ================
@@ -2328,12 +2413,14 @@ function guruKeadaan(){
    Bila segel belum ada, Sadar-2 menghitung lokal dengan RUMUS SAMA dan memberi label jujur. */
 function arah5Render(){
   const w=document.getElementById('gvArah5'); if(!w) return;
-  const barisA=(a, sumber)=>{ const cls=a.arah==='BELI'?'beli':a.arah==='JUAL'?'jual':'tunggu';
+  const barisA=(a, sumber)=>{ const cls='beli';
     const r=a.rencana||a;
     const bth=a.sasaranBertahan?` <span title="${(a.ketSasaran||'').replace(/"/g,'')}" style="font-size:9px;color:var(--legap)">[BERTAHAN${a.bertahanHari?' '+a.bertahanHari+'h':''}]</span>`:'';
+    const amb=(r.jualProfit||r.target)?` · entry ${r.entry} · stop ${r.stop??'—'} · <b>jual profit ${r.jualProfit??r.target}</b> (ambang napas +${r.ambangFaktaPct??'?'}%) · <b>ambisius ${r.jualAmbisius??r.highAmbisius??'—'}</b>`:'';
     return `<div class="baris"><span class="k"><b>${a.simbol}</b>${bth}</span>
-      <span class="v"><span class="arahBig ${cls}" style="font-size:10.5px;display:inline-block;padding:1px 7px;border-radius:7px">${a.arah}</span>
-      ${a.keyakinan}%${r.entry?` · entry ${r.entry} · target ${r.target} · <b>ambisius ${r.highAmbisius??'—'}</b>`:' · tunggu pemicu'}</span></div>`; };
+      <span class="v"><span class="arahBig ${cls}" style="font-size:10.5px;display:inline-block;padding:1px 7px;border-radius:7px">BUY</span>
+      ${a.keyakinan}%${a.layakSkor!=null?` · layak ${a.layakSkor}`:''}${a.keluarga?` · ${a.keluarga}`:''}${amb}</span></div>
+      ${a.alasanAmbisius?`<div class="kecil" style="margin:-1px 0 4px;padding-left:8px;color:var(--tx2)">alasan: ${a.alasanAmbisius}</div>`:''}`; };
   const k=S1.keadaan;
   const data=k&&k.arahHarian&&k.arahHarian.top5&&k.arahHarian.top5.length?k.arahHarian:null;
   if(data){
@@ -2342,7 +2429,7 @@ function arah5Render(){
     // nalar lahir lokal dari angka (tanpa kunci luar); satu tubuh satu bicara.
     const obBaris=sg&&sg.otakBiner&&sg.otakBiner.narasi?`<br><span style="color:var(--tx2)"><b>OTAK-BINER</b> (matematika murni, lahir lokal tanpa kunci): ${String(sg.otakBiner.narasi).replace(/</g,'&lt;').slice(0,260)}…</span>`:'';
     const saktiBaris=sg?`<div class="kecil" style="margin:5px 0;padding:4px 7px;border:1px solid var(--legap);border-radius:8px"><b>VENA SELARAS SAKTI</b> ${sg.siklusSakti?`denyut #${sg.siklusSakti}`:''}${typeof sg.irisan==='number'?` · irisan <b>${sg.irisan}/${sg.dari??'?'}</b>`:''}${Array.isArray(sg.sasaranResmi)&&sg.sasaranResmi.length?` · sasaran resmi SAKTI: ${sg.sasaranResmi.join(' · ')}`:''}<br>${sg.ket||''}${obBaris}</div>`:'';
-    w.innerHTML=`<div class="kecil" style="margin-bottom:4px">${data.jumlah} koin kuaudit Sadar-1 bangun ke-<b>${k.bangunKe}</b> — ini sasaran terbaiknya. <b>AMBISIUS</b> = sasaran peregangan 4×ATR14, bukan janji. [BERTAHAN] = posisi masih jalan dari bangun lalu, BUKAN kunci baru.</div>`+
+    w.innerHTML=`<div class="kecil" style="margin-bottom:4px">${data.jumlah} koin kuaudit Sadar-1 bangun ke-<b>${k.bangunKe}</b> — SEMUA-BUY (hukum TANPA-TUNGGU: koin yang disebut wajib BUY; yang tak layak diganti). <b>jual profit</b> = ambang napas p50 keluarganya, bukan di atasnya. [BERTAHAN] = posisi masih jalan dari bangun lalu, BUKAN kunci baru.</div>`+
       saktiBaris+
       data.top5.map(a=>barisA(a,'segel')).join('')+
       `<div class="kecil" style="margin-top:4px;color:var(--legap)">sumber: ruang-hidup/arah.json + laporan/arah-harian.json — commit GitHub, bisa diaudit siapa pun · ${data.mandat||''}</div>`;
@@ -2350,11 +2437,10 @@ function arah5Render(){
   }
   // fallback lokal: rumus sama, label jujur — bukan segel resmi
   const kr=(S1.ingatan&&S1.ingatan.kromosom)||{rsiMax:70, momMin:0.6, holdJam:24, generasi:0};
-  const loc=Object.entries(S.pasar).map(([sym,p])=>{ const g=guruHitung(p,null,kr); g.simbol=sym;
-    if(g.rencana){ const buy=g.arah==='BELI';
-      g.rencana.highAmbisius=+((buy?p.harga+4*p.atr:p.harga-4*p.atr)).toPrecision(8); }
+  const PEG=/^(USD1|RLUSD|USDE|USDS|USDG|PYUSD|EURC|XUSD|USDC|FDUSD|TUSD|BUSD|DAI|EUR|AEUR|USDP|FRAX|USDX|USDTB|USD|BUSD)USDT$/;
+  const loc=Object.entries(S.pasar).filter(([sym])=>!PEG.test(sym)).map(([sym,p])=>{ const g=guruHitung(p,null,kr); g.simbol=sym;
     return g; })
-    .sort((a,b)=>((a.arah==='TUNGGU')-(b.arah==='TUNGGU'))||(b.keyakinan-a.keyakinan)).slice(0,5);
+    .sort((a,b)=>(b.layakSkor||0)-(a.layakSkor||0)||(b.keyakinan-a.keyakinan)).slice(0,5);
   if(loc.length){
     w.innerHTML='<div class="kecil" style="margin-bottom:4px">hitungan lokal Sadar-2 (rumus sama dengan Sadar-1) — segel resmi menyusul ≤20 mnt:</div>'+
       loc.map(a=>barisA(a,'lokal')).join('');
@@ -2368,24 +2454,26 @@ function guruRender(){
   delete w.dataset.kotor;
   arah5Render();
   const g=guruKeadaan();
-  const cls=g.arah==='BELI'?'beli':g.arah==='JUAL'?'jual':'tunggu';
+  const cls='beli';
   const wa=document.getElementById('gvArah');
   wa.innerHTML=`
     <div class="arahWrap">
       <div class="arahBig ${cls}">${g.arah}</div>
       <div class="arahSide">
-        <div class="arahSym">${g.simbol||'—'} ${g.rencana?'· harga '+g.rencana.entry:''}</div>
-        <div class="arahKey">keyakinan ${g.keyakinan}% · hold ${g.rencana?g.rencana.holdJam+'j':'—'}</div>
+        <div class="arahSym">${g.simbol||'—'} ${g.rencana?'· harga '+g.rencana.entry:''}${g.keluarga?` · ${g.keluarga}`:''}</div>
+        <div class="arahKey">keyakinan ${g.keyakinan}%${g.layakSkor!=null?` · layak ${g.layakSkor}`:''} · hold ${g.rencana?g.rencana.holdJam+'j':'—'}</div>
         <div class="arahBar"><i style="width:${g.keyakinan}%"></i></div>
       </div>
     </div>
     ${g.rencana?`
-    <div class="baris"><span class="k">rencana deal</span><span class="v h">${g.rencana.arah} · RR 1,67</span></div>
+    <div class="baris"><span class="k">pakem BUY (5 baris)</span><span class="v h">${g.keluarga||'—'} · RR ${g.rencana.rr}</span></div>
     <div class="baris"><span class="k">entry</span><span class="v">${g.rencana.entry}</span></div>
-    <div class="baris"><span class="k">stop (1,5×ATR14)</span><span class="v r">${g.rencana.stop}</span></div>
-    <div class="baris"><span class="k">target (2,5×ATR14)</span><span class="v h">${g.rencana.target}</span></div>
-    <div class="kecil" style="margin-top:4px">${g.rencana.disiplin}</div>`
-    :'<div class="kecil" style="margin-top:2px">TUNGGU = tidak ada rencana deal — modal menunggu di luar pasar; disiplin juga adalah arah.</div>'}
+    <div class="baris"><span class="k">stop loss (bawah dasar napas)</span><span class="v r">${g.rencana.stop}</span></div>
+    <div class="baris"><span class="k">jual profit (ambang napas p50)</span><span class="v h">${g.rencana.jualProfit||g.rencana.target}</span></div>
+    <div class="baris"><span class="k">jual profit ambisius (p75)</span><span class="v h">${g.rencana.jualAmbisius||g.rencana.highAmbisius}</span></div>
+    <div class="kecil" style="margin-top:4px">alasan ambisius: ${g.alasanAmbisius||g.rencana.disiplin}</div>
+    <div class="kecil" style="margin-top:2px">${g.rencana.disiplin}</div>`
+    :'<div class="kecil" style="margin-top:2px">hukum TANPA-TUNGGU: koin ini belum berdata sejati — kugali koin lain yang sudah siap; nol modal menganggur tanpa rencana.</div>'}
     <div style="margin-top:7px">${(g.alasan||[]).map(a=>`<div class="kecil">· ${a}</div>`).join('')}</div>
     <div class="kecil" style="margin-top:6px;color:var(--legap)">sumber: ${(g.dasar||[]).join(' · ')} — ${g.sumber||''}</div>`;
   const m=S.madrasah||(S1.keadaan&&S1.keadaan.madrasah);
@@ -3420,9 +3508,10 @@ function biometrik(stx, pk, kd, btc){
   const tunggu=(b.disiplin||'').toString().toUpperCase().includes('TUNGGU')
              ||(b.guruMode||'').toString().toUpperCase().includes('TUNGGU');
   const merugi=(b.netKum!=null&&b.netKum<0)||(b.akurasiPct!=null&&b.akurasiPct<45);
-  b.sikap=(!JASAD.hidup)?'netral':(kb<0.25?'lemah-data':(merugi?'bungkuk':(tunggu?'tunggu':(top&&top.skor>=60?'siaga':'netral'))));
+  // V335 TANPA-TUNGGU: sikap 'tunggu' mati → 'mencerna' (tubuh tetap bekerja)
+  b.sikap=(!JASAD.hidup)?'netral':(kb<0.25?'lemah-data':(merugi?'bungkuk':(tunggu?'mencerna':(top&&top.skor>=60?'siaga':'netral'))));
   if(b.sikap==='bungkuk') dimF*=0.8;
-  if(b.sikap==='tunggu') dimF*=0.85;
+  if(b.sikap==='mencerna') dimF*=0.85;
   b.dimFaktor=KLAMP(dimF,0.4,1);
 
   /* mata: arah momentum 1m nyata */
@@ -3998,10 +4087,10 @@ function render(){
     if(pg.statistik) h+=`<div class="kecil" style="margin:6px 0"><b>peta-geladak (V307)</b> — otak tempaan jadi suara kelima majelis: <b>${pg.statistik.total} jejak</b> (warisan ${pg.statistik.warisan} · dunia ${pg.statistik.dunia})${pg.pelajaranDuniaBaru?` · pelajaran dunia baru +${pg.pelajaranDuniaBaru}`:''} — tiap vonis yang dinilai pasar mengajari peta; tanpa edge di walk-forward = bobot NOL.</div>`;
     h+=`<div class="kecil" style="margin-top:6px"><b>vonis majelis kini</b> — stop 1,5×ATR14 · target 3×ATR14 (R:R 2,0) · ukuran saran = risiko 1% ekuitas / jarak stop:</div>`;
     for(const m of (D.majelis||[])){
-      h+=`<div class="pel"><span class="t">${m.simbol.replace(/USDT$/,'')} · ${m.jalurPenjaga||'—'}</span><b>${m.arah}${m.keyakinan?(' · keyakinan '+m.keyakinan+'%'):' · guru menunggu'}</b>`
+      h+=`<div class="pel"><span class="t">${m.simbol.replace(/USDT$/,'')} · ${m.jalurPenjaga||'—'}</span><b>${m.arah==='TUNGGU'?'DIGANTI (hukum TANPA-TUNGGU)':m.arah}${m.keyakinan?(m.arah==='TUNGGU'?(' · layak '+m.keyakinan+'% < bar'):' · keyakinan '+m.keyakinan+'%'):''}</b>`
         +(m.arah!=='TUNGGU'
           ? `<div>entry ${F(m.entry,6)} · stop ${F(m.stop,6)} (${m.stopPct}%) · target ${F(m.target,6)} · R:R 2,0 · ukuran saran ${m.ukuranSaranPct}% ekuitas</div>`
-          : `<div>${m.badai?'badai volatilitas — guru tidak berdagang di badai':'bukti belum seirama — menunggu adalah ilmu'}</div>`)
+          : `<div>hukum TANPA-TUNGGU (pemilik 2026-10-11): koin ini tak layak — WAJIB diganti koin terlayak hasil galian; lihat tab GURU/ARAH untuk sasaran BUY kini</div>`)
         +`<div class="bkt">penjaga: ${m.arahPenjaga||'—'} · majelis ${m.sepakat?'<b>SEPAKAT</b>':'<b>berbeda — jujur ditampilkan</b>'} · rezim ${m.rezimVol||'—'}</div></div>`;
     }
     h+=`<div class="baris" style="margin-top:6px"><span class="k">buku-evaluasi (pasar menghakimi)</span><span class="v h"><b>${rp.menang||0}W / ${rp.rugi||0}L</b> · winRate ${rp.winRatePct!=null?rp.winRatePct+'%':'—'} · R-rata ${rp.rRata??'—'}</span></div>`

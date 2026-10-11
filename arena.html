@@ -2464,7 +2464,10 @@ async function bedahKoinLokal(t, holder, question, alasan) {
       + '- Volume 24 jam **' + (qv / 1e6).toFixed(1) + ' jt USDT**' + (likuid ? ' (likuid)' : ' (LIKUIDITAS TIPIS — hati-hati, fee mudah memakan gerak tipis)') + '\n'
       + '- mom7 ' + (mom7 >= 0 ? '+' : '') + mom7.toFixed(1) + '% · mom30 ' + (mom30 >= 0 ? '+' : '') + mom30.toFixed(1) + '% · RSI-14 ' + rsiV.toFixed(0) + ' · EMA20/50 ' + (emaAlign >= 1 ? 'tersusun naik' : emaAlign > 0 ? 'setengah tersusun' : 'PATAH') + ' · ATR ' + atrV.toFixed(1) + '% · jarak puncak60 ' + distHigh.toFixed(1) + '% · lonjakan vol ' + volSurge.toFixed(2) + 'x'
       + proTeks + posTeks
-      + '\n\n**VONIS MESIN: ' + arah + ' · keyakinan ' + key + '%**\n\n'
+      + (arah === 'TUNGGU'
+        ? '\n\n**VONIS MESIN: BELUM-LAYAK — DIGANTI (hukum TANPA-TUNGGU V335)** · skor ' + s.toFixed(1) + ' di bawah bar BUY\n\nHukum pemilik: koin yang tak layak WAJIB diganti — aku tak menjual harapan di koin yang belum bernapas. Penggantinya ada di **SASARAN-5** (semua BUY, digali terus):'
+          + ((S5_CACHE && S5_CACHE.length) ? ' ' + S5_CACHE.filter((f) => f.arah === 'BUY').slice(0, 3).map((f) => f.symbol.replace('USDT', '')).join(', ') : ' gali di panel SASARAN-5')
+        : '\n\n**VONIS MESIN: ' + arah + ' · keyakinan ' + key + '%**\n\n')
       + 'Jujur: ini bedah kuantitatif SATU koin dari data hidup, bukan jaminan profit — arah biner selalu bisa dibantah medan esok hari.';
   } catch (e) {
     isi = 'Bedah **' + pas + '** gagal di tengah jalan (jaring: ' + esc((e && e.message) || '?') + ') — aku jujur: lebih baik tanpa laporan daripada laporan yang dikarang. Coba lagi sebentar.';
@@ -2570,22 +2573,49 @@ async function sasaranLimaJalan(paksa) {
     const adaMentah = hasil.filter(Boolean);
     const ada = adaMentah.filter((f) => !f.pegged);
     if (!ada.length) throw new Error('bedah ' + pool.length + ' koin semua gagal (jaring sedang sakit)');
-    // gerbang: kandidat ber-arah penuh (BUY/SELL) dulu, terkuat dulu — bila kurang
-    // dari 5, sisanya dilengkapi kandidat TUNGGU berlabel jujur PENGAWASAN.
+    // V335 HUKUM TANPA-TUNGGU (pemilik 2026-10-11): koin yang disebut WAJIB BUY —
+    // SELL = eksekusi jual hasil koin BUY, TUNGGU dihapus. Lima besar = BUY semua;
+    // bila BUY kurang dari 5, GALI TERUS: kerek lapisan likuiditas 3 jt → 1 jt
+    // (arah TIDAK dilonggarkan — bar kualitas tetap) sampai kelima kursi terisi.
     const skorDesc = (a, b) => (b.s * b.s) - (a.s * a.s);
-    const kunci = ada.filter((f) => f.arah !== 'TUNGGU').sort(skorDesc);
-    const sisa = ada.filter((f) => f.arah === 'TUNGGU').sort(skorDesc);
-    const butuh = 5 - Math.min(5, kunci.length);
-    const lima = kunci.slice(0, 5).concat(butuh > 0 ? sisa.slice(0, butuh) : []);
-    if (!lima.length) throw new Error('tak ada kandidat yang terbaca utuh');
+    let adaGali = ada;
+    let galiTambahan = 0;
+    const kumpulBeli = () => adaGali.filter((f) => f.arah === 'BUY').sort(skorDesc);
+    let lima = kumpulBeli().slice(0, 5);
+    if (lima.length < 5) {
+      try {
+        const poolDalam = (semua || []).filter((t) => /USDT$/.test(t.symbol) && !S5_GANDA.test(t.symbol)
+          && S5_STABLE.indexOf(t.symbol) === -1 && !S5_PEGGED_BASE.test(t.symbol.replace(/USDT$/, ''))
+          && +t.quoteVolume >= S5_QV_MIN / 3 && +t.quoteVolume < S5_QV_MIN && +t.lastPrice > 0)
+          .sort((a, b) => +b.quoteVolume - +a.quoteVolume).slice(0, 150);
+        if (poolDalam.length) {
+          box.innerHTML = '<p class="tiny" style="color:var(--dim)">hukum TANPA-TUNGGU: BUY sah kurang dari 5 — GALI TERUS di lapisan likuiditas lebih dalam (' + poolDalam.length + ' koin)…</p>';
+          const hasil2 = await s5peta(poolDalam, 10, async (t) => {
+            try {
+              const kl = await ambil('https://api.binance.com/api/v3/klines?symbol=' + t.symbol + '&interval=1d&limit=70', 15000);
+              if (!kl || kl.length < 25) return null;
+              const f = s5faktor(kl, +t.quoteVolume);
+              if (!isFinite(f.last) || f.last <= 0) return null;
+              f.symbol = t.symbol; f.chg = +t.priceChangePercent; f.qv = +t.quoteVolume;
+              f.pegged = (f.atrV < 1.5 && Math.abs(f.mom7) < 1 && Math.abs(f.mom30) < 1.5);
+              return f;
+            } catch (e) { return null; }
+          });
+          const ada2 = (hasil2.filter(Boolean)).filter((f) => !f.pegged);
+          if (ada2.length) { adaGali = ada.concat(ada2); galiTambahan = ada2.length; }
+          lima = kumpulBeli().slice(0, 5);
+        }
+      } catch (e) { /* jaring lelah di lapisan dalam — yang sudah digali tetap sah */ }
+    }
+    if (!lima.length) throw new Error('tak ada kandidat BUY yang terbaca utuh — kugali lagi, aku tidak akan mengarang');
     // satu rumah satu kebenaran: posisi sasaran RESMI SAKTI hari ini dipetakan jujur
     const resmi = (((typeof st !== 'undefined' ? st : null) || {}).venaSatuRumah || {}).sasaran || [];
-    const ranking = ada.slice().sort(skorDesc);
+    const ranking = adaGali.slice().sort(skorDesc);
     const posisiResmi = resmi.map((sim) => {
       const idx = ranking.findIndex((f) => f.symbol === String(sim).toUpperCase() + 'USDT');
       return idx >= 0 ? { sim: String(sim).toUpperCase(), peringkat: idx + 1, total: ranking.length, arah: ranking[idx].arah, skor: ranking[idx].s, key: ranking[idx].key } : { sim: String(sim).toUpperCase(), peringkat: null };
     });
-    S5_META = { posisiResmi, dibedah: ada.length, target: pool.length, peggedBuang: adaMentah.length - ada.length };
+    S5_META = { posisiResmi, dibedah: adaGali.length, target: pool.length, peggedBuang: adaMentah.length - ada.length, galiTambahan };
     S5_CACHE = lima; S5_CACHE_AT = kini;
     s5render(lima);
   } catch (e) {
@@ -2609,15 +2639,14 @@ function s5render(lima) {
     const tK = f.arah === 'SELL' ? ent - f.atrAbs : ent + f.atrAbs;
     const sK = f.arah === 'SELL' ? ent + Math.max(1.5 * f.atrAbs, ent * 0.015) : ent - Math.max(1.5 * f.atrAbs, ent * 0.015);
     const tPct = ((tK - ent) / ent) * 100, sPct = ((sK - ent) / ent) * 100;
-    const tunggu = f.arah === 'TUNGGU';
+    const tunggu = false; // V335 TANPA-TUNGGU: baris TUNGGU dihapus — lima besar WAJIB BUY (digali terus)
     const alasan = (f.emaAlign >= 1 ? 'EMA tersusun naik' : f.emaAlign > 0 ? 'EMA setengah tersusun' : 'EMA patah')
       + ' · mom7 ' + (f.mom7 >= 0 ? '+' : '') + f.mom7.toFixed(1) + '% · mom30 ' + (f.mom30 >= 0 ? '+' : '') + f.mom30.toFixed(1) + '%'
       + ' · RSI ' + f.rsiV.toFixed(0) + ' · lonjak-vol ' + f.volSurge.toFixed(2) + '× · ATR ' + f.atrV.toFixed(1) + '%'
       + ' · jarak puncak ' + f.distHigh.toFixed(1) + '%';
-    const ket = tunggu ? 'PENGAWASAN — belum lolos gerbang kunci; level hanya garis pengawasan, bukan undangan masuk'
-      : 'rencana pra-hitung — target 1×ATR, stop 1,5×ATR; dinilai medan candle besok, patuhi stop';
-    const dirCls = tunggu ? '' : f.arah;
-    const dirStyle = tunggu ? ' style="background:rgba(148,163,184,.18);color:var(--dim)"' : '';
+    const ket = 'BUY sah (hukum TANPA-TUNGGU) — rencana pra-hitung: target 1×ATR, stop 1,5×ATR; dinilai medan candle besok, patuhi stop';
+    const dirCls = f.arah;
+    const dirStyle = '';
     return '<div class="pickwrap"><div class="pickrow">'
       + '<span class="mono" style="color:var(--amber2);font-weight:700">#' + (i + 1) + '</span>'
       + '<span class="dir ' + dirCls + '"' + dirStyle + '>' + esc(f.arah) + '</span>'
@@ -2637,8 +2666,7 @@ function s5render(lima) {
       + '</div>'
     : '';
   box.innerHTML = rows + luarHtml
-    + '<p class="tiny" style="margin-top:9px;line-height:1.65">Sumber: <b>Binance spot langsung lewat perambanmu</b> — KANDANG PENUH: ' + (S5_META ? S5_META.dibedah + ' dari ' + S5_META.target + ' pasangan USDT likuid (≥3 jt USDT/hari)' : 'seluruh koin likuid') + ' dibedah ' + esc(jam) + ' UTC, rumus sama dengan mesin arena (EMA/RSI/ATR/momen/lonjak-volume/jarak-puncak). Jujur hukum V274: <b>"pasti kena" tidak ada di rumah ini</b> — inilah 5 terbaik menurut skor transparan saat itu'
-    + (lima.some((f) => f.arah === 'TUNGGU') ? '; yang bertanda TUNGGU cuma pengawasan, bukan undangan masuk' : '')
+    + '<p class="tiny" style="margin-top:9px;line-height:1.65">Sumber: <b>Binance spot langsung lewat perambanmu</b> — KANDANG PENUH: ' + (S5_META ? S5_META.dibedah + ' dari ' + S5_META.target + ' pasangan USDT likuid (≥3 jt USDT/hari)' + (S5_META.galiTambahan > 0 ? ' + ' + S5_META.galiTambahan + ' dari lapisan dalam (GALI-TERUS)' : '') : 'seluruh koin likuid') + ' dibedah ' + esc(jam) + ' UTC, rumus sama dengan mesin arena (EMA/RSI/ATR/momen/lonjak-volume/jarak-puncak). <b>Hukum TANPA-TUNGGU V335:</b> koin yang disebut WAJIB BUY — SELL = eksekusi jual hasil koin BUY; bila BUY sah kurang dari 5, kandang digali lebih dalam (arah tak pernah dilonggarkan). Jujur hukum V274: <b>"pasti kena" tidak ada di rumah ini</b> — inilah 5 terbaik menurut skor transparan saat itu'
     + '. Benar/salahnya dinilai medan candle besok, bukan oleh mulut siapa pun. Patuhi stop, jangan menawar dengan harapan.</p>';
 }
 
