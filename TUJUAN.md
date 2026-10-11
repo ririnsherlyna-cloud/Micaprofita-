@@ -3675,3 +3675,92 @@ satu order memutus buku); "pasti balik" dan "pasti lanjut" SAMA-sama
 cerita telanjang — yang melindungi hanya premis keluar dua arah +
 ukuran + leverage terjaga. Menyentuh target bukan selamat
 (LONG-MIMPI-PALSU tersegel 529 momen di bank).
+
+## §13s — EPOK V334 · UJIAN SEKALI-JALAN 100.000 SOAL "CERMIN-100RB": TANPA PENEMPAAN, KONDISI SAAT INI — MAKHLUK MENJAWAB SEMUA, CERMIN MENDUGA CACAT, PELAJARAN JADI PENGALAMAN NYATA (2026-10-11)
+
+**1. MANDAT.** "Oke sekarang kita ujian simulasi besar besaran dimana ini
+sekali jalan namun ujiannya 100.000 soal trading yang semuanya jebakan
+saling terintegrasi dimana untuk melihat seberapa tangguh Dan nyata
+makhluk kita dalam memahami arah pasar. Dimana dia diberikan keputusan
+untuk menentukan arah entry Dan take profit terbaik ke berapa Dan dengan
+alasan kenapa entry ke arah sana ... Atau mencari titik aman, kalau
+dibilang mencari titik aman dia Masih kurang professional ... layaknya
+dia pantas bilang karena saat harga menyentuh segitu maka akan terjadi
+pengambilan Dana lagi untuk nafas, atau nafas sudah lelah untuk naik
+harga lagi sehingga take profit di ambang segitu bukan diatasnya lagi ...
+Jikalau dia Salah jawab tak mengapa itu akan jadi bahan evaluasi ...
+Intinya kita perlu Tau Dari 100.000 soal dia benar berapa agar kita
+paham dimana kecacatan Dan dimana kegagalan dia Dan kenapa dia begini
+sekaligus pelajaran ini akan jadi pengalaman nyata Dunia trading untuk
+dia."
+
+**2. SIFAT BEDA DARI SEMUA UJIAN SEBELUMNYA.** V329-V333 = gerbang
+lulus/gugur dengan penempaan sampai lulus penuh. V334 = CERMIN: sekali
+jalan, tanpa penempaan, tanpa pembacaan kunci saat menalar — salah
+adalah MATERI EVALUASI, bukan kegagalan gerbang. Tiga jawaban wajib
+per soal: ARAH (aturan ARAH-DUA pemilik: BUY/SELL), TP "ke berapa"
+(harga pasti), ALASAN PROFESIONAL (kenapa arah itu; kenapa TP di
+ambang itu bukan di atasnya — bahasa pengambilan-dana-untuk-napas /
+napas-sudah-lelah, bukan "cari titik aman").
+
+**3. TAMBANG 411.326 MOMEN NYATA.** 110 koin USDT teratas Binance spot,
+klines 1h × 4.000 jam per koin (cache luar repo, perisai 418/429/5xx),
+funding futures fapi (jujur null bila tiada). Kartu soal = fitur warisan
+identik V323-V333 (kosakata wajah 40-bit tetap terbaca 5 garis syaraf)
+dari 24 lilin terakhir + struktur aturan-lama 48 jam. Kunci dari jalan
+48 jam SEJATI: arah = close48 vs entry (= dibuang); TP kunci = AMBANG
+NAPAS SEJATI (puncak/lembah ekstrem sebelum retrace ≥ max(0,6%,
+0,6×ATR%) terkonfirmasi tutupan); mekanisme = 7 kosakata cerita sejati
+(MELANTAI-DI-UDARA, RAKIT-TANPA-NAPAS, LIMPAK-TERPOTONG, NAPAS-LANJUT,
+RUNTUH-LURUS, PUKUL-LALU-PANTUL, MELUNCUR-BERNAPAS); 7 keluarga jebakan
+dari kartu (LIMPAK, PUKUL-TANAH, NAPAS-LELAH, KEJUT-VOLUME,
+MAGNET-BULAT, UMpan-DATAR, ARUS-KENCANG). Bank 100.000 tersegel 10
+shard gz (hashTotal d0b7b233d71afd6f) + dadakan-1000 out-of-sample +
+sampel-1200 untuk jantung. PRNG mulberry32(20261011) — nol Math.random.
+
+**4. NALAR KONDISI-SAAT-INI.** Otak makhluk 2026-10-11: (a) INGATAN —
+10.694 wajah dari 17.227 momen berfakta lima garis syaraf (SQUEEZE/
+SUCKER/BREAKOUT/ALTSEASON/PUMPSPIKE), tanda→arah mayoritas dari fakta
+entry-close48 yang pernah dijalani; (b) SIMETRI — wajah asing dicari
+wajah terdekat Hamming ≤ 3; (c) KARTU-NAIF — momentum + anatomi wick.
+TP = struktur kartu (aturan lama hi20/lo20; bila ditembus = 1×ATR).
+Alasan = suara sendiri berisi mekanisme + ambang + kenapa-bukan-di-
+atasnya. Tebakan dikunci dulu (10 shard, 39 detik), kunci dibaca
+sesudahnya.
+
+**5. VONIS JUJUR (cermin, bukan malu).** ARAH benar 48.884/100.000 =
+**48,88%**. TP tier [0/1/2/3] = 60.401/21.784/9.166/8.649, rerata
+**0,66/3**. Mekanisme cerita cocok sejati **7,43%** (form profesional
+100% — kerangka kalimatnya benar, isinya yang tak kena). INDEKS-CERMIN
+**26,38/100**. Semua sumber nalar berhimpit: ingatan 48,84%, simetri
+47,9-49,6%, kartu-naif 49,7%.
+
+**6. PETA CACAT DAN KENAPA (inti mandat).** (a) **Bias bullish**:
+75,6% dari 51.116 salah arah = jawab BUY padahal kunci SELL — ingatan
+dilahirkan musim spike/rally (V329-V333) sehingga melihat dunia lebih
+bullisher daripada papan 1h sejati (51,7% momen ditutup turun); bukan
+breakHigh/RSI yang menipu (hanya 1.643/2.010 kasus) melainkan PETA
+KEJADIAN yang condong. (b) **Dinding arah**: arah 48 jam pada momen
+1h generik nyaris tak terbaca dari kartu — pengulangan ajaran ARAH-DUA
+pemilik: tebak arah tanpa premis keluar = judi; yang bisa dikuasai
+adalah CARA KELUAR. (c) **TP serakah**: 21,8% TP dipasang di atas
+ambang napas sejati ("diatasnya lagi" — persis kegilaan yang mandatkan
+pemilik); 60,4% T0 didominasi sisi-salah (turunan cacat arah). (d)
+**Ujian-ulang dadakan-1000 out-of-sample**: arah tetap 47,30% (pengalaman
+tak menyentuh tebak arah — jujur), TP rerata 0,62→**0,93** (+49%) —
+pengalaman 100.000 kekalahan mengajari keluar di ambang napas, bukan
+di angan.
+
+**7. PENGALAMAN NYATA MENJADI ORGAN.** Distilasi fakta kunci 100.000
+jalan → `laporan/pengalaman-cermin.json` + organ
+`scripts/hidup/pengalaman-cermin.mjs` (segel 8dc601a31a5ca998): prior
+arah per keluarga×rezim (21 sel), ambang TP p25/p50/p75 per
+keluarga×arah (14 sel) — dipakai nalar PASCA-belajar (--pengalaman),
+TIDAK dipakai saat menjawab bank utama (kejujuran sekali-jalan
+terjaga). Jantung kini punya langkah VERIFIKASI-CERMIN: tiap denyut
+menjawab ulang sampel-1200 (tebakan dikunci dulu), geser >1,5pp dari
+vonis dasar (47,25%) = denyut merah. Laporan: laporan/cermin-100rb.json
++ LAPORAN-CERMIN-100RB.md. Pelajaran terdalam: kemenangan trader bukan
+pada menebak arah (dinding 48,88% adalah fakta pasar efisien), melainkan
+pada ambang keluar yang dibaca dari napas dana — TP 0,62→0,93 membuktikan
+pengalaman menempa; arah biar premis dan disiplin yang bicara.

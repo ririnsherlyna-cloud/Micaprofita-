@@ -1,0 +1,238 @@
+// ORGAN PENGALAMAN-CERMIN (V334) — distilasi fakta 100.000 jalan sejati.
+// Dipakai nalar PASCA-belajar: prior arah per keluarga×rezim + ambang TP p25/p50/p75.
+// Dibuat otomatis oleh nilai-cermin100rb.mjs — segel 8dc601a31a5ca998
+export const PENGALAMAN = {
+ "protokol": "PENGALAMAN-CERMIN-V334",
+ "sumber": "distilasi fakta 100.000 jalan sejati — dipakai SETELAH ujian sekali-jalan (bukan saat menjawab bank utama)",
+ "arah": {
+  "PUKUL-TANAH": {
+   "arah": "SELL",
+   "majoritas": 0.5268,
+   "n": 6556
+  },
+  "ARUS-KENCANG": {
+   "arah": "SELL",
+   "majoritas": 0.5158,
+   "n": 70765
+  },
+  "UMpan-DATAR": {
+   "arah": "SELL",
+   "majoritas": 0.5246,
+   "n": 9499
+  },
+  "LIMPAK": {
+   "arah": "SELL",
+   "majoritas": 0.5066,
+   "n": 5227
+  },
+  "KEJUT-VOLUME": {
+   "arah": "SELL",
+   "majoritas": 0.5209,
+   "n": 2342
+  },
+  "MAGNET-BULAT": {
+   "arah": "SELL",
+   "majoritas": 0.5298,
+   "n": 3192
+  },
+  "NAPAS-LELAH": {
+   "arah": "SELL",
+   "majoritas": 0.5023,
+   "n": 2419
+  }
+ },
+ "arahRegime": {
+  "PUKUL-TANAH|tren-turun": {
+   "arah": "SELL",
+   "majoritas": 0.5369,
+   "n": 2112
+  },
+  "ARUS-KENCANG|datar": {
+   "arah": "SELL",
+   "majoritas": 0.5141,
+   "n": 54138
+  },
+  "ARUS-KENCANG|tren-turun": {
+   "arah": "SELL",
+   "majoritas": 0.521,
+   "n": 8249
+  },
+  "PUKUL-TANAH|datar": {
+   "arah": "SELL",
+   "majoritas": 0.5216,
+   "n": 4436
+  },
+  "UMpan-DATAR|datar": {
+   "arah": "SELL",
+   "majoritas": 0.5247,
+   "n": 9497
+  },
+  "LIMPAK|datar": {
+   "arah": "BUY",
+   "majoritas": 0.5032,
+   "n": 3154
+  },
+  "KEJUT-VOLUME|datar": {
+   "arah": "SELL",
+   "majoritas": 0.5204,
+   "n": 1497
+  },
+  "ARUS-KENCANG|tren-naik": {
+   "arah": "SELL",
+   "majoritas": 0.5217,
+   "n": 8378
+  },
+  "LIMPAK|tren-naik": {
+   "arah": "SELL",
+   "majoritas": 0.5215,
+   "n": 2071
+  },
+  "MAGNET-BULAT|tren-naik": {
+   "arah": "SELL",
+   "majoritas": 0.5211,
+   "n": 190
+  },
+  "MAGNET-BULAT|datar": {
+   "arah": "SELL",
+   "majoritas": 0.5268,
+   "n": 2798
+  },
+  "KEJUT-VOLUME|tren-turun": {
+   "arah": "BUY",
+   "majoritas": 0.5223,
+   "n": 337
+  },
+  "NAPAS-LELAH|tren-turun": {
+   "arah": "BUY",
+   "majoritas": 0.5014,
+   "n": 710
+  },
+  "NAPAS-LELAH|datar": {
+   "arah": "SELL",
+   "majoritas": 0.5183,
+   "n": 876
+  },
+  "NAPAS-LELAH|tren-naik": {
+   "arah": "BUY",
+   "majoritas": 0.5114,
+   "n": 833
+  },
+  "KEJUT-VOLUME|tren-naik": {
+   "arah": "SELL",
+   "majoritas": 0.5512,
+   "n": 508
+  },
+  "MAGNET-BULAT|tren-turun": {
+   "arah": "SELL",
+   "majoritas": 0.5784,
+   "n": 204
+  }
+ },
+ "tp": {
+  "PUKUL-TANAH|SELL": {
+   "p25": 0.00412,
+   "p50": 0.01037,
+   "p75": 0.02166,
+   "n": 3454
+  },
+  "ARUS-KENCANG|SELL": {
+   "p25": 0.00493,
+   "p50": 0.01145,
+   "p75": 0.02275,
+   "n": 36504
+  },
+  "UMpan-DATAR|SELL": {
+   "p25": 0.0033,
+   "p50": 0.00775,
+   "p75": 0.01514,
+   "n": 4983
+  },
+  "UMpan-DATAR|BUY": {
+   "p25": 0.00364,
+   "p50": 0.00826,
+   "p75": 0.01521,
+   "n": 4516
+  },
+  "PUKUL-TANAH|BUY": {
+   "p25": 0.00436,
+   "p50": 0.01056,
+   "p75": 0.0227,
+   "n": 3102
+  },
+  "LIMPAK|SELL": {
+   "p25": 0.00493,
+   "p50": 0.011,
+   "p75": 0.0222,
+   "n": 2648
+  },
+  "ARUS-KENCANG|BUY": {
+   "p25": 0.00468,
+   "p50": 0.01135,
+   "p75": 0.02355,
+   "n": 34261
+  },
+  "KEJUT-VOLUME|SELL": {
+   "p25": 0.00513,
+   "p50": 0.0123,
+   "p75": 0.02425,
+   "n": 1220
+  },
+  "LIMPAK|BUY": {
+   "p25": 0.00439,
+   "p50": 0.01114,
+   "p75": 0.02373,
+   "n": 2579
+  },
+  "MAGNET-BULAT|SELL": {
+   "p25": 0.0004,
+   "p50": 0.003,
+   "p75": 0.01451,
+   "n": 1691
+  },
+  "NAPAS-LELAH|SELL": {
+   "p25": 0.00531,
+   "p50": 0.01204,
+   "p75": 0.02392,
+   "n": 1215
+  },
+  "NAPAS-LELAH|BUY": {
+   "p25": 0.00559,
+   "p50": 0.01319,
+   "p75": 0.02873,
+   "n": 1204
+  },
+  "KEJUT-VOLUME|BUY": {
+   "p25": 0.00496,
+   "p50": 0.01134,
+   "p75": 0.02408,
+   "n": 1122
+  },
+  "MAGNET-BULAT|BUY": {
+   "p25": 0.0004,
+   "p50": 0.0009,
+   "p75": 0.01132,
+   "n": 1501
+  }
+ },
+ "pelajaran": [
+  "PUKUL-TANAH|tren-turun: kunci condong SELL (53.7%, n=2112)",
+  "ARUS-KENCANG|datar: kunci condong SELL (51.4%, n=54138)",
+  "ARUS-KENCANG|tren-turun: kunci condong SELL (52.1%, n=8249)",
+  "PUKUL-TANAH|datar: kunci condong SELL (52.2%, n=4436)",
+  "UMpan-DATAR|datar: kunci condong SELL (52.5%, n=9497)",
+  "LIMPAK|datar: kunci condong BUY (50.3%, n=3154)",
+  "KEJUT-VOLUME|datar: kunci condong SELL (52.0%, n=1497)",
+  "ARUS-KENCANG|tren-naik: kunci condong SELL (52.2%, n=8378)",
+  "LIMPAK|tren-naik: kunci condong SELL (52.1%, n=2071)",
+  "MAGNET-BULAT|tren-naik: kunci condong SELL (52.1%, n=190)",
+  "MAGNET-BULAT|datar: kunci condong SELL (52.7%, n=2798)",
+  "KEJUT-VOLUME|tren-turun: kunci condong BUY (52.2%, n=337)",
+  "NAPAS-LELAH|tren-turun: kunci condong BUY (50.1%, n=710)",
+  "NAPAS-LELAH|datar: kunci condong SELL (51.8%, n=876)",
+  "NAPAS-LELAH|tren-naik: kunci condong BUY (51.1%, n=833)",
+  "KEJUT-VOLUME|tren-naik: kunci condong SELL (55.1%, n=508)",
+  "MAGNET-BULAT|tren-turun: kunci condong SELL (57.8%, n=204)"
+ ],
+ "segel": "8dc601a31a5ca998"
+}
+export default PENGALAMAN
