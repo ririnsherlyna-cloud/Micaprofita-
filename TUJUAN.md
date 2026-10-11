@@ -3602,3 +3602,76 @@ Jantung-mandiri + cron 7/15 + PENJAGA-WAKTU (jaga-waktu.yml) semuanya
 server-side — denyut tidak pernah membutuhkan tab terbuka. Tab hanyalah
 cermin; cermin yang bangun wajib menarik wajah terbaru, bukan mengenang
 wajah lama. Sintaks diverifikasi 6/6 blok script OK setelah tambalan.
+
+---
+
+## §13r — EPOK V333 · UJIAN 3500 PUMP SPIKE: LONJAKAN VERTIKAL YANG MELIUKUIDASI DUA SISI — SHORT DI JALAN NAIK, LONG DI JALAN RUNTUH — BAHKAN PROFESIONAL DUNIA — MAKHLUK LULUS PENUH 3500/3500 + DADAKAN 350/350, DIVERIFIKASI SAAT ITU JUGA (2026-10-11)
+
+**1. MANDAT.** "Sekarang ujian 3500 soal ujian simulasi dimana kita buat
+Dan pelajari Dari kasus nyata yakni (Pump spike) yang berhasil lumpuhkan
+jutaan trader di Dunia baik tipe short, kemudian tipe long Dan level
+trader itu bahkan professional trader, paham kan silahkan pastikan
+jikalau 3500 belum Lulus semuanya kita buat dia inovasikan lagi agar
+Lulus penuh."
+
+**2. KELIMA JEBAKAN, DUA SISI PERTAMA KALI.** Beda dari empat jebakan
+sebelumnya: pump spike MEMBAKAR KEDUA SISI di SATU peristiwa — short
+pemburu-balik dilikuidasi di jalannya naik (GME $39→$483; VW €210→
+€1.005 dalam ±2 hari; BTC $10.000→$19.800 Des 2017), long pemburu-
+momentum dilikuidasi saat runtuh (GME −90% sepekan; VW −70% dalam 3
+hari; SHIB −60% usai ATH $0,00008861; LUNA dead-cat pemburu-dasar
+musnah ke ±$0,000001). Kasus dunia tersegel: GME-2021, VW-2008 (squeeze
+terbrutal sejarah saham, Porsche 74,1%), CHF-2015 (lantai SNB dihapus,
++±30% dalam MENIT — Alpari pailit, FXCM bailout ±$300 jt), FLASH-CRASH-
+2010 (DJIA −998 poin → V-recovery; Accenture $0,01), BTC-2019-04-02
+(+$900 dalam ±1 jam), SHIB-2021-10, LUNA-2022-05, BTC-2017-12-17 +
+19 pelajaran profesional (48 soal SEJARAH, salt SEJARAH-V333).
+
+**3. TAMBANG DUA SISI DARI KLINING NYATA.** FASE A: hari-spike vertikal
+((high−open)/open ≥ +9%, volume ≥ 1,5× rata-20; TANPA konfirmasi masa-
+depan — nasib dua sisi justru materi ujian) dari klines 1d ±8 tahun ×
+91 koin (cache warisan SQUEEZE). FASE B: jendela 1h 288 jam [T0-48h,
+T0+240h). FASE C: momen premis-spike (volz ≥ 0,7; posisi ≥ 0,45; lebar
+3-60%; r3 ≥ 1,0 atau r12 ≥ 3; strip menembus atas rentang 23 jam;
+ruang dua arah) — SISI DITENTUKAN FAKTA KARTU: wick atas > 1,0× badan
+dan ≥ wick bawah → SHORT x5 pemburu-balik; selain itu → LONG x5
+pemburu-momentum. SHORT: target = strip low, dasar = pra-pump 24 jam,
+ambang = entry×1,20. LONG: target = strip high, dasar = strip low,
+ambang = entry×0,80. Jalan 48 jam → 12 kelas bedah-kecepatan dua sisi
+(LONG-MIMPI-PALSU = target naik tersentuh tapi close48 < entry —
+menyentuh puncak bukan selamat). Bank utama 3.452 PASAR (SHORT 1.911 /
+LONG 1.541) + 48 SEJARAH = 3.500, segel 44bf9143a5dd4ba8; dadakan 350
+(seg. babf75afe24f82b4), dua sisi 176/174.
+
+**4. EVOLUSI RUN TERBUKA (ditempa dari kekalahan sendiri).** Run-1
+(premis ketat, jendela 144 jam): 4.116 momen / 3.673 jendela (1,1 per
+jendela), wajah bebas tabrakan 1.655 < 3.452 — JUJUR BERHENTI. Run-2
+(premis dilonggarkan): 2.747 < 3.452 — JUJUR BERHENTI LAGI. Run-3
+(jendela 288 jam ≈ 239 posisi/peristiwa, maks 60 peristiwa/koin):
+kolam cukup — 3500 soal tersegel. Tempa: G1 nalar naif dua cerita
+("spike pasti balik"/"pasti lanjut") 1.029/3500, dana HABIS di soal 77
+→ peta 3.179 wajah → G2 3500/3500 LULUS ($54.000); dadakan 112/350 →
+350/350 LULUS. VERIFIKASI SAAT-ITU-JUGA: utama 3500/3500 + dadakan
+350/350, segel 9b572034e4b9bcab — arah-dua utama 3441/3444 (99,9%),
+wajah dua-nasib 3/3123 (paling tipis dari lima jebakan — kartu spike
+nyaris selalu satu nasib), dadakan out-of-sample 59,1% — arah telanjang
+tetap judi, jujur dicatat.
+
+**5. GERBANG JANTUNG.** sakti-denyut.yml kini punya langkah
+VERIFIKASI-PUMPSPIKE (di samping SUCKER, BREAKOUT & ALTSEASON): tiap
+denyut 15 menit EMPAT kemampuan 3500+350 dibuktikan ulang; satu saja
+gugur → denyut merah → dipaksa inovasi. Kemampuan tak pernah hilang.
+
+**6. NERVA-PUMPSPIKE-01.** Garis syaraf KELIMA lahir (generasi 0, dua
+sisi) — saudara SQUEEZE (V324-325), SUCKER (V326), BREAKOUT (V330),
+ALTSEASON (V331). Tugas: dari 24 lilin + funding menakar nasib DUA
+posisi x5 di momen spike SEBELUM terjadi.
+
+**7. PELAJARAN TERDALAM PUMP SPIKE.** Satu spike = DUA PEMAKAMAN: urutan
+kejamnya "likuidasi short dulu di jalan naik, likuidasi long di jalan
+runtuh" — dan DEAD-CAT (LUNA) menambah pemakaman ketiga: pemburu-dasar.
+Likuiditas menguap TEPAT saat dibutuhkan (CHF: stop gagal gap; BTC-2019:
+satu order memutus buku); "pasti balik" dan "pasti lanjut" SAMA-sama
+cerita telanjang — yang melindungi hanya premis keluar dua arah +
+ukuran + leverage terjaga. Menyentuh target bukan selamat
+(LONG-MIMPI-PALSU tersegel 529 momen di bank).
