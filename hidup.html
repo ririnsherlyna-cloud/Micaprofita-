@@ -912,8 +912,10 @@ async function cerminAmbil(){
   S.cermin = {at:sekarang(), data:d};
   const hariIni=new Date().toISOString().slice(0,10);
   const basi=d.today!==hariIni;
+  const hariPulse=(d.pulse && d.pulse.at) ? String(d.pulse.at).slice(0,10) : null;
+  const pulseLama=hariPulse!==null && hariPulse!==hariIni;
   const tp=(d.todayPicks||[]).find(x=>x.competitor==='MICAPROFITA');
-  jurnal('CERMIN', `cermin arena terbaca: rezim <b>${d.regime}</b>, pick MICAPROFITA ${tp?`<b>${tp.symbol} ${tp.direction}</b> (${tp.confidence}%)`:'kosong'}, FnG ${d.climate?.fng??'-'}${basi?` — <b>TERTUNDA (data ${d.today})</b>: pick lama TIDAK dipakai menuntun sasaran (V300)`:''}`);
+  jurnal('CERMIN', `cermin arena terbaca: rezim <b>${d.regime}</b>, pick MICAPROFITA ${tp?`<b>${tp.symbol} ${tp.direction}</b> (${tp.confidence}%)`:'kosong'}, FnG ${d.climate?.fng??'-'}${basi?` — <b>TERTUNDA (data ${d.today})</b>: pick lama TIDAK dipakai menuntun sasaran (V300)`:pulseLama?` — denyut dalam ekspor lama (${hariPulse}), tidak dipakai menuntun sasaran (V300b)`:''}`);
   return d;
 }
 function simbolSasaran(){
@@ -927,7 +929,11 @@ function simbolSasaran(){
   if(d && d.today===hari){
     const set=[]; const dor=s=>{ if(s && !set.includes(s) && set.length<8) set.push(s); };
     const mine=(d.todayPicks||[]).find(x=>x.competitor==='MICAPROFITA'); if(mine) dor(mine.symbol);
-    for(const it of (d.pulse?.items||[])) dor(it.symbol);
+    // V300b: denyut dinilai umurnya SENDIRI (pulse.at) — ekspor segar bisa
+    // membawa denyut lama (bukti nyata: ekspor 2026-10-11, pulse.at 2026-10-05
+    // berisi GTC/SAND). Denyut lama tidak boleh menuntun sasaran.
+    const hariPulse=(d.pulse && d.pulse.at) ? String(d.pulse.at).slice(0,10) : null;
+    if(hariPulse===hari) for(const it of (d.pulse?.items||[])) dor(it.symbol);
     for(const x of (d.todayPicks||[])) if(x.competitor!=='ACAK') dor(x.symbol);
     for(const m of MAJORS_MATA) dor(m);
     return set;
