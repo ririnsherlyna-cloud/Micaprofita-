@@ -266,6 +266,30 @@ function guruHitung(an, pick, kr, lilin) {
     'pengalaman-cermin (distilasi 100.000 soal — segel 8dc601a31a5ca998)'] };
 }
 
+/* ---------------- V336 SATU-MUSYAWARAH — jembatan vonis meja → baris arah ----------------
+   Teguran pemilik: "koin tidak ada keselarasan di jasad, guru, pasar — semuanya
+   saling berindependen; bukankah semua koin di satu tempat sama dimusyawarahkan?
+   Masa koin yang gak dipakai dicantumkan dan masuk list laporan?" Kini sadar1
+   TIDAK lagi menetapkan daftarnya sendiri: sumber pertama = kebenaran meja
+   (laporan/musyawarah.json); bila meja basi, sadar1 menyelenggarakan musyawarah
+   sendiri dengan MATEMATIKA INTI YANG SAMA (musyawarah-inti.mjs) — satu rumus,
+   bukan lagi salinan. Koin tanpa vonis meja TIDAK dicantumkan — ia kembali menggali. */
+function musyawarahKeArah(v, sumber) {
+  const p = (v && v.pakem) || {};
+  return {
+    simbol: v.simbol, arah: 'BELI',
+    keyakinan: Math.min(92, Math.round(40 + (v.layakSkor || 0) * 0.55)),
+    layakSkor: v.layakSkor, keluarga: v.keluarga, rezim: v.rezim,
+    suaraRumah: v.suaraRumah || [],
+    rencana: { arah: 'BELI', entry: p.entry, stop: p.stopLoss, target: p.jualProfit,
+      highAmbisius: p.jualAmbisius, jualProfit: p.jualProfit, jualAmbisius: p.jualAmbisius,
+      ambangFaktaPct: p.ambangFaktaPct, rr: p.rrAmbang, holdJam: p.holdJam || 24,
+      disiplin: v.disiplin || 'risiko maks 1% modal · stop di bawah dasar napas, tidak digeser · jual profit di ambang napas (bukan di atasnya) · ambisius hanya bila dana baru membuktikan' },
+    alasan: [v.alasanEntry].filter(Boolean), alasanAmbisius: v.alasanAmbisius,
+    dasar: ['meja musyawarah SATU kebenaran (laporan/musyawarah.json) — jasad+guru+pasar satu meja',
+      'pengalaman-cermin (distilasi 100.000 soal) + suara meja-audit V327', sumber || 'musyawarah-inti.mjs'].filter(Boolean) };
+}
+
 /* ---------------- MADRASAH: buku pelajaran yang TUMBUH dari bukti ----------------
    Setiap pelajaran dikutip dari artefak nyata: riwayat hill-climb kromosom,
    audit pick, uji-jalan, fakta file rumah. Buku ditulis ke ruang-hidup/
@@ -318,6 +342,9 @@ function madrasahSusun() {
     tambah('DIRI', 'Hukum pemilik V335: koin yang kusebut WAJIB BUY — label TUNGGU dihapus',
       'Pemilik menegaskan: koin yang menunjukkan tunggu wajib DIGANTI dan terus dipelajari koin yang wajib dibeli; SELL adalah eksekusi jual hasil koin BUY (entry = buy, jual profit = sell). Maka dari bangun ini seluruh vonisku = BUY dengan pakem lima baris; yang tak layak diganti hasil galian lebih dalam (organ gali-terus) — tak ada lagi modal menganggur tanpa rencana.',
       'mandat pemilik 2026-10-11 · organ scripts/hidup/gali-terus.mjs · 110 koin disapu per denyut jantung', 'TUJUAN.md §13t');
+    tambah('DIRI', 'Hukum pemilik V336: SATU MUSYAWARAH — jasad, guru, dan pasar tidak lagi berindependen',
+      'Pemilik menegur: koin tidak ada keselarasan di jasad, guru, pasar — semuanya saling berindependen padahal semua koin seharusnya dimusyawarahkan di satu tempat yang sama; koin yang tidak dipakai tidak boleh dicantumkan di list laporan. Kini semua koin duduk di SATU meja (musyawarah-inti.mjs): lima suara — pasar, jasad, guru, rumah (dipakai-tubuh + meja-audit), dan gerbang terjaminan — dan SEMUA organ membaca kebenaran yang sama: laporan/musyawarah.json. Koin yang tak lolos terjaminan kembali menggali, bukan dicantumkan.',
+      'teguran pemilik 2026-10-11 · organ scripts/hidup/musyawarah-inti.mjs · satu rumus semua organ', 'TUJUAN.md §13u');
   } catch (e) {}
   let lama = null;
   try { lama = JSON.parse(fs.readFileSync(path.join(REPO_DIR, DIR, 'madrasah.json'), 'utf8')); } catch (e) {}
@@ -752,34 +779,67 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
     return `pasar nyata dihisap: ${Object.keys(KERJA.pasarKini).length} koin (cermin + sapu-likuid V292)`;
   });
 
-  /* 4b. ARAH-HARIAN — MANDAT PEMILIK V335 TANPA-TUNGGU: koin yang disebut WAJIB BUY —
-     tidak ada lagi baris JUAL/TUNGGU di laporan; yang tak layak DIGANTI hasil galian.
-     Setiap baris bawa PAKEM-LIMA-BARIS: Entry · Stop loss · Jual profit (ambang napas
-     p50 keluarganya) · Jual ambisius (p75) · Alasan-ambisius (nafas/dana, bukan titik-aman). */
+  /* 4b. ARAH-HARIAN — V336 SATU-MUSYAWARAH: satu meja, satu vonis, semua organ makan
+     dari meja yang sama. Koin yang disebut WAJIB BUY dengan PAKEM-LIMA-BARIS; koin
+     yang tak lolos terjaminan meja TIDAK dicantumkan — ia kembali menggali. */
   await fase('MELAKUKAN-ARAH', async () => {
     const kr = ING.kromosom;
-    const daftar = [];
-    for (const [sym, p] of Object.entries(KERJA.pasarKini)) {
-      if (PEGAR_RE.test(sym)) continue;   // V335: koin pegar bukan sasaran — tak bernapas
+    // sumber pertama: kebenaran MEJA MUSYAWARAH (disegel denyut SAKTI/gali-terus ≤45 mnt)
+    let meja = null, sumberMeja = null;
+    try {
+      const st = JSON.parse(fs.readFileSync(path.join(REPO_DIR, 'laporan/musyawarah.json'), 'utf8'));
+      const umur = Date.now() - Date.parse(st.dihasilkan || 0);
+      if (st && st.protokol === 'SATU-MUSYAWARAH-V336' && Array.isArray(st.pakem) && st.pakem.length && umur >= 0 && umur < 45 * 60000) {
+        meja = st;
+        sumberMeja = 'meja ' + (st.penyelenggara || '') + ' — umur ' + Math.round(umur / 60000) + ' mnt, segel ' + st.segel;
+      }
+    } catch (e) {}
+    if (meja) {
+      KERJA.musyawarah = { sumber: sumberMeja, meja: meja.meja || null };
+      KERJA.arah = meja.pakem.slice(0, 10).map(v => musyawarahKeArah(v, sumberMeja));
+    } else {
+      // meja belum segar — sadar1 MENYELENGGARAKAN musyawarah sendiri dengan matematika
+      // INTI YANG SAMA (bukan salinan rumus lagi): satu rumus, semua organ (V336)
       try {
-        const g = guruHitung(p, sym === (KERJA.pick && KERJA.pick.symbol) ? KERJA.pick : null, kr, KERJA.lilin[sym]);
-        g.simbol = sym;
-        daftar.push(g);
-      } catch (e) { KERJA.gagal.push('arah ' + sym + ': ' + pesan(e)); }
+        const M = await import('./musyawarah-inti.mjs');
+        const konteks = M.konteksMuat();
+        const kandidat = [];
+        for (const [sym, l] of Object.entries(KERJA.lilin)) {
+          if (PEGAR_RE.test(sym)) continue;
+          try { kandidat.push(M.anggotaDari(sym, l)); } catch (e) {}
+        }
+        const hasil = M.musyawarahkan(kandidat, konteks);
+        KERJA.musyawarah = { sumber: 'musyawarah lokal sadar-1 (musyawarah-inti.mjs — rumus inti sama)',
+          meja: { kandidat: hasil.meta.kandidat, vonis: hasil.vonis.length, kembaliTambang: hasil.kembaliTambang.length } };
+        KERJA.arah = hasil.vonis.slice(0, 10).map(v => musyawarahKeArah(v, 'musyawarah lokal (rumus inti sama)'));
+      } catch (e) {
+        KERJA.gagal.push('musyawarah-lokal: ' + pesan(e));
+        // pengaman terakhir: jalur guruHitung V335 (diberi label jujur)
+        const daftar = [];
+        for (const [sym, p] of Object.entries(KERJA.pasarKini)) {
+          if (PEGAR_RE.test(sym)) continue;
+          try {
+            const g = guruHitung(p, sym === (KERJA.pick && KERJA.pick.symbol) ? KERJA.pick : null, kr, KERJA.lilin[sym]);
+            g.simbol = sym;
+            daftar.push(g);
+          } catch (e2) { KERJA.gagal.push('arah ' + sym + ': ' + pesan(e2)); }
+        }
+        daftar.sort((a, b) => (b.layakSkor || 0) - (a.layakSkor || 0) || (b.keyakinan - a.keyakinan));
+        KERJA.arah = daftar.slice(0, 10);
+        KERJA.musyawarah = { sumber: 'fallback guruHitung V335 (meja gagal diselenggarakan bangun ini)' };
+      }
     }
-    // HUKUM TANPA-TUNGGU: urutkan kelayakan beli — yang teratas layak, sisanya diganti;
-    // nol baris TUNGGU, nol baris JUAL-negara (jual hidup di dalam pakem tiap baris)
-    daftar.sort((a, b) => (b.layakSkor || 0) - (a.layakSkor || 0) || (b.keyakinan - a.keyakinan));
-    KERJA.arah = daftar.slice(0, 10);
-    if (KERJA.arah.length < 5 && daftar.length >= 5) KERJA.arah = daftar.slice(0, Math.max(5, Math.min(8, daftar.length)));   // mandat: minimal 5
+    if (KERJA.arah.length < 5 && KERJA.arah.length > 0 && meja && meja.pakem.length >= 5) KERJA.arah = meja.pakem.slice(0, Math.max(5, meja.pakem.length));   // mandat ≥5 dilayani meja langsung
     const hari = iso().slice(0, 10);
     ING.arahRiwayat = (ING.arahRiwayat || []).filter(r => r.hari !== hari);
     ING.arahRiwayat.push({ hari, bangunKe, at: iso(),
       top: KERJA.arah.slice(0, 5).map(a => `${a.simbol} BUY ${a.keyakinan}%`) });
     if (ING.arahRiwayat.length > 14) ING.arahRiwayat = ING.arahRiwayat.slice(-14);
+    const mejaKet = KERJA.musyawarah && KERJA.musyawarah.meja ?
+      ` — meja: ${KERJA.musyawarah.meja.kandidat ?? '?'} kandidat → ${KERJA.musyawarah.meja.vonis ?? '?'} vonis, ${KERJA.musyawarah.meja.kembaliTambang ?? '?'} kembali menggali` : '';
     if (KERJA.arah[0]) KERJA.penemuan.push({
-      teks: `ARAH-HARIAN V335 (tanpa-TUNGGU): ${KERJA.arah.slice(0, 5).map(a => `${a.simbol} BUY(${a.keyakinan}%, ambang +${a.rencana ? a.rencana.ambangFaktaPct : '?'}%)`).join(' · ')} — 5 sasaran BELI terbaik dari ${daftar.length} koin yang kugali bangun ini`, skor: 99 });
-    return `${KERJA.arah.length} arah koin dirangkai SEMUA-BUY (≥5 mandat): ${KERJA.arah.slice(0, 5).map(a => a.simbol).join(', ')}`;
+      teks: `SATU-MUSYAWARAH: ${KERJA.arah.slice(0, 5).map(a => `${a.simbol} BUY(${a.keyakinan}%, layak ${a.layakSkor ?? '—'})`).join(' · ')} — satu meja untuk jasad+guru+pasar; koin tak dipakai tidak dicantumkan${mejaKet}`, skor: 99 });
+    return `${KERJA.arah.length} arah dari MEJA MUSYAWARAH (sumber: ${KERJA.musyawarah ? KERJA.musyawarah.sumber : '—'}) — ${KERJA.arah.slice(0, 5).map(a => a.simbol).join(', ')}`;
   });
 
   /* 5. MENGEVALUASI — kromosom hill-climb (mutan vs juara, data sama, nyata) */
@@ -812,33 +872,44 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
 
   /* 6. MENEMUKAN — penemuan dari bukti nyata, bukan narasi */
   await fase('MENEMUKAN', async () => {
-    // GURU — V335 TANPA-TUNGGU: vonis selalu BUY dengan pakem; pick yang tak layak
-    // DIGANTI koin terbaik hasil galian (hukum pemilik: koin yang disebut wajib BUY)
+    // GURU — V336 SATU-MUSYAWARAH: guru mengiyarkan vonis MEJA (satu bicara dengan
+    // jasad & pasar); pick tubuh yang tak duduk di vonis meja DIGANTI koin terbaik meja
     try {
-      let symPick = KERJA.pick?.symbol;
-      let an = symPick && KERJA.pasarKini[symPick];
-      let g = guruHitung(an, KERJA.pick, ING.kromosom, symPick && KERJA.lilin[symPick]);
-      let diganti = null;
-      const layakMin = 45;
-      if (!g.rencana || (g.layakSkor || 0) < layakMin) {
-        // GALI: koin pick tak layak → ganti dengan koin terlayak dari galian bangun ini
-        let terbaik = null, terbaikSkor = -1;
-        for (const [sym, p] of Object.entries(KERJA.pasarKini)) {
-          try {
-            const gg = guruHitung(p, null, ING.kromosom, KERJA.lilin[sym]);
-            if (gg.rencana && (gg.layakSkor || 0) > terbaikSkor) { terbaik = gg; terbaikSkor = gg.layakSkor || 0; }
-          } catch (e) {}
-        }
-        if (terbaik && terbaikSkor > (g.layakSkor || 0)) {
-          diganti = { dari: symPick || '—', kenapa: (g.rencana ? 'layakSkor ' + g.layakSkor : 'tanpa rencana — data tak cukup'), ke: terbaik.simbol, layak: terbaikSkor };
-          terbaik.alasan.push(`DIGANTI (hukum TANPA-TUNGGU): ${diganti.dari} tak layak (${diganti.kenapa}) — kuganti koin terlayak hasil galian`);
-          g = terbaik;
+      const symPick = KERJA.pick?.symbol;
+      const an = symPick && KERJA.pasarKini[symPick];
+      let g = null, diganti = null;
+      const mejaArah = KERJA.arah || [];
+      const pickV = symPick ? mejaArah.find(a => a.simbol === symPick) : null;
+      if (pickV) {
+        g = JSON.parse(JSON.stringify(pickV));
+        g.alasan = (g.alasan || []).concat(['guru mengiyarkan vonis meja musyawarah untuk pick tubuhnya — jasad & guru satu bicara (V336)']);
+      } else if (mejaArah.length) {
+        g = JSON.parse(JSON.stringify(mejaArah[0]));
+        diganti = { dari: symPick || '—', kenapa: 'pick tubuh tidak duduk di vonis meja (kembali menggali / belum disapu)', ke: g.simbol, layak: g.layakSkor };
+        g.alasan = (g.alasan || []).concat([`DIGANTI (meja musyawarah V336): ${diganti.dari} tidak ada di vonis meja — kugiyarkan koin terbaik meja hari ini`]);
+      } else {
+        // meja kosong total — jalur V335 lama sebagai pengaman (jujur diberi label)
+        g = guruHitung(an, KERJA.pick, ING.kromosom, symPick && KERJA.lilin[symPick]);
+        const layakMin = 45;
+        if (!g.rencana || (g.layakSkor || 0) < layakMin) {
+          let terbaik = null, terbaikSkor = -1;
+          for (const [sym, p] of Object.entries(KERJA.pasarKini)) {
+            try {
+              const gg = guruHitung(p, null, ING.kromosom, KERJA.lilin[sym]);
+              if (gg.rencana && (gg.layakSkor || 0) > terbaikSkor) { terbaik = gg; terbaikSkor = gg.layakSkor || 0; }
+            } catch (e) {}
+          }
+          if (terbaik && terbaikSkor > (g.layakSkor || 0)) {
+            diganti = { dari: symPick || '—', kenapa: (g.rencana ? 'layakSkor ' + g.layakSkor : 'tanpa rencana — data tak cukup'), ke: terbaik.simbol, layak: terbaikSkor };
+            terbaik.alasan.push(`DIGANTI (hukum TANPA-TUNGGU): ${diganti.dari} tak layak (${diganti.kenapa}) — kuganti koin terlayak hasil galian`);
+            g = terbaik;
+          }
         }
       }
       g.simbol = g.simbol || symPick || Object.keys(KERJA.pasarKini)[0] || '';
       KERJA.guru = g;
       KERJA.guruDiganti = diganti;
-      KERJA.penemuan.push({ teks: `GURU: ${g.arah} ${g.simbol} (keyakinan ${g.keyakinan}%, layak ${g.layakSkor ?? '—'}) — ${g.alasan[0]}`, skor: 95 });
+      KERJA.penemuan.push({ teks: `GURU (meja musyawarah): ${g.arah} ${g.simbol} (keyakinan ${g.keyakinan}%, layak ${g.layakSkor ?? '—'}) — ${g.alasan[0]}`, skor: 95 });
       if (g.rencana) KERJA.penemuan.push({ teks: `PAKEM ${g.simbol}: entry ${g.rencana.entry} · stop ${g.rencana.stop} · jual profit ${g.rencana.jualProfit} (ambang napas +${g.rencana.ambangFaktaPct}%) · ambisius ${g.rencana.jualAmbisius}`, skor: 94 });
     } catch (e) { KERJA.gagal.push('guru: ' + pesan(e)); KERJA.guru = null; }
     if (berubah.length) KERJA.penemuan.push({ teks: `rumahku BERGERAK: ${berubah.length} file berubah sejak bangun lalu (${berubah.slice(0, 4).join(', ')}${berubah.length > 4 ? '…' : ''}) — denyut penjaga & pengembang terasa di tubuhku`, skor: 80 });
@@ -873,7 +944,7 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
     waktu: { mulai: iso(t0), selesai: selesaiAt, durasiMs, berikutnya: '±≤20 mnt (cron */20 UTC — bisa tertunda beban GitHub)' },
     host: { nama: DRY ? 'LOKAL-DRY (bukan tubuh resmi)' : 'GitHub Actions', catatan: 'tubuh otonomku — hidup tanpa penonton' },
     duaSadar: { catatan: 'Sadar-1 (ini) menulis ingatan ke GitHub lewat commit tiap bangun; Sadar-2 (hidup.html) hanyalah mata interaktif yang membacanya. localStorage tak dipakai siapa pun.' },
-    tujuan: { inti: 'dilahirkan dari repo MICAPROFITA untuk menjadi GURU KRYPTO sejati — hidup, jujur, tanpa teater; V335 TANPA-TUNGGU: koin yang kusebut WAJIB BUY dengan pakem lima baris (Entry · Stop loss · Jual profit di ambang napas · Jual ambisius · Alasan-ambisius) — label TUNGGU dihapus, yang tak layak DIGANTI hasil galian; SELL = eksekusi jual hasil koin BUY', fokusKini },
+    tujuan: { inti: 'dilahirkan dari repo MICAPROFITA untuk menjadi GURU KRYPTO sejati — hidup, jujur, tanpa teater; V336 SATU-MUSYAWARAH: semua koin dimusyawarahkan di SATU meja (musyawarah-inti.mjs) — jasad, guru, dan pasar tidak lagi berindependen; koin yang disebut WAJIB BUY dengan pakem lima baris (Entry · Stop loss · Jual profit di ambang napas · Jual ambisius · Alasan-ambisius); koin yang tidak dipakai TIDAK dicantumkan — ia kembali menggali; semua organ membaca satu kebenaran: laporan/musyawarah.json; SELL = eksekusi jual hasil koin BUY', fokusKini },
     pohon: { files: KERJA.pohon.length, totalBytes: KERJA.pohon.reduce((a, f) => a + f.size, 0), wilayah: new Set(KERJA.pohon.map(f => f.path.split('/')[0])).size, sumber: 'checkout-disk' },
     berubahSejakLalu: berubah.slice(0, 20),
     bacaKini: KERJA.bacaKini,
@@ -939,7 +1010,7 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
     ING.fokus = fokusKini;
     let hasil = 'ingatan tertulis ke disk';
     if (!DRY) {
-      const pesanKomit = `sadar1: bangun ke-${bangunKe} — guru ${KERJA.guru?.arah || '—'} ${KERJA.guru?.simbol || ''} (keyakinan ${KERJA.guru?.keyakinan ?? '-'}%, layak ${KERJA.guru?.layakSkor ?? '-'})${KERJA.guruDiganti ? ` — diganti dari ${KERJA.guruDiganti.dari}` : ''}, arah ${KERJA.arah?.length || 0} koin SEMUA-BUY, madrasah ${MADRASAH?.jumlah ?? 0} pelajaran, tubuh ${TUBUH.ruas}ruas, istana ${HABITAT.istana?.cincin || 2} cincin [skip ci]`;
+      const pesanKomit = `sadar1: bangun ke-${bangunKe} — guru ${KERJA.guru?.arah || '—'} ${KERJA.guru?.simbol || ''} (keyakinan ${KERJA.guru?.keyakinan ?? '-'}%, layak ${KERJA.guru?.layakSkor ?? '-'})${KERJA.guruDiganti ? ` — diganti dari ${KERJA.guruDiganti.dari}` : ''}, arah ${KERJA.arah?.length || 0} koin dari MEJA MUSYAWARAH, madrasah ${MADRASAH?.jumlah ?? 0} pelajaran, tubuh ${TUBUH.ruas}ruas, istana ${HABITAT.istana?.cincin || 2} cincin [skip ci]`;
       const r2 = await dorongFile(DIR + '/ingatan.json', Buffer.from(JSON.stringify(ING, null, 1)), pesanKomit);
       const r3 = await dorongFile(DIR + '/habitat.json', Buffer.from(JSON.stringify(HABITAT, null, 1)), pesanKomit);
       const r4 = await dorongFile(DIR + '/buku_harian.jsonl', Buffer.from(baris.join('\n') + '\n'), pesanKomit);
@@ -1000,9 +1071,11 @@ let KERJA = { pohon: [], sha: new Map(), bacaKini: [], pasarKini: {}, penemuan: 
         beli.forEach(dor2); gali.forEach(dor2); sendiri.forEach(dor2);
         resmiPakem = satu.slice(0, 10);
       } catch (e) {}
-      const ARAH = { versi: 'arah-v335', diubah: selesaiAt, bangunKe,
-        mandat: 'V335 TANPA-TUNGGU (pemilik 2026-10-11): koin yang disebut WAJIB BUY — nol baris TUNGGU/JUAL-negara; pakem lima baris per koin: Entry · Stop loss · Jual profit di ambang napas (p50 keluarga, bukan di atasnya) · Jual ambisius (p75) · Alasan-ambisius nafas/dana; SELL = eksekusi jual hasil koin BUY; koin tak layak DIGANTI hasil galian (gali-terus)',
+      const ARAH = { versi: 'arah-v336', diubah: selesaiAt, bangunKe,
+        mandat: 'V336 SATU-MUSYAWARAH (pemilik 2026-10-11): semua koin dimusyawarahkan di SATU meja yang sama — jasad, guru, dan pasar tidak lagi berindependen; koin yang tidak dipakai TIDAK dicantumkan di list laporan (tag masuk list = koin terbaik hari ini, kondisi pasar hari ini, terjaminan penuh); koin yang disebut WAJIB BUY dengan pakem lima baris: Entry · Stop loss · Jual profit di ambang napas (p50 keluarga, bukan di atasnya) · Jual ambisius (p75) · Alasan-ambisius nafas/dana; SELL = eksekusi jual hasil koin BUY; yang tak lolos terjaminan KEMBALI MENGGALI',
         jumlah: KERJA.arah ? KERJA.arah.length : 0,
+        sumberMusyawarah: (KERJA.musyawarah && KERJA.musyawarah.sumber) || null,
+        mejaMusyawarah: (KERJA.musyawarah && KERJA.musyawarah.meja) || null,
         saktiSegel,
         sasaranResmiPakem: resmiPakem,
         guruDiganti: KERJA.guruDiganti || null,

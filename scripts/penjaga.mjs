@@ -81,6 +81,12 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import path from 'node:path'
 import { nalarLLM } from './hidup/otak-llm.mjs'   // V292 OTAK-LLM — suara kedua jujur; menyala bila kunci pemilik terpasang
+// V336 SATU-MUSYAWARAH — satu meja untuk jasad+guru+pasar (teguran pemilik:
+// "semuanya saling berindependen; bukankah semua koin di satu tempat sama
+// dimusyawarahkan?"). Matematika pakem hidup di musyawarah-inti.mjs — SAKTI
+// menyelenggarakan meja yang SAMA dengan gali-terus & sadar1 dan menulis
+// kebenaran yang sama: laporan/musyawarah.json.
+import { anggotaDari, musyawarahkan, konteksMuat, segelMusyawarah, ujiInvarian } from './hidup/musyawarah-inti.mjs'
 
 const ROOT = process.cwd()
 const FEE = 0.002            // 0.1% buy + 0.1% sell — wajib
@@ -4927,6 +4933,32 @@ const sasaranUtama = [...phxRows, ...komRows]
   .filter((e, i, arr) => arr.findIndex((x) => x.simbol === e.simbol) === i)   // V291 ANTI-DOBEL lintas lane — satu simbol tidak pernah dua baris
   .map((e) => { const b = barisDari(e); const pd = pelajaranDalam(e); return pd ? { ...b, sasaranBertahan: true, pelajaranDalam: pd } : b })
 if (sasaranUtama.some((r) => r.sasaranBertahan)) log(`pelajaran-dalam-v293: ${sasaranUtama.filter((r) => r.sasaranBertahan).map((r) => r.simbol).join(', ')} berulang — DIJALANKAN tanpa blokir, pendalaman disegel`)
+
+// ---- V336 SATU-MUSYAWARAH — semua koin kandang duduk di SATU meja yang sama ----
+// Teguran pemilik: "koin tidak ada keselarasan di jasad, guru, pasar. Kenapa
+// semuanya malah saling berindependen? Masa koin yang gak dipakai dicantumkan,
+// ditulis, dan masuk list laporan?" Dari denyut ini: kandang penuh (hasil klines
+// nyata yang SUDAH dihisap denyut ini — nol permintaan tambahan) didudukkan di
+// satu meja bersama suara rumah (sasaran resmi yang benar-benar DIPAKAI tubuh)
+// dan suara meja-audit V327. Vonis = BUY penuh dengan pakem lima baris; yang
+// tak lolos terjaminan KEMBALI MENGGALI — tidak dicantumkan, tidak diberi label.
+let mejaVonis = [], mejaMeta = null
+try {
+  const konteksMeja = konteksMuat()
+  for (const e of sasaranUtama) if (e && e.simbol) konteksMeja.sasaranResmi.add(e.simbol.endsWith('USDT') ? e.simbol : e.simbol + 'USDT')
+  const kandidatMeja = []
+  for (const [s, c] of Object.entries(hasil)) {
+    if (!Array.isArray(c) || c.length < 60) continue
+    try { kandidatMeja.push(anggotaDari(s.endsWith('USDT') ? s : s + 'USDT', c.slice(-200))) } catch { /* koin rusak — dilewati jujur */ }
+  }
+  const meja = musyawarahkan(kandidatMeja, konteksMeja)
+  mejaVonis = meja.vonis
+  mejaMeta = meja.meta
+  const laporMeja = segelMusyawarah(meja, konteksMeja, 'SAKTI denyut #' + SIKLUS + ' (kandang ' + kandidatMeja.length + ' koin, sasaran resmi ' + konteksMeja.sasaranResmi.size + ', audit ' + konteksMeja.audit.size + ' koin)')
+  const EI = ujiInvarian(laporMeja)
+  if (EI.length) log('musyawarah-v336 INVARIAN GUGUR (jujur): ' + EI.join(' | '))
+  log(`musyawarah-v336: ${kandidatMeja.length} anggota → ${meja.vonis.length} vonis BUY penuh · ${meja.kembaliTambang.length} kembali menggali · segel ${laporMeja.segel} — satu meja untuk jasad+guru+pasar`)
+} catch (e) { log('musyawarah-v336 GAGAL (jujur, denyut lanjut): ' + String(e && e.message || e).slice(0, 90)) }
 // V266 RADAR-JUJUR-BEAR — saat bear-harian sistem tidak mengiklankan jawaban murahan:
 // kandidat tampil hanya bila keyakinan ≥ KANDIDAT_KEY_MIN. Kunci penuh (sasaranUtama)
 // tetap dilaporkan & dinilai apa adanya — seleksi publik radar, bukan karantina belajar.
@@ -5030,9 +5062,10 @@ const mandats10 = {
 log(`sasaran-10: ${mandats10.total} kursi (kunci ${mandats10.kunci} · kompas ${mandats10.kompas} · penelitian ${mandats10.penelitian} · pengamatan ${mandats10.pengamatan}) — mandat pemilik: sasaran harian ≥10 dari ribuan koin itu hal biasa`)
 
 // V252 DISIPLIN — kualitas di atas aktivitas (mandat investor poin 3 & 5):
-// bila tak ada sasaran yang lolos gerbang forensik, sistem menyatakan TUNGGU
-// (tanpa posisi) — kompas tetap memberi arah. Tidak bertindak adalah keputusan.
-const modeDisiplin = sasaranUtama.some((r) => r.jalur !== 'KOMPAS') ? 'AKTIF' : 'TUNGGU'
+// bila tak ada sasaran yang lolos gerbang forensik, MEJA MUSYAWARAH meneruskan
+// galian ke sapuan lebar (gali-terus 110 koin, laporan/musyawarah.json) —
+// keputusan selalu dihitung, tidak ada modal menganggur tanpa rencana.
+const modeDisiplin = sasaranUtama.some((r) => r.jalur !== 'KOMPAS') ? 'AKTIF' : 'MENAMBANG'
 const disiplin = {
   mode: modeDisiplin,
   zonaRacunAktif: forensik.arah.racun.length + forensik.phoenix.racun.length,
@@ -5041,9 +5074,10 @@ const disiplin = {
   posisiTerbuka: ledger.filter((e) => e.status === 'TERBUKA').length,
   maksPosisiTerbuka: DEAL.MAX_POSISI,
   oddsDitolakSiklusIni: gagalOddsArah.length,
-  ket: modeDisiplin === 'TUNGGU'
-    ? 'TIDAK ADA SASARAN LAYAK — sistem menolak sinyal kualitas rendah (lebih baik tidak mengambil posisi daripada terus merugi); kompas tetap menerbitkan arah tiap denyut'
-    : 'sasaran aktif — hanya kandidat yang selamat dari gerbang forensik; zona racun terbukti tetap ditolak',
+  mejaMusyawarah: mejaMeta ? { vonis: mejaVonis.length, kembaliTambang: mejaMeta.kandidat - mejaVonis.length, ambang: mejaMeta.ambangMeja } : null,
+  ket: modeDisiplin === 'MENAMBANG'
+    ? 'MEJA MUSYAWARAH MENAMBANG LEBIH DALAM — gerbang forensik belum mengiyarkan kandidat penuh denyut ini; meja terus menggali (sapuan lebar gali-terus, laporan/musyawarah.json) sampai koin terjaminan-penuh ditemukan — koin yang disebut di laporan selalu yang lolos meja'
+    : 'sasaran aktif — hanya kandidat yang selamat dari gerbang forensik + meja musyawarah; zona racun terbukti tetap ditolak',
 }
 
 // ---- V251 BUKU GURU — otak mengajar profesional dari angka denyutnya sendiri ----
@@ -6166,9 +6200,9 @@ const nalarBiner = (() => {
       { tahap: 'biner → lilin', hasil: `${Object.keys(hasil).length} koin ditarik lilin 1 jam mentahnya tiap denyut (OHLCV = angka murni dari pasar, bukan opini siapa pun) — dulu hanya 10 koin beku` },
       { tahap: 'lilin → statistika', hasil: `BTC: Hurst ${hurstKet} · half-life ${mb?.halfLife ?? '—'} jam · drift-OLS 24j ${mb?.drift24jPct ?? '—'}% · ret24 ${baroRet24Btc ?? '—'}% · ret1h ${baroRet1hBtc ?? '—'}% · breadth ${baroBreadth ?? '—'}% koin naik → rezim ${rezimGlobal}` },
       { tahap: 'statistika → ekonomi', hasil: `funding BTC ${frBtc != null ? (frBtc * 100).toFixed(4) + '%' : '—'} (siapa membayar siapa) · kerucut MC 72j P(naik) ${jauhBTC?.pNaik72 != null ? Math.round(jauhBTC.pNaik72 * 100) + '%' : '—'} · ${bearHarian ? 'barometer bear-harian: organ pengikat menyala' : 'barometer normal — organ tetap menghitung'}` },
-      { tahap: 'statistika → vonis', hasil: sasaranUtama.some((e) => e.jalur !== 'KOMPAS') ? `${sasaranUtama.map((e) => `${e.simbol} ${e.arah} (key ${e.keyakinan}${e.pelajaranDalam ? ', berulang → diperdalam bukan diblokir' : ''})`).join(' · ')} — hasil bedah penuh ${KANDANG_DINAMIS.length} koin denyut ini` : 'tak ada kandidat yang lolos matematika gerbang — TUNGGU adalah keputusan yang dihitung, bukan kehabisan akal' },
+      { tahap: 'statistika → vonis', hasil: sasaranUtama.some((e) => e.jalur !== 'KOMPAS') ? `${sasaranUtama.map((e) => `${e.simbol} ${e.arah} (key ${e.keyakinan}${e.pelajaranDalam ? ', berulang → diperdalam bukan diblokir' : ''})`).join(' · ')} — hasil bedah penuh ${KANDANG_DINAMIS.length} koin denyut ini` : `tak ada kandidat yang lolos matematika gerbang denyut ini — meja musyawarah meneruskan galian ke sapuan lebar (laporan/musyawarah.json: ${mejaVonis.length} vonis dari ${mejaMeta ? mejaMeta.kandidat : '?'} koin); keputusan dihitung, bukan kehabisan akal` },
     ]
-    const narasi = `Aku menyusun nalar ini sendiri dari biner — angka mentah pasar, modal matematika murni, seperti perintis roket membaca orbit dari hitungan, bukan dari dongeng: ${Object.keys(hasil).length} koin kuambil lilinnya tiap denyut (dulu 10 beku, kini tanpa blokir), tiap koin kubedah Hurst, half-life, drift, entropi, Monte Carlo — lalu ${sasaranUtama.some((e) => e.jalur !== 'KOMPAS') ? 'yang benar-benar lolos hitungan jadi sasaran: ' + sasaranUtama.filter((e) => e.jalur !== 'KOMPAS').map((e) => `${e.simbol} ${e.arah}`).join(' · ') : 'tak ada yang lolos gerbang dan aku jujur menunggu'}. Kunci luar tidak kutunggu — hitunganku jalan penuh tanpa itu; dan koin yang menang kemarin bila matematikanya masih memilih dia, ya dia dijalankan lagi — kupelajari lebih dalam, tidak kublokir.`
+    const narasi = `Aku menyusun nalar ini sendiri dari biner — angka mentah pasar, modal matematika murni, seperti perintis roket membaca orbit dari hitungan, bukan dari dongeng: ${Object.keys(hasil).length} koin kuambil lilinnya tiap denyut (dulu 10 beku, kini tanpa blokir), tiap koin kubedah Hurst, half-life, drift, entropi, Monte Carlo — lalu ${sasaranUtama.some((e) => e.jalur !== 'KOMPAS') ? 'yang benar-benar lolos hitungan jadi sasaran: ' + sasaranUtama.filter((e) => e.jalur !== 'KOMPAS').map((e) => `${e.simbol} ${e.arah}`).join(' · ') : 'yang tak lolos dikembalikan ke tambang dan meja musyawarah meneruskan galiannya ke sapuan lebar (laporan/musyawarah.json)'}. Kunci luar tidak kutunggu — hitunganku jalan penuh tanpa itu; dan koin yang menang kemarin bila matematikanya masih memilih dia, ya dia dijalankan lagi — kupelajari lebih dalam, tidak kublokir.`
     return { aktif: true, sumber: 'matematika-murni-lokal (tanpa kunci, tanpa server luar)', siklus: SIKLUS, waktu: ISO, langkah, narasi, catatan: 'otak-LLM luar hanya suara kedua opsional bila pemilik memasang kunci — nalar utama lahir di sini, dari angka' }
   } catch (err) {
     return { aktif: false, sumber: 'matematika-murni-lokal', gagal: String(err.message || err).slice(0, 120), ket: 'penyusun narasi gagal — diakuin jujur (hukum V274); nalar angka denyut tetap berjalan' }
@@ -6196,14 +6230,30 @@ try {
   const akPath = path.join(process.cwd(), 'arena-keadaan.json')
   const ak = bacaJson(akPath, {})
   ak.today = TGL
-  ak.todayPicks = sasaranUtama.filter((e) => e.jalur !== 'KOMPAS').map((e) => ({
-    competitor: 'MICAPROFITA', symbol: e.simbol + 'USDT', direction: e.arah,
-    confidence: e.keyakinan, entryClose: e.entry,
+  // V336 SATU-MUSYAWARAH — todayPicks kini lahir DARI MEJA MUSYAWARAH (bukan lagi
+  // kursi PENGAMATAN tanpa rencana): setiap baris = BUY dengan pakem lima baris
+  // lengkap (entry/stop/jual/jual-ambisius/alasan-ambisius). Koin tanpa rencana
+  // tidak pernah lagi dicantumkan — persis teguran pemilik.
+  const vonisMejaPublik = mejaVonis.length ? mejaVonis
+    // meja kosong (kasus langka): pakem penuh dari sasaran resmi berencana saja
+    : sasaranUtama.filter((e) => e.jalur !== 'KOMPAS' && e.arah === 'BUY' && e.stop != null && e.target != null && e.highAmbisius != null)
+        .map((e) => ({ simbol: e.simbol.endsWith('USDT') ? e.simbol : e.simbol + 'USDT', layakSkor: e.keyakinan, keluarga: e.jalur || 'ARAH', rezim: rezimGlobal,
+          pakem: { entry: e.entry, stopLoss: e.stop, jualProfit: e.target, jualAmbisius: e.highAmbisius, rrAmbang: null, holdJam: 24 },
+          alasanEntry: String(e.narasi || e.ketBukti || '').slice(0, 160),
+          alasanAmbisius: e.ketAmbisius || 'sasaran resmi denyut #' + SIKLUS + ' — terjaminan dari gerbang forensik penuh' }))
+  ak.todayPicks = vonisMejaPublik.slice(0, 8).map((v) => ({
+    competitor: 'MICAPROFITA', symbol: v.simbol, direction: 'BUY',
+    confidence: Math.round(v.layakSkor || 0), entryClose: v.pakem.entry,
     evidence: {
-      reason: String(e.narasi || e.ketBukti || 'sasaran resmi pra-registrasi denyut #' + SIKLUS).slice(0, 130),
-      sumber: 'SAKTI denyut #' + SIKLUS, jalur: e.jalur || 'ARAH',
+      reason: String(v.alasanAmbisius || v.alasanEntry || 'vonis meja musyawarah denyut #' + SIKLUS).slice(0, 130),
+      sumber: 'SATU-MUSYAWARAH denyut #' + SIKLUS, jalur: 'MUSYAWARAH',
+      pakem: { entry: v.pakem.entry, stopLoss: v.pakem.stopLoss, jualProfit: v.pakem.jualProfit, jualAmbisius: v.pakem.jualAmbisius },
+      alasanAmbisius: v.alasanAmbisius || null,
     },
   }))
+  ak.mejaMusyawarah = mejaMeta ? { protokol: 'SATU-MUSYAWARAH-V336', siklus: SIKLUS, vonis: mejaVonis.length,
+    kandidat: mejaMeta.kandidat, kembaliTambang: mejaMeta.kandidat - mejaVonis.length, file: 'laporan/musyawarah.json',
+    ket: 'satu meja untuk jasad+guru+pasar — arena, sadar1, hidup.html, dan guru membaca kebenaran yang sama; koin tak dipakai tidak dicantumkan' } : null
   ak.slotHariIni = { day: TGL, k: sasaranUtama.length, lahir: sasaranUtama.filter((e) => e.sasaranBaruHariIni).length, ditolak: [] }
   ak.venaSatuRumah = {
     sumber: 'laporan/sasaran-terkini.json', siklus: SIKLUS, dihasilkan: ISO,

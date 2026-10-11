@@ -37,6 +37,7 @@ const FILE_GELADAK = 'laporan/geladak.json'
 const FILE_LEDGER = 'laporan/majelis-ledger.jsonl'
 const FILE_FORMULA = 'pustaka/formula.json'
 const FILE_SASARAN = 'laporan/sasaran-terkini.json'
+const FILE_MEJA = 'laporan/musyawarah.json'   // V336 SATU-MUSYAWARAH — satu kebenaran semua organ
 const HOSTS = ['https://data-api.binance.vision', 'https://api.binance.com', 'https://api1.binance.com']
 const FEE_PUTAR = 0.002 // 0,2% beli+jual taker — jujur untuk spot alt
 const HORIZON = 24 // jam (selaras horizon PENGAMATAN penjaga)
@@ -118,6 +119,7 @@ function geladakSimbol(X) {
 const kena = (vote, ret) => vote === 'NAIK' ? ret > FEE_PUTAR : vote === 'TURUN' ? ret < -FEE_PUTAR : false
 
 // ---------- utama ----------
+let MEJA_KET = null   // V336: keterangan kursi dari meja musyawarah bila tersedia
 async function main() {
   const kini = new Date().toISOString()
   PETA = muatPeta() // otak tempaan naik ke geladak
@@ -127,8 +129,18 @@ async function main() {
   const kursi = (sasaran && (sasaran.sasaranHariIni || [])) || []
   const siklus = (sasaran && sasaran.siklus) || (sasaran && sasaran.pertumbuhan && sasaran.pertumbuhan.siklus) || null
 
-  // 1) pilih kolam geladak: kursi sasaran + BTC selalu (mata guru tak boleh sempit)
+  // 1) pilih kolam geladak: V336 SATU-MUSYAWARAH — kursi majelis kini = VONIS MEJA
+  // (koin yang benar-benar dipakai tubuh) + BTC selalu; sasaran resmi menyusul.
+  // Guru tidak lagi menetapkan daftarnya sendiri — ia menimbang keputusan meja.
   const himpunan = new Set(['BTCUSDT'])
+  try {
+    const mj = JSON.parse(readFileSync(FILE_MEJA, 'utf8'))
+    const umur = Date.now() - Date.parse(mj.dihasilkan || 0)
+    if (mj && mj.protokol === 'SATU-MUSYAWARAH-V336' && Array.isArray(mj.pakem) && umur >= 0 && umur < 45 * 60000) {
+      for (const v of mj.pakem.slice(0, 8)) if (v && v.simbol && /^[A-Z0-9]+USDT$/.test(v.simbol)) himpunan.add(v.simbol)
+      MEJA_KET = `kursi majelis = vonis meja musyawarah (segel ${mj.segel}, umur ${Math.round(umur / 60000)} mnt) — guru menimbang keputusan yang sama dengan jasad & pasar`
+    }
+  } catch { /* meja belum ada — kolam lama dipakai, jujur */ }
   for (const k of kursi) { const s = normalisasi(k.simbol); if (/^[A-Z0-9]+USDT$/.test(s)) himpunan.add(s) }
   const simbols = [...himpunan].slice(0, 11)
 
@@ -202,8 +214,10 @@ async function main() {
     }
     const sum = sumNaik - sumTurun
     const badai = v.volatil === 'BADAI'
-    const arah = badai ? 'TUNGGU' : (sum >= AMBANG_VONIS ? 'NAIK' : sum <= -AMBANG_VONIS ? 'TURUN' : 'TUNGGU')
-    const keyakinan = arah === 'TUNGGU' ? 0 : Math.round(clamp(50 + 50 * Math.abs(sum) / Math.max(0.01, maxSum), 35, 92))
+    // V336: vonis majelis = NAIK/TURUN/MENGUKUR-ULANG — state 'TUNGGU' dihapus dari
+    // seluruh buku guru (hukum pemilik: label tunggu = layak diambil = bodoh)
+    const arah = badai ? 'MENGUKUR-ULANG' : (sum >= AMBANG_VONIS ? 'NAIK' : sum <= -AMBANG_VONIS ? 'TURUN' : 'MENGUKUR-ULANG')
+    const keyakinan = arah === 'MENGUKUR-ULANG' ? 0 : Math.round(clamp(50 + 50 * Math.abs(sum) / Math.max(0.01, maxSum), 35, 92))
     const entry = X[s].C[i], a14 = X[s].atr[i]
     const stopPct = +(100 * 1.5 * a14 / entry).toFixed(2)
     const majelisSeat = {
@@ -211,9 +225,9 @@ async function main() {
       arah, keyakinan, sum: +sum.toFixed(3), badai, tanda: v._tanda || null,
       entry, stop: arah === 'NAIK' ? +(entry - 1.5 * a14).toFixed(8) : arah === 'TURUN' ? +(entry + 1.5 * a14).toFixed(8) : null,
       target: arah === 'NAIK' ? +(entry + 3 * a14).toFixed(8) : arah === 'TURUN' ? +(entry - 3 * a14).toFixed(8) : null,
-      rr: arah === 'TUNGGU' ? null : 2.0, stopPct,
-      ukuranSaranPct: arah === 'TUNGGU' ? 0 : +clamp(100 / Math.max(0.5, stopPct), 2, 100).toFixed(1),
-      rezimVol: v.volatil, sepakat: arah !== 'TUNGGU' && arahPenjaga(k) === arah,
+      rr: arah === 'MENGUKUR-ULANG' ? null : 2.0, stopPct,
+      ukuranSaranPct: arah === 'MENGUKUR-ULANG' ? 0 : +clamp(100 / Math.max(0.5, stopPct), 2, 100).toFixed(1),
+      rezimVol: v.volatil, sepakat: arah !== 'MENGUKUR-ULANG' && arahPenjaga(k) === arah,
       bukti
     }
     majelis.push(majelisSeat)
@@ -225,7 +239,7 @@ async function main() {
     if (existsSync(FILE_LEDGER)) ledger = readFileSync(FILE_LEDGER, 'utf8').trim().split('\n').filter(Boolean).map(JSON.parse)
   } catch { ledger = [] }
   for (const m of majelis) {
-    if (m.arah === 'TUNGGU') continue
+    if (m.arah === 'MENGUKUR-ULANG') continue
     ledger.push({ at: kini, siklus, simbol: m.simbol, arah: m.arah, entry: m.entry, stop: m.stop, target: m.target, keyakinan: m.keyakinan, tanda: m.tanda || null, status: 'terbuka' })
   }
   if (ledger.length > 400) ledger = ledger.slice(-400)
@@ -307,10 +321,10 @@ async function main() {
   const pelajaran = [
     `GELADAK: akurasi tertimbang ${akTimbang ?? '—'}% dari ${sampelTotal} sampel walk-forward (fee ${FEE_PUTAR * 100}% putar, horizon ${HORIZON}j) — angka geladak bukan janji; buku-evaluasi nyata yang menghakimi (${menang}W/${rugi}L).`,
     akTimbang != null && akTimbang < 50
-      ? `geladak di bawah 50% pada jendela ini — faktor belum punya edge di rezim sekarang; guru MENAHAN DIRI (TUNGGU), bukan memaksa vonis. Inilah beda master dan penjudi.`
+      ? `geladak di bawah 50% pada jendela ini — faktor belum punya edge di rezim sekarang; guru MENIMBANG ULANG tanpa vonis (kursi kembali ke meja musyawarah), bukan memaksa vonis. Inilah beda master dan penjudi.`
       : `geladak di atas 50% pada jendela ini — edge ada, tetapi tetap hanya vonis dengan bukti & perisiko yang bicara.`,
-    maxSum > 0 ? `bobot faktor lahir dari hit-rate nyata; tanpa edge (hit≤50%) atau n<${AMBANG_BUKTI} = bobot NOL — bukti dulu, bicara kemudian.` : 'belum ada faktor berbukti (n<' + AMBANG_BUKTI + ' semua) — guru menahan diri, TUNGGU adalah ilmu.',
-    `vonis majelis kini: ${majelis.filter(m => m.arah === 'NAIK').length} NAIK / ${majelis.filter(m => m.arah === 'TURUN').length} TURUN / ${majelis.filter(m => m.arah === 'TUNGGU').length} TUNGGU — ${majelis.filter(m => m.sepakat).length} sepakat dengan penjaga; ${bukuF.daftar.length} formula tersimpan (${hidupF} hidup, gerbang regresi menyala).`
+    maxSum > 0 ? `bobot faktor lahir dari hit-rate nyata; tanpa edge (hit≤50%) atau n<${AMBANG_BUKTI} = bobot NOL — bukti dulu, bicara kemudian.` : 'belum ada faktor berbukti (n<' + AMBANG_BUKTI + ' semua) — guru menimbang ulang tanpa vonis; kehati-hatian adalah ilmu.',
+    `V336 SATU-MUSYAWARAH: ${MEJA_KET || 'meja musyawarah belum segar — kolam kursi lama dipakai bangun ini (jujur)'}; vonis majelis kini: ${majelis.filter(m => m.arah === 'NAIK').length} NAIK / ${majelis.filter(m => m.arah === 'TURUN').length} TURUN / ${majelis.filter(m => m.arah === 'MENGUKUR-ULANG').length} menimbang-ulang (kembali ke meja) — ${majelis.filter(m => m.sepakat).length} sepakat dengan penjaga; ${bukuF.daftar.length} formula tersimpan (${hidupF} hidup, gerbang regresi menyala).`
   ]
 
   const keluar = {

@@ -3849,3 +3849,90 @@ rapor mingguan berapa jual-profit yang tersentuh vs kena stop (bukti
 efek anti-serakah); (b) pengalaman-cermin dikanji ulang dari ledger
 pakem; (c) NERVA-GALI bila jejak cukup; (d) antre lama tetap: Fase 2-3
 trifasa, 1000 simulasi Hanna, kogerensi saksi ke-6.
+
+## §13u — EPOK V336 · SATU-MUSYAWARAH: JASAD, GURU, DAN PASAR TIDAK LAGI BERINDEPENDEN — SATU MEJA, SATU VONIS, SEMUA ORGAN MAKAN DARI MEJA YANG SAMA (2026-10-11)
+
+**1. MANDAT.** "Namun koin tidak ada keselarasan di jasad, guru, pasar.
+Kenapa semuanya malah saling berindependen masing-masing padahal
+bukankah semua koin di satu tempat sama dimusyawarahkan? Kalau ini
+kesannya benar-benar buat kita makin lama makin tumpul! Ini benar
+berbahaya! Masa koin yang gak dipakai dicantumkan, ditulis, dan masuk
+list laporan — kan tag masuk list laporan adalah koin yang memang
+terbaik di hari ini, yang dianalisa dengan kondisi pasar hari ini, dan
+memberikan aspek terjaminan penuh."
+
+**2. DIAGNOSIS JUJUR (bedah organ setelah teguran).** V335 sudah
+menghapus TUNGGU, tetapi matematika pakem DISALIN ke tiga tempat
+(gali-terus, sadar1, hidup.html — tiga rumus identik yang siap
+bergeser sendiri-sendiri) dan EMPAT meja keputusan terpisah tetap
+menetapkan daftarnya masing-masing: gali-terus menyapu 110 koin
+versinya, sadar1 merangkai arah versinya, SAKTI menetapkan sasaran
+versinya (kursi PENGAMATAN tanpa rencana pun lolos ke todayPicks —
+bukti nyata: 'MAGICUSDT NAIK' dan '牛来 SELL' masuk daftar resmi),
+majelis geladak menimbang kursinya sendiri. Irisan antar-organ nyaris
+nol (saktiSegel 'irisan: 0'). Itulah "saling berindependen" yang
+membuat makin lama makin tumpul — dan koin yang tak dipakai tetap
+tercantum.
+
+**3. JAWABAN — SATU MEJA (scripts/hidup/musyawarah-inti.mjs).**
+Matematika pakem kini hidup DI SATU TEMPAT saja: fitur kartu, keluarga
+jebakan, rezim, skor-layak 0–100, dan PAKEM-LIMA-BARIS — dipindah
+verbatim dari gali-terus, lalu gali-terus/sadar1/SAKTI IMPORT dari
+sana (nol salinan tersisa). Di atasnya, musyawarahkan(): lima suara
+duduk bersama untuk SETIAP koin — PASAR (kartu lilin hari ini), JASAD
+(napas/ATR/likuiditas/papan-mati), GURU (pengalaman-cermin 100.000
+soal), RUMAH (koin yang benar-benar DIPAKAI tubuh +8; meja-audit V327
+setuju +6 / menolak −20), dan TERJAMINAN-PENUH (potongan racun berat
+anti-pisau/anti-kejar/papan-mati atau layak < 45 = KEMBALI MENGGALI).
+Vonis hanya BUY dengan pakem lima baris; yang tak lolos TIDAK
+dicantumkan — tercatat di meja.kembaliTambang beserta alasannya.
+
+**4. SATU KEBENARAN: laporan/musyawarah.json.** Disegel
+segelMusyawarah() — berisi hukum meja, meta (kandidat → vonis →
+kembali menggali + suara dipakai-tubuh + audit), dan daftar pakem.
+Cermin warisan laporan/gali-terus.json ditulis identik (pembaca lama
+tak melihat kebenaran lain). Empat organ dijahit makan dari meja yang
+sama: (a) GALI-TERUS = tangan penyelenggara (sapuan 110 koin → segel
+meja); (b) SADAR-1 = sumber pertama kebenaran meja (≤45 mnt), bila
+basi ia MENYELENGGARAKAN musyawarah sendiri dengan import rumus inti
+yang sama — bukan lagi salinan; guru mengiyarkan vonis meja untuk
+pick tubuh, pick yang tak duduk di meja DIGANTI koin terbaik meja;
+arah.json v336 membawa sumberMusyawarah + mejaMusyawarah; (c) SAKTI
+= kandang penuh (hasil klines denyut, nol permintaan tambahan)
+didudukkan di meja; todayPicks arena kini lahir dari vonis meja —
+kursi PENGAMATAN tanpa rencana TIDAK PERNAH lagi masuk list; disiplin
+'TUNGGU' → 'MENAMBANG' (meja terus menggali, keputusan dihitung);
+(d) SADAR-2 (hidup.html) = mejaAmbil() same-origin, sumber pertama
+"Arah kini" + "Arah harian" — jurnal MEJA mencatat setiap pembacaan;
+(majelis geladak guru-master: kursi = vonis meja ≤45 mnt; state
+'TUNGGU' → 'MENGUKUR-ULANG' di seluruh buku guru).
+
+**5. BUKTI LOKAL (sebelum push).** Sapuan gali-terus: 110/110 koin
+sah, 21 dtk, segel 0a402f27c4d18150 — 110 kandidat → 67 vonis BUY
+penuh, 43 kembali menggali. Bukti anti-independen yang persis
+diminta pemilik: LUMIAUSDT (koin dari contoh laporan TUNGGU yang
+dikutangkan) kini layak 37,4 → DITOLAK meja ("layak 37,4 di bawah
+ambang meja 45 — kembali menggali napas lebih dalam"); MAGICUSDT
+(RSI panas di ujung rentang) ditahan anti-kejar; BTC/ETH/BNB papan
+mati (lebar < 1,5%) tak dicantumkan. Contoh pakem teratas: LINKUSDT
+layak 75 — entry 12,862 · stop 12,8185 (risiko 0,35%) · jual profit
+13,008 (ambang napas +1,14%, rr 3,24) · ambisius 13,1649 (+2,35%)
+· alasan-ambisius nafas/dana lengkap. Validasi: node --check 5 organ
+LULUS; blok JS hidup.html 5/6 SAH (cacat tubuhRender-ganda pra-ada
+warisan V332, bukan baru); YAML sakti-denyut sah; langkah jantung
+berganti nama SATU-MUSYAWARAH.
+
+**6. MAKNA MANDAT.** "Makin lama makin tumpul" berangkal dari banyak
+meja keputusan yang masing-masing benar di rumahnya sendiri. Satu meja
+berarti satu angka yang bisa diaudit semua pihak: koin masuk laporan
+HANYA karena meja mengiyarkannya hari ini, dengan kondisi pasar hari
+ini, dengan terjaminan penuh — bukan karena organ tertentu punya
+daftar favorit. Koin tak dipakai kembali ke tambang; meja yang
+menyimpan catatan mengapa ia ditolak.
+
+**7. ANTRE.** (a) nilai medan pakem meja — rapor mingguan jual-profit
+tersentuh vs kena stop per vonis meja (bukti terjaminan); (b) suara
+kromosom sadar1 dihidupkan penuh ke meja (kini lewat import, berikutnya
+sebagai suara berbobot); (c) breadh/iklim SAKTI sebagai suara meja
+keenam; (d) antre lama tetap: nilai medan pakem V335, pengalaman-cermin
+kanji-ulang, NERVA-GALI, trifasa, 1000 simulasi Hanna.
