@@ -2222,7 +2222,7 @@ function renderFighters() {
 }
 
 function renderKronik() {
-  $('#kronik').innerHTML = (st.events || []).map((e) => `<div class="ev"><span class="evchip ${EV_CLS(e.kind)}">${EV_TXT(e.kind)}</span><p><span class="d">${esc(e.day)}</span>${esc(e.text)}</p></div>`).join('') || '<p class="tiny">Belum ada peristiwa.</p>';
+  $('#kronik').innerHTML = (function (ev) { const lihat = new Set(); return (ev || []).filter((e) => { const k = (e.day || '') + '|' + (e.kind || '') + '|' + (e.text || ''); if (lihat.has(k)) return false; lihat.add(k); return true; }); })(st.events).map((e) => `<div class="ev"><span class="evchip ${EV_CLS(e.kind)}">${EV_TXT(e.kind)}</span><p><span class="d">${esc(e.day)}</span>${esc(e.text)}</p></div>`).join('') || '<p class="tiny">Belum ada peristiwa.</p>';
 }
 
 // ---------- papan ----------
@@ -2489,7 +2489,13 @@ async function bedahKoinLokal(t, holder, question, alasan) {
 // juga jadi SASARAN RESMI SAKTI hari ini diberi badge — satu rumah satu kebenaran.
 // Jujur V274: kata "pasti kena" TIDAK ADA di rumah ini — yang ada skor
 // transparan + keyakinan, dan benar/salahnya dinilai medan candle besok.
-const S5_STABLE = ['USDCUSDT','TUSDUSDT','FDUSDUSDT','USDPUSDT','DAIUSDT','EURUSDT','AEURUSDT','BUSDUSDT','USTUSDT','PAXGUSDT','EURIUSDT','XUSDUSDT','USD1USDT'];
+const S5_STABLE = ['USDCUSDT','TUSDUSDT','FDUSDUSDT','USDPUSDT','DAIUSDT','EURUSDT','AEURUSDT','BUSDUSDT','USTUSDT','PAXGUSDT','EURIUSDT','XUSDUSDT','USD1USDT','RLUSDUSDT','USDDUSDT','USDSUSDT','USDEUSDT','PYUSDUSDT','USTCUSDT','XAUTUSDT'];
+// v299b GERBANG PEGGED 3-LAPIS (kasus RLUSD: stablecoin Ripple lolos daftar
+// manual tampil sasaran #2 dengan target +0,0% — mempermalukan rumah):
+// lapis-1 daftar eksplisit di atas; lapis-2 pola akhir base (USD/EUR/pegged
+// lain tertangkap walau tak pernah didaftarkan); lapis-3 jaring statistik
+// di sasaranLimaJalan (pegged = ATR < 1,5% & mom7 < 1% & mom30 < 1,5%).
+const S5_PEGGED_BASE = /(USD|EUR|DAI|USDE|USDS|USD1|PYUSD|USDP|USDD|PAXG|XAUT|USTC|EURI|AEUR|BSCUSD)$/;
 const S5_GANDA = /(UP|DOWN|BULL|BEAR)USDT$/;
 const S5_QV_MIN = 3e6;   // kandang penuh: semua pasangan USDT likuid ≥ 3 jt USDT/hari
 let S5_CACHE = null, S5_CACHE_AT = 0, S5_JALAN = false, S5_META = null;
@@ -2541,7 +2547,8 @@ async function sasaranLimaJalan(paksa) {
   try {
     const semua = await ambil('https://api.binance.com/api/v3/ticker/24hr', 25000);
     const pool = (semua || []).filter((t) => /USDT$/.test(t.symbol) && !S5_GANDA.test(t.symbol)
-      && S5_STABLE.indexOf(t.symbol) === -1 && +t.quoteVolume >= S5_QV_MIN && +t.lastPrice > 0)
+      && S5_STABLE.indexOf(t.symbol) === -1 && !S5_PEGGED_BASE.test(t.symbol.replace(/USDT$/, ''))
+      && +t.quoteVolume >= S5_QV_MIN && +t.lastPrice > 0)
       .sort((a, b) => +b.quoteVolume - +a.quoteVolume);
     if (!pool.length) throw new Error('daftar pasangan tak terbaca dari Binance');
     let prog = 0;
@@ -2552,13 +2559,16 @@ async function sasaranLimaJalan(paksa) {
         const f = s5faktor(kl, +t.quoteVolume);
         if (!isFinite(f.last) || f.last <= 0) return null;
         f.symbol = t.symbol; f.chg = +t.priceChangePercent; f.qv = +t.quoteVolume;
+        // jaring statistik lapis-3: pegged tak dikenal nyaris tak bergerak — bukan sasaran
+        f.pegged = (f.atrV < 1.5 && Math.abs(f.mom7) < 1 && Math.abs(f.mom30) < 1.5);
         return f;
       } finally {
         prog++;
         if (prog % 20 === 0) box.innerHTML = '<p class="tiny" style="color:var(--dim)">membedah kandang penuh: ' + prog + '/' + pool.length + ' koin selesai…</p>';
       }
     });
-    const ada = hasil.filter(Boolean);
+    const adaMentah = hasil.filter(Boolean);
+    const ada = adaMentah.filter((f) => !f.pegged);
     if (!ada.length) throw new Error('bedah ' + pool.length + ' koin semua gagal (jaring sedang sakit)');
     // gerbang: kandidat ber-arah penuh (BUY/SELL) dulu, terkuat dulu — bila kurang
     // dari 5, sisanya dilengkapi kandidat TUNGGU berlabel jujur PENGAWASAN.
@@ -2575,7 +2585,7 @@ async function sasaranLimaJalan(paksa) {
       const idx = ranking.findIndex((f) => f.symbol === String(sim).toUpperCase() + 'USDT');
       return idx >= 0 ? { sim: String(sim).toUpperCase(), peringkat: idx + 1, total: ranking.length, arah: ranking[idx].arah, skor: ranking[idx].s, key: ranking[idx].key } : { sim: String(sim).toUpperCase(), peringkat: null };
     });
-    S5_META = { posisiResmi, dibedah: ada.length, target: pool.length };
+    S5_META = { posisiResmi, dibedah: ada.length, target: pool.length, peggedBuang: adaMentah.length - ada.length };
     S5_CACHE = lima; S5_CACHE_AT = kini;
     s5render(lima);
   } catch (e) {
@@ -2589,7 +2599,7 @@ function s5render(lima) {
   const n5 = (x) => (x == null || !isFinite(x)) ? '—' : (+x).toPrecision(5).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '');
   const jam = new Date(S5_CACHE_AT).toISOString().slice(11, 16);
   const wEl = document.getElementById('s5Waktu');
-  if (wEl) wEl.textContent = '· kandang penuh ' + (S5_META ? S5_META.dibedah + '/' + S5_META.target : '') + ' koin · ' + jam + ' UTC · Binance langsung';
+  if (wEl) wEl.textContent = '· kandang penuh ' + (S5_META ? S5_META.dibedah + '/' + S5_META.target : '') + ' koin' + (S5_META && S5_META.peggedBuang > 0 ? ' · ' + S5_META.peggedBuang + ' pegged dibuang' : '') + ' · ' + jam + ' UTC · Binance langsung';
   const resmiSet = {}; (S5_META && S5_META.posisiResmi || []).forEach((p) => { resmiSet[p.sim] = p; });
   const rows = lima.map((f, i) => {
     const resmiInfo = resmiSet[String(f.symbol).replace('USDT', '')];
