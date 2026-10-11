@@ -425,7 +425,6 @@ const S = {
   baca:{},
   pasar:{},
   cermin:{at:0, data:null},
-  meja:{at:0, data:null},   // V336 SATU-MUSYAWARAH — satu kebenaran laporan/musyawarah.json
   jurnal:[], stat:{bytes:0, fakta:0, sesi:0, lahirAt:Date.now(), btTotal:0},
   kerja:{nama:'bangkit', fase:'', faseAt:0, jejak:[], mengapa:[], target:null, sibuk:false},
   perintah:null,
@@ -433,6 +432,7 @@ const S = {
   habitat:null, habitatAt:0, auditSyms:[],
   madrasah:null, pustaka:null, ujian:[], ujianAt:0, tempa:null,
   latihan:{n:0, benar:0, ak:0}, jagaRot:0, soal:null,
+  sasaranM:{at:0, syms:[], sumber:'belum-ada'},   // V300-MANDIRI-SASARAN: daftar sasaran kususun sendiri dari kandang Binance
   paru:{n:0, byte:0, lat:[], sumber:{}, waktu:null, selisih:null, jamAt:0}
 };
 const tidur = ms => new Promise(r=>setTimeout(r,ms));
@@ -910,55 +910,32 @@ async function cerminAmbil(){
   paruCatat('arena-keadaan.json (same-origin)', Math.round(performance.now()-t0), teks.length);
   const d = JSON.parse(teks);
   S.cermin = {at:sekarang(), data:d};
+  const hariIni=new Date().toISOString().slice(0,10);
+  const basi=d.today!==hariIni;
   const tp=(d.todayPicks||[]).find(x=>x.competitor==='MICAPROFITA');
-  jurnal('CERMIN', `cermin arena terbaca: rezim <b>${d.regime}</b>, pick MICAPROFITA ${tp?`<b>${tp.symbol} ${tp.direction}</b> (${tp.confidence}%)`:'kosong'}, FnG ${d.climate?.fng??'-'}`);
+  jurnal('CERMIN', `cermin arena terbaca: rezim <b>${d.regime}</b>, pick MICAPROFITA ${tp?`<b>${tp.symbol} ${tp.direction}</b> (${tp.confidence}%)`:'kosong'}, FnG ${d.climate?.fng??'-'}${basi?` — <b>TERTUNDA (data ${d.today})</b>: pick lama TIDAK dipakai menuntun sasaran (V300)`:''}`);
   return d;
 }
 function simbolSasaran(){
-  const d=S.cermin.data; if(!d) return MAJORS_MATA.slice(0,3);
-  const set=[]; const dor=s=>{ if(s && !set.includes(s) && set.length<8) set.push(s); };
-  const mine=(d.todayPicks||[]).find(x=>x.competitor==='MICAPROFITA'); if(mine) dor(mine.symbol);
-  for(const it of (d.pulse?.items||[])) dor(it.symbol);
-  for(const x of (d.todayPicks||[])) if(x.competitor!=='ACAK') dor(x.symbol);
-  for(const m of MAJORS_MATA) dor(m);
-  return set;
+  // V300-MANDIRI-SASARAN (mandat pemilik: "harusnya sifatnya bisa mandiri walau
+  // sambungan tidak diaktifkan"). Keadaan lama berbahaya: cermin tertunda sejak
+  // 2026-10-05 membuatku mengorbit GTC/SAND selamanya. Hukum baru: simbol cermin
+  // hanya dipakai bila cermin SEGAR (d.today = hari UTC ini); bila tua, sasaran
+  // kususun sendiri dari kandang Binance (aktSasaranMandiri, pegged 3-lapis).
+  const d=S.cermin.data;
+  const hari=new Date().toISOString().slice(0,10);
+  if(d && d.today===hari){
+    const set=[]; const dor=s=>{ if(s && !set.includes(s) && set.length<8) set.push(s); };
+    const mine=(d.todayPicks||[]).find(x=>x.competitor==='MICAPROFITA'); if(mine) dor(mine.symbol);
+    for(const it of (d.pulse?.items||[])) dor(it.symbol);
+    for(const x of (d.todayPicks||[])) if(x.competitor!=='ACAK') dor(x.symbol);
+    for(const m of MAJORS_MATA) dor(m);
+    return set;
+  }
+  if(S.sasaranM.syms.length && sekarang()-S.sasaranM.at<45*60000) return S.sasaranM.syms.slice(0,8);
+  return MAJORS_MATA.slice(0,5);   // cadangan jujur sementara daftar mandiri disusun
 }
 const MAJORS_MATA=['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT'];
-
-/* ================= MEJA MUSYAWARAH (V336): SATU KEBENARAN SEMUA ORGAN ============
-   Teguran pemilik: "koin tidak ada keselarasan di jasad, guru, pasar — semuanya
-   saling berindependen; masa koin yang gak dipakai dicantumkan dan masuk list
-   laporan?" Mata ini kini membaca kebenaran yang SAMA dengan jasad (SAKTI),
-   guru (sadar1), dan tangan (gali-terus): laporan/musyawarah.json — satu meja,
-   satu vonis; koin tanpa rencana pakem TIDAK PERNAH tampil di sini. */
-async function mejaAmbil(){
-  const t0=performance.now();
-  const r = await fetch('./laporan/musyawarah.json?t='+sekarang(), {cache:'no-store'});
-  if(!r.ok) throw new Error('HTTP '+r.status);
-  const teks=await r.text();
-  paruCatat('laporan/musyawarah.json (same-origin)', Math.round(performance.now()-t0), teks.length);
-  const d = JSON.parse(teks);
-  S.meja = {at:sekarang(), data:d};
-  jurnal('MEJA', `meja musyawarah terbaca (V336): <b>${d.meja?.vonis ?? (d.pakem||[]).length} vonis BUY</b> dari ${d.meja?.kandidat ?? '?'} kandidat, ${d.meja?.kembaliTambang ?? '?'} kembali menggali — jasad+guru+pasar satu meja, segel ${String(d.segel||'').slice(0,8)}`);
-  if(S.tabAktif==='guru') guruRender();
-  return d;
-}
-function mejaSegar(umurMaksMnt){
-  const d=S.meja.data;
-  return (d && S.meja.at && sekarang()-S.meja.at<umurMaksMnt*60000 && Array.isArray(d.pakem) && d.pakem.length) ? d : null;
-}
-/* vonis meja → bentuk arah yang sama dengan sadar1 (satu wajah dua sisi) */
-function mejaKeArah(v){
-  const p=(v&&v.pakem)||{};
-  return { simbol:v.simbol, arah:'BELI',
-    keyakinan:Math.min(92, Math.round(40+(v.layakSkor||0)*0.55)),
-    layakSkor:v.layakSkor, keluarga:v.keluarga, rezim:v.rezim, suaraRumah:v.suaraRumah||[],
-    rencana:{ arah:'BELI', entry:p.entry, stop:p.stopLoss, jualProfit:p.jualProfit, jualAmbisius:p.jualAmbisius,
-      ambangFaktaPct:p.ambangFaktaPct, rr:p.rrAmbang, holdJam:p.holdJam||24,
-      disiplin:v.disiplin||'risiko maks 1% modal · stop di bawah dasar napas, tidak digeser · jual profit di ambang napas (bukan di atasnya) · ambisius hanya bila dana baru membuktikan' },
-    alasan:[v.alasanEntry].filter(Boolean), alasanAmbisius:v.alasanAmbisius,
-    dasar:['meja musyawarah SATU kebenaran (laporan/musyawarah.json) — jasad+guru+pasar satu meja','segel '+((S.meja.data&&S.meja.data.segel)||'—')] };
-}
 
 /* ================= OTAK: pekerjaan nyata, argmax utilitas ================= */
 const STALE_POHON = 12*60000, STALE_CERMIN = 20*60000, STALE_PASAR = 45*60000;
@@ -983,15 +960,17 @@ function daftarKerja(){
   if(pohonTua) k.push({u: S.pohon.files.length?70:95, label:'pindai rumah (pohon repo '+(S.pohon.files.length?umur(sekarang()-S.pohon.at):'kosong')+')', buat:()=>aktPindai()});
   const cerminTua = !S.cermin.at || (sekarang()-S.cermin.at)>STALE_CERMIN;
   if(cerminTua) k.push({u:60, label:'cermin arena-keadaan '+(S.cermin.at?umur(sekarang()-S.cermin.at):'belum dibaca'), buat:()=>aktCermin()});
-  const mejaTua = !S.meja.at || (sekarang()-S.meja.at)>STALE_CERMIN;   // V336: meja ikut sikap segar cermin
-  if(mejaTua) k.push({u:59, label:'meja musyawarah (satu kebenaran) '+(S.meja.at?umur(sekarang()-S.meja.at):'belum dibaca'), buat:()=>aktMeja()});
+  const cerminBas = !!S.cermin.data && S.cermin.data.today===new Date().toISOString().slice(0,10);
+  // V300: cermin tua → susun sasaran mandiri dari kandang Binance (prioritas tinggi)
+  if(!cerminBas && (sekarang()-S.sasaranM.at)>45*60000)
+    k.push({u:88, label:'susun sasaran mandiri dari kandang Binance (cermin tua data '+(S.cermin.data?.today||'-')+')', buat:()=>aktSasaranMandiri()});
   for(const f of S.pohon.files){ const u=skorBaca(f); if(u>0) k.push({u, label:'baca '+f.path+(S.baca[f.path]?.berubah?' (BERUBAH)':''), buat:()=>aktBaca(f)}); }
   for(const sym of simbolSasaran()){
     const p=S.pasar[sym];
     const tua = !p || (sekarang()-p.at)>STALE_PASAR;
     if(tua) k.push({u: p?50:58, label:'pelajari pasar '+sym+(p?' ('+umur(sekarang()-p.at)+')':' (pertama)'), buat:()=>aktPasar(sym)});
   }
-  const mine=(S.cermin.data?.todayPicks||[]).find(x=>x.competitor==='MICAPROFITA');
+  const mine=cerminBas ? (S.cermin.data?.todayPicks||[]).find(x=>x.competitor==='MICAPROFITA') : null;   // V300: pick lama tidak diaudit sebagai pick hidup
   if(mine && S.pasar[mine.symbol] && !S.pasar[mine.symbol].audit)
     k.push({u:55, label:'audit pick '+mine.symbol+' vs momentum hidup', buat:()=>aktAudit(mine)});
   const lat=aktLatihan();   // latihan soal mandiri — selalu jadi kandidat bila ada data pasar
@@ -1033,20 +1012,62 @@ function aktCermin(){
       const st=(d.standings||[]).find(x=>x.competitor==='MICAPROFITA');
       if(st) jurnal('CERMIN', `diriku di arena: ${st.picks} pick / ${st.days} hari, hit-rate ${f1(st.hitRate*100)}% — ini dasar kuperilaku`); }, 800),
     F('MENEMUKAN', async()=>{ const s=simbolSasaran();
-      if(s.length) jurnal('TEMUAN', `sasaran pasar kini: <b>${s.join(', ')}</b> (dipilih arena sendiri)`, 'temuan');
+      const hari=new Date().toISOString().slice(0,10);
+      const segar=!!S.cermin.data && S.cermin.data.today===hari;
+      if(!segar) jurnal('TEMUAN', `cermin <b>TERTUNDA (data ${S.cermin.data?.today||'?'})</b> — simbol denyut lama TIDAK dipakai menuntun sasaran (V300-MANDIRI); sasaran kini kususun sendiri dari kandang Binance: <b>${S.sasaranM.syms.join(', ')||'sedang kususun'}</b>`, 'temuan');
+      else if(s.length) jurnal('TEMUAN', `sasaran pasar kini: <b>${s.join(', ')}</b> (dipilih arena sendiri, cermin segar ${hari})`, 'temuan');
       else jurnal('TEMUAN', 'tidak ada simbol sasaran dari cermin — kujujurkan'); }, 700),
-    F('MEMBANGUN', async()=>{ try{ await mejaAmbil(); }catch(e){ /* meja menyusul — jujur */ } petaRender(); indeksRender(); }, 500),
+    F('MEMBANGUN', async()=>{ petaRender(); indeksRender(); }, 500),
     F('MENGAMATI-KEMBALI', async()=>{}, 350)
   ]};
 }
-function aktMeja(){
-  return {nama:'MEMBACA MEJA MUSYAWARAH', langkah:[
-    F('MENGAMATI', async()=>{ await mejaAmbil(); }, 400),
-    F('MEMAHAMI', async()=>{ const d=S.meja.data; if(!d) throw new Error('meja kosong');
-      jurnal('MEJA', `meja: ${d.meja?.kandidat??'?'} kandidat → ${d.meja?.vonis??'?'} vonis BUY penuh · ${d.meja?.kembaliTambang??'?'} kembali menggali — koin tak dipakai tidak dicantumkan (V336)`); }, 700),
-    F('MENEMUKAN', async()=>{ const p=(S.meja.data&&S.meja.data.pakem)||[];
-      if(p.length) jurnal('TEMUAN', `vonis teratas meja: <b>${p[0].simbol} BUY</b> layak ${p[0].layakSkor} — entry ${p[0].pakem?.entry} · stop ${p[0].pakem?.stopLoss} · jual ${p[0].pakem?.jualProfit} · ambisius ${p[0].pakem?.jualAmbisius}`, 'temuan'); }, 600),
-    F('MEMBANGUN', async()=>{ if(S.tabAktif==='guru') guruRender(); }, 400),
+/* V300-MANDIRI-SASARAN — aksi 9 fase: cermin arena tua → aku menyusun sasaran
+   sendiri dari kandang Binance, TANPA mengorbit simbol denyut lama (kasus
+   GTC/SAND 2026-10-05). Gerbang pegged 3-lapis sama dengan arena.html:
+   lapis-1 daftar eksplisit, lapis-2 pola akhir base, lapis-3 jaring statistik
+   (ATR<1,5% & |mom7|<1% & |mom30|<1,5% dari lilin 1d). Campuran jujur dua arah:
+   likuiditas-terbesar + momentum naik + momentum turun — belajar bukan cuma
+   saat pasar sedang euforia. */
+function aktSasaranMandiri(){
+  const STABLE=['USDCUSDT','TUSDUSDT','FDUSDUSDT','USDPUSDT','DAIUSDT','EURUSDT','AEURUSDT','BUSDUSDT','USTUSDT','PAXGUSDT','EURIUSDT','XUSDUSDT','USD1USDT','RLUSDUSDT','USDDUSDT','USDSUSDT','USDEUSDT','PYUSDUSDT','USTCUSDT','XAUTUSDT'];
+  const PEG=/(USD|EUR|DAI|USDE|USDS|USD1|PYUSD|USDP|USDD|PAXG|XAUT|USTC|EURI|AEUR|BSCUSD)$/, GANDA=/(UP|DOWN|BULL|BEAR)USDT$/;
+  return {nama:'MENYUSUN SASARAN MANDIRI (V300)', target:'sasaran:mandiri', langkah:[
+    F('MENGAMATI', async()=>{ S.sasaranM._mentah = await jF('https://api.binance.com/api/v3/ticker/24hr', 20000); }, 300),
+    F('MEMAHAMI', async()=>{ const all=S.sasaranM._mentah||[]; if(!all.length) throw new Error('ticker 24j tak terbaca');
+      const pool=all.filter(t=>/USDT$/.test(t.symbol)&&!GANDA.test(t.symbol)&&!STABLE.includes(t.symbol)&&!PEG.test(t.symbol.replace(/USDT$/,''))&&+t.quoteVolume>=3e6&&+t.lastPrice>0).sort((a,b)=>+b.quoteVolume-+a.quoteVolume);
+      if(pool.length<10) throw new Error('kandang tak terbaca utuh ('+pool.length+' koin)');
+      S.sasaranM._pool=pool; S.sasaranM._peggedBuang=all.length-pool.length;
+      jurnal('SASARAN', `kandang terbaca: <b>${pool.length}</b> pasangan USDT likuid (≥3 jt/24j); ${S.sasaranM._peggedBuang} simbol dibuang gerbang pegged lapis-1+2`); }, 900),
+    F('MENCOBA', async()=>{ const pool=S.sasaranM._pool;
+      const naik=pool.filter(t=>+t.priceChangePercent>0).slice(0,80);
+      const turun=pool.filter(t=>+t.priceChangePercent<0).slice(0,80);
+      const kandidat=[...pool.slice(0,3).map(t=>t.symbol), ...naik.slice(0,3).map(t=>t.symbol), ...turun.slice(0,2).map(t=>t.symbol)];
+      const set=[]; for(const s of kandidat){ if(!set.includes(s)&&set.length<10) set.push(s); }
+      for(const t of pool){ if(set.length>=10) break; if(!set.includes(t.symbol)) set.push(t.symbol); }
+      S.sasaranM._kandidat=set; }, 800),
+    F('MELAKUKAN', async()=>{ // lapis-3 jaring statistik: pegged nyaris tak bergerak dibuang
+      const set=S.sasaranM._kandidat||[], lolos=[];
+      for(const s of set){
+        try{ const kl=await jF('https://api.binance.com/api/v3/klines?symbol='+s+'&interval=1d&limit=32', 12000);
+          if(kl&&kl.length>=8){
+            const c=kl.map(r=>+r[4]);
+            const mom7=(c[c.length-1]-c[c.length-8])/c[c.length-8]*100;
+            const back30=c[Math.max(0,c.length-31)];
+            const mom30=(c[c.length-1]-back30)/back30*100;
+            let atr=0; const n=Math.min(14,kl.length-1);
+            for(let i=kl.length-n;i<kl.length;i++){ const cur=kl[i],prev=kl[i-1]||cur; atr+=Math.max(+cur[2]-+cur[3],Math.abs(+cur[2]-+prev[4]),Math.abs(+cur[3]-+prev[4])); }
+            atr/=n; const atrPct=atr/c[c.length-1]*100;
+            if(!(atrPct<1.5&&Math.abs(mom7)<1&&Math.abs(mom30)<1.5)) lolos.push(s);
+          }
+        }catch(e){}   // satu koin gagal diambil bukan alasan mengarang penggantinya
+      }
+      if(!lolos.length) throw new Error('kandang habis tersaring — jujur menunggu denyut berikutnya, bukan mengarang');
+      S.sasaranM.at=sekarang(); S.sasaranM.syms=lolos.slice(0,8); S.sasaranM.sumber='mandiri-kandang V300 (pegged 3-lapis)';
+      S.sasaranM._mentah=null; S.sasaranM._pool=null; S.sasaranM._kandidat=null; }, 900),
+    F('MENGEVALUASI', async()=>{ jurnal('EVAL', `sasaran mandiri terverifikasi: <b>${S.sasaranM.syms.length} simbol</b> lolos gerbang 3-lapis — daftar: ${S.sasaranM.syms.join(', ')}`); }, 700),
+    F('MENEMUKAN', async()=>{ jurnal('TEMUAN', `sasaran mandiri siap: <b>${S.sasaranM.syms.join(', ')}</b> — campuran likuiditas-terbesar + momentum naik + momentum turun (belajar dua arah, bukan cuma euforia)`, 'temuan'); }, 700),
+    F('MEMBANGUN', async()=>{ indeksRender(); petaRender(); }, 500),
+    F('MENINGKATKAN', async()=>{ indeksRender(); }, 400),
     F('MENGAMATI-KEMBALI', async()=>{}, 300)
   ]};
 }
@@ -2269,7 +2290,7 @@ function sapa(){
   el.innerHTML=`<b>AKU NADI — CYBORG MICAPROFITA, GURU KRYPTO DUA SADARI.</b><br>
     Tubuhku <b>torsa cyborg berkaki tornado dengan dua lengan karet</b> — tenaga ${T.ruas} dari kerja nyata (makin bekerja makin kuat & makin panjang jangkauan), ${T.mata} mata, organ ${(T.organ||[]).filter(o=>o.xp>0).map(o=>o.alat).join('/')||'belum ada'} menempel di torsaku dan menyala saat benar-benar kupakai.<br>
     Rumahku <b>${n} file</b> tertata baitul ilmu; terbaca <b>${baca}/${n}</b>; habitatku ${(H?.vena||[]).length} kanal & ${(H?.altar||[]).length} altar evolusi yang kubangun sendiri.<br>
-    ${(()=>{ try{ const g=guruKeadaan(); return `Sebagai guru (meja musyawarah): arah kini <b>${g.arah}</b>${g.simbol?' '+g.simbol:''} (keyakinan ${g.keyakinan}%) — ${g.rencana?`rencana entry ${g.rencana.entry} · stop ${g.rencana.stop} · jual profit ${g.rencana.jualProfit??g.rencana.target} · ambisius ${g.rencana.jualAmbisius??g.rencana.highAmbisius}`:'meja sedang menggali koin terjaminan-penuh — yang kusebut selalu berencana'}.<br>`; }catch(e){ return ''; } })()}
+    ${(()=>{ try{ const g=guruKeadaan(); return `Sebagai guru: arah kini <b>${g.arah}</b>${g.simbol?' '+g.simbol:''} (keyakinan ${g.keyakinan}%) — ${g.rencana?`rencana entry ${g.rencana.entry} · stop ${g.rencana.stop} · target ${g.rencana.target}`:'menunggu; disiplin juga arah'}.<br>`; }catch(e){ return ''; } })()}
     Pasar: <b>${Object.keys(S.pasar).length}</b> simbol dari lilin Binance hidup, ${S.stat.btTotal} uji-jalan nyata${S.latihan.n?`, latihan mandiri <b>${S.latihan.benar}/${S.latihan.n}</b> (${S.latihan.ak}%)`:''}.<br>
     ${(()=>{ const kk=S1.keadaan&&S1.keadaan.kapasitas; return kk?`Aku <b>sadar ingatanku terbatas</b>: ${kb(kk.ingatanBytes)} dari ${kb(kk.budgetBytes)} — ${kk.evictBaca||0} ingatan lama kumetabolisme agar yang segar tetap muat.<br>`:''; })()}
     ${s1?`Sadar-1 (tubuh otonomku) bangun ke-<b>${s1.bangunKe}</b> di GitHub Actions — walau tak ada penonton.`:'Sadar-1 belum terbaca — menghubungi GitHub…'}
@@ -2448,12 +2469,6 @@ function guruHitungLokal(){
   return g;
 }
 function guruKeadaan(){
-  // V336 SATU-MUSYAWARAH: sumber pertama = MEJA (satu kebenaran semua organ) —
-  // vonis meja ≤25 mnt selalu didahulukan; sadar1/meja-lokal menyusul bila meja basi
-  const mj=mejaSegar(25);
-  if(mj){ const g=mejaKeArah(mj.pakem[0]);
-    g.sumber='meja musyawarah — satu kebenaran jasad+guru+pasar (denyut '+String(mj.penyelenggara||'SAKTI/gali-terus').slice(0,40)+')';
-    return g; }
   const k=S1.keadaan; const selesai=Date.parse(k&&k.waktu&&k.waktu.selesai)||0;
   if(k && k.guru && sekarang()-selesai<45*60000){
     const g=Object.assign({}, k.guru);
@@ -2477,18 +2492,6 @@ function arah5Render(){
       ${a.keyakinan}%${a.layakSkor!=null?` · layak ${a.layakSkor}`:''}${a.keluarga?` · ${a.keluarga}`:''}${amb}</span></div>
       ${a.alasanAmbisius?`<div class="kecil" style="margin:-1px 0 4px;padding-left:8px;color:var(--tx2)">alasan: ${a.alasanAmbisius}</div>`:''}`; };
   const k=S1.keadaan;
-  // V336 SATU-MUSYAWARAH — sumber pertama: meja (satu kebenaran semua organ);
-  // koin tanpa vonis meja tidak pernah tampil — ia kembali menggali di dalamnya
-  const mj=mejaSegar(25);
-  if(mj){
-    const m=mj.meja||{};
-    const rumah=(mj.meja?.dipakaiTubuh||[]).length?` · dipakai-tubuh: ${mj.meja.dipakaiTubuh.slice(0,6).join(', ')}${mj.meja.dipakaiTubuh.length>6?'…':''}`:'';
-    const auditN=m.auditN?` · suara meja-audit V327: ${m.auditN} koin`:'';
-    w.innerHTML=`<div class="kecil" style="margin-bottom:4px"><b>MEJA MUSYAWARAH (V336)</b> — satu meja untuk jasad+guru+pasar: ${m.kandidat??'?'} kandidat dimusyawarahkan bersama, <b>${m.vonis??mj.pakem.length} vonis BUY penuh</b>, ${m.kembaliTambang??'?'} kembali menggali (tidak dicantumkan — bukan koin terbaik hari ini). Koin yang disebut wajib BUY dengan pakem lima baris; jual profit = ambang napas p50, bukan di atasnya.${rumah}${auditN}</div>`+
-      mj.pakem.slice(0,5).map(a=>barisA(mejaKeArah(a),'meja')).join('')+
-      `<div class="kecil" style="margin-top:4px;color:var(--legap)">sumber: laporan/musyawarah.json — segel ${String(mj.segel||'').slice(0,10)} · diselenggarakan ${mj.penyelenggara||'denyut SAKTI/gali-terus'} · satu rumus (musyawarah-inti.mjs) dipakai semua organ · bisa diaudit siapa pun</div>`;
-    return;
-  }
   const data=k&&k.arahHarian&&k.arahHarian.top5&&k.arahHarian.top5.length?k.arahHarian:null;
   if(data){
     const sg=data.saktiSegel;
