@@ -41,7 +41,7 @@
 (function (global) {
   'use strict';
 
-  var VERSI = 'OTAK-INTI v1.0 · TANAM-ABADI';
+  var VERSI = 'OTAK-INTI v1.1 · TANAM-ABADI';
   var LAHIR = '2026-10-11'; // hari penetapan inti (UTC)
   var QV_MIN = 3e6;         // V298-v2: 3.000.000 USDT/24j
 
@@ -204,8 +204,12 @@
   var STABLE_BASE = new Set([
     'USDC', 'FDUSD', 'TUSD', 'USDP', 'DAI', 'BUSD', 'EURI', 'EUR', 'AEUR',
     'USD1', 'USDE', 'USDS', 'PYUSD', 'PAXG', 'XUSD', 'USTC', 'BSCUSD',
-    'UST', 'TUSD'
+    'UST', 'TUSD', 'RLUSD', 'USDD', 'BUSD', 'GUSD', 'HUSD', 'BSC-USD'
   ]);
+  // v1.1: pola umum di ATAS daftar — stablecoin/pegged baru yang berakhir
+  // "USD"/"EUR" (RLUSD, FDUSD, USDP, XUSD, dst.) tertangkap walau tak
+  // pernah didaftarkan. Jaring statistik ada di bedahKandang (lapis ke-3).
+  var PEGGED_AKHIR = /(USD|EUR|DAI|USDE|USDS|USD1|PYUSD|USDP|USDD|PAXG|XAUT|USTC|EURI|AEUR|BSCUSD)$/;
   var LEVERAGED = /(UP|DOWN|BULL|BEAR)USDT$/;
 
   function lolosKandang(t) {
@@ -214,6 +218,7 @@
     if (LEVERAGED.test(t.symbol)) return false;
     var base = t.symbol.slice(0, -4);
     if (STABLE_BASE.has(base)) return false;
+    if (PEGGED_AKHIR.test(base)) return false;
     if (!(+t.quoteVolume >= QV_MIN)) return false;
     if (!(+t.lastPrice > 0)) return false;
     return true;
@@ -379,7 +384,7 @@
   // BEDAH KANDANG — orkestrasi penuh: pool → klines paralel → faktor →
   // sasaran → snapshot. Cache 30 menit (jujur ditampilkan waktunya).
   // ------------------------------------------------------------------
-  var K_CACHE = null, K_AT = 0, K_JALAN = false;
+  var K_CACHE = null, K_AT = 0, K_JALAN = false, K_PEGGED_DIBUANG = 0;
 
   async function petaBerkelanjutan(list, sekaligus, fn, progres) {
     var out = new Array(list.length).fill(null), i = 0, selesai = 0;
@@ -411,13 +416,18 @@
           var f = faktorKoin(kl, +t.quoteVolume);
           if (!isFinite(f.last) || f.last <= 0) return null;
           f.symbol = t.symbol; f.chg = +t.priceChangePercent;
+          // jaring statistik lapis-3: pegged tak dikenal nyaris tak bergerak
+          // (ATR harian < 1,5% & momentum 7/30 hari < 1%–1,5%) — bukan sasaran
+          f.pegged = (f.atrV < 1.5 && Math.abs(f.mom7) < 1 && Math.abs(f.mom30) < 1.5);
           return f;
         } catch (e) { return null; }
       }, function (selesai, total) {
         prog = selesai;
         if (opts.progres) opts.progres(selesai, total);
       });
-      var ada = hasil.filter(Boolean);
+      var adaMentah = hasil.filter(Boolean);
+      var ada = adaMentah.filter(function (f) { return !f.pegged; });
+      K_PEGGED_DIBUANG = adaMentah.length - ada.length;
       if (!ada.length) throw new Error('bedah ' + pool.length + ' koin semua gagal (jaring sedang sakit) — jujur: aku tidak mengarang daftar');
       var tanggal = todayUTC();
       var lima = susunSasaran(ada, opts.jumlah || 5, tanggal);
@@ -583,7 +593,7 @@
     var h = '';
     if (snap) {
       h += '<div class="oi-grid">'
-        + '<div class="oi-cell"><div class="k">Hari UTC</div><div class="v">' + esc(snap.tanggal) + ' <span class="oi-dim">· hari ke-' + esc(snap.hariKe) + '</span></div></div>'
+        + '<div class="oi-cell"><div class="k">Hari UTC</div><div class="v">' + esc(snap.tanggal) + ' <span class="oi-dim" style="white-space:nowrap">· hari ke-' + esc(snap.hariKe) + '</span></div></div>'
         + '<div class="oi-cell"><div class="k">Watak inti hari ini</div><div class="v oi-amb">' + esc(snap.watak ? snap.watak.watak : '—') + '</div></div>'
         + '<div class="oi-cell"><div class="k">Rezim BTC</div><div class="v">' + esc(snap.regime ? snap.regime.regime : '—') + '</div></div>'
         + '<div class="oi-cell"><div class="k">Kandang dibedah</div><div class="v oi-ok">' + snap.dibedah + ' / ' + snap.target + ' <span class="oi-dim">pasang USDT</span></div></div>'
