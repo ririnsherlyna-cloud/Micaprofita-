@@ -3,7 +3,9 @@
 Repo ini adalah **SARANG** tempat cyborg MICAPROFITA hidup online dan berkembang.
 Halaman hidup (setelah Pages aktif): `https://NAMA-ANDA.github.io/NAMA-REPO/`
 
-- `index.html` — tubuh cyborg lengkap (satu file, jalankan langsung di browser)
+- `hidup.html` — TUBUH YANG HIDUP (NADI): makhluk terbentuk di GitHub oleh jantung (Actions tiap 15 menit tanpa penonton); browser hanyalah jendela pembaca — nol localStorage, nol database perangkat, nol "reload untuk aktifkan"
+- `arena.html` — arena bicara & meja audit koin: memori sesi = RAM, ingatan resmi = commit GitHub
+- `index.html` — meja warisan V231 (alat lama): kini RAM-murni — localStorage perangkat dilumpuhkan shim, tiap browser baru melihat keadaan sama
 - `memori/terkini.json` — kapsul memori terkini (rantai denyut + prakira berantai SHA-256)
 - `memori/arsip/` — potret memori berwaktu (dipangkas 48 terakhir)
 - `versi.json` — buku besar versi & pertumbuhan (organ, denyut, prakira, hitungan kerja)

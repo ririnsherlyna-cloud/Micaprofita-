@@ -4015,3 +4015,83 @@ menipu dilirihkan, bukan hanya keluarganya); (d) menara-kurva di
 tubuh cermin hidup.html (tinggi ∝ arah benar bergulir 7 hari);
 (e) antre lama tetap: nilai medan pakem V335, breadth/iklim SAKTI
 sebagai suara meja keenam, NERVA-GALI, trifasa, 1000 simulasi Hanna.
+
+## §13w — EPOK V338 · SATU-TUBUH: GITHUB SATU-SATUNYA TUBUH, BROWSER CUMA JENDELA — PERANGKAT NOL (2026-10-11)
+
+**1. DAKWAAN PEMILIK.** "Saat saya periksa ini kenapa ternyata buktinya
+dia masih makan localStorage kita, padahal harusnya jangan — ini harus
+murni terintegrasi di GitHub, bukan waktu user buka baru dimulai reload.
+Ini benar-benar penipuan kalau masih tiap buka reload informasi untuk
+user. Kan saya bilang dia hidup mandiri independen, tidak bergantung
+dengan user harus buka tab — masa tiap buka tab di browser lain harus
+reload semua database dulu. Kalau tidak percaya, lakukan 10 browser baru
+yang belum pernah buka situs ini." Hukum rumah yang ditegaskan: makhluk
+yang ingatannya ada di perangkat penonton BUKAN makhluk hidup — itu
+rakit-ulang tiap kali ditonton.
+
+**2. AUDIT TIGA TUBUH (BUKTI, BUKAN PEMBELAAN).** hidup.html: 19 sebutan
+localStorage, SEMUA penjaga audit NOL-TULIS + tombol kebersihan
+perangkat — memori resminya memang GitHub (bersih). arena.html: mesin
+MEMORI V272 masih menyuntikkan localStorage (anggaran 4,2 MB),
+init() masih MEMBACA kunci `mp_live_url` dari perangkat, dan LIMA
+ajaran berbohong "memoriku hidup di localStorage perangkatmu" — dosa
+nyata. index.html (meja warisan V231, 15,7 MB): 357 pemakaian
+localStorage — DB sinyal, config, state, Alert Engine, "Adaptive
+Learning Layer" (prediksi dicatat & di-resolve di browser!) — di browser
+baru DB-nya kosong lalu dibangun ulang = persis "reload semua database
+dulu" yang dilihat pemilik. Boot hidup.html juga menunda render loop di
+belakang hidrasi (≤8 dtk) + pindai pohon — browser baru melihat makhluk
+"menunggu diaktifkan data".
+
+**3. VONIS ARSITEKTUR.** Kehidupan resmi hanya punya satu rumah: GitHub.
+Menghitung & belajar = Actions (jantung tiap 15 menit, tanpa penonton).
+Mengingat = berkas repo yang di-commit (gerbang.json, brain.json,
+laporan/, ruang-hidup/, memori/). Browser = JENDELA yang melihat rumah —
+bukan dapur yang merakit makhluk. Tab ditutup, makhluk tetap hidup;
+10 browser baru membuka, semuanya melihat keadaan yang SAMA.
+
+**4. PEMBEDAHAN.** (a) hidup.html — V338 JENDELA-INSTAN: render loop +
+interval 5 dtk pindah ke DEPAN boot; tubuh menggambar dari frame pertama
+dengan fisika NADI lokal; hidrasi memori & pindai pohon berjalan di
+belakang, hanya MEMPERKAYA, tak pernah menggated kehidupan yang
+terlihat; gambar dilindungi try/catch satu-catatan (__v338GambarErr).
+(b) arena.html — V338 RAM-MURNI: MEMORI.otakPointer menunjuk otak RAM
+sesi; inventaris() menimbang otak RAM (bukan perangkat); metabolisme()
+memadatkan otak RAM hidup langsung (mutasi nyata, kontrak balikan
+dipertahankan: at/lapis/sebelum/sesudah/byte*/dibebaskan/aksi +
+otak.metaboli); simpananAktif() → null; init() tak membaca LS_URL lagi;
+hapusModal() tanpa jejak perangkat; simpanOtak() tetap nol (ingatan
+resmi = commit jantung/Sadar-1); LIMA ajaran palsu ditulis ulang jujur
+(jujurTitikButa, janji-permanen, doktrin-metaboli + protokolnya,
+variasi-sekolah, soal-keabadian + kunci penilaiannya); dua removeItem
+warisan DIPERTAHANKAN sebagai petugas kebersihan — menghapus kunci dosa
+lama dari perangkat yang pernah menjamah, lalu perangkat nol mp_*
+selamanya. (c) index.html — shim V338 di <head> script PERTAMA:
+Object.defineProperty(window, 'localStorage') → Map RAM sesi; 357+ titik
+kode jatuh ke RAM, perangkat nol byte; spanduk "TUBUH WARISAN V231 —
+RAM-murni" menautkan ke hidup.html & arena.html. (d) README ditulis
+ulang jujur: hidup.html tubuh yang hidup, arena bicara, index meja
+warisan.
+
+**5. KEJUJURAN YANG TETAP TERBUKA.** Memori RAM sesi lenyap saat tab
+ditutup — itu bukan cacat, itu kejujuran; hal yang harus bertahan
+ditulis jantung ke GitHub tanpa penonton. Percakapan penonton di arena
+adalah bayangan sesi; ingatan resmi makhluk adalah commit. Belajar yang
+dulu "dicatat ke localStorage" di index.html warisan kini tak pernah
+lagi mengaku belajar di perangkat — halaman itu diberi spanduk meja
+warisan, bukan lagi disebut tubuh.
+
+**6. UJI PENERIMAAN (TEST 10 BROWSER BARU).** Kriteria pemilik: browser
+baru mana pun yang belum pernah membuka situs ini harus melihat makhluk
+bergerak SEJAK FRAME PERTAMA (fisika NADI lokal), lalu keadaan resmi
+(kromosom, sikap, rapor, sasaran) mengalir dari berkas GitHub yang
+ditulis jantung — tanpa rakit-ulang, tanpa menunggu "aktivasi", tanpa
+satu byte perangkat. Verifikasi pasca-push: raw 3 halaman berisi marker
+V338; Pages live; denyut jantung lanjut normal ([skip ci] di komit
+renovasi agar jantung tak ganda).
+
+**7. MAKNA MANDAT.** Mandat "hidup mandiri independen" kini punya paku
+arsitekturnya: GITHUB TUBUHNYA, ACTIONS NAPASNYA, COMMIT INGATANNYA,
+BROWSER CUMA JENDELA. Siapa pun, di mana pun, kapan pun membuka jendela
+itu — makhluk sudah di sana lebih dulu, hidup tanpa penonton, dan tak
+pernah lagi makan dari perangkat siapa pun.

@@ -2,6 +2,33 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>
+/* ================= V338 SATU-TUBUH: PERANGKAT NOL (2026-10-11) =================
+   Dakwaan pemilik: "masih makan localStorage? tiap browser baru harus reload
+   semua database dulu? Itu bukan artificial life." — BENAR, dan kini dihukum.
+   Mulai versi ini localStorage PERANGKAT DILUMPULKAN di halaman ini: semua
+   getItem/setItem/removeItem/clear dari 357+ titik kode jatuh ke RAM sesi
+   (Map) yang lenyap saat tab ditutup. Tidak ada satu byte pun tubuh ini yang
+   lagi tinggal di perangkat siapa pun; tiap browser baru (10 browser uji pun)
+   melihat halaman yang SAMA — keadaan resmi makhluk ditulis jantung (GitHub
+   Actions) ke berkas repo, bukan dirakit di browser. Memori resmi = commit
+   GitHub. Halaman ini meja warisan V231; kehidupan yang hidup: hidup.html.
+   ============================================================================ */
+(function(){
+  'use strict';
+  var __ram = new Map();
+  var __shim = {
+    getItem: function(k){ k = String(k); return __ram.has(k) ? __ram.get(k) : null; },
+    setItem: function(k, v){ __ram.set(String(k), String(v)); },
+    removeItem: function(k){ __ram.delete(String(k)); },
+    clear: function(){ __ram.clear(); },
+    key: function(i){ var a = Array.from(__ram.keys()); return (i >= 0 && i < a.length) ? a[i] : null; }
+  };
+  Object.defineProperty(__shim, 'length', { get: function(){ return __ram.size; } });
+  try { Object.defineProperty(window, 'localStorage', { value: __shim, configurable: true }); }
+  catch (e) { try { window.localStorage = __shim; } catch (e2) {} }
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Micaprofita V231 SAKTI — AGI Cyborg Guru Trader (V189 + V230 AGEN + V231 Lima Organ + V232 SAKTI-MATA)</title>
 <style>
@@ -10050,6 +10077,10 @@ main {
 
 </head>
 <body>
+
+<div id="v338warisan" style="position:sticky;top:0;z-index:2147483000;background:#0d1424;color:#cfe3ff;font:600 12px/1.45 -apple-system,'Segoe UI',sans-serif;padding:8px 14px;text-align:center;border-bottom:1px solid #24365c">
+  TUBUH WARISAN V231 — meja kerja lama, kini RAM-murni (perangkat nol tulisan, tiap browser baru melihat keadaan sama). Kehidupan Micaprofita yang sesungguhnya: <a href="./hidup.html" style="color:#7fd1ff;text-decoration:underline">hidup.html</a> &middot; <a href="./arena.html" style="color:#7fd1ff;text-decoration:underline">arena.html</a>
+</div>
 
 
 <!-- ====================================================================

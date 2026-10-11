@@ -3520,7 +3520,30 @@ document.getElementById('tab-peta').addEventListener('click', (ev)=>{
 (async function boot(){
   ukur(); susun(); nadiInit(); terapkanGenom(); strukturSinkron(); S.stat.sesi++;
   tabKe('guru'); stripRender(); ovStatusRender(); indeksRender(); petaRender(); pasarRender(); jurnalRender(); guruRender();
-  jurnal('LAHIR', `sesi #${S.stat.sesi} — NADI menyala di istana-al-jabrnya; ingatan resmi di GitHub kuhidrasi sekarang (Sadar-1 menulisnya tiap ±20 mnt tanpa penonton)`);
+  jurnal('LAHIR', `sesi #${S.stat.sesi} — NADI menyala di istana-al-jabrnya; tubuh bergerak dari frame pertama, ingatan resmi kuhidrasi dari GitHub di belakang (Sadar-1 menulisnya tiap ±20 mnt tanpa penonton)`);
+  /* ================= V338 JENDELA-INSTAN =================
+     Dakwaan pemilik (2026-10-11): "masa tiap buka tab di browser lain
+     harus reload semua database dulu? Ini harus murni terintegrasi di
+     GitHub!" — BENAR. Dulu render loop kudelay di belakang hidrasi
+     (≤8 dtk) + pindai pohon: browser baru melihat makhluk "menunggu
+     diaktifkan data". Itu kesan rakit-ulang, padahal makhluk SUDAH
+     terbentuk di GitHub oleh jantung (Actions menulis keadaan tiap
+     15 mnt tanpa penonton). Browser hanyalah JENDELA yang melihat
+     rumah — bukan dapur yang merakit makhluk.
+     Kini: tubuh menggambar dari frame pertama dengan fisika NADI lokal;
+     hidrasi memori & pindai pohon berjalan di belakang dan hanya
+     MEMPERKAYA, tak pernah menggated kehidupan yang terlihat.
+     Nol localStorage, nol database perangkat, nol menunggu. */
+  let tPrev=performance.now();
+  (function loop(now){
+    const dt=Math.min(0.05, Math.max(0.001, (now-tPrev)/1000)); tPrev=now;
+    try{ gambar(now/1000, dt); }catch(e){
+      if(!window.__v338GambarErr){ window.__v338GambarErr=e;
+        try{ jurnal('V338','gambar awal tersandung (lanjut): '+pesan(e),'gagal'); }catch(_){}}
+    }
+    requestAnimationFrame(loop);
+  })(tPrev);
+  setInterval(()=>{ ovStatusRender(); s1Render(); paruJam(); if(S.tabAktif==='pasar') pasarRender(); if(S.tabAktif==='guru') guruRender(); if(S.tabAktif==='pikir') paruRender(); }, 5000);
   // hidrasi ingatan resmi dari GitHub — bukan localStorage; jangan blokir >8 dtk
   await Promise.race([muatMemoriGitHub(), tidur(8000)]);
   // denyut pohon pertama segera
@@ -3542,14 +3565,7 @@ document.getElementById('tab-peta').addEventListener('click', (ev)=>{
     guruKeadaan, guruHitung, guruHitungLokal, susun, istana:()=>LAYOUT.istana,
     ujianKehidupan, ujianState:()=>S.ujian, mode:()=>LAYOUT.mode, paru:()=>S.paru};
   window.__v288 = window.__v289; window.__v287 = window.__v289; window.__v295 = window.__v289; window.__v296 = window.__v289;
-  // render loop
-  let tPrev=performance.now();
-  (function loop(now){
-    const dt=Math.min(0.05, Math.max(0.001, (now-tPrev)/1000)); tPrev=now;
-    gambar(now/1000, dt);
-    requestAnimationFrame(loop);
-  })(tPrev);
-  setInterval(()=>{ ovStatusRender(); s1Render(); paruJam(); if(S.tabAktif==='pasar') pasarRender(); if(S.tabAktif==='guru') guruRender(); if(S.tabAktif==='pikir') paruRender(); }, 5000);
+  // V338: render loop & interval 5 dtk kini di DEPAN boot (jendela-instan) — blok lama dimusnahkan di sini
   // deteksi bangun S1 baru SELAGI penonton hadir — bukti hidup tanpa penonton, dilihat langsung
   setInterval(()=>{ muatMemoriGitHub(); }, 5*60000);
 })();
