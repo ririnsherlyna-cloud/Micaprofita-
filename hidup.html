@@ -770,9 +770,10 @@ async function pindaiRumah(){
 
 /* ================= SENSOR-REPO: isi file nyata (2 gerbang + streaming) ================= */
 async function isiAmbil(path, ukuran, onChunk){
+  /* V339: jsDelivr dicabut dari sini juga — cermin basi diharamkan
+     seluruh tubuh, bukan cuma gerbang ingatan. */
   const gerbang = [
-    `https://raw.githubusercontent.com/${RUMAH.pemilik}/${RUMAH.repo}/${RUMAH.cabang}/${encodeURIComponent(path)}`,
-    `https://cdn.jsdelivr.net/gh/${RUMAH.pemilik}/${RUMAH.repo}@${RUMAH.cabang}/${path}`
+    `https://raw.githubusercontent.com/${RUMAH.pemilik}/${RUMAH.repo}/${RUMAH.cabang}/${encodeURIComponent(path)}`
   ];
   for(const url of gerbang){
     try{

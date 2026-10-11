@@ -4158,7 +4158,9 @@ sendiri sebagai label jujur; gagal total dicoba lagi dalam 1 menit.
 sah (`Promise.race([muatMemoriGitHub(), tidur(8000)])`); dugaan
 "ReferenceError uatMemoriGitHub" hanyalah artefak tampilan terminal
 yang menelan urutan `[m` — pelajaran forensik: tuduhan pun wajib
-diuji hex, bukan cuma dibaca.
+diuji hex, bukan cuma dibaca. (f) `isiAmbil` (sensor pohon) ikut
+dibersihkan: jsDelivr terakhir dicabut — kini NOL jsDelivr di
+seluruh hidup.html; cermin basi diharamkan di seluruh tubuh.
 
 **5. KEJUJURAN YANG TETAP TERBUKA.** Turnamen ber-label "hari ini" itu
 berumur UTC — di WIB ia lahir ±07:00 pagi; sebelum itu tab menampilkan
