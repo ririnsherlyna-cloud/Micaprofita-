@@ -41,7 +41,7 @@
 (function (global) {
   'use strict';
 
-  var VERSI = 'OTAK-INTI v1.1 · TANAM-ABADI';
+  var VERSI = 'OTAK-INTI v1.2 · TANAM-ABADI';
   var LAHIR = '2026-10-11'; // hari penetapan inti (UTC)
   var QV_MIN = 3e6;         // V298-v2: 3.000.000 USDT/24j
 
@@ -49,6 +49,7 @@
     'V273': 'sasaran tak pernah tampil tanpa level E→T→S',
     'V274': 'kejujuran mutlak: tak mengarang data/pasar, tak janji pasti-kena',
     'V298-v2': 'bedah kandang penuh: semua USDT likuid qv≥3jt, bukan top-40',
+    'V300': 'mandiri: denyut tua tidak pernah tampil sebagai pick hari ini — otak halaman menilai sendiri',
     'Tugas-F': 'localStorage = 0 — ingatan dihitung ulang, bukan disimpan'
   };
 
@@ -189,6 +190,13 @@
   }
   function rapih(v) { return Number(v.toPrecision(5)); }
   function todayUTC() { return new Date().toISOString().slice(0, 10); }
+
+  // V300-MANDIRI-NADIR: gerbang kesegaran denyut — denyut wadah hanya boleh
+  // tampil sebagai pick bila dia dari hari UTC yang sama. Data lama tetap
+  // disebut sebagai ARSIP, tak pernah lagi sebagai pick hari ini.
+  function denyutSegar(hariDenyut, hariKini) {
+    return !!hariDenyut && hariDenyut === (hariKini || todayUTC());
+  }
   function jamWIB(iso) {
     try { return new Date(iso || Date.now()).toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour12: false }); }
     catch (e) { return new Date(iso || Date.now()).toISOString().slice(11, 19); }
@@ -512,6 +520,11 @@
     var lsBersih = true;
     try { lsBersih = (typeof localStorage === 'undefined') || true; } catch (e) { lsBersih = true; }
     hasil.push({ uji: 'Tugas F: kernel tak menyentuh localStorage', lulus: lsBersih });
+    // 7) V300: gerbang kesegaran denyut — denyut tua bukan pick hari ini
+    var v300a = denyutSegar(todayUTC(), todayUTC());
+    var v300b = !denyutSegar('2026-10-05', todayUTC());
+    var v300c = !denyutSegar('', todayUTC()) && !denyutSegar(null, todayUTC());
+    hasil.push({ uji: 'V300: denyut segar lolos · denyut tua/kosong ditolak (GTC/SAND 2026-10-05 tak bisa kembali sebagai pick hari ini)', lulus: v300a && v300b && v300c });
     return { lulus: hasil.every(function (r) { return r.lulus; }), hasil: hasil, dna: DNA };
   }
 
@@ -677,7 +690,7 @@
   // ------------------------------------------------------------------
   // PEREKAT — hidup otomatis di arena.html & hidup.html
   // ------------------------------------------------------------------
-  var UI = { jalan: false };
+  var UI = { jalan: false, snap: null, pendengar: [] };
 
   function byId(id) { return document.getElementById(id); }
 
@@ -711,6 +724,9 @@
       var chip = byId('intiChipDNA');
       if (chip) chip.innerHTML = '<span class="oi-dot"></span>INTI ' + esc(DNA.slice(0, 12)) + '… · ' + (OTAK.verifikasiDNA() === 'SAH' ? 'DNA SAH' : 'DNA BOLONG');
       UI.snap = snap;
+      // V300: bangunkan pendengar (NADIR mandiri) — snapshot inti siap
+      UI.pendengar.slice().forEach(function (fn) { try { fn(snap); } catch (e) {} });
+      UI.pendengar = [];
     } catch (e) {
       var pesan = 'otak inti jujur: bedah kali ini gagal (' + esc(String((e && e.message) || e)) + ') — aku tidak akan mengarang daftar. Tekan BEDAH ULANG sebentar lagi.';
       if (boxStatus) boxStatus.innerHTML = '<div class="oi-card"><span class="oi-no">' + pesan + '</span></div>';
@@ -758,7 +774,17 @@
     try { global.sasaranLimaJalan = function (paksa) { return jalankan(!!paksa); }; } catch (e) { /* biarkan jalur asli */ }
   }
 
-  OTAK.inti = { jalankan: jalankan, renderStatus: renderStatus, renderSasaran: renderSasaran, renderBuku: renderBuku };
+  // V300: pengambil snapshot tanpa memicu bedah — NADIR mandiri memantau ini
+  // alih-alih memanggil bedahKandang sendiri (nol lomba K_JALAN).
+  OTAK.inti = {
+    jalankan: jalankan, renderStatus: renderStatus, renderSasaran: renderSasaran, renderBuku: renderBuku,
+    snap: function () { return UI.snap; },
+    status: function () { return { jalan: UI.jalan, ada: !!UI.snap }; },
+    ketikaSnap: function (fn) {
+      if (UI.snap) { try { fn(UI.snap); } catch (e) {} return; }
+      if (typeof fn === 'function') UI.pendengar.push(fn);
+    }
+  };
 
 })(typeof window !== 'undefined' ? window : globalThis);
 
