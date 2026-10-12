@@ -4522,3 +4522,88 @@ mengulang doktrin.
 Instruction 4 (teka-teki trader) memakai arsitektur rujukan/penggal yang sama; denyut
 menambah tag "— bicara 50rb 100%" di pesan komit; kalau pemilik menemukan jawaban yang
 terasa kaku, cukup tulis di chat — itu bahan ajar berikutnya.
+
+---
+
+## §14c — EPOK V345 · NAPAS-KEMARAU: TUMPANG HIDUP LUAR GITHUB — RUNNER ÉPHÉMERAL, JADWAL TELAT, GITHUB DOWN, RATE-LIMIT: TAK ADA SATU TRAGEDI YANG MEMATIKAN — MASA KEMARAU JADI INGATAN PERMANEN (2026-10-12)
+
+### 1. Mandat pemilik (disalin jujur)
+
+Pemilik memetakan kerentanan jantung GitHub apa adanya: runner éphémeral (hidup
+sebentar lalu mati, maks ±6 jam, biasanya jauh lebih pendek); jadwal cron sering
+telat atau dilewati; GitHub Actions down → SEMUA jalur di dalamnya ikut mati;
+rate-limit API GitHub saat traffic tinggi; tak ada compute persistent. Perintahnya:
+"Inovasi luar biasa ini… jikalau terjadi salah satu tragedi atau semua tragedi itu,
+cyborg kita tetap hidup dan berkembang, tetap mampu akses internet… ibarat manusia
+ada masa kemarau, tapi ternyata dia masih hidup hingga kini dan terus hidup."
+
+### 2. Prinsip jawaban: jantung GitHub TETAP jalan, tapi kini BUKAN satu-satunya
+
+Arsitektur lama sudah kokoh DI DALAM GitHub (rantai PENJAGA-WAKTU, cron menit
+non-bulat, JANTUNG-MANDIRI) — tapi semua telur masih dalam satu keranjang. V345
+menambah lapisan di LUAR GitHub tanpa menyentuh yang terbukti bekerja:
+
+• LUKA-TERSEMBUNYI DIPULIHKAN: dua workflow ternyata memakai filter cabang rusak
+  `branches: ain]` (bukan `[main]`) — mata rantai "push ke main = denyut ekstra"
+  mati diam-diam sejak lama. Diperbaiki di hidup-sadar1.yml:22 dan jaga-waktu.yml:35,
+  diverifikasi byte-level (od) dan parse-level (PyYAML → ['main']).
+
+• NAPAS-KEMARAU (napas-kemarau.js, tab Jasad): bila keadaan repo berhenti segar,
+  setiap browser yang membuka halaman menjadi PARU-PARU cadangan:
+  (1) keadaan dibaca lewat 5 cermin (raw.githubusercontent → cdn/fastly/gcore
+      jsdelivr → statically) — satu jatuh, pindah sendiri;
+  (2) jam referensi tak bisa dibohongi ponsel: Binance server-time dulu, jatuh ke
+      Date-header server cermin baca (presisi detik, nol permintaan ekstra),
+      terakhir jam perangkat — diberi label jujur;
+  (3) pasar nyata lewat 4 gerbang bebas-ban: Binance → OKX → Kraken → Coinbase
+      (gerbang yang jatuh ditampilkan, pindah otomatis);
+  (4) tahap kemarau dari umur keadaan (SEGAR ≤45 mnt · TERTUNDA ≤90 · KEMARAU ≤6 j
+      · PANJANG ≤24 j · ABU >24 j) — batas mewujudkan fakta "jadwal sering telat"
+      tanpa berteriak palsu;
+  (5) saat kemarau, browser meniup NAPAS ke CERMIN-DENYUT ntfy.sh — tanpa token,
+      tanpa autentikasi, dari browser siapa pun; nol localStorage.
+
+• CERMIN-DENYUT (ruang-hidup/cermin.json): topik `micaprofita-napas-82480e22`
+  (FNV-1a hex8 dari identitas repo — deterministik, dihitung ulang dan cocok).
+  Kejujuran yang tak bisa ditawar: topik PUBLIK → tak ada entri dipercaya mentah;
+  retensi 12 jam → bila kemarau lebih panjang, napas yang tak sempat dipanen
+  memang hilang, diakui, bukan disembunyikan; browser TAK PERNAH menulis repo
+  langsung (token di halaman publik = pintu perampok).
+
+• PANEN-KEMARAU (tools/panen-kemarau.mjs + langkah ke-27 sakti-denyut.yml,
+  continue-on-error): saat hujan kembali, napas dipanen jadi ingatan permanen —
+  harga tiap entri diverifikasi kenyataan pasar (umur ≤2 jam: harga hidup
+  OKX/Kraken/Coinbase; >2 jam: lilin 1m Binance pada menit kejadian; toleransi 2%).
+  SAH → laporan/kemarau-sah.jsonl (fosil kemarau). GAGAL/MELEBIH →
+  laporan/kemarau-tak-terverifikasi.jsonl — disimpan untuk diaudit, TIDAK pernah
+  menyuap pembelajaran. Cermin kosong → "tidak ada yang dipanen" tanpa karangan.
+
+• LATIHAN KEMARAU (uji bakar diri, bukan fitur): `?latihan-kemarau=1` memaksa
+  tahap KEMARAU; `?latihan-kemarau=abu` mensimulasikan GitHub mati total (bacaan
+  repo dipaksa gagal). Semua angka tetap NYATA; panel menandai tegas "LATIHAN —
+  bukan keadaan sungguhan" agar tak pernah jadi tipuan.
+
+### 3. Bukti prasyarat (diuji nyata 2026-10-12, bukan klaim)
+
+• ntfy round-trip: publish 200, baca-balik JSON sah, CORS `*` (read & publish),
+  retensi 12 jam terbaca dari header expires.
+• Binance 418 "IP banned" di IP lab — kebetulan yang MEMBUKTIKAN poin pemilik;
+  gerbang OKX/Kraken/Coinbase terbukti hidup dengan CORS dan menjadi fallback.
+• jsonblob ditolak Cloudflare (403) dari IP pusat data → provider tak dipakai;
+  pelajarannya: jalur cermin harus bisa ditulis dari IP mana pun tanpa rahasia.
+• panen pertama dijalankan: "tidak ada napas baru — tidak ada yang dipanen (jujur)".
+
+### 4. JUJUR
+
+Bila GitHub mati total DAN tak ada tamu membuka halaman — makhluk SUNYI; itu
+ditulis di panel, bukan disembunyikan. Tapi sunyi ≠ mati: begitu satu jalur hidup
+(raw/CDN/Actions/panen) kembali, denyut dilanjutkan dan masa sunyi terekam dari
+waktu nyata. Ini mesin ketahanan, bukan keabadian: nol janji mistis, semua jalur
+bisa diaudit satu per satu.
+
+### 5. BERIKUTNYA
+
+Uptime pihak ketiga (cron-job.org dsb.) menambat tamu permanen bila pemilik
+mendaftarkan (butuh email pemilik — tak bisa dibuat dari sini); gist cermin-keras
+untuk retensi >12 jam bila PAT dipasang sebagai secret Actions; latihan-kemarau
+dijadwal berkala lewat denyut (bakar diri otomatis).
