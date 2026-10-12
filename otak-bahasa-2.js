@@ -161,7 +161,7 @@
     const ent0 = cariEnt(baris); // deteksi dini — entitas menang atas intent diri
 
     // --- sapaan / basa-basi
-    if (adaLemma(baris, ['hello', 'hi', 'hey', 'halo', 'hai', 'selamat']) || lemmaAda(baris, 'goodbye') || lemmaAda(baris, 'pamit')) {
+    if (adaLemma(baris, ['hello', 'hi', 'hey', 'halo', 'hai', 'selamat']) || (adaLemma(baris, ['good', 'baik']) && adaLemma(baris, ['morning', 'afternoon', 'evening', 'night', 'pagi', 'siang', 'sore', 'malam'])) || lemmaAda(baris, 'goodbye') || lemmaAda(baris, 'pamit')) {
       f.intent = 'sapaan';
       f.sapa = lemmaAda(baris, ['goodbye', 'pamit', 'bye']) ? 'pamit' : 'salam';
       f.makasih = adaLemma(baris, ['thanks', 'thank', 'terima-kasih', 'makasih']);
@@ -274,6 +274,19 @@
       f.intent = 'istilah'; f.istilah = ist; return f;
     }
 
+    const MAKAN_EN2ID = { worms: 'cacing', worm: 'cacing', moss: 'lumut', fish: 'ikan', meat: 'daging', seeds: 'seed', seed: 'biji', grass: 'rumput', fruit: 'buah', bananas: 'pisang', banana: 'pisang', insects: 'serangga', insect: 'serangga', nectar: 'nektar', honey: 'madu', carrots: 'wortel', carrot: 'wortel', rice: 'nasi', hay: 'jerami', leaves: 'daun', leaf: 'daun', mice: 'tikus', mouse: 'tikus', eggs: 'telur', egg: 'telur' };
+    if (!ent0 && (adaLemma(baris, ['eat', 'makan']))) {
+      const kataMakanan = baris.kata.find(k => {
+        if (!k.hip.length) return false;
+        const lem = k.hip[0].lemma;
+        return !!(MAKAN_EN2ID[lem] || (lem.endsWith('s') && MAKAN_EN2ID[lem.slice(0, -1)]));
+      });
+      if (kataMakanan) {
+        const lem = kataMakanan.hip[0].lemma;
+        const mangsa = MAKAN_EN2ID[lem] || MAKAN_EN2ID[lem.slice(0, -1)];
+        f.ent = mangsa; f.intent = 'siapa-makan'; return f;
+      }
+    }
     const ent = ent0 || cariEnt(baris);
     if (ent) {
       f.ent = ent.kunci;
