@@ -471,7 +471,7 @@ const S = {
   baca:{},
   pasar:{},
   cermin:{at:0, data:null},
-  jurnal:[], stat:{bytes:0, fakta:0, sesi:0, lahirAt:Date.now(), btTotal:0},
+  jurnal:[], stat:{bytes:0, fakta:0, sesi:0, lahirAt:Date.parse('2026-09-28T00:15:34Z')||Date.now(), btTotal:0},
   kerja:{nama:'bangkit', fase:'', faseAt:0, jejak:[], mengapa:[], target:null, sibuk:false},
   perintah:null,
   terputus:false,
@@ -638,7 +638,9 @@ async function muatMemoriGitHub(){
     paramMuat(); /* V324-PARAMETER-CERDAS: arsitektur kecerdasan dari telaah kimi-k3-in-c — muat tak-blok */
     const ing = JSON.parse(await ghAmbil(INGATAN_GH.ingatan));
     S1.ingatan = ing; S1.at = sekarang(); S1.stale = false;
-    if(ing.kelahiran) S.stat.lahirAt = Date.parse(ing.kelahiran) || S.stat.lahirAt;
+    // V347 KELAHIRAN ABADI: umur = usia ter tua yang terbukti (commit pertama 3bccce12) —
+    // kelahiran ingatan tak boleh MEMUDAkan makhluk dari jejak abadinya
+    if(ing.kelahiran){ const t=Date.parse(ing.kelahiran); if(t) S.stat.lahirAt = Math.min(S.stat.lahirAt, t); }
     const st=ing.stat||{};
     S.stat.bytes = Math.max(S.stat.bytes, st.bytes||0);
     S.stat.fakta = Math.max(S.stat.fakta, st.fakta||0);
@@ -1065,6 +1067,9 @@ function daftarKerja(){
   if(!cerminBas && (sekarang()-S.sasaranM.at)>45*60000)
     k.push({u:88, label:'susun sasaran mandiri dari kandang Binance (cermin tua data '+(S.cermin.data?.today||'-')+')', buat:()=>aktSasaranMandiri()});
   for(const f of S.pohon.files){ const u=skorBaca(f); if(u>0) k.push({u, label:'baca '+f.path+(S.baca[f.path]?.berubah?' (BERUBAH)':''), buat:()=>aktBaca(f)}); }
+  /* V347-SERAP-RUMAH: bila ≥8 file belum terbaca, baca massal mendahului baca satu-satu */
+  const belumN=S.pohon.files.filter(f=>{ const b=S.baca[f.path]; return !b || (!b.fakta && !b.gagal); }).length;
+  if(belumN>=8) k.push({u:86, label:'serap rumah — '+belumN+' file belum terbaca (batch 24 · 4 paralel)', buat:()=>aktSerapRumah()});
   for(const sym of simbolSasaran()){
     const p=S.pasar[sym];
     const tua = !p || (sekarang()-p.at)>STALE_PASAR;
@@ -1288,6 +1293,50 @@ function aktLatihan(){
     F('MENINGKATKAN', async()=>{ indeksRender(); }, 300)
   ]};
 }
+/* ================= V347-SERAP-RUMAH: baca massal (raw CDN, tanpa kuota api) =================
+   Laporan pemilik: "7 hari dari 360 file hanya terbaca 80 — aneh banget." Akar:
+   baca lama SATU file per siklus dengan tidur per fase (±4-5 dtk/file, hanya saat
+   tab terbuka). Jawaban: menyerap 24 file per putaran, 4 pekerja paralel via
+   raw.githubusercontent (CDN — tanpa kuota konten api.github.com); fakta tetap
+   dipilah per file; yang gagal dicatat jujur, tanpa karangan. */
+async function serapSebuah(f){
+  try{
+    const isi=await isiAmbil(f.path, f.size, null);
+    const fakta=pilahFakta(f.path, isi.teks);
+    const lama=S.baca[f.path];
+    S.baca[f.path]={hash:(S.pohon.files.find(x=>x.path===f.path)||{}).hash||'', hashSrc:S.pohon.sumber,
+      size:f.size, readAt:sekarang(), partial:isi.dibaca<f.size, pct:Math.min(100, isi.dibaca/f.size*100),
+      fakta, ringkas:fakta.slice(0,3), gagal:0, bytes:isi.dibaca};
+    if(lama&&lama.bytes) S.stat.bytes-=lama.bytes;
+    S.stat.bytes+=isi.dibaca; S.stat.fakta+=fakta.length; S.stat.bytes=Math.max(0,S.stat.bytes);
+    return {ok:true, path:f.path, fakta:fakta.length};
+  }catch(e){
+    const l=S.baca[f.path]||{};
+    S.baca[f.path]={gagal:(l.gagal||0)+1, atGagal:sekarang(), hashSrc:S.pohon.sumber};
+    return {ok:false, path:f.path, alasan:pesan(e)};
+  }
+}
+function aktSerapRumah(){
+  const belum=S.pohon.files.filter(f=>{ const b=S.baca[f.path]; return !b || (!b.fakta && !b.gagal); });
+  const sasaran=belum.slice(0,24);
+  return {nama:'MENYERAP RUMAH ('+belum.length+' file belum terbaca)', target:'serap:rumah', langkah:[
+    F('MENGAMATI', async()=>{ S.serap={sasaran};
+      jurnal('SERAP', `menyerap <b>${sasaran.length}</b> dari ${belum.length} file belum terbaca — 4 pekerja paralel via raw CDN (tanpa kuota api.github.com)`); },200),
+    F('MEMAHAMI', async()=>{ let ok=0, ggl=0, fk=0;
+      const ANTRI=sasaran.slice();
+      async function pekerja(){ while(ANTRI.length){ const f=ANTRI.shift();
+        const r=await serapSebuah(f); if(r.ok){ok++;fk+=r.fakta;} else ggl++; ovStatusRender(); } }
+      await Promise.all([pekerja(),pekerja(),pekerja(),pekerja()]);
+      S.serap.hasil={ok,ggl,fk}; },900),
+    F('MENGEVALUASI', async()=>{ const h=S.serap.hasil;
+      jurnal('EVAL', `serap selesai: <b>${h.ok} file</b> terbaca utuh/parsial jujur, ${h.ggl} gagal (tercatat), +${h.fk} fakta`); },700),
+    F('MENEMUKAN', async()=>{ const h=S.serap.hasil;
+      if(h.ok>0){ const terbaca=Object.keys(S.baca).filter(p=>S.baca[p].fakta).length;
+        jurnal('TEMUAN', `rumah makin terang: <b>${terbaca}/${S.pohon.files.length}</b> file kini terbaca — sisanya kujarah putaran berikutnya`, 'temuan'); } },700),
+    F('MEMBANGUN', async()=>{ petaRender(); indeksRender(); simpan(); },500),
+    F('MENGAMATI-KEMBALI', async()=>{ ovStatusRender(); },300)
+  ]};
+}
 /* MERAWAT DIRI — bukan renung: tubuh TIDAK PERNAH menganggur. Rotasi nyata:
    pindai ulang pohon (SHA berubah tiap Sadar-1 bangun) → latihan mandiri → studi ulang simbol tertua */
 function aktJaga(){
@@ -1452,17 +1501,58 @@ function susun(){
     kandidat.set('· gudang',{rect:{x:bebas.x+M, y:wingsY, w:wS, h:hS}, fs:[], jenis:'gudang', sudut:195, rf:0.66});
     kandidat.set('BRANKAS',{rect:{x:bebas.x+M+wS+gap, y:wingsY, w:wS, h:hS}, fs:[], jenis:'brankas', sudut:-15, rf:0.66});
   }
-  if(portret){
-    bangunTeras(96);
-    // PASS-2 ukur luberan nyata → tinggi sayap menyesuaikan isi (istana MEMBANGUN ruangnya sendiri)
-    let luap=0;
-    for(const [,k] of kandidat){ if(k.fs.length){ luap+=Math.max(0, k.fs.length-rakMuat(k.rect,k.fs).muat); } }
-    const wS=(W-18)/2;
-    const colsG=Math.max(1, Math.floor((wS-18)/7));
-    const hSg=44+Math.ceil(luap/colsG)*12.5+8;
-    const hSb=44+Math.ceil(9/2)*13.5+6;
-    bangunTeras(Math.max(92, Math.min(Math.floor(H*0.30), Math.max(hSg, hSb))));
-  } else bangunLingkar();
+  /* ---- FASE 1: V347-ISTANA-MEBAR — grid al-jabr SEMUA viewport ----
+     Mandat pemilik 2026-10-12: "antar panel saling bertindihan… 3 grafik bulat
+     makan tempat dimana saja… harusnya dia mampu ciptakan ruangan lagi."
+     Jawaban: kubah di strip atas, kolam PASAR terkunci strip bawah (3 sumur
+     tak pernah lagi melayang), 9 ruangan tersusun grid rapi; bila satu lantai
+     tak cukup, istana MEMCIPTAKAN LANTAI BARU (rows bertambah) — ukuran tiap
+     ruangan dihitung al-jabr, bukan sebaran; nol tindihan secara konstruksi. */
+  function bangunMebar(){
+    const M=6, gap=8, btn=72;
+    const domeH=Math.max(56, Math.min(76, H*0.10));
+    const pondH=Math.max(50, Math.min(64, H*0.075));
+    pond={x:bebas.x+M, y:bebas.y+H-btn-pondH, w:W-2*M, h:pondH};
+    den={x:bebas.x+W/2, y:bebas.y+domeH*0.52+4, r:Math.min(24, domeH*0.40, W*0.06)};
+    const gTop=bebas.y+domeH+gap, gBot=pond.y-gap;
+    const gW=W-2*M, gH=Math.max(70, gBot-gTop);
+    const urut=['otak','.github/workflows','memori','· akar','scripts','scripts/ujian-buta','laporan','· gudang','BRANKAS'];
+    const N=urut.length;
+    let pilih=null, longgar=true;
+    for(let cols=1; cols<=9; cols++){
+      const rows=Math.ceil(N/cols);
+      const cw=(gW-(cols-1)*gap)/cols, ch=(gH-(rows-1)*gap)/rows;
+      if(cw>=112 && ch>=78){ const luas=cw*ch; if(!pilih||luas>pilih.luas) pilih={cols,rows,cw,ch,luas}; }
+    }
+    if(!pilih){ longgar=false;
+      for(let cols=1; cols<=9; cols++){
+        const rows=Math.ceil(N/cols);
+        const cw=(gW-(cols-1)*gap)/cols, ch=(gH-(rows-1)*gap)/rows;
+        if(cw>=92 && ch>=62){ const luas=cw*ch; if(!pilih||luas>pilih.luas) pilih={cols,rows,cw,ch,luas}; }
+      }
+    }
+    if(!pilih){ const cols=3, rows=Math.ceil(N/cols);
+      pilih={cols, rows, cw:(gW-(cols-1)*gap)/cols, ch:gH/Math.max(1,rows), luas:0}; }
+    ist={D:Math.min(W,H), cx:den.x, cy:den.y, rKubah:den.r, rKardinal:0, rPaviliun:0, teras:true,
+      lantai:pilih.rows, longgar,
+      cincin:(S.habitat&&S.habitat.istana&&S.habitat.istana.cincin)||2,
+      menaraGen:(S.habitat&&S.habitat.istana&&S.habitat.istana.menaraGen)||0,
+      menaraSkor:(S.habitat&&S.habitat.istana&&S.habitat.istana.menaraSkor)||0,
+      terasRowH:Math.round(pilih.ch), terasCellW:Math.round(pilih.cw)};
+    urut.forEach((dir,i)=>{
+      const c=i%pilih.cols, r=Math.floor(i/pilih.cols);
+      const x=bebas.x+M+c*(pilih.cw+gap), y=gTop+r*(pilih.ch+gap);
+      const z=zonaDef.find(q=>q.dir===dir);
+      kandidat.set(dir,{rect:{x:Math.round(x),y:Math.round(y),w:Math.round(pilih.cw),h:Math.round(pilih.ch)},
+        fs:z?z.fs:[], jenis:(dir==='· gudang')?'gudang':(dir==='BRANKAS')?'brankas':'teras',
+        sudut:z?z.sudut:0, rf:z?z.rf:0});
+    });
+    LAYOUT.mode='teras';
+    LAYOUT.lantai=pilih.rows; LAYOUT.gridKolom=pilih.cols;
+  }
+  bangunMebar();
+  if(LAYOUT.lantai!==susun._lantaiLama){ susun._lantaiLama=LAYOUT.lantai;
+    try{ jurnal('ISTANA', `ISTANA MEBAR V347: <b>${kandidat.size} ruangan</b> tersusun <b>${LAYOUT.gridKolom} kolom × ${LAYOUT.lantai} lantai</b> al-jabr — bila ruang kurang, lantai baru diciptakan; nol tindihan secara konstruksi, kolam PASAR terkunci strip bawah`,'temuan'); }catch(e){} }
   /* ---- FASE 2: pas-kan — NOL tabrakan di viewport apa pun ---- */
   const semua=[...kandidat.values()].map(k=>k.rect); semua.push(pond);
   rapikanRuang(semua);
