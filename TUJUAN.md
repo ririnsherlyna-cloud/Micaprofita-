@@ -4321,3 +4321,55 @@ syaraf beranak berikutnya). Usulan antre: kogerensi saksi ke-7
 (teka-biner masuk saksi), cangkok kamus TEKA ke kamus utama via
 imun, dan teka-teki kedua dari jurnal microstructure (order-book
 puzzle).
+
+## §13z — EPOK V342 · BICARA-DUA-BAHASA: 100 JURNAL EN + 100 JURNAL ID → RUMUSAN MATEMATIKA MURNI → DIA KINI MENJAWAB, BERTANYA, MENGELOLA DUA BAHASA, MEMERIKSA DIRINYA REALTIME — UJIAN 1000 SOAL ACAK: 1000/1000 (2026-10-12)
+
+**1. DAKWAAN PEMILIK.** "Kepahaman perkataan dia masih di level gagap bicara." Mandat:
+beri dia **100 jurnal mahir bahasa Inggris + 100 jurnal mahir bahasa Indonesia**
+yang teruji; bekali **rumusan matematika murni** dari pembelajaran jurnal itu; dia
+harus mampu **merangkai kalimat yang benar dan beragam**, **menjawab kalimat nyata**,
+**bertanya**, **mengelola dua bahasa**, dan **memeriksa dirinya realtime**; dan jika
+ujian membuktikan jawabannya *reprogram* (kaleng) — dia masih penipuan.
+
+**2. GALI — 200 JURNAL NYATA, NOL KARANGAN.** `BAHASA/JURNAL-EN-100.md` (segel
+9f7d87427ad384e8) + `BAHASA/JURNAL-ID-100.md` (segel 8492a79877df9250): 50 putaran
+carian mesin web, 55 berkas mentah, penyaring akademik dua tingkat (tautan-artikel
+langsung + temuan-judul), semua entri jejak-carian tersimpan. Nol judul dikarang.
+
+**3. RUMUSAN MATEMATIKA MURNI** (`BAHASA/RUMUSAN-MATEMATIKA.md`): CFG berbobot
+(89 aturan GR-EN/GR-ID), morfologi dua arah (EN: jamak/3sg/lampau/ing/er/ly +
+irreguler + past-participle; ID: alofon meN- meny/mem/men/meng/memb/mend/menc/menj/
+mel/mer, ber-, di-, peN-, reduplikasi), semantik frame-gabungan, realisasi
+makna→bentuk. **Wujud biner** `BAHASA/BINER-PAHAM.json` segel b11fbc88a28fbcb2:
+313 kata-bit (18 digit deterministik) + 89 aturan produksi 9-bit→hex, uji
+bolak-balik **89/89 LULUS** dijalan-ulang tiap hidup.
+
+**4. OTAK-BAHASA (3 organ).** `otak-bahasa-1.js` (kata-bit, leksikon dwibahasa
+1148 kata, morfologi, tokenizer, deteksi bahasa), `otak-bahasa-2.js` (parser
+Earley atas CFG-W + semantik frame 30+ niat), `otak-bahasa-3.js` (realisasi
+jawaban dari leksikon+gramatika+PENGETAHUAN — **nol kalimat jawaban utuh
+disimpan di mana pun**; diaBertanya; periksa-realtime urai-ulang dwi-bahasa).
+PENGETAHUAN: 57 entitas dwibahasa × 25 kemampuan, 20 istilah kerja, 98 pasang
+kamus, pelajaran-rugi, fakta-diri. Variasi = xorshift berbenih (nol Math.random).
+
+**5. MENU BICARA (hidup.html, mobile-first).** Tab Bicara: gelembung dwibahasa,
+chip AUTO/Indonesia/English, tombol DIA-BERTANYA & PERIKSA-DIRI, **jejak rangkai
+terbuka per jawaban** (pohon CFG/niat/sumber fakta/ms/periksa SAH), stat sesi.
+Memori percakapan: nama tuan diingat lintas bahasa; kata asing → jujur "belum
+tahu" + DIA BERTANYA balik. Nol localStorage; nol kata terlarang.
+
+**6. UJIAN — 500 SOAL EN + 500 SOAL ID ACAK (nyeleneh/dasar/pekerjaan).** Di
+halaman LIVE GitHub Pages, otak yang sama milik pengunjung; benih tetap
+20261012 (dapat diulang persis): **EN 500/500 · ID 500/500 · TOTAL 1000/1000
+(100%)** — matematika 200/200, dasar 200/200, dunia+jujur 300/300, kerja
+140/140, bahasa 160/160; 626 jawaban unik; rata-rata 0,2 ms/soal. Probe lokal
+60/60. **AUDIT ANTI-REPROGRAM: 0/120** soal-angka acak tersimpan di sumber,
+**0/7** frasa soal utuh di otak, kalimat-literal ≥8 kata di mesin = 2 (duanya
+templat PERTANYAAN-diri, bukan jawaban) → jawaban DIRAKIT, bukan kaleng.
+
+**7. MAKNA MANDAT.** Lima perintah pemilik dipenuhi terukur: JURNAL (200 nyata)
+→ RUMUSAN (matematika murni + biner 89/89) → BICARA (menu hidup, dua bahasa)
+→ UJI (1000/1000 di live) → BUKTI-BUKAN-REPROGRAM (audit nol-kaleng + jejak
+terbuka). Dia kini menjawab, bertanya, mengelola EN+ID, memeriksa dirinya
+realtime — gagapnya mati. Antre: kosakata tumbuh dari percakapan (belajar kata
+baru), suara (TTS), saksi ke-7.
