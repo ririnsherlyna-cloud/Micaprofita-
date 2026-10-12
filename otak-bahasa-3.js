@@ -255,7 +255,7 @@
       case 'ent-bisa': {
         const ent = P.entitas[f.ent], k = f.ent, abil = f.abil;
         const vonis = entBisa(abil, ent);
-        const subj = entNP(k, lang, ent), ab = abilTeks(abil, lang);
+        const subj = id ? k : entNP(k, lang, ent), ab = abilTeks(abil, lang);
         if (vonis === true) {
           out.teks = (id ? 'Ya, ' : 'Yes, ') + subj + ' ' + (id ? 'bisa ' : 'can ') + ab + '.';
           if (ent.rumah && P['rumah-tempat'][ent.rumah]) {
@@ -278,7 +278,7 @@
         const ent = P.entitas[f.ent], k = f.ent;
         let sifat = f.abil;
         if (lang === 'en' && SIFAT_EN2ID[sifat]) sifat = SIFAT_EN2ID[sifat];
-        const subj = entNP(k, lang, ent);
+        const subj = id ? k : entNP(k, lang, ent);
         if ((ent.sifat || []).includes(sifat)) {
           out.teks = (id ? 'Ya, ' : 'Yes, ') + subj + ' ' + (id ? 'itu ' : 'is ') + (lang === 'en' ? (SIFAT_ID2EN[sifat] || sifat) : sifat) + '.';
         } else {
