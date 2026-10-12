@@ -1527,16 +1527,20 @@ function susun(){
     const urut=['otak','.github/workflows','memori','· akar','scripts','scripts/ujian-buta','laporan','· gudang','BRANKAS'];
     const N=urut.length;
     let pilih=null, longgar=true;
-    for(let cols=1; cols<=9; cols++){
-      const rows=Math.ceil(N/cols);
+    /* V347-R3: kandidat dinilai PROPORSI (rasio lebar:tinggi ≈ 1,35) — bukan maksimum
+       luas. Pelajaran uji lapangan: skor luas memilih 9×1 = 9 lemari tinggi kurus
+       hampir kosong — bebas tabrakan tapi tidak pantas memanggil istana. */
+    const nilai=(cols)=>{ const rows=Math.ceil(N/cols);
       const cw=(gW-(cols-1)*gap)/cols, ch=(gH-(rows-1)*gap)/rows;
-      if(cw>=112 && ch>=78){ const luas=cw*ch; if(!pilih||luas>pilih.luas) pilih={cols,rows,cw,ch,luas}; }
+      return {cols,rows,cw,ch,rasio:cw/ch,luas:cw*ch,selisih:Math.abs(cw/ch-1.35)}; };
+    for(let cols=1; cols<=9; cols++){
+      const k=nilai(cols);
+      if(k.cw>=112 && k.ch>=78 && (!pilih || k.selisih<pilih.selisih-1e-9 || (Math.abs(k.selisih-pilih.selisih)<1e-9 && k.luas>pilih.luas))) pilih=k;
     }
     if(!pilih){ longgar=false;
       for(let cols=1; cols<=9; cols++){
-        const rows=Math.ceil(N/cols);
-        const cw=(gW-(cols-1)*gap)/cols, ch=(gH-(rows-1)*gap)/rows;
-        if(cw>=92 && ch>=62){ const luas=cw*ch; if(!pilih||luas>pilih.luas) pilih={cols,rows,cw,ch,luas}; }
+        const k=nilai(cols);
+        if(k.cw>=92 && k.ch>=62 && (!pilih || k.selisih<pilih.selisih-1e-9 || (Math.abs(k.selisih-pilih.selisih)<1e-9 && k.luas>pilih.luas))) pilih=k;
       }
     }
     if(!pilih){ const cols=3, rows=Math.ceil(N/cols);
