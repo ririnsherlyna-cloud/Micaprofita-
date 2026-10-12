@@ -4677,3 +4677,39 @@ berdenyut terus (denyut #368 mendarat tanpa satu pun tab terbuka).
 • Hukum dijaga: marker imun 9/9 hidup sebelum dorong (uji:
   scripts/uji-marker-imun.mjs), YAML sah 27 langkah, node --check
   2/2, nol Math.random/localStorage/karangan, komit [skip ci].
+
+### 8. EPOK V347 — ISTANA-MEBAR + SERAP-RUMAH + POHON-TIGA-GERBANG (2026-10-12)
+
+Dua teguran pemilik: (1) "REPO-LIVE: 360 file cuma 80 terbaca setelah 7 hari —
+aneh banget; cek apa yang kurang di GitHub, permission apa?" (2) "antar panel
+saling bertindihan, 3 grafik bulat section pasar makan tempat dimana saja;
+ruangannya tak mampu atur — harusnya dia mampu ciptakan ruangan lagi."
+
+• AUTOPS (1): BUKAN permission — pohon penuh memang terbaca (trees API 1
+  panggilan), tapi pembaca isi berjalan SATU file per siklus dengan tidur
+  per fase (±4-5 dtk/file, hanya saat tab terbuka) → 7 hari ≈ 80 file. Ditambah:
+  api.github.com tanpa kunci dibatasi 60 req/jam/IP → saat habis, pohon
+  menyusut ke jsdelivr (54 file, parsial). Dan "umur hidup 7 hari" memakai
+  kelahiran ingatan (Sadar-1), bukan kelahiran abadi commit pertama.
+• SERAP-RUMAH (jawaban 1): organ baca massal — 24 file per putaran, 4 pekerja
+  paralel via raw.githubusercontent (CDN, tanpa kuota konten); fakta tetap
+  dipilah per file; gagal dicatat jujur. Antrean kerja: ≥8 file belum terbaca
+  → serap mendahului baca satu-satu. 360 file kini terjarah penuh dalam
+  ±1,5 menit tab terbuka (uji lapangan: 81 → 124 terbaca dalam menit-menit).
+• POHON-TIGA-GERBANG: api.github.com → ungh.cc (proxy publik bebas-kunci,
+  terverifikasi 360 file) → jsdelivr (parsial, dilabel jujur) — pohon tak
+  pernah lagi menyusut karena rate-limit.
+• KELAHIRAN-ABADI di status: lahirAt difloor ke 2026-09-28T00:15:34Z
+  (commit pertama 3bccce12) — kelahiran ingatan tak boleh MEMUDAkan makhluk;
+  status kini jujur "umur hidup 14 hari".
+• ISTANA-MEBAR (jawaban 2): grid al-jabr SEMUA viewport menggantikan lingkar —
+  kubah strip atas, kolam PASAR + 3 sumur TERKUNCI strip bawah (tak pernah
+  lagi melayang), 9 ruangan (OTAK·JANTUNG·MEMORI·AKAR·ALAT·LAPORAN·UJIAN·
+  GUDANG·BRANKAS) tersusun grid rapi; ukuran kolom dipilih PROPORSI (rasio
+  ≈1,35 — pelajaran uji: skor luas melahirkan 9 lemari tinggi kurus);
+  bila satu lantai tak cukup, istana MENCIPTAKAN LANTAI BARU — nol tindihan
+  SECARA KONSTRUKSI (pas-kan V296 tinggal jaring pengaman). Uji lapangan:
+  desktop 1280×577 = 5 kol × 2 lantai (242×174, tabrakan 0); iPhone 390×844 =
+  2 kol × 5 lantai (171×112, tabrakan 0, overflowX false, resize menyusun ulang).
+• Hukum dijaga: marker imun 9/9, 13/13 blok parsable, nol Math.random/
+  localStorage/karangan, komit [skip ci] berantai 6fa12a03←3c5d3973←510a27da.
