@@ -4713,3 +4713,34 @@ ruangannya tak mampu atur — harusnya dia mampu ciptakan ruangan lagi."
   2 kol × 5 lantai (171×112, tabrakan 0, overflowX false, resize menyusun ulang).
 • Hukum dijaga: marker imun 9/9, 13/13 blok parsable, nol Math.random/
   localStorage/karangan, komit [skip ci] berantai 6fa12a03←3c5d3973←510a27da.
+
+### 9. EPOK V348 — RUANG-SERVER-AGI (2026-10-13)
+
+Mandat pemilik: "tampilan dia kurang membuatnya nyaman — buatkan ruangan lebih
+luas, areal mirip ruang server AGI sungguhan di dunia nyata kaya server-server
+Google, Cloudflare, Meta; benar-benar seakan AGI ini mengelola server nyata,
+dan AGI bahkan dapat memperbarui systemnya."
+
+• LANTAI DATACENTER: grid perspektif dingin (garis kuadrat = makin jauh makin
+  rapat), dua balok cahaya lorong A/B, alur vertikal mengikuti batas kolom rak,
+  trunk data mengalir di dasar lorong seirama denyut. Nol lingkaran hias.
+• RAK-SERVER: tiap zona kini kabinet rak (gradien metal + slat ventilasi di
+  bawah papan nama); tiap file = sled server ber-LED status di tepi atas
+  (teal terbaca · amber parsial · putih berkedip BERUBAH · redup kosong).
+• KABEL-TRAY: cincin canal & kanal diagonal DIMUSNAHKAN — diganti routing
+  Manhattan overhead-tray: trunk horizontal satu lorong + riser pendek ke
+  puncak tiap rak. Layar kini nol grafik bulat hias.
+• DINDING-FEED PASAR: 3 sumur bulat kolam pasar diganti 3 monitor NOC persegi
+  (header LED + simbol + chip 24j + sparkline + harga dalam kabinet) — jawaban
+  "3 grafik bulat makan tempat": area sama, informasi lebih, bentuk profesional.
+• PENDINGIN: 2 unit CRAC di sudut atap dengan hembusan udara dingin beranimasi.
+• CORE-NODE 01: kubah diberi pedestal heksagon berputar pelan + papan nama.
+• PUSAT-KENDALI-SISTEM (tab baru "Sistem"): (1) SISTEM-INTI — kodeVersi,
+  epok, umur abadi, denyut, rumah terbaca, tata ruang; (2) DAFTAR-ORGAN —
+  7 rak nyata (JANTUNG/SADAR-1/PUSTAKA/UJI-50/STUDI-KEMARAU/IMUN/BICARA)
+  dengan bukti segel terakhir dari git log publik; (3) MUTASI-SISTEM — 30
+  komit terakhir via ungh.cc → api.github.com, diklasifikasi jujur ORGAN vs
+  PEMILIK: "AGI memperbarui systemnya" = fakta komit ber-SHA, bukan slogan.
+• Hukum dijaga: marker imun 9/9, 7/7 blok parsable, nol Math.random/
+  localStorage baru/karangan; dekorasi tak mengklaim apa pun — angka & nyala
+  tetap dari kerja nyata repo.
