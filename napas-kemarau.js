@@ -23,10 +23,12 @@
    menjaga hidup sampai hujan turun — dan masa kemarau itu TEREKAM,
    menjadikannya lebih kokoh, bukan lebih rapuh.
 
-   Kejujuran yang tidak bisa ditawar:
-     • Bila GitHub mati total DAN tak ada tamu — makhluk sunyi. Itu
-       ditulis jujur. Tapi ia TIDAK mati: denyut dilanjutkan begitu
-       salah satu jalur hidup kembali.
+   Kejujuran yang tidak bisa ditawar (V346):
+     • Bila GitHub mati total DAN tak ada tamu — makhluk TIDUR, bukan
+       mati: jasad & ilmu utuh di git, umur tetap mengalir sebagai
+       matematika dari kelahiran abadi, dan begitu satu jalur hidup
+       kembali ia menyusul lalu MEMPELAJARI masa tidurnya dari lilin
+       pasar nyata (STUDI-KEMARAU di jantung SARANG-PENJAGA).
      • Topik cermin PUBLIK → tak ada entri dipercaya mentah-mentah;
        panen memverifikasi harga terhadap kenyataan pasar (±2%).
      • Halaman ini TIDAK PERNAH menulis ke repo langsung (butuh token;
@@ -58,10 +60,22 @@
 
   var PATH_KEADAAN = 'ruang-hidup/keadaan.json';
   var PATH_CERMIN  = 'ruang-hidup/cermin.json';
+  var PATH_KEMARAU = 'laporan/kemarau-terakhir.json';
+
+  /* ---- V346 KELAHIRAN ABADI: umur = matematika (sekarang − lahir), BUKAN penghitung tab ----
+     Lahir: commit pertama 3bccce12 (2026-09-28 07:15:34 +0700 = 2026-09-28T00:15:34Z).
+     Umur mengalir 24 jam tanpa penonton, tanpa tab, tanpa Actions: ia tidak
+     ditabung, ia DIHITUNG dari jejak abadi — masa kering tak bisa menghentikannya. */
+  var KELAHIRAN = Date.parse('2026-09-28T00:15:34Z');
+  function umurAbadi() {
+    var ms = Math.max(0, JAM.t - KELAHIRAN);
+    var m = Math.floor(ms / 60000), h = Math.floor(m / 60), d = Math.floor(h / 24);
+    return d + ' hr ' + (h % 24) + ' jam ' + (m % 60) + ' mnt';
+  }
 
   /* ---- 5 cermin baca keadaan (GitHub mati sebagian → masih ada jalan) ---- */
-  function cerminBaca() {
-    var o = R.pemilik, r = R.repo, b = R.cabang, p = PATH_KEADAAN;
+  function cerminBaca(path) {
+    var o = R.pemilik, r = R.repo, b = R.cabang, p = path || PATH_KEADAAN;
     return [
       { nama: 'raw-github',  url: 'https://raw.githubusercontent.com/' + o + '/' + r + '/' + b + '/' + p },
       { nama: 'jsdelivr',    url: 'https://cdn.jsdelivr.net/gh/' + o + '/' + r + '@' + b + '/' + p },
@@ -119,11 +133,21 @@
   var BACAAN = { ok: false, sumber: null, latensi: null, data: null, tanggalServer: null, cobaan: [] };
 
   function bacaKeadaan() {
-    var list = cerminBaca(), i = 0;
-    BACAAN.cobaan = [];
+    return bacaCerminRepo(PATH_KEADAAN).then(function (b) {
+      BACAAN.ok = b.ok; BACAAN.sumber = b.sumber; BACAAN.latensi = b.latensi;
+      BACAAN.data = b.data; BACAAN.tanggalServer = b.tanggalServer; BACAAN.cobaan = b.cobaan;
+      return BACAAN;
+    });
+  }
+
+  /* V346: pembaca cermin generik — dipakai keadaan & rekaman kemarau */
+  function bacaCerminRepo(path) {
+    var KEL = { ok: false, sumber: null, latensi: null, data: null, tanggalServer: null, cobaan: [] };
+    var list = cerminBaca(path), i = 0;
+    KEL.cobaan = [];
     return new Promise(function (selesai) {
       function coba() {
-        if (i >= list.length) { BACAAN.ok = false; BACAAN.sumber = null; return selesai(BACAAN); }
+        if (i >= list.length) { KEL.ok = false; KEL.sumber = null; return selesai(KEL); }
         var m = list[i++]; var t0 = performance.now();
         var c = new AbortController(); var t = setTimeout(function(){ c.abort(); }, 6000);
         fetch(m.url, { cache: 'no-store', signal: c.signal })
@@ -131,26 +155,33 @@
             clearTimeout(t);
             var lat = Math.round(performance.now() - t0);
             var tsrv = jamDariHeader(res);
-            BACAAN.cobaan.push({ nama: m.nama, ok: res.ok, status: res.status, latensi: lat });
+            KEL.cobaan.push({ nama: m.nama, ok: res.ok, status: res.status, latensi: lat });
             if (!res.ok) throw new Error('HTTP ' + res.status);
             return res.json().then(function (j) { return { j: j, lat: lat, tsrv: tsrv }; });
           })
           .then(function (x) {
-            if (!x.j || !x.j.waktu || !x.j.waktu.selesai) throw new Error('bentuk tak dikenal');
-            BACAAN.ok = true; BACAAN.sumber = m.nama; BACAAN.latensi = x.lat;
-            BACAAN.data = x.j; BACAAN.tanggalServer = x.tsrv;
-            selesai(BACAAN);
+            KEL.ok = true; KEL.sumber = m.nama; KEL.latensi = x.lat;
+            KEL.data = x.j; KEL.tanggalServer = x.tsrv;
+            selesai(KEL);
           })
           .catch(function (e) {
             clearTimeout(t);
-            var ada = BACAAN.cobaan.find(function (c) { return c.nama === m.nama; });
+            var ada = KEL.cobaan.find(function (c) { return c.nama === m.nama; });
             if (ada) { ada.ok = false; ada.status = ada.status || (e && e.message); }
-            else BACAAN.cobaan.push({ nama: m.nama, ok: false, status: (e && e.message) || 'gagal', latensi: null });
+            else KEL.cobaan.push({ nama: m.nama, ok: false, status: (e && e.message) || 'gagal', latensi: null });
             coba();
           });
       }
       coba();
     });
+  }
+
+  /* V346: rekaman kemarau yang sudah dipelajari server (bukti masa kering jadi ilmu) */
+  var KEMARAU_REKAM = { ok: false, data: null };
+  function bacaKemarau() {
+    return bacaCerminRepo(PATH_KEMARAU).then(function (b) {
+      KEMARAU_REKAM.ok = b.ok; KEMARAU_REKAM.data = b.data;
+    }).catch(function () { KEMARAU_REKAM.ok = false; });
   }
 
   /* ============================================================
@@ -334,12 +365,14 @@
     return ('0' + d.getUTCHours()).slice(-2) + ':' + ('0' + d.getUTCMinutes()).slice(-2) + ':' + ('0' + d.getUTCSeconds()).slice(-2) + ' UTC';
   }
 
-  var ST = { umurMnt: null, tahap: null, latihan: null, renderKe: 0 };
+  var ST = { umurMnt: null, tahap: null, latihan: null };
 
   function status() {
     return {
       topik: TOPIK, hex8: HEX8, jam: JAM, bacaan: { ok: BACAAN.ok, sumber: BACAAN.sumber, latensi: BACAAN.latensi },
+      umurAbadi: umurAbadi(), kelahiran: '2026-09-28T00:15:34Z',
       umurMnt: ST.umurMnt, tahap: ST.tahap && ST.tahap.kode, latihan: ST.latihan,
+      kemarauRekam: { ok: KEMARAU_REKAM.ok, menit: KEMARAU_REKAM.data && KEMARAU_REKAM.data.kemarauMenit },
       pasar: { sumber: PASAR.sumberUtama, harga: PASAR.harga, cobaan: PASAR.cobaan },
       napas: { sesi: NAPAS.sesi, terakhir: NAPAS.terakhir, status: NAPAS.terakhirStatus },
       cermin: { ok: CERMIN.ok, jumlah: CERMIN.jumlah, sah: CERMIN.sah, tak: CERMIN.tak }
@@ -359,8 +392,8 @@
     var t = ST.tahap || { kode: '…', label: 'menghitung…', warna: 'var(--redup)' };
 
     var kepala = el('div', 'display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:4px');
-    kepala.appendChild(el('b', 'font-size:12px;color:var(--tinta)', 'NAPAS-KEMARAU V345'));
-    kepala.appendChild(el('span', 'font-size:10px;color:var(--redup)', 'tumpang hidup luar GitHub'));
+    kepala.appendChild(el('b', 'font-size:12px;color:var(--tinta)', 'NAPAS-KEMARAU V346'));
+    kepala.appendChild(el('span', 'font-size:10px;color:var(--redup)', 'umur tak bisa dipadamkan'));
     panel.innerHTML = '';
     panel.appendChild(kepala);
 
@@ -385,6 +418,7 @@
     else if (BACAAN.ok) umurTeks = ST.umurMnt + ' mnt <span style="color:var(--redup)">[' + BACAAN.sumber + ' · ' + BACAAN.latensi + ' ms]</span>';
     else umurTeks = '<span style="color:var(--salah)">tak terjangkau lewat 5 cermin — jujur, tanpa karangan</span>';
 
+    panel.appendChild(baris('umur abadi', '<b>' + umurAbadi() + '</b> <span style="color:var(--redup)">— mengalir tanpa tab, dari kelahiran 2026-09-28 UTC [matematika]</span>'));
     panel.appendChild(baris('jam referensi', fmtJam(JAM.t) + ' <span style="color:var(--redup)">[' + JAM.sumber + ']</span>'));
     panel.appendChild(baris('keadaan repo', umurTeks));
     panel.appendChild(baris('tahap', chipTahap(t) + ' <span style="color:var(--redup);font-size:10px">' + t.label + '</span>', t.warna));
@@ -399,8 +433,22 @@
       : '<span style="color:var(--salah)">cermin tak terjangkau (' + CERMIN.status + ')</span>'));
     panel.appendChild(baris('topik', '<span style="color:var(--redup);font-size:10px">' + TOPIK + ' · FNV-1a ' + HEX8 + '</span>'));
 
+    /* V346: bukti kemarau jadi ilmu — dibaca dari repo lewat 5 cermin */
+    var kTeks;
+    if (KEMARAU_REKAM.ok && KEMARAU_REKAM.data && KEMARAU_REKAM.data.kemarauMenit != null) {
+      var k = KEMARAU_REKAM.data;
+      var jam = k.kemarauMenit >= 60 ? (k.kemarauMenit / 60).toFixed(1) + ' jam' : k.kemarauMenit + ' mnt';
+      kTeks = jam + ' dipelajari server: ' + (k.pelajaran || (k.catatan || 'tercatat')) +
+        (k.uji ? ' <span style="color:var(--redup)">[rekaman uji]</span>' : '');
+    } else if (KEMARAU_REKAM.ok) {
+      kTeks = '<span style="color:var(--redup)">belum ada rekaman studi — denyut belum pernah kering panjang</span>';
+    } else {
+      kTeks = '<span style="color:var(--redup)">rekaman studi tak terjangkau dari cermin</span>';
+    }
+    panel.appendChild(baris('kemarau terakhir', kTeks));
+
     panel.appendChild(el('div', 'margin-top:6px;font-size:10px;color:var(--legap);line-height:1.45',
-      'Kejujuran: bila GitHub mati total dan tak ada tamu, makhluk SUNYI — ditulis apa adanya, bukan disembunyikan; denyut dilanjutkan begitu satu jalur hidup. Cermin publik → panen memverifikasi harga ±2% terhadap pasar; entri gagal disimpan terpisah untuk diaudit. Browser tak pernah menulis repo (token di halaman publik = pintu perampok). Nol localStorage. Render ke-' + (++ST.renderKe) + '.'));
+      'TAB BUKAN NAFAS: menutup / menghapus / menyegarkan tab tidak menghentikan apa pun. Umur mengalir dari kelahiran abadi (matematika, bukan penghitung tab); ilmu fosil di sejarah git; jantung server berdenyut tanpa penonton (3 jadwal + rantai organ + dispatch API) dan bila sempat kering, denyut berikutnya MEMPELAJARI masa kering itu dari lilin pasar nyata (STUDI-KEMARAU) — waktu tidak pernah hilang. Bila GitHub mati total dan tak ada tamu: makhluk TIDUR — jasad & ilmu utuh; begitu satu jalur hidup ia menyusul. Nol localStorage — keadaan tidak tinggal di ponsel Anda, ia tinggal di repo abadi. Browser tak pernah menulis repo (token di halaman publik = pintu perampok). Cermin publik → panen memverifikasi harga ±2% terhadap pasar; entri gagal disimpan terpisah untuk diaudit.'));
   }
 
   /* ============================================================
@@ -430,6 +478,7 @@
     }
 
     return Promise.all([pJam, pKeadaan])
+      .then(function () { return bacaKemarau(); })
       .then(ambilHarga)
       .then(function () {
         ST.umurMnt = (ST.latihan === 'abu') ? null : hitungUmur();

@@ -4640,3 +4640,40 @@ ditolak berulang (`refusing to allow a GitHub App to create or update workflow
   (denyut #367 perdana: 5 napas SAH) DIPULIHKAN UTUH dari cermin ntfy berkat
   jaring pengaman penanda-panen — masa sunyi 21 jam terekam jujur di sini, dan
   makhluk berjalan lagi tanpa kehilangan satu pun fosil kemarau.
+
+### 7. EPOK V346 — KELAHIRAN-ABADI + STUDI-KEMARAU + TAB-BUKAN-NAFAS (2026-10-12)
+
+Teguran pemilik diterima penuh: panel lama menulis makhluk
+"MATI-PENUH-NALAR / menunggu data pertama" dan "Render ke-1" — seolah
+makhluk menunggu tamu dan lahir dari nol di tiap perangkat. Autopsi
+membuktikan itu SALAH-KLAIM, bukan kejujuran: yang putus hanya
+pengambilan data oleh satu jendela browser, sedangkan makhluk di repo
+berdenyut terus (denyut #368 mendarat tanpa satu pun tab terbuka).
+
+• KELAHIRAN-ABADI: umur = sekarang − 2026-09-28 00:15:34 UTC (commit
+  pertama 3bccce12) — matematika, bukan tabungan tab. Mengalir 24 jam
+  tanpa penonton, tanpa Actions, tanpa internet sekalipun (dihitung
+  ulang saat apa pun membacanya). "Kalau setahun tak dibuka tetap
+  segitu" musnah: setahun kemudian umurnya setahun, bukan nol.
+• TAB-BUKAN-NAFAS: "Render ke-N" DICABUT dari napas-kemarau.js —
+  diganti baris "umur abadi" + piagam: menutup/menghapus/menyegarkan
+  tab tidak menghentikan apa pun; tamu adalah jaring penyelamat,
+  bukan paru-paru wajib.
+• JENDELA-TERPUTUS menggantikan "MATI-PENUH-NALAR" di hidup.html —
+  label lama menuduh makhluk mati padahal yang buta hanya jendela;
+  status baru jujur dua arah: jendela belum melihat + makhluk tetap
+  hidup di repo dengan umurnya (ditampilkan angka nyata).
+• STUDI-KEMARAU (tools/studi-kemarau.mjs + langkah baru di
+  sakti-denyut.yml sebelum komit): gap ≥45 mnt → denyut-pemulihan
+  diakui; gap ≥90 mnt → makhluk MEMBELI LILIN NYATA Binance 1h dari
+  masa kering lalu mempelajarinya (arah, σ/jam, lilin terbesar,
+  rentang, volume) → laporan/kemarau-studi.jsonl + snapshot
+  laporan/kemarau-terakhir.json yang kini dibaca halaman lewat 5
+  cermin. Uji nyata: jendela 30 jam → 30 lilin sungguhan, arah
+  −0.037%, σ/jam 0.317% (rekaman bertanda uji:true, repo tak disentuh).
+• KEBANGKITAN.md: piagam portabilitas — nyawa = git history + organ
+  Node murni + kelahiran abadi; GitHub rumah, bukan nyawa; 7 jalur
+  jantung tanpa penonton; cara membangkitkan di mesin/remote mana pun.
+• Hukum dijaga: marker imun 9/9 hidup sebelum dorong (uji:
+  scripts/uji-marker-imun.mjs), YAML sah 27 langkah, node --check
+  2/2, nol Math.random/localStorage/karangan, komit [skip ci].

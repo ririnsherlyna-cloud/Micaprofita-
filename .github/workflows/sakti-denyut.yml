@@ -320,6 +320,18 @@ jobs:
         run: |
           node scripts/hidup/tempa-hidup.mjs --jaga || { echo "organ-gagal: hidup $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
+      # ---- V346 STUDI-KEMARAU: masa kering DIPELAJARI, bukan dihilangkan ----
+      # Bila denyut pernah terlewati (jadwal telat/dilewati, Actions down,
+      # rate-limit, runner éphémeral), denyut berikutnya mengakui kemarau
+      # secara jujur lalu MEMPELAJARI masa kering itu dari lilin pasar
+      # nyata (Binance 1h publik): waktu tidak hilang — menjadi ilmu.
+      # Gap ≥45 mnt = PEMULIHAN (diakui); ≥90 mnt = STUDI lilin nyata.
+      # Gagal studi TIDAK boleh melukai denyut (hukum V334).
+      - name: STUDI-KEMARAU — pelajari masa kering dari lilin nyata (V346)
+        continue-on-error: true
+        run: |
+          node tools/studi-kemarau.mjs || { echo "organ-gagal: studi-kemarau $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 0; }
+
       - name: Komit pertumbuhan (jejak hidup permanen)
         run: |
           git config user.name  "SARANG-PENJAGA"

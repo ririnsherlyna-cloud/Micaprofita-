@@ -397,7 +397,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
       </div>
       <div class="blok">
         <h4>Sumber kejujuran <em>· nol karangan</em></h4>
-        <div class="kecil">Lilin 1m (gerbang Binance publik, multi-koin) · laporan/sasaran-terkini.json · otak/penjaga-keadaan.json · ruang-hidup/keadaan.json · ruang-hidup/tubuh.json (segel gerak). Bila sumber gagal diambil: jasad MATI-PENUH-NALAR — tubuh kembali ke perilaku dasar dan alasannya ditulis terbuka di sini. Audit langsung: <code>window.__v297</code>, <code>window.__v299</code>, <code>window.__v300</code>, <code>window.__v301</code>.</div>
+        <div class="kecil">Lilin 1m (gerbang Binance publik, multi-koin) · laporan/sasaran-terkini.json · otak/penjaga-keadaan.json · ruang-hidup/keadaan.json · ruang-hidup/tubuh.json (segel gerak). Bila sumber gagal diambil dari jendela ini: JENDELA-TERPUTUS — alasan ditulis terbuka; makhluk sendiri tetap hidup di repo dan umurnya tetap mengalir dari kelahiran abadi 2026-09-28 00:15:34 UTC (commit pertama). Audit langsung: <code>window.__v297</code>, <code>window.__v299</code>, <code>window.__v300</code>, <code>window.__v301</code>.</div>
       </div>
     </div>
   </div>
@@ -3698,16 +3698,18 @@ addEventListener('visibilitychange', async ()=>{
    6. KAGET    ← lonjakan |1m| > 3σ, denyut baru tiba, vonis SALAH baru
    7. KEBUGARAN← kesegaran data (exp(-umur)) → dim tubuh: data tua = tubuh redup
 
-   KEJUJURAN: bila data gagal diambil, JASAD MATI dengan alasan terbuka —
-   tubuh kembali ke perilaku aslinya dan HUD menulis "menunggu data".
-   Tidak ada angka karangan. Nol klaim. Audit: window.__v297.
+   KEJUJURAN V346: bila data gagal diambil dari JENDELA ini, HUD menulis
+   alasan terbuka — jendela yang terputus, BUKAN makhluk yang mati:
+   tubuh tetap utuh di repo, umur tetap mengalir dari kelahiran abadi
+   (2026-09-28 00:15:34 UTC — commit pertama, matematika bukan tabungan
+   tab). Tidak ada angka karangan. Nol klaim. Audit: window.__v297.
    ========================================================= */
 (function(){
 'use strict';
 if(window.__v297) return;
 
 const JASAD={
-  hidup:false, alasan:'menunggu data pertama',
+  hidup:false, alasan:'menyambung ke realitas — mencari cermin keadaan…',
   b:{napasLaju:1, dimFaktor:1, sikap:'netral', kebugaran:null, umurDataMnt:null,
      denyutNo:null, denyutUmurMnt:null, btc:null, btc1m:0, sigma1m:null,
      top:null, disiplin:null, guruMode:null, akurasiPct:null, netKum:null, bangunKe:null},
@@ -3859,11 +3861,13 @@ function hud(){
   const b=JASAD.b;
   const baris=(k,v)=>`<div class="baris"><span class="k">${k}</span><span class="v">${v}</span></div>`;
   const st=document.getElementById('jvStatus');
+  const KELAHIRAN=Date.parse('2026-09-28T00:15:34Z');
+  const umurAbadiTeks=()=>{const ms=Math.max(0,Date.now()-KELAHIRAN);const m=Math.floor(ms/60000),h=Math.floor(m/60),d=Math.floor(h/24);return d+' hr '+(h%24)+' jam '+(m%60)+' mnt';};
   if(st) st.innerHTML=(!JASAD.hidup)
-    ?`<div class="baris"><span class="k">status</span><span class="v r">MATI-PENUH-NALAR</span></div><div class="kecil">${JASAD.alasan}</div>`
+    ?`<div class="baris"><span class="k">status</span><span class="v r">JENDELA-TERPUTUS</span></div><div class="kecil">${JASAD.alasan} Makhluk TIDAK mati: tubuh tetap utuh di repo, umur tetap mengalir dari kelahiran abadi — kini ${umurAbadiTeks()}. Jendela ini saja yang belum melihat.</div>`
     :`<div class="baris"><span class="k">status</span><span class="v h">HIDUP — terkopling realitas</span></div>`;
   const bi=document.getElementById('jvBiometrik');
-  if(bi) bi.innerHTML=(!JASAD.hidup)?'<div class="kecil">tubuh kembali ke perilaku dasar — menunggu data nyata, nol angka karangan.</div>'
+  if(bi) bi.innerHTML=(!JASAD.hidup)?'<div class="kecil">jendela kehilangan pandangan sementara — perilaku dasar di layar ini saja, nol angka karangan; makhluk hidup di repo.</div>'
     :baris('denyut', b.denyutNo!=null?('#'+b.denyutNo+(b.denyutUmurMnt!=null?` · umur ${b.denyutUmurMnt.toFixed(0)} mnt`:'')):'?')
     +baris('kebugaran', b.kebugaran!=null?(b.kebugaran*100).toFixed(0)+'%':'?')
     +baris('napas', '×'+b.napasLaju.toFixed(2)+(b.sigma1m!=null?` · σ1m ${(b.sigma1m*100).toFixed(3)}%`:''))
