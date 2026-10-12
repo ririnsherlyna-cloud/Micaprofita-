@@ -8,13 +8,15 @@
    ============================================================ */
 (function () {
   'use strict';
+  /* V343-REV-B2R15 */
   const O = window.__OTAK_BAHASA;
 
   /* ---------- 6) bigram gabung ---------- */
   const BIGRAM = [
     ['how', 'many'], ['how', 'much'], ['do', 'not'], ['does', 'not'], ['did', 'not'],
     ['di', 'mana'], ['hari', 'ini'], ['di', 'sini'], ['di', 'situ'], ['di', 'sana'],
-    ['terima', 'kasih'], ['benar', 'benar'], ['apa', 'itu']
+    ['terima', 'kasih'], ['benar', 'benar'], ['apa', 'itu'],
+    ['kata', 'benda'], ['kata', 'kerja'], ['kata', 'sifat'], ['kata', 'keterangan'], ['nama', 'diri'], ['kata', 'tanya'], ['kata', 'sambung'], ['kata', 'ganti'], ['kata', 'depan'], ['kata', 'penentu'], ['kata', 'kamus'], ['proper', 'noun']
   ];
   function gabungBigram(tok) {
     const out = [];
@@ -145,14 +147,82 @@
   function angkaDari(baris) {
     const out = [];
     for (const k of baris.kata) {
-      const m = k.surf.match(/^\d+$/); if (m) { out.push(+k.surf); continue; }
-      for (const h of k.hip) if (h.kelas === 'num' && /^\d+$/.test(h.lemma)) { out.push(+h.lemma); break; }
+      const calon = [];
+      const m = k.surf.match(/^\d+$/); if (m) calon.push(+k.surf);
+      for (const h of k.hip) if (h.kelas === 'num' && /^\d+$/.test(h.lemma)) { calon.push(+h.lemma); break; }
+      // V343: kata-angka dari kode matematika (one/satu = 1, hundred/ratus = 100)
+      if (O.nilaiKata && O.nilaiKata[k.surf] != null) calon.push(O.nilaiKata[k.surf]);
+      else for (const h of k.hip) if (O.nilaiKata && O.nilaiKata[h.lemma] != null) { calon.push(O.nilaiKata[h.lemma]); break; }
+      if (calon.length) out.push(calon[0]); // satu nilai per kata — deterministik
     }
     return out;
   }
   function kataAsing(baris) {
     // kata tak dikenal = tak ada hipotesis dan bukan angka/op
     return baris.kata.filter(k => !k.hip.length && !/^\d+$/.test(k.surf) && !OPS.has(k.surf) && k.surf.length > 1).map(k => k.surf);
+  }
+
+  /* ---------- 8b) V343: deteksi koin real-time + kata sasaran ---------- */
+  function deteksiKoin(baris) {
+    if (!O.koin || !O.koin.koin) return null;
+    const KO = O.koin.koin;
+    const kata = baris.kata.map(k => k.surf);
+    let simbol = null;
+    for (const t of kata) {
+      const up = t.toUpperCase();
+      if (KO[up]) { simbol = up; break; }
+    }
+    if (!simbol) {
+      for (const [sym, k] of Object.entries(KO)) {
+        if (kata.includes(k.nama.toLowerCase()) || kata.includes(k.nama.toLowerCase().replace(/\s+/g, '-'))) { simbol = sym; break; }
+      }
+    }
+    if (!simbol) return null;
+    const ada = (d) => adaLemma(baris, d);
+    const id = baris.bahasa === 'id';
+    let jenis = 'koin-harga';
+    if (ada(['grafik', 'chart', 'candle', 'lilin', 'gambar-grafik'])) jenis = 'koin-grafik';
+    else if (ada(['naik', 'turun', 'up', 'down', 'arah', 'ubah', 'change', 'gainers']) || /24\s?j/.test(kata.join(' '))) jenis = 'koin-arah';
+    else if (ada(['harga', 'price', 'berapa', 'how-much', 'worth', 'nilai']) || /^\d/.test('')) jenis = 'koin-harga';
+    // rentang waktu grafik: hari ini=1d, 7 hari/minggu=7d, 30 hari/bulan=30d
+    let tf = '7d';
+    const angka = angkaDari(baris);
+    if (ada(['minggu']) || (angka.length && angka[0] <= 7 && ada(['hari', 'days']) && !ada(['hari-ini']))) tf = '7d';
+    if (ada(['bulan', 'month']) || (angka.length && angka[0] > 7)) tf = '30d';
+    if (ada(['hari-ini', 'today']) || (angka.length && angka[0] === 1)) tf = '1d';
+    return { simbol, jenis, tf, pasar: KO[simbol].pasar, nama: KO[simbol].nama };
+  }
+  function kataTarget(baris) {
+    // kata sasaran untuk soal kode/kelas/lawan: kata berisi-kutip terakhir, atau kata isi terakhir
+    const meta = ['kode', 'code', 'kata', 'word', 'lawan', 'opposite', 'antonim', 'antonym', 'of', 'dari', 'the', 'is', 'are', 'apa', 'itu', 'adalah', 'number', 'angka', 'math', 'matematika', 'verb', 'noun', 'adjective', 'kata-kerja', 'kata-benda', 'kata-sifat', 'adverb', 'kata-keterangan', 'what', 'class', 'kelas', 'jenis', 'berapa', 'how-much', 'tolong', 'please', 'ini', 'itu', 'a', 'an', 'di', 'apakah', 'apaksim', 'kerja', 'benda', 'sifat', 'keterangan', 'naik', 'turun', 'the', 'wh-word', 'wh', 'nama', 'diri', 'proper', 'nama-diri', 'auxiliary', 'aux', 'bilangan', 'partikel', 'preposition', 'kata-depan', 'conjunction', 'pronoun', 'determiner', 'copula', 'negation', 'interjection', 'kata-tanya', 'kata-sambung', 'kata-ganti', 'kata-depan', 'kata-penentu', 'kata-kamus', 'proper-noun', 'number', 'particle', 'negasi', 'negation', 'ganti', 'tanya', 'sambung', 'depan', 'penentu', 'kamus', 'aspect', 'kopula', 'aspek'];
+    const berisi = baris.kata.filter(k => !meta.includes(k.surf) && !/^\d+$/.test(k.surf));
+    if (berisi.length) return berisi[berisi.length - 1].surf;
+    // tingkat dua: hanya meta keras — kata nama-kelas (sifat, ganti, benda…) tetap sasaran sah
+    const keras = ['what', 'is', 'the', 'of', 'apa', 'itu', 'kode', 'code', 'angka', 'number', 'kata', 'word', 'berapa', 'how', 'much', 'math', 'matematika', 'lawan', 'opposite', 'antonim', 'antonym', 'are', 'a', 'an', 'apakah', 'di', 'ke', 'dari', 'the'];
+    const dua = baris.kata.filter(k => !keras.includes(k.surf) && !/^kata-/.test(k.surf) && !/^\d+$/.test(k.surf));
+    if (dua.length) return dua[0].surf;
+    // tingkat tiga: kata terakhir yang sungguh ada di tabel kode
+    const mini = ['what', 'is', 'the', 'of', 'apa', 'itu', 'kode', 'code', 'angka', 'number', 'kata', 'word', 'berapa', 'how', 'much', 'math', 'matematika', 'lawan', 'opposite', 'antonim', 'antonym', 'are', 'a', 'an', 'apakah'];
+    const tiga = baris.kata.filter(k => {
+      if (mini.includes(k.surf) || /^\d+$/.test(k.surf)) return false;
+      if (O.kode && O.kode.petaKata.has(k.surf)) return true;
+      if (/^kata-/.test(k.surf) && O.kode && O.kode.petaKata.has(k.surf.slice(5))) return true;
+      return false;
+    });
+    if (!tiga.length) return null;
+    const pilihTiga = tiga[tiga.length - 1].surf;
+    return /^kata-/.test(pilihTiga) ? pilihTiga.slice(5) : pilihTiga;
+  }
+  function adaSurf(baris, daftar) {
+    return baris.kata.some(k => daftar.includes(k.surf));
+  }
+  function adaFrase(baris, frase) {
+    const bag = frase.split(' ');
+    const srf = baris.kata.map(k => k.surf);
+    for (let i = 0; i + bag.length <= srf.length; i++) {
+      if (bag.every((b, j) => srf[i + j] === b)) return true;
+    }
+    return false;
   }
 
   function semantik(baris, bahasa) {
@@ -165,6 +235,31 @@
     f.asing = kataAsing(baris);
     const ent0 = cariEnt(baris); // deteksi dini — entitas menang atas intent diri
 
+    /* ---------- V343: niat baru — koin real-time, kode, kelas, lawan, hari-matematika ---------- */
+    const dk = deteksiKoin(baris);
+    if (dk) { f.intent = dk.jenis; f.koin = dk; return f; }
+
+    const adaKode = adaSurf(baris, ['kode', 'code']) || adaLemma(baris, ['kode', 'code']) || (id && adaLemma(baris, ['angka']) && adaLemma(baris, ['kata']));
+    if (adaKode) {
+      const t = kataTarget(baris);
+      if (t) { f.intent = 'kode-kata'; f.kata = t; return f; }
+    }
+    const KTQ = [['ganti nama', 'pron'], ['nama-diri', 'prop'], ['proper noun', 'prop'], ['proper-noun', 'prop'], ['wh-word', 'wh'], ['kata-kerja', 'v'], ['kata-benda', 'n'], ['kata-sifat', 'adj'], ['kata-keterangan', 'adv'], ['verb', 'v'], ['noun', 'n'], ['adjective', 'adj'], ['adverb', 'adv'], ['wh', 'wh'], ['auxiliary', 'aux'], ['aux', 'aux'], ['bilangan', 'num'], ['partikel', 'part'], ['preposition', 'prep'], ['kata-depan', 'prep'], ['conjunction', 'conj'], ['kata-sambung', 'conj'], ['pronoun', 'pron'], ['kata-ganti', 'pron'], ['determiner', 'det'], ['kata-penentu', 'det'], ['copula', 'cop'], ['negation', 'neg'], ['negasi', 'neg'], ['interjection', 'int'], ['dictionary word', 'x'], ['kata kamus', 'x'], ['kata tanya', 'wh'], ['kata-tanya', 'wh'], ['number', 'num'], ['particle', 'part'], ['aspect', 'aspek'], ['aspek', 'aspek'], ['kopula', 'cop'], ['copula2', 'cop']];
+    const ktqHit = KTQ.find(([w]) => adaFrase(baris, w.replace(/-/g, ' ')) || baris.kata.some(k => k.surf === w));
+    if (ktqHit) {
+      const t = kataTarget(baris);
+      if (t) { f.intent = 'kelas-kata'; f.kelasTanya = ktqHit[1]; f.kata = t; return f; }
+    }
+    // hari matematika: [angka] hari setelah/sebelum [nama hari] — dua bahasa
+    const hariUrut = O.urutKata || {};
+    const namaHari = baris.kata.find(k => hariUrut[k.surf] != null && hariUrut[k.surf] <= 6 && (O.kode && O.kode.petaKata.get(k.surf) && O.kode.petaKata.get(k.surf).kat === 'hari'));
+    if (namaHari && f.angka.length >= 1 && (adaSurf(baris, ['setelah', 'sesudah', 'after']) || adaSurf(baris, ['sebelum', 'before']))) {
+      f.intent = 'hari-matematika';
+      f.matHari = { n: f.angka[0], arah: adaSurf(baris, ['setelah', 'sesudah', 'after']) ? 1 : -1, urut: hariUrut[namaHari.surf] };
+      return f;
+    }
+
+
     // --- sapaan / basa-basi
     if (adaLemma(baris, ['hello', 'hi', 'hey', 'halo', 'hai', 'selamat']) || (adaLemma(baris, ['good', 'baik']) && adaLemma(baris, ['morning', 'afternoon', 'evening', 'night', 'pagi', 'siang', 'sore', 'malam'])) || lemmaAda(baris, 'goodbye') || lemmaAda(baris, 'pamit')) {
       f.intent = 'sapaan';
@@ -174,6 +269,12 @@
     }
     if (adaLemma(baris, ['thanks', 'thank', 'terima-kasih', 'makasih'])) { f.intent = 'terima-kasih'; return f; }
 
+
+    const konteksTerjemah = adaLemma(baris, ['inggris', 'english', 'indonesia', 'indonesian']);
+    if (!konteksTerjemah && (adaLemma(baris, ['lawan', 'antonim', 'antonym']) || adaSurf(baris, ['opposite', 'antonym', 'antonim', 'lawan-kata']))) {
+      const t = kataTarget(baris);
+      if (t) { f.intent = 'lawan-kata'; f.kata = t; return f; }
+    }
     // --- perintah bahasa (hanya imperatif; kalimat tanya masuk diri-bahasa)
     const adaTanyaKata = adaLemma(baris, ['what', 'who', 'where', 'when', 'why', 'how', 'how-many', 'how-much', 'apa', 'siapa', 'bagaimana', 'berapa', 'kapan', 'mengapa', 'di-mana', 'apakah', 'bisakah']) || adaLemma(baris, ['can', 'could', 'do', 'does', 'did', 'are', 'is', 'bisakah', 'apakah']);
     if ((lemmaAda(baris, 'speak') || lemmaAda(baris, 'bicara') || lemmaAda(baris, 'pakai')) && !adaTanyaKata) {
@@ -221,7 +322,7 @@
     }
 
     // --- identitas diri
-    const kamu = adaLemma(baris, ['you', 'your', 'yourself', 'kamu', 'mu', 'dirimu', 'micaprofita']) || baris.kata.some(k => /mu$/.test(k.surf) && k.surf.length > 4);
+    const kamu = adaLemma(baris, ['you', 'your', 'yourself', 'kamu', 'mu', 'dirimu', 'micaprofita']) || baris.kata.some(k => /mu$/.test(k.surf) && k.surf.length > 4 && !/^(ber|me[mnky]|ter|di|ke|se|pe[nmky])/.test(k.surf));
     const adaTanyaKata2 = adaLemma(baris, ['what', 'who', 'where', 'when', 'why', 'how', 'how-many', 'how-much', 'apa', 'siapa', 'bagaimana', 'berapa', 'kapan', 'mengapa', 'di-mana', 'apakah', 'bisakah']);
     const diMana = adaLemma(baris, ['where', 'di-mana', 'dimana', 'mana']);
     const kenapa = adaLemma(baris, ['why', 'mengapa', 'kenapa']);
@@ -236,7 +337,7 @@
     if (apa && adaLemma(baris, ['languages', 'language', 'bahasa']) && (kamu || adaLemma(baris, ['speak', 'bicara', 'menguasai'])) && !ent0) { f.intent = 'diri-bahasa'; return f; }
     if (apa && adaLemma(baris, ['heart', 'jantung']) ) { f.intent = 'diri-jantung'; return f; }
     if (apa && adaLemma(baris, ['motto', 'motto', 'diaman'])) { f.intent = 'diri-motto'; return f; }
-    if (apa && adaLemma(baris, ['pakem', 'buy', 'beli']) && (adaLemma(baris, ['pakem', 'beli', 'buy']))) { f.intent = 'diri-pakem'; return f; }
+    if (adaLemma(baris, ['pakem']) && (apa || bagaimana || adaLemma(baris, ['buy', 'beli']))) { f.intent = 'diri-pakem'; return f; }
     if (apa && adaLemma(baris, ['uji-50', 'tournament', 'turnamen', 'uji50']) || (berapa && adaLemma(baris, ['koin', 'coin', 'turnamen', 'tournament', 'uji-50']))) {
       f.intent = 'diri-uji50'; return f;
     }
@@ -246,10 +347,10 @@
     // --- terjemahan dua arah
     const adaMetaBahasa = adaLemma(baris, ['language', 'bahasa', 'say', 'bilang', 'ucap']);
     if ((id && adaLemma(baris, ['inggris', 'indonesia', 'english'])) || (!id && adaLemma(baris, ['indonesian', 'english']))) {
-      const meta = ['language', 'bahasa', 'inggris', 'english', 'indonesian', 'indonesia', 'say', 'bilang', 'how', 'what', 'apa', 'do', 'you', 'the', 'in', 'word', 'kata', 'from', 'dari', 'is', 'adalah', 'bagaimana', 'how-much', 'how-many'];
+      const meta = ['language', 'bahasa', 'inggris', 'english', 'indonesian', 'indonesia', 'say', 'bilang', 'how', 'what', 'apa', 'do', 'you', 'the', 'in', 'word', 'kata', 'from', 'dari', 'is', 'adalah', 'bagaimana', 'how-much', 'how-many', 'arti', 'artinya', 'terjemahkan', 'translate', 'means', 'mean', 'meaning', 'tolong', 'please', 'ke', 'dalam', 'into', 'for'];
       const iBP = baris.kata.findIndex(k => k.hip.some(h => ['inggris', 'english', 'indonesia', 'indonesian'].includes(h.lemma)));
       const layak = (k) => (k.hip.some(h => ['x', 'n'].includes(h.kelas)) || O.tag(k.surf, bahasa === 'en' ? 'id' : 'en').length) && !meta.includes(k.hip[0] ? k.hip[0].lemma : k.surf);
-      const layakSasaran = (k) => (k.hip.some(h => ['x', 'n'].includes(h.kelas)) || O.tag(k.surf, bahasa === 'en' ? 'id' : 'en').length) && !['inggris', 'english', 'indonesian', 'indonesia', 'say', 'bilang', 'how', 'what', 'apa', 'do', 'you', 'the', 'in', 'from', 'dari', 'is', 'adalah', 'bagaimana', 'how-much', 'how-many', 'word', 'kata'].includes(k.hip[0] ? k.hip[0].lemma : k.surf);
+      const layakSasaran = (k) => (k.hip.length || O.tag(k.surf, bahasa === 'en' ? 'id' : 'en').length) && !['inggris', 'english', 'indonesian', 'indonesia', 'say', 'bilang', 'how', 'what', 'apa', 'do', 'you', 'the', 'in', 'from', 'dari', 'is', 'adalah', 'bagaimana', 'how-much', 'how-many', 'word', 'kata', 'bahasa', 'language', 'arti', 'artinya', 'terjemahkan', 'translate', 'tolong', 'please', 'means', 'mean', 'meaning', 'dalam', 'ke', 'into', 'for', 'di', 'to'].includes(k.hip[0] ? k.hip[0].lemma : k.surf);
       let kandidat = baris.kata.filter(layak);
       if (iBP > -1) {
         const sesudah = baris.kata.slice(iBP + 1).filter(layakSasaran);
@@ -274,16 +375,24 @@
     }
 
     // --- buat kalimat (generasi hidup)
-    if (adaLemma(baris, ['make', 'buat', 'rangkai']) && adaLemma(baris, ['sentence', 'kalimat'])) {
+    if (adaLemma(baris, ['make', 'buat', 'rangkai']) && (adaLemma(baris, ['sentence', 'kalimat']) || adaSurf(baris, ['sentence', 'kalimat']))) {
       const meta = ['make', 'buat', 'rangkai', 'sentence', 'kalimat', 'with', 'dengan', 'a', 'the'];
       const kt = baris.kata.filter(k => k.hip.some(h => ['v', 'n', 'adj'].includes(h.kelas)) && !meta.includes(k.hip[0].lemma));
-      f.intent = 'buat-kalimat'; f.kata = kt.length ? kt[kt.length - 1].surf : null; return f;
+      let sasaran = kt.length ? kt[kt.length - 1].surf : null;
+      if (!sasaran) { // kata lintas-bahasa: cari lewat dua leksikon
+        const kand = baris.kata.filter(k => !meta.includes(k.surf) && (O.tag(k.surf, 'en')[0] || O.tag(k.surf, 'id')[0]));
+        sasaran = kand.length ? kand[kand.length - 1].surf : null;
+      }
+      f.intent = 'buat-kalimat'; f.kata = sasaran; return f;
     }
 
     // --- istilah pekerjaan
     const ist = cariIstilah(baris);
-    if (ist && (apa || adaLemma(baris, ['explain', 'jelaskan']) || bagaimana)) {
-      f.intent = 'istilah'; f.istilah = ist; return f;
+    const adaExplain = adaLemma(baris, ['explain', 'jelaskan']) || adaSurf(baris, ['explain', 'jelaskan']);
+    if (ist && (apa || adaExplain || bagaimana)) {
+      f.intent = 'istilah'; f.istilah = ist;
+      f.istilahLang = adaSurf(baris, ['explain', 'what', 'how', 'is', 'the']) && !adaSurf(baris, ['apa', 'jelaskan', 'itu']) ? 'en' : 'id';
+      return f;
     }
 
     const ITEM_MAKAN = new Set(Object.values(P.entitas).flatMap(e => e.makan || []));
@@ -355,4 +464,11 @@
   O.gabungBigram = gabungBigram; O.parse = parse; O.teksPohon = teksPohon;
   O.semantik = semantik; O.cariEnt = cariEnt; O.cariIstilah = cariIstilah; O.cariAbil = cariAbil;
   O.angkaDari = angkaDari; O.simbolToken = simbolToken; O.OPS = OPS;
+  O.deteksiKoin = deteksiKoin; O.kataTarget = kataTarget; O.adaFrase = adaFrase; O.adaSurf = adaSurf;
+  O.deteksiKoinTeks = (teks) => {
+    const tok = O.gabungBigram(O.tokenisasi(teks || ''));
+    const baris = O.tandaiBaris(tok, 'id');
+    baris.bahasa = 'id';
+    return deteksiKoin(baris);
+  };
 })();

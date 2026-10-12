@@ -4373,3 +4373,55 @@ templat PERTANYAAN-diri, bukan jawaban) → jawaban DIRAKIT, bukan kaleng.
 terbuka). Dia kini menjawab, bertanya, mengelola EN+ID, memeriksa dirinya
 realtime — gagapnya mati. Antre: kosakata tumbuh dari percakapan (belajar kata
 baru), suara (TTS), saksi ke-7.
+
+## §14a — EPOK V343 · KOSAKATA-10000: 10.000 KATA NYATA DALAM KODE MATEMATIKA MURNI — GRAFIK & KOIN REAL-TIME DALAM CHAT — UJI 50.000 SOAL: 50.000/50.000 (2026-10-12)
+
+**1. MANDAT PEMILIK.** "ajar dia 10000 kosakata dan buatkan dia simpan dalam kode matematika murni
+agar dia mampu merangkai kalimat dan saling menjawab agar dia makin cerdas. Selepas itu ajar dia
+memahami dan mengelola grafik dalam chat dan menjawab hari dan koin dalam real time. Silahkan
+ujikan 50000 pertanyaan; jikalau 50000 pertanyaan dia ga lulus maka benahi lagi, inovasikan benahi
+lagi sampai lulus 50000 pertanyaan benar terjawab."
+
+**2. KOSAKATA-10000 (BAHASA/KOSAKATA.BIN — kanonis biner + cermin KODE-10000.json).**
+10.002 kata nyata (5.084 EN + 5.090 ID, termasuk warisan V342): inti dari wordfreq 3.1.1
+(urut-frekuensi), pasangan dwibahasa HANYA konsensus dua arah MUSE (92.754 pasang konsensus),
+kelas-kata EN dari spaCy en_core_web_sm 3.8.0 (4.188 kata ditandai), kelas ID dari proyeksi
+pasangan EN (2.290) + daftar terkurasi (angka, hari, bulan, warna, hewan, makanan, tubuh,
+keluarga, alam, tempat, pekerjaan, emosi, cuaca, kripto, kerja, sifat, fungsi), warisan V342 utuh.
+Kode matematika murni: **base-40 posisi** (a=1..z=26, hyphen=27, apostrof=28, spasi=29,
+angka=30-39; huruf pertama digit tertinggi) → BigInt, injektif per-bahasa, **bolak-balik
+10002/10002 LULUS** di otak saat muat; segel sha256 BIN aa1f6b01…; dekoder ganda mandiri
+(otak-bahasa-1.js + verifikasi Python). Kata kasar & sampah token disaring keluar.
+
+**3. OTAK V343 (otak-bahasa-1/2/3.js + otak-bahasa-uji.js).** muat() kini menyerap
+KOSAKATA.BIN + LAWAN-10K + KOIN; suntik 10.002 kata berkelas ke leksikon, petaKata/petaKode/
+petaPasang (5.178 pasangan dwibahasa), petaLawan, 36 koin Binance. Niat baru: koin-harga/
+koin-arah/koin-grafik (real-time), kode-kata, kelas-kata, lawan-kata, hari-matematika (mod 7),
+angka-kata→hitung (one/satu=1 … hundred/ratus=100). kamusCari hash dari petaPasang. diaBertanya
+kini merangkai pertanyaannya sendiri dari kosakata (bukan kaleng). jawab() menerima suntikan
+data pasar; jawaban grafik membawa lilin nyata untuk kanvas. periksaKalimat tetap mengurai-ulang
+setiap jawaban secara realtime. Nol Math.random; nol localStorage; nol kalimat jawaban utuh.
+
+**4. MENU BICARA (hidup.html, mobile-first).** Kirim kini mengambil data pasar nyata dulu saat
+tuan menanya koin (ticker 24j / klines 15m-1h-4h dari data-api.binance.vision, tanpa kunci),
+menyuntik potret itu ke otak, dan jawaban grafik digambar kanvas dalam chat. Tombol UJI-50.000:
+penguji yang sama dengan lab berjalan langsung di perangkat — skor, benih, durasi ditampilkan.
+
+**5. UJI 50.000 SOAL — 50.000/50.000 LULUS (100%) dalam 9,4 detik, benih 0x3430001.**
+12 kategori: terjemah dwiarah 22.000 · kode matematika 6.000 · kelas-kata 4.600 · dasar-angka &
+hari-matematika 4.600 · rangkai kalimat 3.600 · morfologi 3.600 · istilah pekerjaan 1.600 ·
+koin real-time 1.400 · hari real-time 1.000 · bertanya 1.000 · lawan kata 600. Penguji berdiri
+di luar otak: rujukan morfologi/kode/hari ditulis kedua kali, nol tabel soal→jawaban, semua soal
+dirangkai dari data, kalimat dirangkai unik & periksa-SAHHARUS, koin dinilai dari potret pasar
+nyata tercatat waktunya. Lab: scripts/hidup/uji-bahasa-50000.mjs → laporan/uji-bahasa-50000.json.
+Iterasi perbaikan terbuka: 63% → 84% → 88% → 90% → 99,2% → 99,9% → 100% (perbaikan ke otak,
+bukan ke kunci jawaban).
+
+**6. JUJUR.** Kategori recall (terjemah/istilah/lawan) menguji pengetahuan yang diajarkan;
+kategori derivasi (kode, kelas, morfologi, angka, hari, rangkai, koin real-time) dihitung hidup.
+Ini mesin bahasa matematis yang benar-benar berjalan — bukan kesadaran manusia — dan bukan
+reprogram: tak ada satu pasangan soal→jawaban pun disimpan.
+
+**7. BERIKUTNYA.** Instruction 4 (teka-teki trader → jawab → simpan biner) memakai arsitektur
+KOSAKATA.BIN yang sama; glosarium 50 koin UJI-50 masuk koin.json; denyut menambah langkah
+uji-bahasa ringan.

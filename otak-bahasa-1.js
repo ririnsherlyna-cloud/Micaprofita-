@@ -9,6 +9,7 @@
    ============================================================ */
 (function () {
   'use strict';
+  /* V343-REV-B1R2 */
   const O = (window.__OTAK_BAHASA = window.__OTAK_BAHASA || {
     siap: false, stat: { soal: 0, jawab: 0, sahih: 0, diperbaiki: 0, ms: 0 },
     memori: { namaTuan: null, topik: null, entTerakhir: null, giliran: 0, kataAsing: [], log: [] },
@@ -57,16 +58,76 @@
     return { siap: true, jumlah, lulus, segel: B.segel, bitRata: B.stat && B.stat.bitRata };
   }
 
+  /* ---------- 1b) KOSAKATA.BIN — dekoder wujud biner murni (V343) ----------
+     format v1: 'MCBA1' + u8 versi + u32 n + tabel kelas + tabel kategori +
+     rekaman: u8 wl + utf8 w + u8 bahasa + u8 kelas0 + u8 kelas1 + u16 kat +
+     u8 flag(bit0 nilai f64, bit1 urut u16) + i32 pair + [nilai] + [urut] +
+     u8 kl + kl byte BigInt kode (base-40 posisi, digit 1..39) */
+  function dekoderKosakata(buf) {
+    const dv = new DataView(buf);
+    const u8 = new Uint8Array(buf);
+    if (String.fromCharCode(u8[0], u8[1], u8[2], u8[3], u8[4]) !== 'MCBA1') throw new Error('magic KOSAKATA.BIN salah');
+    let p = 5;
+    const versi = dv.getUint8(p); p += 1;
+    if (versi !== 1) throw new Error('versi biner ' + versi);
+    const n = dv.getUint32(p, true); p += 4;
+    const td = new TextDecoder();
+    const bacaStr = () => { const L = dv.getUint8(p); p += 1; const s = td.decode(u8.slice(p, p + L)); p += L; return s; };
+    const nKelas = dv.getUint16(p, true); p += 2;
+    const kelasTabel = []; for (let i = 0; i < nKelas; i++) kelasTabel.push(bacaStr());
+    const nKat = dv.getUint16(p, true); p += 2;
+    const katTabel = []; for (let i = 0; i < nKat; i++) katTabel.push(bacaStr());
+    const recs = [];
+    for (let i = 0; i < n; i++) {
+      const wl = dv.getUint8(p); p += 1;
+      const w = td.decode(u8.slice(p, p + wl)); p += wl;
+      const b = dv.getUint8(p); p += 1;
+      const k0 = dv.getUint8(p), k1 = dv.getUint8(p + 1); p += 2;
+      const kat = dv.getUint16(p, true); p += 2;
+      const flag = dv.getUint8(p); p += 1;
+      const pair = dv.getInt32(p, true); p += 4;
+      let nilai = null, urut = null;
+      if (flag & 1) { nilai = dv.getFloat64(p, true); p += 8; }
+      if (flag & 2) { urut = dv.getUint16(p, true); p += 2; }
+      const kl = dv.getUint8(p); p += 1;
+      let kode = 0n;
+      for (let j = 0; j < kl; j++) kode = (kode << 8n) | BigInt(u8[p + j]);
+      p += kl;
+      recs.push({ w, b, k: [kelasTabel[k0], kelasTabel[k1]], kat: katTabel[kat], pair, nilai, urut, kode });
+    }
+    return { n, kelasTabel, katTabel, recs };
+  }
+  function kodeKeKata(kode) { // balikan matematika murni: BigInt base-40 → kata
+    const F = { 27: '-', 28: "'", 29: ' ' };
+    const digit = [];
+    let k = BigInt(kode);
+    while (k > 0n) { digit.push(Number(k % 40n)); k = k / 40n; }
+    digit.reverse();
+    return digit.map(d => F[d] !== undefined ? F[d] : (d >= 30 ? String(d - 30) : String.fromCharCode(96 + d))).join('');
+  }
+  function ujiKode() { // bolak-balik SELURUH tabel — bukti hidup tiap kali dimuat
+    const K = O.kode; if (!K || !K.recs) return { siap: false, jumlah: 0, lulus: 0 };
+    let lulus = 0;
+    for (const r of K.recs) if (kodeKeKata(r.kode) === r.w) lulus++;
+    return { siap: true, jumlah: K.recs.length, lulus };
+  }
+
   /* ---------- 2) muat data repo ---------- */
   async function muat(basis) {
     const b = basis || './';
     const ambil = async (f) => { const r = await fetch(b + f, { cache: 'no-store' }); if (!r.ok) throw new Error(f + ' ' + r.status); return r.json(); };
-    const [lexE, lexI, grE, grI, pen, bin] = await Promise.all([
+    const ambilBin = async (f) => { const r = await fetch(b + f, { cache: 'no-store' }); if (!r.ok) throw new Error(f + ' ' + r.status); return r.arrayBuffer(); };
+    const [lexE, lexI, grE, grI, pen, bin, kodeBuf, lawan, koin] = await Promise.all([
       ambil('BAHASA/LEXIKON-EN.json'), ambil('BAHASA/LEXIKON-ID.json'),
       ambil('BAHASA/GRAMATIKA-EN.json'), ambil('BAHASA/GRAMATIKA-ID.json'),
-      ambil('BAHASA/PENGETAHUAN.json'), ambil('BAHASA/BINER-PAHAM.json')
+      ambil('BAHASA/PENGETAHUAN.json'), ambil('BAHASA/BINER-PAHAM.json'),
+      ambilBin('BAHASA/KOSAKATA.BIN'),
+      ambil('BAHASA/LAWAN-10K.json').catch(() => ({ en: [], id: [] })),
+      ambil('BAHASA/KOIN.json').catch(() => ({ koin: {} }))
     ]);
     O.lexEN = lexE; O.lexID = lexI; O.grEN = grE; O.grID = grI; O.pen = pen; O.biner = bin;
+    O.kode = dekoderKosakata(kodeBuf);
+    O.lawan = lawan; O.koin = koin;
     suntikLeksikon();
     O.siap = true;
     return status();
@@ -101,6 +162,37 @@
     for (const k of Object.keys(P.kerja.diri)) {
       tambahLex('id', k, k, 'n', 'diri');
       tambahLex('en', k, k, 'n', 'diri');
+    }
+    /* ---------- V343: suntik 10.000 kosakata matematika ---------- */
+    if (O.kode && O.kode.recs) {
+      O.nilaiKata = {}; O.urutKata = {};
+      O.kode.petaKata = new Map(); O.kode.petaKode = new Map(); O.kode.petaPasang = new Map();
+      for (const r of O.kode.recs) {
+        const lang = r.b === 0 ? 'en' : 'id';
+        tambahLex(lang, r.w, r.w, r.k[0], 'kodes10k');
+        if (r.k[1] && r.k[1] !== r.k[0]) tambahLex(lang, r.w, r.w, r.k[1], 'kodes10k');
+        if (r.nilai != null) O.nilaiKata[r.w] = r.nilai;
+        if (r.urut != null) O.urutKata[r.w] = r.urut;
+        O.kode.petaKata.set(r.w, r);
+        O.kode.petaKode.set(String(r.kode), r);
+        if (r.pair >= 0) {
+          const q = O.kode.recs[r.pair];
+          O.kode.petaPasang.set(r.w, r.b === 0 ? { en: r.w, id: q.w } : { en: q.w, id: r.w });
+        }
+      }
+    }
+    if (O.lawan) {
+      O.petaLawan = new Map();
+      for (const [a, b2] of (O.lawan.en || [])) { O.petaLawan.set('en:' + a, b2); O.petaLawan.set('en:' + b2, a); }
+      for (const [a, b2] of (O.lawan.id || [])) { O.petaLawan.set('id:' + a, b2); O.petaLawan.set('id:' + b2, a); }
+    }
+    if (O.koin && O.koin.koin) {
+      for (const [sym, k] of Object.entries(O.koin.koin)) {
+        tambahLex('id', sym.toLowerCase(), sym, 'prop', 'koin');
+        tambahLex('en', sym.toLowerCase(), sym, 'prop', 'koin');
+        tambahLex('id', k.nama.toLowerCase(), k.nama, 'prop', 'koin');
+        tambahLex('en', k.nama.toLowerCase(), k.nama, 'prop', 'koin');
+      }
     }
   }
 
@@ -153,6 +245,7 @@
 
   /* ---------- 4) morfologi ID dua arah (alofon meN- dst.) ---------- */
   function idMeN(r) { // asal → berimbuhan meN-
+    if (/^(l)/.test(r)) return 'me' + r;
     if (/^(s)/.test(r)) return 'meny' + r.slice(1);
     if (/^(p)/.test(r)) return 'mem' + r.slice(1);
     if (/^(t)/.test(r)) return 'men' + r.slice(1);
@@ -275,6 +368,7 @@
 
   /* ---------- ekspor ---------- */
   O.bitDari = bitDari; O.ujiBiner = ujiBiner; O.dekoderBiner = dekoderBiner;
+  O.dekoderKosakata = dekoderKosakata; O.kodeKeKata = kodeKeKata; O.ujiKode = ujiKode;
   O.muat = muat; O.deteksiBahasa = deteksiBahasa; O.tokenisasi = tokenisasi;
   O.tandaiBaris = tandaiBaris; O.tag = tag; O.pilih = pilih; O.xorshift = xorshift;
   O.morf = {
@@ -293,7 +387,11 @@
       entitas: O.pen ? Object.keys(O.pen.entitas).length : 0,
       istilah: O.pen ? Object.keys(O.pen.kerja.istilah).length : 0,
       kamus: O.pen ? O.pen['kamus-pair'].length : 0,
-      biner: ujiBiner()
+      biner: ujiBiner(),
+      kode: ujiKode(),
+      pasangKode: O.kode && O.kode.petaPasang ? O.kode.petaPasang.size : 0,
+      lawan: O.petaLawan ? O.petaLawan.size / 2 : 0,
+      koin: O.koin && O.koin.koin ? Object.keys(O.koin.koin).length : 0
     };
   }
 })();

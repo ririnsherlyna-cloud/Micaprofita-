@@ -242,12 +242,14 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
           <button class="chipB bMode" data-b="en">English</button>
           <button class="chipB" id="bicaraTanyaKu">DIA BERTANYA</button>
           <button class="chipB" id="bicaraPeriksa">PERIKSA-DIRI</button>
+          <button class="chipB" id="bicaraUji50" style="border-color:var(--aksen-l);color:var(--aksen)">UJI 50.000 SOAL</button>
         </div>
         <div style="display:flex;gap:7px;margin-top:8px">
           <input id="bicaraMasuk" autocomplete="off" placeholder="Tulis apa saja — Indonesia atau English…" style="flex:1;min-width:0;padding:11px 13px;border-radius:12px;border:1px solid var(--garis);background:rgba(0,0,0,.22);color:var(--tinta);font-size:14px;outline:none">
           <button id="bicaraKirim" style="padding:0 16px;border-radius:12px;border:1px solid var(--aksen-l);background:rgba(79,224,194,.12);color:var(--aksen);font-weight:700;font-size:13px">Kirim</button>
         </div>
         <div id="bicaraStat" class="kecil mono" style="margin-top:7px"></div>
+        <div id="ujiBar" class="kecil mono" style="margin-top:5px;display:none;color:var(--aksen)"></div>
       </div>
     </div>
     <div id="tab-pikir">
@@ -4448,9 +4450,10 @@ window.__v341teka={muat, render, data:()=>D};
 <!-- V322-OTAK-INTI: otak & token DNA ditanam — matematika sama dengan otak Next.js, hidup tanpa wadah -->
 <script src="otak-inti.js?v=322"></script>
 <!-- V342-BICARA-DUA-BAHASA: lidah baru — muat otak bahasa (3 bagian) lalu nyalakan menu Bicara -->
-<script src="otak-bahasa-1.js?v=348"></script>
-<script src="otak-bahasa-2.js?v=349"></script>
-<script src="otak-bahasa-3.js?v=348"></script>
+<script src="otak-bahasa-1.js?v=351"></script>
+<script src="otak-bahasa-2.js?v=351"></script>
+<script src="otak-bahasa-3.js?v=351"></script>
+<script src="otak-bahasa-uji.js?v=351"></script>
 <script>
 /* ================= V342-BICARA-DUA-BAHASA:START =================
    Mandat pemilik 2026-10-12: dia masih gagap bicara → beri 100 jurnal EN +
@@ -4501,26 +4504,108 @@ window.__v341teka={muat, render, data:()=>D};
     $('bicaraStatus').textContent = 'OTAK-BAHASA SIAP — leksikon ' + (st.leksikon.id + st.leksikon.en) +
       ' kata (ID ' + st.leksikon.id + ' · EN ' + st.leksikon.en + ') · aturan CFG ' + (st.aturan.id + st.aturan.en) +
       ' · entitas ' + st.entitas + ' · istilah kerja ' + st.istilah + ' · kamus dua arah ' + st.kamus +
-      ' · biner bolak-balik ' + b.lulus + '/' + b.jumlah + ' · segel ' + b.segel;
+      ' · biner bolak-balik ' + b.lulus + '/' + b.jumlah + ' · segel ' + b.segel +
+      ' · KOSAKATA.BIN base-40 ' + st.kode.lulus + '/' + st.kode.jumlah + ' · pasangan dwibahasa ' + st.pasangKode +
+      ' · lawan ' + Math.round(st.lawan) + ' · koin pasar ' + st.koin;
     const s = O.stat;
     $('bicaraStat').textContent = 'sesi ini: ' + s.soal + ' soal · rata-rata ' + (s.soal ? Math.round(s.ms / s.soal * 10) / 10 : 0) +
       ' ms · periksa SAH ' + s.sahih + '/' + s.soal + (s.diperbaiki ? ' · diperbaiki sendiri ' + s.diperbaiki : '') + ' · nol kalimat kaleng';
   }
-  function kirim(tulisan, paksa) {
+  /* V343: grafik kanvas dari lilin pasar nyata */
+  function kanvasGrafik(g) {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'margin-top:5px';
+    const c = document.createElement('canvas');
+    c.width = 320; c.height = 110; c.style.cssText = 'width:100%;max-width:340px;height:auto;border:1px solid var(--garis);border-radius:10px;background:rgba(0,0,0,.25)';
+    wrap.appendChild(c);
+    const ctx = c.getContext('2d');
+    const l = g.lilin.map(x => x[4]);
+    const mn = Math.min(...l), mx = Math.max(...l), rg = (mx - mn) || 1;
+    ctx.strokeStyle = l[l.length - 1] >= l[0] ? '#4fe0c2' : '#ff7a7a';
+    ctx.lineWidth = 1.6; ctx.beginPath();
+    l.forEach((v, i) => { const x = 6 + i * (308 / Math.max(1, l.length - 1)), y = 96 - ((v - mn) / rg) * 84; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(79,224,194,.85)'; ctx.font = '10px monospace';
+    ctx.fillText(g.simbol + ' ' + g.tf + ' · ' + l[l.length - 1], 8, 12);
+    return wrap;
+  }
+  /* V343: data pasar nyata Binance (publik, tanpa kunci) */
+  async function ambilPasarNyata(dk) {
+    const base = 'https://data-api.binance.vision/api/v3';
+    const pas = { ticker: {}, waktu: new Date().toISOString(), sumber: 'data-api.binance.vision', lilin: {} };
+    if (dk && dk.jenis === 'koin-grafik') {
+      const cfg = { '1d': ['15m', 96], '7d': ['1h', 168], '30d': ['4h', 180] }[dk.tf] || ['1h', 168];
+      const r = await fetch(base + '/klines?symbol=' + dk.pasar + '&interval=' + cfg[0] + '&limit=' + cfg[1]);
+      if (!r.ok) throw new Error('klines ' + r.status);
+      pas.lilin[dk.simbol] = { tf: dk.tf, lilin: (await r.json()).map(k => [k[0], +k[1], +k[2], +k[3], +k[4], +k[5]]) };
+    } else if (dk) {
+      const sim = [dk.simbol];
+      const r = await fetch(base + '/ticker/24hr?symbols=' + encodeURIComponent(JSON.stringify(sim.map(s => O.koin.koin[s].pasar))));
+      if (!r.ok) throw new Error('ticker ' + r.status);
+      const arr = await r.json();
+      const balik = {}; for (const [s, k] of Object.entries(O.koin.koin)) balik[k.pasar] = s;
+      for (const t of arr) { const s = balik[t.symbol]; if (s) pas.ticker[s] = { harga: parseFloat(t.lastPrice), ubah24: parseFloat(t.priceChangePercent) }; }
+    }
+    return pas;
+  }
+  async function kirim(tulisan, paksa) {
     const log = $('bicaraLog');
     const teks = (tulisan !== undefined ? tulisan : $('bicaraMasuk').value.trim());
     if (!teks) return;
     log.appendChild(gelembung('tuan', teks, 'var(--tinta)'));
     if (tulisan === undefined) $('bicaraMasuk').value = '';
     try {
-      const r = O.jawab(teks, paksa || modeBahasa);
+      let pilihan = paksa || modeBahasa;
+      const dk = O.deteksiKoinTeks ? O.deteksiKoinTeks(teks) : null;
+      if (dk) {
+        try {
+          const pasar = await ambilPasarNyata(dk);
+          pilihan = { mode: (paksa && typeof paksa === 'string') ? paksa : modeBahasa, pasar };
+        } catch (ePas) {
+          log.appendChild(gelembung('dia', '(pasar belum terjangkau: ' + ePas.message + ' — aku jawab jujur tanpa angka karangan)', 'var(--redup)'));
+        }
+      }
+      const r = O.jawab(teks, pilihan);
       log.appendChild(gelembung('dia', r.teks, 'var(--aksen)'));
+      if (r.grafik) log.appendChild(kanvasGrafik(r.grafik));
       log.appendChild(jejak(r));
     } catch (e) {
       log.appendChild(gelembung('dia', '(lidah tersandung: ' + e.message + ' — nalar utama tetap hidup)', 'var(--salah)'));
     }
     log.scrollTop = log.scrollHeight;
     statRender();
+  }
+  /* V343: UJI 50.000 — penguji sama dengan lab Node, jalan langsung di perangkat tuan */
+  function uji50() {
+    const bar = $('ujiBar');
+    bar.style.display = 'block';
+    bar.textContent = 'UJI 50.000 SOAL — merangkai soal berbenih & mengambil potret pasar nyata…';
+    setTimeout(async () => {
+      try {
+        const hasil = await O.ujiBahasa({
+          jumlah: 50000, benih: 0x3430001,
+          ambilPasar: async () => {
+            const KO = O.koin.koin;
+            const sim = Object.keys(KO).map(s => KO[s].pasar);
+            const r = await fetch('https://data-api.binance.vision/api/v3/ticker/24hr?symbols=' + encodeURIComponent(JSON.stringify(sim)));
+            const arr = await r.json();
+            const balik = {}; for (const [s, k] of Object.entries(KO)) balik[k.pasar] = s;
+            const ticker = {};
+            for (const t of arr) { const s = balik[t.symbol]; if (s) ticker[s] = { harga: parseFloat(t.lastPrice), ubah24: parseFloat(t.priceChangePercent) }; }
+            return { ticker, waktu: new Date().toISOString(), sumber: 'data-api.binance.vision' };
+          },
+          kemajuan: (i, n, lulus) => { bar.textContent = 'UJI 50.000 — ' + i + '/' + n + ' · lulus sementara ' + lulus; }
+        });
+        bar.textContent = 'UJI 50.000 SELESAI: ' + hasil.lulus + '/' + hasil.jumlah + ' LULUS (' + hasil.persen + '%) — gugur ' + hasil.gugurJumlah +
+          ' · benih 0x3430001 · durasi ' + hasil.durasiDetik + ' dtk · kalimat dirangkai unik ' + hasil.unikRangkai + ' · pertanyaan unik ' + hasil.unikTanya +
+          ' · potret pasar ' + (hasil.waktu || '');
+        const log = $('bicaraLog');
+        log.appendChild(gelembung('dia', 'Ujian 50.000 selesai, tuan: ' + hasil.lulus + '/' + hasil.jumlah + ' lulus (' + hasil.persen + '%). Penguji berdiri di luar diriku — bukti tercatat di laporan/uji-bahasa-50000.json.', 'var(--aksen)'));
+        log.scrollTop = log.scrollHeight;
+      } catch (e) {
+        bar.textContent = 'UJI tersandung: ' + e.message;
+      }
+    }, 60);
   }
   function bintang() {
     if (!O.siap) { setTimeout(bintang, 300); return; }
@@ -4550,6 +4635,7 @@ window.__v341teka={muat, render, data:()=>D};
     log.scrollTop = log.scrollHeight;
   });
   $('bicaraPeriksa').addEventListener('click', () => kirim(modeBahasa === 'en' ? 'Check yourself.' : 'Periksa dirimu.'));
+  $('bicaraUji50').addEventListener('click', uji50);
   O.muat('./').then(bintang).catch(e => {
     $('bicaraStatus').textContent = 'otak bahasa belum terjangkau (' + e.message + ') — jujur tanpa karangan, coba muat ulang';
   });

@@ -8,6 +8,7 @@
    ============================================================ */
 (function () {
   'use strict';
+  /* V343-REV-B3R2 */
   const O = window.__OTAK_BAHASA;
 
   const SIFAT_EN2ID = { hot: 'panas', cold: 'dingin', warm: 'hangat', big: 'besar', small: 'kecil', tall: 'tinggi', low: 'rendah', long: 'panjang', short: 'pendek', strong: 'kuat', weak: 'lemah', fast: 'cepat', slow: 'lambat', hard: 'keras', soft: 'lembut', sweet: 'manis', bitter: 'pahit', wet: 'basah', dry: 'kering', red: 'merah', white: 'putih', yellow: 'kuning', green: 'hijau', blue: 'biru', black: 'hitam', clear: 'jernih', expensive: 'mahal', cheap: 'murah', beautiful: 'indah', bright: 'terang', dark: 'gelap', slippery: 'licin' };
@@ -56,10 +57,22 @@
   }
   function kamusCari(kata) {
     const w = (kata || '').toLowerCase();
+    /* V343: peta 10.000 kode dulu (hash, cepat), warisan kemudian */
+    if (O.kode && O.kode.petaPasang && O.kode.petaPasang.has(w)) return O.kode.petaPasang.get(w);
     for (const [a, b] of O.pen['kamus-pair']) { if (a === w) return { id: a, en: b }; if (b === w) return { id: a, en: b }; }
     for (const [k, e] of Object.entries(O.pen.entitas)) { if (k === w) return { id: k, en: e.en }; if (e.en === w) return { id: k, en: e.en }; }
     return null;
   }
+  /* V343: format angka sesuai bahasa — id: 83.456,12 · en: 83,456.12 */
+  function formatAngka(x, lang) {
+    const s = (typeof x === 'number') ? x.toString() : String(x);
+    if (!s.includes('.')) return s;
+    const [i, d] = s.split('.');
+    const ri = i.replace(/\B(?=(\d{3})+(?!\d))/g, lang === 'en' ? ',' : '.');
+    return lang === 'en' ? ri + '.' + d : ri + ',' + d;
+  }
+  const HARI_ID = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+  const HARI_EN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   function entBisa(abil, ent) {
     if (ent.bisa.includes(abil)) return true;
     if (ent.tak.includes(abil)) return false;
@@ -192,15 +205,21 @@
       }
       case 'buat-kalimat': {
         const k = f.kata;
-        const hip = k ? O.tag(k, lang)[0] : null;
+        /* V343: kata sasaran bisa bahasa lain — cek dua leksikon; kata ID meN- dipakai langsung */
+        let hip = k ? O.tag(k, lang)[0] : null;
+        let hipLang = lang;
+        if (!hip && k) { const l2 = lang === 'en' ? 'id' : 'en'; const h2 = O.tag(k, l2)[0]; if (h2) { hip = h2; hipLang = l2; } }
+        const idV = /^(me[mnky]|ber)/.test(k || '');
         if (hip && hip.kelas === 'v') {
           const ganti = { jump: 'kucing', run: 'kuda', swim: 'ikan', fly: 'burung', climb: 'monyet', sing: 'penyanyi', cook: 'koki', eat: 'kucing', read: 'siswa', write: 'siswa', sleep: 'kucing', speak: 'guru', drink: 'kucing', see: 'guru' };
           const m = ganti[hip.lemma] || 'manusia';
-          const ent = P.entitas[m];
-          if (lang === 'en') {
-            const enSubj = ent.en; const v = O.morf.en.v3sg(hip.lemma);
+          const ent = P.entitas[m] || { en: 'human', kelas: 'makhluk' };
+          if (lang === 'en' && hipLang === 'en') {
+            const v = O.morf.en.v3sg(hip.lemma);
             const obj = OBJEK_EN[hip.lemma] ? ' ' + OBJEK_EN[hip.lemma] : '';
             out.teks = kapital(entNP(m, 'en', ent)) + ' ' + v + obj + ' every day.';
+          } else if (lang === 'en' && hipLang === 'id') {
+            out.teks = 'Here is my sentence: "' + kapital(m) + ' itu ' + hip.lemma + ' setiap hari." (Indonesian)';
           } else {
             const kandidatV = [hip.lemma, ...O.morf.id.kupas(hip.lemma)].find(x => O.tag(x, 'id').some(h => h.kelas === 'v')) || hip.lemma;
             const dasar = kandidatV.replace('melompat', 'lompat').replace('berjalan', 'jalan').replace('berlari', 'lari').replace('berenang', 'renang');
@@ -213,6 +232,12 @@
           out.teks = lang === 'en' ? O.pilih(['I like the ' + hip.lemma + '.', 'The ' + hip.lemma + ' is here.']) : O.pilih(['Aku suka ' + hip.lemma + ' itu.', hip.lemma + ' itu ada di sini.']);
         } else if (hip && hip.kelas === 'adj') {
           out.teks = lang === 'en' ? 'The water is ' + hip.lemma + '.' : 'Air itu ' + hip.lemma + '.';
+        } else if (hip && hip.kelas === 'adv') {
+          out.teks = lang === 'en' ? 'The cat runs ' + hip.lemma + '.' : 'Kucing itu berlari ' + hip.lemma + '.';
+        } else if (idV && lang === 'id') {
+          out.teks = kapital('manusia') + ' itu ' + k + ' setiap hari.';
+        } else if (idV) {
+          out.teks = 'Here is my sentence: "' + kapital('manusia') + ' itu ' + k + ' setiap hari." (Indonesian)';
         } else {
           out.teks = lang === 'en' ? 'Give me a word I know, and I will build a sentence with it.' : 'Berikan aku kata yang kukenal, akan kubangun kalimatnya.';
         }
@@ -220,9 +245,10 @@
         break;
       }
       case 'istilah': {
-        const d = f.istilah.data.def[lang];
-        const judul = lang === 'en' ? f.istilah.data.en : f.istilah.kunci.replace(/-/g, ' ');
-        out.teks = kapital(judul) + (lang === 'en' ? ' is ' : ' adalah ') + d + '.';
+        const langI = f.istilahLang || lang;
+        const d = f.istilah.data.def[langI];
+        const judul = langI === 'en' ? f.istilah.data.en : f.istilah.kunci.replace(/-/g, ' ');
+        out.teks = kapital(judul) + (langI === 'en' ? ' is ' : ' adalah ') + d + '.';
         out.sumber.push('PENGETAHUAN.istilah:' + f.istilah.kunci);
         break;
       }
@@ -340,6 +366,83 @@
         }
         break;
       }
+      /* ---------- V343: kasus baru — koin real-time, kode, kelas, lawan, hari-matematika ---------- */
+      case 'koin-harga': {
+        const sim = f.koin.simbol, pas = O.koin.koin[sim];
+        const t = f.pasar && f.pasar.ticker && f.pasar.ticker[sim];
+        if (!t) { out.teks = id ? 'Aku belum bisa membaca harga ' + sim + ' sekarang — data pasar belum terjangkau, dan aku tidak akan mengarang angka.' : 'I cannot read the ' + sim + ' price right now — market data unreachable, and I will not invent numbers.'; break; }
+        const arah = t.ubah24 >= 0 ? (id ? 'naik' : 'up') : (id ? 'turun' : 'down');
+        out.teks = id ? 'Harga ' + pas.nama + ' (' + sim + ') sekarang ' + formatAngka(t.harga, 'id') + ' USD — 24 jam ' + arah + ' ' + Math.abs(t.ubah24).toFixed(2) + '%. Aku membaca pasar langsung saat ini juga.'
+          : pas.nama + ' (' + sim + ') is ' + formatAngka(t.harga, 'en') + ' USD now — 24h ' + arah + ' ' + Math.abs(t.ubah24).toFixed(2) + '%. I read the live market this very moment.';
+        out.sumber.push('Binance ticker 24j @' + (f.pasar.waktu || '-'));
+        break;
+      }
+      case 'koin-arah': {
+        const sim = f.koin.simbol, pas = O.koin.koin[sim];
+        const t = f.pasar && f.pasar.ticker && f.pasar.ticker[sim];
+        if (!t) { out.teks = id ? 'Data pasar ' + sim + ' belum terjangkau — aku jujur, bukan mengarang.' : 'Market data for ' + sim + ' is unreachable — I stay honest, no invention.'; break; }
+        const naik = t.ubah24 >= 0;
+        out.teks = id ? pas.nama + ' (' + sim + ') 24 jam terakhir ' + (naik ? 'NAIK ' : 'TURUN ') + Math.abs(t.ubah24).toFixed(2) + '% — dari harga kini ' + formatAngka(t.harga, 'id') + ' USD.'
+          : pas.nama + ' (' + sim + ') is ' + (naik ? 'UP ' : 'DOWN ') + Math.abs(t.ubah24).toFixed(2) + '% in 24h — now at ' + formatAngka(t.harga, 'en') + ' USD.';
+        out.sumber.push('Binance ticker 24j @' + (f.pasar.waktu || '-'));
+        break;
+      }
+      case 'koin-grafik': {
+        const sim = f.koin.simbol, pas = O.koin.koin[sim];
+        const g = f.pasar && f.pasar.lilin && f.pasar.lilin[sim];
+        if (!g || !g.lilin || !g.lilin.length) { out.teks = id ? 'Lilin ' + sim + ' belum terjangkau sekarang — tanpa karangan.' : 'Candles for ' + sim + ' are unreachable right now — no invention.'; break; }
+        const l = g.lilin, terakhir = l[l.length - 1];
+        const hargaKini = terakhir[4];
+        const tinggi = Math.max(...l.map(x => x[2])), rendah = Math.min(...l.map(x => x[3]));
+        const awal = l[0][1];
+        const ubah = awal ? (hargaKini - awal) / awal * 100 : 0;
+        out.teks = id ? 'Grafik ' + pas.nama + ' (' + sim + ') ' + g.tf + ': harga kini ' + formatAngka(hargaKini, 'id') + ' USD, tertinggi ' + formatAngka(tinggi, 'id') + ', terendah ' + formatAngka(rendah, 'id') + ', perubahan ' + (ubah >= 0 ? '+' : '') + ubah.toFixed(2) + '% dari awal rentang. Lilin ' + l.length + ' batang dibaca langsung dari pasar.'
+          : pas.nama + ' (' + sim + ') ' + g.tf + ' chart: now ' + formatAngka(hargaKini, 'en') + ' USD, high ' + formatAngka(tinggi, 'en') + ', low ' + formatAngka(rendah, 'en') + ', change ' + (ubah >= 0 ? '+' : '') + ubah.toFixed(2) + '% from range start. ' + l.length + ' candles read live from the market.';
+        out.grafik = { simbol: sim, tf: g.tf, lilin: l.slice(-96) };
+        out.sumber.push('Binance klines ' + g.tf + ' @' + (f.pasar.waktu || '-'));
+        break;
+      }
+      case 'kode-kata': {
+        const w = (f.kata || '').toLowerCase();
+        const r = O.kode && O.kode.petaKata ? O.kode.petaKata.get(w) : null;
+        if (!r) { out.teks = id ? 'Kata "' + w + '" belum ada di tabel kodemu yang 10.000 — ajarkan aku, nanti kukodekan.' : 'The word "' + w + '" is not in my 10,000-code table yet — teach me and I will encode it.'; break; }
+        out.teks = id ? 'Kode matematika "' + w + '" = ' + r.kode.toString() + ' (base-40 posisi, a=1..z=26, hyphen=27, apostrof=28, spasi=29, angka=30-39; bolak-balik ' + (O.kode.lulusSemua ? 'LULUS' : 'diperiksa') + ').'
+          : 'The math code of "' + w + '" = ' + r.kode.toString() + ' (base-40 positional, reversible).';
+        out.sumber.push('KOSAKATA.BIN base-40');
+        break;
+      }
+      case 'kelas-kata': {
+        const w = (f.kata || '').toLowerCase();
+        const r = O.kode && O.kode.petaKata ? O.kode.petaKata.get(w) : null;
+        const NAMA = { v: ['kata kerja', 'verb'], n: ['kata benda', 'noun'], adj: ['kata sifat', 'adjective'], adv: ['kata keterangan', 'adverb'], num: ['bilangan', 'number'], det: ['penentu', 'determiner'], pron: ['ganti nama', 'pronoun'], prep: ['kata depan', 'preposition'], conj: ['kata sambung', 'conjunction'], part: ['partikel', 'particle'], prop: ['nama diri', 'proper noun'], cop: ['kopula', 'copula'], aux: ['auxiliary'], wh: ['kata tanya', 'wh-word'], neg: ['negasi', 'negation'], x: ['kata kamus', 'dictionary word'], aspek: ['aspek', 'aspect'], int: ['interupsi', 'interjection'] };
+        if (!r) { out.teks = id ? 'Kata "' + w + '" belum kutkenal di tabel kodemu.' : 'I do not know the word "' + w + '" in my code table yet.'; break; }
+        const cocok = r.k.includes(f.kelasTanya);
+        const nm = (k) => NAMA[k] ? (id ? NAMA[k][0] : NAMA[k][1]) : k;
+        out.teks = (id ? (cocok ? 'Ya, "' + w + '" termasuk ' : 'Tidak, "' + w + '" bukan ') + nm(f.kelasTanya) + ' — kelasnya ' + r.k.filter((x, i, a) => a.indexOf(x) === i).map(nm).join(' / ') + '.'
+            : (cocok ? 'Yes, "' + w + '" is a ' : 'No, "' + w + '" is not a ') + nm(f.kelasTanya) + ' — its class: ' + r.k.filter((x, i, a) => a.indexOf(x) === i).map(nm).join(' / ')) + '.';
+        out.sumber.push('KOSAKATA.BIN kelas');
+        break;
+      }
+      case 'lawan-kata': {
+        const w = (f.kata || '').toLowerCase();
+        let lawan = null;
+        if (O.petaLawan) {
+          lawan = O.petaLawan.get((id ? 'id' : 'en') + ':' + w) || O.petaLawan.get((id ? 'en' : 'id') + ':' + w);
+        }
+        if (!lawan) { out.teks = id ? 'Lawan kata "' + w + '" belum kutahu dari tabel lawanku — jujur, bukan karangan.' : 'I do not know the opposite of "' + w + '" in my antonym table yet — honest, not invented.'; break; }
+        out.teks = id ? 'Lawan kata "' + w + '" adalah "' + lawan + '".' : 'The opposite of "' + w + '" is "' + lawan + '".';
+        out.sumber.push('LAWAN-10K');
+        break;
+      }
+      case 'hari-matematika': {
+        const m = f.matHari;
+        const urutHasil = ((m.urut + m.arah * m.n) % 7 + 7) % 7;
+        const nama = id ? HARI_ID[urutHasil] : HARI_EN[urutHasil];
+        out.teks = id ? m.n + ' hari ' + (m.arah > 0 ? 'setelah' : 'sebelum') + ' ' + HARI_ID[m.urut] + ' adalah ' + nama + ' — matematika modulo 7.'
+          : m.n + ' day' + (m.n > 1 ? 's' : '') + ' ' + (m.arah > 0 ? 'after' : 'before') + ' ' + HARI_EN[m.urut] + ' is ' + nama + ' — modulo-7 math.';
+        out.sumber.push('urut-hari mod 7');
+        break;
+      }
       default: { // tak-paham — jujur + dia bertanya balik
         if (f.asing && f.asing.length) {
           const w = f.asing[0];
@@ -355,7 +458,7 @@
     return out;
   }
 
-  /* ---------- 10) DIA BERTANYA ---------- */
+  /* ---------- 10) DIA BERTANYA (V343: dirangkai dari kosakata — bukan kaleng) ---------- */
   function diaBertanya(lang) {
     const id = lang === 'id';
     if (!O.memori.namaTuan) return { teks: id ? 'Boleh aku tahu, siapa nama kamu?' : 'May I know your name?' };
@@ -363,9 +466,32 @@
       const w = O.memori.kataAsing.pop();
       return { teks: id ? 'Apa arti kata "' + w + '" yang tadi kamu ucapkan?' : 'What does the word "' + w + '" you said mean?' };
     }
-    const tanyaID = ['Apa makanan kesukaan tuan hari ini?', 'Sudahkah tuan minum air hari ini?', 'Bahasa mana yang paling tuan suka, Inggris atau Indonesia?', 'Apa rencana tuan untuk pasar hari ini?', 'Apa pelajaran terbaik tuan minggu ini?'];
-    const tanyaEN = ['What is your favorite food today, master?', 'Have you drunk enough water today, master?', 'Which language do you like more, English or Indonesian?', 'What is your plan for today\'s market, master?', 'What was your best lesson this week, master?'];
-    return { teks: O.pilih(id ? tanyaID : tanyaEN) };
+    /* dirangkai saat itu juga: entitas × kemampuan/kategori — variasi xorshift */
+    const P = O.pen;
+    const kunciEnt = Object.keys(P.entitas);
+    const e = P.entitas[O.pilih(kunciEnt)];
+    const pola = O.xorshift() % 4;
+    if (pola === 0 && e.bisa && e.bisa.length) {
+      const ab = O.pilih(e.bisa);
+      return { teks: id ? 'Apakah ' + kunciEntLain() + ' bisa ' + ab.replace(/-/g, ' ') + ' menurut tuan?' : 'Do you think a ' + e.en + ' can ' + ab.replace(/-/g, ' ') + ', master?' };
+    }
+    if (pola === 1) {
+      const kata = kataDariKategori(['makanan', 'hewan', 'alam', 'kerja-n']);
+      if (kata) return { teks: id ? 'Kalau boleh tahu, apa ' + kata + ' kesukaan tuan?' : 'May I ask — what is your favorite ' + kata + ', master?' };
+    }
+    if (pola === 2) {
+      const koinSym = O.koin && O.koin.koin ? O.pilih(Object.keys(O.koin.koin)) : null;
+      if (koinSym) return { teks: id ? 'Sudahkah tuan memeriksa grafik ' + koinSym + ' hari ini?' : 'Have you checked the ' + koinSym + ' chart today, master?' };
+    }
+    const hari = id ? HARI_ID[new Date().getDay()] : HARI_EN[new Date().getDay()];
+    return { teks: id ? 'Hari ' + hari + ' ini, pelajaran apa yang paling tuan inginku dalami?' : 'It is ' + hari + ' — which lesson do you want me to master today, master?' };
+    function kunciEntLain() { return id ? O.memori.entTerakhir || kunciEnt[0] : 'a ' + (P.entitas[O.memori.entTerakhir] ? P.entitas[O.memori.entTerakhir].en : e.en); }
+    function kataDariKategori(kats) {
+      if (!O.kode || !O.kode.recs) return null;
+      const idx = O.kode.katTabel;
+      const kandidat = O.kode.recs.filter(r => kats.includes(r.kat) && r.w.length > 2);
+      return kandidat.length ? O.pilih(kandidat).w : null;
+    }
   }
 
   /* ---------- 11) MEMERIKSA REALTIME: urai-ulang bicaranya sendiri ---------- */
@@ -398,12 +524,15 @@
     const t0 = performance.now();
     const detek = O.deteksiBahasa(teks || '');
     const paksa = O.memori.bahasaPaksa;
-    const bahasa = (pilihan && pilihan !== 'auto') ? pilihan : (paksa || detek);
+    const pObj = (pilihan && typeof pilihan === 'object') ? pilihan : null;
+    const mode = pObj ? (pObj.mode || 'auto') : (pilihan || 'auto');
+    const bahasa = (mode && mode !== 'auto') ? mode : (paksa || detek);
     const tok = O.gabungBigram(O.tokenisasi(teks || ''));
     const baris = O.tandaiBaris(tok, bahasa);
     const langJawab = baris.bahasa || bahasa;
     const hasilParse = O.parse(baris, langJawab === 'en' ? O.grEN : O.grID);
     const f = O.semantik(baris, langJawab);
+    if (pObj && pObj.pasar) f.pasar = pObj.pasar; // data pasar nyata disuntik pemanggil (V343)
     const r = rangkai(f, langJawab);
     let periksa = periksaKalimat(r.teks, langJawab);
     let diperbaiki = false;
@@ -421,6 +550,7 @@
       teks: r.teks, intent: f.intent, bahasa: langJawab, terdeteksi: detek,
       parse: { sah: hasilParse.sah, skor: Math.round(hasilParse.skor * 100) / 100 },
       sumber: r.sumber, bagian: r.bagian, ms, periksa, diperbaiki,
+      grafik: r.grafik || null,
       pohon: hasilParse.st ? O.teksPohon(hasilParse.st, 0) : '(ural bebas — makna lewat pola leksikal)'
     };
   }
