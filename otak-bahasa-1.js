@@ -162,6 +162,8 @@
     if (/^(c)/.test(r)) return 'menc' + r;
     if (/^(j)/.test(r)) return 'menj' + r;
     if (/^(m)/.test(r)) return 'mem' + r.slice(1);
+    if (/^(l)/.test(r)) return 'mel' + r;
+    if (/^(r)/.test(r)) return 'mer' + r;
     if (/^[aiueo]/.test(r)) return 'meng' + r;
     return 'meN' + r;
   }
