@@ -122,7 +122,7 @@
   function cariAbil(baris) {
     const P = O.pen, balik = {};
     for (const [k, v] of Object.entries(P.kemampuan)) { balik[k] = k; balik[v] = k; }
-    for (const k of baris.kata) for (const h of k.hip) {
+    for (const k of [...baris.kata].reverse()) for (const h of k.hip) {
       if (h.kelas !== 'v') continue;
       for (const [label, kunci] of Object.entries(balik)) {
         if (h.lemma === label || h.lemma === label.replace(/-/g, '')) return kunci;
@@ -274,17 +274,19 @@
       f.intent = 'istilah'; f.istilah = ist; return f;
     }
 
-    const MAKAN_EN2ID = { worms: 'cacing', worm: 'cacing', moss: 'lumut', fish: 'ikan', meat: 'daging', seeds: 'seed', seed: 'biji', grass: 'rumput', fruit: 'buah', bananas: 'pisang', banana: 'pisang', insects: 'serangga', insect: 'serangga', nectar: 'nektar', honey: 'madu', carrots: 'wortel', carrot: 'wortel', rice: 'nasi', hay: 'jerami', leaves: 'daun', leaf: 'daun', mice: 'tikus', mouse: 'tikus', eggs: 'telur', egg: 'telur' };
+    const ITEM_MAKAN = new Set(Object.values(P.entitas).flatMap(e => e.makan || []));
+    const MAKAN_EN2ID = { worms: 'cacing', worm: 'cacing', moss: 'lumut', fish: 'ikan', meat: 'daging', seeds: 'biji', seed: 'biji', grass: 'rumput', fruit: 'buah', bananas: 'pisang', banana: 'pisang', insects: 'serangga', insect: 'serangga', nectar: 'nektar', honey: 'madu', carrots: 'wortel', carrot: 'wortel', rice: 'nasi', hay: 'jerami', leaves: 'daun', leaf: 'daun', mice: 'tikus', mouse: 'tikus', eggs: 'telur', egg: 'telur' };
     if (!ent0 && (adaLemma(baris, ['eat', 'makan']))) {
       const kataMakanan = baris.kata.find(k => {
-        if (!k.hip.length) return false;
-        const lem = k.hip[0].lemma;
-        return !!(MAKAN_EN2ID[lem] || (lem.endsWith('s') && MAKAN_EN2ID[lem.slice(0, -1)]));
+        const lem = k.hip.length ? k.hip[0].lemma : k.surf;
+        if (ITEM_MAKAN.has(lem)) return true;
+        const en = MAKAN_EN2ID[lem] || (lem.endsWith('s') && MAKAN_EN2ID[lem.slice(0, -1)]);
+        return en && ITEM_MAKAN.has(en);
       });
       if (kataMakanan) {
-        const lem = kataMakanan.hip[0].lemma;
-        const mangsa = MAKAN_EN2ID[lem] || MAKAN_EN2ID[lem.slice(0, -1)];
-        f.ent = mangsa; f.intent = 'siapa-makan'; return f;
+        const lem = kataMakanan.hip.length ? kataMakanan.hip[0].lemma : kataMakanan.surf;
+        f.ent = ITEM_MAKAN.has(lem) ? lem : (MAKAN_EN2ID[lem] || MAKAN_EN2ID[lem.slice(0, -1)]);
+        f.intent = 'siapa-makan'; return f;
       }
     }
     const ent = ent0 || cariEnt(baris);

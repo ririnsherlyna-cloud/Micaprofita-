@@ -135,7 +135,7 @@
         out.teks = id ? 'Tuan sekaligus guruku adalah ' + D.tuan.id + '.' : 'My master and teacher is ' + D.tuan.en + '.';
         break;
       }
-      case 'diri-motto': { out.teks = id ? 'Motoku ' + D.motto.id + '. Diaman.' : 'My motto is ' + D.motto.en + '. Diaman.'; break; }
+      case 'diri-motto': { out.teks = id ? 'Motto aku ' + D.motto.id + '. Diaman.' : 'My motto is ' + D.motto.en + '. Diaman.'; break; }
       case 'diri-pakem': {
         out.teks = id ? 'Pakem BUY lima barisku: ' + D.pakem.id.replace('pakem BUY lima baris: ', '') + '.' : 'My five-row BUY pakem: ' + D.pakem.en.replace('the five-row BUY pakem: ', '') + '.';
         break;
