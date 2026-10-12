@@ -378,10 +378,12 @@
     for (const seg of segmen) {
       if (FRAGMEN.test(seg)) { bagian.push({ seg, sah: true, cara: 'fragmen' }); continue; }
       const tok = O.gabungBigram(O.tokenisasi(seg));
-      const baris = O.tandaiBaris(tok, lang);
+      const namaKu = O.memori.namaTuan ? String(O.memori.namaTuan).toLowerCase() : null;
+      let baris = O.tandaiBaris(tok, lang);
+      const terisiDari = (b) => { const ba = b.kata.filter(k => !/^\d/.test(k.surf) && (!namaKu || k.surf !== namaKu)); return ba.filter(k => k.hip.length).length / Math.max(1, ba.length); };
+      if (baris.kata.length && terisiDari(baris) < 0.6) { const l2 = O.tandaiBaris(tok, lang === 'en' ? 'id' : 'en'); if (terisiDari(l2) > terisiDari(baris)) baris = l2; }
       const adaAngka = tok.some(t => /^\d+$/.test(t));
       const p = O.parse(baris, gr);
-      const namaKu = O.memori.namaTuan ? String(O.memori.namaTuan).toLowerCase() : null;
       const bukanAngka = baris.kata.filter(k => !/^\d/.test(k.surf) && (!namaKu || k.surf !== namaKu));
       const terisi = bukanAngka.filter(k => k.hip.length).length / Math.max(1, bukanAngka.length);
       const ok = p.sah || adaAngka || terisi >= 0.99 || terisi >= 0.45;

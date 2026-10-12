@@ -249,9 +249,10 @@
       const meta = ['language', 'bahasa', 'inggris', 'english', 'indonesian', 'indonesia', 'say', 'bilang', 'how', 'what', 'apa', 'do', 'you', 'the', 'in', 'word', 'kata', 'from', 'dari', 'is', 'adalah', 'bagaimana', 'how-much', 'how-many'];
       const iBP = baris.kata.findIndex(k => k.hip.some(h => ['inggris', 'english', 'indonesia', 'indonesian'].includes(h.lemma)));
       const layak = (k) => (k.hip.some(h => ['x', 'n'].includes(h.kelas)) || O.tag(k.surf, bahasa === 'en' ? 'id' : 'en').length) && !meta.includes(k.hip[0] ? k.hip[0].lemma : k.surf);
+      const layakSasaran = (k) => (k.hip.some(h => ['x', 'n'].includes(h.kelas)) || O.tag(k.surf, bahasa === 'en' ? 'id' : 'en').length) && !['inggris', 'english', 'indonesian', 'indonesia', 'say', 'bilang', 'how', 'what', 'apa', 'do', 'you', 'the', 'in', 'from', 'dari', 'is', 'adalah', 'bagaimana', 'how-much', 'how-many', 'word', 'kata'].includes(k.hip[0] ? k.hip[0].lemma : k.surf);
       let kandidat = baris.kata.filter(layak);
       if (iBP > -1) {
-        const sesudah = baris.kata.slice(iBP + 1).filter(layak);
+        const sesudah = baris.kata.slice(iBP + 1).filter(layakSasaran);
         kandidat = sesudah.length ? sesudah : baris.kata.slice(0, iBP).filter(layak);
       }
       const kataTujuan = kandidat.length ? kandidat[kandidat.length - 1] : null;
@@ -311,6 +312,8 @@
       if (iWh > -1 && iV > -1 && iEnt > iV) { f.intent = 'siapa-makan'; return f; }
       if (iV > -1 && iEnt < iV && (iWh > -1 || adaAux) && (adaLemma(baris, ['what', 'apa']))) { f.intent = 'ent-makan'; return f; }
       let abil = cariAbil(baris);
+      if (adaLemma(baris, ['eat', 'makan']) && adaLemma(baris, ['plants', 'plant', 'tumbuhan', 'sayur'])) abil = 'makan-tumbuhan';
+      else if (adaLemma(baris, ['eat', 'makan']) && adaLemma(baris, ['meat', 'daging'])) abil = 'makan-daging';
       if (diMana) { f.intent = 'ent-rumah'; return f; }
       if ((adaLemma(baris, ['eat']) && iEnt < baris.kata.findIndex(k => k.hip.some(h => ['eat'].includes(h.lemma))) && !abil) || (adaLemma(baris, ['makanan']) && apa)) { f.intent = 'ent-makan'; return f; }
       // sifat mendahului kemampuan: ada adj + nuansa tanya → sifat
