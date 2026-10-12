@@ -122,12 +122,16 @@
   function cariAbil(baris) {
     const P = O.pen, balik = {};
     for (const [k, v] of Object.entries(P.kemampuan)) { balik[k] = k; balik[v] = k; }
-    for (const k of [...baris.kata].reverse()) for (const h of k.hip) {
-      if (h.kelas !== 'v') continue;
-      for (const [label, kunci] of Object.entries(balik)) {
-        if (h.lemma === label || h.lemma === label.replace(/-/g, '')) return kunci;
-        const potongan = label.split('-');
-        if (potongan.length > 1 && potongan[0] === h.lemma) return kunci;
+    // dua lapis: verba PERSIS dulu (surface = lemma), baru verba turunan (-er dsb)
+    for (const persis of [true, false]) {
+      for (const k of [...baris.kata].reverse()) for (const h of k.hip) {
+        if (h.kelas !== 'v') continue;
+        if (persis !== (h.surf === h.lemma)) continue;
+        for (const [label, kunci] of Object.entries(balik)) {
+          if (h.lemma === label || h.lemma === label.replace(/-/g, '')) return kunci;
+          const potongan = label.split('-');
+          if (potongan.length > 1 && potongan[0] === h.lemma) return kunci;
+        }
       }
     }
     return null;
@@ -257,7 +261,7 @@
     }
     if (adaLemma(baris, ['past', 'lampau']) && (apa || adaLemma(baris, ['of', 'dari']))) {
       const meta = ['plural', 'past', 'bentuk', 'jamak', 'lampau'];
-      const kt2 = baris.kata.filter(k => k.hip.some(h => h.kelas === 'v') && !meta.includes(k.hip[0].lemma));
+      const kt2 = baris.kata.filter(k => k.hip.some(h => h.kelas === 'v' || h.kelas === 'aux' || h.kelas === 'cop') && !meta.includes(k.hip[0].lemma));
       f.intent = 'morf-lampau'; f.kata = kt2.length ? kt2[kt2.length - 1].surf : (f.asing || [])[0]; return f;
     }
 
@@ -302,6 +306,13 @@
       const abil = cariAbil(baris);
       if (diMana) { f.intent = 'ent-rumah'; return f; }
       if ((adaLemma(baris, ['eat']) && iEnt < baris.kata.findIndex(k => k.hip.some(h => ['eat'].includes(h.lemma))) && !abil) || (adaLemma(baris, ['makanan']) && apa)) { f.intent = 'ent-makan'; return f; }
+      // sifat mendahului kemampuan: ada adj + nuansa tanya → sifat
+      const adjTok0 = baris.kata.find(k => k.hip.some(h => h.kelas === 'adj'));
+      if (adjTok0 && (tanyaYa || adaLemma(baris, ['is', 'are', 'adalah']))) {
+        f.intent = 'ent-sifat'; f.abil = adjTok0.hip.find(h => h.kelas === 'adj').lemma; return f;
+      }
+      if (abil === 'makan-daging' && adaLemma(baris, ['plants', 'plant', 'tumbuhan', 'sayur'])) abil = 'makan-tumbuhan';
+      if (abil === 'makan-tumbuhan' && adaLemma(baris, ['meat', 'daging'])) abil = 'makan-daging';
       if (abil && abil !== 'makan-daging' && abil !== 'makan-tumbuhan') { f.intent = 'ent-bisa'; f.abil = abil; return f; }
       if (abil && (tanyaYa) && (f.negasi || iWh < 0)) { // does a cat eat meat? → cek makan
         f.intent = 'ent-makan-cek'; f.abil = abil; return f;

@@ -168,6 +168,7 @@
         break;
       }
       case 'morf-jamak': {
+        if (!f.kata) { out.teks = id ? 'Sebutkan katanya — aku bentukkan.' : 'Name the word and I will pluralize it.'; break; }
         if (lang === 'en') {
           const bentuk = O.morf.en.plural(f.kata);
           out.teks = 'The plural of "' + f.kata + '" is "' + bentuk + '".';
@@ -179,6 +180,7 @@
         break;
       }
       case 'morf-lampau': {
+        if (!f.kata) { out.teks = id ? 'Sebutkan katanya — aku lampaukan.' : 'Name the word and I will put it in the past.'; break; }
         if (lang === 'en') {
           const bentuk = O.morf.en.past(f.kata);
           out.teks = 'The past of "' + f.kata + '" is "' + bentuk + '".';
@@ -231,7 +233,8 @@
         out.teks = id ? kapital(k) + ' adalah ' + ent.def.id + '.' : kapital(entNP(k, 'en', ent)) + ' is ' + ent.def.en + '.';
         const sif = ent.sifat || [];
         if (sif.length) {
-          out.teks += id ? ' ' + kapital(k) + ' itu ' + sif.slice(0, 2).join(' dan ') + '.' : ' It is ' + sif.slice(0, 2).join(' and ') + '.';
+          const sifTampil = sif.slice(0, 2).map(x => lang === 'en' ? (SIFAT_ID2EN[x] || x.replace(/-/g, ' ')) : x);
+          out.teks += id ? ' ' + kapital(k) + ' itu ' + sifTampil.join(' dan ') + '.' : ' It is ' + sifTampil.join(' and ') + '.';
         }
         out.sumber.push('PENGETAHUAN.entitas:' + k);
         break;
@@ -322,11 +325,11 @@
         const pemakan = Object.entries(P.entitas).filter(([, e]) => (e.makan || []).includes(f.ent));
         if (pemakan.length) {
           if (lang === 'en') {
-            const list = pemakan.slice(0, 3).map(([k2]) => O.morf.en.plural(P.entitas[k2].en));
+            const list = pemakan.slice(0, 5).map(([k2]) => O.morf.en.plural(P.entitas[k2].en));
             const mangsa = MAKAN_ID2EN[f.ent] || f.ent;
             out.teks = kapital(list.join(', ')) + ' eat ' + mangsa + '.';
           } else {
-            const list = pemakan.slice(0, 3).map(([k2]) => k2);
+            const list = pemakan.slice(0, 5).map(([k2]) => k2);
             out.teks = kapital(list.join(', ')) + ' makan ' + f.ent + '.';
           }
           out.sumber.push('PENGETAHUAN.pindai makan');
