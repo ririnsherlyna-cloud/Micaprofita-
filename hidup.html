@@ -770,10 +770,18 @@ async function jF(url, ms=12000){
   } finally{ clearTimeout(t); }
 }
 async function pohonAmbil(){
+  /* V347 TIGA GERBANG POHON: api.github.com (kuota 60/jam/IP tanpa kunci — sering habis
+     saat traffic tinggi, akar laporan "360 file cuma 80 terbaca" versi pohon) →
+     ungh.cc (proxy publik bebas-kunci) → jsdelivr (parsial, jujur dilabel). */
   try{ const d = await jF(`https://api.github.com/repos/${RUMAH.pemilik}/${RUMAH.repo}/git/trees/${RUMAH.cabang}?recursive=1`);
     if(d && Array.isArray(d.tree)){
       const files = d.tree.filter(t=>t.type==='blob').map(t=>({path:t.path, size:t.size||0, hash:t.sha||''}));
       if(files.length) return {files, sumber:'github-api'};
+    }}catch(e){}
+  try{ const d = await jF(`https://ungh.cc/repos/${RUMAH.pemilik}/${RUMAH.repo}/files/${RUMAH.cabang}`);
+    if(d && Array.isArray(d.files) && d.files.length){
+      const files = d.files.map(p=>({path:String(p).replace(/^\//,''), size:0, hash:''}));
+      if(files.length) return {files, sumber:'ungh'};
     }}catch(e){}
   try{ const d = await jF(`https://data.jsdelivr.com/v1/packages/gh/${RUMAH.pemilik}/${RUMAH.repo}@${RUMAH.cabang}?structure=flat`);
     if(d && Array.isArray(d.files)){
