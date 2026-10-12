@@ -27,3 +27,5 @@ Halaman hidup (setelah Pages aktif): `https://NAMA-ANDA.github.io/NAMA-REPO/`
 - **EVOLUSI** — bila tubuh naik versi, dia meng-commit `index.html` barunya sendiri; Pages membangun ulang
 
 Dipasang lewat **Jalur B (git push manual)** — kelanjutan perawatan dilakukan organ V243 SAKTI-SARANG langsung dari browser via GitHub API (Jalur A), konvergen di repo yang sama.
+
+<!-- NAPAS-KEMARAU V345-R2 penanda sinkron: 2026-10-12T13:34:53Z -->
