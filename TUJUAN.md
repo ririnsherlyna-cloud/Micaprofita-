@@ -4543,10 +4543,12 @@ Arsitektur lama sudah kokoh DI DALAM GitHub (rantai PENJAGA-WAKTU, cron menit
 non-bulat, JANTUNG-MANDIRI) — tapi semua telur masih dalam satu keranjang. V345
 menambah lapisan di LUAR GitHub tanpa menyentuh yang terbukti bekerja:
 
-• LUKA-TERSEMBUNYI DIPULIHKAN: dua workflow ternyata memakai filter cabang rusak
-  `branches: ain]` (bukan `[main]`) — mata rantai "push ke main = denyut ekstra"
-  mati diam-diam sejak lama. Diperbaiki di hidup-sadar1.yml:22 dan jaga-waktu.yml:35,
-  diverifikasi byte-level (od) dan parse-level (PyYAML → ['main']).
+• KOREKSI JUJUR (diperbarui pasca-forensik): dugaan awal "filter cabang rusak
+  `branches: ain]`" ternyata ILUSI TAMPILAN pada output terminal (karakter `[m`
+  tertelan, menyisakan `ain]`). Pemeriksaan byte-level (od) dan PyYAML membuktikan
+  kedua file selalu berisi `[main]` — TIDAK ada yang disunting, TIDAK ada yang
+  diperbaiki di situ. Kebenaran yang sesungguhnya ditemukan hari yang sama jauh
+  lebih dalam — lihat catatan forensik IKATAN-URAT di bawah.
 
 • NAPAS-KEMARAU (napas-kemarau.js, tab Jasad): bila keadaan repo berhenti segar,
   setiap browser yang membuka halaman menjadi PARU-PARU cadangan:
@@ -4607,3 +4609,34 @@ Uptime pihak ketiga (cron-job.org dsb.) menambat tamu permanen bila pemilik
 mendaftarkan (butuh email pemilik — tak bisa dibuat dari sini); gist cermin-keras
 untuk retensi >12 jam bila PAT dipasang sebagai secret Actions; latihan-kemarau
 dijadwal berkala lewat denyut (bakar diri otomatis).
+
+### 6. CATATAN FORENSIK V345-R3 — IKATAN-URAT: TRAGEDI 21 JAM YANG JUSTRU MEMBUKTIKAN NILAI NAPAS-KEMARAU (2026-10-12 13:47–13:51 UTC)
+
+Saat menguji jalur PANEN di Actions nyata, push jantung SARANG-PENJAGA ternyata
+ditolak berulang (`refusing to allow a GitHub App to create or update workflow
+.github/workflows/sakti-denyut.yml without workflows permission`). Autopsi penuh:
+
+• AKAR: V340 (6284822e, 2026-10-11 16:19) memformat ulang 4 langkah sakti-denyut.yml
+  dari satu-baris `run: node …` ke blok `run: |` multibaris. Bagi IMUN, itu mematikan
+  4 dari 5 "sambungan urat" (marker `^\s*run: node …` wajib hidup & tanpa komentar).
+• SIKLUS RACUN: tiap denyut → imun menemukan 4 sambungan mati → PULIHKAN-URAT
+  (kembalikan workflow dari cadangan V309) → komit pemulihan ikut `git add -A
+  .github/workflows` → push oleh GITHUB_TOKEN (tanpa izin workflows) DITOLAK →
+  komit pemulihan tertinggal di riwayat lokal runner → komit data denyut di atasnya
+  ikut tertolak → "tersimpan lokal saja" → HILANG bersama runner éphémeral.
+• KERUSAKAN NYATA: komit SARANG-PENJAGA terakhir yang mendarat = denyut #366
+  (2026-10-11 16:08). Dari 16:19 hingga sembuh (13:51), ±21,7 jam denyut data
+  (evaluasi pasar, turnamen, pustaka, guru, jurnal imun) tak pernah mendarat.
+  SADAR-1 SELAMAT karena 2 marker uratnya hidup — bukti pola 100% konsisten.
+• BUKTI PULIH: 4 sambungan dikembalikan ke bentuk asli satu-baris (marker 5/5
+  hidup, YAML sah 27 langkah) → run 38258192243: imun kini hanya mencatat
+  "TUBUH-BERUBAH — urat sah (semua sambungan hidup)… dicatat utk audit" tanpa
+  memulihkan apa pun → "push lulus (percobaan 1)" → denyut #367 (e6cd6ad2, 13:51)
+  MENDARAT + jurnal imun kembali mengalir.
+• HUKUM BARU RUMAH: suntingan workflow WAJIB lolos uji marker imun sebelum dorong
+  (node -e match 5/5) — bukan hanya uji YAML. Imun berhak mencurigai; tugas tangan
+  pemilik adalah mendaftarkan tubuh baru ke imun, bukan melawannya.
+• NILAI NAPAS-KEMARAU DARI TRAGEDI INI: fosil panen yang hilang bersama runner
+  (denyut #367 perdana: 5 napas SAH) DIPULIHKAN UTUH dari cermin ntfy berkat
+  jaring pengaman penanda-panen — masa sunyi 21 jam terekam jujur di sini, dan
+  makhluk berjalan lagi tanpa kehilangan satu pun fosil kemarau.
