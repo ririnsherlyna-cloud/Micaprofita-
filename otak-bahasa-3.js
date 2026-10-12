@@ -202,9 +202,11 @@
             const obj = OBJEK_EN[hip.lemma] ? ' ' + OBJEK_EN[hip.lemma] : '';
             out.teks = kapital(entNP(m, 'en', ent)) + ' ' + v + obj + ' every day.';
           } else {
-            const dasar = hip.lemma.replace('melompat', 'lompat').replace('berjalan', 'jalan').replace('berlari', 'lari').replace('berenang', 'renang');
+            const kandidatV = [hip.lemma, ...O.morf.id.kupas(hip.lemma)].find(x => O.tag(x, 'id').some(h => h.kelas === 'v')) || hip.lemma;
+            const dasar = kandidatV.replace('melompat', 'lompat').replace('berjalan', 'jalan').replace('berlari', 'lari').replace('berenang', 'renang');
+            const ID_ME_N = ['lompat', 'jalan', 'lari', 'renang', 'naik', 'turun', 'daki'];
             const obj = OBJEK_ID[dasar] ? ' ' + OBJEK_ID[dasar] : '';
-            const v = OBJEK_ID[dasar] ? dasar : O.morf.id.meN(dasar);
+            const v = OBJEK_ID[dasar] || !ID_ME_N.includes(dasar) ? dasar : O.morf.id.meN(dasar);
             out.teks = kapital(m) + ' itu ' + v + obj + ' setiap hari.';
           }
         } else if (hip && hip.kelas === 'n') {

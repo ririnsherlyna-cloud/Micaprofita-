@@ -127,8 +127,9 @@
       for (const k of [...baris.kata].reverse()) for (const h of k.hip) {
         if (h.kelas !== 'v') continue;
         if (persis !== (h.surf === h.lemma)) continue;
+        const varian = [h.lemma, ...(baris.bahasa === 'id' ? O.morf.id.kupas(h.lemma) : [])];
         for (const [label, kunci] of Object.entries(balik)) {
-          if (h.lemma === label || h.lemma === label.replace(/-/g, '')) return kunci;
+          if (varian.some(v => v === label || v === label.replace(/-/g, ''))) return kunci;
           const potongan = label.split('-');
           if (potongan.length > 1 && potongan[0] === h.lemma) return kunci;
         }
@@ -246,7 +247,13 @@
     const adaMetaBahasa = adaLemma(baris, ['language', 'bahasa', 'say', 'bilang', 'ucap']);
     if ((id && adaLemma(baris, ['inggris', 'indonesia', 'english'])) || (!id && adaLemma(baris, ['indonesian', 'english']))) {
       const meta = ['language', 'bahasa', 'inggris', 'english', 'indonesian', 'indonesia', 'say', 'bilang', 'how', 'what', 'apa', 'do', 'you', 'the', 'in', 'word', 'kata', 'from', 'dari', 'is', 'adalah', 'bagaimana', 'how-much', 'how-many'];
-      const kandidat = baris.kata.filter(k => (k.hip.some(h => h.kelas === 'x') || k.hip.some(h => h.kelas === 'n') || O.tag(k.surf, bahasa === 'en' ? 'id' : 'en').length) && !meta.includes(k.hip[0] ? k.hip[0].lemma : k.surf));
+      const iBP = baris.kata.findIndex(k => k.hip.some(h => ['inggris', 'english', 'indonesia', 'indonesian'].includes(h.lemma)));
+      const layak = (k) => (k.hip.some(h => ['x', 'n'].includes(h.kelas)) || O.tag(k.surf, bahasa === 'en' ? 'id' : 'en').length) && !meta.includes(k.hip[0] ? k.hip[0].lemma : k.surf);
+      let kandidat = baris.kata.filter(layak);
+      if (iBP > -1) {
+        const sesudah = baris.kata.slice(iBP + 1).filter(layak);
+        kandidat = sesudah.length ? sesudah : baris.kata.slice(0, iBP).filter(layak);
+      }
       const kataTujuan = kandidat.length ? kandidat[kandidat.length - 1] : null;
       if (kataTujuan) { f.intent = 'terjemah'; f.kata = kataTujuan.surf; f.arah = adaLemma(baris, ['inggris', 'english']) ? 'en' : 'id'; return f; }
       if (adaMetaBahasa) { f.intent = 'terjemah-cara'; return f; }
@@ -303,7 +310,7 @@
       const iEnt = baris.kata.findIndex(k => k.hip.some(h => h.lemma === ent.data.en || h.lemma === ent.kunci));
       if (iWh > -1 && iV > -1 && iEnt > iV) { f.intent = 'siapa-makan'; return f; }
       if (iV > -1 && iEnt < iV && (iWh > -1 || adaAux) && (adaLemma(baris, ['what', 'apa']))) { f.intent = 'ent-makan'; return f; }
-      const abil = cariAbil(baris);
+      let abil = cariAbil(baris);
       if (diMana) { f.intent = 'ent-rumah'; return f; }
       if ((adaLemma(baris, ['eat']) && iEnt < baris.kata.findIndex(k => k.hip.some(h => ['eat'].includes(h.lemma))) && !abil) || (adaLemma(baris, ['makanan']) && apa)) { f.intent = 'ent-makan'; return f; }
       // sifat mendahului kemampuan: ada adj + nuansa tanya → sifat
