@@ -183,7 +183,7 @@
     if (/^(r|l)/.test(r)) return 'be' + r;
     return 'ber' + r;
   }
-  const ID_AWALAN = ['mem', 'meny', 'meng', 'men', 'memb', 'mend', 'menc', 'menj', 'ber', 'ter', 'di', 'ke', 'se', 'peN', 'peny', 'peng', 'pen', 'per'];
+  const ID_AWALAN = ['mem', 'meny', 'meng', 'men', 'memb', 'mend', 'menc', 'menj', 'mel', 'mer', 'ber', 'ter', 'di', 'ke', 'se', 'peN', 'peny', 'peng', 'pen', 'per'];
   function idKupas(w) { // kandidat asal kata berimbuhan — untuk parse & tanya-morfologi
     const c = [];
     for (const p of ID_AWALAN) if (w.startsWith(p) && w.length > p.length + 1) {
@@ -195,6 +195,8 @@
       else if (p === 'mend') c.push('d' + w.slice(4));
       else if (p === 'menc') c.push('c' + w.slice(4));
       else if (p === 'menj') c.push('j' + w.slice(4));
+      else if (p === 'mel') c.push('l' + w.slice(3));
+      else if (p === 'mer') c.push('r' + w.slice(3));
       else c.push(w.slice(p.length));
     }
     if (w.startsWith('meN')) c.push(w.slice(3));
@@ -221,6 +223,8 @@
   function kandidatAsal(w, lang) {
     const c = [w];
     if (lang === 'en') {
+      const PP = { taken: 'take', given: 'give', known: 'know', written: 'write', spoken: 'speak', broken: 'break', chosen: 'choose', eaten: 'eat', seen: 'see', driven: 'drive', hidden: 'hide', meant: 'mean' };
+      if (PP[w]) c.push(PP[w]);
       if (w.endsWith('ies')) c.push(w.slice(0, -3) + 'y');
       if (w.endsWith('ves')) c.push(w.slice(0, -3) + 'f', w.slice(0, -3) + 'fe');
       if (w.endsWith('es')) c.push(w.slice(0, -2));

@@ -241,8 +241,8 @@
     // --- terjemahan dua arah
     const adaMetaBahasa = adaLemma(baris, ['language', 'bahasa', 'say', 'bilang', 'ucap']);
     if ((id && adaLemma(baris, ['inggris', 'indonesia', 'english'])) || (!id && adaLemma(baris, ['indonesian', 'english']))) {
-      const meta = ['language', 'bahasa', 'inggris', 'english', 'indonesian', 'indonesia', 'say', 'bilang', 'how', 'what', 'apa', 'do', 'you', 'the', 'in', 'word', 'kata'];
-      const kandidat = baris.kata.filter(k => (k.hip.some(h => h.kelas === 'x') || k.hip.some(h => h.kelas === 'n')) && !meta.includes(k.hip[0].lemma));
+      const meta = ['language', 'bahasa', 'inggris', 'english', 'indonesian', 'indonesia', 'say', 'bilang', 'how', 'what', 'apa', 'do', 'you', 'the', 'in', 'word', 'kata', 'from', 'dari', 'is', 'adalah', 'bagaimana', 'how-much', 'how-many'];
+      const kandidat = baris.kata.filter(k => (k.hip.some(h => h.kelas === 'x') || k.hip.some(h => h.kelas === 'n') || O.tag(k.surf, bahasa === 'en' ? 'id' : 'en').length) && !meta.includes(k.hip[0] ? k.hip[0].lemma : k.surf));
       const kataTujuan = kandidat.length ? kandidat[kandidat.length - 1] : null;
       if (kataTujuan) { f.intent = 'terjemah'; f.kata = kataTujuan.surf; f.arah = adaLemma(baris, ['inggris', 'english']) ? 'en' : 'id'; return f; }
       if (adaMetaBahasa) { f.intent = 'terjemah-cara'; return f; }
@@ -250,13 +250,13 @@
 
     // --- morfologi hidup
     if (adaLemma(baris, ['plural', 'jamak', 'banyak']) && (apa || adaLemma(baris, ['of', 'dari']))) {
-      const meta = ['plural', 'past', 'bentuk', 'jamak', 'lampau', 'word', 'kata'];
+      const meta = ['plural', 'past', 'bentuk', 'jamak', 'lampau'];
       const kt2 = baris.kata.filter(k => k.hip.some(h => h.kelas === 'n') && !meta.includes(k.hip[0].lemma));
       const target = kt2.length ? kt2[kt2.length - 1].surf : (f.asing || [])[0];
       f.intent = 'morf-jamak'; f.kata = target; return f;
     }
     if (adaLemma(baris, ['past', 'lampau']) && (apa || adaLemma(baris, ['of', 'dari']))) {
-      const meta = ['plural', 'past', 'bentuk', 'jamak', 'lampau', 'the'];
+      const meta = ['plural', 'past', 'bentuk', 'jamak', 'lampau'];
       const kt2 = baris.kata.filter(k => k.hip.some(h => h.kelas === 'v') && !meta.includes(k.hip[0].lemma));
       f.intent = 'morf-lampau'; f.kata = kt2.length ? kt2[kt2.length - 1].surf : (f.asing || [])[0]; return f;
     }
@@ -286,7 +286,7 @@
       if (iV > -1 && iEnt < iV && (iWh > -1 || adaAux) && (adaLemma(baris, ['what', 'apa']))) { f.intent = 'ent-makan'; return f; }
       const abil = cariAbil(baris);
       if (diMana) { f.intent = 'ent-rumah'; return f; }
-      if (adaLemma(baris, ['eat', 'makan']) && iEnt < baris.kata.findIndex(k => k.hip.some(h => ['eat', 'makan'].includes(h.lemma))) && !abil) { f.intent = 'ent-makan'; return f; }
+      if ((adaLemma(baris, ['eat']) && iEnt < baris.kata.findIndex(k => k.hip.some(h => ['eat'].includes(h.lemma))) && !abil) || (adaLemma(baris, ['makanan']) && apa)) { f.intent = 'ent-makan'; return f; }
       if (abil && abil !== 'makan-daging' && abil !== 'makan-tumbuhan') { f.intent = 'ent-bisa'; f.abil = abil; return f; }
       if (abil && (tanyaYa) && (f.negasi || iWh < 0)) { // does a cat eat meat? → cek makan
         f.intent = 'ent-makan-cek'; f.abil = abil; return f;

@@ -377,9 +377,9 @@
       const adaAngka = tok.some(t => /^\d+$/.test(t));
       const p = O.parse(baris, gr);
       const namaKu = O.memori.namaTuan ? String(O.memori.namaTuan).toLowerCase() : null;
-      const bukanAngka = baris.kata.filter(k => !/^\d+([.,]\d+)?$/.test(k.surf) && (!namaKu || k.surf !== namaKu));
+      const bukanAngka = baris.kata.filter(k => !/^\d/.test(k.surf) && (!namaKu || k.surf !== namaKu));
       const terisi = bukanAngka.filter(k => k.hip.length).length / Math.max(1, bukanAngka.length);
-      const ok = p.sah || adaAngka || terisi >= 0.99 || terisi >= 0.55;
+      const ok = p.sah || adaAngka || terisi >= 0.99 || terisi >= 0.45;
       if (!ok) sah = false;
       bagian.push({ seg, sah: ok, cara: p.sah ? 'CFG' : adaAngka ? 'angka' : terisi >= 0.99 ? 'leksikal-penuh' : 'struktural' });
     }
