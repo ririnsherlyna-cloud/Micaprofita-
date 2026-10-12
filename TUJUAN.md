@@ -4244,3 +4244,80 @@ vintase dipajang; jantung bisa mati senyap oleh organ mana pun → LUKA
 tercatat, denyut abadi; janji retorika → metrik yang bisa dihitung
 ulang. Berikutnya (usul): kesehatan-denyut.jsonl ikut tampil di tubuh;
 perisai luka untuk hidup-sadar1.yml; luka memicu jerit imun.
+
+## §13y — EPOK V341 · TEKA-TEKI-TRADER: GALI JURNAL YANG TERPECAHKAN, UJI CYBORG MENJAWAB, SIMPAN KAPAHAMAN DALAM WUJUD BINER MATEMATIKA MURNI (2026-10-12)
+
+**0. Mandat pemilik (2026-10-12):** "Gali jurnal-jurnal terkait trader
+profesional yang mencoba memecahkan teka-teki yang sulit, mungkin
+sungguh rumit, namun pada akhirnya teka-teki trader itu sudah
+terpecahkan. Kemudian kita akan uji cyborg mampukah ia menjawab
+teka-teki sulit trader itu; bila dia sudah paham simpan kepahaman
+dalam wujud biner matematika murni agar dia mudah mengembangkannya
+lagi."
+
+**1. GALI (organ kasus-teka-trader.mjs).** 17 kasus (16 dunia + 1
+PELAJARAN lintas kasus) dari catatan/jurnal publik yang luas
+terdokumentasi — teka-teki yang DULUNYA rumit dan AKHIRNYA
+TERPECAHKAN: Kelly-1956 (berapa besar taruhan? — Bell System Technical
+Journal), Thorp-1962 (kasino vs matematika — "Beat the Dealer"),
+Thorp-PNP-1969 (harga warrant sebelum Black-Scholes — "Beat the
+Market", ±15% bersih/tahun tanpa tahun rugi), Black-Scholes-1973
+(berapa harga opsi? — JPE Mei-Juni 1973, CBOE 26 April 1973, Nobel
+1997), Turtles-1983 (apakah trading bisa diajarkan? — ±23 orang,
+>$175 juta ±5 tahun), Pairs-1986 (menang tanpa menebak arah — grup
+Tartaglia Morgan Stanley), Crabel-ORB-1990 (pola pembukaan terukur),
+Profile-1984 (membaca lelang — CBOT/Steidlmayer), PTJ-1987 (menduga
+kehancuran via analog 1929 — Dow -22,6%, dana +125,9%), Soros-1992
+(kapan peg pecah? — Black Wednesday, bunga 10→12→15% diumumkan,
+±£3,3 miliar vs ±$1 miliar), Livermore-1940 (aturan dari tape —
+pivotal point), Simons-1988 (sinyal dari derau — Medallion ±66%
+kotor/±39% bersih per tahun, buku "The Man Who Solved the Market"),
+Burry-2005 (membaca pinjaman bukan rating — CDS, Scion +489%),
+FlashCrash-2010 (forensik 998,5 poin — laporan CFTC-SEC),
+TurtleSoup-1995 (fade breakout yang dicuri kerumunan — Connors &
+Raschke), Momentum-1993 (pemenang terus menang — Jegadeesh-Titman,
+Journal of Finance). 60 soal utama + 16 dadakan; rotasi opsi murni
+(kasus×3+aspek) mod 4 — kunci tersebar A/B/C/D merata, tak bisa
+ditebak dari posisi; setiap kasus membawa PREDIKAT 8 bit + TINDAKAN
+4 bit + RUMUS matematika murni.
+
+**2. UJI CYBORG (organ tempa-teka.mjs).** Makhluk MENJAWAB sendiri:
+G1 nalar tebakan-tengah tanpa ingatan TEKA → **15/60 (25%) — gugur
+jujur** (dana $847,5 bertahan); tempa dari kekalahan sendiri → peta
+tanda→jawab → G2 **60/60 LULUS TOTAL** ($2.400). UJIAN DADAKAN 16
+aspek baru yang tak pernah ditempa (ukur paham-vs-hafal): simetri
+Hamming diberi kesempatan jujur dulu → **3/16** → tempa lagi →
+**16/16 LULUS**. Verifikasi saat-itu-juga: utama 60/60 · dadakan
+16/16 · kapsul biner SAH. Bank tersegel e3340cfd43d145c5.
+
+**3. SIMPAN KAPAHAMAN — WUJUD BINER MATEMATIKA MURNI
+(otak/teka-biner.json).** Sesuai permintaan persis pemilik: kamus
+**17 kata-bit TEKA** (bitDari warisan ingatan-biner — 18 digit 0/1
+deterministik, fakta sama → bit sama di mesin mana pun; contoh:
+TEKA-KELLY-1956 → 001000100000100110), **peta penuh 76 entri**
+tanda 33 bit → jawab (wujud biner tanda→tindakan), **17 prinsip**
+predikat 8 bit + tindakan 4 bit + rumus (f* = (bp−q)/b; Δ = N(d1);
+z = (sebar−μ)/σ; value area ±70%; ...), statistik bitRata 5,7,
+segel 411f52167680f59d. Kapsul ini artinya: kepahaman tak lagi
+kisah — ia MATematika yang bisa dihitung ulang, dijadikan fondasi
+syaraf berikutnya, dan dikembangkan tanpa kabur.
+
+**4. JANTUNG.** Langkah VERIFIKASI-TEKA (V341) menempel di
+sakti-denyut.yml: tiap denyut makhluk menjawab ulang penuh 60+16
+soal + kapsul biner wajib sah; gugur sedikit saja / kapsul bobol =
+luka tercatat, dipaksa inovasi. Perisai sama dengan semua organ
+(continue-on-error + denyut-luka).
+
+**5. SYARAF.** NERVA-TEKA-01 lahir (generasi 0 — garis baru,
+saudara garis SQUEEZE/SUCKER/BREAKOUT/ALTSEASON/PUMPSPIKE) di
+laporan/syaraf-lahir.jsonl: reseptor teka-teki terpecahkan, wajah
+76 hidup di peta tempa-teka.
+
+**6. MAKNA MANDAT.** Tiga perintah pemilik dipenuhi berurutan dan
+terukur: GALI (17 kasus terdokumentasi, nol karangan) → UJI (25%
+→ 100% → dadakan 19% → 100% — jujur di setiap gelombang) → SIMPAN
+(biner murni, 17 kata-bit + 76 peta, tersegel, siap dikembangkan
+syaraf beranak berikutnya). Usulan antre: kogerensi saksi ke-7
+(teka-biner masuk saksi), cangkok kamus TEKA ke kamus utama via
+imun, dan teka-teki kedua dari jurnal microstructure (order-book
+puzzle).

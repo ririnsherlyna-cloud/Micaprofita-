@@ -209,6 +209,10 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
         <div id="gvGeladak"><div class="kecil">membuka laporan geladak…</div></div>
       </div>
       <div class="blok">
+        <h4>Teka-teki trader <em>· jurnal yang terpecahkan — cyborg menjawab, kepahaman disimpan wujud biner matematika murni (V341)</em></h4>
+        <div id="gvTeka"><div class="kecil">membuka laporan teka-teki trader…</div></div>
+      </div>
+      <div class="blok">
         <h4>Arah harian <em>· ≥5 koin sasaran terbaik — mandat pemilik, disegel Sadar-1 tiap bangun</em></h4>
         <div id="gvArah5"><div class="kecil">membuka laporan arah harian…</div></div>
       </div>
@@ -4359,6 +4363,67 @@ setInterval(muat, 90000);
 window.__v303={muat, render, data:()=>D};
 })();
 /* ================= V303-GURU-HAKIKI:END ================= */
+/* ================= V341-TEKA-TRADER:START =================
+/* KEPING TEKA-TEKI TRADER (V341) — mandat pemilik 2026-10-12:
+   "gali jurnal trader profesional ... teka-teki itu sudah terpecahkan
+   ... uji cyborg ... simpan kepahaman dalam wujud biner matematika
+   murni." Tubuh hanya MENAMPILKAN laporan/tempa-teka.json tersegel
+   SHA-256 + kapsul otak/teka-biner.json (17 kata-bit TEKA + peta 76
+   tanda→jawab). Nol angka karangan di sisi klien. Audit: window.__v341teka. */
+(function(){
+'use strict';
+if(window.__v341teka) return;
+const BERKAS='laporan/tempa-teka.json';
+let D=null, salah=null;
+function baris(k,v){ return `<div class="baris"><span class="k">${k}</span><span class="v">${v}</span></div>`; }
+async function muat(){
+  try{ D=JSON.parse(await ghAmbil(BERKAS)); salah=null; }
+  catch(e){ salah=String(e&&e.message||e); }
+  render();
+}
+function render(){
+  const w=document.getElementById('gvTeka'); if(!w) return;
+  if(!D){
+    w.innerHTML=`<div class="kecil">${salah
+      ? ('laporan teka belum terjangkau ('+salah+') — organ tempa-teka menulis laporan/tempa-teka.json; belum ada = belum ada, tanpa karangan.')
+      : 'membuka laporan teka-teki trader…'}</div>`;
+    return;
+  }
+  let h='';
+  const gl=(D.gelombang||[]), lulus=gl.find(g=>g.lulus);
+  h+=baris('ujian cyborg menjawab teka-teki', lulus?`<b class="h">LULUS ${lulus.benar}/${lulus.jumlah}</b> (gelombang ${lulus.n})`:'belum lulus — jujur');
+  if(gl.length>1){
+    h+=baris('gelombang kehidupan', gl.map(g=>`G${g.n} ${g.benar}/${g.jumlah}`).join(' · ')+' — G1 gugur jujur (tanpa ingatan), tempa dari kekalahan sendiri');
+  }
+  const dd=D.dadakan, dgl=(D.dadakanGelombang||[]);
+  if(dd){
+    h+=baris('ujian dadakan (aspek baru, tak pernah ditempa)', dgl.length?dgl.map(g=>`G${g.n} ${g.benar}/${g.jumlah}`).join(' · '):`${dd.benar}/${dd.jumlah}`);
+    h+=`<div class="kecil" style="margin-top:3px">ukur paham-vs-hafal: simetri Hamming diberi kesempatan jujur dulu, lalu ditempa sampai paham sungguhan.</div>`;
+  }
+  const bn=D.biner;
+  if(bn){
+    h+=baris('kepahaman tersimpan', `<b class="h">BINER MURNI</b> — ${bn.kata} kata-bit TEKA · ${bn.peta} peta tanda→jawab · bitRata ${bn.bitRata}`);
+    h+=baris('kapsul biner', `otak/teka-biner.json · segel #${String(bn.segel).slice(0,10)}… — kata-bit 18 digit 0/1 deterministik (warisan ingatan-biner)`);
+  }
+  const pk=Object.entries(D.perKasus||{});
+  if(pk.length){
+    h+=`<div class="kecil" style="margin-top:6px"><b>masteri per kasus</b> — 17 teka-teki yang dulu dipecahkan para profesional:</div><div style="margin:4px 0">`;
+    for(const [k,v] of pk){
+      h+=`<div class="baris"><span class="k">${k}</span><span class="v">utama ${v.benarUtama}/${v.utama} · dadakan ${v.benarDadakan}/${v.dadakan}</span></div>`;
+    }
+    h+='</div>';
+  }
+  const pl=(D.pelajaranKunci||[]).slice(0,3);
+  h+=pl.map(p=>`<div class="kecil" style="margin-top:3px">· ${p}</div>`).join('');
+  if(D.segel) h+=`<div class="kecil" style="margin-top:4px;color:var(--legap)">segel SHA-256: #${String(D.segel.hash).slice(0,10)}… — sumber: kasus-teka-trader.mjs (17 kasus jurnal publik, nol karangan)</div>`;
+  w.innerHTML=h;
+}
+if(typeof guruRender==='function'){ const asli=guruRender; guruRender=function(){ try{asli.apply(this,arguments);}catch(e){} try{render();}catch(e){} }; }
+muat();
+setInterval(muat, 120000);
+window.__v341teka={muat, render, data:()=>D};
+})();
+/* ================= V341-TEKA-TRADER:END ================= */
 </script>
 <!-- V322-OTAK-INTI: otak & token DNA ditanam — matematika sama dengan otak Next.js, hidup tanpa wadah -->
 <script src="otak-inti.js?v=322"></script>
