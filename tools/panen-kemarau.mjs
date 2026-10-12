@@ -132,29 +132,51 @@ let teks;
 try { teks = await fTeks(`https://ntfy.sh/${TOPIK}/json?poll=1&since=${RETENSI_JAM}h`); }
 catch (e) { console.log(`[PANEN-KEMARAU] cermin tak terjangkau (${e.message}) — jujur, tanpa karangan; panen batal`); process.exit(0); }
 
+// IDEMPOTEN-1: id yang sudah tertulis di fosil lama tidak dipanen dua kali
+const sudahTertulis = new Set();
+for (const j of ['laporan/kemarau-sah.jsonl', 'laporan/kemarau-tak-terverifikasi.jsonl']) {
+  const p = jalur(j);
+  if (!existsSync(p)) continue;
+  try {
+    for (const baris of readFileSync(p, 'utf8').split('\n')) {
+      if (!baris.trim()) continue;
+      try { const d = JSON.parse(baris); if (d.idNtfy) sudahTertulis.add(d.idNtfy); } catch { /* baris rusak — biarkan */ }
+    }
+  } catch { /* baca gagal — lanjut */ }
+}
+
 const diprosesSebelumnya = new Set(cermin.processedIds || []);
 const terakhirWaktu = cermin.panen?.terakhir ? Date.parse(cermin.panen.terakhir) : 0;
 
 const entri = [];
 const idBaru = [];
+const pesanPanen = [];   // penanda panen dari mesin lain (panen sebelumnya yang komitnya hilang)
 for (const baris of teks.split('\n')) {
   if (!baris.trim()) continue;
   let m; try { m = JSON.parse(baris); } catch { continue; }
   if (m.event !== 'message' || !m.message || !m.id) continue;
+  let p; try { p = JSON.parse(m.message); } catch { continue; }
+  // IDEMPOTEN-2: penanda panen dari mesin lain → id-nya dianggap selesai
+  if (p && p.jenis === 'panen' && Array.isArray(p.ids)) {
+    pesanPanen.push(...p.ids);
+    continue;
+  }
   idBaru.push(m.id);
   if (diprosesSebelumnya.has(m.id)) continue;
-  let p; try { p = JSON.parse(m.message); } catch { continue; }
+  if (sudahTertulis.has(m.id)) continue;
   if (!p || p.jenis !== 'napas') continue;
   const w = Date.parse(p.waktu);
   if (!isNaN(w) && w <= terakhirWaktu) continue;   // sudah terpanen menurut waktu
   entri.push({ id: m.id, tNtfy: m.time, entry: p });
 }
+const idSelesai = new Set([...diprosesSebelumnya, ...pesanPanen, ...sudahTertulis]);
 
 if (!entri.length) {
   console.log('[PANEN-KEMARAU] tidak ada napas baru di cermin — tidak ada yang dipanen (jujur)');
   // tetap simpan id terlihat agar tak diproses dua kali di masa depan
-  cermin.processedIds = [...new Set([...(cermin.processedIds || []), ...idBaru])].slice(-500);
+  cermin.processedIds = [...new Set([...idSelesai, ...idBaru])].slice(-500);
   writeFileSync(jalur('ruang-hidup/cermin.json'), JSON.stringify(cermin, null, 2) + '\n');
+  terbitkanPenanda([...idBaru]);
   process.exit(0);
 }
 
@@ -165,11 +187,13 @@ const jTolak = jalur('laporan/kemarau-tak-terverifikasi.jsonl');
 
 let nSah = 0, nTolak = 0;
 const tPanen = new Date().toISOString();
+const idTerpanen = [];
 for (const { id, entry } of entri) {
   const v = await verifikasi(entry);
   const catatan = { waktuPanen: tPanen, idNtfy: id, entry, verifikasi: { sah: v.sah, alasan: v.alasan, umurJam: v.umurJam ?? null, rincian: v.rincian } };
   if (v.sah) { appendFileSync(jSah, JSON.stringify(catatan) + '\n'); nSah++; }
   else { appendFileSync(jTolak, JSON.stringify(catatan) + '\n'); nTolak++; }
+  idTerpanen.push(id);
   console.log(`  ${v.sah ? 'SAH ' : 'TOLAK'} ${entry.waktu} tahap=${entry.tahap} latihan=${!!entry.latihan} koin=${Object.keys(entry.harga || {}).length}`);
 }
 
@@ -179,7 +203,27 @@ cermin.panen = {
   sah: (cermin.panen?.sah || 0) + nSah,
   tolak: (cermin.panen?.tolak || 0) + nTolak
 };
-cermin.processedIds = [...new Set([...(cermin.processedIds || []), ...idBaru])].slice(-500);
+cermin.processedIds = [...new Set([...idSelesai, ...idBaru])].slice(-500);
 writeFileSync(jalur('ruang-hidup/cermin.json'), JSON.stringify(cermin, null, 2) + '\n');
+
+// JARING PENGAMAN: komit bisa hilang bersama runner éphémeral (kejadian nyata
+// denyut #367) — maka daftar id terpanen DITERBITKAN balik ke cermin sebagai
+// penanda panen. Panen berikutnya (mesin mana pun) membacanya dan tak dobel.
+terbitkanPenanda(idTerpanen);
+
 console.log(`[PANEN-KEMARAU] selesai: ${nSah} sah → laporan/kemarau-sah.jsonl · ${nTolak} tak-terverifikasi → laporan/kemarau-tak-terverifikasi.jsonl (disimpan untuk audit, tak pernah menyuap pembelajaran)`);
 console.log('[PANEN-KEMARAU] masa kemarau kini ingatan permanen — makhluk makin kokoh, bukan lebih rapuh');
+
+/* ---------- penanda panen ke cermin (best-effort, tak fatal) ---------- */
+async function terbitkanPenanda(ids) {
+  if (!ids || !ids.length) return;
+  try {
+    const r = await fetch(`https://ntfy.sh/${TOPIK}`, {
+      method: 'POST',
+      body: JSON.stringify({ jenis: 'panen', ids, waktu: new Date().toISOString(), oleh: 'panen-kemarau' })
+    });
+    console.log(`[PANEN-KEMARAU] penanda ${ids.length} id diterbitkan ke cermin (HTTP ${r.status}) — komit hilang pun tak akan dobel panen`);
+  } catch (e) {
+    console.log(`[PANEN-KEMARAU] penanda gagal diterbitkan (${e.message}) — dedup masih dijaga processedIds + idNtfy di fosil`);
+  }
+}

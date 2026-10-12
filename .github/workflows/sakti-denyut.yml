@@ -404,14 +404,26 @@ jobs:
         continue-on-error: true
         run: |
           node tools/panen-kemarau.mjs --panen || { echo "organ-gagal: panen-kemarau $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 0; }
-          if [ -n "$(git status --porcelain laporan/kemarau-sah.jsonl laporan/kemarau-tak-terverifikasi.jsonl ruang-hidup/cermin.json 2>/dev/null)" ]; then
-            git add laporan/kemarau-sah.jsonl laporan/kemarau-tak-terverifikasi.jsonl ruang-hidup/cermin.json 2>/dev/null || true
-            git commit -m "PANEN-KEMARAU: napas tamu dipanen jadi ingatan permanen [skip ci]"
-            for i in 1 2 3; do
-              git pull --rebase origin main || true
-              if git push; then echo "panen terdorong ke repo (percobaan $i)"; break; fi
-              sleep 5
-            done
+          # V345-R2: git add hanya berkas yang ADA (pelajaran run #367: pathspec
+          # berkas yang tak tercipta membuat git add gagal atomik — fosil SAH
+          # hilang bersama runner éphémeral), komit hanya bila ada yang ter-stage.
+          KOTAK=""
+          [ -f laporan/kemarau-sah.jsonl ] && KOTAK="$KOTAK laporan/kemarau-sah.jsonl"
+          [ -f laporan/kemarau-tak-terverifikasi.jsonl ] && KOTAK="$KOTAK laporan/kemarau-tak-terverifikasi.jsonl"
+          [ -f ruang-hidup/cermin.json ] && KOTAK="$KOTAK ruang-hidup/cermin.json"
+          if [ -n "$KOTAK" ] && [ -n "$(git status --porcelain $KOTAK 2>/dev/null)" ]; then
+            git add -- $KOTAK
+            if git diff --cached --quiet; then
+              echo "tak ada yang ter-stage — jujur"
+            else
+              git commit -m "PANEN-KEMARAU: napas tamu dipanen jadi ingatan permanen [skip ci]"
+              for i in 1 2 3 4; do
+                git pull --rebase origin main || true
+                if git push; then echo "panen terdorong ke repo (percobaan $i)"; break; fi
+                echo "push ditolak (percobaan $i) — rebase ulang & coba lagi"
+                sleep $((i * 5))
+              done
+            fi
           else
             echo "cermin kosong — tak ada yang dipanen (jujur, tanpa karangan)"
           fi
