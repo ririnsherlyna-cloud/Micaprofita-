@@ -253,7 +253,7 @@
       let kandidat = baris.kata.filter(layak);
       if (iBP > -1) {
         const sesudah = baris.kata.slice(iBP + 1).filter(layakSasaran);
-        kandidat = sesudah.length ? sesudah : baris.kata.slice(0, iBP).filter(layak);
+        kandidat = sesudah.length ? sesudah : baris.kata.slice(0, iBP).filter(layakSasaran);
       }
       const kataTujuan = kandidat.length ? kandidat[kandidat.length - 1] : null;
       if (kataTujuan) { f.intent = 'terjemah'; f.kata = kataTujuan.surf; f.arah = adaLemma(baris, ['inggris', 'english']) ? 'en' : 'id'; return f; }
