@@ -27,7 +27,7 @@ global.fetch = async (f) => {
 }
 
 // muat 4 organ otak — pembacaan-jaminan: tahan flicker berkas (tunggu versi berpenanda)
-const PENANDA = { 'otak-bahasa-1.js': 'V343-REV-B1R2', 'otak-bahasa-2.js': 'V343-REV-B2R15', 'otak-bahasa-3.js': 'V343-REV-B3R2', 'otak-bahasa-uji.js': 'V343-REV-U4' }
+const PENANDA = { 'otak-bahasa-1.js': 'V344-REV-B1R1', 'otak-bahasa-2.js': 'V344-REV-B2R1', 'otak-bahasa-3.js': 'V344-REV-B3R1', 'otak-bahasa-uji.js': 'V344-REV-U5' }
 function bacaJamin(f) {
   for (let i = 0; i < 20; i++) {
     const isi = readFileSync(AKAR + '/' + f, 'utf8')
@@ -43,7 +43,9 @@ for (const f of ['otak-bahasa-1.js', 'otak-bahasa-2.js', 'otak-bahasa-3.js', 'ot
 const O = global.window.__OTAK_BAHASA
 
 const st = await O.muat('./')
-console.log('OTAK SIANCANG:', JSON.stringify({ leksikon: st.leksikon, kode: st.kode, pasangKode: st.pasangKode, lawan: st.lawan, koin: st.koin }))
+// V344: tanggal lahir NYATA dari versi.json — soal umur/lahir dihitung dari sini
+try { O.diriLahirAt = Date.parse(JSON.parse(readFileSync(AKAR + '/versi.json', 'utf8')).memoriWaktu) } catch (e) { O.diriLahirAt = null }
+console.log('OTAK SIANCANG:', JSON.stringify({ leksikon: st.leksikon, kode: st.kode, pasangKode: st.pasangKode, lawan: st.lawan, koin: st.koin, lahirAt: O.diriLahirAt }))
 
 // data pasar nyata (satu potret untuk kategori koin-realtime; jujur tercatat waktunya)
 async function ambilPasar() {
@@ -64,14 +66,14 @@ async function ambilPasar() {
 }
 
 const jumlah = PENUH ? 50000 : CUPlik
-console.log(`MULAI UJI ${jumlah} SOAL (benih 0x3430001)...`)
+console.log(`MULAI UJI ${jumlah} SOAL (benih 0x3440001)...`)
 const hasil = await O.ujiBahasa({
-  jumlah, benih: 0x3430001, ambilPasar,
+  jumlah, benih: 0x3440001, ambilPasar,
   kemajuan: (i, n, lulus) => console.log(`  kemajuan ${i}/${n} — lulus sementara ${lulus}`)
 })
 
 const laporan = {
-  epok: 'V343-KOSAKATA-10000',
+  epok: 'V344-NGOBROL-SANTAI',
   organ: ['otak-bahasa-1.js', 'otak-bahasa-2.js', 'otak-bahasa-3.js', 'otak-bahasa-uji.js'],
   statusOtak: st,
   pasar: hasil.pasarInfo || null,
@@ -83,6 +85,7 @@ const laporan = {
   durasiDetik: hasil.durasiDetik,
   unikRangkai: hasil.unikRangkai,
   unikTanya: hasil.unikTanya,
+  unikDialog: hasil.unikDialog || 0,
   perKategori: hasil.perKategori,
   contohGugur: hasil.gugur.slice(0, 120),
   selesai: new Date().toISOString()

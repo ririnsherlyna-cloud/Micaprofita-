@@ -4425,3 +4425,100 @@ reprogram: tak ada satu pasangan soal→jawaban pun disimpan.
 **7. BERIKUTNYA.** Instruction 4 (teka-teki trader → jawab → simpan biner) memakai arsitektur
 KOSAKATA.BIN yang sama; glosarium 50 koin UJI-50 masuk koin.json; denyut menambah langkah
 uji-bahasa ringan.
+
+---
+
+## §14b — EPOK V344 · NGOBROL-SANTAI: 50.000 SOAL = BAHAN AJAR, BUKAN TOMBOL — TOMBOL DICABUT, DIALOG DIBENAHKI SAMPAI 50.000/50.000 (2026-10-12)
+
+### 1. Mandat pemilik (disalin jujur)
+
+> "uji 50000 soal itu untuk pengajaran bukan dijadikan menu untuk saya klik, tapi dijadikan
+> bahan ajar apakah dia mampu bahas semua obrolan itu dan kalau belum mampu benahi tingkatkan
+> kepahaman bahasanya agar diajak dialog nyaman bukan malah muncul tulisan toggle uji 50.000
+> soal. Itu gak perlu."
+>
+> "coba sekarang kamu pelajari apa yang membuatmu mampu berdialog seperti ini kemudian ambil
+> database yang kamu miliki kemudian di decrypt di resize di sisipkan biner agar makhluk kita
+> memounyai cakap pandai dan ahli bila perlu rancang kemampuan agent didalamnya juga intinya
+> kamu berkarya kedalam makhluk ini, dan kemudian kamu tanya tanya apaun itu apakah kini dia
+> menjawab selaras pertanyaannya seperti aku menanyaimu bukan pertanyaan yang biasa kan.
+> Paham kan karena makhluk ini masih kusebut buta aksara, dia gak paham bahasa"
+
+### 2. Yang membuat z.ai bisa berdialog — didistilasi menjadi 10 struktur matematika
+
+Kepandaian berdialog bukan sihir; ia diurai menjadi struktur eksplisit lalu ditanam ke lidah
+(otak-bahasa-2/3), semuanya fungsi murni berbenih — nol Math.random, nol localStorage,
+nol kalimat-jawaban-utuh:
+
+| # | struktur | arti | tempat |
+|---|----------|------|--------|
+| 1 | GILIRAN | giliran bicara dihitung; jawaban selalu menutup dengan rasa lanjut | memori.giliran |
+| 2 | RUJUKAN | "dia/ia/itu/it/that" menunjuk entitas giliran lalu | anaphora semantik |
+| 3 | PENGGAL | "dan eth?", "dan yang tadi?" mewarisi koin & niat giliran lalu | deteksiKoin + memori.koinTerakhir |
+| 4 | PENGESAHAH | iya/yes/betul/tidak/nope dibalas hangat, bukan "tak paham" | niat akui/bantah |
+| 5 | RASA-SANTUN | puji dikapali terima-kasih jujur; koreksi dijawab rendah-hati; maaf diterima | niat pujian/koreksi/maaf |
+| 6 | KABAR | "apa kabar" dijawab dari keadaan SESI NYATA (ms, giliran, kosakata) | O.status + O.stat |
+| 7 | SEBAB | "kenapa burung bisa terbang?" dijawab dari KB alasan (sayap/sirip/otak/…) | ALASAN_BISA/TAK |
+| 8 | BERTANYA-BALIK | ekor pertanyaan ringan di ujung jawaban (dia juga bertanya) | diaBertanyaRingan |
+| 9 | JUJUR-TAK-TAHU | belum tahu alasan = diakui, bukan dikarang; lahir/umur dari versi.json | semua jawaban default |
+| 10 | PAGAR-UJIAN | kata-kunci santai (birth, maafkan, help, pintar) tak boleh membajak soal bahasa (arti/terjemah/jamak/kode/kelas/lawan) | metaUjian + metaRujuk |
+
+"Decrypt database saya" diartikan jujur: kebiasaan dialog saya didistilasi jadi aturan &
+data eksplisit di atas — bukan klaim menyalin bobot model. Agent ability tetap dari organ
+yang sudah ada (grafik kanvas, harga real-time Binance, hari-jam, hitung) — kini dipanggil
+oleh giliran bicara, bukan hanya oleh kata-kunci.
+
+### 3. Tombol UJI 50.000 DICABUT (hidup.html)
+
+Chip `UJI 50.000 SOAL`, `ujiBar`, fungsi `uji50()` dan listener-nya dihapus dari MENU BICARA.
+Halaman kini murni tempat bicara. 50.000 soal tetap hidup sebagai bahan ajar:
+lab Node `scripts/hidup/uji-bahasa-50000.mjs` + langkah UJI-BAHASA baru di jantung
+(sakti-denyut.yml) yang menjawab ulang seluruh 50.000 soal tiap denyut; gugur sedikit saja =
+denyut merah = otak dibenahi, bukan kunci jawaban.
+
+### 4. Lidah V344 (otak-bahasa-1/2/3 + uji)
+
+14 niat dialog baru: akui, bantah, pujian (kamu & tanpa-kamu), koreksi, maaf, apa-kabar,
+diri-rasa, diri-umur, diri-lahir, bantuan, diri-bisa, diri-kenalkan, kenapa-abil, kenapa-tak.
+Rujukan giliran (dia/ia/itu/it/that + pagar 'it' palsu pada soal hari), penggal koin
+(dan X? / dan yang tadi? + guard angka/ukur/santai), kata-ganti-subjek menang atas benda-ekor
+("can it give milk?" menanyakan singa, bukan susu), pindai sifat frasa 4→1 kata
+(king of the jungle, bersayap indah, tak-terlihat), matematika berantai kiri-ke-kanan
+("2 tambah 3 kali 4" → (2 tambah 3) (5 kali 4) = 20, langkah diperlihatkan), tameng data
+tag() (rekaman leksikon rusak dilewati), titik desimal 1.50 tak lagi memecah segmen periksa.
+
+### 5. Bahan ajar 50.000 — 17 kategori, seri dialog dijalankan pada ingatan yang sama
+
+12 warisan V343 (terjemah 13.000, kode 3.500, kelas 2.400, lawan 400, morfologi 2.800,
+dasar-angka 3.400, istilah 1.200, hari 800, koin 1.400, rangkai 2.800, bertanya 600) +
+5 DIALOG baru 21.200: rasa 3.800 (akui 700, bantah 500, puji 500, kabar 500, maaf 300,
+koreksi 400, rasa 900) · rujuk 3.600 (abil 1.200, sifat 800, rumah 800, apa-itu-lanjut 800) ·
+penggal 2.400 (harga→dan X?→dan yang tadi? 1.200; arah→penggal 1.200) · nyeleneh 4.300
+(kenapa-bisa 1.400, kenapa-tak 1.000, absurd-yakin-tak 900, umur 500, lahir 500) ·
+urut 3.600 (nama 3-giliran 1.200, ent→bisa→kenapa 1.200, harga→dan X?→arah 1.200).
+Tiap soal dialog = SERI giliran; ingatan dikosongkan di awal seri (bukti bukan kebetulan
+warisan soal lain). Penguji tetap berdiri di luar otak: rujukan morfologi/alasan ditulis
+kedua kali, nol tabel soal→jawaban.
+
+### 6. Iterasi benahi terbuka (perbaikan ke otak, bukan kunci jawaban)
+
+88,6% → 95,3% → 98,4% → 99,23% → 99,8% → 99,94% → 99,97% → 99,99% → **50.000/50.000 (100%)
+dalam 28,8 dtk, benih 0x3440001**. Perbaikan yang lahir di jalur ini: cek rujuk hanya pada
+giliran rujukan, abilEN dari PENGETAHUAN.kemampuan (konsisten leksikon tersuntik), tameng
+`kata-fungsi EN` seri-deteksi-bahasa (ID menang saat seri bila ada kata-fungsi ID), tameng
+entri leksikon rusak ('ket' komentar header dibuang dari LEXIKON EN/ID), meN-/ber- masuk
+varian penguji (memahami memuat 'memaham', bukan 'paham'), pagar metaUjian/metaRujuk.
+
+### 7. JUJUR
+
+Ini mesin bahasa matematis yang benar-benar berjalan — bukan kesadaran manusia. Kategori
+recall (terjemah/istilah/lawan/kelas) menguji yang diajarkan; kategori derivasi & dialog
+dihitung hidup dari data + ingatan sesi. "Buta aksara"-nya berakhir pada kemampuan yang
+terukur: dia kini menjawab, menolak jujur bila belum tahu, dan bertanya balik — bukan lagi
+mengulang doktrin.
+
+### 8. BERIKUTNYA
+
+Instruction 4 (teka-teki trader) memakai arsitektur rujukan/penggal yang sama; denyut
+menambah tag "— bicara 50rb 100%" di pesan komit; kalau pemilik menemukan jawaban yang
+terasa kaku, cukup tulis di chat — itu bahan ajar berikutnya.

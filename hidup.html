@@ -242,14 +242,15 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
           <button class="chipB bMode" data-b="en">English</button>
           <button class="chipB" id="bicaraTanyaKu">DIA BERTANYA</button>
           <button class="chipB" id="bicaraPeriksa">PERIKSA-DIRI</button>
-          <button class="chipB" id="bicaraUji50" style="border-color:var(--aksen-l);color:var(--aksen)">UJI 50.000 SOAL</button>
+          <!-- V344: tombol UJI 50.000 SOAL DICABUT — mandat pemilik: 50.000 soal itu
+               BAHAN AJAR internal (lab Node + denyut), bukan menu untuk diklik.
+               Dialog yang nyaman = cukup bicara saja di sini. -->
         </div>
         <div style="display:flex;gap:7px;margin-top:8px">
           <input id="bicaraMasuk" autocomplete="off" placeholder="Tulis apa saja — Indonesia atau English…" style="flex:1;min-width:0;padding:11px 13px;border-radius:12px;border:1px solid var(--garis);background:rgba(0,0,0,.22);color:var(--tinta);font-size:14px;outline:none">
           <button id="bicaraKirim" style="padding:0 16px;border-radius:12px;border:1px solid var(--aksen-l);background:rgba(79,224,194,.12);color:var(--aksen);font-weight:700;font-size:13px">Kirim</button>
         </div>
         <div id="bicaraStat" class="kecil mono" style="margin-top:7px"></div>
-        <div id="ujiBar" class="kecil mono" style="margin-top:5px;display:none;color:var(--aksen)"></div>
       </div>
     </div>
     <div id="tab-pikir">
@@ -4575,43 +4576,13 @@ window.__v341teka={muat, render, data:()=>D};
     log.scrollTop = log.scrollHeight;
     statRender();
   }
-  /* V343: UJI 50.000 — penguji sama dengan lab Node, jalan langsung di perangkat tuan */
-  function uji50() {
-    const bar = $('ujiBar');
-    bar.style.display = 'block';
-    bar.textContent = 'UJI 50.000 SOAL — merangkai soal berbenih & mengambil potret pasar nyata…';
-    setTimeout(async () => {
-      try {
-        /* ujian netral-sesi: ingatan percakapan dibersihkan, benih xorshift dikembalikan — kondisi sama dengan lab */
-        O.memori.namaTuan = null; O.memori.kataAsing = []; O.memori.entTerakhir = null; O.memori.giliran = 0; O.memori.bahasaPaksa = null; O.acak = 0x2f6e2b1;
-        const hasil = await O.ujiBahasa({
-          jumlah: 50000, benih: 0x3430001,
-          ambilPasar: async () => {
-            const KO = O.koin.koin;
-            const sim = Object.keys(KO).map(s => KO[s].pasar);
-            const r = await fetch('https://data-api.binance.vision/api/v3/ticker/24hr?symbols=' + encodeURIComponent(JSON.stringify(sim)));
-            const arr = await r.json();
-            const balik = {}; for (const [s, k] of Object.entries(KO)) balik[k.pasar] = s;
-            const ticker = {};
-            for (const t of arr) { const s = balik[t.symbol]; if (s) ticker[s] = { harga: parseFloat(t.lastPrice), ubah24: parseFloat(t.priceChangePercent) }; }
-            return { ticker, waktu: new Date().toISOString(), sumber: 'data-api.binance.vision' };
-          },
-          kemajuan: (i, n, lulus) => { bar.textContent = 'UJI 50.000 — ' + i + '/' + n + ' · lulus sementara ' + lulus; }
-        });
-        window.__V343_UJI = hasil;
-        bar.textContent = 'UJI 50.000 SELESAI: ' + hasil.lulus + '/' + hasil.jumlah + ' LULUS (' + hasil.persen + '%) — gugur ' + hasil.gugurJumlah +
-          ' · benih 0x3430001 · durasi ' + hasil.durasiDetik + ' dtk · kalimat dirangkai unik ' + hasil.unikRangkai + ' · pertanyaan unik ' + hasil.unikTanya +
-          ' · potret pasar ' + (hasil.waktu || '');
-        const log = $('bicaraLog');
-        log.appendChild(gelembung('dia', 'Ujian 50.000 selesai, tuan: ' + hasil.lulus + '/' + hasil.jumlah + ' lulus (' + hasil.persen + '%). Penguji berdiri di luar diriku — bukti tercatat di laporan/uji-bahasa-50000.json.', 'var(--aksen)'));
-        log.scrollTop = log.scrollHeight;
-      } catch (e) {
-        bar.textContent = 'UJI tersandung: ' + e.message;
-      }
-    }, 60);
-  }
+  /* V344: fungsi uji50() DICABUT — 50.000 soal kini bahan ajar internal
+     (lab Node scripts/hidup/uji-bahasa-50000.mjs + langkah UJI-BAHASA di denyut),
+     bukan lagi menu di halaman. Halaman ini murni tempat berbicara yang nyaman. */
   function bintang() {
     if (!O.siap) { setTimeout(bintang, 300); return; }
+    /* V344: tanggal lahir NYATA dari versi.json — jawaban umur/lahir dihitung dari repo, bukan dikarang */
+    fetch('./versi.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(v => { if (v && v.memoriWaktu) O.diriLahirAt = Date.parse(v.memoriWaktu); }).catch(() => {});
     statRender();
     const log = $('bicaraLog');
     const t = O.diaBertanya(modeBahasa === 'auto' ? 'id' : modeBahasa);
@@ -4638,7 +4609,6 @@ window.__v341teka={muat, render, data:()=>D};
     log.scrollTop = log.scrollHeight;
   });
   $('bicaraPeriksa').addEventListener('click', () => kirim(modeBahasa === 'en' ? 'Check yourself.' : 'Periksa dirimu.'));
-  $('bicaraUji50').addEventListener('click', uji50);
   O.muat('./').then(bintang).catch(e => {
     $('bicaraStatus').textContent = 'otak bahasa belum terjangkau (' + e.message + ') — jujur tanpa karangan, coba muat ulang';
   });

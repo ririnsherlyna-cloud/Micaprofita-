@@ -1,5 +1,5 @@
 /* ============================================================
-   OTAK-BAHASA-1 V342 — LIDAH BAGIAN PERTAMA
+   OTAK-BAHASA-1 V344 — LIDAH BAGIAN PERTAMA
    (1) kata-bit + dekoder produksi biner (uji bolak-balik)
    (2) muat BAHASA/*.json dari repo + suntik leksikon dua bahasa
    (3) morfologi EN (jamak/3sg/lampau/ing/er/ly) dua arah
@@ -9,7 +9,7 @@
    ============================================================ */
 (function () {
   'use strict';
-  /* V343-REV-B1R2 */
+  /* V344-REV-B1R1 */
   const O = (window.__OTAK_BAHASA = window.__OTAK_BAHASA || {
     siap: false, stat: { soal: 0, jawab: 0, sahih: 0, diperbaiki: 0, ms: 0 },
     memori: { namaTuan: null, topik: null, entTerakhir: null, giliran: 0, kataAsing: [], log: [] },
@@ -303,11 +303,11 @@
   function idRedup2Asal(w) { return w.includes('-') && w.split('-')[0] === w.split('-')[1] ? [w.split('-')[0]] : null; }
 
   /* ---------- 5) tokenizer + deteksi bahasa + tag ---------- */
-  const EN_FUNGSI = /\b(the|is|are|am|do|does|did|can|cannot|what|who|where|when|why|how|of|and|to|in|on|a|an|you|your|my|i|it|is|that|this)\b/gi;
+  const EN_FUNGSI = /\b(the|is|are|am|do|does|did|can|cannot|what|who|where|when|why|how|of|and|to|in|on|a|an|you|your|my|i|it|is|that|this|yes|no|okay|ok|right|sure|good|great|nice|cool|wow|sorry|thanks|thank|hello|hi|hey|bye|please)\b/gi;
   const ID_FUNGSI = /\b(apa|itu|ini|yang|adalah|saya|aku|kamu|siapa|mengapa|kenapa|bagaimana|berapa|kapan|tidak|bukan|dan|atau|dengan|untuk|dari|ke|di|bisa|dapat|akan|sudah|sedang|juga|mana)\b/gi;
   function deteksiBahasa(t) {
     const en = (t.match(EN_FUNGSI) || []).length, id = (t.match(ID_FUNGSI) || []).length;
-    if (en === id) return /[^a-z]/i.test(t.replace(/[a-z0-9 .,!?'"-]/gi, '')) ? 'id' : (en > 0 ? 'en' : 'id');
+    if (en === id) return /[^a-z]/i.test(t.replace(/[a-z0-9 .,!?'"-]/gi, '')) ? 'id' : (en > 0 && id === 0 ? 'en' : 'id'); // V344: seri → ID menang bila ada kata-fungsi ID (soal terjemah memakai kata puji EN)
     return en > id ? 'en' : 'id';
   }
   function tokenisasi(t) {
@@ -343,7 +343,9 @@
     const hasil = [];
     const cek = (kata, surf) => {
       const e = L[kata]; if (!e) return;
-      const daftar = Array.isArray(e[0]) ? e : [e];
+      /* V344: tameng data — rekaman rusak (komentar header dsb.) dilewati, tak boleh merobek lidah */
+      const sah = (x) => Array.isArray(x) && x.length >= 2 && typeof x[0] === 'string' && typeof x[1] === 'string';
+      const daftar = (Array.isArray(e[0]) ? e : [e]).filter(sah);
       for (const [lemma, kelas, cat] of daftar) {
         if (!hasil.some(h => h.lemma === lemma && h.kelas === kelas)) hasil.push({ lemma, kelas, surf, cat: cat || '' });
       }

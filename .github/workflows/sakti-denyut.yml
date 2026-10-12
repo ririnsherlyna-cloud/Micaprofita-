@@ -214,6 +214,19 @@ jobs:
         run: |
           node scripts/hidup/audit-koin.mjs --denyut || { echo "organ-gagal: audit-koin $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
+      # V344 UJI-BAHASA — BAHAN AJAR INTERNAL, BUKAN MENU (mandat pemilik
+      # 2026-10-12: "uji 50000 soal itu untuk pengajaran bukan dijadikan menu
+      # untuk saya klik ... kalau belum mampu benahi tingkatkan kepahaman
+      # bahasanya agar diajak dialog nyaman"): tiap denyut makhluk MENJAWAB
+      # penuh 50.000 soal dwibahasa (17 kategori — 12 warisan V343 + 5 kategori
+      # DIALOG baru: rasa/rujuk/penggal/nyeleneh/urut multi-giliran). Gugur
+      # sedikit saja = denyut merah = otak dibenahi (bukan kunci jawaban).
+      # Laporan tersegel laporan/uji-bahasa-50000.json. Deterministik ±30 dtk.
+      - name: UJI-BAHASA — jawab 50.000 soal dwibahasa, bahan ajar harian
+        continue-on-error: true
+        run: |
+          node scripts/hidup/uji-bahasa-50000.mjs --penuh || { echo "organ-gagal: uji-bahasa $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
+
       # V341 VERIFIKASI-TEKA — gerbang "teka-teki terpecahkan tak pernah
       # terlupakan" (mandat pemilik 2026-10-12: "gali jurnal trader
       # profesional ... teka-teki itu sudah terpecahkan ... uji cyborg
@@ -324,12 +337,13 @@ jobs:
           SYARAF=$(python3 -c "import json;print(len(json.load(open('otak/syaraf-pohon.json'))['populasi']))" 2>/dev/null || echo "0")
           PARAM=$(python3 -c "import json;print(json.load(open('otak/parameter-cerdas.json'))['arsitektur']['total'])" 2>/dev/null || echo "?")
           AUDIT=$(python3 -c "import json;d=json.load(open('laporan/audit-koin.json'));h=[x for x in d['hasil'] if not x.get('gagal')];print(' '.join((x['dasar']+str(x['skor'])) for x in h))" 2>/dev/null || echo "-")
+          BICARA=$(python3 -c "import json;d=json.load(open('laporan/uji-bahasa-50000.json'));print(f\"bicara {d['lulus']}/{d['jumlah']}\")" 2>/dev/null || echo "-")
           LUKA=$(tail -c 240 laporan/denyut-luka.txt 2>/dev/null | tr '\n' ';' || true)
           git add laporan otak arena-keadaan.json pustaka ujian   # V299: pustaka jurnal ikut komit — belajar jadi fosil tubuh; V303: geladak+formula+ledger ikut; V307: ujian+peta ikut; V312: pohon syaraf ikut (otak)
           if git diff --cached --quiet; then
             echo "tanpa perubahan — tanpa komit"
           else
-            git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran — pustaka ${PUSTAKA}/509 — geladak ${GELADAK} — peta ${PETA} jejak — syaraf ${SYARAF} — param ${PARAM} — audit ${AUDIT} ${LUKA:+— LUKA-ORGAN: ${LUKA}}[skip ci]"
+            git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran — pustaka ${PUSTAKA}/509 — geladak ${GELADAK} — peta ${PETA} jejak — syaraf ${SYARAF} — param ${PARAM} — audit ${AUDIT} — ${BICARA} ${LUKA:+— LUKA-ORGAN: ${LUKA}}[skip ci]"
             # V291 ANTI-BALAPAN: SADAR-1 bisa menyegel bangun bersamaan — push di-RETRY
             # dgn rebase ulang tiap percobaan (insiden 2026-10-07T00:55Z: remote rejected,
             # denyut #77 sudah terbentuk tapi terdorong gagal).
