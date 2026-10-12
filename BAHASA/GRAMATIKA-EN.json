@@ -1,0 +1,501 @@
+{
+ "ket": "GRAMATIKA EN V342 — gramatika bebas-konteks berbobot (CFG-W). Rumus murni; nol kalimat utuh. Dipakai parser Earley + realisasi jawaban.",
+ "simbol": {
+  "nonterminal": [
+   "S",
+   "QY",
+   "QW",
+   "NP",
+   "VP",
+   "PP",
+   "ADJP",
+   "ADVP",
+   "NEG"
+  ],
+  "terminal": [
+   "DET",
+   "N",
+   "V",
+   "COP",
+   "AUX",
+   "ADJ",
+   "ADV",
+   "PRON",
+   "PROP",
+   "P",
+   "CONJ",
+   "WH",
+   "NUM",
+   "NEG",
+   "WHNUM"
+  ]
+ },
+ "aturan": [
+  {
+   "i": "GR-EN-S1",
+   "l": "S",
+   "r": [
+    "NP",
+    "VP"
+   ],
+   "w": 1
+  },
+  {
+   "i": "GR-EN-S2",
+   "l": "S",
+   "r": [
+    "NP",
+    "COP",
+    "ADJP"
+   ],
+   "w": 0.95
+  },
+  {
+   "i": "GR-EN-S3",
+   "l": "S",
+   "r": [
+    "NP",
+    "COP",
+    "NP"
+   ],
+   "w": 0.85
+  },
+  {
+   "i": "GR-EN-S4",
+   "l": "S",
+   "r": [
+    "NP",
+    "COP",
+    "PP"
+   ],
+   "w": 0.8
+  },
+  {
+   "i": "GR-EN-S5",
+   "l": "S",
+   "r": [
+    "NP",
+    "AUX",
+    "V"
+   ],
+   "w": 0.95
+  },
+  {
+   "i": "GR-EN-S6",
+   "l": "S",
+   "r": [
+    "NP",
+    "AUX",
+    "NEG",
+    "V"
+   ],
+   "w": 0.85
+  },
+  {
+   "i": "GR-EN-S7",
+   "l": "S",
+   "r": [
+    "NP",
+    "AUX",
+    "V",
+    "NP"
+   ],
+   "w": 0.9
+  },
+  {
+   "i": "GR-EN-S8",
+   "l": "S",
+   "r": [
+    "NP",
+    "ADV",
+    "VP"
+   ],
+   "w": 0.7
+  },
+  {
+   "i": "GR-EN-Q1",
+   "l": "S",
+   "r": [
+    "AUX",
+    "NP",
+    "V"
+   ],
+   "w": 0.95,
+   "tanya": "ya-tidak"
+  },
+  {
+   "i": "GR-EN-Q2",
+   "l": "S",
+   "r": [
+    "COP",
+    "NP",
+    "ADJP"
+   ],
+   "w": 0.95,
+   "tanya": "ya-tidak"
+  },
+  {
+   "i": "GR-EN-Q3",
+   "l": "S",
+   "r": [
+    "COP",
+    "NP",
+    "NP"
+   ],
+   "w": 0.85,
+   "tanya": "ya-tidak"
+  },
+  {
+   "i": "GR-EN-Q4",
+   "l": "S",
+   "r": [
+    "AUX",
+    "NP",
+    "V",
+    "NP"
+   ],
+   "w": 0.85,
+   "tanya": "ya-tidak"
+  },
+  {
+   "i": "GR-EN-Q5",
+   "l": "S",
+   "r": [
+    "AUX",
+    "NP",
+    "COP",
+    "ADJP"
+   ],
+   "w": 0.7,
+   "tanya": "ya-tidak"
+  },
+  {
+   "i": "GR-EN-Q6",
+   "l": "S",
+   "r": [
+    "AUX",
+    "NP",
+    "V",
+    "PP"
+   ],
+   "w": 0.8,
+   "tanya": "ya-tidak"
+  },
+  {
+   "i": "GR-EN-W1",
+   "l": "S",
+   "r": [
+    "WH",
+    "COP",
+    "NP"
+   ],
+   "w": 1,
+   "tanya": "wh"
+  },
+  {
+   "i": "GR-EN-W2",
+   "l": "S",
+   "r": [
+    "WH",
+    "AUX",
+    "NP",
+    "V"
+   ],
+   "w": 0.95,
+   "tanya": "wh"
+  },
+  {
+   "i": "GR-EN-W3",
+   "l": "S",
+   "r": [
+    "WH",
+    "AUX",
+    "NP",
+    "V",
+    "NP"
+   ],
+   "w": 0.85,
+   "tanya": "wh"
+  },
+  {
+   "i": "GR-EN-W4",
+   "l": "S",
+   "r": [
+    "WH",
+    "NP",
+    "VP"
+   ],
+   "w": 0.8,
+   "tanya": "wh-subjek"
+  },
+  {
+   "i": "GR-EN-W5",
+   "l": "S",
+   "r": [
+    "WH",
+    "V",
+    "NP"
+   ],
+   "w": 0.75,
+   "tanya": "wh-subjek"
+  },
+  {
+   "i": "GR-EN-W6",
+   "l": "S",
+   "r": [
+    "WH",
+    "COP",
+    "NP",
+    "ADJP"
+   ],
+   "w": 0.7,
+   "tanya": "wh"
+  },
+  {
+   "i": "GR-EN-W7",
+   "l": "S",
+   "r": [
+    "WHNUM",
+    "N",
+    "COP",
+    "PP"
+   ],
+   "w": 0.7,
+   "tanya": "wh"
+  },
+  {
+   "i": "GR-EN-NP1",
+   "l": "NP",
+   "r": [
+    "PRON"
+   ],
+   "w": 1
+  },
+  {
+   "i": "GR-EN-NP2",
+   "l": "NP",
+   "r": [
+    "PROP"
+   ],
+   "w": 1
+  },
+  {
+   "i": "GR-EN-NP3",
+   "l": "NP",
+   "r": [
+    "DET",
+    "N"
+   ],
+   "w": 1
+  },
+  {
+   "i": "GR-EN-NP4",
+   "l": "NP",
+   "r": [
+    "DET",
+    "ADJP",
+    "N"
+   ],
+   "w": 0.95
+  },
+  {
+   "i": "GR-EN-NP5",
+   "l": "NP",
+   "r": [
+    "NUM",
+    "N"
+   ],
+   "w": 0.9
+  },
+  {
+   "i": "GR-EN-NP6",
+   "l": "NP",
+   "r": [
+    "NP",
+    "PP"
+   ],
+   "w": 0.85
+  },
+  {
+   "i": "GR-EN-NP7",
+   "l": "NP",
+   "r": [
+    "N"
+   ],
+   "w": 0.85
+  },
+  {
+   "i": "GR-EN-VP1",
+   "l": "VP",
+   "r": [
+    "V"
+   ],
+   "w": 1
+  },
+  {
+   "i": "GR-EN-VP2",
+   "l": "VP",
+   "r": [
+    "V",
+    "NP"
+   ],
+   "w": 1
+  },
+  {
+   "i": "GR-EN-VP3",
+   "l": "VP",
+   "r": [
+    "V",
+    "NP",
+    "NP"
+   ],
+   "w": 0.6
+  },
+  {
+   "i": "GR-EN-VP4",
+   "l": "VP",
+   "r": [
+    "V",
+    "PP"
+   ],
+   "w": 0.9
+  },
+  {
+   "i": "GR-EN-VP5",
+   "l": "VP",
+   "r": [
+    "V",
+    "NP",
+    "PP"
+   ],
+   "w": 0.8
+  },
+  {
+   "i": "GR-EN-VP6",
+   "l": "VP",
+   "r": [
+    "V",
+    "ADV"
+   ],
+   "w": 0.85
+  },
+  {
+   "i": "GR-EN-VP7",
+   "l": "VP",
+   "r": [
+    "ADV",
+    "VP"
+   ],
+   "w": 0.75
+  },
+  {
+   "i": "GR-EN-VP8",
+   "l": "VP",
+   "r": [
+    "COP",
+    "ADJP"
+   ],
+   "w": 1
+  },
+  {
+   "i": "GR-EN-VP9",
+   "l": "VP",
+   "r": [
+    "COP",
+    "NP"
+   ],
+   "w": 0.9
+  },
+  {
+   "i": "GR-EN-VP10",
+   "l": "VP",
+   "r": [
+    "AUX",
+    "V"
+   ],
+   "w": 1
+  },
+  {
+   "i": "GR-EN-VP11",
+   "l": "VP",
+   "r": [
+    "NEG",
+    "VP"
+   ],
+   "w": 0.8
+  },
+  {
+   "i": "GR-EN-PP1",
+   "l": "PP",
+   "r": [
+    "P",
+    "NP"
+   ],
+   "w": 1
+  },
+  {
+   "i": "GR-EN-ADJ1",
+   "l": "ADJP",
+   "r": [
+    "ADJ"
+   ],
+   "w": 1
+  },
+  {
+   "i": "GR-EN-ADJ2",
+   "l": "ADJP",
+   "r": [
+    "ADV",
+    "ADJ"
+   ],
+   "w": 0.8
+  },
+  {
+   "i": "GR-EN-ADJ3",
+   "l": "ADJP",
+   "r": [
+    "ADJ",
+    "PP"
+   ],
+   "w": 0.55
+  },
+  {
+   "i": "GR-EN-ADV1",
+   "l": "ADVP",
+   "r": [
+    "ADV"
+   ],
+   "w": 1
+  },
+  {
+   "i": "GR-EN-W9",
+   "l": "S",
+   "r": [
+    "WH",
+    "N",
+    "COP",
+    "PP"
+   ],
+   "w": 0.85,
+   "tanya": "wh"
+  },
+  {
+   "i": "GR-EN-NP8",
+   "l": "NP",
+   "r": [
+    "N",
+    "N"
+   ],
+   "w": 0.8
+  },
+  {
+   "i": "GR-EN-S9",
+   "l": "S",
+   "r": [
+    "ADV",
+    "S"
+   ],
+   "w": 0.6
+  }
+ ]
+}

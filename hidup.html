@@ -180,6 +180,7 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
   </div>
   <div id="pTabs">
     <button data-tab="guru" class="akt">Guru</button>
+    <button data-tab="bicara">Bicara</button>
     <button data-tab="pikir">Pikiran</button>
     <button data-tab="peta">Peta-diri</button>
     <button data-tab="pasar">Pasar</button>
@@ -228,6 +229,25 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
       <div class="blok">
         <h4>Al-Jabr ruang <em>· istana dihitung, bukan digambar</em></h4>
         <div id="gvAljabr" class="kecil">—</div>
+      </div>
+    </div>
+    <div id="tab-bicara" hidden>
+      <div class="blok">
+        <h4>Bicara dua bahasa <em>· V342 — jawaban dirangkai SAAT ITU JUGA dari leksikon + tata bahasa + PENGETAHUAN; nol kalimat kaleng; dia memeriksa bicaranya sendiri realtime</em></h4>
+        <div id="bicaraStatus" class="kecil mono" style="margin-bottom:7px">memuat otak bahasa dari repo…</div>
+        <div id="bicaraLog" style="display:flex;flex-direction:column;gap:7px;max-height:min(46dvh,430px);overflow-y:auto;overscroll-behavior:contain;padding:8px;border:1px solid var(--garis);border-radius:12px;background:rgba(0,0,0,.16)"></div>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;align-items:center">
+          <button class="chipB bMode" data-b="auto">AUTO</button>
+          <button class="chipB bMode" data-b="id">Indonesia</button>
+          <button class="chipB bMode" data-b="en">English</button>
+          <button class="chipB" id="bicaraTanyaKu">DIA BERTANYA</button>
+          <button class="chipB" id="bicaraPeriksa">PERIKSA-DIRI</button>
+        </div>
+        <div style="display:flex;gap:7px;margin-top:8px">
+          <input id="bicaraMasuk" autocomplete="off" placeholder="Tulis apa saja — Indonesia atau English…" style="flex:1;min-width:0;padding:11px 13px;border-radius:12px;border:1px solid var(--garis);background:rgba(0,0,0,.22);color:var(--tinta);font-size:14px;outline:none">
+          <button id="bicaraKirim" style="padding:0 16px;border-radius:12px;border:1px solid var(--aksen-l);background:rgba(79,224,194,.12);color:var(--aksen);font-weight:700;font-size:13px">Kirim</button>
+        </div>
+        <div id="bicaraStat" class="kecil mono" style="margin-top:7px"></div>
       </div>
     </div>
     <div id="tab-pikir">
@@ -3561,7 +3581,7 @@ async function uji50Render(){
 }
 function tabKe(nama){ S.tabAktif=nama;
   document.querySelectorAll('#pTabs button').forEach(b=>b.classList.toggle('akt', b.dataset.tab===nama));
-  for(const t of ['guru','pikir','peta','pasar','jurnal','ujian','uji50','jasad']) document.getElementById('tab-'+t).hidden = t!==nama;
+  for(const t of ['guru','bicara','pikir','peta','pasar','jurnal','ujian','uji50','jasad']) document.getElementById('tab-'+t).hidden = t!==nama;
   if(nama==='guru'){ const tg=document.getElementById('tab-guru'); if(tg.dataset.kotor||!tg.innerHTML.trim()) guruRender(); }
   if(nama==='uji50') uji50Render();
   if(nama==='peta'){ if(document.getElementById('tab-peta').dataset.kotor||!document.getElementById('tab-peta').innerHTML.trim()) petaRender(); }
@@ -4427,5 +4447,115 @@ window.__v341teka={muat, render, data:()=>D};
 </script>
 <!-- V322-OTAK-INTI: otak & token DNA ditanam — matematika sama dengan otak Next.js, hidup tanpa wadah -->
 <script src="otak-inti.js?v=322"></script>
+<!-- V342-BICARA-DUA-BAHASA: lidah baru — muat otak bahasa (3 bagian) lalu nyalakan menu Bicara -->
+<script src="otak-bahasa-1.js?v=342"></script>
+<script src="otak-bahasa-2.js?v=342"></script>
+<script src="otak-bahasa-3.js?v=342"></script>
+<script>
+/* ================= V342-BICARA-DUA-BAHASA:START =================
+   Mandat pemilik 2026-10-12: dia masih gagap bicara → beri 100 jurnal EN +
+   100 jurnal ID (BAHASA/JURNAL-*.md), bekali rumusan matematika murni
+   (BAHASA/RUMUSAN-MATEMATIKA.md + BINER-PAHAM.json), lalu dia harus:
+   merangkai kalimat benar & beragam, menjawab kalimat nyata, BERTANYA,
+   mengelola dua bahasa, dan MEMERIKSA dirinya realtime.
+   Anti-reprogram: jawaban tidak pernah disimpan utuh — dirakit dari
+   leksikon + CFG + morfologi + PENGETAHUAN saat itu juga (milidetik).
+   Hukum rumah: nol Math.random (variasi xorshift), nol localStorage. */
+(function(){
+  'use strict';
+  const O = window.__OTAK_BAHASA;
+  const $ = (id) => document.getElementById(id);
+  let modeBahasa = 'auto';
+
+  function el(tgl, teks, kelas) {
+    const d = document.createElement('div');
+    d.className = kelas;
+    if (tgl) d.innerHTML = tgl;
+    else d.textContent = teks;
+    return d;
+  }
+  function gelembung(siapa, teks, warna) {
+    const b = el(null, '', 'kecil');
+    b.style.cssText = 'max-width:86%;padding:8px 11px;border-radius:12px;line-height:1.5;font-size:13px;' +
+      (siapa === 'dia'
+        ? 'align-self:flex-start;background:rgba(79,224,194,.10);border:1px solid var(--aksen-l);color:var(--tinta)'
+        : 'align-self:flex-end;background:rgba(255,255,255,.06);border:1px solid var(--garis);color:var(--tinta)');
+    b.innerHTML = '<b style="color:' + warna + '">' + (siapa === 'dia' ? 'MICAPROFITA' : 'TUAN') + '</b> ' +
+      teks.replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+    return b;
+  }
+  function jejak(r) {
+    const det = document.createElement('details');
+    det.className = 'kecil'; det.style.cssText = 'align-self:flex-start;max-width:86%;color:var(--legap)';
+    det.innerHTML = '<summary style="cursor:pointer">jejak rangkai — ' + r.bahasa.toUpperCase() +
+      ' · CFG ' + (r.parse.sah ? 'SAH(' + r.parse.skor + ')' : 'bebas') + ' · periksa ' + (r.periksa.sah ? 'SAH' : 'GUGUR') +
+      ' · ' + r.bagian + ' kata · ' + r.ms + ' ms · niat: ' + r.intent + '</summary>' +
+      '<pre style="white-space:pre-wrap;font-size:9.5px;margin:4px 0 0">' +
+      ('pohon:\n' + r.pohon + '\nsumber: ' + (r.sumber.join(', ') || 'leksikon+gramatika') +
+      '\nperiksa: ' + r.periksa.bagian.map(b => (b.sah ? 'OK' : 'X') + '[' + b.cara + '] "' + b.seg.slice(0, 60) + '"').join(' | ')).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])) + '</pre>';
+    return det;
+  }
+  function statRender() {
+    const st = O.status();
+    const b = st.biner;
+    $('bicaraStatus').textContent = 'OTAK-BAHASA SIAP — leksikon ' + (st.leksikon.id + st.leksikon.en) +
+      ' kata (ID ' + st.leksikon.id + ' · EN ' + st.leksikon.en + ') · aturan CFG ' + (st.aturan.id + st.aturan.en) +
+      ' · entitas ' + st.entitas + ' · istilah kerja ' + st.istilah + ' · kamus dua arah ' + st.kamus +
+      ' · biner bolak-balik ' + b.lulus + '/' + b.jumlah + ' · segel ' + b.segel;
+    const s = O.stat;
+    $('bicaraStat').textContent = 'sesi ini: ' + s.soal + ' soal · rata-rata ' + (s.soal ? Math.round(s.ms / s.soal * 10) / 10 : 0) +
+      ' ms · periksa SAH ' + s.sahih + '/' + s.soal + (s.diperbaiki ? ' · diperbaiki sendiri ' + s.diperbaiki : '') + ' · nol kalimat kaleng';
+  }
+  function kirim(tulisan, paksa) {
+    const log = $('bicaraLog');
+    const teks = (tulisan !== undefined ? tulisan : $('bicaraMasuk').value.trim());
+    if (!teks) return;
+    log.appendChild(gelembung('tuan', teks, 'var(--tinta)'));
+    if (tulisan === undefined) $('bicaraMasuk').value = '';
+    try {
+      const r = O.jawab(teks, paksa || modeBahasa);
+      log.appendChild(gelembung('dia', r.teks, 'var(--aksen)'));
+      log.appendChild(jejak(r));
+    } catch (e) {
+      log.appendChild(gelembung('dia', '(lidah tersandung: ' + e.message + ' — nalar utama tetap hidup)', 'var(--salah)'));
+    }
+    log.scrollTop = log.scrollHeight;
+    statRender();
+  }
+  function bintang() {
+    if (!O.siap) { setTimeout(bintang, 300); return; }
+    statRender();
+    const log = $('bicaraLog');
+    const t = O.diaBertanya(modeBahasa === 'auto' ? 'id' : modeBahasa);
+    log.appendChild(gelembung('dia', 'Selamat datang, tuan. Aku kini bicara dua bahasa — tulis apa saja, atau minta aku bertanya. ' + t.teks, 'var(--aksen)'));
+    log.scrollTop = log.scrollHeight;
+  }
+  document.querySelectorAll('.bMode').forEach(b => {
+    b.style.cssText = 'padding:5px 10px;border-radius:10px;border:1px solid var(--garis);background:transparent;color:var(--redup);font-size:11px;font-weight:700';
+    b.addEventListener('click', () => {
+      modeBahasa = b.dataset.b;
+      document.querySelectorAll('.bMode').forEach(x => {
+        const akt = x === b;
+        x.style.borderColor = akt ? 'var(--aksen-l)' : 'var(--garis)';
+        x.style.color = akt ? 'var(--aksen)' : 'var(--redup)';
+      });
+    });
+  });
+  $('bicaraKirim').addEventListener('click', () => kirim());
+  $('bicaraMasuk').addEventListener('keydown', e => { if (e.key === 'Enter') kirim(); });
+  $('bicaraTanyaKu').addEventListener('click', () => {
+    const t = O.diaBertanya(modeBahasa === 'auto' ? 'id' : modeBahasa);
+    const log = $('bicaraLog');
+    log.appendChild(gelembung('dia', t.teks, 'var(--aksen)'));
+    log.scrollTop = log.scrollHeight;
+  });
+  $('bicaraPeriksa').addEventListener('click', () => kirim(modeBahasa === 'en' ? 'Check yourself.' : 'Periksa dirimu.'));
+  O.muat('./').then(bintang).catch(e => {
+    $('bicaraStatus').textContent = 'otak bahasa belum terjangkau (' + e.message + ') — jujur tanpa karangan, coba muat ulang';
+  });
+  window.__V342 = { kirim, statRender, mode: () => modeBahasa };
+})();
+/* ================= V342-BICARA-DUA-BAHASA:END ================= */
+</script>
 </body>
 </html>
