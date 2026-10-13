@@ -1428,8 +1428,9 @@ async function otakLoop(){
 const cv=document.getElementById('panggung'), cx=cv.getContext('2d');
 let DPR=1, bebas={x:14,y:14,w:600,h:400}, VIG=null;
 const LAYOUT={nodes:new Map(), zona:[], rects:[], den:{x:0,y:0,r:60}, pond:{x:0,y:0,w:0,h:0}};
-const ZONA_URUT=['otak','.github/workflows','memori','scripts/ujian-buta','· akar','scripts','laporan'];
-const ZONA_NAMA={'· akar':'AKAR','otak':'OTAK','memori':'MEMORI','.github/workflows':'JANTUNG','scripts/ujian-buta':'UJIAN','scripts':'ALAT','laporan':'LAPORAN','BRANKAS':'BRANKAS','· gudang':'GUDANG'};
+const TRAY_PAKET=[];   // V350: butir data nyata di tray — lahir hanya dari kejadian baca/mutasi sungguhan
+const ZONA_URUT=['otak','.github/workflows','memori','laporan','scripts','BAHASA','ujian','imun','pustaka','· akar'];
+const ZONA_NAMA={'· akar':'AKAR','otak':'OTAK','memori':'MEMORI','.github/workflows':'JANTUNG','scripts':'ALAT','laporan':'LAPORAN','BAHASA':'BAHASA','ujian':'UJIAN','imun':'IMUN','pustaka':'PUSTAKA','BRANKAS':'BRANKAS','· gudang':'GUDANG'};
 let POND_POS={};
 function ukur(){
   DPR=Math.min(devicePixelRatio||1, 2);
@@ -1446,30 +1447,47 @@ function ukur(){
    4 paviliun diagonal (AKAR/ALAT/LAPORAN/UJIAN), rak buku sejajar rapi;
    ingatan ruang-hidup mengorbit kubah. SEMUA posisi = fungsi murni (al-jabr)
    dari jumlah file & genom — bukan rasa, bukan sebaran. Rumus dipajang di tab Guru. */
+/* V350-RUANG-SERVER-SEJATI: rak = direktori NYATA seluruh gudang. Dakwaan
+   lama: AKAR menampung 146 file campuran (BAHASA/ujian/imun/pustaka tersembunyi
+   di dalamnya) — daftar server tak jujur. Kini tiap wilayah repo berdiri
+   sebagai rak sendiri; ruang-hidup tetap CORE-NODE yang mengorbit kubah. */
 const SLOT_ISTANA=[
   ['otak',              -90, 0.33, 'kardinal'],
   ['.github/workflows',    0, 0.35, 'kardinal'],
   ['memori',             180, 0.35, 'kardinal'],
-  ['· akar',             -45, 0.50, 'paviliun'],
-  ['scripts',             45, 0.50, 'paviliun'],
   ['laporan',            135, 0.50, 'paviliun'],
-  ['scripts/ujian-buta', 225, 0.50, 'paviliun']];
+  ['scripts',             45, 0.50, 'paviliun'],
+  ['BAHASA',             -45, 0.50, 'paviliun'],
+  ['ujian',              225, 0.50, 'paviliun'],
+  ['imun',               315, 0.50, 'paviliun'],
+  ['pustaka',            270, 0.50, 'paviliun'],
+  ['· akar',              90, 0.50, 'paviliun']];
 function slotDir(d){
-  if(SLOT_ISTANA.some(s=>s[0]===d)) return d;
-  if(d.startsWith('scripts')) return 'scripts';
-  if(d==='ruang-hidup') return 'SARANG';
+  /* V350-R2: pemetaan per SEGMENT PERTAMA — subdirektori (imun/cadangan,
+     ujian/cermin100rb, BAHASA/...) wajib ikut rak induknya, bukan meluber
+     ke AKAR; dahulu 39 unit IMUN + 11 UJIAN tersembunyi di rak salah. */
+  if(d==='· akar') return '· akar';
+  if(d.startsWith('.github')) return '.github/workflows';
+  const atas=d.split('/')[0];
+  if(SLOT_ISTANA.some(s=>s[0]===atas)) return atas;
+  if(atas==='scripts') return 'scripts';
+  if(atas==='ruang-hidup') return 'SARANG';
   return '· akar';
 }
 function rakMuat(rect, fs){
   // al-jabr rak: pitch menyesuaikan lebar & isi; area rak mulai DI BAWAH papan nama (y+44);
-  // kapasitas dihitung DULU — buku yang tak muat TIDAK PERNAH digambar keluar ruangan
+  // kapasitas dihitung DULU — unit yang tak muat TIDAK PERNAH digambar keluar ruangan.
+  // V350-R4: pitchY melar — unit server mengisi kabinet vertikal seperti rak 42U
+  // sungguhan (desktop), sementara ponsel tetap rapat seperti semula.
   const w0=rect.w, h0=rect.h;
   let p=Math.max(5.5, Math.min(11, (w0-18)/Math.max(1, Math.ceil(Math.sqrt(Math.max(1,fs.length))))));
   let cols=Math.max(1, Math.floor((w0-18)/p)), rows=Math.ceil(fs.length/cols);
   while(rows*(p+6)>h0-52 && p>5){ p-=0.5; cols=Math.max(1, Math.floor((w0-18)/p)); rows=Math.ceil(fs.length/cols); }
   const kapRows=Math.max(1, Math.floor((h0-52)/(p+6)));
   const muat=Math.max(0, cols*kapRows);
-  return {p, cols, kapRows, muat};
+  const rowsMuat=Math.max(1, Math.ceil(Math.min(fs.length, muat)/cols));
+  const pitchY=Math.max(p+6, Math.min(24, (h0-58)/rowsMuat));
+  return {p, cols, kapRows, muat, pitchY};
 }
 function rapikanRuang(rects){
   // PAS-KAN (V296): menolak dua ruangan bertumpuk di viewport APA PUN —
@@ -1572,7 +1590,7 @@ function susun(){
     den={x:bebas.x+W/2, y:bebas.y+domeH*0.52+4, r:Math.min(24, domeH*0.40, W*0.06)};
     const gTop=bebas.y+domeH+gap, gBot=pond.y-gap;
     const gW=W-2*M, gH=Math.max(70, gBot-gTop);
-    const urut=['otak','.github/workflows','memori','· akar','scripts','scripts/ujian-buta','laporan','· gudang','BRANKAS'];
+    const urut=['otak','.github/workflows','laporan','scripts','BAHASA','ujian','imun','pustaka','memori','· akar','· gudang','BRANKAS'];
     const N=urut.length;
     let pilih=null, longgar=true;
     /* V347-R3: kandidat dinilai PROPORSI (rasio lebar:tinggi ≈ 1,35) — bukan maksimum
@@ -1617,14 +1635,14 @@ function susun(){
   }
   bangunMebar();
   if(LAYOUT.lantai!==susun._lantaiLama){ susun._lantaiLama=LAYOUT.lantai;
-    try{ jurnal('ISTANA', `ISTANA MEBAR V347: <b>${kandidat.size} ruangan</b> tersusun <b>${LAYOUT.gridKolom} kolom × ${LAYOUT.lantai} lantai</b> al-jabr — bila ruang kurang, lantai baru diciptakan; nol tindihan secara konstruksi, kolam PASAR terkunci strip bawah`,'temuan'); }catch(e){} }
+    try{ jurnal('RUANG', `RUANG-SERVER-SEJATI V350: <b>${kandidat.size} rak direktori nyata</b> tersusun <b>${LAYOUT.gridKolom} kolom × ${LAYOUT.lantai} lantai</b> — seluruh gudang terpetakan (BAHASA·UJIAN·IMUN·PUSTAKA rak sendiri); bila ruang kurang, lantai baru diciptakan; nol tindihan secara konstruksi`,'temuan'); }catch(e){} }
   /* ---- FASE 2: pas-kan — NOL tabrakan di viewport apa pun ---- */
   const semua=[...kandidat.values()].map(k=>k.rect); semua.push(pond);
   rapikanRuang(semua);
   /* ---- FASE 3: rak, buku, zona (pakai rect FINAL) ---- */
   for(const z of zonaDef){
     const k=kandidat.get(z.dir); if(!k) continue;
-    const {p, cols, muat}=rakMuat(k.rect, k.fs);
+    const {p, cols, muat, pitchY}=rakMuat(k.rect, k.fs);
     const muatFs=k.fs.slice(0, muat), luapFs=k.fs.slice(muat);
     for(const f of luapFs) GUDANG.push(f);
     const rowsMuat=Math.max(1, Math.ceil(muatFs.length/cols));
@@ -1634,12 +1652,12 @@ function susun(){
     muatFs.forEach((f,i)=>{
       const gx=i%cols, gy=Math.floor(i/cols);
       const r=2.6+3.4*Math.log1p(f.size||1)/jelas;
-      LAYOUT.nodes.set(f.path, {x:x0+gx*p, y:y0+gy*(p+6), r:Math.min(5.6,r), dir:z.dir, f, gy, cols, rowY:y0+gy*(p+6)});
+      LAYOUT.nodes.set(f.path, {x:x0+gx*p, y:y0+gy*pitchY, r:Math.min(5.6,r), dir:z.dir, f, gy, cols, rowY:y0+gy*pitchY});
     });
     LAYOUT.zona.push({dir:z.dir, dirs:[z.dir], jenis:k.jenis, sudut:z.sudut, rf:z.rf,
       nama:ZONA_NAMA[z.dir]||z.dir.split('/').pop().toUpperCase(),
       rect:k.rect, cx:k.rect.x+k.rect.w/2, cy:k.rect.y+k.rect.h/2, n:muatFs.length, luap:luapFs.length,
-      rakRows:rowsMuat, rakRowY:Array.from({length:rowsMuat},(_,g)=>y0+g*(p+6))});
+      rakRows:rowsMuat, rakRowY:Array.from({length:rowsMuat},(_,g)=>y0+g*pitchY)});
     LAYOUT.rects.push(k.rect);
   }
   LAYOUT.den=den; LAYOUT.pond=pond; LAYOUT.istana=ist;
@@ -2140,6 +2158,35 @@ function gambarPendingin(t){
     cx.fillText('CRAC-0'+(i+1), x+3, yU-3);
   }
 }
+/* ===== V350 OPS-KONSOL — bukti hidup "AGI memperbarui systemnya" =====
+   Satu panel di dasar lorong: mutasi sistem terakhir (komit organ — SHA bisa
+   diverifikasi di tab Actions), aturan dinamis yang makhluk pasang sendiri
+   (PENERIMA-SISTEM), dan vonis ledger pembaruan. Semua dari berkas repo
+   sungguhan (SIS), nol karangan; menyala begitu data sampai. */
+function gambarOps(t){
+  const w0=Math.min(360, bebas.w-104), h0=30;
+  if(w0<150) return;
+  const x0=bebas.x+2, y0=bebas.y+bebas.h-h0-6;
+  const prox=Math.max(0, 1-Math.hypot(NADI.x-(x0+w0/2), NADI.y-(y0+h0/2))/120);
+  cx.fillStyle='rgba(5,9,17,.82)'; rr(x0,y0,w0,h0,6); cx.fill();
+  cx.strokeStyle=`rgba(255,255,255,${(0.09+prox*0.14).toFixed(3)})`; cx.lineWidth=1;
+  rr(x0,y0,w0,h0,6); cx.stroke();
+  const k=(SIS.komit&&SIS.komit[0])||null;
+  const r=(SIS.aturan&&SIS.aturan.ringkas)||null;
+  const ad=SIS.aturan, pb=SIS.pembaruan;
+  const baru=k&&SIS.komitAt&&(sekarang()-SIS.komitAt<9000);
+  cx.fillStyle= baru?`rgba(233,238,248,${(0.4+0.6*Math.abs(Math.sin(t*6))).toFixed(3)})`:(k?'rgba(79,224,194,.9)':'rgba(148,161,186,.4)');
+  cx.fillRect(x0+7, y0+9, 3, 3);
+  cx.font=FONT_Z; cx.textAlign='left';
+  cx.fillStyle='rgba(148,161,186,.85)';
+  cx.fillText('PEMBARUAN-MANDIRI', x0+15, y0+12.5);
+  cx.fillStyle= k?'rgba(233,238,248,.8)':'rgba(148,161,186,.5)';
+  cx.fillText(k?`komit ${k.sha} · ${sisKlasifikasi(k.pesan).org} · ${umur(sekarang()-(Date.parse(k.waktu)||SIS.at))}`:'menjangkau gerbang mutasi repo…', x0+15, y0+24.5);
+  if(ad){ const kanan=`${(r&&(r.aktifCt||0))||0} aturan AKTIF · siklus ${ad.siklus||'—'}`
+      +(pb&&pb.ledger&&w0>320?` · vonis ${pb.ledger.matang} (hit ${pb.ledger.hitPct}%)`:'' );
+    cx.textAlign='right'; cx.fillStyle='rgba(79,224,194,.75)';
+    cx.fillText(kanan, x0+w0-8, y0+12.5); cx.textAlign='left'; }
+}
 function gambarHabitat(t, dt){
   gambarVena(t, dt);
   const kini=sekarang();
@@ -2160,12 +2207,38 @@ function gambarHabitat(t, dt){
   for(const z of LAYOUT.zona){ if(!z.rect) continue;
     cx.beginPath(); cx.moveTo(z.cx,trayY); cx.lineTo(z.cx,z.rect.y+5); cx.stroke(); }
   cx.restore();
-  // ZONA: lemari rak buku + jalur sumbu ke gerbang kardinal; menyala saat didekati
+  /* V350 TRAY-PAKET — butir data meluncur di tray mengikuti rute Manhattan:
+     dari rak naik ke tray, melintang lorong, turun ke CORE-NODE. Lahir HANYA
+     dari kejadian nyata (unit dibaca / komit organ baru) — bukan hiasan waktu. */
+  for(let i=TRAY_PAKET.length-1;i>=0;i--){
+    const pk=TRAY_PAKET[i], u=(kini-pk.at)/(pk.dur||2200);
+    if(!pk || u>=1){ TRAY_PAKET.splice(i,1); continue; }
+    const seg=(v)=>{ if(v<0.28) return {x:pk.cx, y:pk.top+(trayY-pk.top)*(v/0.28)};
+      if(v<0.72) return {x:pk.cx+(den.x-pk.cx)*((v-0.28)/0.44), y:trayY};
+      return {x:den.x, y:trayY+(den.y+den.r-6-trayY)*((v-0.72)/0.28)}; };
+    for(const off of [0,0.07,0.14]){
+      const q=seg(Math.min(1,u+off)), a=Math.max(0,(1-off*4))*(0.9-u*0.35);
+      cx.fillStyle=`rgba(79,224,194,${a.toFixed(3)})`;
+      cx.beginPath(); cx.arc(q.x,q.y,1.7,0,7); cx.fill();
+    }
+  }
+  // ZONA V350: kabinet rak server NYATA — satu rak = satu direktori repo;
+  // menyala saat didekati, saat isinya dibaca, dan saat jantung repo berdenyut
   for(const z of LAYOUT.zona){
     let prox=0;
     for(const p of pos){ const d=jarakKeRect(p.x,p.y,z.rect); prox=Math.max(prox, Math.max(0, 1-d/90)); }
     const tgtZona=S.kerja.target && S.kerja.target.startsWith('pasar:')===false &&
       LAYOUT.nodes.get(S.kerja.target)?.dir && z.dir===LAYOUT.nodes.get(S.kerja.target)?.dir;
+    /* V350: jejak baca nyata per rak — unit yang baru dibaca membuat kabinet
+       menyala dan melahirkan paket tray (bukti AGI sedang mengelola server) */
+    let nK=0, bacaMax=0;
+    for(const [p,n0] of LAYOUT.nodes){ if(n0.dir!==z.dir) continue;
+      const b=S.baca[p]; if(!(b&&(b.fakta||b.s1))) continue; nK++;
+      const st=b.readAt||b.berubah||b.atGagal||0; if(st>bacaMax) bacaMax=st; }
+    const bacaBaru=bacaMax && bacaMax>(z._bacaMax||0) && (kini-bacaMax)<12000;
+    if(bacaBaru && TRAY_PAKET.length<24) TRAY_PAKET.push({cx:z.cx, top:z.rect.y+4, at:kini, dur:2200});
+    if(bacaMax>(z._bacaMax||0)) z._bacaMax=bacaMax;
+    const dbaca=Math.max(0, 1-(kini-(z._bacaMax||0))/8000);
     const terbuka=true;   // semua zona = tubuh utuh: tak ada lagi zona terputus, hanya progres belajar yang tampil jujur
     if(z.jenis==='kardinal'){
       cx.strokeStyle='rgba(79,224,194,.045)'; cx.lineWidth=1;
@@ -2175,47 +2248,72 @@ function gambarHabitat(t, dt){
       cx.strokeStyle='rgba(79,224,194,.04)'; cx.lineWidth=1;
       cx.beginPath(); cx.moveTo(den.x, den.y); cx.lineTo(z.cx, z.rect.y+6); cx.stroke();
     }
-    const al=(terbuka?0.05:0.03)+prox*0.07+(tgtZona?0.05:0);
-    /* RAK-SERVER V348 — badan kabinet + gradien metal + slat ventilasi:
-       zona bukan lagi lemari buku melainkan rak server nyata yang dijaga makhluk */
+    const al=(terbuka?0.075:0.03)+prox*0.09+(tgtZona?0.06:0)+dbaca*0.12;
+    /* RAK-SERVER V348/V350 — badan kabinet + gradien metal + papan nama */
     const gR=cx.createLinearGradient(0,z.rect.y,0,z.rect.y+z.rect.h);
-    gR.addColorStop(0,`rgba(18,29,48,${(0.34+prox*0.22).toFixed(3)})`);
+    gR.addColorStop(0,`rgba(18,29,48,${(0.38+prox*0.22+dbaca*0.10).toFixed(3)})`);
     gR.addColorStop(1,`rgba(6,10,19,${(0.46+prox*0.18).toFixed(3)})`);
     cx.fillStyle=gR; rr(z.rect.x+4, z.rect.y+4, z.rect.w-8, z.rect.h-8, 10); cx.fill();
     cx.strokeStyle=`rgba(255,255,255,${al.toFixed(3)})`; cx.lineWidth=1;
     rr(z.rect.x+4, z.rect.y+4, z.rect.w-8, z.rect.h-8, 12); cx.stroke();
+    /* V350: papan nama rak — pelat metal gelap + LED status + garis rambut */
+    cx.fillStyle='rgba(2,5,10,.55)'; rr(z.rect.x+5, z.rect.y+5, z.rect.w-10, 33, 8); cx.fill();
+    cx.strokeStyle=`rgba(79,224,194,${(0.05+dbaca*0.3).toFixed(3)})`; cx.lineWidth=1;
+    cx.beginPath(); cx.moveTo(z.rect.x+9, z.rect.y+38.5); cx.lineTo(z.rect.x+z.rect.w-9, z.rect.y+38.5); cx.stroke();
+    cx.fillStyle=`rgba(79,224,194,${(0.5+dbaca*0.5).toFixed(3)})`; cx.fillRect(z.rect.x+9, z.rect.y+10.5, 2.6, 2.6);
+    /* ventilasi dasar — selat tipis di kaki kabinet */
     cx.strokeStyle='rgba(148,161,186,.075)';
-    for(let sv=0;sv<3;sv++){ const vy=z.rect.y+35+sv*3;
+    for(let sv=0;sv<3;sv++){ const vy=z.rect.y+z.rect.h-5.5+sv*2.4;
       cx.beginPath(); cx.moveTo(z.rect.x+11,vy); cx.lineTo(z.rect.x+z.rect.w-11,vy); cx.stroke(); }
-    // PAPAN RAK — garis sejajar tertib di bawah tiap barisan buku
+    // PAPAN RAK — garis sejajar tertib di bawah tiap barisan unit
     if(z.rakRowY) for(const ry of z.rakRowY){
       cx.strokeStyle='rgba(255,255,255,.035)'; cx.lineWidth=1;
       cx.beginPath(); cx.moveTo(z.rect.x+9, ry+4.5); cx.lineTo(z.rect.x+z.rect.w-9, ry+4.5); cx.stroke();
     }
     // gerbang: berlian kecil di tepi lemari menghadap kubah
     const gd=z.jenis==='kardinal'?7:5;
-    cx.fillStyle=`rgba(79,224,194,${((terbuka?0.20:0.08)+prox*0.35).toFixed(3)})`;
+    cx.fillStyle=`rgba(79,224,194,${((terbuka?0.20:0.08)+prox*0.35+dbaca*0.2).toFixed(3)})`;
     berlian(z.rect.x+rectTepiX(z,den), z.rect.y+rectTepiY(z,den), gd); cx.fill();
     // rune zona — SELALU TERBUKA: label zona-terputus sudah DIMUSNAHKAN dari tubuh.
     // Ada di rumah = organ hidup. Yang tampil = progres belajar nyata (kubaca N/M).
     const du=STRUKTUR.denyut[z.dir]||0, de=Math.max(0,1-(kini-du)/8000);
-    const ra=0.30+prox*0.55+de*0.35;   /* V348: dasar lebih terang — papan nama rak selalu terbaca */
-    let nK=0; for(const [p,n0] of LAYOUT.nodes){ if(n0.dir===z.dir && S.baca[p] && (S.baca[p].fakta||S.baca[p].s1)) nK++; }
+    const ra=0.42+prox*0.5+de*0.30+dbaca*0.22;   /* V350: papan nama rak selalu terbaca */
     cx.font=FONT_Z; cx.textAlign='left'; cx.textBaseline='alphabetic';
     cx.fillStyle=`rgba(148,161,186,${ra.toFixed(3)})`;
-    cx.fillText(z.nama, z.rect.x+13, z.rect.y+19);
-    cx.fillStyle=`rgba(91,103,128,${(ra*0.7).toFixed(3)})`;
+    cx.fillText(z.nama, z.rect.x+17, z.rect.y+19);
+    cx.fillStyle=`rgba(91,103,128,${(ra*0.85).toFixed(3)})`;
     const sub=z.jenis==='brankas'
       ? `${z.n} harta tersegel · sentuh untuk kubaca`
       : z.jenis==='gudang'
-        ? (z.n?`${z.n} buku luberan${(z.rakMuatG!=null&&z.rakMuatG<z.n)?` · rak penuh ${z.rakMuatG}, sisanya menunggu ruang baru`:''}`:'kosong — ruang cadangan istana')
-        : `${z.n} buku · kubaca ${nK}`;
-    cx.fillText(sub, z.rect.x+13, z.rect.y+31);
+        ? (z.n?`${z.n} unit luberan${(z.rakMuatG!=null&&z.rakMuatG<z.n)?` · rak penuh ${z.rakMuatG}, sisanya menunggu ruang baru`:''}`:'kosong — ruang cadangan ruang server')
+        : `${z.n} unit server · kubaca ${nK}`;
+    /* V350-R3: teks papan nama dikunci di dalam kabinet — nol luber ke rak tetangga */
+    let subT=sub; while(cx.measureText(subT).width>z.rect.w-30 && subT.length>4) subT=subT.slice(0,-2);
+    if(subT!==sub) subT=subT.replace(/[\s·,]+$/,'')+'…';
+    cx.fillText(subT, z.rect.x+17, z.rect.y+31);
+    /* V350: meter cakupan baca rak — angka NYATA kubaca/total unit (nol hias) */
+    if(z.jenis!=='brankas' && z.jenis!=='gudang' && z.n>0 && z.rect.h>58){
+      const bx0=z.rect.x+13, bx1=z.rect.x+z.rect.w-13, by=z.rect.y+z.rect.h-8;
+      const cov=Math.max(0, Math.min(1, nK/z.n));
+      cx.fillStyle='rgba(255,255,255,.07)'; cx.fillRect(bx0,by,bx1-bx0,2.2);
+      cx.fillStyle=`rgba(79,224,194,${(0.4+dbaca*0.45).toFixed(3)})`; cx.fillRect(bx0,by,(bx1-bx0)*cov,2.2);
+    }
     // KAMAR KEBAL BRANKAS — tepi ganda emas: harta negara butuh kamar yang jelas bedanya
     if(z.jenis==='brankas'){
       cx.strokeStyle=`rgba(255,208,120,${(0.10+prox*0.28+(tgtZona?0.08:0)).toFixed(3)})`; cx.lineWidth=1;
       rr(z.rect.x+7, z.rect.y+7, z.rect.w-14, z.rect.h-14, 9); cx.stroke();
     }
+  }
+  /* V350: penanda LANTAI — bila rak bertambah, grid menciptakan lantai baru;
+     penomoran nyata dari susun() (LAYOUT.lantai), bukan klaim kosong */
+  if(LAYOUT.lantai>1){
+    cx.font=FONT_Z; cx.textAlign='right'; cx.fillStyle='rgba(120,160,220,.28)';
+    const barisY=[];
+    for(const z of LAYOUT.zona){ if(!z.rect) continue;
+      const cy0=z.rect.y+z.rect.h/2;
+      if(!barisY.some(y=>Math.abs(y-cy0)<30)) barisY.push(cy0); }
+    barisY.sort((a,b)=>a-b).forEach((y,i)=>cx.fillText('L-'+String(i+1).padStart(2,'0'), innerWidth-4, y+3));
+    cx.textAlign='left';
   }
   // sarang — CORE-NODE pusat ruang server: cekungan cahaya bernapas seirama makhluk
   const gl=cx.createRadialGradient(den.x,den.y,2, den.x,den.y,den.r*1.55);
@@ -2257,7 +2355,7 @@ function gambarHabitat(t, dt){
     if(st==='ubah') ledC=`rgba(233,238,248,${(0.35+0.65*Math.abs(Math.sin(t*4.6+n.x*0.13))).toFixed(3)})`;
     else if(st==='baca') ledC=`rgba(79,224,194,${Math.min(1,al*1.4).toFixed(3)})`;
     else if(st==='parsial') ledC=`rgba(255,208,120,${(al*1.3).toFixed(3)})`;
-    else ledC='rgba(148,161,186,.14)';
+    else ledC='rgba(148,161,186,.22)';
     cx.fillStyle=ledC; cx.fillRect(n.x-1.1, n.y-bh/2-3.4, 2.2, 2.2);
   }
   // HARTA BRANKAS — segel emas: pointer ke artefak nyata penentu nyawa; satu-satunya aksen emas di istana
@@ -2594,6 +2692,7 @@ function gambar(t, dt){
   gambarHabitat(t, dt);
   gambarPond(t, dt);
   gambarPendingin(t);
+  gambarOps(t);
   gambarBacaan(t);
   gambarNadi(t);
   gambarLabel();
@@ -3581,7 +3680,7 @@ function ovStatusRender(){
   const n=S.pohon.files.length, baca=Object.keys(S.baca).length;
   let s;
   if(S.terputus && !n) s='TERPUTUS — hidup dari ingatan';
-  else if(S.pohon.live) s=`REPO-LIVE via ${S.pohon.sumber} · ${n} file`;
+  else if(S.pohon.live) s=`REPO-LIVE via ${S.pohon.sumber} · ${n} file · ${LAYOUT.zona.filter(z=>z.jenis!=='gudang'&&z.jenis!=='brankas').length} rak`;
   else if(n) s=`peta-cache · umur ${umur(sekarang()-S.pohon.at)}`;
   else s='memindai rumah…';
   st.textContent=s;
@@ -3829,7 +3928,7 @@ async function uji50Render(){
    kemarau) yang menulis-ulang otak, ingatan, dan alatnya TIAP DENYUT tanpa
    tangan manusia. Tab ini membaca git log dari dua gerbang bebas-kunci dan
    memajangnya apa adanya; setiap komit bermata SHA yang bisa diverifikasi. */
-const SIS={at:0, komit:null, sumber:'', aturan:null, aturanAt:0};
+const SIS={at:0, komit:null, sumber:'', aturan:null, aturanAt:0, pembaruan:null, shaTop:'', komitAt:0};
 function sisKlasifikasi(msg){
   const m=String(msg||'');
   if(/^(SARANG-PENJAGA|sadar1|IMUN|UJI-50|STUDI-KEMARAU|KEBANGKITAN|pustaka|denyut|SADAR)/i.test(m)) return {org:'ORGAN', c:'temuan'};
@@ -3872,7 +3971,19 @@ async function sistemMuat(){
     SIS.komit=h.komit; SIS.sumber=h.sumber; SIS.at=sekarang();
     const organ=h.komit.filter(k=>sisKlasifikasi(k.pesan).org==='ORGAN').length;
     if(!lama) jurnal('SISTEM', `pusat kendali terbuka: <b>${h.komit.length} komit terakhir</b> terbaca via ${h.sumber} — <b>${organ}</b> lahir dari organ tubuh sendiri (GitHub Actions): sistem memperbarui dirinya sendiri`, 'temuan');
+    /* V350 OPS-KONSOL: deteksi mutasi BARU — sistem yang memperbarui dirinya
+       terlihat LANGSUNG di ruangan (paket tray dari rak JANTUNG + catatan) */
+    const shaTop=(h.komit[0]&&h.komit[0].sha)||'';
+    if(lama && SIS.shaTop && shaTop && shaTop!==SIS.shaTop){
+      jurnal('SISTEM', `mutasi baru dilihat di ruangan: <b>${shaTop}</b> — ${String(h.komit[0].pesan||'').slice(0,90)} (via ${h.sumber})`, 'temuan');
+      const zj=LAYOUT.zona.find(z=>z.dir==='.github/workflows');
+      if(zj && TRAY_PAKET.length<24) TRAY_PAKET.push({cx:zj.cx, top:zj.rect.y+4, at:sekarang(), dur:2400});
+    }
+    if(shaTop) SIS.shaTop=shaTop;
+    SIS.komitAt=sekarang();
   }catch(e){ SIS.komit=SIS.komit||null; if(!SIS.komit) SIS.at=sekarang()-300000; }
+  /* V350: vonis ledger organ PEMBARUAN-SISTEM — bukti angka: sistem menilai dirinya sendiri */
+  try{ const pb=await ghAmbil('laporan/pembaruan-sistem.json'); SIS.pembaruan=JSON.parse(pb); }catch(e){ SIS.pembaruan=SIS.pembaruan||null; }
   if(S.tabAktif==='sistem') sistemRender();
 }
 function sistemRender(){
@@ -3947,7 +4058,7 @@ function sistemRender(){
         return `<div class="jr ${kl.c}"><span class="t">${k.sha} · ${k.penulis} · ${kl.org}${k.waktu?' · '+String(k.waktu).slice(0,16).replace('T',' '):''}</span><br>${k.pesan.slice(0,120)}</div>`; }).join('');
   }
 }
-setInterval(()=>{ if(S.tabAktif==='sistem' && sekarang()-SIS.at>5*60000) sistemMuat(); }, 60000);
+setInterval(()=>{ if(sekarang()-SIS.at>5*60000) sistemMuat().catch(()=>{}); }, 60000);   // V350: OPS-konsol + deteksi mutasi — tanpa peduli tab mana terbuka
 function tabKe(nama){ S.tabAktif=nama;
   document.querySelectorAll('#pTabs button').forEach(b=>b.classList.toggle('akt', b.dataset.tab===nama));
   for(const t of ['guru','bicara','pikir','peta','pasar','jurnal','ujian','uji50','sistem','jasad']) document.getElementById('tab-'+t).hidden = t!==nama;
@@ -3974,7 +4085,7 @@ document.getElementById('tab-peta').addEventListener('click', (ev)=>{
 (async function boot(){
   ukur(); susun(); nadiInit(); terapkanGenom(); strukturSinkron(); S.stat.sesi++;
   tabKe('guru'); stripRender(); ovStatusRender(); indeksRender(); petaRender(); pasarRender(); jurnalRender(); guruRender();
-  jurnal('LAHIR', `sesi #${S.stat.sesi} — NADI menyala di istana-al-jabrnya; tubuh bergerak dari frame pertama, ingatan resmi kuhidrasi dari GitHub di belakang (Sadar-1 menulisnya tiap ±20 mnt tanpa penonton)`);
+  jurnal('LAHIR', `sesi #${S.stat.sesi} — NADI menyala di ruang server AGI-nya; tubuh bergerak dari frame pertama, ingatan resmi kuhidrasi dari GitHub di belakang (Sadar-1 menulisnya tiap ±20 mnt tanpa penonton)`);
   /* ================= V338 JENDELA-INSTAN =================
      Dakwaan pemilik (2026-10-11): "masa tiap buka tab di browser lain
      harus reload semua database dulu? Ini harus murni terintegrasi di
@@ -4009,6 +4120,7 @@ document.getElementById('tab-peta').addEventListener('click', (ev)=>{
   }
   susun(); ovStatusRender();
   otakLoop();
+  sistemMuat().catch(()=>{});   // V350: OPS-konsol menyala sejak boot — mutasi sistem terlihat tanpa membuka tab
   // UJIAN KEHIDUPAN — halaman menguji dirinya: simulasi atau nyata?
   ujianKehidupan().catch(e=>{ jurnal('UJIAN', 'ujian gagal total: '+pesan(e), 'gagal'); });
   document.getElementById('uvUlang').addEventListener('click', ()=>{ ujianKehidupan().catch(e=>jurnal('UJIAN','uji ulang gagal: '+pesan(e),'gagal')); });
@@ -4019,6 +4131,10 @@ document.getElementById('tab-peta').addEventListener('click', (ev)=>{
     guruKeadaan, guruHitung, guruHitungLokal, susun, istana:()=>LAYOUT.istana,
     ujianKehidupan, ujianState:()=>S.ujian, mode:()=>LAYOUT.mode, paru:()=>S.paru};
   window.__v288 = window.__v289; window.__v287 = window.__v289; window.__v295 = window.__v289; window.__v296 = window.__v289;
+  /* V350: probe audit ruang server — rak, tray, dan bukti pembaruan mandiri */
+  window.__v350 = {SIS, TRAY_PAKET,
+    rak:()=>LAYOUT.zona.map(z=>({dir:z.dir, nama:z.nama, n:z.n, luap:z.luap})),
+    ops:()=>({komit:(SIS.komit&&SIS.komit[0])||null, aturan:(SIS.aturan&&SIS.aturan.ringkas)||null, pembaruan:SIS.pembaruan||null})};
   // V338: render loop & interval 5 dtk kini di DEPAN boot (jendela-instan) — blok lama dimusnahkan di sini
   // deteksi bangun S1 baru SELAGI penonton hadir — bukti hidup tanpa penonton, dilihat langsung
   setInterval(()=>{ muatMemoriGitHub(); }, 5*60000);
