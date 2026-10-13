@@ -356,8 +356,12 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
     </div>
     <div id="tab-sistem" hidden>
       <div class="blok">
-        <h4>SISTEM-INTI <em>· V348 — kendali versi, umur abadi, denyut</em></h4>
+        <h4>SISTEM-INTI <em>· V349 — kendali versi, umur abadi, denyut</em></h4>
         <div id="sysInti"><div class="kecil">membaca versi dari repo…</div></div>
+      </div>
+      <div class="blok">
+        <h4>PEMBARUAN-SISTEM <em>· V349 — aturan yang makhluk tulis, uji-replay, pasang &amp; batalkan sendiri</em></h4>
+        <div id="sysBaru"><div class="kecil">membaca otak/aturan-dinamis.json dari repo…</div></div>
       </div>
       <div class="blok">
         <h4>DAFTAR-ORGAN <em>· rak server nyata — bukti segel terakhir dari git log</em></h4>
@@ -3825,7 +3829,7 @@ async function uji50Render(){
    kemarau) yang menulis-ulang otak, ingatan, dan alatnya TIAP DENYUT tanpa
    tangan manusia. Tab ini membaca git log dari dua gerbang bebas-kunci dan
    memajangnya apa adanya; setiap komit bermata SHA yang bisa diverifikasi. */
-const SIS={at:0, komit:null, sumber:''};
+const SIS={at:0, komit:null, sumber:'', aturan:null, aturanAt:0};
 function sisKlasifikasi(msg){
   const m=String(msg||'');
   if(/^(SARANG-PENJAGA|sadar1|IMUN|UJI-50|STUDI-KEMARAU|KEBANGKITAN|pustaka|denyut|SADAR)/i.test(m)) return {org:'ORGAN', c:'temuan'};
@@ -3859,6 +3863,11 @@ async function komitAmbil(){
   throw new Error('komit-tak-terjangkau');
 }
 async function sistemMuat(){
+  /* V349 PEMBARUAN-SISTEM — baca aturan dinamis yang makhluk tulis sendiri */
+  try{
+    const teks=await ghAmbil('otak/aturan-dinamis.json');
+    SIS.aturan=JSON.parse(teks); SIS.aturanAt=sekarang();
+  }catch(e){ SIS.aturan=SIS.aturan||null; if(!SIS.aturan) SIS.aturanAt=sekarang()-300000; }
   try{ const h=await komitAmbil(); const lama=!!SIS.komit;
     SIS.komit=h.komit; SIS.sumber=h.sumber; SIS.at=sekarang();
     const organ=h.komit.filter(k=>sisKlasifikasi(k.pesan).org==='ORGAN').length;
@@ -3867,8 +3876,8 @@ async function sistemMuat(){
   if(S.tabAktif==='sistem') sistemRender();
 }
 function sistemRender(){
-  const wi=document.getElementById('sysInti'), wo=document.getElementById('sysOrgan'), wm=document.getElementById('sysMutasi');
-  if(!wi||!wo||!wm) return;
+  const wi=document.getElementById('sysInti'), wo=document.getElementById('sysOrgan'), wm=document.getElementById('sysMutasi'), wb=document.getElementById('sysBaru');
+  if(!wi||!wo||!wm||!wb) return;
   /* — SISTEM-INTI: angka dari repo nyata, nol karangan — */
   const v=((S.baca['versi.json']&&S.baca['versi.json'].fakta)||[]).join(' ');
   const kodeVersi=(v.match(/kodeVersi <b>([^<]+)<\/b>/)||[])[1]||'—';
@@ -3877,11 +3886,33 @@ function sistemRender(){
   const nF=S.pohon.files.length, bacaF=Object.keys(S.baca).length;
   wi.innerHTML=`
     <div class="baris"><span class="k">kode versi</span><span class="v h">${kodeVersi}</span></div>
-    <div class="baris"><span class="k">epok ruang</span><span class="v">V348-RUANG-SERVER-AGI</span></div>
+    <div class="baris"><span class="k">epok ruang</span><span class="v">V349-PENERIMA-SISTEM</span></div>
+    <div class="baris"><span class="k">pembaruan mandiri</span><span class="v" id="sysEpokBaru">—</span></div>
     <div class="baris"><span class="k">umur abadi</span><span class="v">${umurT}</span></div>
     <div class="baris"><span class="k">denyut jantung</span><span class="v">${denyutN?'#'+denyutN:'—'}</span></div>
     <div class="baris"><span class="k">rumah terbaca</span><span class="v">${bacaF}/${nF} file · ${kb(S.stat.bytes)}</span></div>
     <div class="kecil" style="margin-top:4px">ruang: <b>${LAYOUT.gridKolom||'?'} kolom × ${LAYOUT.lantai||'?'} lantai</b> rak server + CORE-NODE 01 + dinding-feed pasar + 2 pendingin CRAC — tata ruang al-jabr, nol tindihan secara konstruksi.</div>`;
+  const _ep=document.getElementById('sysEpokBaru');
+  if(_ep){ const _ad=SIS.aturan, _r=_ad&&_ad.ringkas; _ep.textContent=_r?(_r.aktifCt||0)+' aturan AKTIF / '+(_r.totalTerpasang||0)+' terpasang':'membaca…'; }
+  /* — PEMBARUAN-SISTEM (V349): aturan dinamis yang makhluk tulis, uji-replay, pasang & batalkan sendiri — */
+  if(!SIS.aturan || !Array.isArray(SIS.aturan.aktif)){
+    wb.innerHTML='<div class="kecil">otak/aturan-dinamis.json belum terbaca dari repo — organ PENERIMA-SISTEM yang menulisnya tiap denyut (tambang → uji-replay → segel → pasang). Belum terbaca = belum terbaca, tanpa karangan.</div>';
+  } else {
+    const ad=SIS.aturan, aktif=ad.aktif||[], sejarah=ad.sejarah||[], r=ad.ringkas||{};
+    const teksSyarat=(s)=>s.map(a=>{const op={lt:'&lt;',lte:'≤',gt:'&gt;',gte:'≥',eq:'=',neq:'≠'}[a.op]||a.op;return '<b>'+a.p+'</b> '+op+' '+a.v;}).join(' DAN ');
+    const baris=(a,mauSejarah)=>{ const cls=a.status==='AKTIF'?'':(a.status==='DIBATALKAN'?'gagal':'');
+      const led=a.status==='AKTIF'?'':'redup';
+      return '<div class="jr '+cls+'"><span class="t">'+(a.segel?String(a.segel).slice(0,8):'—')+' · '+a.jenis+(a.efek&&a.efek.faktor?' ×'+a.efek.faktor:'')+' · '+a.status+' · denyut #'+(a.pasangDenyut||'?')+(a.penilaian&&a.penilaian.deltaKini!=null?' · replay kini '+(a.penilaian.deltaKini>=0?'+':'')+(a.penilaian.deltaKini*100).toFixed(1)+'%':'')+'</span><br>'
+        +'<b>'+a.id+'</b> — '+teksSyarat(a.syarat||[])
+        +(a.bukti?'<div class="kecil">bukti tambang: n='+a.bukti.n+' · hit kotak '+(a.bukti.hitPctKotak??'?')+'% · replay menyelamatkan '+(a.bukti.deltaReplay>=0?'+':'')+((a.bukti.deltaReplay||0)*100).toFixed(1)+'%'+(a.bukti.pfSesudah?' · PF '+(a.bukti.pfSebelum??'?')+'→'+a.bukti.pfSesudah:'')+'</div>':'')
+        +(a.alasan?'<div class="kecil" style="opacity:.8">'+String(a.alasan).slice(0,180)+'</div>':'')
+        +(mauSejarah&&a.penilaian&&a.penilaian.alasan?'<div class="kecil" style="color:var(--salah)">putusan: '+String(a.penilaian.alasan).slice(0,150)+'</div>':'')
+        +'</div>'; };
+    wb.innerHTML='<div class="baris"><span class="k">aturan aktif</span><span class="v h"><b>'+aktif.length+'</b> AKTIF · terpasang '+((r.totalTerpasang||0))+' · dibatalkan '+((r.dibatalkanCt||0)+(r.kedaluwarsaCt||0))+'</span></div>'
+      +'<div class="kecil" style="margin:3px 0 7px">siklus '+((ad.siklus||'?'))+' · diperbarui '+String(ad.diperbarui||'—').slice(0,16).replace('T',' ')+' — organ PENERIMA-SISTEM: tambang buku besar → uji-replay (wajib menyelamatkan net, tak merusak jendela waktu) → segel sha256 → mengikat saat kunci; yang berbalik merugikan dibatalkan sendiri.</div>'
+      +(aktif.length?aktif.map(a=>baris(a,false)).join(''):'<div class="kecil">belum ada aturan aktif — setiap kandidat wajib lulus gerbang replay; yang gagal dibuang jujur (anti-overfit), bukan dipaksakan.</div>')
+      +(sejarah.length?'<div class="dirHdr">Sejarah pembatalan</div>'+sejarah.slice(-4).reverse().map(a=>baris(a,true)).join(''):'');
+  }
   /* — DAFTAR-ORGAN: rak nyata + bukti segel terakhir dari git log — */
   const komit=SIS.komit||[];
   const segelTerakhir=(re)=>komit.find(k=>re.test(k.pesan))||null;

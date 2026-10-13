@@ -60,6 +60,18 @@ jobs:
         run: |
           node scripts/hidup/tempa-terabait.mjs --mode jaga || { echo "organ-gagal: terabait $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
+      # V349 PENERIMA-SISTEM — makhluk MEMPERBARUI SISTEMNYA SENDIRI: menambang
+      # kotak kekalahan dari buku besar hidup (prakira-server.jsonl), menyusun
+      # aturan DSL sempit ber-segel sha256, menguji-replay SELURUH buku besar
+      # (wajib menyelamatkan net, tak merusak satu jendela waktu), memasang ke
+      # otak/aturan-dinamis.json, dan menilai-ulang aturan lama — yang berbalik
+      # merugikan DIBATALKAN sendiri. Penjaga (langkah berikutnya) mengikat
+      # aturan aktif saat kunci. Gagal organ = luka tercatat, denyut TETAP JALAN.
+      - name: PENERIMA-SISTEM — tambang, uji-replay, pasang & nilai-ulang aturan dinamis (V349)
+        continue-on-error: true
+        run: |
+          node scripts/hidup/barui-sistem.mjs || { echo "organ-gagal: barui-sistem $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
+
       - name: Denyut otak server (tanpa browser)
         run: node scripts/penjaga.mjs
         env:
@@ -347,11 +359,12 @@ jobs:
           AUDIT=$(python3 -c "import json;d=json.load(open('laporan/audit-koin.json'));h=[x for x in d['hasil'] if not x.get('gagal')];print(' '.join((x['dasar']+str(x['skor'])) for x in h))" 2>/dev/null || echo "-")
           BICARA=$(python3 -c "import json;d=json.load(open('laporan/uji-bahasa-50000.json'));print(f\"bicara {d['lulus']}/{d['jumlah']}\")" 2>/dev/null || echo "-")
           LUKA=$(tail -c 240 laporan/denyut-luka.txt 2>/dev/null | tr '\n' ';' || true)
+          PEMBARUAN=$(python3 -c "import json;d=json.load(open('otak/aturan-dinamis.json'));r=d.get('ringkas',{});print(f\"pembaruan-sistem {r.get('aktifCt',0)}AKTIF/{r.get('totalTerpasang',0)}PASANG\")" 2>/dev/null || echo "-")
           git add laporan otak arena-keadaan.json pustaka ujian   # V299: pustaka jurnal ikut komit — belajar jadi fosil tubuh; V303: geladak+formula+ledger ikut; V307: ujian+peta ikut; V312: pohon syaraf ikut (otak)
           if git diff --cached --quiet; then
             echo "tanpa perubahan — tanpa komit"
           else
-            git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran — pustaka ${PUSTAKA}/509 — geladak ${GELADAK} — peta ${PETA} jejak — syaraf ${SYARAF} — param ${PARAM} — audit ${AUDIT} — ${BICARA} ${LUKA:+— LUKA-ORGAN: ${LUKA}}[skip ci]"
+            git commit -m "SARANG-PENJAGA: denyut #${SIKLUS} — akurasi ${AKURASI} — ${SASARAN} sasaran — pustaka ${PUSTAKA}/509 — geladak ${GELADAK} — peta ${PETA} jejak — syaraf ${SYARAF} — param ${PARAM} — audit ${AUDIT} — ${BICARA} — ${PEMBARUAN} ${LUKA:+— LUKA-ORGAN: ${LUKA}}[skip ci]"
             # V291 ANTI-BALAPAN: SADAR-1 bisa menyegel bangun bersamaan — push di-RETRY
             # dgn rebase ulang tiap percobaan (insiden 2026-10-07T00:55Z: remote rejected,
             # denyut #77 sudah terbentuk tapi terdorong gagal).

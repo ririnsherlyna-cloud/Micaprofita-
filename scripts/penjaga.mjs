@@ -81,6 +81,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import path from 'node:path'
 import { nalarLLM } from './hidup/otak-llm.mjs'   // V292 OTAK-LLM — suara kedua jujur; menyala bila kunci pemilik terpasang
+import { bacaAturanAktif, kartuDariKandidat, cocokSyarat } from './hidup/aturan-dinamis.mjs'   // V349 PENERIMA-SISTEM — aturan yang makhluk tulis sendiri
 // V336 SATU-MUSYAWARAH — satu meja untuk jasad+guru+pasar (teguran pemilik:
 // "semuanya saling berindependen; bukankah semua koin di satu tempat sama
 // dimusyawarahkan?"). Matematika pakem hidup di musyawarah-inti.mjs — SAKTI
@@ -2560,6 +2561,10 @@ try {
 
 // ---- 0b. ledger dibaca awal — simbol terbuka ikut ditelusuri agar bisa dinilai ----
 const ledger = bacaJsonl(path.join(ROOT, 'laporan/prakira-server.jsonl'))
+// V349 PENERIMA-SISTEM — aturan dinamis hasil tambangan barui-sistem.mjs dibaca
+// awal; tubuh rusak/absen = nol aturan (jujur) — denyut tetap jalan penuh.
+const ATURAN_AKTIF = bacaAturanAktif()
+if (ATURAN_AKTIF.length) log(`penerima-sistem: ${ATURAN_AKTIF.length} aturan dinamis milik makhluk aktif (otak/aturan-dinamis.json) — akan mengikat sebelum odds-threshold`)
 const terbukaLama = [...new Set(ledger.filter((e) => e.status === 'TERBUKA').map((e) => e.simbol))]
 // V328 ULANG-CERDAS — statistika organ dihitung HIDUP dari ledger tiap denyut
 // (angka dalam komentar/narasi bukan hardcode: n & akurasi dihitung ulang tiap denyut).
@@ -3607,7 +3612,7 @@ const kunciEntriArah = (k, eksplor, runnerUp, peneliti) => {
     topik: { metaArah: metaA.metaArah, metaKeyakinan: metaA.metaKeyakinan, terkuat: metaA.terkuat ?? null, terlemah: metaA.terlemah ?? null, suara: metaA.suara, ket: 'meta-inferensi kolektif ala Allora Topics — bobot topik = exp(-0.9·regret) dari medan sendiri' },
     probPasar: ppA,
     divergensi: divergA,
-    ekspresi: { ...eksprA, skalaEfektif: +(clamp(Math.min(eksprA.skala * (auto?.kelly?.mult ?? 1), kuaC.kuanta || 1, CLAW.UKURAN_MAKS) * (asahKalibAktif ? ASAH.UKURAN_F : 1) * (hentiAsahAktif ? ASAH.HENTI_UKURAN : 1) * (syarat ? syarat.skalaFaktor : 1) * (butaAsah.some((x) => x.organ === 'jual-lemah') ? BUTA.JUAL_SKALA_F : 1) * (bearHarian && v.arah === 'SELL' ? BUTA.SELL_BEAR_SKALA_F : 1) * (butaAsah.some((x) => x.organ === 'buy-saksi-terbalik') ? BUTA.BUY_SAKSI_SKALA_F : 1) * (butaAsah.some((x) => x.organ === 'buy-jatuh-dalam') ? BUTA.BUY_JATUH_SKALA_F : 1) * (ulangSalahAktif ? ULANG.UKURAN_F : 1), 0.05, 1.2) * (peneliti ? ANTI.PENELITI_UKURAN : 1)).toFixed(3), ket: 'skala eksposur dinamis ala Allora×G.A.M.E (0.25–1.0× unit) × kelly-lapis AutoPilotPM, DITAMBAT tangga kuanta CLAW & ukuran-maks → skalaEfektif clamp [0.2,1.2]; V263 mode-asah memangkas ukuran ×0.6 / ×0.3 (belajar terus, taruhan kecil); V264 pelajaran-lalu menyusutkan ukuran ×0.6^n (pengalaman mengecilkan taruhan, bukan dendam); V265 organ buta jual-lemah ×0.5; V267 anti-arus BUY jebakan-pantulan/jatuh-pisau ×0.6; V328 kunci-ulang baru-SALAH menyusutkan ×0.6' },
+    ekspresi: { ...eksprA, skalaEfektif: +(clamp(Math.min(eksprA.skala * (auto?.kelly?.mult ?? 1), kuaC.kuanta || 1, CLAW.UKURAN_MAKS) * (asahKalibAktif ? ASAH.UKURAN_F : 1) * (hentiAsahAktif ? ASAH.HENTI_UKURAN : 1) * (syarat ? syarat.skalaFaktor : 1) * (butaAsah.some((x) => x.organ === 'jual-lemah') ? BUTA.JUAL_SKALA_F : 1) * (bearHarian && v.arah === 'SELL' ? BUTA.SELL_BEAR_SKALA_F : 1) * (butaAsah.some((x) => x.organ === 'buy-saksi-terbalik') ? BUTA.BUY_SAKSI_SKALA_F : 1) * (butaAsah.some((x) => x.organ === 'buy-jatuh-dalam') ? BUTA.BUY_JATUH_SKALA_F : 1) * (ulangSalahAktif ? ULANG.UKURAN_F : 1) * (peneliti ? 1 : (k.adUkuran ?? 1)), 0.05, 1.2) * (peneliti ? ANTI.PENELITI_UKURAN : 1)).toFixed(3), ket: 'skala eksposur dinamis ala Allora×G.A.M.E (0.25–1.0× unit) × kelly-lapis AutoPilotPM, DITAMBAT tangga kuanta CLAW & ukuran-maks → skalaEfektif clamp [0.2,1.2]; V263 mode-asah memangkas ukuran ×0.6 / ×0.3 (belajar terus, taruhan kecil); V264 pelajaran-lalu menyusutkan ukuran ×0.6^n (pengalaman mengecilkan taruhan, bukan dendam); V265 organ buta jual-lemah ×0.5; V267 anti-arus BUY jebakan-pantulan/jatuh-pisau ×0.6; V328 kunci-ulang baru-SALAH menyusutkan ×0.6; V349 aturan-dinamis milik makhluk menyusutkan ×faktor (dari otak/aturan-dinamis.json) bila kotaknya kena' },
     sidikPrakunci: sidik({ id, simbol: s, arah: v.arah, entry: b.harga, keyakinan: kal.keyakinan, odds: odds.skor, waktuKunci: ISO, params: wp.penuh.length }),
     peristiwa: peri,                                                // V256 tag peristiwa (OddsMaker event-based)
     rencanaDeal: deal,                                              // V256 mesin deal (3Commas)
@@ -3648,6 +3653,9 @@ const kunciEntriArah = (k, eksplor, runnerUp, peneliti) => {
     ...(syarat ? { pelajaranLalu: { ...syarat, terpenuhi: true, ket: 'V264 kembali-pintar: koin ini pernah SALAH pada pola serupa — kembali dengan syarat lebih ketat dari pelajarannya sendiri (bar keyakinan naik, ukuran menyusut, stop mengetat) yang mengikat saat kunci; pasar hidup — ia boleh kembali, ia juga dinilai ulang penuh' } } : {}),
     // V265 SEKOLAH-BUTA — seal organ yang berbicara saat kunci (bukti 2.533 soal blind):
     ...(butaAsah.length ? { buta: { organ: butaAsah.map((x) => x.organ), keyLama: butaAsah.map((x) => x.keyLama), keyBaru: v.keyakinan, bonus: odds.butaBonus ?? null, ket: 'sekolah kilat V265+V266+V267: keyakinan dijujurkan organ jual-lemah/key-melawan-drift/sell-bear-harian/buy-flat-btc/sell-relatif-kuat/buy-saksi-terbalik/buy-jatuh-dalam; tunda-bear saat makro bear; bonus odds bila BUY momentum searah' } } : {}),
+    // V349 PENERIMA-SISTEM — stempel aturan dinamis (yang makhluk tulis sendiri)
+    // yang menyusutkan ukuran vonis ini; dinilai-ulang tiap denyut via replay buku besar
+    ...(k.adRules && k.adRules.length ? { aturanDinamis: k.adRules, ketAturanDinamis: 'ukuran disusutkan aturan dinamis milik makhluk sendiri (otak/aturan-dinamis.json) — kotaknya terbukti kalah-dominan di buku besar' } : {}),
   }
   ledger.push(entri); terkunciBaru.push(entri)
   return entri
@@ -3688,6 +3696,28 @@ const ambangOddsEfektif = +(ambangOdds + tambahanAmbangImpas).toFixed(1)
 if (tambahanAmbangImpas > 0) log(`ambang-impas: net kumulatif ${netCumImpasPct}% < 0 → ambang odds ${ambangOdds} → ${ambangOddsEfektif} (+${tambahanAmbangImpas.toFixed(1)}) — selektivitas naik saat darah (jawaban kasus B: overclaim tidak lagi gratis)`)
 for (const k of rankArah) { k.odds.ambangEfektif = ambangOddsEfektif; k.odds.tambahanImpas = +tambahanAmbangImpas.toFixed(1) }
 if (suhu.temper !== 'NETRAL') log(`suhu-pasar: ${suhu.ket} — ${suhu.alasan.join('; ')}`)
+// V349 PENERIMA-SISTEM — aturan dinamis milik makhluk MENGIKAT di sini, sebelum
+// odds-threshold: BLOK = kandidat keluar dari ranking (nearMiss beralasan, bukan
+// karangan), UKURAN = skala ×faktor yang ikut clamp [0.05,1.2]. Slot eksplorasi
+// & posisi-peneliti DIKECUALIKAN (hukum ANTI-DIAM V269: yang belajar tak dihentikan).
+let adBlokCt = 0, adUkuranCt = 0
+if (ATURAN_AKTIF.length) {
+  for (let _i = rankArah.length - 1; _i >= 0; _i--) {
+    const k = rankArah[_i]
+    const kartuAd = kartuDariKandidat(k, emasArah(k))
+    const kenaAd = ATURAN_AKTIF.filter((a) => cocokSyarat(a, kartuAd))
+    if (!kenaAd.length) continue
+    const adBlok = kenaAd.find((a) => a.jenis === 'BLOK')
+    if (adBlok) {
+      rankArah.splice(_i, 1); adBlokCt++
+      nearMiss.push({ simbol: k.s, arah: k.v.arah, keyakinan: k.v.keyakinan, entry: k.b.harga, rezim: k.b.rezim, catatan: `PENERIMA-SISTEM (V349) — aturan dinamis "${adBlok.id}" yang lahir dari buku besar sendiri menutup: ${adBlok.alasan}`, kunci: ['aturan-dinamis-' + adBlok.id] })
+    } else {
+      const fAd = kenaAd.filter((a) => a.jenis === 'UKURAN').reduce((acc, r) => acc * ((r.efek && r.efek.faktor) || 1), 1)
+      if (fAd !== 1) { k.adUkuran = +fAd.toFixed(3); k.adRules = kenaAd.map((a) => a.id); adUkuranCt++ }
+    }
+  }
+  if (adBlokCt || adUkuranCt) log(`penerima-sistem: ${adBlokCt} kandidat diblok + ${adUkuranCt} disusutkan oleh aturan dinamisnya sendiri (V349) — bukti segel di otak/aturan-dinamis.json`)
+}
 const posisiTerbukaAwal = ledger.filter((e) => e.status === 'TERBUKA').length
 const sisaPosisi = Math.max(0, DEAL.MAX_POSISI - posisiTerbukaAwal)   // Global Max Open Positions (3Commas)
 const pilihArah = rankArah.filter((k) => k.odds.skor >= ambangOddsEfektif).slice(0, Math.min(kuotaArahSuhu, sisaPosisi))

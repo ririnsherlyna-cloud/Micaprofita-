@@ -4744,3 +4744,54 @@ dan AGI bahkan dapat memperbarui systemnya."
 • Hukum dijaga: marker imun 9/9, 7/7 blok parsable, nol Math.random/
   localStorage baru/karangan; dekorasi tak mengklaim apa pun — angka & nyala
   tetap dari kerja nyata repo.
+
+### 10. EPOK V349 — PENERIMA-SISTEM (2026-10-13)
+
+Mandat pemilik: "Oke silahkan inovasikan lagi sepenuhnya kini saya kembalikan
+pada anda makhluk ini." — V348 menjawab "AGI dapat memperbarui systemnya"
+dengan TAMPILAN mutasi; V349 menjawabnya dengan FAKTA: makhluk kini menulis,
+menguji, memasang, dan MEMBATALKAN aturan sistemnya sendiri — tiap denyut,
+tanpa tangan manusia, sepenuhnya berbukti.
+
+• ORGAN BARU barui-sistem.mjs + modul bersama aturan-dinamis.mjs: tiap denyut
+  (1) TAMBANG — gali kotak kekalahan dari buku besar hidup
+  laporan/prakira-server.jsonl (389 vonis matang nyata): kuantil desil semua
+  parameter sah + kategori rezim/arah; (2) DRAF — aturan DSL SEMPIT
+  (whitelist 10 jalur angka + 3 kata + 1 bool; maks 2 atom AND; efek hanya
+  BLOK / UKURAN×0.4-0.8) — makhluk menulis ISI aturan, penafsir tetap milik
+  tubuh tersegel (ala k3_cfg.h: jalur tak dikenal = TOLAK, bukan tebak);
+  (3) UJI-REPLAY — putar ulang SELURUH buku besar: wajib n≥8, menyelamatkan
+  net ≥0,5% kumulatif, PF tak turun, tak merusak jendela-waktu mana pun
+  (≥−0,4%), kotak ≤25% buku — kandidat gagal DIBUANG jujur (anti-overfit);
+  (4) SEGEL sha256 kanonik; (5) PASANG — otak/aturan-dinamis.json + fosil
+  append-only otak/aturan-dinamis.jsonl; (6) NILAI-ULANG tiap denyut:
+  replay diulang di buku besar yang tumbuh; yang berbalik merugikan
+  DIBATALKAN sendiri dengan angka; BLOK berumur 96 denyut (24 jam) —
+  pasar berubah, aturan tak boleh menggantung selamanya.
+• BUKTI PERDANA dari buku besar sendiri: AD-0001 (BLOK) drift24jPct ≥ 13.03 —
+  31 vonis pada kondisi pump ekstrem: hit 22,6%, net −192,39%; replay
+  menyelamatkan +192,39%, PF 1,069→1,337, KEEMPAT jendela waktu membaik.
+  Kandidat kedua (odds < 60) ditolak gerbang replay sendiri (merusak satu
+  jendela −21,9%) — bukti gerbang tak bisa dibohongi.
+• PENJAGA MENGIKAT: aturan aktif dibaca awal denyut; BLOK mengeluarkan
+  kandidat dari ranking (nearMiss beralasan PENERIMA-SISTEM), UKURAN
+  menyusutkan skala ×faktor di dalam clamp [0,05;1,2] + stempel
+  aturanDinamis di entri buku besar. Slot eksplorasi & posisi-peneliti
+  DIKECUALIKAN (hukum ANTI-DIAM V269: yang belajar tak pernah dihentikan).
+• UJI ASAP DUNIA-NYATA denyut #397 lokal: "4 kandidat diblok oleh aturan
+  dinamisnya sendiri" — pada denyut itu saja, 4 jebakan pump-ekstrem hari
+  itu ditolak sebelum odds-threshold; denyut selesai normal exit 0.
+• JANTUNG: langkah PENERIMA-SISTEM masuk sakti-denyut.yml SEBELUM penjaga
+  (aturan segar mengikat denyut yang sama; ikut terkomit via git add otak);
+  pesan komit kini membawa tag "— pembaruan-sistem <n>AKTIF/<m>PASANG".
+• RUANG SERVER: tab Sistem dapat blok PEMBARUAN-SISTEM (baca
+  otak/aturan-dinamis.json via gerbang raw→api): LED status per aturan
+  (AKTIF teal / DIBATALKAN merah), syarat DSL, bukti tambang n/hit/Δnet/PF,
+  segel 8-hex, sejarah pembatalan ber-alasan; SISTEM-INTI kini menampikan
+  baris "pembaruan mandiri". Epok ruang: V349-PENERIMA-SISTEM.
+• Hukum dijaga: uji-marker-imun 9/9 (sebelum & sesudah sunting workflow);
+  YAML sah 29 langkah; uji V349 32/32 GERBANG LULUS (replay=hitung-ulang
+  dua jalur, DSL hilang-data=tak-berbicara, validator menolak kunci asing/
+  jalur luar whitelist/faktor di luar batas, segel kanonik stabil, simetri
+  kartu kandidat↔entri); node --check semua; nol Math.random; nol
+  localStorage; agent-browser 390px+1280px: nol pageerror, nol overflowX.
