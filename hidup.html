@@ -348,6 +348,10 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
         <div id="u50Status"><div class="kecil">membuka turnamen…</div></div>
       </div>
       <div class="blok">
+        <h4>Gelar guru <em>· V352 inkwisksi terbuka — tiap kemampuan DIUKUR angka nyata dari tubuh sendiri, bukan dijanjikan kata (mandat pemilik 2026-10-14: “kalau masih ada yang disembunyikan — kemampuan, data, teknis — kasih juga ke dia”)</em></h4>
+        <div id="u50Gelar"><div class="kecil">mengukur kemampuan…</div></div>
+      </div>
+      <div class="blok">
         <h4>Daftar kemenangan <em>· panen dari lilin 5m Binance sesungguhnya — kena TP / kena ambisius / justru kena SL, dengan data &amp; alasan</em></h4>
         <div id="u50Panen"><div class="kecil">membuka panen…</div></div>
       </div>
@@ -3911,6 +3915,34 @@ async function uji50Render(){
         :'turnamen format pra-V351: aturan buruan high–low berlaku di PENDAFTARAN UTC berikutnya; pakem hari ini beku — tidak diubah-ubah di tengah jalan (jujur)'}</div>
       <div class="kecil" style="margin-top:3px">${U50.hari.hukum?U50.hari.hukum[2]:''}</div>`;
   } else w.innerHTML='<div class="kecil">turnamen hari ini belum didaftar — denyut jantung berikutnya mendaftarkannya dari 50 vonis teratas meja musyawarah; jujur menunggu segel, tanpa karangan.</div>';
+  /* — V352 GELAR-GURU: inkwisksi terbuka — tiap kemampuan diukur angka, bukan kata — */
+  const wg=document.getElementById('u50Gelar');
+  if(wg){
+    const t=U50.hari, kv=U50.kurva, tot=(kv&&kv.total)||{};
+    const pes=(t&&t.peserta)||[];
+    const pakemPenuh=pes.filter(p=>p.pakem&&p.pakem.entry>0&&p.pakem.stopLoss>0&&p.pakem.jualProfit>0&&p.pakem.jualAmbisius>0).length;
+    /* pesertaTerburu dari organ berformat teks "n/total" — diurai jujur, bukan dibanding buta */
+    const abRaw=(t&&t.aturanBuruan&&t.aturanBuruan.sumber)?(t.aturanBuruan.pesertaTerburu??null):null;
+    let terburuTeks=null, terburuSah=false;
+    if(abRaw!=null){
+      const mAb=String(abRaw).match(/^(\d+)\s*\/\s*(\d+)$/);
+      if(mAb){ terburuTeks=mAb[0]; terburuSah=(+mAb[1])===(+mAb[2])&&pes.length>0&&(+mAb[2])===pes.length; }
+      else { const nAb=pes.filter(p=>p.buruan).length; terburuTeks=nAb+'/'+pes.length; terburuSah=pes.length>0&&nAb===pes.length; }
+    }
+    const bobot=kv&&kv.bobotKeluarga?Object.values(kv.bobotKeluarga).filter(b=>b.delta):[];
+    const baris=[
+      {n:'MATA-NYATA',u:'peserta ber-pakem penuh dari data turnamen',v:`${pakemPenuh}/${pes.length||0}`,amb:'100%',sah:pes.length>0&&pakemPenuh===pes.length},
+      {n:'DISIPLIN',u:'soal didinginkan sekali, tak diubah-ubah di tengah jalan',v:t&&t.hukum?'tersegel '+t.tanggal:'—',amb:'pakem beku',sah:!!(t&&t.hukum&&t.segel)},
+      {n:'MEDAN-BURUAN',u:'level dari high–low 24 jam Binance nyata (V351)',v:terburuTeks?terburuTeks+' terburu':(t?'pra-V351 — diakui jujur':'—'),amb:'semua terburu',sah:terburuSah},
+      {n:'ARAH',u:'arah benar kumulatif melawan dinding CERMIN-100RB',v:tot.arahBenar==null?'—':tot.arahBenar+'%',amb:'≥ 48,88%',sah:tot.arahBenar!=null&&tot.arahBenar>=48.88},
+      {n:'EKSPEKTANSI',u:'R rata semua vonis matang — matematika sang guru',v:tot.rRata==null?'—':String(tot.rRata),amb:'≥ 0',sah:tot.rRata!=null&&tot.rRata>=0},
+      {n:'BELAJAR',u:'keluarga berbobot yang mengubah meja esok (suara-kurva)',v:String(bobot.length),amb:'≥ 1',sah:bobot.length>=1},
+      {n:'INGATAN',u:'hari tercatat di kurva — belajar tak pernah hilang',v:String((kv&&kv.hari&&kv.hari.length)||0),amb:'≥ 2',sah:!!(kv&&kv.hari&&kv.hari.length>=2)},
+    ];
+    const terbuka=baris.filter(b=>b.sah).length;
+    wg.innerHTML=baris.map(b=>`<div class="baris"><span class="k"><b>${b.n}</b> <span style="color:var(--legap)">· ${b.u}</span></span><span class="v">${b.v} <span class="kecil">(ambang ${b.amb})</span> <b style="color:${b.sah?'var(--aksen)':'var(--legap)'}">${b.sah?'TERBUKA':'BELUM'}</b></span></div>`).join('')
+      +`<div class="kecil" style="margin-top:6px">INKWISIKSI V352: <b>${terbuka}/${baris.length}</b> kemampuan terbuka — gelar <b>GURU FINANSIAL</b> dipakai bila SEMUA terbuka, dan dipakai di depan pemilik tanpa satu pun baris disembunyikan; yang gugur diukur angkanya, bukan ditutupi kata. Mengukur ulang tiap tab ini dibuka — mandi data, bukan mandi retorika.</div>`;
+  }
   /* — daftar kemenangan (kemarin dulu, lalu hari ini yang sudah selesai) — */
   const wp=document.getElementById('u50Panen');
   const selesaiDari=(tur)=>tur&&tur.peserta?tur.peserta.filter(p=>p.status&&p.status!=='terbuka'):[];
