@@ -129,6 +129,12 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
 .uvBtn{width:100%;margin-top:10px;background:rgba(79,224,194,.08);border:1px solid var(--aksen-l);color:var(--aksen);
   border-radius:10px;padding:9px;font:inherit;font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer}
 .uvBtn:hover{background:rgba(79,224,194,.16)}
+/* V351 BURUAN-RENTANG — koin turnamen hari ini + pita high–low nyata per peserta */
+.u50Koin{display:inline-block;border:1px solid var(--garis);border-radius:8px;padding:1px 6px;font-size:9px;letter-spacing:.4px;color:var(--redup)}
+.u50Koin.win{color:var(--aksen);border-color:var(--aksen-l)} .u50Koin.lose{color:var(--salah);border-color:rgba(255,95,109,.35)}
+.u50Rentang{position:relative;height:6px;margin:3px 0 3px 8px;border:1px solid var(--garis);border-radius:4px;background:linear-gradient(90deg,rgba(248,81,73,.12),rgba(255,255,255,.03) 30%,rgba(79,224,194,.12))}
+.u50Rentang u{position:absolute;top:-3px;width:2px;height:10px;border-radius:1px;background:var(--legap);text-decoration:none}
+.u50Rentang u.e{background:var(--tinta)} .u50Rentang u.t{background:var(--aksen);box-shadow:0 0 6px var(--aksen-l)} .u50Rentang u.a{background:#ffd166}
 /* ===== V348 PUSAT-KENDALI-SISTEM (tab Sistem) ===== */
 .sysRow{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:12px}
 .sysRow .sysNm{flex:1;color:var(--tinta);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -3850,9 +3856,22 @@ function u50Kartu(p, tunjukAlasan){
   const st=U50_ST[p.status]||U50_ST.terbuka;
   const k=p.pakem||{};
   const panen=p.panen?` · ret <b>${p.panen.retPct>0?'+':''}${p.panen.retPct}%</b> · R ${p.panen.r??'—'}${p.panen.ditutup?` · ditutup ${p.panen.ditutup.slice(5,16).replace('T',' ')}`:''}`:'';
+  /* V351: pita rentang high–low nyata — low…high, jarum stop/entry/jual/ambisius */
+  const b=p.buruan;
+  let rentangHtml='';
+  if(b && k.entry){
+    const span=(b.tinggi-b.rendah)||1;
+    const pos=(v)=>Math.max(-6,Math.min(106,((v-b.rendah)/span)*100));
+    rentangHtml=`<div class="u50Rentang">`
+      +(isFinite(pos(k.stopLoss))?`<u style="left:${pos(k.stopLoss).toFixed(1)}%"></u>`:'')
+      +`<u class="e" style="left:${pos(k.entry).toFixed(1)}%"></u>`
+      +`<u class="t" style="left:${pos(k.jualProfit).toFixed(1)}%"></u>`
+      +`<u class="a" style="left:${pos(k.jualAmbisius).toFixed(1)}%"></u></div>`
+      +`<div class="kecil" style="margin:-1px 0 3px;padding-left:8px">keyakinan <b>${p.layakSkor}</b> · medan buruan high–low 24j nyata <b>${b.rendah}–${b.tinggi}</b> (lebar ${b.lebarPct}%, entry di ${(b.posisiEntry*100).toFixed(0)}%) · buru jual <b>${k.jualProfit}</b> (+${k.jarakJualPct}%) · ambisius <b>${k.jualAmbisius}</b> (+${k.jarakAmbisiusPct}%) · stop ${k.stopLoss} (−${k.risikoPct}%)</div>`;
+  }
   return `<div class="baris"><span class="k">#${p.peringkat} <b>${p.simbol}</b>${p.keluarga?` <span style="color:var(--legap)">· ${p.keluarga}</span>`:''}</span>
     <span class="v"><span style="color:${st.c};font-weight:700;font-size:9.5px">${st.t}</span>${panen}</span></div>
-    <div class="kecil" style="margin:-1px 0 3px;padding-left:8px">keyakinan <b>${p.layakSkor}</b> · entry ${k.entry} · stop ${k.stopLoss} (risiko ${k.risikoPct}%) · <b>jual profit ${k.jualProfit}</b> (+${k.jarakJualPct}%, ambang napas) · <b>ambisius ${k.jualAmbisius}</b> (+${k.jarakAmbisiusPct}%)</div>
+    ${rentangHtml||(p.buruan?'':`<div class="kecil" style="margin:-1px 0 3px;padding-left:8px">keyakinan <b>${p.layakSkor}</b> · entry ${k.entry} · stop ${k.stopLoss} (risiko ${k.risikoPct}%) · <b>jual profit ${k.jualProfit}</b> (+${k.jarakJualPct}%, ambang napas) · <b>ambisius ${k.jualAmbisius}</b> (+${k.jarakAmbisiusPct}%)</div>`)}
     ${tunjukAlasan&&p.alasanAmbisius?`<div class="kecil" style="margin:-1px 0 5px;padding-left:8px;color:var(--tx2)">alasan: ${p.alasanAmbisius}</div>`:''}`;
 }
 async function uji50Render(){
@@ -3884,6 +3903,12 @@ async function uji50Render(){
     w.innerHTML=`<div class="baris"><span class="k">turnamen</span><span class="v h"><b>${U50.hari.tanggal}</b> · ${U50.hari.peserta.length} peserta</span></div>
       <div class="baris"><span class="k">meja asal</span><span class="v">musyawarah segel ${U50.hari.sumberMusyawarah.segel} (${U50.hari.sumberMusyawarah.vonisTotal} vonis) — SATU-MUSYAWARAH</span></div>
       <div class="baris"><span class="k">panen kini</span><span class="v"><span style="color:var(--aksen)">ambisius <b>${r.menangAmbisius??0}</b></span> · <span style="color:var(--aksen)">tp <b>${r.menangTp??0}</b></span> · <span style="color:var(--salah)">sl <b>${r.kalahSl??0}</b></span> · kedaluwarsa ${r.kedaluwarsaBenar??0}/${r.kedaluwarsaSalah??0} · jalan ${r.terbuka??0} — arah benar ${r.arahBenar==null?'—':'<b>'+r.arahBenar+'%</b>'} (dinding 48,88%)</span></div>
+      <div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:7px">${U50.hari.peserta.map(p=>{const ret=p.panen&&p.panen.retPct; const cls=ret!=null?(ret>=0?'win':'lose'):''; return `<span class="u50Koin ${cls}">${String(p.simbol).replace(/USDT$/,'')}${ret!=null?` ${ret>0?'+':''}${ret}%`:''}</span>`}).join('')}</div>
+      <div class="kecil" style="margin-top:5px">${U50.hari.aturanBuruan
+        ?(U50.hari.aturanBuruan.sumber
+          ?`medan buruan V351: ${U50.hari.aturanBuruan.pembeda} — high–low 24 jam NYATA per koin (${U50.hari.aturanBuruan.pesertaTerburu||'—'} peserta terburu)`
+          :'medan buruan belum terukur saat pendaftaran — pakem musyawarah dipakai apa adanya (jujur)')
+        :'turnamen format pra-V351: aturan buruan high–low berlaku di PENDAFTARAN UTC berikutnya; pakem hari ini beku — tidak diubah-ubah di tengah jalan (jujur)'}</div>
       <div class="kecil" style="margin-top:3px">${U50.hari.hukum?U50.hari.hukum[2]:''}</div>`;
   } else w.innerHTML='<div class="kecil">turnamen hari ini belum didaftar — denyut jantung berikutnya mendaftarkannya dari 50 vonis teratas meja musyawarah; jujur menunggu segel, tanpa karangan.</div>';
   /* — daftar kemenangan (kemarin dulu, lalu hari ini yang sudah selesai) — */

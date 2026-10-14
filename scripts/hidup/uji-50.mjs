@@ -38,7 +38,17 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs'
 import { tidur, fmt, hash16 } from './musyawarah-inti.mjs'
 
-export const PROTOKOL_UJI = 'UJI-50-V337'
+export const PROTOKOL_UJI = 'UJI-50-V351'
+/* V351 BURUAN-RENTANG (mandat pemilik 2026-10-14): "keuntungan mereka kecil sekali —
+   jangan ambil rentang sedikit, buat kayak high price low price, biar seru dan
+   keuntungannya besar." Dakwaan terbukti: TP lama = ambang napas keluarga
+   (median 1,14%, lantai 0,3%) — menang seret, kalah besar. Kini saat
+   PENDAFTARAN (sekali sehari, lalu beku — jujur, tak diubah-ubah) level tiap
+   peserta ditata ulang dari rentang high–low 24 jam Binance yang NYATA:
+     jual profit = entry + 35% rentang · ambisius = entry + 80% rentang ·
+     stop = entry − 20% rentang (dilantai 1,0/2,2/0,55% agar koin bernapas
+     sempit tak diangan-angkan; dilangitkan maks 25% agar listing gila tak
+     menggantung soal). Turnamen yang sudah didaftar TIDAK disentuh. */
 const DIR_UJI = 'laporan/uji-50'
 const FILE_MUSYAWARAH = 'laporan/musyawarah.json'
 const MAKS_PESERTA = 50
@@ -84,6 +94,59 @@ async function lilin5mSejak(sym, mulaiMs) {
     if (!Array.isArray(d)) return null
     return d.map(k => ({ t: k[0], o: +k[1], h: +k[2], l: +k[3], c: +k[4], v: +k[5] }))
   } catch (e) { return null }
+}
+
+// ---------- RENTANG 24 JAM NYATA (satu panggil untuk semua koin) ----------
+// V351 BURUAN-RENTANG: high–low 24 jam dari ticker Binance sesungguhnya —
+// inilah medan buruan yang harus ditunggangi tiap peserta. Gagal jaring =
+// pakem musyawarah dipakai apa adanya + dicatat jujur, tanpa karangan.
+async function rentang24j(simbol) {
+  const res = await ambilCepat('/api/v3/ticker/24hr')
+  if (!res) return null
+  try {
+    const d = await res.json()
+    if (!Array.isArray(d)) return null
+    const map = {}
+    const inginkan = new Set(simbol)
+    for (const t of d) {
+      if (!inginkan.has(t.symbol)) continue
+      const tinggi = +t.highPrice, rendah = +t.lowPrice
+      if (!(tinggi > 0) || !(rendah > 0) || tinggi <= rendah) continue
+      map[t.symbol] = { tinggi, rendah, lebarPct: Math.round((tinggi / rendah - 1) * 10000) / 100 }
+    }
+    return Object.keys(map).length ? map : null
+  } catch (e) { return null }
+}
+
+// ---------- BURUAN-DARI-RENTANG: level diturunkan dari high–low nyata ----------
+function buruanDari(pakemLama, rentang) {
+  const lebarPct = Math.min(25, Math.max(1.5, rentang.lebarPct))
+  const L = lebarPct / 100
+  const entry = pakemLama.entry
+  const jualPct = Math.max(0.35 * lebarPct, 1.0)
+  const ambPct = Math.max(0.80 * lebarPct, 2.2)
+  const stopPct = Math.max(0.20 * lebarPct, 0.55)
+  const span = (rentang.tinggi - rentang.rendah) || 1
+  const posisi = Math.max(0, Math.min(1, (entry - rentang.rendah) / span))
+  return {
+    pakem: {
+      entry, stopLoss: +(entry * (1 - stopPct / 100)).toPrecision(8),
+      jualProfit: +(entry * (1 + jualPct / 100)).toPrecision(8),
+      jualAmbisius: +(entry * (1 + ambPct / 100)).toPrecision(8),
+      rrAmbang: Math.round((stopPct > 0 ? jualPct / stopPct : 0) * 100) / 100,
+      holdJam: 24,
+      risikoPct: Math.round(stopPct * 100) / 100,
+      jarakJualPct: Math.round(jualPct * 100) / 100,
+      jarakAmbisiusPct: Math.round(ambPct * 100) / 100,
+      ambangFaktaPct: pakemLama.ambangFaktaPct,
+      sumberAmbang: 'buruan-rentang 24j Binance (high–low nyata)',
+    },
+    buruan: {
+      tinggi: rentang.tinggi, rendah: rentang.rendah,
+      lebarPct, posisiEntry: Math.round(posisi * 1000) / 1000,
+      sumber: 'ticker/24hr Binance — saat pendaftaran, lalu beku',
+    },
+  }
 }
 
 // ---------- PANEN satu peserta — lilin 5m menyatakan jalannya deal ----------
@@ -164,29 +227,50 @@ function rekapkan(peserta) {
 }
 
 // ---------- DAFTAR turnamen hari ini (sekali per hari UTC — didinginkan) ----------
-function daftarkan(musy, kini) {
+function daftarkan(musy, kini, rentangMap) {
   const tgl = tanggalUtc(kini)
   const umur = kini - Date.parse(musy.dihasilkan || 0)
   if (!(umur >= 0 && umur < UMUR_MUSYAWARAH_MS))
     throw new Error(`meja musyawarah basi (${Math.round(umur / 60000)} mnt) — tak layak jadi soal; denyut berikutnya setelah segel segar`)
   const vonis = (musy.pakem || []).filter(v => v && v.pakem && v.pakem.entry > 0)
   if (!vonis.length) throw new Error('meja tanpa vonis sah — tak ada peserta hari ini (jujur, tanpa karangan)')
-  const peserta = vonis.slice(0, MAKS_PESERTA).map((v, i) => ({
-    simbol: v.simbol, peringkat: i + 1, layakSkor: v.layakSkor, keluarga: v.keluarga, rezim: v.rezim,
-    pakem: v.pakem, alasanEntry: v.alasanEntry, alasanAmbisius: v.alasanAmbisius,
-    suaraRumah: v.suaraRumah || [],
-    status: 'terbuka', dibuka: new Date(kini).toISOString(), panen: null,
-  }))
+  /* V351 BURUAN-RENTANG: level pakem ditata ulang dari high–low 24 jam nyata
+     SATU KALI di sini; setelah tersegel, peserta tidak pernah diubah-ubah. */
+  let nBuruan = 0
+  const peserta = vonis.slice(0, MAKS_PESERTA).map((v, i) => {
+    const dasar = {
+      simbol: v.simbol, peringkat: i + 1, layakSkor: v.layakSkor, keluarga: v.keluarga, rezim: v.rezim,
+      pakem: v.pakem, alasanEntry: v.alasanEntry, alasanAmbisius: v.alasanAmbisius,
+      suaraRumah: v.suaraRumah || [],
+      status: 'terbuka', dibuka: new Date(kini).toISOString(), panen: null,
+    }
+    const r = rentangMap && rentangMap[v.simbol]
+    if (r) {
+      const b = buruanDari(v.pakem, r)
+      dasar.pakem = b.pakem
+      dasar.buruan = b.buruan
+      dasar.alasanAmbisius =
+        `BURUAN-RENTANG (mandat pemilik: seru, keuntungan sebesar rentang high–low): medannya NYATA — high 24 jam ${fmt(b.buruan.tinggi)}, low ${fmt(b.buruan.rendah)}, lebar ${b.buruan.lebarPct}%; entry ${fmt(v.pakem.entry)} duduk di ${(b.buruan.posisiEntry * 100).toFixed(0)}% rentang. ` +
+        `Kubeli untuk menunggangi seluruh napas harian: jual profit menunggu +${b.pakem.jarakJualPct}% (35% rentang), ambisius +${b.pakem.jarakAmbisiusPct}% (80% rentang) bila dana baru membuktikan tembus, stop −${b.pakem.risikoPct}% (20% rentang) — ambang napas keluarga ${v.keluarga} (p50 +${v.pakem.ambangFaktaPct}%) tetap jadi pengetahuan, bukan sasaran. ` +
+        `21,78% dari 100.000 soal mati karena serakah melampaui ambang — maka ambisius hanya dihormati setelah profit terkunci; lilin 5m yang menyentuh dua level dinilai pesimistis.`
+      nBuruan++
+    }
+    return dasar
+  })
   const turnamen = {
     protokol: PROTOKOL_UJI, tanggal: tgl, dibuat: new Date(kini).toISOString(),
     hukum: [
       'peserta = 50 vonis teratas SATU-MUSYAWARAH (laporan/musyawarah.json) — keyakinan terbesar di peringkat 1; tak ada koin di luar meja',
-      'tiap peserta WAJIB BUY ber-PAKEM-LIMA-BARIS (entry · stop loss · jual profit · jual profit ambisius · alasan-ambisius) — didinginkan sekali per hari, tak diubah-ubah',
+      'tiap peserta WAJIB BUY ber-PAKEM (entry · stop loss · jual profit · jual profit ambisius · alasan-ambisius) — didinginkan sekali per hari, tak diubah-ubah',
+      'V351 BURUAN-RENTANG: saat pendaftaran level diturunkan dari rentang high–low 24 jam Binance NYATA (jual profit 35% · ambisius 80% · stop 20% rentang, lantai 1,0/2,2/0,55%, langit 25%) — seru, sasaran besar, tapi tetap jarak yang sesungguhnya pernah ditempuh koin',
       'panen dibaca lilin 5m Binance sesungguhnya; lilin dua-level dinilai pesimistis (stop dianggap dulu) — tak ada optimisme karangan',
       '48 jam tanpa level tersentuh = ditutup di harga terakhir, arahnya diakui apa adanya',
       'daftar kemenangan + kurva ditulis tiap denyut; bobot-keluarga dari kurva dibaca meja musyawarah esok (belajar nyata, tak pernah hilang)',
     ],
     sumberMusyawarah: { segel: musy.segel, dihasilkan: musy.dihasilkan, vonisTotal: vonis.length, kembaliTambang: musy.meja ? musy.meja.kembaliTambang : null },
+    aturanBuruan: rentangMap
+      ? { sumber: 'ticker/24hr Binance — high–low 24 jam nyata saat pendaftaran', pembeda: 'jual profit 35% rentang · ambisius 80% rentang · stop 20% rentang (lantai 1,0/2,2/0,55% · langit 25%)', pesertaTerburu: nBuruan + '/' + peserta.length }
+      : { sumber: null, catatan: 'rentang 24 jam tak terjangkau saat pendaftaran — pakem musyawarah dipakai apa adanya (jujur); denyut esok mencoba lagi' },
     dinding100k: { arahPct: DINDING_ARAH_100K, serakahPct: DINDING_SERAKAH_100K, catatan: 'tembok yang harus ditembus — bukan rujukan kebanggaan' },
     peserta,
   }
@@ -326,16 +410,21 @@ try {
   const fHari = fileHari(tanggalUtc(kini))
   if (!existsSync(fHari)) {
     const musy = JSON.parse(readFileSync(FILE_MUSYAWARAH, 'utf8'))
-    turHariIni = daftarkan(musy, kini)
+    /* V351 BURUAN-RENTANG: medan high–low 24 jam diukur SATU KALI saat pendaftaran */
+    let rentangMap = null
+    try { rentangMap = await rentang24j((musy.pakem || []).map(v => v && v.simbol).filter(Boolean).slice(0, MAKS_PESERTA)) } catch (e) {}
+    turHariIni = daftarkan(musy, kini, rentangMap)
     mkdirSync(DIR_UJI, { recursive: true })
     writeFileSync(fHari, JSON.stringify(turHariIni, null, 1))
-    console.log(`[uji-50] TURNAMEN ${turHariIni.tanggal} didaftar: ${turHariIni.peserta.length} peserta (meja ${turHariIni.sumberMusyawarah.vonisTotal} vonis, segel ${turHariIni.sumberMusyawarah.segel}) — ${turHariIni.peserta[0].simbol} keyakinan teratas ${turHariIni.peserta[0].layakSkor}`)
+    console.log(`[uji-50] TURNAMEN ${turHariIni.tanggal} didaftar: ${turHariIni.peserta.length} peserta (meja ${turHariIni.sumberMusyawarah.vonisTotal} vonis, segel ${turHariIni.sumberMusyawarah.segel}) — buruan-rentang ${turHariIni.aturanBuruan.pesertaTerburu || '0/' + turHariIni.peserta.length} · ${turHariIni.peserta[0].simbol} keyakinan teratas ${turHariIni.peserta[0].layakSkor}`)
   } else {
     try { turHariIni = JSON.parse(readFileSync(fHari, 'utf8')) } catch (e) { turHariIni = null }
     // perbaiki turnamen kosong: bila hari ini terdaftar tanpa peserta namun meja kini punya vonis
     if (turHariIni && (!turHariIni.peserta || !turHariIni.peserta.length)) {
       const musy = JSON.parse(readFileSync(FILE_MUSYAWARAH, 'utf8'))
-      turHariIni = daftarkan(musy, kini)
+      let rentangMap = null
+      try { rentangMap = await rentang24j((musy.pakem || []).map(v => v && v.simbol).filter(Boolean).slice(0, MAKS_PESERTA)) } catch (e) {}
+      turHariIni = daftarkan(musy, kini, rentangMap)
       writeFileSync(fHari, JSON.stringify(turHariIni, null, 1))
       console.log(`[uji-50] TURNAMEN ${turHariIni.tanggal} diperbaiki: ${turHariIni.peserta.length} peserta`)
     }
@@ -355,7 +444,7 @@ try {
     const E = ujiInvarianUji(turHariIni)
     if (E.length) { console.error('[uji-50] INVARIAN GUGUR (jujur): ' + E.join(' | ')); process.exit(1) }
     const top = turHariIni.peserta.slice(0, 3)
-    for (const x of top) console.log(`  #${x.peringkat} ${x.simbol} — keyakinan ${x.layakSkor} · entry ${fmt(x.pakem.entry)} · stop ${fmt(x.pakem.stopLoss)} · jual ${fmt(x.pakem.jualProfit)} · ambisius ${fmt(x.pakem.jualAmbisius)}`)
+    for (const x of top) console.log(`  #${x.peringkat} ${x.simbol} — keyakinan ${x.layakSkor} · entry ${fmt(x.pakem.entry)}${x.buruan ? ` (di ${(x.buruan.posisiEntry * 100).toFixed(0)}% rentang ${fmt(x.buruan.rendah)}–${fmt(x.buruan.tinggi)})` : ''} · stop ${fmt(x.pakem.stopLoss)} · jual ${fmt(x.pakem.jualProfit)} (+${x.pakem.jarakJualPct}%) · ambisius ${fmt(x.pakem.jualAmbisius)} (+${x.pakem.jarakAmbisiusPct}%)`)
   }
 } catch (e) {
   console.error('[uji-50] GAGAL (jujur, denyut lanjut):', e && e.message || e)
