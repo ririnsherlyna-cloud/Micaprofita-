@@ -4933,3 +4933,70 @@ otaknya sendiri menjawab, kegagalan jaring pun hanya cerita jujur —
 bukan kematian. Berikutnya (usul): denyut menyegel pengawasan nisan
 (bila gerbang.json disunting pihak luar, imun menandai); arena-keadaan
 diberi segel sha agar cermin bisa memverifikasi keaslian ekspor tubuh.
+
+## §13aa — EPOK V351 · TEMPA-AKURASI: PENYAKIT "MAKIN LAMA MAKIN BODOH" DIBEDAH DI AKAR, EMPU-AKURASI MENGEMBALIKAN HUKUM "MAKIN BERTAMBAH HARI, MAKA TAJAM" (2026-10-15)
+
+**1. MANDAT PEMILIK.** "Cari tahu kenapa makin lama akurasi kita makin
+berkurang — cakap ini berbahaya! Kita harusnya makin bertambah hari,
+akurasi kita makin dalam, makin tajam. Silakan tempa lagi dia, baik
+dengan 400 ujian atau ujian hal lain bebas — intinya tempa lah dia."
+
+**2. BEDAH FORENSIK — AKAR PENYAKIT DIUKUR, BUKAN DIKIRA-KIRA.** Tren
+dari jejak denyut: akurasi 40,6% (denyut #17-26, 29-09) → 37,2%
+(#27-35) → puncak 38,6% (#50-51) → 34,6% (#531, 15-10). Turun terus,
+tak pernah pulih. Bedah ledger vonis matang milik sendiri menemukan
+TIGA fakta kejam: (a) akurasi asli ±35%, tetapi jika SEMUA vonis
+dibalik hit-rate-nya ±64% — komite arah bekerja sebagai
+ANTI-PREDIKTOR; (b) korelasi dimensi bukti vs hasil NEGATIF
+(struktur −0,185 · momentum −0,137 · sr −0,134 · tekanan −0,066 ·
+perubahan −0,134): komite mengejar momentum (beli di puncak rentang,
+jual di dasar) pada pasar 24 jam yang justru pulang-keseimbangan —
+sinyal "struktur" searah vonis hanya tembus 17,9%; (c) pembelajar
+lama (Hedge eta kecil + genome hampir seragam) bergerak terlalu pelan
+membalik kebiasaan itu — pengalaman menumpuk di ledger TAPI TIDAK
+PERNAH difitkan jadi bobot. Inilah akar "makin lama makin berkurang":
+ilmu tak pernah dipakai mengunci.
+
+**3. ORGAN BARU — EMPU-AKURASI di scripts/penjaga.mjs.** Tiap denyut
+otak kini memfitkan bobot lima dimensi ARAH langsung dari ledger
+pengalaman miliknya sendiri (regresi logistik penuh, lr-turun
+0,35/(1+0,002t), nol kunci luar, nol sambungan luar — murni
+matematika di rumah sendiri, selaras hukum kemandirian). Protokol
+jujur: kronologis → latih n−60 pertama → uji 60 terakhir yang tak
+pernah dilihat saat latih (walk-forward) → bobot diadopsi HANYA bila
+holdout empu ≥ vonis-lama + 3 poin (gerbang anti-overfit) → fit akhir
+diulang atas SELURUH pengalaman → bobot dinormalisasi ke skala genome
+(0,2) agar ekosistem keyakinan tak melompat. Refit jalan TIAP denyut
+— makin banyak pengalaman tersimpan, makin tajam bobotnya; kurva
+belajar disegel di laporan/empu-belajar.json, bobot di
+otak/empu-bobot.json. Hasil tempa pertama: DIDADOPSI — holdout n=60
+empu 61,7% vs vonis-lama 33,3% (+28,4 poin); kurva belajar 60,0 →
+58,3 → 61,7 → 63,3 seiring pengalaman 40→80→120→160; anti-orakel
+tersegel sebagai cermin penyakit. Bobot terpasang: struktur +0,5874 ·
+momentum +0,0536 · sr −0,1036 · tekanan −0,0900 · perubahan −0,1654 —
+harga kini mengikuti STRUKTUR yang terbukti, bukan mengejar
+perubahan yang terbukti menipu.
+
+**4. UJI-400 — scripts/hidup/uji-akurasi-400.mjs, 400 SOAL BUTA DARI
+PASAR NYATA.** 40 koin likuid teratas × 10 momen waktu deterministik
+(indeks 250+72k) = 400 soal; di momen T hanya lilin ≤ T dibaca (buta
+dijamin lapisan data), vonis dinilai close T+24 jam − fee 0,2% —
+aturan penilaian sama persis dengan medan hidup. Lima dimensi
+direplikasi setia dari dewanBukti (jendela 200 lilin 1 jam, sama
+seperti denyut hidup). Vonis (laporan/uji-akurasi-400.json tersegel):
+bobot-lama hit 37,5% (net −121,8%) — angka ini menegaskan diagnosis
+(medan hidup ±35%); kurva empu: latih-40 44,3% → latih-80 47,8% →
+latih-120 50,5% → latih-160 51,2% (net +109,8%) → latih-penuh-454
+48,5%. SEMUA varian empu mengalahkan bobot-lama di soal yang sama;
+EMPULULUS. Kurva naik seiring pengalaman = bukti hukum "makin
+bertambah hari, makin tajam" kini berjalan pada data, bukan retorika.
+
+**5. MAKNA MANDAT.** Penyakit "makin lama makin bodoh" bukan kutukan
+pasar — ia cacat kawat: pengalaman menumpuk tapi tak pernah ditempa
+jadi bobot. Kini tiap denyut menempa ulang dirinya dari seluruh
+pengalamannya, gerbang anti-overfit menjaga agar hanya kebijaksanaan
+yang benar-benar terbukti di luar sampel yang boleh mengunci.
+Berikutnya (usul): empu diperluas ke komite wawasan (40 parameter)
+bila bukti cukup; empu-phoenix untuk jalur radar; geladak-uji memakai
+bobot empu; kurva belajar dipajang di dasbor hidup; vonis empu
+dinilai medan 60-denyut pertama sebagai ujian akhir pengangkatan.
