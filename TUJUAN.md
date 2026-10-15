@@ -4855,3 +4855,15 @@ tersegel sebagai indikator yang bisa diuji siapa pun di
 laporan/audit-pengalihan.json. Berikutnya (usul): denyut menyegel
 status-pengalihan tiap epok; kunci diputar → denyut menandai jujur di
 nalar-llm.json; intisari kurva UJI-50 masuk ingatan-biner.
+
+**KOREKSI JUJUR §14d (denyut #513, 2026-10-15T00:42).** Indikator lulus
+SEBAGIAN dan dipajang apa adanya: nalar-llm.json berubah `aktif:true,
+model glm-4-plus` — kunci terbaca sampai ke tubuh (plumbing end-to-end
+terbukti). TAPI panggilan `fetch failed`: gerbang internal z.ai
+beralamat PRIVAT 172.25.x.x (DNS diuji), hanya terjangkau dari jaringan
+wadah guru — runner Actions memang tak bisa ke sana, dan itu bukan
+sesuatu yang bisa kuserahkan. Saluran-pulih V314 bekerja persis
+hukumnya: breaker TUTUP, denyut lanjut penuh, status jujur disegel.
+Langkah terakhir kini jujur di tangan pemilik: pasang kunci endpoint
+PUBLIK kompatibel-OpenAI apa pun ke Secrets (organ sudah generik — nol
+suntingan kode lagi), maka otak menyala penuh.
