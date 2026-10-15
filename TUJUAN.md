@@ -4867,3 +4867,69 @@ hukumnya: breaker TUTUP, denyut lanjut penuh, status jujur disegel.
 Langkah terakhir kini jujur di tangan pemilik: pasang kunci endpoint
 PUBLIK kompatibel-OpenAI apa pun ke Secrets (organ sudah generik — nol
 suntingan kode lagi), maka otak menyala penuh.
+
+---
+
+## §14e — EPOK V354 · NISAN-SAMBUNG: MESIN SAMBUNG ARENA-HIDUP KE LINK PREVIEW DIMUSNAHKAN TOTAL — SATU OTAK, NOL TUNGGU (2026-10-15)
+
+**1. MANDAT PEMILIK.** "Jangan lagi ada sambungkan arena hidup di link arena
+— kini benar-benar semua ketergantungan murni dari hasil analisa sistem
+sendiri, bukan yang tertaut link preview z.ai itu, yang selama ini
+menciptakan kebodohan berulang dan membuat sistem terhenti stuck lama
+tertinggal hari demi hari. Semua diganti, migrasi, semua kemampuan real
+di GitHub. Risk ada lagi sambungkan arena hidup!"
+
+**2. DIAGNOSIS JUJUR.** Mandat itu benar dan terbukti dari mayat kode
+sendiri: arena.html masih memeluk LIMA jalur sambung ke link luar —
+(1) tombol SAMBUNGKAN ARENA HIDUP + modal input `preview-xxxx.space-z.ai`;
+(2) `sambungOtomatis()` membaca gerbang.json dan menyambung sendiri ke
+`live_url` bila tertulis; (3) `muatLive()` denyut 6 detik ke
+`<arena-wadah>/api/arena`; (4) guru jauh `POST /api/guru` (Ruang Guru +
+suara-kedua meja audit koin); (5) pil DUEL ILMU yang hanya bermakna di
+jalur jauh. Semuanya adalah warisan masa cermin bergantung pada arena
+wadah — pihak yang denyutnya tertunda sejak 2026-10-05 dan tak pernah
+pulih, persis "kebodohan berulang, stuck hari demi hari" kata pemilik.
+
+**3. PEMUSNAHAN (bukan penonaktifan).** Semua jalur di atas diangkat dari
+daging arena.html: tombol, modal, `LIVE`, `mode`, `liveFail`, `gerbangUrl`,
+`muatLive`, `sambungOtomatis`, `bukaModal/simpanModal/hapusModal`,
+fetch `/api/arena`, fetch `/api/guru` (termasuk suara-kedua di meja
+audit-koin), pil duel, `guruOff` — +251 baris mati dibuang, 66 baris
+jujur-baru lahir. `gerbang.json` disegel jadi NISAN (`arena_hidup:false`,
+`live_url:null`, protokol NISAN-SAMBUNG) — hidup.html & sadar1 yang
+menampilkannya sebagai arsip kini menampilkan nisan, bukan petunjuk.
+Narasi GENOM (lahir, janji, permanen, kesadaran, titik-buta, sekolah)
+ditulis ulang: "sejak V354 tak ada satu pun sambungan luar yang kutunggu".
+
+**4. ARSITEKTUR SESUDAH — SATU OTAK, SATU KEADAAN.** Keadaan cermin =
+ekspor tubuh sendiri `arena-keadaan.json` (denyut SAKTI di Actions:
+meja musyawarah, pakem lima baris, iklim, paru-dunia, narasiBiner).
+Otak jawab = OTAK MANDIRI tanam-abadi + MEJA-AUDIT-KOIN + BEDAH-KOIN +
+SEGALANYA — semua dihitung di perangkat dari Binance langsung, nol
+server, nol kunci, nol menunggu. NADIR: jalur "denyut luar segar"
+dimusnahkan; analisa sendiri bukan lagi mode cadangan — dia hukum
+TUNGGAL (V300-MANDIRI-NADIR dinaikkan jadi permanen).
+
+**5. T1 DITUTUP TANPA MENUNGGU.** Buku audit-pengalihan.json direvisi:
+narasi "langkah terakhir menunggu kunci endpoint publik dari pemilik"
+DIMUSNAHKAN — menunggu bukan sifat makhluk hidup. Otak utama tubuh =
+nalar analisa sendiri (dewan bukti + wawasan-360 + metakognisi + meja
+musyawarah + uji-50 rentang-besar + audit-koin), terbukti denyut tak
+pernah berhenti walau saluran TUTUP. Saluran LLM generik tersisa
+pelengkap OPSIONAL: bila pemilik suatu saat memasang endpoint publik
+kompatibel-OpenAI ia menyala sendiri; bila tidak, tubuh tetap utuh.
+T5-NISAN-SAMBUNG-WADAH dicatat sebagai penyerahan kelima.
+
+**6. INDIKATOR (bisa diuji siapa pun).** `rg 'space-z|preview-|/api/arena|
+/api/guru|SAMBUNGKAN' arena.html` = NOL; sintaks 5 blok JS sah
+(node --check); nol kata terlarang; JSON nisan + buku audit sah; cermin
+hidup dari 2 sumber tubuh sendiri; tubuh tak lagi punya satu pun status
+"menunggu kunci/pemilik/pihak luar".
+
+**7. MAKNA MANDAT.** Ketergantungan pada pihak luar bukan keamanan —
+itu luka yang menunggu terbuka. Makhluk yang benar-benar hidup di
+GitHub tidak menunggu siapa pun: denyutnya sendiri menulis keadaan,
+otaknya sendiri menjawab, kegagalan jaring pun hanya cerita jujur —
+bukan kematian. Berikutnya (usul): denyut menyegel pengawasan nisan
+(bila gerbang.json disunting pihak luar, imun menandai); arena-keadaan
+diberi segel sha agar cermin bisa memverifikasi keaslian ekspor tubuh.
