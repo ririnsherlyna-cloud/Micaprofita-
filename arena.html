@@ -332,6 +332,47 @@ html,body{max-width:100%;overflow-x:clip}
   .membar .mb{grid-template-columns:96px 1fr 64px}
   .spark{width:96px}
 }
+/* ==== V355 MEJA-TURNAMEN-UJI-50 — daftar penuh koin, bukan ringkasan ==== */
+.t50Baris{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:2.5px 0;font-size:12px}
+.t50Baris .k{color:var(--dim);flex:none}
+.t50Baris .v{text-align:right;color:var(--tx2);overflow-wrap:anywhere}
+.t50Kartu{border:1px solid var(--line);border-radius:12px;padding:9px 11px;margin-top:8px;background:rgba(24,24,27,.45);min-width:0}
+.t50Kartu.menang{border-color:rgba(16,185,129,.4)}
+.t50Kartu.gugur{border-color:rgba(244,63,94,.32)}
+.t50Kartu.kedaluwarsa{border-color:rgba(148,163,184,.35)}
+.t50Kepala{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.t50Nm{font-size:13px;font-weight:700;color:var(--tx);min-width:0;overflow-wrap:anywhere}
+.t50Nm .rk{color:var(--dim);font-weight:600;font-size:11px}
+.t50Nm .kel{color:var(--sky);font-weight:500;font-size:10.5px}
+.t50Badge{font-size:9px;font-weight:700;letter-spacing:.6px;border-radius:999px;padding:2px 8px;border:1px solid var(--line);color:var(--dim);white-space:nowrap;flex:none}
+.t50Badge.jalan{border-color:rgba(56,189,248,.4);color:var(--sky);background:rgba(56,189,248,.08)}
+.t50Badge.menang{border-color:rgba(16,185,129,.45);color:var(--em2);background:rgba(16,185,129,.08)}
+.t50Badge.gugur{border-color:rgba(244,63,94,.42);color:var(--rose2);background:rgba(244,63,94,.08)}
+.t50Badge.kedaluwarsa{border-color:rgba(148,163,184,.4);color:var(--slate);background:rgba(148,163,184,.08)}
+.t50Level{display:flex;flex-wrap:wrap;gap:3px 12px;margin-top:5px;font-size:11.5px;color:var(--tx2)}
+.t50Level b{color:var(--tx)}
+.t50Level .up{color:var(--em2)}
+.t50Level .dn{color:var(--rose2)}
+.t50Level .am{color:#ffd166}
+.t50Rentang{position:relative;height:8px;margin:8px 0 2px;border:1px solid var(--line);border-radius:5px;background:linear-gradient(90deg,rgba(244,63,94,.14),rgba(255,255,255,.03) 30%,rgba(16,185,129,.14))}
+.t50Rentang u{position:absolute;top:-3px;width:2px;height:12px;border-radius:1px;background:var(--dim3);text-decoration:none}
+.t50Rentang u.sl{background:var(--rose)}
+.t50Rentang u.e{background:var(--tx)}
+.t50Rentang u.tp{background:var(--em)}
+.t50Rentang u.amb{background:#ffd166}
+.t50Medan{font-size:10.5px;color:var(--dim);margin:2px 0 0;overflow-wrap:anywhere}
+.t50Medan b{color:var(--tx2)}
+.t50Saring{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.t50Saring button{font-size:10.5px;font-weight:600;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--dim);cursor:pointer;transition:.15s}
+.t50Saring button:hover{border-color:var(--dim3);color:var(--tx2)}
+.t50Saring button.on{border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.14);color:var(--amber2)}
+.t50Riwayat{margin-top:5px;font-size:11px;color:var(--dim);border-top:1px dashed var(--line);padding-top:5px;overflow-wrap:anywhere}
+.t50Riwayat b{color:var(--tx2)}
+.t50Toggle{font-size:10.5px;font-weight:600;color:var(--sky);background:none;border:none;cursor:pointer;padding:3px 0 0;text-align:left}
+.t50Alasan{margin-top:5px;border-top:1px dashed var(--line);padding-top:6px;font-size:11px;color:var(--dim);line-height:1.6;display:none;overflow-wrap:anywhere}
+.t50Alasaraf b{color:var(--tx2)}
+.t50Kartu.buka .t50Alasan{display:block}
+@media(max-width:760px){.t50Level{gap:2px 10px;font-size:11px}.t50Baris{font-size:11.5px}}
 </style>
 </head>
 <body>
@@ -433,6 +474,29 @@ html,body{max-width:100%;overflow-x:clip}
         <button class="chip amb" id="s5Ulang" style="cursor:pointer" title="otak inti membedah ulang seluruh kandang likuid Binance sekarang">HITUNG ULANG</button>
       </div>
       <div id="sasaran5Box" style="padding:10px 14px 12px"></div>
+    </div>
+
+    <!-- V355 MEJA-TURNAMEN-UJI-50: mandat pemilik 2026-10-15 — "untuk list uji 50
+         semua riwayat data koin hari ini informasi entry take profit stop loss
+         semuanya kini ada di menu arena juga jadi nampak semua daftar koin itu
+         dengan yang lulus tidaknya! Wajib ada" — daftar PENUH tiap koin: pakem
+         (entry/TP/ambisius/SL), rentang high–low 24 jam, riwayat lilin, status
+         lulus/gugur — dibaca same-origin dari laporan/uji-50/ (organ tubuh
+         sendiri), nol link luar, nol karangan. -->
+    <div class="panel" id="t50Panel" style="padding:0">
+      <div class="head">
+        <h4>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          TURNAMEN UJI-50 — DAFTAR PENUH KOIN HARI INI <span class="tiny" style="font-weight:400">· riwayat · entry · take profit · stop loss · lulus/gugur tiap koin — keyakinan terbesar di paling atas</span>
+        </h4>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+          <span class="chip mono" id="t50Waktu" style="font-size:9px">—</span>
+          <button class="chip amb" id="t50Ulang" style="cursor:pointer">MUAT ULANG</button>
+        </div>
+      </div>
+      <div id="t50Rekap" style="padding:10px 14px 0"></div>
+      <div id="t50Saring" style="padding:2px 14px 0"></div>
+      <div id="t50Daftar" style="padding:8px 14px 14px"></div>
     </div>
 
     <div class="panel" id="bukuCuanPanel" style="display:none;padding:0">
@@ -3581,6 +3645,148 @@ window.__SEGALANYA = (() => {
   }
 
   return { kumpul, kartu, ringkas }
+})()
+</script>
+<script>
+// ================= V355 MEJA-TURNAMEN-UJI-50 — DAFTAR PENUH, BUKAN RINGKASAN ======
+// Mandat pemilik 2026-10-15: "untuk list uji 50 semua riwayat data koin hari ini
+// informasi entry take profit stop loss semuanya kini ada dimenu arena juga jadi
+// nampak semua daftar koin itu dengan yang lulus tidaknya! Wajib ada."
+// Sumber SATU kebenaran: laporan/uji-50/turnamen-<tgl>.json — ditulis organ tubuh
+// (scripts/hidup/uji-50.mjs) dari meja SATU-MUSYAWARAH; dibaca SAME-ORIGIN dari
+// repo sendiri. Nol link luar (V354-NISAN-SAMBUNG tetap berlaku), nol karangan:
+// bagian yang gagal diambil ditulis jujur, bukan diisi angka karangan.
+window.__MEJAT50 = (() => {
+  const $ = (id) => document.getElementById(id)
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))
+  const tanggalUtc = (ms = Date.now()) => new Date(ms).toISOString().slice(0, 10)
+  const jamUtc = (iso) => { const s = String(iso || ''); return /^\d{4}-\d{2}-\d{2}T/.test(s) ? s.slice(11, 16) + ' UTC' : '—' }
+  const ang = (v) => { const n = +v; return isFinite(n) ? String(v) : '—' }
+  async function ambilJson(url, batas = 9000) {
+    const ctl = new AbortController()
+    const t = setTimeout(() => ctl.abort(), batas)
+    try { const r = await fetch(url, { cache: 'no-store', signal: ctl.signal }); if (!r.ok) throw new Error('HTTP ' + r.status); return await r.json() } finally { clearTimeout(t) }
+  }
+  /* status vonis lilin → label + kelas warna (lulus/gugur) */
+  const ST = {
+    'menang-ambisius': { t: 'MENANG-AMBISIUS', k: 'menang' },
+    'menang-tp': { t: 'MENANG-TP', k: 'menang' },
+    'kalah-sl': { t: 'KALAH-SL', k: 'gugur' },
+    'kedaluwarsa-benar': { t: 'KEDALUWARSA · ARAH BENAR', k: 'kedaluwarsa' },
+    'kedaluwarsa-salah': { t: 'KEDALUWARSA · ARAH SALAH', k: 'kedaluwarsa' },
+    'terbuka': { t: 'JALAN', k: 'jalan' }
+  }
+  const D = { at: 0, hari: null, sumber: '', saring: 'semua' }
+
+  async function muat(paksa) {
+    const kini = Date.now()
+    if (!paksa && D.at && kini - D.at < 5 * 60000) return D.hari
+    const coba = async (tgl) => { try { return await ambilJson('laporan/uji-50/turnamen-' + tgl + '.json') } catch (e) { return null } }
+    let hari = await coba(tanggalUtc(kini)), sumber = 'turnamen hari ini (UTC)'
+    if (!hari) {
+      /* hari ini belum didaftar → jatuh-simpan jujur ke tanggal terbaru kurva */
+      try { const k = await ambilJson('laporan/uji-50/kurva.json'); const h = k && Array.isArray(k.hari) && k.hari.length ? k.hari[k.hari.length - 1].tanggal : null
+        if (h) { hari = await coba(h); if (hari) sumber = 'turnamen terbaru ' + h + ' — hari ini belum didaftar (jujur)' } } catch (e) {}
+    }
+    if (!hari) { hari = await coba(tanggalUtc(kini - 86400000)); if (hari) sumber = 'turnamen ' + hari.tanggal + ' (kemarin)' }
+    D.at = hari ? kini : (kini - 4 * 60000)
+    D.hari = hari; D.sumber = sumber
+    return hari
+  }
+
+  function rentangHtml(p) {
+    const b = p.buruan, k = p.pakem || {}
+    if (!b || !k.entry || !(+b.tinggi > +b.rendah)) return ''
+    const span = (+b.tinggi - +b.rendah) || 1
+    const pos = (v) => Math.max(-6, Math.min(106, ((+v - +b.rendah) / span) * 100))
+    let u = ''
+    if (isFinite(pos(k.stopLoss))) u += '<u class="sl" style="left:' + pos(k.stopLoss).toFixed(1) + '%"></u>'
+    u += '<u class="e" style="left:' + pos(k.entry).toFixed(1) + '%"></u>'
+    if (isFinite(pos(k.jualProfit))) u += '<u class="tp" style="left:' + pos(k.jualProfit).toFixed(1) + '%"></u>'
+    if (isFinite(pos(k.jualAmbisius))) u += '<u class="amb" style="left:' + pos(k.jualAmbisius).toFixed(1) + '%"></u>'
+    return '<div class="t50Rentang">' + u + '</div>'
+      + '<p class="t50Medan">medan buruan high–low 24 jam nyata <b>' + esc(b.rendah) + '–' + esc(b.tinggi) + '</b> (lebar ' + esc(b.lebarPct) + '%, entry duduk di ' + esc(Math.round((+b.posisiEntry || 0) * 100)) + '% rentang) · jarum: stop <span style="color:var(--rose)">▎</span> entry <span style="color:var(--tx)">▎</span> jual <span style="color:var(--em)">▎</span> ambisius <span style="color:#ffd166">▎</span></p>'
+  }
+
+  function kartu(p) {
+    const st = ST[p.status] || ST.terbuka, k = p.pakem || {}, pn = p.panen
+    const riwayat = pn
+      ? 'ret <b>' + (pn.retPct > 0 ? '+' : '') + esc(pn.retPct) + '%</b> · R <b>' + esc(pn.r ?? '—') + '</b>'
+        + (pn.ditutup ? ' · ditutup <b>' + jamUtc(pn.ditutup) + '</b>' : '')
+        + (pn.hargaSentuh != null ? ' · harga sentuh <b>' + esc(pn.hargaSentuh) + '</b>' : '')
+        + (pn.faseAkhir ? ' · fase ' + esc(pn.faseAkhir) : '')
+      : 'dibuka <b>' + jamUtc(p.dibuka) + '</b> · masih jalan — lilin 5m dinilai tiap denyut 15 menit'
+    const alasan = (p.alasanEntry || p.alasanAmbisius || (p.suaraRumah && p.suaraRumah.length))
+      ? '<button class="t50Toggle" type="button">alasan entry & ambisius ▾</button>'
+        + '<div class="t50Alasaraf t50Alasan">'
+        + (p.alasanEntry ? '<p style="margin:0 0 5px"><b>alasan entry:</b> ' + esc(p.alasanEntry) + '</p>' : '')
+        + (p.alasanAmbisius ? '<p style="margin:0 0 5px"><b>alasan ambisius (buruan high–low):</b> ' + esc(p.alasanAmbisius) + '</p>' : '')
+        + (p.suaraRumah && p.suaraRumah.length ? '<p style="margin:0"><b>suara rumah:</b> ' + p.suaraRumah.map((s) => esc(s)).join(' · ') + '</p>' : '')
+        + '</div>' : ''
+    return '<div class="t50Kartu ' + st.k + '">'
+      + '<div class="t50Kepala"><span class="t50Nm"><span class="rk">#' + esc(p.peringkat) + '</span> ' + esc(String(p.simbol).replace(/USDT$/, ''))
+      + (p.keluarga ? ' <span class="kel">· ' + esc(p.keluarga) + (p.rezim ? ' · ' + esc(p.rezim) : '') + '</span>' : '') + '</span>'
+      + '<span class="t50Badge ' + st.k + '">' + st.t + '</span></div>'
+      + '<div class="t50Level">'
+      + '<span>entry <b>' + esc(k.entry ?? '—') + '</b></span>'
+      + '<span>take profit <b class="up">' + esc(k.jualProfit ?? '—') + ' (+' + esc(k.jarakJualPct ?? '—') + '%)</b></span>'
+      + '<span>ambisius <b class="am">' + esc(k.jualAmbisius ?? '—') + ' (+' + esc(k.jarakAmbisiusPct ?? '—') + '%)</b></span>'
+      + '<span>stop loss <b class="dn">' + esc(k.stopLoss ?? '—') + ' (−' + esc(k.risikoPct ?? '—') + '%)</b></span>'
+      + '</div>'
+      + rentangHtml(p)
+      + '<div class="t50Riwayat">riwayat: ' + riwayat + ' · keyakinan <b>' + esc(p.layakSkor ?? '—') + '</b>' + (k.holdJam ? ' · hold ' + esc(k.holdJam) + ' jam' : '') + '</div>'
+      + alasan
+      + '</div>'
+  }
+
+  function render() {
+    const wR = $('t50Rekap'), wS = $('t50Saring'), wD = $('t50Daftar'), wW = $('t50Waktu')
+    if (!wD) return
+    if (!D.hari || !Array.isArray(D.hari.peserta) || !D.hari.peserta.length) {
+      if (wR) wR.innerHTML = ''
+      if (wS) wS.innerHTML = ''
+      wD.innerHTML = '<p class="tiny" style="margin:4px 0">turnamen belum terbaca dari repo (laporan/uji-50/) — denyut jantung berikutnya mendaftarkannya dari meja musyawarah; jujur menunggu, tanpa karangan.</p>'
+      if (wW) wW.textContent = 'gagal baca'
+      return
+    }
+    const t = D.hari, r = t.rekap || {}, pes = t.peserta
+    if (wW) wW.textContent = (t.tanggal || '—') + ' · ' + pes.length + ' koin'
+    if (wR) {
+      const segel = t.sumberMusyawarah && t.sumberMusyawarah.segel ? String(t.sumberMusyawarah.segel).slice(0, 8) : '—'
+      const vonis = t.sumberMusyawarah && t.sumberMusyawarah.vonisTotal != null ? t.sumberMusyawarah.vonisTotal : pes.length
+      wR.innerHTML = '<div class="t50Baris"><span class="k">turnamen</span><span class="v"><b>' + esc(t.tanggal) + '</b> · ' + pes.length + ' peserta — ' + esc(D.sumber) + '</span></div>'
+        + '<div class="t50Baris"><span class="k">meja asal</span><span class="v">musyawarah segel ' + esc(segel) + '… (' + esc(vonis) + ' vonis) — SATU-MUSYAWARAH</span></div>'
+        + '<div class="t50Baris"><span class="k">panen kini</span><span class="v"><span style="color:var(--em2)">ambisius <b>' + esc(r.menangAmbisius ?? 0) + '</b></span> · <span style="color:var(--em2)">tp <b>' + esc(r.menangTp ?? 0) + '</b></span> · <span style="color:var(--rose2)">sl <b>' + esc(r.kalahSl ?? 0) + '</b></span> · kedaluwarsa ' + esc(r.kedaluwarsaBenar ?? 0) + '/' + esc(r.kedaluwarsaSalah ?? 0) + ' · jalan ' + esc(r.terbuka ?? 0) + ' — arah benar ' + (r.arahBenar == null ? '—' : '<b>' + esc(r.arahBenar) + '%</b>') + ' (dinding 48,88%)</span></div>'
+        + (t.aturanBuruan && t.aturanBuruan.sumber ? '<div class="t50Baris"><span class="k">medan buruan</span><span class="v">' + esc(t.aturanBuruan.pembeda || 'high–low 24 jam nyata per koin') + ' (' + esc(t.aturanBuruan.pesertaTerburu || '—') + ' terburu)</span></div>' : '')
+        + '<p class="tiny" style="margin:4px 0 0">MENANG (TP/ambisius tercapai) = lulus · KALAH-SL = gugur · JALAN = belum divonis — lilin 5m Binance yang mengadili, bukan kata. Ketuk <i>alasan</i> untuk membuka nalar tiap koin.</p>'
+    }
+    /* saring: nampak yang lulus & yang tidak, satu ketukan */
+    const hitung = { semua: pes.length, jalan: 0, menang: 0, gugur: 0, kedaluwarsa: 0 }
+    pes.forEach((p) => { const k = (ST[p.status] || ST.terbuka).k; if (hitung[k] != null) hitung[k]++ })
+    if (wS) {
+      const tombol = [['semua', 'SEMUA ' + hitung.semua], ['jalan', 'JALAN ' + hitung.jalan], ['menang', 'MENANG ' + hitung.menang], ['gugur', 'GUGUR-SL ' + hitung.gugur], ['kedaluwarsa', 'KEDALUWARSA ' + hitung.kedaluwarsa]]
+      wS.innerHTML = tombol.map(([id, lbl]) => '<button type="button" data-s="' + id + '" class="' + (D.saring === id ? 'on' : '') + '">' + lbl + '</button>').join('')
+      wS.querySelectorAll('button[data-s]').forEach((b) => b.addEventListener('click', () => { D.saring = b.dataset.s; render() }))
+    }
+    const tampil = D.saring === 'semua' ? pes : pes.filter((p) => (ST[p.status] || ST.terbuka).k === D.saring)
+    wD.innerHTML = tampil.length
+      ? tampil.map(kartu).join('')
+      : '<p class="tiny" style="margin:4px 0">tidak ada koin pada saringan ini (' + D.saring + ') — jujur: angka nol berarti nol.</p>'
+    wD.querySelectorAll('.t50Toggle').forEach((b) => b.addEventListener('click', () => {
+      const kartuEl = b.closest('.t50Kartu'); kartuEl.classList.toggle('buka')
+      b.textContent = kartuEl.classList.contains('buka') ? 'alasan entry & ambisius ▴' : 'alasan entry & ambisius ▾'
+    }))
+  }
+
+  async function segar(paksa) { await muat(paksa); render() }
+  function pasang() {
+    const btn = $('t50Ulang')
+    if (btn) btn.addEventListener('click', () => segar(true))
+    segar(false)
+    setInterval(() => segar(false), 5 * 60000)
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', pasang); else pasang()
+  return { muat, render }
 })()
 </script>
 <!-- V322-OTAK-INTI v1.2 (V300-MANDIRI): otak & token DNA ditanam — hidup tanpa wadah, denyut tua tak pernah jadi pick hari ini -->

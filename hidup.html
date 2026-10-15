@@ -135,6 +135,12 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);co
 .u50Rentang{position:relative;height:6px;margin:3px 0 3px 8px;border:1px solid var(--garis);border-radius:4px;background:linear-gradient(90deg,rgba(248,81,73,.12),rgba(255,255,255,.03) 30%,rgba(79,224,194,.12))}
 .u50Rentang u{position:absolute;top:-3px;width:2px;height:10px;border-radius:1px;background:var(--legap);text-decoration:none}
 .u50Rentang u.e{background:var(--tinta)} .u50Rentang u.t{background:var(--aksen);box-shadow:0 0 6px var(--aksen-l)} .u50Rentang u.a{background:#ffd166}
+/* V355: baris kompak daftar penuh — mandat pemilik 2026-10-15: riwayat/entry/TP/SL
+   tiap koin WAJIB nampak langsung di kartu “Turnamen hari ini”, bukan cuma rekap */
+.u50Baris{display:flex;gap:7px;align-items:flex-start;padding:4px 0;border-bottom:1px dashed rgba(255,255,255,.06);font-size:11.5px;line-height:1.55}
+.u50Baris:last-child{border-bottom:none}
+.u50Badge{flex:none;font-size:8.5px;font-weight:700;letter-spacing:.5px;border:1px solid;border-radius:999px;padding:1.5px 6px;margin-top:1px;white-space:nowrap}
+.u50Isi{min-width:0;overflow-wrap:anywhere;color:var(--tinta)}
 /* ===== V348 PUSAT-KENDALI-SISTEM (tab Sistem) ===== */
 .sysRow{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:12px}
 .sysRow .sysNm{flex:1;color:var(--tinta);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -3878,6 +3884,17 @@ function u50Kartu(p, tunjukAlasan){
     ${rentangHtml||(p.buruan?'':`<div class="kecil" style="margin:-1px 0 3px;padding-left:8px">keyakinan <b>${p.layakSkor}</b> · entry ${k.entry} · stop ${k.stopLoss} (risiko ${k.risikoPct}%) · <b>jual profit ${k.jualProfit}</b> (+${k.jarakJualPct}%, ambang napas) · <b>ambisius ${k.jualAmbisius}</b> (+${k.jarakAmbisiusPct}%)</div>`)}
     ${tunjukAlasan&&p.alasanAmbisius?`<div class="kecil" style="margin:-1px 0 5px;padding-left:8px;color:var(--tx2)">alasan: ${p.alasanAmbisius}</div>`:''}`;
 }
+/* V355: baris kompak per koin — mandat pemilik 2026-10-15: “semua riwayat data
+   koin hari ini, informasi entry, take profit, stop loss — semuanya… Wajib ada”.
+   Satu baris per koin di kartu “Turnamen hari ini”: status lulus/gugur + pakem
+   penuh + riwayat lilin + rentang 24j — dibaca dari data turnamen, nol karangan. */
+function u50Kompak(p){
+  const k=p.pakem||{}, st=U50_ST[p.status]||U50_ST.terbuka, pn=p.panen, b=p.buruan;
+  const riwayat=pn
+    ?`ret <b>${pn.retPct>0?'+':''}${pn.retPct}%</b> · R ${pn.r??'—'}${pn.ditutup?` · ditutup ${pn.ditutup.slice(11,16)} UTC`:''}${pn.hargaSentuh!=null?` · sentuh ${pn.hargaSentuh}`:''}`
+    :`dibuka ${p.dibuka?p.dibuka.slice(11,16)+' UTC':'—'} · masih jalan`;
+  return `<div class="u50Baris"><span class="u50Badge" style="color:${st.c};border-color:${st.c}">${st.t}</span><span class="u50Isi"><b>#${p.peringkat} ${String(p.simbol).replace(/USDT$/,'')}</b> — entry <b>${k.entry??'—'}</b> → jual profit <b>${k.jualProfit??'—'}</b> (+${k.jarakJualPct??'—'}%) · ambisius ${k.jualAmbisius??'—'} (+${k.jarakAmbisiusPct??'—'}%) · stop ${k.stopLoss??'—'} (−${k.risikoPct??'—'}%)<span style="color:var(--redup)"> · ${riwayat}${b?` · rentang 24j ${b.rendah}–${b.tinggi}`:''} · keyakinan ${p.layakSkor??'—'}</span></span></div>`;
+}
 async function uji50Render(){
   const w=document.getElementById('u50Status'); if(!w) return;
   const tab=document.getElementById('tab-uji50');
@@ -3908,6 +3925,7 @@ async function uji50Render(){
       <div class="baris"><span class="k">meja asal</span><span class="v">musyawarah segel ${U50.hari.sumberMusyawarah.segel} (${U50.hari.sumberMusyawarah.vonisTotal} vonis) — SATU-MUSYAWARAH</span></div>
       <div class="baris"><span class="k">panen kini</span><span class="v"><span style="color:var(--aksen)">ambisius <b>${r.menangAmbisius??0}</b></span> · <span style="color:var(--aksen)">tp <b>${r.menangTp??0}</b></span> · <span style="color:var(--salah)">sl <b>${r.kalahSl??0}</b></span> · kedaluwarsa ${r.kedaluwarsaBenar??0}/${r.kedaluwarsaSalah??0} · jalan ${r.terbuka??0} — arah benar ${r.arahBenar==null?'—':'<b>'+r.arahBenar+'%</b>'} (dinding 48,88%)</span></div>
       <div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:7px">${U50.hari.peserta.map(p=>{const ret=p.panen&&p.panen.retPct; const cls=ret!=null?(ret>=0?'win':'lose'):''; return `<span class="u50Koin ${cls}">${String(p.simbol).replace(/USDT$/,'')}${ret!=null?` ${ret>0?'+':''}${ret}%`:''}</span>`}).join('')}</div>
+      <div style="margin-top:9px;border-top:1px solid var(--garis);padding-top:4px"><div class="kecil" style="margin:0 0 2px">daftar penuh ${U50.hari.peserta.length} koin — riwayat · entry · take profit · stop loss · lulus/gugur (mandat pemilik 2026-10-15: “Wajib ada”):</div>${U50.hari.peserta.map(u50Kompak).join('')}</div>
       <div class="kecil" style="margin-top:5px">${U50.hari.aturanBuruan
         ?(U50.hari.aturanBuruan.sumber
           ?`medan buruan V351: ${U50.hari.aturanBuruan.pembeda} — high–low 24 jam NYATA per koin (${U50.hari.aturanBuruan.pesertaTerburu||'—'} peserta terburu)`
