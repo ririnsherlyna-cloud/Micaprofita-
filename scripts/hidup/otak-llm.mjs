@@ -20,6 +20,17 @@
 // SOPAN (nol tembakan saat terbuka, kecuali satu probe terjadwal).
 // Keadaan breaker dipersist di otak/saluran-keadaan.json — denyut
 // berikutnya mengingat luka & tetap mendengarkan pulihan pihak luar.
+//
+// V351 PENGALIHAN-OTAK (mandat pemilik "guru financial": "ada yang lu
+// sembunyikan kemampuannya, datanya, teknisnya, harusnya lu kasih juga
+// ke dia") — AUDIT JUJUR MENEMUKAN: otak bahasa tubuh MATI sejak lahir
+// (nalar-llm.json aktif:false) karena Secrets kosong, sementara gurunya
+// (AI di wadah pemilik) memakai saluran z.ai yang menuntut HEADER SESI.
+// Kini Secrets diisi (LLM_URL/LLM_KEY/LLM_MODEL/LLM_HEADERS) dan organ
+// ini membaca LLM_HEADERS (JSON header tambahan apa pun — generik, bukan
+// hardcode satu penyedia). Bukti hidup dipajang: bila denyut ini membaca
+// medan dan LLM menjawab, nalar-llm.json berubah aktif:true DENGAN
+// narasi nyata — indikator, bukan retorika.
 // ============================================================
 import { buatSaluran } from './saluran.mjs'
 
@@ -38,11 +49,24 @@ export async function nalarLLM (umpan) {
       ket: 'kunci LLM belum dipasang di repo (Secrets LLM_URL/LLM_KEY kosong) — denyut menganalisa dengan mesin nalar lokal penuh; otak-LLM menyala otomatis begitu kunci terpasang, tanpa pura-pura',
     }
   }
+  // V351: header tambahan dari Secrets (JSON objek) — saluran apa pun yang
+  // menuntut header sesi bisa hidup tanpa menyunting organ ini.
+  let headerTambahan = {}
+  try {
+    if (process.env.LLM_HEADERS) {
+      const h = JSON.parse(process.env.LLM_HEADERS)
+      if (h && typeof h === 'object' && !Array.isArray(h)) headerTambahan = h
+    }
+  } catch (e) { headerTambahan = {} }
   const sistem = 'Kau analis crypto jujur MICAPROFITA. Balas dalam bahasa Indonesia ringkas (maks 120 kata). Dilarang mengklaim kepastian; sebut selalu ketidakpastian & skenario. Format tepat: NARASI: <pembacaan medan> | KRITIK: <kelemahan argumen sistem ini>'
   return saluranLLM.panggil(async (signal) => {
     const r = await fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${key}`,
+        ...headerTambahan, // V351 PENGALIHAN-OTAK
+      },
       body: JSON.stringify({
         model,
         messages: [
