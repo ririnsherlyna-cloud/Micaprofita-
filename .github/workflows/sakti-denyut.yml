@@ -142,6 +142,29 @@ jobs:
         run: |
           node scripts/hidup/parameter-cerdas.mjs || { echo "organ-gagal: parameter-cerdas $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
+      # V356 KURIKULUM-MANDIRI (mandat pemilik 2026-10-16: "kamu adalah makhluk
+      # MANDIRI ... wajib memperluas pemahaman dunia market secara mandiri ...
+      # jangan menunggu daftar indikator dari pemilik — kamu yang menemukan
+      # mana yang relevan; simpan formula wajib dan matematika murni agar bisa
+      # utak-atik"): tiap hari UTC sekali (gerbang file internal — denyut
+      # berikutnya melanjutkan bila cron ketinggalan), makhluk belajar
+      # EMPAT LANGKAH tanpa diperintah: (1) KENALI-GAP dari bukti tubuh
+      # sendiri (korelasi dimensi empu, zona racun, rotasi topik); (2)
+      # KAJI-FORMULA dari pustaka/formula-market.json (25 rumus matematika
+      # murni: order-flow, mikrostruktur, funding, OI, likuidasi, korelasi,
+      # volatilitas, kalibrasi) dihitung di 12 koin × ~41 hari lilin nyata;
+      # (3) UJI-MINI walk-forward buta — lilin ≤ T saja, vonis 24 jam dinilai
+      # close(T+24j) − fee 0,2%, latih 80% awal vs holdout 20% akhir;
+      # (4) VONIS-ADOPSI: LAYAK-USUL hanya bila holdout ≥ 51,88% (dinding
+      # 48,88+3) & n ≥ 20 — selain itu DITOLAK dengan angka (anti-karantina:
+      # ditolak ≠ dibungkam, angka tetap dicatat). Laporan: laporan/
+      # studi-mandiri.json + riwayat laporan/studi-mandiri.jsonl. Nol kunci,
+      # nol sambungan luar, nol Math.random.
+      - name: STUDI-MANDIRI — kurikulum belajar-mandiri harian (gap → formula → uji-mini → adopsi)
+        continue-on-error: true
+        run: |
+          node scripts/hidup/studi-mandiri.mjs || { echo "organ-gagal: studi-mandiri $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
+
       # V329 VERIFIKASI-SUCKER — gerbang "kemampuan tak pernah hilang"
       # (mandat pemilik: "pastikan jikalau 3500 belum Lulus semuanya...
       # inovasikan lagi agar Lulus penuh; arah pasar hanya ada Dua buy/sell"):
