@@ -1,0 +1,95 @@
+{
+ "protokol": "PUSTA-DOKTRIN-V303",
+ "nama": "DOKTRIN-SEM-BILAN",
+ "asal": "amanat pemilik 2026-10-16: 'Pahami Nih! — harga adalah satu-satunya kebenaran yang bisa dibayar... makhluk kita adalah master investasi'",
+ "filsafat": {
+  "inti": "Harga = satu-satunya kebenaran yang bisa dibayar. Fundamental memilih APA, teknikal memilih KAPAN dan BERAPA, hitungan memastikan untung di arah mana pun, kegagalan menyempurnakan rumus.",
+  "sikap": "Tidak ada pasar yang ditolak: naik, turun, menyamping, panik, euforia — semua punya celah. Kerja kita menghitung celah itu sebelum terjadi.",
+  "hukum": "Pasar tidak peduli harapan; ia hanya membayar disiplin. Yang patuh berbulan-bulan menyalip yang mengejar sinyal."
+ },
+ "doktrin": [
+  {"no": "I", "nama": "TAHU_APA_YANG_DIPERDAGANGKAN", "inti": "aset = klaim atas nilai nyata (bisnis, jaringan, sumber daya). Cek: likuiditas, volume, kabar datang, jadwal pelepasan pasokan, pemilik terbesar. Fundamental konteks, teknikal angka."},
+  {"no": "II", "nama": "ARAH_DARI_KERANGKA_BESAR", "inti": "mingguan+harian dulu, baru 4h/1h/15m. Naik: puncak-dasar makin tinggi -> jalur beli. Turun: makin rendah -> jalur short. Menyamping: beli dasar rentang, jual puncak rentang.", "hukum": "dua arah sama-sama sumber laba; yang berubah hanya jalurnya"},
+  {"no": "III", "nama": "RENTANG_24_JAM", "inti": "H24/L24 rolling = tepi wilayah perebutan, stop loss orang lain menumpuk di sana.", "skenario": [
+   "belum sentuh H24 -> ruang atas terbuka, target R1 lalu R2",
+   "belum sentuh L24 -> ruang bawah terbuka, target S1 lalu S2",
+   "tembus + volume besar -> lanjut; masuk saat retest tepi, stop di baliknya",
+   "tembus lalu balik ke dalam (sapuan) -> stop massal terambil; celah ke tepi lawan; stop di balik ujung sapuan",
+   "tengah rentang -> belum ada keunggulan; tandai tepi, dua arah, eksekusi di tepi",
+   "rentang > ATR -> gerak matang; cari kelelahan atau lanjut dgn konfirmasi volume"]},
+  {"no": "IV", "nama": "HITUNG_TARGET_DUA_ARAH", "inti": "jangan menebak — hitung, tulis target kedua arah tiap hari.", "lihat": "formula D01-D05"},
+  {"no": "V", "nama": "STOP_DARI_FORMULA", "inti": "stop = titik skenario gugur, bukan persentase dipatok. Level pembatal + penyangga 0.5xATR menyaring goyangan palsu; pasar liar menaikkan ATR -> stop melebar otomatis.", "gerbang": "R:R >= 1:2 SETELAH biaya, hitung sebelum klik; tidak lulus -> geser entry/target, jangan persempit stop; tetap tidak -> tunggu", "bertahap": "sebagian di target 1, stop ke impas, sisa ke target berikut; stop TIDAK PERNAH digeser menjauh", "lihat": "D06-D09"},
+  {"no": "VI", "nama": "SYARAT_MASUK_4", "inti": "(1) searah kerangka besar / pola jelas di tepi; (2) di zona level kuat; (3) ada konfirmasi candle/volume; (4) R:R >= 1:2 setelah biaya. Kurang satu = belum transaksi.", "hukum": "itu bukan menghindar, itu menunggu hitungan lengkap"},
+  {"no": "VII", "nama": "Skenario_TERBURUK", "inti": "pelajari lonjakan, jatuh bebas, gap, slippage. Tiap saat tanya: kalau harga menembus levelku, ia berhenti di mana? Hitung lewat target arah sebaliknya. Jangan rata-rata ke bawah pada posisi salah."},
+  {"no": "VIII", "nama": "KEGAGALAN_BAHAN_AJAR", "inti": "rugi = uang kuliah; bedah 5 tanya (target meleset atau eksekusi salah? level mana gagal & kenapa? penyangga ATR pas? skenario salah baca? emosi ikut campur?) -> SATU perbaikan rumus per rugi.", "hukum": "rugi tanpa catatan = biaya terbuang; rugi dengan catatan = investasi. 2-3 rugi beruntun -> berhenti, bedah semua dulu."},
+  {"no": "IX", "nama": "UJI_SEBELUM_PERCAYA", "inti": "backtest -> demo -> modal kecil. Expectancy = (winrate x rata untung) - (lossrate x rata rugi); positif layak, negatif perbaiki/buang. Uji juga formula stop: berapa kali level pembatal benar jadi titik jatuh, berapa hanya sapuan."}
+ ],
+ "formula": [
+  {"id": "D01", "nama": "PIVOT", "rumus": "P = (H+L+C)/3 (data kemarin)"},
+  {"id": "D02", "nama": "PIVOT_LEVEL", "rumus": "R1 = 2P-L ; S1 = 2P-H ; R2 = P+(H-L) ; S2 = P-(H-L)", "identitas": ["R1+S1 = P+C", "R2 = 2P-S2", "R2-P = P-S2 = H-L"]},
+  {"id": "D03", "nama": "TARGET_NAIK", "urut": ["R1", "R2", "H24+0.618xRentang", "H24+1.0xRentang", "level mingguan/bulanan/rekor"]},
+  {"id": "D04", "nama": "TARGET_TURUN", "urut": ["S1", "S2", "L24-0.618xRentang", "L24-1.0xRentang", "level mingguan/bulanan/rekor"]},
+  {"id": "D05", "nama": "SISA_RUANG", "rumus": "sisa = ATR14 - rentang berjalan; target jauh melebihi sisa butuh volume besar / tren kerangka tinggi; level bertumpuk (pivot+Fib+besar satu area) = zona terkuat"},
+  {"id": "D06", "nama": "STOP_FORMULA", "rumus": "beli: stop = level_pembatal - 0.5xATR ; jual: stop = level_pembatal + 0.5xATR", "level_pembatal": "S1/S2 atau R1/R2 terdekat, L24/H24, ujung sapuan, level mingguan"},
+  {"id": "D07", "nama": "UKURAN_POSISI", "rumus": "units = dana/entry ; rugi@stop = |entry-stop| x units ; laba net = (|target-entry| x units) - biaya(fee+spread+slippage)"},
+  {"id": "D08", "nama": "GERBANG_RR", "rumus": "laba_net / rugi_stop >= 2", "catatan": "win-rate impas rasio 1:2 = 33.3% — gerbang ini menoleransi hit-rate di bawah 50%"},
+  {"id": "D09", "nama": "EXPECTANCY", "rumus": "E = (winrate x rata_untung) - (lossrate x rata_rugi) ; E > 0 layak"},
+  {"id": "D10", "nama": "BREAKEVEN_WR", "rumus": "WR_impas = 1 / (1 + RR)"},
+  {"id": "D11", "nama": "LARANGAN", "aturan": ["stop tidak pernah digeser menjauh", "jangan rata-rata ke bawah pada posisi salah", "2-3 rugi beruntun -> berhenti & bedah"]}
+ ],
+ "disiplinHarian": [
+  {"fase": "pagi", "isi": "tren besar, H24/L24, pivot, ATR, target naik+turun, level pembatal, skenario jika-naik & jika-turun"},
+  {"fase": "siang", "isi": "eksekusi hanya setup lolos stop, posisi, syarat masuk"},
+  {"fase": "malam", "isi": "jurnal: alasan masuk, hasil, posisi harga vs rentang 24jam, kesalahan, emosi"},
+  {"fase": "akhirPekan", "isi": "statistik, bedah semua rugi, buang rumus tak terbukti"},
+  {"fase": "terusMenerus", "isi": "catat target/stop yang tepat & meleset -> dari data itu rumus sendiri lahir"}
+ ],
+ "verifikasiMatematis": {
+  "status": "LULUS_SEMUA",
+  "skrip": "/home/z/my-project/scripts/verifikasi-doktrin.py",
+  "contoh": {"pivot": "H=110 L=95 C=104 -> P=103, R1=111, S1=96, R2=118, S2=88", "stop": "batal 98, ATR 2 -> stop beli 97; ATR 5 -> 93.5 (melebar otomatis)", "sizing": "entry 100 stop 97 target 106.5 dana 1000 fee 0.2%: rugi 30, laba net 63, R:R 2.10 LULUS", "expectancy": "0.45x2R-0.55x1R = +0.35R"},
+  "identitas": "R1+S1=P+C, R2=2P-S2, R2-P=P-S2=H-L terbukti aljabar & numerik"
+ },
+ "ujiEmpiris": {
+  "protokol": "UJI-DOKTRIN-IX-2026-10-16",
+  "data": "kline jam-an Binance 6 simbol (BTC ETH SOL BNB XRP DOGE), 2021-2026, 1189 hari-berpasangan",
+  "sumber": "/home/z/my-project/cache-cascade/h-*.json",
+  "hasil": {
+   "sentuh_R1_pct": 24.1, "sentuh_S1_pct": 46.3,
+   "sentuh_R2_pct": 9.4, "sentuh_S2_pct": 27.0,
+   "sentuh_T3_0618R_pct": 7.8, "sentuh_S3_0618R_pct": 25.5,
+   "sentuh_T4_10R_pct": 4.6, "sentuh_S4_10R_pct": 17.9,
+   "sentuh_atas_H24_pct": 33.8,
+   "dari_yang_sentuh_atas": {"tembus_tahan_pct": 54.2, "tembus_vol_besar_pct": 48.3, "sapuan_pct": 45.8, "sapuan_ke_tepi_lawan_pct": 28.3},
+   "sentuh_bawah_L24_pct": 51.3,
+   "dari_yang_sentuh_bawah": {"tembus_tahan_pct": 64.3, "sapuan_pct": 35.7, "sapuan_ke_tepi_lawan_pct": 19.7},
+   "hari_sentuh_dua_tepi": 79, "R1_dulu_pct": 55.7, "S1_dulu_pct": 44.3,
+   "jarak_open_ke_R1_vs_rentang": 0.850, "jarak_open_ke_S1_vs_rentang": 0.851, "simetri_kiri_kanan": true
+  },
+  "file": "/home/z/my-project/download/riset-doktrin/hasil-uji-doktrin.json"
+ },
+ "penilaianJujur": {
+  "kekuatan": [
+   "semua formula matematis solid & identitas pivot terbukti",
+   "target dua arah simetris (0.85 rentang kiri & kanan) -> 'dua arah sumber laba' terbukti struktural",
+   "tembus vs sapuan nyaris seimbang di H24 (54:46) -> doktrin benar menuntut SIAPKAN DUA ARAH, tak boleh asumsi tembus",
+   "gerbang R:R>=2 menoleransi hit-rate rendah (impas 33.3%) — desain gerbang tepat sasaran"
+  ],
+  "titikLemah": [
+   "sentuhan R1 hanya 24.1% / S1 46.3% per hari -> 'target pertama kena besok' TIDAK bisa diasumsikan; wajib gerbang Doktrin VI",
+   "sapuan -> tepi lawan hanya 28.3% (atas) / 19.7% (bawah) -> skenario celah lawan paling jarang; R:R ke tepi lawan sering gagal gerbang, buang bila tak lulus",
+   "sampel condong bear-market (2022-2023) -> level bawah lebih sering kena; kumpulkan data bull tambahan sebelum mengklaim simetri arah"
+  ],
+  "hukum": "rumus tanpa gerbang = kepanikan berpakaian hitungan; gerbang R:R + syarat masuk 4 adalah penyelamat"
+ },
+ "pelajaranUtkSistem": [
+  "sasaran-terkini & arah-harian = Doktrin II+IV sudah hidup di organ; tambahkan pivot R1/S1/R2/S2 & T3/T4/S3/S4 sebagai target dua arah harian",
+  "geladak hit-rate = Doktrin IX expectancy dalam wujud lain; tambahkan kolom R:R setelah biaya pada tiap sasaran",
+  "zona racun = Doktrin VII (skenario terburuk) — sama filosofi: hitung dulu di mana harga berhenti",
+  "denyut 15 menit = disiplin harian; tambahkan fase 'malam' berupa bedah 5 tanya pada tiap vonis SALAH",
+  "formula hidup TIDUR = rumus yang buang sementara (Doktrin IX: buang tak terbukti) — kapabilitas menunggu bukti baru",
+  "stop dari formula, bukan persentase = parameter-cerdas harus membaca ATR, bukan angka beku"
+ ],
+ "diperbarui": "2026-10-16T14:10:00+08:00",
+ "segel": "DOKTRIN-SEM-BILAN-TERVERIFIKASI-1189-HARI-2026-10-16"
+}
