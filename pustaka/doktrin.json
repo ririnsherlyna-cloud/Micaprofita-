@@ -1,0 +1,85 @@
+{
+ "protokol": "PUSTA-DOKTRIN-V001",
+ "sumber": "Doktrin trading lengkap dari pemilik (sesi sebelumnya, bahasa Indonesia), distilasi ulang menjadi pustaka eksekutabel — 2026-10-16",
+ "aksioma": [
+  "Harga adalah satu-satunya kebenaran yang bisa dibayar.",
+  "Tidak ada kondisi pasar yang ditolak: naik, turun, sideways, panik, euforia — semuanya punya celah. Tugas bukan menunggu kondisi ideal, tapi menghitung celah lebih dulu.",
+  "Level, target, dan stop adalah peta probabilitas; akurasi yang menjadikannya wujud nyata."
+ ],
+ "doktrin": [
+  {
+   "id": "D1",
+   "nama": "KENALI ASET",
+   "isi": "Fundamental memberi konteks (cerita, berita, aliran dana); teknikal memberi angka yang bisa dihitung. Jangan pernah menembak aset yang tidak dikenal; kenali dulu, baru ukur."
+  },
+  {
+   "id": "D2",
+   "nama": "KERANGKA BESAR MENENTUKAN ARAH",
+   "isi": "Top-down: Minggu/Hari menentukan arah besar, 4H/1H/15m mencari titik masuk. Tiga kondisi pasar, tiga sumber laba: naik = beli dan tahan; turun = jual/short; sideways = kerja di tepi rentang. Tidak ada kondisi yang dibenci — semua dikerjakan."
+  },
+  {
+   "id": "D3",
+   "nama": "KUASAI RENTANG 24 JAM",
+   "isi": "Setiap hari hitung H24, L24, Rentang = H24 − L24 dari 24 candle tertutup terakhir. Dari OHLC kemarin, tarik pivot P = (H+L+C)/3; R1 = 2P − L; S1 = 2P − H; R2 = P + (H−L); S2 = P − (H−L). Tangga target naik: R1 → R2 → H24 + 0.618×Rentang → H24 + 1.0×Rentang → puncak minggu/bulan/riwayat. Turun simetris: S1 → S2 → L24 − 0.618×Rentang → L24 − 1.0×Rentang → dasar minggu/bulan/riwayat."
+  },
+  {
+   "id": "D4",
+   "nama": "BATAS KEMASUK-AKAN (VALIDITAS)",
+   "isi": "Ruang tersisa = ATR14 − jarak yang sudah ditempuh sejak tepi rentang. Jika ruang tersisa habis, level sebagus apa pun ditolak — jangan membeli di ujung napas."
+  },
+  {
+   "id": "D5",
+   "nama": "STOP DAN POSISI",
+   "isi": "Beli: Stop = level pembatal − 0.5×ATR. Jual: Stop = level pembatal + 0.5×ATR. Posisi = modal alokasi ÷ harga entry. Stop boleh digeser ke arah laba (breakeven), TIDAK PERNAH dilebarkan."
+  },
+  {
+   "id": "D6",
+   "nama": "EKONOMI TRADE (FEE-AFTER)",
+   "isi": "Laba bersih = (jarak target × posisi) − biaya total. Syarat lulus: R:R bersih ≥ 1:2 SETELAH fee. Expectancy = (win rate × rata-rata laba) − (loss rate × rata-rata rugi); hanya trading bila expectancy > 0."
+  },
+  {
+   "id": "D7",
+   "nama": "KELUAR BERTAHAP",
+   "isi": "Ambil laba sebagian di tiap anak tangga target; sisa posisi digeser stop ke breakeven. Menjaga yang sudah ada lebih utama daripada mengejar yang belum pasti."
+  },
+  {
+   "id": "D8",
+   "nama": "DISIPLIN HARIAN",
+   "isi": "Jurnal setiap trade. Setelah posisi ditutup, bedah 5 pertanyaan: (1) Kenapa saya masuk? (2) Apakah sesuai doktrin atau emosi? (3) Apakah stop dikelola benar? (4) Apa yang bisa membuatnya lebih cepat/bersih? (5) Pola kesalahan apa yang berulang pekan ini? Dua sampai tiga loss beruntun = berhenti total, bedah diri sebelum kembali."
+  },
+  {
+   "id": "D9",
+   "nama": "LARANGAN MUTLAK",
+   "isi": "Tidak average-down (menambah posisi rugi). Tidak revenge trading. Tidak trading tanpa stop. Menolak setup yang tidak lolos hitungan — tapi tidak pernah menolak kondisi pasar."
+  }
+ ],
+ "rumus": [
+  { "id": "RD01", "nama": "RENTANG-24J", "teks": "H24 = high tertinggi 24 candle tertutup terakhir; L24 = low terendahnya; Rentang = H24 − L24" },
+  { "id": "RD02", "nama": "PIVOT-KEMARIN", "teks": "P = (H+L+C)/3; R1 = 2P − L; S1 = 2P − H; R2 = P + (H−L); S2 = P − (H−L); H,L,C = OHLC kemarin" },
+  { "id": "RD03", "nama": "TANGGA-TARGET", "teks": "naik: R1 → R2 → H24+0.618×Rentang → H24+1.0×Rentang → puncak minggu/bulan/riwayat; turun simetris ke bawah" },
+  { "id": "RD04", "nama": "RUANG-TERSISA", "teks": "ruangTersisa = ATR14 − jarakTempuh; tolak entry bila ≤ 0" },
+  { "id": "RD05", "nama": "STOP", "teks": "buy: stop = pembatal − 0.5×ATR14; sell: stop = pembatal + 0.5×ATR14" },
+  { "id": "RD06", "nama": "POSISI", "teks": "posisi = modalAlokasi / entry" },
+  { "id": "RD07", "nama": "LABA-BERSIH", "teks": "labaBersih = (jarakTarget × posisi) − feeTotal; R:R bersih = labaBersih / (rugiBersih bila stop kena)" },
+  { "id": "RD08", "nama": "EXPECTANCY", "teks": "E = (winRate × avgWin) − (lossRate × avgLoss); wajib > 0" }
+ ],
+ "skenario24h": [
+  { "id": "S1", "nama": "BELUM-SENTUH-H24", "keputusan": "tidak menembak ke atas; tunggu di tepi atau main dari sisi bawah" },
+  { "id": "S2", "nama": "BELUM-SENTUH-L24", "keputusan": "tidak menembak ke bawah; tunggu di tepi atau main dari sisi atas" },
+  { "id": "S3", "nama": "BREAKOUT-NYATA", "keputusan": "menembus H24/L24 dengan volum nyata DAN close di luar rentang → JANGAN kejar; entry di retest level yang ditembus" },
+  { "id": "S4", "nama": "SAPUAN-LIKUIDITAS", "keputusan": "sentuh H24/L24 tapi close kembali di dalam rentang = sapuan stop-loss; harga cenderung berbalik ke TEPi BERLAWANAN; jangan ikut arah sapuan" },
+  { "id": "S5", "nama": "TENGAH-RENTANG", "keputusan": "tunggu — tepi rentang yang memberi sudut, tengah memberi tidak apa-apa" },
+  { "id": "S6", "nama": "RENTANG-LUAS-LEBIH-ATR", "keputusan": "jika rentang 24 jam melebihi ATR, cari tanda kelelahan (ekshaus) di ujung, jangan kejar harga" }
+ ],
+ "disiplinHarian": [
+  "hitung H24/L24/Rentang/pivot sebelum pasar dibuka",
+  "catat setiap entry/exit + alasan ke jurnal",
+  "bedah 5 pertanyaan setelah posisi ditutup",
+  "2–3 loss beruntun → berhenti total dan bedah diri",
+  "cekap expectancy mingguan; matikan setup bila E ≤ 0"
+ ],
+ "hubunganPustaka": {
+  "formula.json": "D3/D5/D6 adalah bentuk eksplisit dari yang selama ini dicari pola otomatisnya; doktrin = kerangka, formula hidup = pengukur",
+  "msci.json": "sama-sama ajaran presisi: definisikan dulu (denominator/frozen base ↔ pembatal/ATR), baru hitung"
+ }
+}
