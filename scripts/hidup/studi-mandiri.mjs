@@ -228,7 +228,13 @@ function pilihTopik(lib, riwayat, empu, mate) {
     if (z && z.akurasiPct < 30) alasan.push(`zona racun terburuk "${z.kunci}" ak ${z.akurasiPct}% — perlu alat ukur rezim lebih tajam`)
   }
   const urut = [...topik].sort((a, b) => (terakhir[a] || '').localeCompare(terakhir[b] || '') || a.localeCompare(b))
-  const topikHariIni = dorong && urut.includes(dorong) ? dorong : urut[0]
+  let topikHariIni = urut[0]
+  if (dorong && urut.includes(dorong)) {
+    const tgl = terakhir[dorong] || ''
+    const selisih = tgl ? Math.floor((Date.parse(hariUTC()) - Date.parse(tgl)) / 86400000) : 99
+    if (selisih >= 3) topikHariIni = dorong
+    else alasan.push(`dorongan bukti "${dorong}" baru dipelajari ${tgl || 'hari ini'} — giliran rotasi "${topikHariIni}" agar semua topik tersentuh ≤ 7 hari (anti-kelaparan-topik)`)
+  }
   return { topik: topikHariIni, kenapa: alasan.length ? alasan.join(' · ') : `rotasi kurikulum — topik paling lama tak disentuh (${terakhir[topikHariIni] || 'belum pernah'})` }
 }
 
