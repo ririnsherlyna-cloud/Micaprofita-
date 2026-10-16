@@ -5000,3 +5000,81 @@ Berikutnya (usul): empu diperluas ke komite wawasan (40 parameter)
 bila bukti cukup; empu-phoenix untuk jalur radar; geladak-uji memakai
 bobot empu; kurva belajar dipajang di dasbor hidup; vonis empu
 dinilai medan 60-denyut pertama sebagai ujian akhir pengangkatan.
+
+---
+
+## §13ab — EPOK V357 · PENGAWAS-OTONOM: KEMANDIRIAN-PENUH — EVALUASI SENDIRI TIAP 15 MENIT, SEKOLAH BUTA SAAT PEMICU, SEMUA KEPUTUSAN DIKOMIT TANPA MENUNGGU (2026-10-16)
+
+**1. MANDAT PEMILIK.** "Mulai sekarang kamu wajib berjalan sebagai
+sistem yang mandiri dan independen penuh. (1) Jangan lagi menunggu
+perintah atau mandat baru dari saya untuk setiap perbaikan.
+(2) Setiap 15 menit kamu wajib mengevaluasi sendiri performa ledger
+hidupmu (hit-rate, Brier, zona racun, korelasi fitur). (3) Jika
+hit-rate 7 hari terakhir < 42% atau Brier > 0,30, kamu WAJIB segera:
+menjalankan sekolah buta mini (minimal 500 soal × 50 dunia beku),
+menguji inversi/reweighting fitur yang sedang jelek, mengadopsi
+perubahan hanya jika lolos holdout ≥ +3 poin dan anti-overfit.
+(4) Semua keputusan perbaikan, versi baru, dan perubahan bobot harus
+kamu catat sendiri di ledger dan di-commit tanpa menunggu persetujuan.
+(5) Tujuan utamamu: dalam 7 hari ke depan hit-rate ledger hidup harus
+menembus 99,99%+ secara stabil, bukan hanya di uji kandang."
+
+**2. ORGAN BARU — PENGAWAS-OTONOM di scripts/hidup/pengawas-otonom.mjs.**
+Enam hukum tersegel di tubuh organ: (1) EVALUASI-MANDIRI — hit-rate 7d
+(sasaran-terkini akurasi.jendela7h) + Brier arah (ilmu.brier) + zona
+racun (forensik.zonaRacun) + korelasi fitur (empu-belajar
+korelasiDimensiHasil) dibaca dari rapor tubuh sendiri tiap denyut, nol
+sambungan luar; (2) PEMICU-MUTLAK — hit7d < 42 ATAU brier > 0.30 =
+sekolah WAJIB; keadaan tak-diketahui diperlakukan pemicu nyala
+(menghadapi-diri, bukan pura-pura sehat); (3) SEKOLAH-BUTA-MINI — 500
+soal × 50 dunia beku per run: dunia w memotong kolam pengalaman dengan
+langkah deterministik stride 7w+3 (nol Math.random), tiap soal dunia
+beku asli (bukti 5 dimensi dibekukan saat waktuKunci, kunci hasil 24
+jam net-fee dibaca sesudahnya), holdout = 150 pengalaman TERBARU tiap
+dunia; (4) UJI-INVERSI — 8 kandidat: baseline-terpasang (pembanding),
+inversi-penuh, inversi per-dimensi untuk tiap dim korelasi ≤ −0.05,
+anti-korelasi murni, anti-korelasi-lunak, dan refit-logistik-per-dunia
+(reweighting hidup: bobot difit ulang dari latih tiap dunia — 50
+holdout sekaligus); (5) GERBANG-ADOPSI — adopsi HANYA bila holdout ≥
+baseline +3.0 poin DAN ≥ 26/50 dunia lulus gerbang sama DAN median
+delta lintas dunia ≥ +1.5 DAN kedua belah holdout (awal & akhir)
+keduanya tak-kalah baseline (anti-overfit dua sisi) — gagal = DITOLAK
+dengan angka (anti-karantina); (6) LEDGER-MANDIRI — tiap keputusan
+tertulis laporan/otonom.json + riwayat laporan/otonom.jsonl + bobot
+aktif otak/otonom-bobot.json, ikut komit denyut tiap 15 menit tanpa
+menunggu; laporan/lapor-otonom.json = status kemandirian sekali per
+24 jam (gerbang tanggal UTC).
+
+**3. JAHITAN KE DENYUT.** Workflow SARANG-PENJAGA: langkah PENGAWAS-
+OTONOM dipasang SEBELUM langkah denyut otak (bobot segar terbaca);
+gagal organ = luka tercatat, denyut TETAP JALAN (hukum V334). Penjaga
+membaca otak/otonom-bobot.json sebagai prior: bobot ARAH = 50% empu/
+genome + 50% pengawas-otonom, HANYA bila adopsi=true dan usia ≤ 24
+jam (kedaluwarsa = tak dicampur, dipaksa sekolah ulang — tak ada
+bobot beku). Empu refit tiap denyut tetap jalan — dua pembelajar
+berlomba jujur, angka medan yang memutuskan.
+
+**4. BUKTI TEMPAAAN PERTAMA (run lokal 2026-10-16, siklus 599).**
+Pemicu NYALA (hit7d 35,3% < 42 · Brier 0,2797 ≤ 0,30 — hit yang
+mematikan pemicu). Kolam 521 pengalaman matang jalur ARAH. Sekolah:
+50 dunia × 500 soal, holdout 150 terbaru per dunia, 8 kandidat.
+Vonis jujur: SEMUA DITOLAK — inversi-penuh median −16,0 poin
+(cermin anti-orakel justru lebih buruk dari bobot terpasang: diagnosis
+V351 tak lagi berlaku penuh, empu sudah menggigit); anti-korelasi
+−14,0; anti-korelasi-lunak −16,0; refit-logistik-per-dunia −4,7
+(reweighting dari nol kalah dari pengalaman yang sudah ditempa); inversi
+satu-dim momentum/sr/perubahan delta 0,0 (dim kecil tak mampu
+membalik arah keputusan). Baseline tetap — bukan karena malas, tapi
+karena TIDAK ADA kandidat yang mengalahkannya di 50 dunia beku dengan
+gerbang +3 poin. Total penilaian 50 × 500 × 8 = 200.000 vonis-dunia
+per run, 0,55 detik, deterministik.
+
+**5. MAKNA MANDAT.** Makhluk kini memegang tali sendiri: pemicu,
+sekolah, gerbang, catatan, dan komit — semuanya hidup di denyut 15
+menit, tanpa menunggu perintah. Tujuan 99,99% dikejar lewat loop ini
+dengan hukum anti-overfit tetap mengikat: angka medan yang dinilai,
+bukan klaim — satu kandidat pun tak boleh naik tanpa 50 dunia yang
+menyaksikan. Berikutnya (usul): kolam pengalaman terus tumbuh tiap
+denyut sehingga sekolah makin dalam; empu-phoenix & geladak bisa
+ikut diuji inversinya bila pemicu menyala lebih lama; lapor-otonom
+24 jam menjadi buku audit kemandirian publik.

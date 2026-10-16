@@ -72,6 +72,21 @@ jobs:
         run: |
           node scripts/hidup/barui-sistem.mjs || { echo "organ-gagal: barui-sistem $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
 
+      # V357 PENGAWAS-OTONOM — KEMANDIRIAN-PENUH (mandat pemilik 2026-10-16):
+      # "sistem mandiri & independen penuh — evaluasi sendiri tiap 15 menit
+      # (hit-rate, Brier, zona racun, korelasi fitur); bila hit-rate 7 hari
+      # < 42% atau Brier > 0,30 WAJIB sekolah buta mini (500 soal × 50 dunia
+      # beku) + uji inversi/reweighting fitur jelek; adopsi HANYA bila holdout
+      # ≥ +3 poin & anti-overfit; semua keputusan & perubahan bobot dicatat
+      # sendiri di ledger dan di-commit tanpa menunggu persetujuan".
+      # Organ menulis laporan/otonom.json + laporan/otonom.jsonl + otak/
+      # otonom-bobot.json (prior 50/50 dibaca denyut di langkah berikutnya,
+      # kedaluwarsa 24 jam) + laporan/lapor-otonom.json sekali per 24 jam.
+      - name: PENGAWAS-OTONOM — evaluasi mandiri 15-menit + sekolah buta bila pemicu (V357)
+        continue-on-error: true
+        run: |
+          node scripts/hidup/pengawas-otonom.mjs || { echo "organ-gagal: pengawas-otonom $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
+
       - name: Denyut otak server (tanpa browser)
         run: node scripts/penjaga.mjs
         env:

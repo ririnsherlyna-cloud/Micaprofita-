@@ -3073,9 +3073,32 @@ const EMPU = empuAkurasi(ledger)
 if (EMPU.adopsi) log(`empu-akurasi: DIDADOPSI — holdout empu ${EMPU.rapor.uji.hitEmpu}% vs vonis-lama ${EMPU.rapor.uji.hitVonisLama}% (n=${EMPU.rapor.uji.nHoldout}) — bobot lima dimensi kini ditempa dari ${EMPU.rapor.pengalaman} pengalaman sendiri`)
 else log(`empu-akurasi: ${EMPU.rapor.vonis} — ${EMPU.rapor.alasan}`)
 const bobotGenomeCampur = campur(genome, ilmu.hedge.arah)
-const bobotArah = EMPU.adopsi && EMPU.bobotNorm
-  ? Object.fromEntries(DIM_ARAH.map((k, j) => [k, EMPU.bobotNorm[j]]))
-  : bobotGenomeCampur
+// ---- V357 PENGAWAS-OTONOM (mandat pemilik 2026-10-16: "kemandirian penuh —
+// setiap perbaikan & perubahan bobot dicatat sendiri tanpa menunggu persetujuan")
+// Organ pengawas (scripts/hidup/pengawas-otonom.mjs, jalan sebelum denyut tiap 15
+// menit) mengevaluasi hit-rate 7d + Brier + zona racun + korelasi fitur; bila
+// pemicu (hit<42 ATAU brier>0.30) dia menjalankan sekolah buta mini 500 soal × 50
+// dunia beku dan menguji inversi/reweighting — bobot diadopsi HANYA bila lulus
+// gerbang penuh (holdout ≥ +3 poin · ≥26/50 dunia · median ≥ +1.5 · dua-sisi
+// tak-kalah). Artefaknya otak/otonom-bobot.json kini DICAMPUR 50/50 di sini
+// sebagai prior — ber-usia maks 24 jam (kedaluwarsa = tak dicampur, dipaksa
+// sekolah ulang). Keputusan penuh tersegel di laporan/otonom.json + .jsonl.
+const OTONOM = (() => {
+  const o = bacaJson(path.join(ROOT, 'otak/otonom-bobot.json'), null)
+  if (!o || !o.adopsi || !o.bobot) return null
+  const usia = Date.now() - new Date(o.diperbarui).getTime()
+  if (!Number.isFinite(usia) || usia > 24 * 3600 * 1000) return null
+  return o
+})()
+const bobotArah = (() => {
+  const dasar = EMPU.adopsi && EMPU.bobotNorm
+    ? Object.fromEntries(DIM_ARAH.map((k, j) => [k, EMPU.bobotNorm[j]]))
+    : bobotGenomeCampur
+  if (!OTONOM) return dasar
+  const campurOtonom = Object.fromEntries(DIM_ARAH.map((k) => [k, +(0.5 * (dasar[k] ?? 0) + 0.5 * (OTONOM.bobot[k] ?? 0)).toFixed(4)]))
+  log(`otonom-campur: bobot ARAH = 50% empu/genome + 50% pengawas-otonom (kebijakan ${OTONOM.kebijakan}, siklus ${OTONOM.siklus})`)
+  return campurOtonom
+})()
 const bobotPhx = campur(phxGenome, ilmu.hedge.phx)
 const bobotWaw = campur(genomeWaw, ilmu.hedge.waw)
 
