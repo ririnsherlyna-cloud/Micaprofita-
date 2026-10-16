@@ -1,0 +1,159 @@
+{
+ "protokol": "PUSTA-MSCI-V303",
+ "sumber": {
+  "utama": "MSCI Index Calculation Methodology (February 2025, PDF 145 hal)",
+  "gimi": "MSCI Global Investable Market Indexes Methodology (August 2025, PDF 192 hal)",
+  "urlCalc": "https://www.msci.com/indexes/documents/methodology/0_MSCI_Index_Calculation_Methodology_20240812.pdf",
+  "urlGimi": "https://www.msci.com/indexes/documents/methodology/1_MSCI_Global_Investable_Market_Indexes_Methodology_20250807.pdf",
+  "arsipLokal": "/home/z/my-project/download/msci/"
+ },
+ "identitas": {
+  "nama": "MSCI = Morgan Stanley Capital International (nama historis; sejak 2007 MSCI Inc. berdiri sendiri setelah spin-off dari Morgan Stanley)",
+  "asal": "bermula dari Capital International Perspectives (1969); lisensi Morgan Stanley 1986; MSCI World, MSCI EM, MSCI ACWI",
+  "hakikat": "indeks terkoreksi free float, tertimbang kapitalisasi pasar; BUKAN indeks berimbang harga sederhana"
+ },
+ "catatanKunci": "MSCI TIDAK memakai divisor ala S&P/DJ — pembilang/pembagi dikelola lewat pasangan IndexAdjustedMarketCap_t (harga hari t) vs IndexInitialMarketCap_t (harga t-1, jumlah saham t-1, FX t-1). Aksi korporasi diserap lewat Price Adjustment Factor (PAF) agar indeks kontinu.",
+ "formula": [
+  {
+   "id": "M01",
+   "nama": "LEVEL_INDEKS_HARGA",
+   "bagian": "Calc 1.1 hal 6",
+   "rumus": "PriceIndexLevelUSD_t = PriceIndexLevelUSD_{t-1} * IndexAdjustedMarketCapUSD_t / IndexInitialMarketCapUSD_t",
+   "var": {
+    "IndexAdjustedMarketCapUSD_t": "kap pasar indeks hari t (harga t, FX t)",
+    "IndexInitialMarketCapUSD_t": "kap pasar indeks acuan (harga t-1, jumlah saham t-1, FX t-1)"
+   },
+   "catatan": "indeks lokal memakai rasio yang sama dengan FX t-1 di pembilang & pembagi → bebas efek kurs"
+  },
+  {
+   "id": "M02",
+   "nama": "KAP_PASAR_INDEKS_TERKOREKSI",
+   "bagian": "Calc 1.1.1 hal 7",
+   "rumus": "IndexAdjustedMarketCapUSD_t = SUM_{s in I,t} ( EndOfDayNumberOfShares_{t-1} * PricePerShare_t * InclusionFactor_t * PAF_t / FXrate_t )",
+   "var": {
+    "InclusionFactor": "kombinasi FIF / DIF / Growth / Value / Index Inclusion Factor",
+    "PAF": "Price Adjustment Factor — penyerap aksi korporasi (rights issue, dividend besar >= 5% cum price)",
+    "FXrate": "nilai 1 USD dalam mata uang harga s"
+   }
+  },
+  {
+   "id": "M03",
+   "nama": "KAP_INISIAL_INDEKS",
+   "bagian": "Calc 1.1.1 hal 7",
+   "rumus": "IndexInitialMarketCapUSD_t = SUM_{s in I,t} ( EndOfDayNumberOfShares_{t-1} * PricePerShare_{t-1} * InclusionFactor_t / FXrate_{t-1} )"
+  },
+  {
+   "id": "M04",
+   "nama": "METODE_KONTRIBUSI",
+   "bagian": "Calc 1.2 hal 14",
+   "rumus": "Index_t = Index_{t-1} * (1 + SUM_{s} InitialSecurityWeight_t * SecurityDailyPriceReturn_t)",
+   "var": {
+    "InitialSecurityWeight_t": "SecurityInitialFullMarketCapUSD_t * IF_t / SUM(...) * 100 (dalam %)",
+    "SecurityDailyPriceReturn_t": "(SecurityAdjustedMarketCapUSD_t / SecurityInitialMarketCapUSD_t - 1) * 100"
+   }
+  },
+  {
+   "id": "M05",
+   "nama": "BOBOT_BESOK",
+   "bagian": "Calc 1.3 hal 13",
+   "rumus": "InitialSecurityWeight_{t+1} = (NOS_t * Price_t * IF_{t+1} / FX_t) / SUM(NOS_t * Price_t * IF_{t+1} / FX_t) * 100"
+  },
+  {
+   "id": "M06",
+   "nama": "DTR_TOTAL_RETURN_HARIAN",
+   "bagian": "Calc 2.1 hal 21",
+   "rumus": "DTRIndexLevelUSD_t = DTRIndexLevelUSD_{t-1} * (IndexAdjustedMarketCapUSD_t + IndexDividendImpactUSD_t) / IndexInitialMarketCapUSD_t",
+   "var": {
+    "IndexDividendImpactUSD_t": "SUM_{s ex-date t} ( EndOfDayNumberOfShares_{ex-date-1} * DividendPerShare_t * IF_t / FXrate_t )"
+   }
+  },
+  {
+   "id": "M07",
+   "nama": "GROSS_VS_NET_DTR",
+   "bagian": "Calc 2.2 hal 28",
+   "rumus": "Gross DTR: dividen bruto (tanpa kredit pajak). Net DTR: dividen dipotong pajak withholding tarif MAKSIMUM investor institusi non-residen (tanpa benefit treaty) untuk indeks internasional; residen untuk indeks domestik",
+   "catatan": "reinvestasi pada ex-date di bursa utama; dividen khusus >= 5% cum-price memakai PAF (masuk indeks harga juga); < 5% & tidak berulang 3 tahun hanya masuk DTR"
+  },
+  {
+   "id": "M08",
+   "nama": "FREE_FLOAT",
+   "bagian": "GIMI hal 99",
+   "rumus": "FreeFloat% = 100% - NonFreeFloatShareholdings%  (non-free float = kepemilikan strategis: pemerintah, pendiri/keluarga, karyawan, perusahaan lain, silang)",
+   "var": {"NonFreeFloatShareholdings%": "jumlah saham non-bebas dibagi total saham beredar"}
+  },
+  {
+   "id": "M09",
+   "nama": "FREE_FLOAT_UNTUK Investor ASING",
+   "bagian": "GIMI hal 100 (ber-FOL)",
+   "rumus": "FreeFloatForForeignInvestors% = min( 100% - NonFreeFloatShareholdings% , FOL% - ForeignNonFreeFloatShareholdings% )",
+   "catatan": "varian kedua (FOL dikurangi kepemilikan strategis asing) hanya untuk negara yang foreign room-nya TIDAK dipantau"
+  },
+  {
+   "id": "M10",
+   "nama": "FIF_Foreign_Inclusion_Factor",
+   "bagian": "GIMI hal 100",
+   "rumus": "FIF = free float yang tersedia bagi investor asing, dibulatkan: NAIK ke 5% terdekat jika FF > 15%; ke 1% terdekat jika FF < 15%; ber-FOL: FIF = min(FF-asing dibulatkan, FOL dibulatkan 1%)",
+   "contoh": {"tanpaFOL": "FF 57% -> FIF 0.60; FF 12.4% -> FIF 0.12", "denganFOL": "FF 60%, FOL 33.3%, strategis asing 10% -> min(60,23.3)=23.3 -> FIF 0.25; tanpa strategis asing -> 33.3 -> FIF 0.33"}
+  },
+  {
+   "id": "M11",
+   "nama": "FFMC_Free_Float_Adjusted_Market_Cap",
+   "bagian": "GIMI hal 103",
+   "rumus": "FreeFloatAdjustedMarketCapitalization = FIF * FullMarketCapitalization",
+   "contoh": "FullMC $5.000mm, FIF 0.60 -> FFMC $3.000mm; FIF 0.12 -> FFMC $600mm"
+  },
+  {
+   "id": "M12",
+   "nama": "FOREIGN_ROOM",
+   "bagian": "GIMI hal 102 & 30",
+   "rumus": "ForeignRoom = (FOL - KepemilikanAsingSaatIni) / FOL",
+   "gerbang": {
+    "masuk_universe": "foreign room >= 15% (Minimum Foreign Room Requirement)",
+    "bobot_penuh": "foreign room >= 25%",
+    "zona_15_25": "faktor penyesuaian 0.5 dikalikan FIF final",
+    "contoh_resmi": "(40% - 20%) / 40% = 50%"
+   }
+  },
+  {
+   "id": "M13",
+   "nama": "GERBANG_INVESTABILITAS",
+   "bagian": "GIMI 2.2.6-2.2.9, 2.3.6",
+   "aturan": [
+    "Global Minimum FIF: FIF >= 0.15 untuk masuk Market Investable Equity Universe",
+    "Pengecualian perusahaan raksasa: FIF < 0.15 boleh masuk Standard jika FFMC >= 1.8x minimum Standard (existing: 2/3 dari 1.8x)",
+    "Minimum FFMC: >= 50% dari Market Size-Segment Cutoff (atau 50% batas Global Minimum Size Range bila cutoff di luar rentang)",
+    "IPO: minimal trading 3 bulan (IPO besar bisa lebih awal)",
+    "Likuiditas: ATVR 12 bulan >= 20% DM / 15% EM; existing boleh bertahan di 2/3 (13.3% / 10%) + ATVR 3bln >= 5% + FoT >= 80%/70%; ATVR rendah -> Liquidity Adjustment Factor 0.5",
+    "Screen kenaikan harga ekstrem: excess return vs ambang 100%-2500% (5D s/d 250D) menahan tambahan ke Standard Index"
+   ]
+  },
+  {
+   "id": "M14",
+   "nama": "ICI_INTERNAL_CURRENCY_INDEX",
+   "bagian": "Calc 1.1.1",
+   "rumus": "IndexAdjustedMarketCapForLocal_t = SUM( NOS_{t-1} * Price_t * IF_t * PAF_t / FX_{t-1} * ICI_t / ICI_{t-1} )",
+   "catatan": "ICI = 1 kecuali redenominasi mata uang (contoh: TRY -> TRY Baru, ICI = 1.000.000)"
+  }
+ ],
+ "verifikasi": {
+  "metode": "hitung ulang contoh resmi Calc 1.1.2 (Day 1-3, 4 sekuritas) dengan skrip python",
+  "target_usd": [100.273, 99.462, 101.430],
+  "target_local": [100.397, 100.221, 101.614],
+  "hasil_usd": [100.273, 99.462, 101.43],
+  "hasil_local": [100.397, 100.221, 101.614],
+  "market_caps_day1": {"adjusted": 70558595, "initial": 70366633, "forLocal": 70646090},
+  "bobot_day1_pct": {"A": 16.52, "B": 3.40, "C": 3.16, "D": 76.91},
+  "status": "LULUS_PRESISI_6_DIGIT",
+  "skrip": "/home/z/my-project/scripts/verifikasi-msci.py"
+ },
+ "pelajaranUtkSistem": [
+  "PAF (Price Adjustment Factor) = pola anti-jump: aksi korporasi diserap faktor pengali, level indeks tidak pernah melompat — sama dengan filosofi kontinuitas formula hidup",
+  "Pasangan Adjusted/Initial = pengganti divisor: pembilang hidup (harga t), pembagi beku di t-1 — pola pembanding beku ala dunia terbeku (frozen world)",
+  "InclusionFactor = pengali investabilitas: FIF menurunkan bobot saham yang tidak bisa dibeli asing — analog re-weighing fitur yang tak dapat diakses",
+  "Foreign room < 25% -> faktor 0.5 pada FIF: hukuman gradien, bukan mati total — analog zona racun dengan penurunan bobot bertahap",
+  "Gross vs Net DTR: definisi dulu baru angka — dua seri sah dari data sama, beda asumsi pajak (analog: definisi hit-rate harus dikunci sebelum dinilai)",
+  "Pembulatan FIF bertingkat (5% jika besar, 1% jika kecil): kisi pembulatan mencegah presisi palsu pada data kasar — analog pengukuran n kecil"
+ ],
+ "diperbarui": "2026-10-16T13:35:00+08:00",
+ "segel": "MSCI-FORMULA-TERVERIFIKASI-2026-10-16"
+}
