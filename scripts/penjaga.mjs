@@ -2640,6 +2640,24 @@ for (const s of daftarTelusur) if (!hasil[s]) gagal.push(s)
 radar.telusurDalam = Object.keys(hasil).length
 const host = Object.entries(hitungHost).sort((a, b) => b[1] - a[1])[0]?.[0] || 'tidak-ada'
 log(`telusur dalam: OK ${radar.telusurDalam}/${daftarTelusur.length} via ${host}`, gagal.length ? `gagal: ${gagal.slice(0, 10).join(', ')}${gagal.length > 10 ? '…' : ''}` : '')
+// TANGGA-DATA-JUJUR (etika-data hukum pemilik: "jujur & tahan-banting") — tangga darurat
+// host dicatat APA ADANYA ke jurnal tetap (laporan/jurnal-data.json), bukan cuma log
+// konsol runner: siapa host yang mengangkat tiap denyut, dan peristiwa Binance bermasalah
+// yang diselamatkan anak tangga cadangan (bybit/okx/coinbase) — angka tidak dikarang.
+try {
+  const _jdPath = path.join(ROOT, 'laporan/jurnal-data.json')
+  const _jd = bacaJson(_jdPath, { protokol: 'JURNAL-DATA-V001', denyut: [], peristiwa: [] })
+  _jd.denyut.push({ waktu: ISO, host: hitungHost, ok: radar.telusurDalam, gagal: gagal.length })
+  while (_jd.denyut.length > 96) _jd.denyut.shift()
+  const _binanceOk = (hitungHost['binance'] || 0) + (hitungHost['binance-vision'] || 0)
+  const _cadanganOk = (hitungHost['bybit'] || 0) + (hitungHost['okx'] || 0) + (hitungHost['coinbase'] || 0)
+  if (_cadanganOk > 0 && _binanceOk === 0)
+    _jd.peristiwa.push({ waktu: ISO, jenis: 'binance-terblokir', tangga: hitungHost, ok: radar.telusurDalam, gagal: gagal.length, ket: 'semua anak tangga Binance gagal dari runner — tangga darurat (bybit/okx/coinbase) yang mengangkat denyut ini; dicatat apa adanya' })
+  else if (_binanceOk === 0 && _cadanganOk === 0)
+    _jd.peristiwa.push({ waktu: ISO, jenis: 'gelap-total', ket: 'semua host tak terjangkau — denyut dilewati tanpa tulis (fault isolation)' })
+  while (_jd.peristiwa.length > 200) _jd.peristiwa.shift()
+  tulis(_jdPath, _jd)
+} catch (e) { log(`jurnal-data: gagal ditulis (${String(e.message).slice(0, 40)}) — jujur, tidak menghentikan denyut`) }
 if (!hasil.BTC) throw new Error('BTC tak terjangkau di semua host — siklus dilewati tanpa tulis (fault isolation)')
 
 mkdirSync(path.join(ROOT, 'laporan'), { recursive: true })
