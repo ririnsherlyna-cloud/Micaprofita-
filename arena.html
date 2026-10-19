@@ -2862,9 +2862,15 @@ function renderBukuCuan() {
   if (!m || !m.totalPlan) { panel.style.display = 'none'; return; }
   panel.style.display = '';
   const sgn = (v, d) => (v >= 0 ? '+' : '') + Number(v).toFixed(d === undefined ? 2 : d);
-  const rows = (bc.entri || []).slice(-6).reverse().map((e) => `<div class="bcRow"><span class="mono bcDay">${esc(String(e.day || '').slice(5))}</span><span class="bcSt ${e.status === 'MENANG' ? 'men' : e.status === 'KALAH' ? 'kal' : 'ked'}">${esc(e.status)}</span><b class="mono">${esc(String(e.symbol || '').replace('USDT', ''))}</b><span class="dim">${esc(e.arah)} · via ${esc(String(e.via || '').toLowerCase())}</span><span class="mono ${e.netPct >= 0 ? 'up' : 'dn'}">${sgn(e.netPct)}%</span><span class="dim mono">${e.r !== null && e.r !== undefined ? sgn(e.r, 2) + 'R' : ''}</span><span class="dim">rezim ${esc(e.regime)} · k ${e.keyakinan}%</span></div>`).join('');
+  const rows = (bc.entri || []).slice(-6).reverse().map((e) => `<div class="bcRow"><span class="mono bcDay">${esc(String(e.day || '').slice(5))}</span><span class="bcSt ${e.status === 'MENANG' ? 'men' : e.status === 'KALAH' ? 'kal' : 'ked'}">${esc(e.status)}</span><b class="mono">${esc(String(e.symbol || '').replace('USDT', ''))}</b><span class="dim">${esc(e.arah)} · via ${esc(String(e.via || '—').toLowerCase())}${e.sumber === 'doktrin-restorasi' ? ' · <span style="color:var(--amber,#d7a13a)">doktrin</span>' : e.backfill ? ' · <span class="dim">backfill</span>' : ''}</span><span class="mono ${e.netPct >= 0 ? 'up' : 'dn'}">${e.netPct != null ? sgn(e.netPct) + '%' : '—'}</span><span class="dim mono">${e.r !== null && e.r !== undefined ? sgn(e.r, 2) + 'R' : ''}</span><span class="dim">rezim ${esc(e.regime || '—')} · k ${e.keyakinan != null ? e.keyakinan : '—'}%</span></div>`).join('');
   const rezim = (m.perRegime || []).filter((r) => r.kalah > 0).map((r) => `<span class="bcKet"><b>${esc(r.regime)}</b> ${r.kalah} kalah/${r.n} · eks ${sgn(r.eksPct)}%</span>`).join(' ');
-  const ber = (bc.berlangsung || []).map((b) => `<b>${esc(String(b.symbol || '').replace('USDT', ''))}</b> ${esc(b.arah)} (T ${b.targetPct !== null && b.targetPct !== undefined ? sgn(b.targetPct) + '%' : '—'} / S ${b.stopPct !== null && b.stopPct !== undefined ? b.stopPct + '%' : '—'})`).join(' · ');
+  const ber = (bc.berlangsung || []).map((b) => `<b>${esc(String(b.symbol || '').replace('USDT', ''))}</b> ${esc(b.arah)} (T ${b.targetPct !== null && b.targetPct !== undefined ? sgn(b.targetPct) + '%' : '—'} / S ${b.stopPct !== null && b.stopPct !== undefined ? b.stopPct + '%' : '—'})${b.napas && b.napas.rentangHarianPct != null ? `<span class="dim"> napas ${Number(b.napas.rentangHarianPct).toFixed(1)}%</span>` : ''}`).join(' · ');
+  const np = bc.napasPasar || {};
+  const md = bc.metrikDoktrin || null;
+  const napasLine = np.koinDihitung ? `<p class="bcBaris"><b style="color:var(--lime,#9bd25e)">NAPAS PASAR NYATA (7 hari):</b> ${np.koinDihitung} koin diukur · median rentang harian <b class="mono">${np.medianRentangHarianPct != null ? Number(np.medianRentangHarianPct).toFixed(1) + '%' : '—'}</b>${np.koinTerbesar ? ` · terbesar ${esc(String(np.koinTerbesar.symbol || '').replace('USDT', ''))} ${Number(np.koinTerbesar.rentangHarianPct).toFixed(1)}%` : ''} — band kini mengikuti napas koin (V357), bukan ambang karangan</p>` : '';
+  const dokLine = md && md.totalPlan ? `<p class="bcBaris"><b style="color:var(--amber,#d7a13a)">BAYANGAN DOKTRIN</b> (tangga H24/L24 pada rencana yang sama): ${md.menang} MENANG · ${md.kalah} KALAH · ${md.kedaluwarsa} kedaluwarsa · eks ${sgn(md.ekspektansiPct)}% vs band-lama ${md.pembanding ? sgn(md.pembanding.ekspektansiPct) + '%' : '—'}${md.ditolakDoktrin ? ` · ${md.ditolakDoktrin} rencana ditolak doktrin (ruang habis)` : ''}</p>` : '';
+  const pelLine = (bc.pelajaran || []).length ? `<p class="bcBaris"><b>PELAJARAN BUKU:</b></p>` + bc.pelajaran.map((p) => `<p class="dim" style="margin:2px 0">• ${esc(p)}</p>`).join('') : '';
+  const jejakLine = bc.jejak ? `<p class="dim" style="margin-top:7px">Jejak abadi: <span class="mono">${esc(bc.jejak.berkas)}</span> (append-only)${bc.backfill && bc.backfill.selesai ? ` · backfill ${bc.backfill.vonisPulih} vonis dipulihkan dari sejarah git` : ''}</p>` : '';
   $('#bukuCuanBox').innerHTML = `
     <div class="bcGrid">
       <div class="bcStat"><p class="lab">Net kumulatif (majemuk)</p><p class="val ${m.netKumulatifPct >= 0 ? 'up' : 'dn'}">${sgn(m.netKumulatifPct)}%</p></div>
@@ -2876,7 +2882,11 @@ function renderBukuCuan() {
     ${rezim ? `<p class="bcBaris"><b style="color:var(--rose2)">KETELEDORAN DIHITUNG:</b> ${rezim}</p>` : ''}
     ${rows ? `<div class="bcRows">${rows}</div>` : ''}
     ${ber ? `<p class="bcBaris">Berlangsung: ${ber} — dinilai saat candle tutup.</p>` : ''}
-    <p class="dim" style="margin-top:7px">${esc(bc.kejujuran || '')}</p>`;
+    ${napasLine}
+    ${dokLine}
+    ${pelLine}
+    <p class="dim" style="margin-top:7px">${esc(bc.kejujuran || '')}</p>
+    ${jejakLine}`;
 }
 
 // ---------- orkestra ----------

@@ -121,6 +121,23 @@ jobs:
         continue-on-error: true
         run: node scripts/hidup/gerbang.mjs guru-master
 
+      # V357 BUKU-CUAN-ABADI — ULTIMATUM pemilik 2026-10-19: "Riwayat ini kenapa
+      # tak pernah bertingkat — kesannya sudah lama mati! Jangan ada kasus kematian
+      # lagi informasi! Data jejak setiap waktu kemarin harus selalu ada dan jadi
+      # bahan pembelajaran untuk hari ini dan ke depannya."
+      # Forensik: bukuCuan BEKU sejak 2026-10-05 karena TIDAK ADA penulisnya di
+      # denyut (V276 menulis sekali, organ penilai tak pernah ada). Diakui terbuka,
+      # kini disembuhkan di akar: organ ini dinilai SETIAP denyut — rencana
+      # resmi ditilang lilin nyata (stop/sasaran/kedaluwarsa, fee ditagih), jejak
+      # append-only laporan/buku-cuan.jsonl TIDAK PERNAH bisu lagi, napas koin
+      # (rentang harian nyata 7 hari) diukur untuk tiap rencana, pelajaran ditulis,
+      # dan arena-keadaan.json bukuCuan bertingkat lagi. Backfill 10-05→19 sudah
+      # dipulihkan dari sejarah git (tersegel di jejak) — runner tak mengulangnya.
+      - name: BUKU-CUAN-ABADI — buku besar dinilai tiap denyut, jejak tak pernah bisu
+        continue-on-error: true
+        run: |
+          node scripts/hidup/buku-cuan.mjs --denyut || { echo "organ-gagal: buku-cuan $(date -u +%FT%TZ)" >> laporan/denyut-luka.txt; exit 1; }
+
       # V312 SYARAF-BERANAK (mandat pemilik 2026-10-09: "syaraf yang bisa
       # beranak sehingga syaraf itu menciptakan syaraf baru dan syaraf-syaraf
       # baru yang kompeten; dan bekerja 100x lipat lebih cepat"): tiap denyut

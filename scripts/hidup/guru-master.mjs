@@ -32,6 +32,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync, statSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { tandaDi, muatPeta, ajariDariLedger, simpanPeta, tanamWarisan } from './peta-geladak.mjs'
+import { doktrinRencana } from './doktrin-perisiko.mjs'   // V357 — perisiko majelis dari tangga doktrin (ultimatum pemilik 10-19)
 
 const FILE_GELADAK = 'laporan/geladak.json'
 const FILE_LEDGER = 'laporan/majelis-ledger.jsonl'
@@ -219,13 +220,23 @@ async function main() {
     const arah = badai ? 'MENGUKUR-ULANG' : (sum >= AMBANG_VONIS ? 'NAIK' : sum <= -AMBANG_VONIS ? 'TURUN' : 'MENGUKUR-ULANG')
     const keyakinan = arah === 'MENGUKUR-ULANG' ? 0 : Math.round(clamp(50 + 50 * Math.abs(sum) / Math.max(0.01, maxSum), 35, 92))
     const entry = X[s].C[i], a14 = X[s].atr[i]
-    const stopPct = +(100 * 1.5 * a14 / entry).toFixed(2)
+    // V357 PERISIKO-DOKTRIN (ultimatum pemilik 10-19: "SL/TP ±1% itu pengecut —
+    // koin gak naik +1 turun -1"): stop/target dari TANGGA doktrin (H24/L24 24
+    // lilin tertutup → R1→R2→H24+0,618R→H24+1,0R; stop = pembatal ∓0,5×ATR14).
+    // Fallback ATR-jam lama bila lilin tak cukup — jujur ditandai di sumber.
+    const dokG = arah !== 'MENGUKUR-ULANG'
+      ? doktrinRencana(X[s].bar, arah === 'NAIK' ? 'BUY' : 'SELL', entry, FEE_PUTAR * 100)
+      : null
+    const dokLayak = !!(dokG && dokG.layak && dokG.target != null && dokG.stop != null)
+    const stopPct = dokLayak ? +(100 * dokG.stopDist / entry).toFixed(2) : +(100 * 1.5 * a14 / entry).toFixed(2)
     const majelisSeat = {
       simbol: s, jalurPenjaga: k.jalur || k.jalurPenjaga || null, arahPenjaga: arahPenjaga(k),
       arah, keyakinan, sum: +sum.toFixed(3), badai, tanda: v._tanda || null,
-      entry, stop: arah === 'NAIK' ? +(entry - 1.5 * a14).toFixed(8) : arah === 'TURUN' ? +(entry + 1.5 * a14).toFixed(8) : null,
-      target: arah === 'NAIK' ? +(entry + 3 * a14).toFixed(8) : arah === 'TURUN' ? +(entry - 3 * a14).toFixed(8) : null,
-      rr: arah === 'MENGUKUR-ULANG' ? null : 2.0, stopPct,
+      entry, stop: arah === 'NAIK' ? (dokLayak ? +dokG.stop.toFixed(8) : +(entry - 1.5 * a14).toFixed(8)) : arah === 'TURUN' ? (dokLayak ? +dokG.stop.toFixed(8) : +(entry + 1.5 * a14).toFixed(8)) : null,
+      target: arah === 'NAIK' ? (dokLayak ? +dokG.target.toFixed(8) : +(entry + 3 * a14).toFixed(8)) : arah === 'TURUN' ? (dokLayak ? +dokG.target.toFixed(8) : +(entry - 3 * a14).toFixed(8)) : null,
+      rr: arah === 'MENGUKUR-ULANG' ? null : (dokLayak ? +dokG.rrKotor.toFixed(2) : 2.0), stopPct,
+      sumberPerisiko: dokLayak ? ('doktrin-tangga · ' + (dokG.anak || 'lantai-napas')) : 'atr-jam-lama',
+      napas7hPct: dokG && dokG.napas ? +dokG.napas.rentangHarianPct.toFixed(2) : null,
       ukuranSaranPct: arah === 'MENGUKUR-ULANG' ? 0 : +clamp(100 / Math.max(0.5, stopPct), 2, 100).toFixed(1),
       rezimVol: v.volatil, sepakat: arah !== 'MENGUKUR-ULANG' && arahPenjaga(k) === arah,
       bukti

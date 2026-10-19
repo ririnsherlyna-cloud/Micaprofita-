@@ -81,6 +81,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import path from 'node:path'
 import { nalarLLM } from './hidup/otak-llm.mjs'   // V292 OTAK-LLM — suara kedua jujur; menyala bila kunci pemilik terpasang
+import { doktrinRencana } from './hidup/doktrin-perisiko.mjs'   // V357 PERISIKO-DOKTRIN — ultimatum pemilik 10-19: band dari tangga H24/L24, bukan median MC pengecut
 import { bacaAturanAktif, kartuDariKandidat, cocokSyarat } from './hidup/aturan-dinamis.mjs'   // V349 PENERIMA-SISTEM — aturan yang makhluk tulis sendiri
 // V336 SATU-MUSYAWARAH — satu meja untuk jasad+guru+pasar (teguran pemilik:
 // "semuanya saling berindependen; bukankah semua koin di satu tempat sama
@@ -3416,7 +3417,7 @@ for (const s of KANDANG_DINAMIS) {
     { param: 'komite', domain: 'clawtrade-keluarga', lapis: 'claw', nilai: komC.keyakinan, arah: komC.arah === 'BUY' ? 0.5 : komC.arah === 'SELL' ? -0.5 : 0, ket: `${komC.ket} — 5 suara berbobot tetap ala CoordinatorAgent (ClawTradeAI)` },
     { param: 'kartu', domain: 'clawtrade-keluarga', lapis: 'claw', nilai: kartC.skor, arah: 0, ket: `${kartC.ket} — kartu 4×25 ala RiskManagerAgent; > ${CLAW.KARTU_MAKS} diveto-saksi` },
   )
-  kandidatArah.push({ s, id, b, v, waw, wp, buktiWaw, warA, mcA, eksA, mateA: mateArah, jauhA, buktiCand, kena, vetoW, estM, predM, peri: periA, deal: dealA, odds: oddsA, metaA, ppA, divergA, eksprA, butaAsah, auto: { slip: autoSlip, kelly: autoKelly, peluang: autoPeluang }, komC, kartC })
+  kandidatArah.push({ s, id, b, v, waw, wp, buktiWaw, warA, mcA, eksA, mateA: mateArah, jauhA, buktiCand, kena, vetoW, estM, predM, peri: periA, deal: dealA, odds: oddsA, metaA, ppA, divergA, eksprA, butaAsah, auto: { slip: autoSlip, kelly: autoKelly, peluang: autoPeluang }, komC, kartC, c })   // V357: lilin dibawa — perisiko doktrin butuh H24/L24 saat kunci
 }
 const emasArah = (k) => k.kena.some((z) => z.status === 'EMAS')
 // V259 KESEGARAN GERAKAN (kaizen-trader: "1H ACCELERATION is THE key signal...
@@ -3482,7 +3483,7 @@ const syaratDariPelajaran = (simbol, arah, rezim) => {
   }
 }
 const kunciEntriArah = (k, eksplor, runnerUp, peneliti) => {
-  const { s, id, b, v, waw, wp, buktiWaw, warA, mcA, eksA, mateA, jauhA, buktiCand, kena, estM, predM, peri, deal, odds, metaA, ppA, divergA, eksprA, butaAsah, auto, komC, kartC } = k
+  const { s, id, b, v, waw, wp, buktiWaw, warA, mcA, eksA, mateA, jauhA, buktiCand, kena, estM, predM, peri, deal, odds, metaA, ppA, divergA, eksprA, butaAsah, auto, komC, kartC, c } = k
   const emas = emasArah(k)
   // V264 REM-PINTAR (revisi dingin-dendam V259 — doktrin pemilik: jejak dingin =
   // REM SINGKAT ber-kadaluarsa, bukan blacklist): 2 kekalahan beruntun → rem 1 DENYUT
@@ -3710,8 +3711,18 @@ const kunciEntriArah = (k, eksplor, runnerUp, peneliti) => {
   // V262 STOP/TARGET WAJIB (kasus D) + V263 MODE-ASAH — stop diperketat ×0.75 saat
   // mode-asah (overclaim → jarak salah lebih pendek), ukuran mikro saat henti-harian.
   const _asahStopF = (asahKalibAktif ? ASAH.STOP_KETAT_F : 1) * (hentiAsahAktif ? 0.9 : 1) * (syarat ? syarat.stopFaktor : 1) * (peneliti ? ANTI.PENELITI_STOP_F : 1) * (ulangSalahAktif ? ULANG.STOP_F : 1)   // V264: pelajaran lalu mengetatkan stop ×0.8^n · V328: kunci-ulang baru-SALAH mengetatkan ×0.85
-  const _stopPctImp = (eksA ? eksA.rugiPct : IMPAS.STOP_DEFAULT_PCT) * _asahStopF
-  const _tgtPctImp = eksA ? eksA.gainPct : IMPAS.TARGET_DEFAULT_PCT
+  // V357 PERISIKO-DOKTRIN (ultimatum pemilik 2026-10-19: "kenapa SL/TP di ambang
+  // +1 persen? koin gak naik +1 turun -1! lihat data harian tiap koin!") — band
+  // TIDAK lagi dari MEDIAN kerucut-MC (median = setengah jalan = tidur di dalam
+  // debu harian; bukti buku-cuan 567 rencana 10-05→19: ekspektansi −0,17%,
+  // net kumulatif −85%). Kini tangga doktrin D3-D7: H24/L24 dari 24 lilin
+  // tertutup → R1→R2→H24+0,618R→H24+1,0R, stop = pembatal ∓0,5×ATR, target
+  // minimal 0,618×Rentang — band bernapas dengan koin. Kerucut MC (eksA) tetap
+  // dihitung sebagai BUKTI ekspektasi arah — bukan lagi sasaran harga.
+  const _dok = (typeof doktrinRencana === 'function' && Array.isArray(c)) ? doktrinRencana(c, v.arah, b.harga, 0.2) : null
+  const _dokLayak = !!(doktrinRencana && _dok && _dok.layak && _dok.target != null && _dok.stop != null)
+  const _stopPctImp = _dokLayak ? +(_dok.stopPct * _asahStopF).toFixed(2) : (eksA ? eksA.rugiPct : IMPAS.STOP_DEFAULT_PCT) * _asahStopF
+  const _tgtPctImp = _dokLayak ? +_dok.targetPct.toFixed(2) : (eksA ? eksA.gainPct : IMPAS.TARGET_DEFAULT_PCT)
   // V277-JUAL-AMBISIUS — jalur ARAH pun wajib membawa harga ambisius: sasaran
   // dilanjutkan 50% jaraknya sendiri (perkiraan tertinggi, bukan janji) — kartu
   // sasaran tak pernah lagi tampil tanpa jual ambisius.
@@ -3719,8 +3730,10 @@ const kunciEntriArah = (k, eksplor, runnerUp, peneliti) => {
   const impasRencana = {
     stop: +(v.arah === 'BUY' ? b.harga * (1 - _stopPctImp / 100) : b.harga * (1 + _stopPctImp / 100)).toPrecision(7),
     target: +(v.arah === 'BUY' ? b.harga * (1 + _tgtPctImp / 100) : b.harga * (1 - _tgtPctImp / 100)).toPrecision(7),
-    sumber: eksA ? 'MC-kone-2k' : 'default-jujur',
-    ketTarget: eksA ? `ekspektasi MC: gain median +${(+_tgtPctImp).toFixed(2)}% / rugi median −${(+_stopPctImp).toFixed(2)}% net-fee` : `default konservatif tanpa MC: stop −${IMPAS.STOP_DEFAULT_PCT}% / target +${IMPAS.TARGET_DEFAULT_PCT}%`,
+    sumber: _dokLayak ? ('doktrin-tangga · ' + (_dok.anak || 'lantai-napas')) : (eksA ? 'MC-kone-2k' : 'default-jujur'),
+    ketTarget: _dokLayak
+      ? `V357 tangga doktrin (H24 ${_dok.kerangka.H24.toPrecision(6)} / L24 ${_dok.kerangka.L24.toPrecision(6)}): target ${(+_dok.targetPct).toFixed(2)}% (${_dok.anak}) vs stop ${(+_dok.stopPct).toFixed(2)}% (pembatal ∓0,5×ATR) — napas koin 7 hari ${_dok.napas ? (+_dok.napas.rentangHarianPct).toFixed(1) + '%' : '—'}; band mengikuti napas, bukan ambang karangan`
+      : eksA ? `ekspektasi MC: gain median +${(+_tgtPctImp).toFixed(2)}% / rugi median −${(+_stopPctImp).toFixed(2)}% net-fee (V357: fallback jujur — tangga doktrin tak layak di lilin ini)` : `default konservatif tanpa MC: stop −${IMPAS.STOP_DEFAULT_PCT}% / target +${IMPAS.TARGET_DEFAULT_PCT}%`,
     highAmbisius: +(v.arah === 'BUY' ? _tgtHargaImp * (1 + (_tgtPctImp / 100) * 0.5) : _tgtHargaImp * (1 - (_tgtPctImp / 100) * 0.5)).toPrecision(7),
     ketAmbisius: 'sasaran dilanjutkan 50% jaraknya — perkiraan tertinggi, bukan janji',
   }
