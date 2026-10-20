@@ -1,9 +1,9 @@
 {
  "protokol": "KURIKULUM-MANDIRI-V1",
- "tanggal": "2026-10-19",
- "dihasilkan": "2026-10-19T00:18:53.710Z",
- "topik": "order-flow",
- "kenapaTopikIni": "korelasi momentum→hasil -0.106 — otak mengejar harga tanpa membaca agresor → order-flow didahulukan · korelasi perubahan -0.101 — rezim berubah lebih cepat dari keyakinan → volatilitas didahulukan",
+ "tanggal": "2026-10-20",
+ "dihasilkan": "2026-10-20T00:12:27.363Z",
+ "topik": "korelasi-rezim",
+ "kenapaTopikIni": "korelasi momentum→hasil -0.115 — otak mengejar harga tanpa membaca agresor → order-flow didahulukan · korelasi perubahan -0.116 — rezim berubah lebih cepat dari keyakinan → volatilitas didahulukan · dorongan bukti \"order-flow\" baru dipelajari 2026-10-19 — giliran rotasi \"korelasi-rezim\" agar semua topik tersentuh ≤ 7 hari (anti-kelaparan-topik)",
  "koin": [
   "BTCUSDT",
   "ETHUSDT",
@@ -12,66 +12,45 @@
   "NEARUSDT",
   "XRPUSDT",
   "BNBUSDT",
-  "DOGEUSDT",
-  "SUIUSDT",
   "WLDUSDT",
-  "HYPEUSDT",
-  "SNDKBUSDT"
+  "SUIUSDT",
+  "SNDKBUSDT",
+  "PUMPUSDT",
+  "ENAUSDT"
  ],
  "rumusDiuji": [
   {
-   "id": "FM-OF-01",
-   "nama": "Order Flow Imbalance (delta taker terbobot)",
-   "jenis": "sinyal",
-   "pakai": 67,
-   "noTrade": 312,
-   "hitPct": 52.2,
-   "latihHit": 52.8,
-   "latihN": 53,
-   "holdoutHit": 50,
-   "holdoutN": 14,
-   "netPct": 21.8,
+   "id": "FM-KR-01",
+   "nama": "Korelasi EWMA pasangan BTC–koin",
+   "jenis": "sinyal-filter",
+   "nPakai": 396,
+   "nTahan": 80,
+   "hitPakaiTahan": 45,
+   "hitBaselineSamaMomen": 48,
+   "sah": false,
    "vonis": "DITOLAK",
-   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
+   "gerbang": "hit-terfilter ≥ baseline+3 poin & holdout n ≥ 20"
   },
   {
-   "id": "FM-OF-02",
-   "nama": "Kemiringan CVD (cumulative volume delta)",
-   "jenis": "sinyal",
-   "pakai": 169,
-   "noTrade": 210,
-   "hitPct": 49.7,
-   "latihHit": 49.6,
-   "latihN": 135,
-   "holdoutHit": 50,
-   "holdoutN": 34,
-   "netPct": -47.7,
+   "id": "FM-KR-02",
+   "nama": "Dispersi return lintas koin",
+   "jenis": "sinyal-filter",
+   "nPakai": 396,
+   "nTahan": 80,
+   "hitPakaiTahan": 45,
+   "hitBaselineSamaMomen": 48,
+   "sah": false,
    "vonis": "DITOLAK",
-   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
-  },
-  {
-   "id": "FM-OF-03",
-   "nama": "Kesepakatan delta-return (volume quality)",
-   "jenis": "sinyal",
-   "pakai": 293,
-   "noTrade": 86,
-   "hitPct": 49.5,
-   "latihHit": 50.4,
-   "latihN": 234,
-   "holdoutHit": 45.8,
-   "holdoutN": 59,
-   "netPct": 6.7,
-   "vonis": "DITOLAK",
-   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
+   "gerbang": "hit-terfilter ≥ baseline+3 poin & holdout n ≥ 20"
   }
  ],
  "alatTerukur": [],
- "vonisHarian": "DITOLAK 3 — dinding holdout belum ditembus; angka dicatat, belajar terus (anti-karantina)",
+ "vonisHarian": "DITOLAK 2 — dinding holdout belum ditembus; angka dicatat, belajar terus (anti-karantina)",
  "hukum": [
   "lilin ≤ T saja (buta)",
   "nilai close T+24j − fee 0,2%",
   "holdout 20% akhir",
   "anti-overfit: gagal verifikasi = dibuang"
  ],
- "segel": "156c39b8eda3e000"
+ "segel": "5066f1703e5ade00"
 }
