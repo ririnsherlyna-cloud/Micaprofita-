@@ -1,9 +1,9 @@
 {
  "protokol": "KURIKULUM-MANDIRI-V1",
- "tanggal": "2026-10-22",
- "dihasilkan": "2026-10-22T00:19:38.540Z",
- "topik": "order-flow",
- "kenapaTopikIni": "korelasi momentum→hasil -0.107 — otak mengejar harga tanpa membaca agresor → order-flow didahulukan · korelasi perubahan -0.101 — rezim berubah lebih cepat dari keyakinan → volatilitas didahulukan",
+ "tanggal": "2026-10-23",
+ "dihasilkan": "2026-10-23T00:22:28.519Z",
+ "topik": "mikrostruktur",
+ "kenapaTopikIni": "korelasi momentum→hasil -0.112 — otak mengejar harga tanpa membaca agresor → order-flow didahulukan · korelasi perubahan -0.106 — rezim berubah lebih cepat dari keyakinan → volatilitas didahulukan · dorongan bukti \"order-flow\" baru dipelajari 2026-10-22 — giliran rotasi \"mikrostruktur\" agar semua topik tersentuh ≤ 7 hari (anti-kelaparan-topik)",
  "koin": [
   "BTCUSDT",
   "ETHUSDT",
@@ -11,67 +11,74 @@
   "SOLUSDT",
   "NEARUSDT",
   "XRPUSDT",
+  "AIUSDT",
+  "XAUTUSDT",
   "BNBUSDT",
-  "SPCXBUSDT",
-  "RLUSDUSDT",
   "WLDUSDT",
-  "UNIUSDT",
-  "IOSTUSDT"
+  "SNDKBUSDT",
+  "SOXLBUSDT"
  ],
  "rumusDiuji": [
   {
-   "id": "FM-OF-01",
-   "nama": "Order Flow Imbalance (delta taker terbobot)",
-   "jenis": "sinyal",
-   "pakai": 89,
-   "noTrade": 307,
-   "hitPct": 40.4,
-   "latihHit": 39.4,
-   "latihN": 71,
-   "holdoutHit": 44.4,
-   "holdoutN": 18,
-   "netPct": -48.2,
-   "vonis": "DITOLAK",
-   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
+   "id": "FM-MS-01",
+   "nama": "Mikro-harga Stoikov (snapshot order book)",
+   "jenis": "alat",
+   "vonis": "MESIN-BELUM-ADA — rumus tersimpan; mesin bisa diutak-atik organ berikutnya"
   },
   {
-   "id": "FM-OF-02",
-   "nama": "Kemiringan CVD (cumulative volume delta)",
-   "jenis": "sinyal",
-   "pakai": 193,
-   "noTrade": 203,
-   "hitPct": 44.6,
-   "latihHit": 43.5,
-   "latihN": 154,
-   "holdoutHit": 48.7,
-   "holdoutN": 39,
-   "netPct": -102.4,
-   "vonis": "DITOLAK",
-   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
+   "id": "FM-MS-02",
+   "nama": "Penaksir spread Roll",
+   "jenis": "alat",
+   "vonis": "MESIN-BELUM-ADA — rumus tersimpan; mesin bisa diutak-atik organ berikutnya"
   },
   {
-   "id": "FM-OF-03",
-   "nama": "Kesepakatan delta-return (volume quality)",
+   "id": "FM-MS-03",
+   "nama": "Amihud tak-likuiditas",
+   "jenis": "sinyal-filter",
+   "nPakai": 396,
+   "nTahan": 80,
+   "hitPakaiTahan": 52.5,
+   "hitBaselineSamaMomen": 47.2,
+   "sah": true,
+   "vonis": "LAYAK-USUL",
+   "gerbang": "hit-terfilter ≥ baseline+3 poin & holdout n ≥ 20"
+  },
+  {
+   "id": "FM-MS-04",
+   "nama": "Rasio wick likuidasi",
    "jenis": "sinyal",
-   "pakai": 276,
-   "noTrade": 120,
-   "hitPct": 44.6,
-   "latihHit": 44.5,
-   "latihN": 220,
-   "holdoutHit": 44.6,
-   "holdoutN": 56,
-   "netPct": -144.7,
-   "vonis": "DITOLAK",
+   "pakai": 151,
+   "noTrade": 245,
+   "hitPct": 51.7,
+   "latihHit": 50.8,
+   "latihN": 120,
+   "holdoutHit": 54.8,
+   "holdoutN": 31,
+   "netPct": -12.5,
+   "vonis": "LAYAK-USUL",
    "gerbang": "holdout ≥ 51.88% & n ≥ 20"
   }
  ],
- "alatTerukur": [],
- "vonisHarian": "DITOLAK 3 — dinding holdout belum ditembus; angka dicatat, belajar terus (anti-karantina)",
+ "alatTerukur": [
+  {
+   "id": "FM-MS-01",
+   "nama": "Mikro-harga Stoikov (snapshot order book)",
+   "fungsi": "mikro-harga",
+   "status": "konteks-hari-ini"
+  },
+  {
+   "id": "FM-MS-02",
+   "nama": "Penaksir spread Roll",
+   "fungsi": "spread-roll",
+   "status": "konteks-hari-ini"
+  }
+ ],
+ "vonisHarian": "USUL 2 rumus (FM-MS-03, FM-MS-04) — menunggu konfirmasi ledger hidup ≥ 20 vonis matang sebelum duduk di meja musyawarah",
  "hukum": [
   "lilin ≤ T saja (buta)",
   "nilai close T+24j − fee 0,2%",
   "holdout 20% akhir",
   "anti-overfit: gagal verifikasi = dibuang"
  ],
- "segel": "dcd2a740ad72e000"
+ "segel": "35d61b345c106200"
 }
