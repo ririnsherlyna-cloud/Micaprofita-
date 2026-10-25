@@ -1,42 +1,77 @@
 {
  "protokol": "KURIKULUM-MANDIRI-V1",
- "tanggal": "2026-10-24",
- "dihasilkan": "2026-10-24T00:12:09.928Z",
- "topik": "open-interest",
- "kenapaTopikIni": "korelasi momentum→hasil -0.116 — otak mengejar harga tanpa membaca agresor → order-flow didahulukan · korelasi perubahan -0.118 — rezim berubah lebih cepat dari keyakinan → volatilitas didahulukan · dorongan bukti \"order-flow\" baru dipelajari 2026-10-22 — giliran rotasi \"open-interest\" agar semua topik tersentuh ≤ 7 hari (anti-kelaparan-topik)",
- "koin": [],
+ "tanggal": "2026-10-25",
+ "dihasilkan": "2026-10-25T00:03:37.544Z",
+ "topik": "order-flow",
+ "kenapaTopikIni": "korelasi momentum→hasil -0.112 — otak mengejar harga tanpa membaca agresor → order-flow didahulukan · korelasi perubahan -0.106 — rezim berubah lebih cepat dari keyakinan → volatilitas didahulukan",
+ "koin": [
+  "BTCUSDT",
+  "ETHUSDT",
+  "SOLUSDT",
+  "ZECUSDT",
+  "NEARUSDT",
+  "XRPUSDT",
+  "BNBUSDT",
+  "AIUSDT",
+  "BMTUSDT",
+  "WLDUSDT",
+  "PEPEUSDT",
+  "DOGEUSDT"
+ ],
  "rumusDiuji": [
   {
-   "id": "FM-OI-01",
-   "nama": "Matriks kuadran OI × harga",
-   "vonis": "TANPA-MOMEN — data kurang panjang (jujur)"
+   "id": "FM-OF-01",
+   "nama": "Order Flow Imbalance (delta taker terbobot)",
+   "jenis": "sinyal",
+   "pakai": 70,
+   "noTrade": 326,
+   "hitPct": 48.6,
+   "latihHit": 50,
+   "latihN": 56,
+   "holdoutHit": 42.9,
+   "holdoutN": 14,
+   "netPct": 9.5,
+   "vonis": "DITOLAK",
+   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
   },
   {
-   "id": "FM-OI-02",
-   "nama": "Tekanan leverage masuk",
-   "vonis": "TANPA-MOMEN — data kurang panjang (jujur)"
+   "id": "FM-OF-02",
+   "nama": "Kemiringan CVD (cumulative volume delta)",
+   "jenis": "sinyal",
+   "pakai": 178,
+   "noTrade": 218,
+   "hitPct": 46.1,
+   "latihHit": 45.1,
+   "latihN": 142,
+   "holdoutHit": 50,
+   "holdoutN": 36,
+   "netPct": -76.6,
+   "vonis": "DITOLAK",
+   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
   },
   {
-   "id": "FM-OI-03",
-   "nama": "Kepadatan OI terhadap perputaran",
-   "jenis": "alat",
-   "vonis": "MESIN-BELUM-ADA — rumus tersimpan; mesin bisa diutak-atik organ berikutnya"
+   "id": "FM-OF-03",
+   "nama": "Kesepakatan delta-return (volume quality)",
+   "jenis": "sinyal",
+   "pakai": 298,
+   "noTrade": 98,
+   "hitPct": 43.3,
+   "latihHit": 45.4,
+   "latihN": 238,
+   "holdoutHit": 35,
+   "holdoutN": 60,
+   "netPct": -213.5,
+   "vonis": "DITOLAK",
+   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
   }
  ],
- "alatTerukur": [
-  {
-   "id": "FM-OI-03",
-   "nama": "Kepadatan OI terhadap perputaran",
-   "fungsi": "kepadatan-OI",
-   "status": "konteks-hari-ini"
-  }
- ],
- "vonisHarian": "DITOLAK 0 — dinding holdout belum ditembus; angka dicatat, belajar terus (anti-karantina)",
+ "alatTerukur": [],
+ "vonisHarian": "DITOLAK 3 — dinding holdout belum ditembus; angka dicatat, belajar terus (anti-karantina)",
  "hukum": [
   "lilin ≤ T saja (buta)",
   "nilai close T+24j − fee 0,2%",
   "holdout 20% akhir",
   "anti-overfit: gagal verifikasi = dibuang"
  ],
- "segel": "afb65bf407f7e800"
+ "segel": "4672147024991200"
 }
