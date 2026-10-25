@@ -1,14 +1,14 @@
 {
  "protokol": "PENGAWAS-OTONOM-V357",
  "identitas": "V357 KEMANDIRIAN-PENUH-V1 — mandat pemilik 2026-10-16: sistem mandiri & independen penuh, evaluasi tiap 15 menit, sekolah buta saat pemicu, adopsi hanya gerbang holdout +3 & anti-overfit, semua keputusan dicatat & dikomit tanpa menunggu",
- "diperbarui": "2026-10-25T06:10:03.257Z",
- "siklus": 1120,
+ "diperbarui": "2026-10-25T06:36:20.213Z",
+ "siklus": 1121,
  "hari": "2026-10-25",
  "jam": "2026-10-25T06",
  "metrik": {
-  "hitRate7d": 42.3,
+  "hitRate7d": 41.6,
   "ambangHit": 42,
-  "hitLewat": true,
+  "hitLewat": false,
   "brierArah": 0.2732,
   "ambangBrier": 0.3,
   "brierLewat": true,
@@ -22,38 +22,113 @@
   },
   "korelasiFitur": {
    "struktur": -0.005,
-   "momentum": -0.101,
-   "sr": -0.081,
-   "tekanan": -0.008,
-   "perubahan": -0.104
+   "momentum": -0.1,
+   "sr": -0.079,
+   "tekanan": -0.006,
+   "perubahan": -0.103
   },
   "sasaranMutlak": {
    "tujuan": "hit-rate ledger hidup menembus 99,99%+ stabil dalam 7 hari (mandat pemilik)",
-   "hit7dSekarang": 42.3,
+   "hit7dSekarang": 41.6,
    "catatan": "tujuan dikejar lewat loop perbaikan tiap denyut — angka medan yang dinilai, bukan klaim (hukum anti-overfit rumah tetap mengikat)"
   }
  },
  "pemicu": {
-  "aktif": false,
+  "aktif": true,
   "syarat": "hit7d < 42% ATAU brier > 0.3",
   "hitTidakDiketahui": false,
   "brierTidakDiketahui": false
  },
  "kolam": {
-  "pengalamanMatang": 843,
+  "pengalamanMatang": 844,
   "sumber": "laporan/prakira-server.jsonl (vonis matang jalur ARAH, kunci dibaca dari hasil 24 jam net-fee)"
  },
  "sekolah": {
   "mati": false,
-  "ket": "pemicu mati — sekolah tidak dijalankan denyut ini"
+  "alasan": null,
+  "dunia": 50,
+  "soalPerDunia": 500,
+  "holdoutN": 150,
+  "totalPenilaian": 175000,
+  "kandidat": [
+   "baseline-terpasang",
+   "inversi-penuh",
+   "inversi-momentum",
+   "inversi-sr",
+   "inversi-perubahan",
+   "anti-korelasi",
+   "anti-korelasi-lunak",
+   "refit-logistik-per-dunia"
+  ],
+  "rekap": [
+   {
+    "nama": "inversi-penuh",
+    "medianDelta": 0,
+    "rataDelta": 0.07,
+    "duniaLulus3": 6,
+    "duniaDuaSisi": 1,
+    "lulus": false
+   },
+   {
+    "nama": "inversi-momentum",
+    "medianDelta": 0,
+    "rataDelta": 0,
+    "duniaLulus3": 0,
+    "duniaDuaSisi": 50,
+    "lulus": false
+   },
+   {
+    "nama": "inversi-sr",
+    "medianDelta": 0,
+    "rataDelta": -0.36,
+    "duniaLulus3": 0,
+    "duniaDuaSisi": 6,
+    "lulus": false
+   },
+   {
+    "nama": "inversi-perubahan",
+    "medianDelta": 0,
+    "rataDelta": 0,
+    "duniaLulus3": 0,
+    "duniaDuaSisi": 50,
+    "lulus": false
+   },
+   {
+    "nama": "anti-korelasi",
+    "medianDelta": -1.34,
+    "rataDelta": -1.29,
+    "duniaLulus3": 2,
+    "duniaDuaSisi": 1,
+    "lulus": false
+   },
+   {
+    "nama": "anti-korelasi-lunak",
+    "medianDelta": 0.67,
+    "rataDelta": 0.99,
+    "duniaLulus3": 13,
+    "duniaDuaSisi": 1,
+    "lulus": false
+   },
+   {
+    "nama": "refit-logistik-per-dunia",
+    "medianDelta": 1.33,
+    "rataDelta": 1.07,
+    "duniaLulus3": 7,
+    "duniaDuaSisi": 21,
+    "lulus": false
+   }
+  ]
  },
  "adopsi": {
-  "vonis": "TIDAK-DIJALANKAN",
-  "alasan": "pemicu mati — tak ada sekolah, tak ada perubahan bobot",
-  "kandidatTerbaik": null,
+  "vonis": "DITOLAK",
+  "alasan": "tak ada kandidat yang lulus gerbang penuh (holdout +3 poin · ≥26/50 dunia · median ≥+1.5 · dua-sisi tak-kalah) — terbaik: refit-logistik-per-dunia median 1.33 lulus-7/50; baseline tetap (anti-overfit)",
+  "kandidatTerbaik": {
+   "nama": "refit-logistik-per-dunia",
+   "medianDelta": 1.33
+  },
   "bobotBaru": null
  },
- "keputusan": "PEMICU-MATI — HANYA-EVALUASI",
+ "keputusan": "SEKOLAH-JALAN-DITOLAK",
  "hukum": [
   "evaluasi tiap denyut (15 menit)",
   "pemicu mutlak: hit7d<42 ATAU brier>0.30",
@@ -62,5 +137,5 @@
   "adopsi HANYA holdout ≥ +3 poin & anti-overfit (≥26/50 dunia · median ≥+1.5 · dua-sisi tak-kalah)",
   "semua keputusan dicatat & dikomit tanpa menunggu persetujuan"
  ],
- "segel": "17aaf4f226f7bd80"
+ "segel": "3ed1f0003996f000"
 }
