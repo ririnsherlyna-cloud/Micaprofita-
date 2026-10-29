@@ -1,77 +1,81 @@
 {
  "protokol": "KURIKULUM-MANDIRI-V1",
- "tanggal": "2026-10-28",
- "dihasilkan": "2026-10-28T00:14:21.452Z",
- "topik": "order-flow",
- "kenapaTopikIni": "korelasi momentum→hasil -0.111 — otak mengejar harga tanpa membaca agresor → order-flow didahulukan · korelasi perubahan -0.105 — rezim berubah lebih cepat dari keyakinan → volatilitas didahulukan",
+ "tanggal": "2026-10-29",
+ "dihasilkan": "2026-10-29T00:17:12.772Z",
+ "topik": "kalibrasi",
+ "kenapaTopikIni": "korelasi momentum→hasil -0.104 — otak mengejar harga tanpa membaca agresor → order-flow didahulukan · dorongan bukti \"order-flow\" baru dipelajari 2026-10-28 — giliran rotasi \"kalibrasi\" agar semua topik tersentuh ≤ 7 hari (anti-kelaparan-topik)",
  "koin": [
   "BTCUSDT",
   "ETHUSDT",
-  "ZECUSDT",
   "SOLUSDT",
-  "NEARUSDT",
+  "ZECUSDT",
+  "PEPEUSDT",
   "XRPUSDT",
   "BNBUSDT",
+  "NEARUSDT",
   "RLUSDUSDT",
   "SOXLBUSDT",
-  "ENAUSDT",
-  "TRXUSDT",
-  "SNDKBUSDT"
+  "SNDKBUSDT",
+  "ENAUSDT"
  ],
  "rumusDiuji": [
   {
-   "id": "FM-OF-01",
-   "nama": "Order Flow Imbalance (delta taker terbobot)",
-   "jenis": "sinyal",
-   "pakai": 117,
-   "noTrade": 279,
-   "hitPct": 43.6,
-   "latihHit": 43,
-   "latihN": 93,
-   "holdoutHit": 45.8,
-   "holdoutN": 24,
-   "netPct": -39.2,
-   "vonis": "DITOLAK",
-   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
+   "id": "FM-KA-01",
+   "nama": "Pembaruan keyakinan Bayes",
+   "jenis": "alat",
+   "vonis": "MESIN-BELUM-ADA — rumus tersimpan; mesin bisa diutak-atik organ berikutnya"
   },
   {
-   "id": "FM-OF-02",
-   "nama": "Kemiringan CVD (cumulative volume delta)",
-   "jenis": "sinyal",
-   "pakai": 220,
-   "noTrade": 176,
-   "hitPct": 41.8,
-   "latihHit": 40.9,
-   "latihN": 176,
-   "holdoutHit": 45.5,
-   "holdoutN": 44,
-   "netPct": -150,
-   "vonis": "DITOLAK",
-   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
+   "id": "FM-KA-02",
+   "nama": "Kelly terfragmen (ukuran posisi)",
+   "jenis": "alat",
+   "vonis": "MESIN-BELUM-ADA — rumus tersimpan; mesin bisa diutak-atik organ berikutnya"
   },
   {
-   "id": "FM-OF-03",
-   "nama": "Kesepakatan delta-return (volume quality)",
-   "jenis": "sinyal",
-   "pakai": 274,
-   "noTrade": 122,
-   "hitPct": 41.6,
-   "latihHit": 43.4,
-   "latihN": 219,
-   "holdoutHit": 34.5,
-   "holdoutN": 55,
-   "netPct": -175.1,
-   "vonis": "DITOLAK",
-   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
+   "id": "FM-KA-03",
+   "nama": "Brier + log-loss (segel epoch)",
+   "jenis": "alat",
+   "vonis": "MESIN-BELUM-ADA — rumus tersimpan; mesin bisa diutak-atik organ berikutnya"
+  },
+  {
+   "id": "FM-KA-04",
+   "nama": "Entropi permutasi (peta keteraturan)",
+   "jenis": "alat",
+   "vonis": "MESIN-BELUM-ADA — rumus tersimpan; mesin bisa diutak-atik organ berikutnya"
   }
  ],
- "alatTerukur": [],
- "vonisHarian": "DITOLAK 3 — dinding holdout belum ditembus; angka dicatat, belajar terus (anti-karantina)",
+ "alatTerukur": [
+  {
+   "id": "FM-KA-01",
+   "nama": "Pembaruan keyakinan Bayes",
+   "fungsi": "bayes",
+   "status": "konteks-hari-ini"
+  },
+  {
+   "id": "FM-KA-02",
+   "nama": "Kelly terfragmen (ukuran posisi)",
+   "fungsi": "kelly",
+   "status": "konteks-hari-ini"
+  },
+  {
+   "id": "FM-KA-03",
+   "nama": "Brier + log-loss (segel epoch)",
+   "fungsi": "brier",
+   "status": "konteks-hari-ini"
+  },
+  {
+   "id": "FM-KA-04",
+   "nama": "Entropi permutasi (peta keteraturan)",
+   "fungsi": "entropi",
+   "status": "konteks-hari-ini"
+  }
+ ],
+ "vonisHarian": "DITOLAK 0 — dinding holdout belum ditembus; angka dicatat, belajar terus (anti-karantina)",
  "hukum": [
   "lilin ≤ T saja (buta)",
   "nilai close T+24j − fee 0,2%",
   "holdout 20% akhir",
   "anti-overfit: gagal verifikasi = dibuang"
  ],
- "segel": "b16df73853e96400"
+ "segel": "79becc148bac8c00"
 }
