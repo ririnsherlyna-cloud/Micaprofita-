@@ -1,12 +1,12 @@
 {
  "protokol": "PENGAWAS-OTONOM-V357",
  "identitas": "V357 KEMANDIRIAN-PENUH-V1 — mandat pemilik 2026-10-16: sistem mandiri & independen penuh, evaluasi tiap 15 menit, sekolah buta saat pemicu, adopsi hanya gerbang holdout +3 & anti-overfit, semua keputusan dicatat & dikomit tanpa menunggu",
- "diperbarui": "2026-11-01T23:17:03.794Z",
- "siklus": 1574,
+ "diperbarui": "2026-11-01T23:38:37.024Z",
+ "siklus": 1575,
  "hari": "2026-11-01",
  "jam": "2026-11-01T23",
  "metrik": {
-  "hitRate7d": 37.6,
+  "hitRate7d": 37.3,
   "ambangHit": 42,
   "hitLewat": false,
   "brierArah": 0.2689,
@@ -21,15 +21,15 @@
    "ekspekPct": -3.89
   },
   "korelasiFitur": {
-   "struktur": -0.051,
-   "momentum": -0.118,
-   "sr": -0.076,
-   "tekanan": 0.031,
-   "perubahan": -0.138
+   "struktur": -0.05,
+   "momentum": -0.119,
+   "sr": -0.078,
+   "tekanan": 0.032,
+   "perubahan": -0.137
   },
   "sasaranMutlak": {
    "tujuan": "hit-rate ledger hidup menembus 99,99%+ stabil dalam 7 hari (mandat pemilik)",
-   "hit7dSekarang": 37.6,
+   "hit7dSekarang": 37.3,
    "catatan": "tujuan dikejar lewat loop perbaikan tiap denyut — angka medan yang dinilai, bukan klaim (hukum anti-overfit rumah tetap mengikat)"
   }
  },
@@ -40,7 +40,7 @@
   "brierTidakDiketahui": false
  },
  "kolam": {
-  "pengalamanMatang": 942,
+  "pengalamanMatang": 941,
   "sumber": "laporan/prakira-server.jsonl (vonis matang jalur ARAH, kunci dibaca dari hasil 24 jam net-fee)"
  },
  "sekolah": {
@@ -64,19 +64,19 @@
   "rekap": [
    {
     "nama": "inversi-penuh",
-    "medianDelta": -6,
-    "rataDelta": -5.64,
-    "duniaLulus3": 9,
-    "duniaDuaSisi": 8,
+    "medianDelta": -17.33,
+    "rataDelta": -16.93,
+    "duniaLulus3": 0,
+    "duniaDuaSisi": 0,
     "lulus": false
    },
    {
     "nama": "inversi-struktur",
-    "medianDelta": 3.33,
-    "rataDelta": 3.39,
-    "duniaLulus3": 35,
-    "duniaDuaSisi": 45,
-    "lulus": true
+    "medianDelta": 2,
+    "rataDelta": 2.04,
+    "duniaLulus3": 13,
+    "duniaDuaSisi": 27,
+    "lulus": false
    },
    {
     "nama": "inversi-momentum",
@@ -88,10 +88,10 @@
    },
    {
     "nama": "inversi-sr",
-    "medianDelta": 1.33,
-    "rataDelta": 0.68,
-    "duniaLulus3": 10,
-    "duniaDuaSisi": 20,
+    "medianDelta": -1.34,
+    "rataDelta": -1.65,
+    "duniaLulus3": 3,
+    "duniaDuaSisi": 8,
     "lulus": false
    },
    {
@@ -104,46 +104,40 @@
    },
    {
     "nama": "anti-korelasi",
-    "medianDelta": -10,
-    "rataDelta": -8.73,
-    "duniaLulus3": 9,
-    "duniaDuaSisi": 3,
+    "medianDelta": -17.33,
+    "rataDelta": -17.48,
+    "duniaLulus3": 0,
+    "duniaDuaSisi": 0,
     "lulus": false
    },
    {
     "nama": "anti-korelasi-lunak",
-    "medianDelta": -8.67,
-    "rataDelta": -8.19,
-    "duniaLulus3": 9,
+    "medianDelta": -16,
+    "rataDelta": -16.16,
+    "duniaLulus3": 0,
     "duniaDuaSisi": 0,
     "lulus": false
    },
    {
     "nama": "refit-logistik-per-dunia",
-    "medianDelta": 0.67,
-    "rataDelta": 0.04,
-    "duniaLulus3": 7,
-    "duniaDuaSisi": 27,
+    "medianDelta": 0,
+    "rataDelta": -0.04,
+    "duniaLulus3": 3,
+    "duniaDuaSisi": 13,
     "lulus": false
    }
   ]
  },
  "adopsi": {
-  "vonis": "DIDADOPSI",
-  "alasan": "inversi-struktur: median delta holdout 3.33 poin, 35/50 dunia lulus +3, dua-sisi tak-kalah 45/50 — semua gerbang penuh",
+  "vonis": "DITOLAK",
+  "alasan": "tak ada kandidat yang lulus gerbang penuh (holdout +3 poin · ≥26/50 dunia · median ≥+1.5 · dua-sisi tak-kalah) — terbaik: inversi-struktur median 2 lulus-13/50; baseline tetap (anti-overfit)",
   "kandidatTerbaik": {
    "nama": "inversi-struktur",
-   "medianDelta": 3.33
+   "medianDelta": 2
   },
-  "bobotBaru": {
-   "struktur": -0.3963,
-   "momentum": -0.2293,
-   "sr": 0.0785,
-   "tekanan": 0.1659,
-   "perubahan": -0.1299
-  }
+  "bobotBaru": null
  },
- "keputusan": "ADOPSI-BOBOT-BARU",
+ "keputusan": "SEKOLAH-JALAN-DITOLAK",
  "hukum": [
   "evaluasi tiap denyut (15 menit)",
   "pemicu mutlak: hit7d<42 ATAU brier>0.30",
@@ -152,5 +146,5 @@
   "adopsi HANYA holdout ≥ +3 poin & anti-overfit (≥26/50 dunia · median ≥+1.5 · dua-sisi tak-kalah)",
   "semua keputusan dicatat & dikomit tanpa menunggu persetujuan"
  ],
- "segel": "076c8ec88e834040"
+ "segel": "9a380280a3683c00"
 }
