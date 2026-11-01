@@ -1,51 +1,77 @@
 {
  "protokol": "KURIKULUM-MANDIRI-V1",
- "tanggal": "2026-10-31",
- "dihasilkan": "2026-10-31T00:02:28.120Z",
- "topik": "likuidasi",
- "kenapaTopikIni": "rotasi kurikulum — topik paling lama tak disentuh (2026-10-21)",
+ "tanggal": "2026-11-01",
+ "dihasilkan": "2026-11-01T00:04:30.468Z",
+ "topik": "order-flow",
+ "kenapaTopikIni": "korelasi momentum→hasil -0.108 — otak mengejar harga tanpa membaca agresor → order-flow didahulukan · korelasi perubahan -0.11 — rezim berubah lebih cepat dari keyakinan → volatilitas didahulukan",
  "koin": [
   "BTCUSDT",
   "ETHUSDT",
-  "SOLUSDT",
-  "BNBUSDT",
-  "NEARUSDT",
-  "PEPEUSDT",
   "ZECUSDT",
-  "XRPUSDT",
+  "NEARUSDT",
+  "SOLUSDT",
   "TRXUSDT",
-  "ENAUSDT",
+  "BNBUSDT",
+  "PEPEUSDT",
   "UNIUSDT",
-  "HYPEUSDT"
+  "XRPUSDT",
+  "LINKUSDT",
+  "LSKUSDT"
  ],
  "rumusDiuji": [
   {
-   "id": "FM-LQ-01",
-   "nama": "Proksi kaskade likuidasi",
+   "id": "FM-OF-01",
+   "nama": "Order Flow Imbalance (delta taker terbobot)",
    "jenis": "sinyal",
-   "vonis": "MESIN-BELUM-ADA — rumus tersimpan; mesin bisa diutak-atik organ berikutnya"
+   "pakai": 82,
+   "noTrade": 314,
+   "hitPct": 45.1,
+   "latihHit": 38.5,
+   "latihN": 65,
+   "holdoutHit": 70.6,
+   "holdoutN": 17,
+   "netPct": -13.3,
+   "vonis": "DITOLAK",
+   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
   },
   {
-   "id": "FM-LQ-02",
-   "nama": "Jarak ke cluster likuidasi umum",
-   "jenis": "alat",
-   "vonis": "MESIN-BELUM-ADA — rumus tersimpan; mesin bisa diutak-atik organ berikutnya"
-  }
- ],
- "alatTerukur": [
+   "id": "FM-OF-02",
+   "nama": "Kemiringan CVD (cumulative volume delta)",
+   "jenis": "sinyal",
+   "pakai": 204,
+   "noTrade": 192,
+   "hitPct": 43.1,
+   "latihHit": 42.9,
+   "latihN": 163,
+   "holdoutHit": 43.9,
+   "holdoutN": 41,
+   "netPct": -133.1,
+   "vonis": "DITOLAK",
+   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
+  },
   {
-   "id": "FM-LQ-02",
-   "nama": "Jarak ke cluster likuidasi umum",
-   "fungsi": "jarak-cluster",
-   "status": "konteks-hari-ini"
+   "id": "FM-OF-03",
+   "nama": "Kesepakatan delta-return (volume quality)",
+   "jenis": "sinyal",
+   "pakai": 304,
+   "noTrade": 92,
+   "hitPct": 37.5,
+   "latihHit": 39.1,
+   "latihN": 243,
+   "holdoutHit": 31.1,
+   "holdoutN": 61,
+   "netPct": -321.7,
+   "vonis": "DITOLAK",
+   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
   }
  ],
- "vonisHarian": "DITOLAK 0 — dinding holdout belum ditembus; angka dicatat, belajar terus (anti-karantina)",
+ "alatTerukur": [],
+ "vonisHarian": "DITOLAK 3 — dinding holdout belum ditembus; angka dicatat, belajar terus (anti-karantina)",
  "hukum": [
   "lilin ≤ T saja (buta)",
   "nilai close T+24j − fee 0,2%",
   "holdout 20% akhir",
   "anti-overfit: gagal verifikasi = dibuang"
  ],
- "segel": "41434b13c917e400"
+ "segel": "f508b58b53b13800"
 }
