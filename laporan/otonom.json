@@ -1,8 +1,8 @@
 {
  "protokol": "PENGAWAS-OTONOM-V357",
  "identitas": "V357 KEMANDIRIAN-PENUH-V1 — mandat pemilik 2026-10-16: sistem mandiri & independen penuh, evaluasi tiap 15 menit, sekolah buta saat pemicu, adopsi hanya gerbang holdout +3 & anti-overfit, semua keputusan dicatat & dikomit tanpa menunggu",
- "diperbarui": "2026-11-01T13:21:22.970Z",
- "siklus": 1549,
+ "diperbarui": "2026-11-01T13:47:37.939Z",
+ "siklus": 1550,
  "hari": "2026-11-01",
  "jam": "2026-11-01T13",
  "metrik": {
@@ -21,7 +21,7 @@
    "ekspekPct": -3.75
   },
   "korelasiFitur": {
-   "struktur": -0.049,
+   "struktur": -0.05,
    "momentum": -0.11,
    "sr": -0.075,
    "tekanan": 0.033,
@@ -49,10 +49,11 @@
   "dunia": 50,
   "soalPerDunia": 500,
   "holdoutN": 150,
-  "totalPenilaian": 175000,
+  "totalPenilaian": 200000,
   "kandidat": [
    "baseline-terpasang",
    "inversi-penuh",
+   "inversi-struktur",
    "inversi-momentum",
    "inversi-sr",
    "inversi-perubahan",
@@ -64,9 +65,17 @@
    {
     "nama": "inversi-penuh",
     "medianDelta": -22.67,
-    "rataDelta": -22.87,
+    "rataDelta": -22.79,
     "duniaLulus3": 0,
     "duniaDuaSisi": 0,
+    "lulus": false
+   },
+   {
+    "nama": "inversi-struktur",
+    "medianDelta": 0.67,
+    "rataDelta": 0.4,
+    "duniaLulus3": 1,
+    "duniaDuaSisi": 22,
     "lulus": false
    },
    {
@@ -80,9 +89,9 @@
    {
     "nama": "inversi-sr",
     "medianDelta": -2.67,
-    "rataDelta": -2.83,
-    "duniaLulus3": 0,
-    "duniaDuaSisi": 2,
+    "rataDelta": -2.31,
+    "duniaLulus3": 1,
+    "duniaDuaSisi": 3,
     "lulus": false
    },
    {
@@ -95,25 +104,25 @@
    },
    {
     "nama": "anti-korelasi",
-    "medianDelta": -21.33,
-    "rataDelta": -21.91,
+    "medianDelta": -21.34,
+    "rataDelta": -22.13,
     "duniaLulus3": 0,
     "duniaDuaSisi": 0,
     "lulus": false
    },
    {
     "nama": "anti-korelasi-lunak",
-    "medianDelta": -17.33,
-    "rataDelta": -18.03,
+    "medianDelta": -17.34,
+    "rataDelta": -18.48,
     "duniaLulus3": 0,
     "duniaDuaSisi": 0,
     "lulus": false
    },
    {
     "nama": "refit-logistik-per-dunia",
-    "medianDelta": -0.66,
-    "rataDelta": -1.16,
-    "duniaLulus3": 6,
+    "medianDelta": 0,
+    "rataDelta": -0.33,
+    "duniaLulus3": 4,
     "duniaDuaSisi": 3,
     "lulus": false
    }
@@ -121,10 +130,10 @@
  },
  "adopsi": {
   "vonis": "DITOLAK",
-  "alasan": "tak ada kandidat yang lulus gerbang penuh (holdout +3 poin · ≥26/50 dunia · median ≥+1.5 · dua-sisi tak-kalah) — terbaik: inversi-momentum median 0 lulus-0/50; baseline tetap (anti-overfit)",
+  "alasan": "tak ada kandidat yang lulus gerbang penuh (holdout +3 poin · ≥26/50 dunia · median ≥+1.5 · dua-sisi tak-kalah) — terbaik: inversi-struktur median 0.67 lulus-1/50; baseline tetap (anti-overfit)",
   "kandidatTerbaik": {
-   "nama": "inversi-momentum",
-   "medianDelta": 0
+   "nama": "inversi-struktur",
+   "medianDelta": 0.67
   },
   "bobotBaru": null
  },
@@ -137,5 +146,5 @@
   "adopsi HANYA holdout ≥ +3 poin & anti-overfit (≥26/50 dunia · median ≥+1.5 · dua-sisi tak-kalah)",
   "semua keputusan dicatat & dikomit tanpa menunggu persetujuan"
  ],
- "segel": "7e6324fef59aa000"
+ "segel": "e56124d8bcfc9000"
 }
