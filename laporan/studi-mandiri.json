@@ -1,65 +1,77 @@
 {
  "protokol": "KURIKULUM-MANDIRI-V1",
- "tanggal": "2026-11-04",
- "dihasilkan": "2026-11-04T00:20:20.184Z",
- "topik": "volatilitas",
- "kenapaTopikIni": "rotasi kurikulum — topik paling lama tak disentuh (2026-10-26)",
+ "tanggal": "2026-11-05",
+ "dihasilkan": "2026-11-05T00:22:20.797Z",
+ "topik": "order-flow",
+ "kenapaTopikIni": "korelasi momentum→hasil -0.12 — otak mengejar harga tanpa membaca agresor → order-flow didahulukan · korelasi perubahan -0.125 — rezim berubah lebih cepat dari keyakinan → volatilitas didahulukan",
  "koin": [
   "BTCUSDT",
   "ETHUSDT",
-  "ZECUSDT",
   "SOLUSDT",
+  "ZECUSDT",
   "XRPUSDT",
   "NEARUSDT",
   "BNBUSDT",
   "PEPEUSDT",
   "UNIUSDT",
-  "RLUSDUSDT",
-  "UUSDT",
-  "HYPEUSDT"
+  "SNDKBUSDT",
+  "SUIUSDT",
+  "DOGEUSDT"
  ],
  "rumusDiuji": [
   {
-   "id": "FM-VL-01",
-   "nama": "Parkinson dari rentang lilin",
-   "jenis": "alat",
-   "vonis": "MESIN-BELUM-ADA — rumus tersimpan; mesin bisa diutak-atik organ berikutnya"
-  },
-  {
-   "id": "FM-VL-02",
-   "nama": "Garman–Klass",
-   "jenis": "alat",
-   "vonis": "MESIN-BELUM-ADA — rumus tersimpan; mesin bisa diutak-atik organ berikutnya"
-  },
-  {
-   "id": "FM-VL-03",
-   "nama": "Yang–Zhang (aman lonjakan antar-sesi)",
-   "jenis": "alat",
-   "vonis": "MESIN-BELUM-ADA — rumus tersimpan; mesin bisa diutak-atik organ berikutnya"
-  },
-  {
-   "id": "FM-VL-04",
-   "nama": "Variance ratio Lo–MacKinlay",
+   "id": "FM-OF-01",
+   "nama": "Order Flow Imbalance (delta taker terbobot)",
    "jenis": "sinyal",
-   "pakai": 282,
-   "noTrade": 113,
-   "hitPct": 50.4,
-   "latihHit": 50.2,
-   "latihN": 225,
-   "holdoutHit": 50.9,
-   "holdoutN": 57,
-   "netPct": 15.6,
+   "pakai": 84,
+   "noTrade": 312,
+   "hitPct": 48.8,
+   "latihHit": 46.3,
+   "latihN": 67,
+   "holdoutHit": 58.8,
+   "holdoutN": 17,
+   "netPct": -4.3,
+   "vonis": "DITOLAK",
+   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
+  },
+  {
+   "id": "FM-OF-02",
+   "nama": "Kemiringan CVD (cumulative volume delta)",
+   "jenis": "sinyal",
+   "pakai": 194,
+   "noTrade": 202,
+   "hitPct": 49.5,
+   "latihHit": 47.1,
+   "latihN": 155,
+   "holdoutHit": 59,
+   "holdoutN": 39,
+   "netPct": -66.6,
+   "vonis": "LAYAK-USUL",
+   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
+  },
+  {
+   "id": "FM-OF-03",
+   "nama": "Kesepakatan delta-return (volume quality)",
+   "jenis": "sinyal",
+   "pakai": 289,
+   "noTrade": 107,
+   "hitPct": 42.9,
+   "latihHit": 42.9,
+   "latihN": 231,
+   "holdoutHit": 43.1,
+   "holdoutN": 58,
+   "netPct": -244.7,
    "vonis": "DITOLAK",
    "gerbang": "holdout ≥ 51.88% & n ≥ 20"
   }
  ],
  "alatTerukur": [],
- "vonisHarian": "DITOLAK 1 — dinding holdout belum ditembus; angka dicatat, belajar terus (anti-karantina)",
+ "vonisHarian": "USUL 1 rumus (FM-OF-02) — menunggu konfirmasi ledger hidup ≥ 20 vonis matang sebelum duduk di meja musyawarah",
  "hukum": [
   "lilin ≤ T saja (buta)",
   "nilai close T+24j − fee 0,2%",
   "holdout 20% akhir",
   "anti-overfit: gagal verifikasi = dibuang"
  ],
- "segel": "d7f2a4ec156b9000"
+ "segel": "50316b3cdfbe8000"
 }
