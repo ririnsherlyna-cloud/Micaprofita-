@@ -1,77 +1,42 @@
 {
  "protokol": "KURIKULUM-MANDIRI-V1",
- "tanggal": "2026-11-05",
- "dihasilkan": "2026-11-05T00:22:20.797Z",
- "topik": "order-flow",
- "kenapaTopikIni": "korelasi momentum→hasil -0.12 — otak mengejar harga tanpa membaca agresor → order-flow didahulukan · korelasi perubahan -0.125 — rezim berubah lebih cepat dari keyakinan → volatilitas didahulukan",
- "koin": [
-  "BTCUSDT",
-  "ETHUSDT",
-  "SOLUSDT",
-  "ZECUSDT",
-  "XRPUSDT",
-  "NEARUSDT",
-  "BNBUSDT",
-  "PEPEUSDT",
-  "UNIUSDT",
-  "SNDKBUSDT",
-  "SUIUSDT",
-  "DOGEUSDT"
- ],
+ "tanggal": "2026-11-06",
+ "dihasilkan": "2026-11-06T00:05:08.867Z",
+ "topik": "funding",
+ "kenapaTopikIni": "korelasi momentum→hasil -0.107 — otak mengejar harga tanpa membaca agresor → order-flow didahulukan · korelasi perubahan -0.131 — rezim berubah lebih cepat dari keyakinan → volatilitas didahulukan · dorongan bukti \"order-flow\" baru dipelajari 2026-11-05 — giliran rotasi \"funding\" agar semua topik tersentuh ≤ 7 hari (anti-kelaparan-topik)",
+ "koin": [],
  "rumusDiuji": [
   {
-   "id": "FM-OF-01",
-   "nama": "Order Flow Imbalance (delta taker terbobot)",
-   "jenis": "sinyal",
-   "pakai": 84,
-   "noTrade": 312,
-   "hitPct": 48.8,
-   "latihHit": 46.3,
-   "latihN": 67,
-   "holdoutHit": 58.8,
-   "holdoutN": 17,
-   "netPct": -4.3,
-   "vonis": "DITOLAK",
-   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
+   "id": "FM-FU-01",
+   "nama": "Funding z-score (kerumunan berbayar)",
+   "vonis": "TANPA-MOMEN — data kurang panjang (jujur)"
   },
   {
-   "id": "FM-OF-02",
-   "nama": "Kemiringan CVD (cumulative volume delta)",
-   "jenis": "sinyal",
-   "pakai": 194,
-   "noTrade": 202,
-   "hitPct": 49.5,
-   "latihHit": 47.1,
-   "latihN": 155,
-   "holdoutHit": 59,
-   "holdoutN": 39,
-   "netPct": -66.6,
-   "vonis": "LAYAK-USUL",
-   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
+   "id": "FM-FU-02",
+   "nama": "Biaya carry kumulatif 3 hari (formalisasi ekonomi-cerdas)",
+   "jenis": "alat",
+   "vonis": "MESIN-BELUM-ADA — rumus tersimpan; mesin bisa diutak-atik organ berikutnya"
   },
   {
-   "id": "FM-OF-03",
-   "nama": "Kesepakatan delta-return (volume quality)",
-   "jenis": "sinyal",
-   "pakai": 289,
-   "noTrade": 107,
-   "hitPct": 42.9,
-   "latihHit": 42.9,
-   "latihN": 231,
-   "holdoutHit": 43.1,
-   "holdoutN": 58,
-   "netPct": -244.7,
-   "vonis": "DITOLAK",
-   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
+   "id": "FM-FU-03",
+   "nama": "Divergensi funding–harga",
+   "vonis": "TANPA-MOMEN — data kurang panjang (jujur)"
   }
  ],
- "alatTerukur": [],
- "vonisHarian": "USUL 1 rumus (FM-OF-02) — menunggu konfirmasi ledger hidup ≥ 20 vonis matang sebelum duduk di meja musyawarah",
+ "alatTerukur": [
+  {
+   "id": "FM-FU-02",
+   "nama": "Biaya carry kumulatif 3 hari (formalisasi ekonomi-cerdas)",
+   "fungsi": "carry",
+   "status": "konteks-hari-ini"
+  }
+ ],
+ "vonisHarian": "DITOLAK 0 — dinding holdout belum ditembus; angka dicatat, belajar terus (anti-karantina)",
  "hukum": [
   "lilin ≤ T saja (buta)",
   "nilai close T+24j − fee 0,2%",
   "holdout 20% akhir",
   "anti-overfit: gagal verifikasi = dibuang"
  ],
- "segel": "50316b3cdfbe8000"
+ "segel": "d4cd78fa89f4d000"
 }
