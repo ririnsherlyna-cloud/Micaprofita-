@@ -1,65 +1,81 @@
 {
  "protokol": "KURIKULUM-MANDIRI-V1",
- "tanggal": "2026-11-07",
- "dihasilkan": "2026-11-07T00:17:35.288Z",
- "topik": "volatilitas",
- "kenapaTopikIni": "korelasi perubahan -0.127 — rezim berubah lebih cepat dari keyakinan → volatilitas didahulukan",
+ "tanggal": "2026-11-08",
+ "dihasilkan": "2026-11-08T00:08:46.259Z",
+ "topik": "kalibrasi",
+ "kenapaTopikIni": "korelasi perubahan -0.148 — rezim berubah lebih cepat dari keyakinan → volatilitas didahulukan · dorongan bukti \"volatilitas\" baru dipelajari 2026-11-07 — giliran rotasi \"kalibrasi\" agar semua topik tersentuh ≤ 7 hari (anti-kelaparan-topik)",
  "koin": [
   "BTCUSDT",
   "ETHUSDT",
   "ZECUSDT",
-  "SOLUSDT",
   "XRPUSDT",
-  "RLUSDUSDT",
-  "BNBUSDT",
-  "SNDKBUSDT",
+  "SOLUSDT",
+  "ONEUSDT",
   "NEARUSDT",
-  "PEPEUSDT",
+  "BNBUSDT",
+  "UUSDT",
+  "UNIUSDT",
   "HYPEUSDT",
-  "SOXLBUSDT"
+  "XAUTUSDT"
  ],
  "rumusDiuji": [
   {
-   "id": "FM-VL-01",
-   "nama": "Parkinson dari rentang lilin",
+   "id": "FM-KA-01",
+   "nama": "Pembaruan keyakinan Bayes",
    "jenis": "alat",
    "vonis": "MESIN-BELUM-ADA — rumus tersimpan; mesin bisa diutak-atik organ berikutnya"
   },
   {
-   "id": "FM-VL-02",
-   "nama": "Garman–Klass",
+   "id": "FM-KA-02",
+   "nama": "Kelly terfragmen (ukuran posisi)",
    "jenis": "alat",
    "vonis": "MESIN-BELUM-ADA — rumus tersimpan; mesin bisa diutak-atik organ berikutnya"
   },
   {
-   "id": "FM-VL-03",
-   "nama": "Yang–Zhang (aman lonjakan antar-sesi)",
+   "id": "FM-KA-03",
+   "nama": "Brier + log-loss (segel epoch)",
    "jenis": "alat",
    "vonis": "MESIN-BELUM-ADA — rumus tersimpan; mesin bisa diutak-atik organ berikutnya"
   },
   {
-   "id": "FM-VL-04",
-   "nama": "Variance ratio Lo–MacKinlay",
-   "jenis": "sinyal",
-   "pakai": 270,
-   "noTrade": 126,
-   "hitPct": 51.1,
-   "latihHit": 52.8,
-   "latihN": 216,
-   "holdoutHit": 44.4,
-   "holdoutN": 54,
-   "netPct": 26.6,
-   "vonis": "DITOLAK",
-   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
+   "id": "FM-KA-04",
+   "nama": "Entropi permutasi (peta keteraturan)",
+   "jenis": "alat",
+   "vonis": "MESIN-BELUM-ADA — rumus tersimpan; mesin bisa diutak-atik organ berikutnya"
   }
  ],
- "alatTerukur": [],
- "vonisHarian": "DITOLAK 1 — dinding holdout belum ditembus; angka dicatat, belajar terus (anti-karantina)",
+ "alatTerukur": [
+  {
+   "id": "FM-KA-01",
+   "nama": "Pembaruan keyakinan Bayes",
+   "fungsi": "bayes",
+   "status": "konteks-hari-ini"
+  },
+  {
+   "id": "FM-KA-02",
+   "nama": "Kelly terfragmen (ukuran posisi)",
+   "fungsi": "kelly",
+   "status": "konteks-hari-ini"
+  },
+  {
+   "id": "FM-KA-03",
+   "nama": "Brier + log-loss (segel epoch)",
+   "fungsi": "brier",
+   "status": "konteks-hari-ini"
+  },
+  {
+   "id": "FM-KA-04",
+   "nama": "Entropi permutasi (peta keteraturan)",
+   "fungsi": "entropi",
+   "status": "konteks-hari-ini"
+  }
+ ],
+ "vonisHarian": "DITOLAK 0 — dinding holdout belum ditembus; angka dicatat, belajar terus (anti-karantina)",
  "hukum": [
   "lilin ≤ T saja (buta)",
   "nilai close T+24j − fee 0,2%",
   "holdout 20% akhir",
   "anti-overfit: gagal verifikasi = dibuang"
  ],
- "segel": "95d2e44c390bc400"
+ "segel": "1150f6b8cf1f8d00"
 }
