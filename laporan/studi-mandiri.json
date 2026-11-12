@@ -1,51 +1,84 @@
 {
  "protokol": "KURIKULUM-MANDIRI-V1",
- "tanggal": "2026-11-11",
- "dihasilkan": "2026-11-11T00:02:18.392Z",
- "topik": "likuidasi",
- "kenapaTopikIni": "korelasi perubahan -0.125 — rezim berubah lebih cepat dari keyakinan → volatilitas didahulukan · dorongan bukti \"volatilitas\" baru dipelajari 2026-11-10 — giliran rotasi \"likuidasi\" agar semua topik tersentuh ≤ 7 hari (anti-kelaparan-topik)",
+ "tanggal": "2026-11-12",
+ "dihasilkan": "2026-11-12T00:25:24.902Z",
+ "topik": "mikrostruktur",
+ "kenapaTopikIni": "korelasi perubahan -0.15 — rezim berubah lebih cepat dari keyakinan → volatilitas didahulukan · dorongan bukti \"volatilitas\" baru dipelajari 2026-11-10 — giliran rotasi \"mikrostruktur\" agar semua topik tersentuh ≤ 7 hari (anti-kelaparan-topik)",
  "koin": [
   "BTCUSDT",
   "ETHUSDT",
   "ZECUSDT",
   "SOLUSDT",
   "XRPUSDT",
-  "RLUSDUSDT",
-  "PEPEUSDT",
-  "NEARUSDT",
-  "BNBUSDT",
   "NVDABUSDT",
+  "RLUSDUSDT",
+  "NEARUSDT",
   "SNDKBUSDT",
+  "PEPEUSDT",
+  "SOXLBUSDT",
   "UNIUSDT"
  ],
  "rumusDiuji": [
   {
-   "id": "FM-LQ-01",
-   "nama": "Proksi kaskade likuidasi",
-   "jenis": "sinyal",
+   "id": "FM-MS-01",
+   "nama": "Mikro-harga Stoikov (snapshot order book)",
+   "jenis": "alat",
    "vonis": "MESIN-BELUM-ADA — rumus tersimpan; mesin bisa diutak-atik organ berikutnya"
   },
   {
-   "id": "FM-LQ-02",
-   "nama": "Jarak ke cluster likuidasi umum",
+   "id": "FM-MS-02",
+   "nama": "Penaksir spread Roll",
    "jenis": "alat",
    "vonis": "MESIN-BELUM-ADA — rumus tersimpan; mesin bisa diutak-atik organ berikutnya"
+  },
+  {
+   "id": "FM-MS-03",
+   "nama": "Amihud tak-likuiditas",
+   "jenis": "sinyal-filter",
+   "nPakai": 396,
+   "nTahan": 80,
+   "hitPakaiTahan": 43.8,
+   "hitBaselineSamaMomen": 42.9,
+   "sah": false,
+   "vonis": "DITOLAK",
+   "gerbang": "hit-terfilter ≥ baseline+3 poin & holdout n ≥ 20"
+  },
+  {
+   "id": "FM-MS-04",
+   "nama": "Rasio wick likuidasi",
+   "jenis": "sinyal",
+   "pakai": 144,
+   "noTrade": 252,
+   "hitPct": 50.7,
+   "latihHit": 53.9,
+   "latihN": 115,
+   "holdoutHit": 37.9,
+   "holdoutN": 29,
+   "netPct": -163.4,
+   "vonis": "DITOLAK",
+   "gerbang": "holdout ≥ 51.88% & n ≥ 20"
   }
  ],
  "alatTerukur": [
   {
-   "id": "FM-LQ-02",
-   "nama": "Jarak ke cluster likuidasi umum",
-   "fungsi": "jarak-cluster",
+   "id": "FM-MS-01",
+   "nama": "Mikro-harga Stoikov (snapshot order book)",
+   "fungsi": "mikro-harga",
+   "status": "konteks-hari-ini"
+  },
+  {
+   "id": "FM-MS-02",
+   "nama": "Penaksir spread Roll",
+   "fungsi": "spread-roll",
    "status": "konteks-hari-ini"
   }
  ],
- "vonisHarian": "DITOLAK 0 — dinding holdout belum ditembus; angka dicatat, belajar terus (anti-karantina)",
+ "vonisHarian": "DITOLAK 2 — dinding holdout belum ditembus; angka dicatat, belajar terus (anti-karantina)",
  "hukum": [
   "lilin ≤ T saja (buta)",
   "nilai close T+24j − fee 0,2%",
   "holdout 20% akhir",
   "anti-overfit: gagal verifikasi = dibuang"
  ],
- "segel": "8f23f460b6fd5800"
+ "segel": "47f486e08df12000"
 }
