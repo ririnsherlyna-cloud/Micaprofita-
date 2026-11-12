@@ -1,12 +1,12 @@
 {
  "protokol": "PENGAWAS-OTONOM-V357",
  "identitas": "V357 KEMANDIRIAN-PENUH-V1 — mandat pemilik 2026-10-16: sistem mandiri & independen penuh, evaluasi tiap 15 menit, sekolah buta saat pemicu, adopsi hanya gerbang holdout +3 & anti-overfit, semua keputusan dicatat & dikomit tanpa menunggu",
- "diperbarui": "2026-11-12T00:24:05.581Z",
- "siklus": 2151,
+ "diperbarui": "2026-11-12T00:50:16.031Z",
+ "siklus": 2152,
  "hari": "2026-11-12",
  "jam": "2026-11-12T00",
  "metrik": {
-  "hitRate7d": 39.5,
+  "hitRate7d": 39.4,
   "ambangHit": 42,
   "hitLewat": false,
   "brierArah": 0.266,
@@ -16,20 +16,20 @@
   "zonaRacunTerburuk": {
    "jalur": "ARAH",
    "kunci": "BUY-PARABOLIK",
-   "n": 157,
-   "akurasiPct": 29.9,
-   "ekspekPct": -4.36
+   "n": 156,
+   "akurasiPct": 30.1,
+   "ekspekPct": -4.26
   },
   "korelasiFitur": {
-   "struktur": -0.042,
-   "momentum": -0.081,
-   "sr": -0.077,
-   "tekanan": -0.018,
-   "perubahan": -0.152
+   "struktur": -0.041,
+   "momentum": -0.078,
+   "sr": -0.074,
+   "tekanan": -0.019,
+   "perubahan": -0.15
   },
   "sasaranMutlak": {
    "tujuan": "hit-rate ledger hidup menembus 99,99%+ stabil dalam 7 hari (mandat pemilik)",
-   "hit7dSekarang": 39.5,
+   "hit7dSekarang": 39.4,
    "catatan": "tujuan dikejar lewat loop perbaikan tiap denyut — angka medan yang dinilai, bukan klaim (hukum anti-overfit rumah tetap mengikat)"
   }
  },
@@ -40,7 +40,7 @@
   "brierTidakDiketahui": false
  },
  "kolam": {
-  "pengalamanMatang": 944,
+  "pengalamanMatang": 945,
   "sumber": "laporan/prakira-server.jsonl (vonis matang jalur ARAH, kunci dibaca dari hasil 24 jam net-fee)"
  },
  "sekolah": {
@@ -63,10 +63,10 @@
   "rekap": [
    {
     "nama": "inversi-penuh",
-    "medianDelta": 2.66,
-    "rataDelta": 1.28,
-    "duniaLulus3": 22,
-    "duniaDuaSisi": 23,
+    "medianDelta": 4,
+    "rataDelta": 2.08,
+    "duniaLulus3": 25,
+    "duniaDuaSisi": 18,
     "lulus": false
    },
    {
@@ -79,10 +79,10 @@
    },
    {
     "nama": "inversi-sr",
-    "medianDelta": 0.67,
-    "rataDelta": 0.64,
+    "medianDelta": 0,
+    "rataDelta": 0.32,
     "duniaLulus3": 0,
-    "duniaDuaSisi": 16,
+    "duniaDuaSisi": 27,
     "lulus": false
    },
    {
@@ -96,45 +96,39 @@
    {
     "nama": "anti-korelasi",
     "medianDelta": 1.33,
-    "rataDelta": -0.21,
-    "duniaLulus3": 14,
-    "duniaDuaSisi": 13,
+    "rataDelta": 0.39,
+    "duniaLulus3": 16,
+    "duniaDuaSisi": 14,
     "lulus": false
    },
    {
     "nama": "anti-korelasi-lunak",
-    "medianDelta": 5.34,
-    "rataDelta": 3.25,
-    "duniaLulus3": 35,
-    "duniaDuaSisi": 31,
-    "lulus": true
+    "medianDelta": 2,
+    "rataDelta": 2.32,
+    "duniaLulus3": 20,
+    "duniaDuaSisi": 20,
+    "lulus": false
    },
    {
     "nama": "refit-logistik-per-dunia",
-    "medianDelta": 2,
-    "rataDelta": 1.72,
-    "duniaLulus3": 19,
-    "duniaDuaSisi": 31,
+    "medianDelta": 0.67,
+    "rataDelta": 0.03,
+    "duniaLulus3": 12,
+    "duniaDuaSisi": 17,
     "lulus": false
    }
   ]
  },
  "adopsi": {
-  "vonis": "DIDADOPSI",
-  "alasan": "anti-korelasi-lunak: median delta holdout 5.34 poin, 35/50 dunia lulus +3, dua-sisi tak-kalah 31/50 — semua gerbang penuh",
+  "vonis": "DITOLAK",
+  "alasan": "tak ada kandidat yang lulus gerbang penuh (holdout +3 poin · ≥26/50 dunia · median ≥+1.5 · dua-sisi tak-kalah) — terbaik: inversi-penuh median 4 lulus-25/50; baseline tetap (anti-overfit)",
   "kandidatTerbaik": {
-   "nama": "anti-korelasi-lunak",
-   "medianDelta": 5.34
+   "nama": "inversi-penuh",
+   "medianDelta": 4
   },
-  "bobotBaru": {
-   "struktur": 0.6006,
-   "momentum": 0.006,
-   "sr": 0.1654,
-   "tekanan": 0.0629,
-   "perubahan": -0.0474
-  }
+  "bobotBaru": null
  },
- "keputusan": "ADOPSI-BOBOT-BARU",
+ "keputusan": "SEKOLAH-JALAN-DITOLAK",
  "hukum": [
   "evaluasi tiap denyut (15 menit)",
   "pemicu mutlak: hit7d<42 ATAU brier>0.30",
@@ -143,5 +137,5 @@
   "adopsi HANYA holdout ≥ +3 poin & anti-overfit (≥26/50 dunia · median ≥+1.5 · dua-sisi tak-kalah)",
   "semua keputusan dicatat & dikomit tanpa menunggu persetujuan"
  ],
- "segel": "aa8671e029e79c00"
+ "segel": "3fbdf63e070c8e00"
 }
