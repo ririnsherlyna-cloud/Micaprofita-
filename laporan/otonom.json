@@ -1,12 +1,12 @@
 {
  "protokol": "PENGAWAS-OTONOM-V357",
  "identitas": "V357 KEMANDIRIAN-PENUH-V1 — mandat pemilik 2026-10-16: sistem mandiri & independen penuh, evaluasi tiap 15 menit, sekolah buta saat pemicu, adopsi hanya gerbang holdout +3 & anti-overfit, semua keputusan dicatat & dikomit tanpa menunggu",
- "diperbarui": "2026-11-17T12:00:22.734Z",
- "siklus": 2466,
+ "diperbarui": "2026-11-17T12:26:38.731Z",
+ "siklus": 2467,
  "hari": "2026-11-17",
  "jam": "2026-11-17T12",
  "metrik": {
-  "hitRate7d": 41.7,
+  "hitRate7d": 41.8,
   "ambangHit": 42,
   "hitLewat": false,
   "brierArah": 0.2646,
@@ -22,14 +22,14 @@
   },
   "korelasiFitur": {
    "struktur": -0.018,
-   "momentum": -0.058,
-   "sr": -0.06,
-   "tekanan": 0.018,
-   "perubahan": -0.12
+   "momentum": -0.056,
+   "sr": -0.058,
+   "tekanan": 0.019,
+   "perubahan": -0.118
   },
   "sasaranMutlak": {
    "tujuan": "hit-rate ledger hidup menembus 99,99%+ stabil dalam 7 hari (mandat pemilik)",
-   "hit7dSekarang": 41.7,
+   "hit7dSekarang": 41.8,
    "catatan": "tujuan dikejar lewat loop perbaikan tiap denyut — angka medan yang dinilai, bukan klaim (hukum anti-overfit rumah tetap mengikat)"
   }
  },
@@ -40,7 +40,7 @@
   "brierTidakDiketahui": false
  },
  "kolam": {
-  "pengalamanMatang": 969,
+  "pengalamanMatang": 968,
   "sumber": "laporan/prakira-server.jsonl (vonis matang jalur ARAH, kunci dibaca dari hasil 24 jam net-fee)"
  },
  "sekolah": {
@@ -63,11 +63,11 @@
   "rekap": [
    {
     "nama": "inversi-penuh",
-    "medianDelta": 12.67,
-    "rataDelta": 12.95,
-    "duniaLulus3": 43,
-    "duniaDuaSisi": 27,
-    "lulus": true
+    "medianDelta": 11.33,
+    "rataDelta": 9.24,
+    "duniaLulus3": 46,
+    "duniaDuaSisi": 12,
+    "lulus": false
    },
    {
     "nama": "inversi-momentum",
@@ -80,9 +80,9 @@
    {
     "nama": "inversi-sr",
     "medianDelta": 0,
-    "rataDelta": 0.09,
-    "duniaLulus3": 3,
-    "duniaDuaSisi": 11,
+    "rataDelta": -0.16,
+    "duniaLulus3": 0,
+    "duniaDuaSisi": 29,
     "lulus": false
    },
    {
@@ -95,46 +95,40 @@
    },
    {
     "nama": "anti-korelasi",
-    "medianDelta": 12,
-    "rataDelta": 11.45,
-    "duniaLulus3": 40,
-    "duniaDuaSisi": 29,
-    "lulus": true
+    "medianDelta": 8.67,
+    "rataDelta": 7.31,
+    "duniaLulus3": 44,
+    "duniaDuaSisi": 15,
+    "lulus": false
    },
    {
     "nama": "anti-korelasi-lunak",
-    "medianDelta": 10.66,
-    "rataDelta": 12.17,
-    "duniaLulus3": 45,
-    "duniaDuaSisi": 33,
-    "lulus": true
+    "medianDelta": 7.34,
+    "rataDelta": 6.76,
+    "duniaLulus3": 47,
+    "duniaDuaSisi": 17,
+    "lulus": false
    },
    {
     "nama": "refit-logistik-per-dunia",
-    "medianDelta": 0,
-    "rataDelta": 1.12,
-    "duniaLulus3": 8,
-    "duniaDuaSisi": 20,
+    "medianDelta": 0.67,
+    "rataDelta": 1.35,
+    "duniaLulus3": 9,
+    "duniaDuaSisi": 37,
     "lulus": false
    }
   ]
  },
  "adopsi": {
-  "vonis": "DIDADOPSI",
-  "alasan": "inversi-penuh: median delta holdout 12.67 poin, 43/50 dunia lulus +3, dua-sisi tak-kalah 27/50 — semua gerbang penuh",
+  "vonis": "DITOLAK",
+  "alasan": "tak ada kandidat yang lulus gerbang penuh (holdout +3 poin · ≥26/50 dunia · median ≥+1.5 · dua-sisi tak-kalah) — terbaik: inversi-penuh median 11.33 lulus-46/50; baseline tetap (anti-overfit)",
   "kandidatTerbaik": {
    "nama": "inversi-penuh",
-   "medianDelta": 12.67
+   "medianDelta": 11.33
   },
-  "bobotBaru": {
-   "struktur": -0.5624,
-   "momentum": 0.0928,
-   "sr": -0.0347,
-   "tekanan": -0.0889,
-   "perubahan": 0.2212
-  }
+  "bobotBaru": null
  },
- "keputusan": "ADOPSI-BOBOT-BARU",
+ "keputusan": "SEKOLAH-JALAN-DITOLAK",
  "hukum": [
   "evaluasi tiap denyut (15 menit)",
   "pemicu mutlak: hit7d<42 ATAU brier>0.30",
@@ -143,5 +137,5 @@
   "adopsi HANYA holdout ≥ +3 poin & anti-overfit (≥26/50 dunia · median ≥+1.5 · dua-sisi tak-kalah)",
   "semua keputusan dicatat & dikomit tanpa menunggu persetujuan"
  ],
- "segel": "2cdcc078c561cb00"
+ "segel": "c4090d3838899c00"
 }
