@@ -1,11 +1,17 @@
 {
-  "diperbarui": "2026-11-17T08:43:14.719Z",
-  "siklus": 2459,
-  "adopsi": false,
-  "bobotTerpasang": null,
+  "diperbarui": "2026-11-17T09:09:33.233Z",
+  "siklus": 2460,
+  "adopsi": true,
+  "bobotTerpasang": {
+    "struktur": 0.5703,
+    "momentum": -0.0907,
+    "sr": 0.0325,
+    "tekanan": 0.0847,
+    "perubahan": -0.2218
+  },
   "protokol": "EMPU-AKURASI-V351",
-  "vonis": "MENUNGGU",
-  "alasan": "holdout n=60: empu 36.7% vs vonis-lama 35% (< +3 poin) — gerbang anti-overfit menahan; bobot genome tetap",
+  "vonis": "DIDADOPSI",
+  "alasan": "holdout n=60: empu 36.7% vs vonis-lama 33.3% (≥ +3 poin) — bobot pengalaman diadopsi, fit akhir atas seluruh 970 pengalaman",
   "pengalaman": 970,
   "fitur": [
     "struktur",
@@ -16,16 +22,16 @@
   ],
   "korelasiDimensiHasil": {
     "struktur": -0.017,
-    "momentum": -0.057,
+    "momentum": -0.058,
     "sr": -0.06,
-    "tekanan": 0.019,
+    "tekanan": 0.016,
     "perubahan": -0.12
   },
   "uji": {
     "nLatih": 910,
     "nHoldout": 60,
     "hitEmpu": 36.7,
-    "hitVonisLama": 35,
+    "hitVonisLama": 33.3,
     "gerbang": "adopsi hanya bila empu ≥ vonis-lama + 3 poin (anti-overfit)"
   },
   "kurvaBelajar": [
@@ -35,11 +41,11 @@
     },
     {
       "latih": 80,
-      "hitHoldout": 38.3
+      "hitHoldout": 35
     },
     {
       "latih": 120,
-      "hitHoldout": 33.3
+      "hitHoldout": 31.7
     },
     {
       "latih": 160,
@@ -56,8 +62,8 @@
   ],
   "antiOrakel": {
     "ket": "hit-rate bila semua vonis lama dibalik — cermin jujur penyakit arah",
-    "hitPct": 57.4
+    "hitPct": 57.5
   },
-  "akurasiLedger": 42.6,
+  "akurasiLedger": 42.5,
   "catatan": "bobot difit dari ledger vonis matang milik sendiri — nol kunci luar, nol sambungan luar; refit tiap denyut, makin banyak pengalaman makin tajam"
 }
