@@ -1,14 +1,14 @@
 {
  "protokol": "PENGAWAS-OTONOM-V357",
  "identitas": "V357 KEMANDIRIAN-PENUH-V1 — mandat pemilik 2026-10-16: sistem mandiri & independen penuh, evaluasi tiap 15 menit, sekolah buta saat pemicu, adopsi hanya gerbang holdout +3 & anti-overfit, semua keputusan dicatat & dikomit tanpa menunggu",
- "diperbarui": "2026-11-17T03:54:17.535Z",
- "siklus": 2447,
+ "diperbarui": "2026-11-17T04:20:34.403Z",
+ "siklus": 2448,
  "hari": "2026-11-17",
- "jam": "2026-11-17T03",
+ "jam": "2026-11-17T04",
  "metrik": {
-  "hitRate7d": 42.3,
+  "hitRate7d": 41.9,
   "ambangHit": 42,
-  "hitLewat": true,
+  "hitLewat": false,
   "brierArah": 0.2646,
   "ambangBrier": 0.3,
   "brierLewat": true,
@@ -16,25 +16,25 @@
   "zonaRacunTerburuk": {
    "jalur": "ARAH",
    "kunci": "BUY-NAIK",
-   "n": 201,
-   "akurasiPct": 19.9,
-   "ekspekPct": -1.57
+   "n": 202,
+   "akurasiPct": 19.8,
+   "ekspekPct": -1.58
   },
   "korelasiFitur": {
    "struktur": -0.018,
-   "momentum": -0.056,
-   "sr": -0.056,
-   "tekanan": 0.018,
-   "perubahan": -0.117
+   "momentum": -0.057,
+   "sr": -0.058,
+   "tekanan": 0.017,
+   "perubahan": -0.118
   },
   "sasaranMutlak": {
    "tujuan": "hit-rate ledger hidup menembus 99,99%+ stabil dalam 7 hari (mandat pemilik)",
-   "hit7dSekarang": 42.3,
+   "hit7dSekarang": 41.9,
    "catatan": "tujuan dikejar lewat loop perbaikan tiap denyut — angka medan yang dinilai, bukan klaim (hukum anti-overfit rumah tetap mengikat)"
   }
  },
  "pemicu": {
-  "aktif": false,
+  "aktif": true,
   "syarat": "hit7d < 42% ATAU brier > 0.3",
   "hitTidakDiketahui": false,
   "brierTidakDiketahui": false
@@ -45,15 +45,96 @@
  },
  "sekolah": {
   "mati": false,
-  "ket": "pemicu mati — sekolah tidak dijalankan denyut ini"
+  "alasan": null,
+  "dunia": 50,
+  "soalPerDunia": 500,
+  "holdoutN": 150,
+  "totalPenilaian": 175000,
+  "kandidat": [
+   "baseline-terpasang",
+   "inversi-penuh",
+   "inversi-momentum",
+   "inversi-sr",
+   "inversi-perubahan",
+   "anti-korelasi",
+   "anti-korelasi-lunak",
+   "refit-logistik-per-dunia"
+  ],
+  "rekap": [
+   {
+    "nama": "inversi-penuh",
+    "medianDelta": 0,
+    "rataDelta": 0,
+    "duniaLulus3": 0,
+    "duniaDuaSisi": 50,
+    "lulus": false
+   },
+   {
+    "nama": "inversi-momentum",
+    "medianDelta": 0,
+    "rataDelta": 0,
+    "duniaLulus3": 0,
+    "duniaDuaSisi": 50,
+    "lulus": false
+   },
+   {
+    "nama": "inversi-sr",
+    "medianDelta": 0,
+    "rataDelta": 0,
+    "duniaLulus3": 0,
+    "duniaDuaSisi": 50,
+    "lulus": false
+   },
+   {
+    "nama": "inversi-perubahan",
+    "medianDelta": 0,
+    "rataDelta": 0,
+    "duniaLulus3": 0,
+    "duniaDuaSisi": 50,
+    "lulus": false
+   },
+   {
+    "nama": "anti-korelasi",
+    "medianDelta": 0,
+    "rataDelta": 0,
+    "duniaLulus3": 0,
+    "duniaDuaSisi": 50,
+    "lulus": false
+   },
+   {
+    "nama": "anti-korelasi-lunak",
+    "medianDelta": 0,
+    "rataDelta": 0,
+    "duniaLulus3": 0,
+    "duniaDuaSisi": 50,
+    "lulus": false
+   },
+   {
+    "nama": "refit-logistik-per-dunia",
+    "medianDelta": 35.33,
+    "rataDelta": 33.59,
+    "duniaLulus3": 50,
+    "duniaDuaSisi": 50,
+    "lulus": true
+   }
+  ]
  },
  "adopsi": {
-  "vonis": "TIDAK-DIJALANKAN",
-  "alasan": "pemicu mati — tak ada sekolah, tak ada perubahan bobot",
-  "kandidatTerbaik": null,
-  "bobotBaru": null
+  "vonis": "DIDADOPSI",
+  "alasan": "refit-logistik-per-dunia: median delta holdout 35.33 poin, 50/50 dunia lulus +3, dua-sisi tak-kalah 50/50 — semua gerbang penuh",
+  "kandidatTerbaik": {
+   "nama": "refit-logistik-per-dunia",
+   "medianDelta": 35.33
+  },
+  "bobotBaru": {
+   "struktur": 0,
+   "momentum": 0,
+   "sr": 0,
+   "tekanan": 0,
+   "perubahan": 0
+  }
  },
- "keputusan": "PEMICU-MATI — HANYA-EVALUASI",
+ "keputusan": "ADOPSI-BOBOT-BARU",
  "hukum": [
   "evaluasi tiap denyut (15 menit)",
   "pemicu mutlak: hit7d<42 ATAU brier>0.30",
@@ -62,5 +143,5 @@
   "adopsi HANYA holdout ≥ +3 poin & anti-overfit (≥26/50 dunia · median ≥+1.5 · dua-sisi tak-kalah)",
   "semua keputusan dicatat & dikomit tanpa menunggu persetujuan"
  ],
- "segel": "a1ed4882ec429400"
+ "segel": "aa2b717665043800"
 }
