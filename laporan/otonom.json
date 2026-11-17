@@ -1,14 +1,14 @@
 {
  "protokol": "PENGAWAS-OTONOM-V357",
  "identitas": "V357 KEMANDIRIAN-PENUH-V1 — mandat pemilik 2026-10-16: sistem mandiri & independen penuh, evaluasi tiap 15 menit, sekolah buta saat pemicu, adopsi hanya gerbang holdout +3 & anti-overfit, semua keputusan dicatat & dikomit tanpa menunggu",
- "diperbarui": "2026-11-17T02:22:35.149Z",
- "siklus": 2443,
+ "diperbarui": "2026-11-17T02:43:55.204Z",
+ "siklus": 2444,
  "hari": "2026-11-17",
  "jam": "2026-11-17T02",
  "metrik": {
-  "hitRate7d": 41.6,
+  "hitRate7d": 42.1,
   "ambangHit": 42,
-  "hitLewat": false,
+  "hitLewat": true,
   "brierArah": 0.2646,
   "ambangBrier": 0.3,
   "brierLewat": true,
@@ -21,20 +21,20 @@
    "ekspekPct": -4.51
   },
   "korelasiFitur": {
-   "struktur": -0.019,
-   "momentum": -0.055,
-   "sr": -0.056,
-   "tekanan": 0.017,
-   "perubahan": -0.118
+   "struktur": -0.02,
+   "momentum": -0.058,
+   "sr": -0.059,
+   "tekanan": 0.018,
+   "perubahan": -0.119
   },
   "sasaranMutlak": {
    "tujuan": "hit-rate ledger hidup menembus 99,99%+ stabil dalam 7 hari (mandat pemilik)",
-   "hit7dSekarang": 41.6,
+   "hit7dSekarang": 42.1,
    "catatan": "tujuan dikejar lewat loop perbaikan tiap denyut — angka medan yang dinilai, bukan klaim (hukum anti-overfit rumah tetap mengikat)"
   }
  },
  "pemicu": {
-  "aktif": true,
+  "aktif": false,
   "syarat": "hit7d < 42% ATAU brier > 0.3",
   "hitTidakDiketahui": false,
   "brierTidakDiketahui": false
@@ -45,96 +45,15 @@
  },
  "sekolah": {
   "mati": false,
-  "alasan": null,
-  "dunia": 50,
-  "soalPerDunia": 500,
-  "holdoutN": 150,
-  "totalPenilaian": 175000,
-  "kandidat": [
-   "baseline-terpasang",
-   "inversi-penuh",
-   "inversi-momentum",
-   "inversi-sr",
-   "inversi-perubahan",
-   "anti-korelasi",
-   "anti-korelasi-lunak",
-   "refit-logistik-per-dunia"
-  ],
-  "rekap": [
-   {
-    "nama": "inversi-penuh",
-    "medianDelta": 0,
-    "rataDelta": 0,
-    "duniaLulus3": 0,
-    "duniaDuaSisi": 50,
-    "lulus": false
-   },
-   {
-    "nama": "inversi-momentum",
-    "medianDelta": 0,
-    "rataDelta": 0,
-    "duniaLulus3": 0,
-    "duniaDuaSisi": 50,
-    "lulus": false
-   },
-   {
-    "nama": "inversi-sr",
-    "medianDelta": 0,
-    "rataDelta": 0,
-    "duniaLulus3": 0,
-    "duniaDuaSisi": 50,
-    "lulus": false
-   },
-   {
-    "nama": "inversi-perubahan",
-    "medianDelta": 0,
-    "rataDelta": 0,
-    "duniaLulus3": 0,
-    "duniaDuaSisi": 50,
-    "lulus": false
-   },
-   {
-    "nama": "anti-korelasi",
-    "medianDelta": 0,
-    "rataDelta": 0,
-    "duniaLulus3": 0,
-    "duniaDuaSisi": 50,
-    "lulus": false
-   },
-   {
-    "nama": "anti-korelasi-lunak",
-    "medianDelta": 0,
-    "rataDelta": 0,
-    "duniaLulus3": 0,
-    "duniaDuaSisi": 50,
-    "lulus": false
-   },
-   {
-    "nama": "refit-logistik-per-dunia",
-    "medianDelta": 36,
-    "rataDelta": 36.24,
-    "duniaLulus3": 50,
-    "duniaDuaSisi": 50,
-    "lulus": true
-   }
-  ]
+  "ket": "pemicu mati — sekolah tidak dijalankan denyut ini"
  },
  "adopsi": {
-  "vonis": "DIDADOPSI",
-  "alasan": "refit-logistik-per-dunia: median delta holdout 36 poin, 50/50 dunia lulus +3, dua-sisi tak-kalah 50/50 — semua gerbang penuh",
-  "kandidatTerbaik": {
-   "nama": "refit-logistik-per-dunia",
-   "medianDelta": 36
-  },
-  "bobotBaru": {
-   "struktur": 0,
-   "momentum": 0,
-   "sr": 0,
-   "tekanan": 0,
-   "perubahan": 0
-  }
+  "vonis": "TIDAK-DIJALANKAN",
+  "alasan": "pemicu mati — tak ada sekolah, tak ada perubahan bobot",
+  "kandidatTerbaik": null,
+  "bobotBaru": null
  },
- "keputusan": "ADOPSI-BOBOT-BARU",
+ "keputusan": "PEMICU-MATI — HANYA-EVALUASI",
  "hukum": [
   "evaluasi tiap denyut (15 menit)",
   "pemicu mutlak: hit7d<42 ATAU brier>0.30",
@@ -143,5 +62,5 @@
   "adopsi HANYA holdout ≥ +3 poin & anti-overfit (≥26/50 dunia · median ≥+1.5 · dua-sisi tak-kalah)",
   "semua keputusan dicatat & dikomit tanpa menunggu persetujuan"
  ],
- "segel": "4b4281902e28a400"
+ "segel": "b634bc58ae63d000"
 }
