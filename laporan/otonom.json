@@ -1,14 +1,14 @@
 {
  "protokol": "PENGAWAS-OTONOM-V357",
  "identitas": "V357 KEMANDIRIAN-PENUH-V1 — mandat pemilik 2026-10-16: sistem mandiri & independen penuh, evaluasi tiap 15 menit, sekolah buta saat pemicu, adopsi hanya gerbang holdout +3 & anti-overfit, semua keputusan dicatat & dikomit tanpa menunggu",
- "diperbarui": "2026-11-17T12:52:52.248Z",
- "siklus": 2468,
+ "diperbarui": "2026-11-17T13:19:10.322Z",
+ "siklus": 2469,
  "hari": "2026-11-17",
- "jam": "2026-11-17T12",
+ "jam": "2026-11-17T13",
  "metrik": {
-  "hitRate7d": 41.8,
+  "hitRate7d": 42,
   "ambangHit": 42,
-  "hitLewat": false,
+  "hitLewat": true,
   "brierArah": 0.2646,
   "ambangBrier": 0.3,
   "brierLewat": true,
@@ -22,113 +22,38 @@
   },
   "korelasiFitur": {
    "struktur": -0.018,
-   "momentum": -0.054,
-   "sr": -0.056,
+   "momentum": -0.055,
+   "sr": -0.057,
    "tekanan": 0.02,
-   "perubahan": -0.12
+   "perubahan": -0.121
   },
   "sasaranMutlak": {
    "tujuan": "hit-rate ledger hidup menembus 99,99%+ stabil dalam 7 hari (mandat pemilik)",
-   "hit7dSekarang": 41.8,
+   "hit7dSekarang": 42,
    "catatan": "tujuan dikejar lewat loop perbaikan tiap denyut — angka medan yang dinilai, bukan klaim (hukum anti-overfit rumah tetap mengikat)"
   }
  },
  "pemicu": {
-  "aktif": true,
+  "aktif": false,
   "syarat": "hit7d < 42% ATAU brier > 0.3",
   "hitTidakDiketahui": false,
   "brierTidakDiketahui": false
  },
  "kolam": {
-  "pengalamanMatang": 967,
+  "pengalamanMatang": 966,
   "sumber": "laporan/prakira-server.jsonl (vonis matang jalur ARAH, kunci dibaca dari hasil 24 jam net-fee)"
  },
  "sekolah": {
   "mati": false,
-  "alasan": null,
-  "dunia": 50,
-  "soalPerDunia": 500,
-  "holdoutN": 150,
-  "totalPenilaian": 175000,
-  "kandidat": [
-   "baseline-terpasang",
-   "inversi-penuh",
-   "inversi-momentum",
-   "inversi-sr",
-   "inversi-perubahan",
-   "anti-korelasi",
-   "anti-korelasi-lunak",
-   "refit-logistik-per-dunia"
-  ],
-  "rekap": [
-   {
-    "nama": "inversi-penuh",
-    "medianDelta": 9.33,
-    "rataDelta": 9.39,
-    "duniaLulus3": 46,
-    "duniaDuaSisi": 22,
-    "lulus": false
-   },
-   {
-    "nama": "inversi-momentum",
-    "medianDelta": 0,
-    "rataDelta": 0,
-    "duniaLulus3": 0,
-    "duniaDuaSisi": 50,
-    "lulus": false
-   },
-   {
-    "nama": "inversi-sr",
-    "medianDelta": 0.67,
-    "rataDelta": 0.85,
-    "duniaLulus3": 0,
-    "duniaDuaSisi": 21,
-    "lulus": false
-   },
-   {
-    "nama": "inversi-perubahan",
-    "medianDelta": 0,
-    "rataDelta": 0,
-    "duniaLulus3": 0,
-    "duniaDuaSisi": 50,
-    "lulus": false
-   },
-   {
-    "nama": "anti-korelasi",
-    "medianDelta": 6.67,
-    "rataDelta": 7.36,
-    "duniaLulus3": 42,
-    "duniaDuaSisi": 24,
-    "lulus": false
-   },
-   {
-    "nama": "anti-korelasi-lunak",
-    "medianDelta": 7.33,
-    "rataDelta": 7.31,
-    "duniaLulus3": 43,
-    "duniaDuaSisi": 24,
-    "lulus": false
-   },
-   {
-    "nama": "refit-logistik-per-dunia",
-    "medianDelta": 0.67,
-    "rataDelta": 0.87,
-    "duniaLulus3": 8,
-    "duniaDuaSisi": 25,
-    "lulus": false
-   }
-  ]
+  "ket": "pemicu mati — sekolah tidak dijalankan denyut ini"
  },
  "adopsi": {
-  "vonis": "DITOLAK",
-  "alasan": "tak ada kandidat yang lulus gerbang penuh (holdout +3 poin · ≥26/50 dunia · median ≥+1.5 · dua-sisi tak-kalah) — terbaik: inversi-penuh median 9.33 lulus-46/50; baseline tetap (anti-overfit)",
-  "kandidatTerbaik": {
-   "nama": "inversi-penuh",
-   "medianDelta": 9.33
-  },
+  "vonis": "TIDAK-DIJALANKAN",
+  "alasan": "pemicu mati — tak ada sekolah, tak ada perubahan bobot",
+  "kandidatTerbaik": null,
   "bobotBaru": null
  },
- "keputusan": "SEKOLAH-JALAN-DITOLAK",
+ "keputusan": "PEMICU-MATI — HANYA-EVALUASI",
  "hukum": [
   "evaluasi tiap denyut (15 menit)",
   "pemicu mutlak: hit7d<42 ATAU brier>0.30",
@@ -137,5 +62,5 @@
   "adopsi HANYA holdout ≥ +3 poin & anti-overfit (≥26/50 dunia · median ≥+1.5 · dua-sisi tak-kalah)",
   "semua keputusan dicatat & dikomit tanpa menunggu persetujuan"
  ],
- "segel": "1871cf607f54c180"
+ "segel": "5033a48edafde400"
 }
