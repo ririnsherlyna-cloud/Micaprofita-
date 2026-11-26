@@ -1,11 +1,17 @@
 {
-  "diperbarui": "2026-11-26T14:37:39.988Z",
-  "siklus": 2989,
-  "adopsi": false,
-  "bobotTerpasang": null,
+  "diperbarui": "2026-11-26T15:03:50.781Z",
+  "siklus": 2990,
+  "adopsi": true,
+  "bobotTerpasang": {
+    "struktur": 0.1645,
+    "momentum": -0.0866,
+    "sr": 0.3918,
+    "tekanan": 0.0337,
+    "perubahan": -0.3234
+  },
   "protokol": "EMPU-AKURASI-V351",
-  "vonis": "MENUNGGU",
-  "alasan": "holdout n=60: empu 50% vs vonis-lama 48.3% (< +3 poin) — gerbang anti-overfit menahan; bobot genome tetap",
+  "vonis": "DIDADOPSI",
+  "alasan": "holdout n=60: empu 50% vs vonis-lama 46.7% (≥ +3 poin) — bobot pengalaman diadopsi, fit akhir atas seluruh 956 pengalaman",
   "pengalaman": 956,
   "fitur": [
     "struktur",
@@ -15,49 +21,49 @@
     "perubahan"
   ],
   "korelasiDimensiHasil": {
-    "struktur": -0.004,
-    "momentum": 0.021,
+    "struktur": -0.007,
+    "momentum": 0.02,
     "sr": 0.042,
-    "tekanan": 0.013,
-    "perubahan": -0.047
+    "tekanan": 0.011,
+    "perubahan": -0.05
   },
   "uji": {
     "nLatih": 896,
     "nHoldout": 60,
     "hitEmpu": 50,
-    "hitVonisLama": 48.3,
+    "hitVonisLama": 46.7,
     "gerbang": "adopsi hanya bila empu ≥ vonis-lama + 3 poin (anti-overfit)"
   },
   "kurvaBelajar": [
     {
       "latih": 40,
-      "hitHoldout": 45
+      "hitHoldout": 41.7
     },
     {
       "latih": 80,
-      "hitHoldout": 51.7
+      "hitHoldout": 41.7
     },
     {
       "latih": 120,
-      "hitHoldout": 48.3
+      "hitHoldout": 53.3
     },
     {
       "latih": 160,
-      "hitHoldout": 40
+      "hitHoldout": 41.7
     },
     {
       "latih": 200,
-      "hitHoldout": 46.7
+      "hitHoldout": 50
     },
     {
       "latih": 896,
-      "hitHoldout": 50
+      "hitHoldout": 51.7
     }
   ],
   "antiOrakel": {
     "ket": "hit-rate bila semua vonis lama dibalik — cermin jujur penyakit arah",
-    "hitPct": 55.5
+    "hitPct": 55.6
   },
-  "akurasiLedger": 44.5,
+  "akurasiLedger": 44.4,
   "catatan": "bobot difit dari ledger vonis matang milik sendiri — nol kunci luar, nol sambungan luar; refit tiap denyut, makin banyak pengalaman makin tajam"
 }
